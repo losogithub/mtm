@@ -1,0 +1,8 @@
+{
+  "dependencies":
+  {
+    "express": "*",
+    "ejs": "*",
+    "express-partials": "*"
+  }
+}
