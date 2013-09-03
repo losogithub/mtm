@@ -1,0 +1,33 @@
+body, h1, h2, h3, h4, h5, h6, p, dl, dt, dd, ul, ol, li, th, td, div, blockquote, pre, form, fieldset, input, textarea {margin: 0px;padding: 0px}
+ol, ul{list-style: none}
+img, fieldset, table, th, td{border: 0px none}
+input, button, textarea{border: 0px none}
+input, textarea{font-size: 1em}
+a{color: rgb(36, 104, 206);}
+a:link, a:visited{text-decoration: underline;}
+a:hover, a:active, a:focus{text-decoration: none;}
+html{overflow-y: scroll}
+body{font: 12px/1.5 arial, sans-serif}
+small{font-size: 100%}
+.A1{color: rgb(170, 170, 170)}
+.Hide{display: none}
+.Header{z-index: 501;width: 100%;border-top: 3px solid rgb(51, 51, 51);border-bottom: 1px solid rgb(231, 231, 231);}
+.HeaderInner{position: relative;width: 960px;height: 44px;margin: 0px auto;}
+.Footer{width: 100%; border-top: 1px solid rgb(231, 231, 231)}
+.FooterInner{width: 960px; margin: 0px auto; padding: 25px 0px}
+.MtmLinkUl{float: left; line-height: 1}
+.MtmLinkUl a{color: rgb(51, 51, 51); font-size: 11px;}
+.MtmLinkUl a:link,.MtmLinkUl a:visited{text-decoration: none}
+.MtmLinkUl a:hover,.MtmLinkUl a:active{text-decoration: underline}
+.FooterSeparator{display: inline-block;position: relative;top: 1px;width: 0px;height: 11px;overflow: hidden;margin: 0px 11px 0px 15px;border-left: 1px solid rgb(205, 205, 205);}
+.Copyright{float: right;line-height: 1;color: rgb(51, 51, 51);font-family: Tahoma,Arial,sans-serif;font-size: 11px;}
+.Copyright b{font-weight: normal}
+.ButtonToggle{line-height: 12px;font-size: 12px;vertical-align: middle;}
+.ButtonToggle{cursor: pointer;}
+.ButtonToggle{color: rgb(102, 102, 102);}
+.ButtonToggleIco{display: inline-block;overflow: hidden;margin: 0px 0px 0px 3px;border: 0px none;background: transparent 0px 0px no-repeat;text-align: left;text-indent: -9999px;}
+.ButtonToggleIco{background-image: url("/images/sprite_btn.png");}
+.ButtonToggleIco{width: 0px;vertical-align: middle;}
+.ButtonToggleIco{height: 13px;width: 13px;}
+.ButtonToggleClose .ButtonToggleIco{background-position: -15px -170px;}
+.ButtonToggleOpen .ButtonToggleIco{background-position: 0 -170px;}
