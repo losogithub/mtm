@@ -8,6 +8,11 @@
 .InputForm.Required{width: 762px;padding: 0px;background-position: 5px 10px;}
 .InputFormInputTxt{width: 100%;background-color: transparent;min-height: 38px;line-height: 38px;font-size: 23px;font-weight: bold;vertical-align: middle;}
 .EditFormOption{left: 797px;bottom: 0px;line-height: 0;position: absolute;}
+.Widget{margin-bottom: 35px}
+.WidgetInput{padding: 5px 5px 0 0;border-width: 1px;border-style: solid;border-color: rgb(202, 206, 209) rgb(232, 234, 235) rgb(232, 234, 235) rgb(202, 206, 209);}
+.WidgetInputBox{width: 100%}
+.WidgetTxtInput{min-height: 73px}
+.WidgetTxtInputBox{transition: height 0.2s ease 0s;min-height: 68px;overflow-x: auto;overflow-y: hidden;resize: none;}
 #editFormBox01 {position: relative; height: 41px}
 #editFormBox02 {margin-top: 25px}
 #editFormItem01 {width: 95px;margin-right: 15px;float: left;}
@@ -22,5 +27,5 @@
 #main01{float: left;width: 635px;border-right: 1px solid rgb(231, 231, 231);min-height: 41px;padding: 0 24px 40px 0;}
 #mainInner01{}
 #widgetList01{position: relative;padding-bottom: 1px;}
-#Pagination01{line-height: 1.2;margin: 30px 0px 40px 0;font-family: Arial,Helvetica,sans-serif;font-size: 16px;text-align: center;}
-#Sub01{position: relative;float: right;width: 300px;padding-bottom: 40px;}
+#pagination01 {line-height: 1.2;margin: 30px 0px 40px 0;font-family: Arial,Helvetica,sans-serif;font-size: 16px;text-align: center;}
+#sub01 {position: relative;float: right;width: 300px;padding-bottom: 40px;}

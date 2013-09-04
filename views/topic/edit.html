@@ -1,3 +1,4 @@
+<script type="text/javascript" src="/javascripts/jquery.autosize.min.js"></script>
 <div class="EditHead">
 
 </div>
@@ -8,10 +9,10 @@
         <form id="_jMissionForm">
           <fieldset class="EditForm">
             <div id="editFormBox01">
-              <p class="InputForm Required">
+              <div class="InputForm Required">
                 <input class="InputFormInputTxt PlaceHolder" type="text" placeholder="输入总结标题（50个字以内）"/>
-                <a class="EditFormOption ButtonToggle ButtonToggleClose" href="#">可选项目<span class="ButtonToggleIco"></span></a>
-              </p>
+                <a class="EditFormOption ButtonToggle ButtonToggleClose" href="##">可选项目<span class="ButtonToggleIco"></span></a>
+              </div>
             </div>
             <div id="editFormBox02">
               <dl id="editFormItem01">
@@ -67,8 +68,16 @@
   <div id="contentsWrap01">
     <div id="main01">
       <div id="mainInner01">
-        <div id="widgetList01"></div>
-        <div id="Pagination01"></div>
+        <div id="widgetList01">
+          <div class="Widget WidgetTypeTxt">
+            <form>
+              <div class="WidgetInput WidgetTxtInput Required">
+                <textarea class="WidgetInputBox WidgetTxtInputBox" placeholder="输入文本"></textarea>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div id="pagination01"></div>
       </div>
     </div>
     <div id="sub01"></div>
