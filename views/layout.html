@@ -3,7 +3,9 @@
 <head>
   <title><%= title %></title>
   <link type='text/css' rel='stylesheet' href='/stylesheets/common.css'/>
-  <link type='text/css' rel='stylesheet' href='<%= css %>'/>
+  <% for(i in css) { %>
+  <link type='text/css' rel='stylesheet' href='<%= css[i] %>'/>
+  <% } %>
   <script type="text/javascript" src="http://libs.baidu.com/jquery/1.10.2/jquery.min.js"></script>
 </head>
 <body>
@@ -15,9 +17,9 @@
     <div class='FooterInner'>
       <ul class='MtmLinkUl'>
         <li>
-          <a href='##'>关于我们</a>
+          <a>关于我们</a>
           <span class='FooterSeparator'>|</span>
-          <a href='##'>使用条规</a>
+          <a>使用条规</a>
           <span class='FooterSeparator'>|</span>
         </li>
       </ul>
@@ -26,6 +28,8 @@
       </p>
     </div>
   </footer>
-  <script type="text/javascript" async="async" src="<%= js %>"></script>
+  <% for(i in js) { %>
+  <script type="text/javascript" async="async" src="<%= js[i] %>"></script>
+  <% } %>
 </body>
 </html>

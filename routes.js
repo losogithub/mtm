@@ -9,4 +9,8 @@ var topic = require('./controllers/topic');
 
 module.exports = function(app) {
   app.get('/topic/create', topic.create);
+  app.get('/topic/getid', topic.getId);
+  app.get('/topic/getcontents', topic.getContents);
+  app.post('/topic/create', topic.post);
+  app.put('/topic/sort', topic.sort);
 }

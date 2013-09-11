@@ -9,6 +9,7 @@ var app = express();
 
 app.set('view engine', 'html');
 app.engine('html', ejs.renderFile);
+app.use(express.bodyParser());
 app.use(partials());
 app.use(express.static(__dirname + '/public'));
 

@@ -1,4 +1,5 @@
 <script type="text/javascript" src="/javascripts/jquery.autosize.min.js"></script>
+<script type="text/javascript" src="/javascripts/jquery-ui-1.10.3.custom.min.js"></script>
 <div class="EditHead">
 
 </div>
@@ -11,19 +12,19 @@
             <div id="editFormBox01">
               <div class="InputForm Required">
                 <input class="InputFormInputTxt PlaceHolder" type="text" placeholder="输入总结标题（50个字以内）"/>
-                <a class="EditFormOption ButtonToggle ButtonToggleClose" href="##">可选项目<span class="ButtonToggleIco"></span></a>
+                <a id='editFormOption' class="ButtonToggle ButtonToggleClose" style='display: none'>可选项目<span class="ButtonToggleIco"></span></a>
               </div>
             </div>
-            <div id="editFormBox02">
+            <div id="editFormBox02" style='display: none'>
               <dl id="editFormItem01">
                 <dt class="Hide">标题图片</dt>
                 <dd id="editFormImgArea01">
                   <ul id="editFormImgAddList01">
                     <li>
-                      <a class="A1" href="#">搜索图片</a>
+                      <a class="A1">搜索图片</a>
                     </li>
                     <li>
-                      <a class="A1" href="#">上传图片</a>
+                      <a class="A1">上传图片</a>
                     </li>
                   </ul>
                 </dd>
@@ -43,22 +44,22 @@
         <div id="widgetUtilTtl01"><b>添加条目</b></div>
         <ul>
           <li>
-            <a>链接</a>
+            <a class="WidgetUtilBtn TypeLink">链接</a>
           </li>
           <li>
-            <a>图片</a>
+            <a class="WidgetUtilBtn TypeImg">图片</a>
           </li>
           <li>
-            <a>视频</a>
+            <a class="WidgetUtilBtn TypeVideo">视频</a>
           </li>
           <li>
-            <a>引用</a>
+            <a class="WidgetUtilBtn TypeQuote">引用</a>
           </li>
           <li>
-            <a>文本</a>
+            <a class="WidgetUtilBtn TypeTxt">文本</a>
           </li>
           <li>
-            <a>标题</a>
+            <a class="WidgetUtilBtn TypeTtl">标题</a>
           </li>
         </ul>
         </td>
@@ -67,19 +68,25 @@
   </div>
   <div id="contentsWrap01">
     <div id="main01">
-      <div id="mainInner01">
-        <div id="widgetList01">
-          <div class="Widget WidgetTypeTxt">
-            <form>
-              <div class="WidgetInput WidgetTxtInput Required">
-                <textarea class="WidgetInputBox WidgetTxtInputBox" placeholder="输入文本"></textarea>
-              </div>
-            </form>
-          </div>
-        </div>
-        <div id="pagination01"></div>
-      </div>
+      <ul class="WidgetList01">
+      </ul>
+      <div id="pagination01"></div>
     </div>
     <div id="sub01"></div>
+  </div>
+  <div id="templates" style="display:none;">
+    <li class="Widget" style="display:none;"></li>
+    <form class="WidgetItem TypeTxt">
+      <div class="WidgetInput WidgetTxtInput Required">
+        <textarea class="WidgetInputBox WidgetTxtInputBox" name="contents" placeholder="输入文本"></textarea>
+      </div>
+      <div class="WidgetButton">
+        <button class="Btn BtnSave" type="button"></button>
+        <button class="Btn BtnCancel" type="button"></button>
+      </div>
+    </form>
+    <div class='WidgetItem TypeTxt'>
+      <p class='WidgetItemTxtView'></p>
+    </div>
   </div>
 </div>
