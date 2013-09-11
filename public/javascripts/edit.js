@@ -88,7 +88,7 @@
         });
       }
 
-      self.widget().delegate('.WidgetList01', 'click', function (event) {
+      self.widget().delegate('#widgetMenu01', 'click', function (event) {
         if (self.options.mode == 'edit') {
           console.log('haha1');
           var $selected = $('.Selected', self.options.$ul);
@@ -127,7 +127,7 @@
         var $editWidget = self.widget().find('#templates .Widget').clone().addClass('Selected');
         self.options.$ul.prepend($editWidget);
         switch (event.target.className) {
-          case 'WidgetUtilBtn TypeTxt':
+          case 'WidgetMenuBtn TypeTxt':
             $editWidget.itemText(options);
             break;
           default :
