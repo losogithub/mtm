@@ -28,7 +28,7 @@
   })();
 
   var doIfGetIdDone = function (data) {
-    console.log(data.id);
+    console.log('doIfGetIdDone');
     if (data.id) {
       topicId = data.id;
       location.hash = '#' + topicId;
@@ -43,16 +43,11 @@
         forcePlaceholderSize: true,
         opacity: 0.5,
         tolerance: "pointer",
-        start: function (event, data) {
-        },
-        stop: function (event, data) {
-        },
         update: function (event, data) {
-          console.log('update');
-          var itemId = data.item.attr('id');
-          var prevItemId = data.item.prev().attr('id');
-          console.log(data.item.prev());
-          console.log(data.item.prev().attr('id'));
+          console.log('sort');
+          var itemId = data.item.attr('id').replace(/mtm_/, '');
+          var tempId = data.item.prev().attr('id');
+          var prevItemId = tempId ? tempId.replace(/mtm_/, '') : undefined;
           $.ajax('/topic/sort', {
             type: 'PUT',
             data: {
@@ -66,7 +61,7 @@
     }($));
 
     $(function ($) {
-      $('.Contents').edit({ items: data.items });
+      $('.Contents').edit({ itemsData: data.itemsData });
     });
   };
 
@@ -80,11 +75,11 @@
       this.options.$ul = this.widget().find('.WidgetList01');
       var self = this;
 
-      var items = this.options.items;
+      var itemsData = this.options.itemsData;
       var prevItem;
-      if (items) {
-        $.each(items, function (i, item) {
-          prevItem = self.insertItemAfter(item, prevItem);
+      if (itemsData) {
+        $.each(itemsData, function (i, itemData) {
+          prevItem = self.insertItemAfter(itemData, prevItem);
         });
       }
 
@@ -98,6 +93,9 @@
             for (var i = 0; i < sType.length; i++) {
               if ($selected.first().find('.WidgetItem').is('.Type' + sType[i]) && $(event.target).is('.Type' + sType[i])) {
                 console.log('haha');
+                $selected.find('.WidgetInputBox')
+                  .focus()
+                  .end();
                 return;
               }
             }
@@ -111,7 +109,6 @@
             //TODO 放弃对已有条目的修改
           }
         }
-        ;
         var options = {
           create: function () {
             self.options.mode = 'edit';
@@ -119,8 +116,7 @@
           cancel: function () {
             self.options.mode = 'default';
           },
-          commit: function (event, data) {
-            self.insertItemAfter(data);
+          commit: function () {
             self.options.mode = 'default';
           }
         };
@@ -137,50 +133,46 @@
       });
     },
 
-    insertItemAfter: function (item, prevItem) {
+    insertItemAfter: function (itemData, $prevItem) {
+      console.log('insertItemAfter');
+      var self = this;
       var $defaultWidget = this.widget().find('#templates .Widget').clone();
-      if (prevItem) {
-        $defaultWidget.insertAfter(prevItem);
+      if ($prevItem && $prevItem[0]) {
+        $defaultWidget.insertAfter($prevItem);
       } else {
         $defaultWidget.prependTo(this.options.$ul);
       }
-      console.log(item.type);
-      console.log(item.text);
-      switch (item.type) {
-        case 'TEXT':
-          console.log('case TEXT');
-          $defaultWidget.prepend(this.widget().find('#templates div.WidgetItem.TypeTxt').clone())
-            .attr('id', item._id)
-            .find('.WidgetItemTxtView')
-            .html(item.text)
-            .end()
-            .slideDown('fast');
-          break;
-      }
+      console.log(itemData.type);
+      console.log(itemData.text);
+      itemData.li = $defaultWidget;
+      createItem(itemData);
       return $defaultWidget;
     }
 
   });
 
   $.widget('mtm.itemText', {
+
     options: {
-      mode: 'create'
+      mode: 'create',
+      text: ''
     },
+
     _create: function () {
       var self = this;
       this.widget()
         .addClass('WidgetTypeTxt')
         .prepend($('#templates form.WidgetItem.TypeTxt').clone())
         .find('.WidgetInputBox')
-        .autosize({append: '\n'})
+        .autosize({ append: '\n' })
+        .val(this.options.text.replace(/<br>/g, '\n'))
         .blur(function () {
-          if (this.value == '') {
+          if (this.value.replace(/\n/g, '<br>') == self.options.text) {
             self.options.mode = 'create';
           } else {
             self.options.mode = 'edit';
           }
         })
-        .focus()
         .end()
         .find('.BtnSave')
         .click(function (event) {
@@ -188,16 +180,20 @@
         })
         .end()
         .find('.BtnCancel')
-        .click(function (event) {
-          if (self.options.mode == 'edit') {
-            if (!confirm('您编辑的内容将被丢弃，确定要放弃吗？')) {
-              return;
-            }
-          }
+        .click(function () {
           self.cancel();
         })
         .end()
-        .slideDown('fast');
+        .removeClass('HeightAnimation')
+        .fadeIn('fast', function () {
+          self.widget()
+            .find('.WidgetInputBox')
+            .addClass('HeightAnimation');
+        })
+        .find('.WidgetInputBox')
+        .trigger('autosize.resize')
+        .focus()
+        .end();
 
       $('form', this.widget()).validate({
         debug: false,
@@ -227,29 +223,121 @@
         }
       });
     },
-    remove: function () {
-      this.widget().slideUp('fast', function () {
-        this.remove();
-      });
+
+    _destroy: function () {
+      this.widget().empty();
     },
+
     cancel: function () {
-      this.remove();
+      var self = this;
+      if (self.options.mode == 'edit') {
+        if (!confirm('您编辑的内容将被丢弃，确定要放弃吗？')) {
+          return;
+        }
+      }
+      var tempId = this.widget().attr('id');
+      var id = tempId ? tempId.replace(/mtm_/, '') : undefined;
+      if (!id) {
+        this.widget().hide('fast', function () {
+          this.remove();
+        });
+      } else {
+        this.widget().hide();
+        createItem({
+          _id: id,
+          type: 'TEXT',
+          text: self.options.text.replace(/\n/g, '<br>'),
+          li: self.widget()
+        });
+      }
       this._trigger('cancel');
     },
     commit: function () {
       var self = this;
       console.log('commit');
-      var prevId = this.widget().prev().attr('id');
-      $.post('/topic/create', {
-        topic_id: topicId,
-        prev_item_id: prevId,
-        type: 'TEXT',
-        text: this.widget().find('.WidgetInputBox').val().replace(/\n/g,'<br>')
-      }).done(function (data) {
-          self.remove();
-          self._trigger('commit', null, data);
-        });
+      var tempId = this.widget().attr('id');
+      var itemId = tempId ? tempId.replace(/mtm_/, '') : undefined;
+      if (itemId) {
+        $.ajax('/topic/edititem', {
+          type: 'PUT',
+          data: {
+            itemId: itemId,
+            type: 'TEXT',
+            text: self.widget().find('.WidgetInputBox').val().replace(/\n/g, '<br>')
+          }
+        }).done(function (data) {
+            data.li = self.widget();
+            createItem(data);
+            self._trigger('commit', null, data);
+          });
+      } else {
+        var tempId = this.widget().attr('id');
+        var prevItemId = tempId ? tempId.replace(/mtm_/, '') : undefined;
+        $.post('/topic/createitem', {
+          topicId: topicId,
+          prevItemId: prevItemId,
+          type: 'TEXT',
+          text: self.widget().find('.WidgetInputBox').val().replace(/\n/g, '<br>')
+        }).done(function (data) {
+            data.li = self.widget();
+            createItem(data);
+            self._trigger('commit', null, data);
+          });
+      }
     }
   });
+
+  var createItem = function (data) {
+    console.log('createItem');
+    var itemId = data._id;
+    var type = data.type;
+    var li = data.li;
+    if (li.data('mtm-itemText')) {
+      console.log('destroy');
+      li.itemText('destroy');
+      li.removeAttr('style');
+      li.hide();
+    }
+    switch (type) {
+      case 'TEXT':
+        var text = data.text;
+        li.prepend($('#templates div.WidgetItem.TypeTxt').clone())
+          .attr('id', 'mtm_' + itemId)
+          .find('.WidgetItemTxtView')
+          .html(text)
+          .end()
+          .find('.BtnEdit')
+          .click(function () {
+            li.hide();
+            var text = li.find('.WidgetItemTxtView').html();
+            li.empty();
+            var options = $.extend(this.options, {
+              id: itemId,
+              text: text
+            });
+            li.itemText(options);
+          })
+          .end()
+          .find('.BtnDel')
+          .click(function () {
+            if (!confirm('条目删除后无法找回，您确定要删除吗？')) {
+              return;
+            }
+            li.hide('fast', function () {
+              li.remove();
+            });
+            $.ajax('/topic/deleteitem', {
+              type: 'DELETE',
+              data: {
+                topicId: topicId,
+                itemId: li.attr('id').replace(/mtm_/, '')
+              }
+            });
+          })
+          .end()
+          .fadeIn('fast');
+        break;
+    }
+  }
 
 })(jQuery);

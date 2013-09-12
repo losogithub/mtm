@@ -17,7 +17,7 @@ var newId = function (callback) {
   var topic = new TopicModel();
   topic.save(function (err, product) {
     if (err) {
-      console.error('fail to get new topic id:' + err);
+      console.error('get new topic id failed:' + err);
       callback(null);
     } else {
       console.log('get new topic id done');
@@ -31,7 +31,7 @@ var validateId = function (id, callback) {
   console.log(id);
   TopicModel.findById(id, null, function (err, topic) {
     if (err) {
-      console.error('fail to validate topic id:' + err);
+      console.error('validate topic id failed:' + err);
       callback(false);
     } else {
       console.log('validate topic id done');
@@ -50,7 +50,7 @@ var newAndSave = function (topic_id, prev_item_id, type, text, callback) {
       topic.item_count++;
       topic.save(function (err) {
         if (err) {
-          console.error('fail to increase topic.item_count:' + err);
+          console.error('increase topic.item_count failed:' + err);
         } else {
           callback(item);
         }
@@ -62,13 +62,13 @@ var newAndSave = function (topic_id, prev_item_id, type, text, callback) {
 var createVoidItemIfRequired = function (topicId, callback) {
   TopicModel.findById(topicId, 'void_item_id item_count', function (err, topic) {
     if (err) {
-      console.error('fail to find topic:' + err);
+      console.error('find topic failed:' + err);
     } else if (!topic) {
       console.log('topic not found');
     } else {
       ItemModel.findById(topic.void_item_id, function (err, void_item) {
         if (err) {
-          console.error('fail to find void item:' + err);
+          console.error('find void item failed:' + err);
         } else if (void_item) {
           console.log('void item found');
           callback(topic);
@@ -77,7 +77,7 @@ var createVoidItemIfRequired = function (topicId, callback) {
           void_item = new ItemModel();
           void_item.save(function (err, void_item) {
             if (err) {
-              console.error('fail to create void item:' + err);
+              console.error('create void item failed:' + err);
             } else {
               console.log('void item created');
               topic.void_item_id
@@ -86,11 +86,11 @@ var createVoidItemIfRequired = function (topicId, callback) {
                 = void_item._id;
               topic.save(function (err) {
                 if (err) {
-                  console.error('fail to save topic.void_item_id:' + err);
+                  console.error('save topic.void_item_id failed:' + err);
                 } else {
                   void_item.save(function (err) {
                     if (err) {
-                      console.error('fail to save void item.prev&next:' + err);
+                      console.error('save void item.prev&next failed:' + err);
                     } else {
                       callback(topic);
                     }
@@ -108,12 +108,12 @@ var createVoidItemIfRequired = function (topicId, callback) {
 var getContents = function (id, callback) {
   TopicModel.findById(id, 'void_item_id item_count', function (err, topic) {
     if (err) {
-      console.error('fail to get void_item_id:' + err);
+      console.error('get void_item_id failed:' + err);
     } else {
       var items = [];
       ItemModel.findById(topic.void_item_id, function (err, void_item) {
         if (err) {
-          console.error('fail to find void item:' + err);
+          console.error('find void item failed:' + err);
         } else {
           if (void_item) {
             console.log('void item found');
@@ -138,7 +138,7 @@ var _getItems = function (remain_count, void_item_id, id, items, callback) {
   }
   ItemModel.findById(id, function (err, item) {
     if (err) {
-      console.error('fail to get item:' + err);
+      console.error('get item failed:' + err);
     } else {
       if (item && item._id + '' !=  void_item_id + '') {
         items.push({ _id: item._id, type: item.type, text: item.text });

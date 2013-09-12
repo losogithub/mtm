@@ -18,8 +18,7 @@ var create = function (req, res, next) {
       '/stylesheets/jquery-ui-1.10.3.custom.css'
     ],
     js: [
-      '/javascripts/edit.js',
-      'http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js'
+      '/javascripts/edit.js'
     ]
   });
 }
@@ -35,7 +34,7 @@ var getContents = function (req, res, next) {
   Topic.validateId(req.query.id, function (valid) {
     if (valid) {
       Topic.getContents(req.query.id, function (items) {
-        res.send({ items: items });
+        res.send({ itemsData: items });
       })
     } else {
       getId(req, res, next);
@@ -43,13 +42,16 @@ var getContents = function (req, res, next) {
   })
 }
 
-var post = function (req, res, next) {
+var createItem = function (req, res, next) {
+  var topicId = req.body.topicId;
+  var prevItemId = req.body.prevItemId;
+  var type = req.body.type;
   var text = sanitize(req.body.text).trim();
   text = sanitize(text).xss();
   Topic.newAndSave(
-    req.body.topic_id,
-    req.body.prev_item_id,
-    req.body.type,
+    topicId,
+    prevItemId,
+    type,
     text,
     function (item) {
       console.log('create item done.');
@@ -59,6 +61,20 @@ var post = function (req, res, next) {
         text: item.text
       });
     });
+}
+
+var editItem = function (req, res, next) {
+  var itemId = req.body.itemId;
+  var type = req.body.type;
+  var text = sanitize(req.body.text).trim();
+  text = sanitize(text).xss();
+  Item.editItem(itemId, type, text, function (item) {
+    res.send({
+      _id: item._id,
+      type: item.type,
+      text: item.text
+    });
+  });
 }
 
 var sort = function (req, res, next) {
@@ -75,8 +91,18 @@ var sort = function (req, res, next) {
   })
 }
 
+var deleteItem = function (req, res, next) {
+  var topicId = req.body.topicId;
+  var itemId = req.body.itemId;
+  Item.deleteItem(itemId, function () {
+    res.send(0);
+  });
+}
+
 exports.create = create;
 exports.getId = getId;
 exports.getContents = getContents;
-exports.post = post;
+exports.createItem = createItem;
+exports.editItem = editItem;
 exports.sort = sort;
+exports.deleteItem = deleteItem;

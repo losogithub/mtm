@@ -9,17 +9,28 @@
 .InputFormInputTxt{width: 100%;background-color: transparent;min-height: 38px;line-height: 38px;font-size: 23px;font-weight: bold;vertical-align: middle;}
 .WidgetMenuBtn {text-decoration: none}
 .WidgetList01{padding-bottom: 1px;}
-.WidgetList01 li{background-color: rgb(255, 255, 255)}
-.Widget{background-color: #28b937;padding: 15px 0}
+.WidgetList01 li{position: relative;background-color: rgb(255, 255, 255)}
+.Widget{padding: 15px 0 0}
 .Widget:hover{background-color: #f8f8f8;}
-.ui-sortable-helper:hover{background-color: rgba(40, 184, 55, 0.2);-webkit-box-shadow:rgba(0,0,0,0.2) 1px 1px 2px;-moz-box-shadow:rgba(0,0,0,0.2) 1px 1px 2px;box-shadow:rgba(0,0,0,0.2) 1px 1px 2px}
-.WidgetInput{padding: 5px 5px 0 0;border-width: 1px;border-style: solid;border-color: rgb(202, 206, 209) rgb(232, 234, 235) rgb(232, 234, 235) rgb(202, 206, 209);}
+.ui-sortable-helper{background-color: rgba(40, 184, 55, 0.2)!important;-webkit-box-shadow:rgba(0,0,0,0.2) 1px 1px 2px;-moz-box-shadow:rgba(0,0,0,0.2) 1px 1px 2px;box-shadow:rgba(0,0,0,0.2) 1px 1px 2px}
+.WidgetInput{background-color: #ffffff;padding: 5px 5px 0 0;border-width: 1px;border-style: solid;border-color: rgb(202, 206, 209) rgb(232, 234, 235) rgb(232, 234, 235) rgb(202, 206, 209);}
 .WidgetInputBox{width: 100%}
 .WidgetTxtInput{min-height: 68px}
-.WidgetTxtInputBox{transition: height 0.2s ease 0s;min-height: 66px;resize: none;font-size: 14px}
+.WidgetTxtInputBox{min-height: 66px;resize: none;font-size: 14px}
+.HeightAnimation{transition: height 0.2s ease 0s;}
 .WidgetItemTxtView{line-height: 1.429;color: rgb(102, 102, 102);font-size: 14px;}
 .WidgetButton{margin: 14px 0px 0px;letter-spacing:7px}
 .WidgetDragPlaceholder{width: 635px;background: url(/images/bg_WidgetDragPlaceholder.png) repeat 0 0}
+.WidgetUtil2{visibility: hidden;position: relative;text-align: right}
+.Widget:hover .WidgetUtil2{visibility: visible}
+.ui-sortable-helper:hover .WidgetUtil2{visibility: hidden}
+.BtnEdit{vertical-align: middle;color: rgb(124, 148, 170);line-height: 1}
+.BtnIco{vertical-align: middle;display: inline-block;background-image: url(/images/sprite_btn.png);}
+.BtnIcoEdit{background-position: -180px -170px;width: 11px;height: 14px;margin: 0 3px 0 0}
+.WidgetUtilSeparator{height: 11px;margin: 0px 5px;border-left: rgb(223, 228, 233) 1px solid;display: inline-block;width: 0px;overflow: hidden;vertical-align: -1px;}
+.BtnDel{vertical-align: middle;color: rgb(124, 148, 170);padding: 0 6px 0 0;line-height: 1}
+.BtnIco{vertical-align: middle;display: inline-block;background-image: url(/images/sprite_btn.png);}
+.BtnIcoDel{background-position: -200px -170px;width: 11px;height: 14px;margin: 0 3px 0 0}
 #editFormOption{left: 797px;bottom: 0px;line-height: 0;position: absolute;}
 #editFormBox01 {position: relative; height: 41px}
 #editFormBox02 {margin-top: 25px}
