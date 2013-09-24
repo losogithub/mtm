@@ -1,12 +1,11 @@
 {
-    "name": "mtm",
-    "version": "0.0.1" ,
-    "main": "app.js",
-    "private": "true",
-    "dependencies":
-    {
-        "express": "*",
-        "ejs": "*",
-        "express-partials": "*"
-    }
+  "dependencies":
+  {
+    "eventproxy": "*",
+    "express": "*",
+    "ejs": "*",
+    "express-partials": "*",
+    "mongoose": "*",
+    "validator": "*"
+  }
 }

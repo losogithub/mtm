@@ -1,3 +1,6 @@
+<script type="text/javascript" src="/javascripts/jquery.autosize.min.js"></script>
+<script type="text/javascript" src="/javascripts/jquery-ui-1.10.3.custom.min.js"></script>
+<script type="text/javascript" src='http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js'></script>
 <div class="EditHead">
 
 </div>
@@ -8,21 +11,21 @@
         <form id="_jMissionForm">
           <fieldset class="EditForm">
             <div id="editFormBox01">
-              <p class="InputForm Required">
+              <div class="InputForm Required">
                 <input class="InputFormInputTxt PlaceHolder" type="text" placeholder="输入总结标题（50个字以内）"/>
-                <a class="EditFormOption ButtonToggle ButtonToggleClose" href="#">可选项目<span class="ButtonToggleIco"></span></a>
-              </p>
+                <a id='editFormOption' class="ButtonToggle ButtonToggleClose" style='display: none'>可选项目<span class="ButtonToggleIco"></span></a>
+              </div>
             </div>
-            <div id="editFormBox02">
+            <div id="editFormBox02" style='display: none'>
               <dl id="editFormItem01">
                 <dt class="Hide">标题图片</dt>
                 <dd id="editFormImgArea01">
                   <ul id="editFormImgAddList01">
                     <li>
-                      <a class="A1" href="#">搜索图片</a>
+                      <a class="A1">搜索图片</a>
                     </li>
                     <li>
-                      <a class="A1" href="#">上传图片</a>
+                      <a class="A1">上传图片</a>
                     </li>
                   </ul>
                 </dd>
@@ -37,27 +40,27 @@
           </fieldset>
         </form>
       </div>
-      <table id="widgetUtil01">
+      <table id="widgetMenu01">
         <td>
         <div id="widgetUtilTtl01"><b>添加条目</b></div>
         <ul>
           <li>
-            <a>链接</a>
+            <a class="WidgetMenuBtn TypeLink">链接</a>
           </li>
           <li>
-            <a>图片</a>
+            <a class="WidgetMenuBtn TypeImg">图片</a>
           </li>
           <li>
-            <a>视频</a>
+            <a class="WidgetMenuBtn TypeVideo">视频</a>
           </li>
           <li>
-            <a>引用</a>
+            <a class="WidgetMenuBtn TypeQuote">引用</a>
           </li>
           <li>
-            <a>文本</a>
+            <a class="WidgetMenuBtn TypeTxt">文本</a>
           </li>
           <li>
-            <a>标题</a>
+            <a class="WidgetMenuBtn TypeTtl">标题</a>
           </li>
         </ul>
         </td>
@@ -66,11 +69,30 @@
   </div>
   <div id="contentsWrap01">
     <div id="main01">
-      <div id="mainInner01">
-        <div id="widgetList01"></div>
-        <div id="Pagination01"></div>
-      </div>
+      <ul class="WidgetList01">
+      </ul>
+      <div id="pagination01"></div>
     </div>
     <div id="sub01"></div>
+  </div>
+  <div id="templates" style="display:none;">
+    <li class="Widget" style="display:none;"></li>
+    <form class="WidgetItem TypeTxt">
+      <div class="WidgetInput WidgetTxtInput Required">
+        <textarea class="WidgetInputBox WidgetTxtInputBox" name="contents" placeholder="输入文本"></textarea>
+      </div>
+      <div class="WidgetButton">
+        <button class="Btn BtnSave" type="button"></button>
+        <button class="Btn BtnCancel" type="button"></button>
+      </div>
+    </form>
+    <div class='WidgetItem TypeTxt'>
+      <p class='WidgetItemTxtView'></p>
+      <div class='WidgetUtil2'>
+        <a class="BtnEdit"><span class="BtnIco BtnIcoEdit"></span>修改</a>
+        <span class='WidgetUtilSeparator'>|</span>
+        <a class="BtnDel"><span class="BtnIco BtnIcoDel"></span>删除</a>
+      </div>
+    </div>
   </div>
 </div>

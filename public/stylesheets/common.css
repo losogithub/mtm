@@ -3,7 +3,8 @@ ol, ul{list-style: none}
 img, fieldset, table, th, td{border: 0px none}
 input, button, textarea{border: 0px none}
 input, textarea{font-size: 1em}
-a{color: rgb(36, 104, 206);}
+textarea{font-family: arial,sans-serif;}
+a{cursor: pointer;color: rgb(36, 104, 206);text-decoration: underline;}
 a:link, a:visited{text-decoration: underline;}
 a:hover, a:active, a:focus{text-decoration: none;}
 html{overflow-y: scroll}
@@ -16,7 +17,7 @@ small{font-size: 100%}
 .Footer{width: 100%; border-top: 1px solid rgb(231, 231, 231)}
 .FooterInner{width: 960px; margin: 0px auto; padding: 25px 0px}
 .MtmLinkUl{float: left; line-height: 1}
-.MtmLinkUl a{color: rgb(51, 51, 51); font-size: 11px;}
+.MtmLinkUl a{color: rgb(51, 51, 51); font-size: 11px;text-decoration: none}
 .MtmLinkUl a:link,.MtmLinkUl a:visited{text-decoration: none}
 .MtmLinkUl a:hover,.MtmLinkUl a:active{text-decoration: underline}
 .FooterSeparator{display: inline-block;position: relative;top: 1px;width: 0px;height: 11px;overflow: hidden;margin: 0px 11px 0px 15px;border-left: 1px solid rgb(205, 205, 205);}
@@ -31,3 +32,6 @@ small{font-size: 100%}
 .ButtonToggleIco{height: 13px;width: 13px;}
 .ButtonToggleClose .ButtonToggleIco{background-position: -15px -170px;}
 .ButtonToggleOpen .ButtonToggleIco{background-position: 0 -170px;}
+.Btn{vertical-align: middle;cursor: pointer;background-image: url(/images/sprite_btn.png)}
+.BtnSave{width: 45px;height: 26px;background-position: 0 -60px;}
+.BtnCancel{width: 68px;height: 26px;background-position: 0 -30px}
