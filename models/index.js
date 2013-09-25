@@ -15,5 +15,11 @@ mongoose.connect(config.db, function (err) {
   }
 });
 
+//models
+require('./user');
+
 exports.TopicModel = require('./topic');
 exports.ItemModel = require('./item');
+
+
+exports.User = mongoose.model('User');
