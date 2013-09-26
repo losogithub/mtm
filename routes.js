@@ -32,6 +32,7 @@ module.exports = function(app) {
     app.get('/signup', sign.showSignUp);
 
     app.post('/signup', sign.signup);
+    app.post('/registerAccount', sign.signup);
 
     /*
     app.get('/signout', sign.signout);

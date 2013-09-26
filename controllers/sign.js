@@ -22,11 +22,8 @@ var showSignUp = function (req, res) {
 };
 
 
-var signup1 = function(req, res, next){
-    console.log("success signup !");
-    res.render('sign/success_signup');
-};
 var signup = function (req, res, next) {
+    console.log("now sign up !");
     var name = sanitize(req.body.username).trim();
     name = sanitize(name).xss();
     var loginname = name.toLowerCase();
@@ -38,58 +35,152 @@ var signup = function (req, res, next) {
     //var re_pass = sanitize(req.body.re_pass).trim();
     //re_pass = sanitize(re_pass).xss();
 
-    if (name === '' || pass === '' || email === '') {
-        res.render('sign/signup', {error: '信息不完整。', name: name, email: email});
-        return;
-    }
 
-    if (name.length < 5) {
-        res.render('sign/signup', {error: '用户名至少需要5个字符。', name: name, email: email});
-        return;
-    }
-
-    try {
-        check(name, '用户名只能使用0-9，a-z，A-Z。').isAlphanumeric();
-    } catch (e) {
-        res.render('sign/signup', {error: e.message, name: name, email: email});
-        return;
-    }
-      /*
-    if (pass !== re_pass) {
-        res.render('sign/signup', {error: '两次密码输入不一致。', name: name, email: email});
-        return;
-    }   */
-
-    try {
-        check(email, '不正确的电子邮箱。').isEmail();
-    } catch (e) {
-        res.render('sign/signup', {error: e.message, name: name, email: email});
-        return;
-    }
-
-    User.getUsersByQuery({'$or': [{'loginName': loginname}, {'email': email}]}, {}, function (err, users) {
-        if (err) {
-            return next(err);
+    // 1. check name
+    var flag = true;
+    var eFlag = true;
+    var eMsg = '';
+    var nMsg = '';
+    var pMsg = '';
+    if(name === ''){ nMsg = '<p htmlfor="_email" generated="true" class="MdMsgError01">Enter your username(ID).</p>'; flag = false;}
+    else if (name.length < 5) {
+        console.log('name length less than 5');
+        flag = false;
+        nMsg = '<p htmlfor="_email" generated="true" class="MdMsgError01">cannot less than 5.</p>' ;}
+    else {
+        try {
+            check(name, '用户名只能使用0-9，a-z，A-Z。').isAlphanumeric();
+        } catch (e) {
+            nMsg = '<p htmlfor="_email" generated="true" class="MdMsgError01">' + e.message + '</p>';
+            flag = false;
         }
-        if (users.length > 0) {
-            res.render('sign/signup', {error: '用户名或邮箱已被使用。', name: name, email: email});
-            return;
+    }
+
+
+    // 2. check email
+    if(email === ''){eMsg = '<p htmlfor="_email" generated="true" class="MdMsgError01">Enter your email address.</p>'; eFlag = false; }
+    else {
+        try {
+            check(email, '不正确的电子邮箱。').isEmail();
+        } catch (e) {
+            eMsg = '<p htmlfor="_email" generated="true" class="MdMsgError01">' +  e.message + '</p>';
+            eFlag = false;
         }
 
-        // md5 the pass
-        pass = md5(pass);
+    }
 
-        User.newAndSave(name, loginname, pass, email, false, function (err) {
-            if (err) {
+    //3. password
+    if(pass === '') {pMsg = '<p htmlfor="_email" generated="true" class="MdMsgError01">Enter your password.</p>' }
+
+    if (flag){
+        User.getUserByName(loginname, function(err, user){
+            if(err){
                 return next(err);
             }
-            // 发送激活邮件
-            mail.sendActiveMail(email, md5(email + config.session_secret), name, email);
-            res.render('sign/success_signup', {
-                emailAddress: email
-            });
+            if(user){
+                console.log('user name has been registered!');
+                nMsg = '<p htmlfor="_email" generated="true" class="MdMsgError01">This username(ID) has already been registered.</p>';
+                // because of the callback function asynchronized.
+                if(eFlag){
+                    User.getUserByMail(email, function(err, user){
+                        if(err){
+                            return next(err);
+                        }
+                        if(user){
+                            console.log('user email has been registered');
+                            eMsg = '<p htmlfor="_email" generated="true" class="MdMsgError01">The email address you have entered has already been registered.</p>';
+                        }
+
+                        console.log("nMsg: %s", nMsg);
+                        console.log("eMsg: %s", eMsg);
+                        console.log("pMsg: %s", pMsg);
+                        // finally error render error info page.
+                        if( eMsg || nMsg || pMsg){
+                            console.log("%s", eMsg);
+                            res.render('sign/registerAccount', {emailMsg : eMsg, nameMsg : nMsg, passwordMsg : pMsg, name: name, email: email});
+                            return;
+                        }
+
+                        // success
+                        // md5 the pass
+                        pass = md5(pass);
+
+                        User.newAndSave(name, loginname, pass, email, false, function (err) {
+                            if (err) {
+                                return next(err);
+                            }
+                            // 发送激活邮件
+                            mail.sendActiveMail(email, md5(email + config.session_secret), name, email);
+                            res.render('sign/success_signup', {
+                                emailAddress: email
+                            });
+                        });
+                    })
+                }
+            }
+            else {
+                // not user, check email
+                if(eFlag){
+                    User.getUserByMail(email, function(err, user){
+                        if(err){
+                            return next(err);
+                        }
+                        if(user){
+                            console.log('user email has been registered');
+                            eMsg = '<p htmlfor="_email" generated="true" class="MdMsgError01">The email address you have entered has already been registered.</p>';
+                        }
+
+                        console.log("nMsg: %s", nMsg);
+                        console.log("eMsg: %s", eMsg);
+                        console.log("pMsg: %s", pMsg);
+                        // finally error render error info page.
+                        if( eMsg || nMsg || pMsg){
+                            console.log("%s", eMsg);
+                            res.render('sign/registerAccount', {emailMsg : eMsg, nameMsg : nMsg, passwordMsg : pMsg, name: name, email: email});
+                            return;
+                        }
+
+                        // success
+                        // md5 the pass
+                        pass = md5(pass);
+                        User.newAndSave(name, loginname, pass, email, false, function (err) {
+                            if (err) {
+                                return next(err);
+                            }
+                            // 发送激活邮件
+                            mail.sendActiveMail(email, md5(email + config.session_secret), name, email);
+                            res.render('sign/success_signup', {
+                                emailAddress: email
+                            });
+                        });
+                    })
+                }
+                // correct user, wrong email.
+                else {
+                    res.render('sign/registerAccount', {emailMsg : eMsg, nameMsg : nMsg, passwordMsg : pMsg, name: name, email: email});
+                    return;
+                }
+            }
         });
-    });
+    }
+    else if(eFlag){
+        User.getUserByMail(email, function(err, user){
+            if(err){
+                return next(err);
+            }
+            if(user){
+                console.log('user email has been registered');
+                eMsg = '<p htmlfor="_email" generated="true" class="MdMsgError01">The email address you have entered has already been registered.</p>';
+            }
+            // wrong name, maybe correct email address.
+            res.render('sign/registerAccount', {emailMsg : eMsg, nameMsg : nMsg, passwordMsg : pMsg, name: name, email: email});
+            return;
+        })
+    }
+    else {
+        res.render('sign/registerAccount', {emailMsg : eMsg, nameMsg : nMsg, passwordMsg : pMsg, name: name, email: email});
+        return;
+    }
 };
 
 

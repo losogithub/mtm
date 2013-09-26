@@ -13,11 +13,12 @@
 <body class="LyPage01 ExLangEn">
 <div class="LyWrap">
 
+
     <!--[[HEADER-AREA]]-->
     <header><div class="LyHead01">
 
         <nav role="navigation"><ul class="MdGnbUtil01">
-            <li class="mdGnbUtil01Li"><a href="/login">login</a></li><li class="mdGnbUtil01Li"><span class="MdGnbSeparator01">|</span><a href="http://www.mtmt.com">MTM</a></li>
+            <li class="mdGnbUtil01Li"><a href="/login">login</a></li><li class="mdGnbUtil01Li"><span class="MdGnbSeparator01">|</span><a href="http://www.mtmt.com">MTM</a></li>       <!-- hre login shall be a link-->
             <!--/MdGnbUtil01--></ul></nav>
 
         <div class="MdRegistHead01 MdCF">
@@ -44,12 +45,10 @@
             }
             //]]>
         </script>
-        <form method="post" id="_registForm" action="/signup">
-            <input type="hidden" name="fromUrl" value="http://mtm.com/" />
-            <input type="hidden" id="certKey" name="certKey" value="" />
-            <!--
-            <input type="hidden" name="captchaKey" id="captchaKey" value="1^HJLzy0Lqp23QEf64" class="_inputCaptchaKey" />
-             -->
+        <form method="post" id="_registForm" action="/registerAccount">
+            <input type="hidden" name="fromUrl" value="http://mtm.com/">
+            <input type="hidden" id="certKey" name="certKey" value="">
+            <!-- <input type="hidden" name="captchaKey" id="captchaKey" value="" class="_inputCaptchaKey"> -->
 
             <div class="MdFormRegist01">
                 <div class="mdFormRegist01Inner MdCF">
@@ -62,9 +61,11 @@
                                     <dt class="mdFormRegist01Unit01Ttl"><span class="mdFormRegist01Ttl01">Username</span></dt>
                                     <dd class="mdFormRegist01Unit01Body">
                                         <div class="MdInputTxt01">
-                                            <div class="mdInputTxt01Inner"><input type="text" class="mdInputTxt01Input _userNameInput" value="" maxlength="20" id="_userName" name="username" /></div>
+                                            <div class="mdInputTxt01Inner"><input type="text" class="mdInputTxt01Input _userNameInput" value="<%= name %>" maxlength="20" id="_userName" name="username"></div>
                                             <!--/MdInputTxt01--></div>
                                         <div class="mdFormRegist01MsgBox">
+                                            <%- nameMsg %>
+                                            <!-- <p htmlfor="_email" generated="true" class="MdMsgError01">This username(ID) has already been registered.</p>          <!-- todo : add code to js to insert this html-->
                                         </div>
                                     </dd>
                                     <!--/mdFormRegist01Unit01--></dl>
@@ -73,9 +74,11 @@
                                     <dt class="mdFormRegist01Unit01Ttl"><span class="mdFormRegist01Ttl02">Email</span></dt>
                                     <dd class="mdFormRegist01Unit01Body">
                                         <div class="MdInputTxt01">
-                                            <div class="mdInputTxt01Inner"><input type="text" class="mdInputTxt01Input" id="_email"  name="email" value="" /></div>
+                                            <div class="mdInputTxt01Inner"><input type="text" class="mdInputTxt01Input" id="_email" name="email" value="<%= email %>"></div>
                                             <!--/MdInputTxt01--></div>
                                         <div class="mdFormRegist01MsgBox">
+                                            <%- emailMsg %>
+                                           <!--  <p htmlfor="_email" generated="true" class="MdMsgError01">The email address you have entered has already been registered.</p>  <!-- todo: -->
                                         </div>
                                     </dd>
                                     <!--/mdFormRegist01Unit01--></dl>
@@ -84,9 +87,10 @@
                                     <dt class="mdFormRegist01Unit01Ttl"><span class="mdFormRegist01Ttl03">Password</span></dt>
                                     <dd class="mdFormRegist01Unit01Body">
                                         <div class="MdInputTxt01">
-                                            <div class="mdInputTxt01Inner"><input type="password" class="mdInputTxt01Input" maxlength="20" id="_passwd" name="password" /></div>
+                                            <div class="mdInputTxt01Inner"><input type="password" class="mdInputTxt01Input" maxlength="20" id="_passwd" name="password"></div>
                                             <!--/MdInputTxt01--></div>
                                         <div class="mdFormRegist01MsgBox">
+                                            <%- passwordMsg %>
                                         </div>
                                     </dd>
                                     <!--/mdFormRegist01Unit01--></dl>
@@ -96,7 +100,6 @@
                     </fieldset>
                     <!--/mdFormRegist01Inner--></div>
                 <!--/MdFormRegist01--></div>
-
 
             <div class="MdAgree01">
                 <fieldset>
@@ -109,7 +112,7 @@
                 <!--/MdAgree01--></div>
 
             <ul class="MdActionBtn01">
-                <li class="mdActionBtn01Li"><input type="submit" class="MdBtnRegist01 mdBtnRegist01Disabled" value="Sign Up" disabled="disabled" /></li>
+                <li class="mdActionBtn01Li"><input type="submit" class="MdBtnRegist01 mdBtnRegist01Disabled" value="Sign Up" disabled="disabled"></li>
                 <!--/MdActionBtn01--></ul>
         </form>
 
@@ -119,7 +122,7 @@
         <script>
             $().ready(function() {
                 new nj.account.initRegistForm();
-                //lcs_do();  9.24
+                //lcs_do();
             });
         </script>
         <!--[[/SCRIPT]]-->
@@ -148,11 +151,12 @@
         <!--[[/FOOTER-AREA]]--></footer>
     <!--[[/FOOTER-AREA]]-->
 
+
     <!--/LyWrap--></div>
 
 <!--[[LAYER-AREA]]-->
 <!--[[/LAYER-AREA]]-->
 
 
-</body>
-</html>
+
+</body></html>
