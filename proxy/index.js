@@ -7,3 +7,4 @@
  */
 exports.Topic = require('./topic');
 exports.Item = require('./item');
+exports.User = require('./user');
