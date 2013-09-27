@@ -767,6 +767,7 @@
               itemId: $item.attr('mtm_id')
             }
           });
+          $item.css('visibility', 'hidden');
           $item.hide('fast', function () {
             $item.remove();
           });
