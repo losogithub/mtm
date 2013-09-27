@@ -20,9 +20,9 @@ var app = express();
 app.set('view engine', 'html');
 app.engine('html', ejs.renderFile);
 app.use(express.bodyParser());
+app.use(partials());
 app.use(app.router);
 
-app.use(partials());
 app.use(express.static(__dirname + '/public'));
 app.use(express.cookieParser);
 app.use(express.session({
