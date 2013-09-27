@@ -9,23 +9,36 @@
   <script type="text/javascript" src="http://libs.baidu.com/jquery/1.10.2/jquery.min.js"></script>
 </head>
 <body>
+  <% if (locals.index) { %>
+  <header class='Header Index'>
+    <div class="Inner Index"></div>
+  <% } else { %>
   <header class='Header'>
     <div class="Inner"></div>
+  <% } %>
   </header>
+
   <%- body %>
+
   <footer class='Footer'>
+    <% if (locals.index) { %>
+    <div class='Inner Index'>
+    <% } else { %>
     <div class='Inner'>
-      <ul class='MtmLinkUl'>
-        <li>
-          <a>关于我们</a>
-          <span class='FooterSeparator'>|</span>
-          <a>使用条规</a>
-          <span class='FooterSeparator'>|</span>
-        </li>
-      </ul>
-      <p class='Copyright'>
-        <small>© <b>mtm</b></small>
-      </p>
+    <% } %>
+      <div class='MiddleHelper'></div>
+      <div class="MiddleWrapper">
+        <ul class='MtmLinkUl NegLinkWrapper'>
+          <li><a>关于我们</a><span class='FooterSeparator'>|</span></li>
+          <li><a>使用条规</a><span class='FooterSeparator'>|</span></li>
+        </ul>
+      </div>
+      <div class='Copyright'>
+        <div class='MiddleHelper'></div>
+        <div class="MiddleWrapper">
+          <small>© <b>mtm</b></small>
+        </div>
+      </div>
     </div>
   </footer>
   <% for (i in locals.js) { %>

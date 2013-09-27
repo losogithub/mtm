@@ -7,7 +7,10 @@
  */
 var index = function (req, res, next) {
   res.render('index', {
-    title: 'mtm[我设计的信息。策展平台]'
+    title: 'mtm[我设计的信息。策展平台]',
+    index: 1,
+    css: ['/stylesheets/index.css'],
+    js: ['/javascripts/index.js']
   });
 }
 
