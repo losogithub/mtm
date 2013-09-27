@@ -19,7 +19,10 @@ mongoose.connect(config.db, function (err) {
 require('./user');
 
 exports.TopicModel = require('./topic');
-exports.ItemModel = require('./item');
-
+exports.ItemModels = {
+  'VOID': require('./void_item'),
+  'TEXT': require('./text_item'),
+  'TITLE': require('./title_item')
+}
 
 exports.User = mongoose.model('User');
