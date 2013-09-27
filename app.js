@@ -29,7 +29,6 @@ app.use(express.session({
     secret: config.session_secret
 }));
 
-
 routes(app);
 
 app.listen(config.port);
