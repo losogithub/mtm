@@ -10,149 +10,132 @@ var ObjectId = require('mongoose').Types.ObjectId;
 
 var models = require('../models');
 var TopicModel = models.TopicModel;
-var ItemModel = models.ItemModel;
 var Item = require('./item');
 
+/**
+ * 获取新总结id
+ * @param callback
+ */
 var newId = function (callback) {
+  console.log('newId');
+
+  //新建总结
   var topic = new TopicModel();
-  topic.save(function (err, product) {
+  topic.save(function (err, topic) {
     if (err) {
       console.error('get new topic id failed:' + err);
       callback(null);
     } else {
       console.log('get new topic id done');
-      console.log(product._id);
-      callback(product._id);
+      console.log(topic._id);
+
+      //将总结id传给回调函数
+      callback(topic._id);
     }
   });
 }
 
-var validateId = function (id, callback) {
-  console.log(id);
-  TopicModel.findById(id, null, function (err, topic) {
+/**
+ * 验证总结id
+ * @param topicId
+ * @param callback
+ */
+var validateId = function (topicId, callback) {
+  console.log('validateId===');
+  console.log(topicId);
+
+  //查找总结
+  TopicModel.findById(topicId, function (err, topic) {
     if (err) {
       console.error('validate topic id failed:' + err);
+
+      //验证出错
       callback(false);
+
     } else {
       console.log('validate topic id done');
       console.log(topic);
+
+      //验证结果传给回调函数
       callback(topic ? true : false);
     }
   });
 }
 
-var newAndSave = function (topic_id, prev_item_id, type, text, callback) {
-  var item = new ItemModel();
-  item.type = type;
-  item.text = text;
-  createVoidItemIfRequired(topic_id, function (topic) {
-    Item.insertItem(item, topic.void_item_id, function (item) {
-      topic.item_count++;
-      topic.save(function (err) {
-        if (err) {
-          console.error('increase topic.item_count failed:' + err);
-        } else {
-          callback(item);
-        }
-      });
-    });
-  })
-}
+/**
+ * 创建条目链表头
+ * @param topicId
+ * @param callback
+ */
+var createVoidItemIfNotExist = function (topicId, callback) {
+  console.log('createVoidItemIfNotExist');
 
-var createVoidItemIfRequired = function (topicId, callback) {
-  TopicModel.findById(topicId, 'void_item_id item_count', function (err, topic) {
+  //查找总结
+  TopicModel.findById(topicId, function (err, topic) {
     if (err) {
       console.error('find topic failed:' + err);
     } else if (!topic) {
       console.log('topic not found');
     } else {
-      ItemModel.findById(topic.void_item_id, function (err, void_item) {
-        if (err) {
-          console.error('find void item failed:' + err);
-        } else if (void_item) {
-          console.log('void item found');
-          callback(topic);
-        } else {
-          console.log('void item not found');
-          void_item = new ItemModel();
-          void_item.save(function (err, void_item) {
-            if (err) {
-              console.error('create void item failed:' + err);
-            } else {
-              console.log('void item created');
-              topic.void_item_id
-                = void_item.prev_item_id
-                = void_item.next_item_id
-                = void_item._id;
-              topic.save(function (err) {
-                if (err) {
-                  console.error('save topic.void_item_id failed:' + err);
-                } else {
-                  void_item.save(function (err) {
-                    if (err) {
-                      console.error('save void item.prev&next failed:' + err);
-                    } else {
-                      callback(topic);
-                    }
-                  });
-                }
-              })
-            }
-          })
-        }
-      })
+      console.log('topic=======');
+      console.log(topic);
+
+      //创建条目链表头
+      Item.createVoidItem(topic, callback);
     }
   });
 }
 
-var getContents = function (id, callback) {
-  TopicModel.findById(id, 'void_item_id item_count', function (err, topic) {
+/**
+ * 获取一个总结的所有条目
+ * @param topicId
+ * @param callback
+ */
+var getContents = function (topicId, callback) {
+  console.log('getContents');
+
+  //查找总结
+  TopicModel.findById(topicId, function (err, topic) {
     if (err) {
-      console.error('get void_item_id failed:' + err);
+      console.error('find topic failed:' + err);
     } else {
-      var items = [];
-      ItemModel.findById(topic.void_item_id, function (err, void_item) {
+
+      //获取该总结的所有条目
+      Item.getItems(topic.void_item_id, topic.item_count, callback);
+    }
+  })
+}
+
+/**
+ * 修改条目数
+ * @param topicId
+ * @param increment
+ */
+var increaseItemCountBy = function (topicId, increment) {
+  console.log('increaseItemCountBy');
+
+  //查找总结
+  TopicModel.findById(topicId, function (err, topic) {
+    if (err) {
+      console.error('find topic failed:' + err);
+    } else {
+      console.log('find topic done');
+
+      //修改条目数
+      topic.item_count += increment;
+      topic.save(function () {
         if (err) {
-          console.error('find void item failed:' + err);
+          console.error('increase item_count failed:' + err);
         } else {
-          if (void_item) {
-            console.log('void item found');
-            _getItems(topic.item_count, void_item._id, void_item.next_item_id, items, function () {
-              callback(items);
-            });
-          } else {
-            console.log('void item not found');
-            callback(items);
-          }
+          console.log('increase item_count done');
         }
       });
     }
   })
 }
 
-var _getItems = function (remain_count, void_item_id, id, items, callback) {
-  if (remain_count <= 0) {
-    console.log('no more items, remain_count:%d', remain_count);
-    callback();
-    return;
-  }
-  ItemModel.findById(id, function (err, item) {
-    if (err) {
-      console.error('get item failed:' + err);
-    } else {
-      if (item && item._id + '' !=  void_item_id + '') {
-        items.push({ _id: item._id, type: item.type, text: item.text });
-        _getItems(--remain_count, void_item_id, item.next_item_id, items, callback);
-      } else {
-        console.log('no more items');
-        callback();
-      }
-    }
-  })
-}
-
-exports.newId = newId;
+exports.newId = newId;//增
 exports.validateId = validateId;
-exports.newAndSave = newAndSave;
-exports.getContents = getContents;
-exports.createVoidItemIfRequired = createVoidItemIfRequired;
+exports.getContents = getContents;//查
+exports.createVoidItemIfNotExist = createVoidItemIfNotExist;
+exports.increaseItemCountBy = increaseItemCountBy;

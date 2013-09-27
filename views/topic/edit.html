@@ -1,98 +1,125 @@
 <script type="text/javascript" src="/javascripts/jquery.autosize.min.js"></script>
 <script type="text/javascript" src="/javascripts/jquery-ui-1.10.3.custom.min.js"></script>
-<script type="text/javascript" src='http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js'></script>
+<script type="text/javascript"
+        src='http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js'></script>
 <div class="EditHead">
-
+  <div class="Inner">
+    <div class='MiddleHelper'></div>
+    <div class="MiddleWrapper">
+      <h1 class='EditHeadTtl'>创建总结</h1>
+    </div>
+    <div class="EditHeadBtn">
+      <div class='MiddleHelper'></div>
+      <div class="MiddleWrapper">
+        <button class='Btn BtnSaveDraft' type="button"></button>
+        <button class='Btn BtnPublish' type="button"></button>
+        <button class='Btn BtnHeadCancel' type="button"></button>
+      </div>
+    </div>
+  </div>
 </div>
 <div class="Contents">
   <div class="Top">
-    <div class="TopInner">
+    <div class="Inner">
       <div class="Heading">
-        <form id="_jMissionForm">
+        <form>
           <fieldset class="EditForm">
-            <div id="editFormBox01">
-              <div class="InputForm Required">
-                <input class="InputFormInputTxt PlaceHolder" type="text" placeholder="输入总结标题（50个字以内）"/>
-                <a id='editFormOption' class="ButtonToggle ButtonToggleClose" style='display: none'>可选项目<span class="ButtonToggleIco"></span></a>
-              </div>
+            <div class="EditFormBox01">
+              <input class="InputBoxTitle Required" type="text" placeholder="输入总结标题（50字以内）" name='title'/>
+              <a class='EditFormOption ButtonToggle ButtonToggleClose' style='display: none'>可选项目<span
+                class="ButtonToggleIco"></span></a>
             </div>
-            <div id="editFormBox02" style='display: none'>
-              <dl id="editFormItem01">
+            <div class="EditFormBox02" style='display: none'>
+              <dl class="EditFormItem01">
                 <dt class="Hide">标题图片</dt>
-                <dd id="editFormImgArea01">
-                  <ul id="editFormImgAddList01">
-                    <li>
-                      <a class="A1">搜索图片</a>
-                    </li>
-                    <li>
-                      <a class="A1">上传图片</a>
-                    </li>
+                <dd class="EditFormImgArea01">
+                  <ul class="EditFormImgAddList01">
+                    <li><a class="A1">搜索图片</a></li>
+                    <li><a class="A1">上传图片</a></li>
                   </ul>
                 </dd>
               </dl>
-              <dl id="editFormItem02">
+              <dl class="EditFormItem02">
                 <dt class="Hide">总结说明</dt>
-                <dd>
-                  <textarea id="inputForm01" placeholder="输入总结说明（150字以内，换行符无效）"></textarea>
-                </dd>
+                <dd><textarea class="InputBoxDescription" placeholder="输入总结描述（150字以内，换行符无效）"
+                              name='description'></textarea></dd>
               </dl>
             </div>
           </fieldset>
         </form>
       </div>
-      <table id="widgetMenu01">
-        <td>
-        <div id="widgetUtilTtl01"><b>添加条目</b></div>
-        <ul>
-          <li>
-            <a class="WidgetMenuBtn TypeLink">链接</a>
-          </li>
-          <li>
-            <a class="WidgetMenuBtn TypeImg">图片</a>
-          </li>
-          <li>
-            <a class="WidgetMenuBtn TypeVideo">视频</a>
-          </li>
-          <li>
-            <a class="WidgetMenuBtn TypeQuote">引用</a>
-          </li>
-          <li>
-            <a class="WidgetMenuBtn TypeTxt">文本</a>
-          </li>
-          <li>
-            <a class="WidgetMenuBtn TypeTtl">标题</a>
-          </li>
-        </ul>
-        </td>
-      </table>
-    </div>
-  </div>
-  <div id="contentsWrap01">
-    <div id="main01">
-      <ul class="WidgetList01">
-      </ul>
-      <div id="pagination01"></div>
-    </div>
-    <div id="sub01"></div>
-  </div>
-  <div id="templates" style="display:none;">
-    <li class="Widget" style="display:none;"></li>
-    <form class="WidgetItem TypeTxt">
-      <div class="WidgetInput WidgetTxtInput Required">
-        <textarea class="WidgetInputBox WidgetTxtInputBox" name="contents" placeholder="输入文本"></textarea>
+      <div class="WidgetMenu01">
+        <div class="MiddleHelper"></div>
+        <div class="MiddleWrapper">
+          <div class="WidgetUtilTtl01"><b>添加条目</b></div>
+          <ul>
+            <li><a class="WidgetMenuBtn" mtm_type="Link">链接</a></li>
+            <li><a class="WidgetMenuBtn" mtm_type="Img">图片</a></li>
+            <li><a class="WidgetMenuBtn" mtm_type="Video">视频</a></li>
+            <li><a class="WidgetMenuBtn" mtm_type="Quote">引用</a></li>
+            <li><a class="WidgetMenuBtn" mtm_type="TEXT">文本</a></li>
+            <li><a class="WidgetMenuBtn" mtm_type="TITLE">标题</a></li>
+          </ul>
+        </div>
       </div>
+    </div>
+  </div>
+
+  <!--内容-->
+  <div class="ContentsWrap01">
+    <div class="Main">
+      <ul class="WidgetItemList">
+      </ul>
+      <div class="Pagination"></div>
+    </div>
+    <div class="Sub"></div>
+  </div>
+
+  <!--模板2-->
+  <div class="templates" style="display:none;">
+
+    <ul>
+      <li class="WidgetItem"></li>
+    </ul>
+
+    <form class="Widget">
+      <div class='WidgetUtil0'>
+      </div>
+      <!--插入内容-->
       <div class="WidgetButton">
         <button class="Btn BtnSave" type="button"></button>
         <button class="Btn BtnCancel" type="button"></button>
       </div>
     </form>
-    <div class='WidgetItem TypeTxt'>
-      <p class='WidgetItemTxtView'></p>
+    <div class='Item'>
+      <div class='WidgetUtil0'>
+      </div>
+      <!--插入内容-->
+      <div class='WidgetUtil1'>
+        <a class="BtnInsert">插入</a>
+      </div>
       <div class='WidgetUtil2'>
         <a class="BtnEdit"><span class="BtnIco BtnIcoEdit"></span>修改</a>
         <span class='WidgetUtilSeparator'>|</span>
         <a class="BtnDel"><span class="BtnIco BtnIcoDel"></span>删除</a>
       </div>
     </div>
+
+    <div class='WidgetContent TEXT'>
+      <textarea class="WidgetInputBox TEXT Required" name="contents" placeholder="输入文本"></textarea>
+    </div>
+
+    <div class='ItemContent TEXT'>
+      <p class='ItemView TEXT'></p>
+    </div>
+
+    <div class='WidgetContent TITLE'>
+      <input class="WidgetInputBox TITLE Required" name="contents" placeholder="输入标题">
+    </div>
+
+    <div class='ItemContent TITLE'>
+      <p class='ItemView TITLE'></p>
+    </div>
+
   </div>
 </div>

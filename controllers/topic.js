@@ -24,17 +24,26 @@ var create = function (req, res, next) {
 }
 
 var getId = function (req, res, next) {
-  Topic.newId(function (id) {
-    res.send({ id: id });
+  Topic.newId(function (topicId) {
+    res.send({ topicId: topicId });
   });
 }
 
 var getContents = function (req, res, next) {
-  console.log(req.originalUrl);
-  Topic.validateId(req.query.id, function (valid) {
+  var topicId = req.query.topicId;
+  Topic.validateId(topicId, function (valid) {
     if (valid) {
-      Topic.getContents(req.query.id, function (items) {
-        res.send({ itemsData: items });
+      Topic.getContents(topicId, function (items) {
+        var itemsData = [];
+        items.forEach(function (item) {
+          itemsData.push({
+            type: item.type,
+            itemId: item._id,
+            text: item.text,
+            title: item.title
+          });
+        });
+        res.send({ itemsData: itemsData });
       })
     } else {
       getId(req, res, next);
@@ -44,47 +53,70 @@ var getContents = function (req, res, next) {
 
 var createItem = function (req, res, next) {
   var topicId = req.body.topicId;
+  var prevItemType = req.body.prevItemType;
   var prevItemId = req.body.prevItemId;
   var type = req.body.type;
   var text = sanitize(req.body.text).trim();
   text = sanitize(text).xss();
-  Topic.newAndSave(
-    topicId,
-    prevItemId,
-    type,
-    text,
-    function (item) {
-      console.log('create item done.');
-      res.send({
-        _id: item._id,
-        type: item.type,
-        text: item.text
-      });
-    });
+  var title = sanitize(req.body.title).trim();
+  title = sanitize(title).xss();
+  var data = {
+    text: text,
+    title: title
+  }
+
+  Topic.createVoidItemIfNotExist(topicId, function (topic) {
+    Item.createItem(
+      topic,
+      prevItemType,
+      prevItemId,
+      type,
+      data,
+      function (item) {
+        Topic.increaseItemCountBy(topicId, 1);
+        console.log('create item done.');
+        res.send({
+          itemId: item._id,
+          type: item.type,
+          text: item.text,
+          title: item.title
+        });
+      })
+  })
 }
 
 var editItem = function (req, res, next) {
-  var itemId = req.body.itemId;
   var type = req.body.type;
+  var itemId = req.body.itemId;
   var text = sanitize(req.body.text).trim();
   text = sanitize(text).xss();
-  Item.editItem(itemId, type, text, function (item) {
+  var title = sanitize(req.body.title).trim();
+  title = sanitize(title).xss();
+  var data = {
+    text: text,
+    title: title
+  }
+  Item.editItem(type, itemId, data, function (item) {
     res.send({
-      _id: item._id,
+      itemId: item._id,
       type: item.type,
-      text: item.text
+      text: item.text,
+      title: item.title
     });
   });
 }
 
 var sort = function (req, res, next) {
   var topicId = req.body.topicId;
+  var type = req.body.type;
   var itemId = req.body.itemId;
+  var prevItemType = req.body.prevItemType;
   var prevItemId = req.body.prevItemId;
-  Topic.createVoidItemIfRequired(topicId, function (topic) {
-    Item.detachItem(itemId, function (item) {
+  Topic.createVoidItemIfNotExist(topicId, function (topic) {
+    Item.detachItem(type, itemId, function (item) {
+      prevItemType = prevItemType || 'VOID';
       prevItemId = prevItemId || topic.void_item_id;
-      Item.insertItem(item, prevItemId, function () {
+      Item.insertItem(item, prevItemType, prevItemId, function () {
         res.send(0);
       })
     })
@@ -92,11 +124,12 @@ var sort = function (req, res, next) {
 }
 
 var deleteItem = function (req, res, next) {
-  var topicId = req.body.topicId;
+  var type = req.body.type;
   var itemId = req.body.itemId;
-  Item.deleteItem(itemId, function () {
-    res.send(0);
+  Item.deleteItem(type, itemId, function (item) {
+    Topic.increaseItemCountBy(item.topic_id, -1);
   });
+  res.send(0);
 }
 
 exports.create = create;
