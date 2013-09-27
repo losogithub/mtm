@@ -12,7 +12,7 @@ var Item = require('../proxy').Item;
 
 var create = function (req, res, next) {
   res.render('topic/edit', {
-    title: 'mtm',
+    title: '创建总结-mtm',
     css: [
       '/stylesheets/edit.css',
       '/stylesheets/jquery-ui-1.10.3.custom.css'

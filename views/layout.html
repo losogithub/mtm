@@ -3,9 +3,9 @@
 <head>
   <title><%= title %></title>
   <link type='text/css' rel='stylesheet' href='/stylesheets/common.css'/>
-  <% css.forEach(function (c) { %>
-  <link type='text/css' rel='stylesheet' href='<%= c %>'/>
-  <% }) %>
+  <% for (i in locals.css) { %>
+  <link type='text/css' rel='stylesheet' href='<%= css[i] %>'/>
+  <% } %>
   <script type="text/javascript" src="http://libs.baidu.com/jquery/1.10.2/jquery.min.js"></script>
 </head>
 <body>
@@ -28,8 +28,8 @@
       </p>
     </div>
   </footer>
-  <% js.forEach(function (j) { %>
-  <script type="text/javascript" async="async" src="<%= j %>"></script>
-  <% }) %>
+  <% for (i in locals.js) { %>
+  <script type="text/javascript" async="async" src="<%= js[i] %>"></script>
+  <% } %>
 </body>
 </html>

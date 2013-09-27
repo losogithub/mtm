@@ -5,16 +5,13 @@
  * Time: 12:43 AM
  * To change this template use File | Settings | File Templates.
  */
+var site = require('./controllers/site');
 var topic = require('./controllers/topic');
 var sign = require('./controllers/sign');
 
 module.exports = function(app) {
     // home page
-    app.get('/', function(req, res){
-        console.log("log: index");
-        res.writeHead(200, {'Content-Type': 'text/html'});
-        res.end("index");
-    })
+    app.get('/', site.index);
 
     //console.log("router start");
 
