@@ -8,7 +8,7 @@
 var Topic = require('../proxy').Topic;
 
 var index = function (req, res, next) {
-  Topic.getHotMtms(function (topics) {
+  Topic.getHotTopics(function (topics) {
     var topicsData = [];
     topics.forEach(function (topic) {
       topicsData.push({

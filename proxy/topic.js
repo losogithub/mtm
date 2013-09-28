@@ -137,8 +137,8 @@ var increaseItemCountBy = function (topicId, increment) {
 /**
  * 获取人气总结
  */
-var getHotMtms = function (callback) {
-  console.log('getHotMtms');
+var getHotTopics = function (callback) {
+  console.log('getHotTopics');
 
   TopicModel.find({void_item_id: {$ne: null}})
     .sort('-_id')
@@ -158,4 +158,4 @@ exports.validateId = validateId;
 exports.getContents = getContents;//查
 exports.createVoidItemIfNotExist = createVoidItemIfNotExist;
 exports.increaseItemCountBy = increaseItemCountBy;
-exports.getHotMtms = getHotMtms;
+exports.getHotTopics = getHotTopics;
