@@ -140,15 +140,17 @@ var increaseItemCountBy = function (topicId, increment) {
 var getHotMtms = function (callback) {
   console.log('getHotMtms');
 
-  TopicModel.find({void_item_id: {$ne: null}}, function (err, topics) {
-    if (err) {
-      console.error('find topic failed:' + err);
-    } else {
-      console.log('find topic done');
-      console.log(topics.length);
-      callback(topics);
-    }
-  })
+  TopicModel.find({void_item_id: {$ne: null}})
+    .sort('-_id')
+    .exec(function (err, topics) {
+      if (err) {
+        console.error('find topic failed:' + err);
+      } else {
+        console.log('find topic done');
+        console.log(topics.length);
+        callback(topics);
+      }
+    });
 }
 
 exports.newId = newId;//增
