@@ -11,26 +11,26 @@ a:hover, a:active, a:focus{text-decoration: none;}
 .NegLinkWrapper a{text-decoration: none;}
 .NegLinkWrapper a:link,.NegLinkWrapper a:visited{text-decoration: none;}
 .NegLinkWrapper a:hover,.NegLinkWrapper a:active,.NegLinkWrapper a:focus{text-decoration: underline;}
-html{overflow-y: scroll}
-body{font: 12px/1.5 "微软雅黑",arial, sans-serif}
+html{overflow-y: scroll;}
+body{font: 12px/1.5 "微软雅黑",arial, sans-serif;}
 small{font-size: 100%}
 table{vertical-align: middle;border-spacing: 0;}
 :focus {outline: 0 none;}
 .A1{color: rgb(170, 170, 170)}
 .Hide{display: none}
-.Inner{position: relative;width: 960px;margin: 0px auto;height: 100%;}
+.Inner{position: relative;width: 960px;margin: 0px auto;min-height: 100%;height: 100%;}
 .Inner.Index{width: 1010px;}
 .Header{z-index: 501;height: 44px;width: 100%;border-top: 3px solid rgb(51, 51, 51);border-bottom: 1px solid rgb(231, 231, 231);}
 .Header.Index{height: 108px;}
-.Footer{width: 100%; border-top: 1px solid rgb(231, 231, 231);height: 63px;}
-.Footer .Inner{}
+.Footer{width: 100%; border-top: 1px solid rgb(231, 231, 231);}
+.Footer .Inner{padding: 25px 0;overflow: hidden;}
 .MiddleHelper {height: 100%;display: inline-block;vertical-align: middle;}
 .MiddleWrapper {display: inline-block;vertical-align: middle;margin-left: -3px;}
-.MtmLinkUl{display: inline-block;}
+.MtmLinkUl{float: left;line-height: 1;}
 .MtmLinkUl li{display: inline;}
 .MtmLinkUl a{color: rgb(51, 51, 51); font-size: 11px;}
 .FooterSeparator{display: inline-block;position: relative;top: 1px;width: 0px;height: 11px;overflow: hidden;margin: 0px 11px 0px 15px;border-left: 1px solid rgb(205, 205, 205);}
-.Copyright{float: right;color: rgb(51, 51, 51);font-family: Tahoma,Arial,sans-serif;font-size: 11px;height: 100%}
+.Copyright{float: right;color: rgb(51, 51, 51);font-family: Tahoma,Arial,sans-serif;font-size: 11px;line-height: 1;}
 .Copyright b{font-weight: normal}
 .ButtonToggle{line-height: 12px;font-size: 12px;vertical-align: middle;}
 .ButtonToggle{cursor: pointer;}
@@ -44,3 +44,24 @@ table{vertical-align: middle;border-spacing: 0;}
 .Btn{vertical-align: middle;cursor: pointer;background-image: url(/images/sprite_btn.png)}
 .BtnSave{width: 45px;height: 26px;background-position: 0 -60px;}
 .BtnCancel{width: 68px;height: 26px;background-position: 0 -30px}
+/*框架*/
+.ContentsWrapper {width: 960px;min-height: 81px;margin: 0px auto;overflow: hidden;background: url("/images/bg_ContentsWrapper.png") repeat-y scroll 660px 0px transparent;}
+.Main {float: left;width: 635px;min-height: 41px;padding-bottom: 40px;}
+.Pagination {line-height: 1.2;margin: 30px 0px 40px 0;font-family: Arial,Helvetica,sans-serif;font-size: 16px;text-align: center;}
+.Sub {position: relative;float: right;width: 300px;padding-bottom: 40px;}
+/*条目*/
+.WidgetItem:hover{background-color: #f8f8f8;}
+.WidgetUtil0{height: 15px}
+.WidgetUtil1{visibility: hidden;display: inline-block;}
+.WidgetUtil2{visibility: hidden;display: inline-block;position: absolute;right: 0}
+.ItemView{word-wrap: break-word;}
+.ItemView.TEXT{line-height: 1.429;color: rgb(102, 102, 102);font-size: 14px;}
+.ItemView.TITLE{line-height: 1.3;font-size: 20px;font-weight: bold;color: #000000;padding-bottom: 5px;border-bottom: 2px solid #EAECEE;}
+.BtnInsert{vertical-align: middle;color: rgb(124, 148, 170);line-height: 1}
+.BtnEdit{vertical-align: middle;color: rgb(124, 148, 170);line-height: 1}
+.BtnIco{vertical-align: middle;display: inline-block;background-image: url(/images/sprite_btn.png);}
+.BtnIcoEdit{background-position: -180px -170px;width: 11px;height: 14px;margin: 0 3px 0 0}
+.WidgetUtilSeparator{height: 11px;margin: 0px 5px;border-left: rgb(223, 228, 233) 1px solid;display: inline-block;width: 0px;overflow: hidden;vertical-align: -1px;}
+.BtnDel{vertical-align: middle;color: rgb(124, 148, 170);padding: 0 6px 0 0;line-height: 1}
+.BtnIco{vertical-align: middle;display: inline-block;background-image: url(/images/sprite_btn.png);}
+.BtnIcoDel{background-position: -200px -170px;width: 11px;height: 14px;margin: 0 3px 0 0}

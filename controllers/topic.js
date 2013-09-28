@@ -11,9 +11,30 @@ var Topic = require('../proxy').Topic;
 var Item = require('../proxy').Item;
 
 var index = function (req, res, next) {
-  res.render('topic/index', {
-
-  });
+  var topicId = req.params.topicId;
+  Topic.validateId(topicId, function (valid) {
+    if (valid) {
+      Topic.getContents(topicId, function (items) {
+        var itemsData = [];
+        items.forEach(function (item) {
+          itemsData.push({
+            type: item.type,
+            itemId: item._id,
+            text: item.text,
+            title: item.title
+          });
+        });
+        res.render('topic/index', {
+          css: [
+            '/stylesheets/topic.css'
+          ],
+          items: itemsData
+        });
+      })
+    } else {
+      res.end('您要查看的总结不存在');
+    }
+  })
 }
 
 var create = function (req, res, next) {
