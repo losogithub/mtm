@@ -10,9 +10,15 @@ var sanitize = require('validator').sanitize;
 var Topic = require('../proxy').Topic;
 var Item = require('../proxy').Item;
 
+var index = function (req, res, next) {
+  res.render('topic/index', {
+
+  });
+}
+
 var create = function (req, res, next) {
   res.render('topic/edit', {
-    title: 'mtm',
+    title: '创建总结-mtm',
     css: [
       '/stylesheets/edit.css',
       '/stylesheets/jquery-ui-1.10.3.custom.css'
@@ -132,6 +138,7 @@ var deleteItem = function (req, res, next) {
   res.send(0);
 }
 
+exports.index = index;
 exports.create = create;
 exports.getId = getId;
 exports.getContents = getContents;

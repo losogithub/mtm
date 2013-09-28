@@ -5,26 +5,24 @@
  * Time: 12:43 AM
  * To change this template use File | Settings | File Templates.
  */
+var site = require('./controllers/site');
 var topic = require('./controllers/topic');
 var sign = require('./controllers/sign');
 
-module.exports = function(app) {
-    // home page
-    app.get('/', function(req, res){
-        console.log("log: index");
-        res.writeHead(200, {'Content-Type': 'text/html'});
-        res.end("index");
-    })
+module.exports = function (app) {
+  // home page
+  app.get('/', site.index);
 
-    //console.log("router start");
+  //console.log("router start");
 
-    app.get('/topic/create', topic.create);
-    app.get('/topic/getid', topic.getId);
-    app.get('/topic/getcontents', topic.getContents);
-    app.post('/topic/createitem', topic.createItem);
-    app.put('/topic/edititem', topic.editItem);
-    app.put('/topic/sort', topic.sort);
-    app.delete('/topic/deleteitem', topic.deleteItem);
+  app.get('/topic/create', topic.create);
+  app.get('/topic/getid', topic.getId);
+  app.get('/topic/getcontents', topic.getContents);
+  app.get('/topic/:topicId', topic.index);
+  app.post('/topic/createitem', topic.createItem);
+  app.put('/topic/edititem', topic.editItem);
+  app.put('/topic/sort', topic.sort);
+  app.delete('/topic/deleteitem', topic.deleteItem);
 
 
 
@@ -34,11 +32,10 @@ module.exports = function(app) {
     app.post('/signup', sign.signup);
     app.post('/registerAccount', sign.signup);
     app.get('/login', sign.showLogin);
-    app.post('/login', sign.login);
     /*
     app.get('/signout', sign.signout);
 
-
+    app.post('/signin', sign.login);
     app.get('/active_account', sign.active_account);
 
     // password

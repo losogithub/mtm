@@ -1,5 +1,6 @@
 body, h1, h2, h3, h4, h5, h6, p, dl, dt, dd, ul, ol, li, th, td, div, blockquote, pre, form, fieldset, input, textarea {margin: 0px;padding: 0px}
 ol, ul{list-style: none}
+h1, h2, h3, h4, h5, h6 {font-size: 100%;font-weight: normal;}
 img, fieldset, table, th, td{border: 0px none}
 input, button, textarea{border: 0px none}
 input, textarea{font-size: 1em;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;}
@@ -7,6 +8,9 @@ textarea{font-family: arial,sans-serif;}
 a{cursor: pointer;color: rgb(36, 104, 206);text-decoration: underline;}
 a:link, a:visited{text-decoration: underline;}
 a:hover, a:active, a:focus{text-decoration: none;}
+.NegLinkWrapper a{text-decoration: none;}
+.NegLinkWrapper a:link,.NegLinkWrapper a:visited{text-decoration: none;}
+.NegLinkWrapper a:hover,.NegLinkWrapper a:active,.NegLinkWrapper a:focus{text-decoration: underline;}
 html{overflow-y: scroll}
 body{font: 12px/1.5 "微软雅黑",arial, sans-serif}
 small{font-size: 100%}
@@ -15,16 +19,18 @@ table{vertical-align: middle;border-spacing: 0;}
 .A1{color: rgb(170, 170, 170)}
 .Hide{display: none}
 .Inner{position: relative;width: 960px;margin: 0px auto;height: 100%;}
+.Inner.Index{width: 1010px;}
 .Header{z-index: 501;height: 44px;width: 100%;border-top: 3px solid rgb(51, 51, 51);border-bottom: 1px solid rgb(231, 231, 231);}
-.Footer{width: 100%; border-top: 1px solid rgb(231, 231, 231);padding: 25px 0px;}
-.MiddleHelper {width: 0;height: 100%;display: inline-block;vertical-align: middle;}
+.Header.Index{height: 108px;}
+.Footer{width: 100%; border-top: 1px solid rgb(231, 231, 231);height: 63px;}
+.Footer .Inner{}
+.MiddleHelper {height: 100%;display: inline-block;vertical-align: middle;}
 .MiddleWrapper {display: inline-block;vertical-align: middle;margin-left: -3px;}
-.MtmLinkUl{float: left; line-height: 1}
-.MtmLinkUl a{color: rgb(51, 51, 51); font-size: 11px;text-decoration: none}
-.MtmLinkUl a:link,.MtmLinkUl a:visited{text-decoration: none}
-.MtmLinkUl a:hover,.MtmLinkUl a:active{text-decoration: underline}
+.MtmLinkUl{display: inline-block;}
+.MtmLinkUl li{display: inline;}
+.MtmLinkUl a{color: rgb(51, 51, 51); font-size: 11px;}
 .FooterSeparator{display: inline-block;position: relative;top: 1px;width: 0px;height: 11px;overflow: hidden;margin: 0px 11px 0px 15px;border-left: 1px solid rgb(205, 205, 205);}
-.Copyright{float: right;line-height: 1;color: rgb(51, 51, 51);font-family: Tahoma,Arial,sans-serif;font-size: 11px;}
+.Copyright{float: right;color: rgb(51, 51, 51);font-family: Tahoma,Arial,sans-serif;font-size: 11px;height: 100%}
 .Copyright b{font-weight: normal}
 .ButtonToggle{line-height: 12px;font-size: 12px;vertical-align: middle;}
 .ButtonToggle{cursor: pointer;}
