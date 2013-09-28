@@ -11,14 +11,19 @@ var check = require('validator').check,
 var crypto = require('crypto');
 var config = require('../config');
 
+
 var User = require('../proxy').User;
 var mail = require('../services/mail');
 
 var showSignUp = function (req, res) {
     console.log("render singup page");
-    //res.writeHead(200, {'Content-Type': 'text/html'});
-    //res.end("hello");
-    res.render('sign/signup');
+    res.render('sign/signup', {
+        title: config.name,
+        metaHead: '',
+        css: '',
+        js : '' ,
+        layout: 'signLayout'
+    });
 };
 
 
@@ -99,7 +104,17 @@ var signup = function (req, res, next) {
                         // finally error render error info page.
                         if( eMsg || nMsg || pMsg){
                             console.log("%s", eMsg);
-                            res.render('sign/registerAccount', {emailMsg : eMsg, nameMsg : nMsg, passwordMsg : pMsg, name: name, email: email});
+                            res.render('sign/registerAccount', {
+                                title: config.name,
+                                metaHead: '',
+                                css: '',
+                                js : '' ,
+                                layout: 'signLayout',
+                                emailMsg : eMsg,
+                                nameMsg : nMsg,
+                                passwordMsg : pMsg,
+                                name: name,
+                                email: email});
                             return;
                         }
 
@@ -114,14 +129,29 @@ var signup = function (req, res, next) {
                             // 发送激活邮件
                             mail.sendActiveMail(email, md5(email + config.session_secret), name, email);
                             res.render('sign/success_signup', {
-                                emailAddress: email
+                                title: config.name,
+                                emailAddress: email,
+                                metaHead: '<meta http-equiv="pragma" content="no-cache" /><meta http-equiv="cache-control" content="no-cache" /><meta http-equiv="expires" content="-1" />',
+                                css: '',
+                                js: '',
+                                layout:'signLayout'
                             });
                         });
                     })
                 }
                 // not registered user, wrong email.
                 else {
-                    res.render('sign/registerAccount', {emailMsg : eMsg, nameMsg : nMsg, passwordMsg : pMsg, name: name, email: email});
+                    res.render('sign/registerAccount', {
+                        title: config.name,
+                        metaHead: '',
+                        css: '',
+                        js : '' ,
+                        layout: 'signLayout',
+                        emailMsg : eMsg,
+                        nameMsg : nMsg,
+                        passwordMsg : pMsg,
+                        name: name,
+                        email: email});
                     return;
                 }
             }
@@ -143,7 +173,17 @@ var signup = function (req, res, next) {
                         // finally either registerd email address, or wrong password
                         if( eMsg || pMsg){
                             console.log("%s", eMsg);
-                            res.render('sign/registerAccount', {emailMsg : eMsg, nameMsg : nMsg, passwordMsg : pMsg, name: name, email: email});
+                            res.render('sign/registerAccount', {
+                                title: config.name,
+                                metaHead: '',
+                                css: '',
+                                js : '' ,
+                                layout: 'signLayout',
+                                emailMsg : eMsg,
+                                nameMsg : nMsg,
+                                passwordMsg : pMsg,
+                                name: name,
+                                email: email});
                             return;
                         }
 
@@ -157,14 +197,29 @@ var signup = function (req, res, next) {
                             // 发送激活邮件
                             mail.sendActiveMail(email, md5(email + config.session_secret), name, email);
                             res.render('sign/success_signup', {
-                                emailAddress: email
+                                title: config.name,
+                                emailAddress: email,
+                                metaHead: '<meta http-equiv="pragma" content="no-cache" /><meta http-equiv="cache-control" content="no-cache" /><meta http-equiv="expires" content="-1" />',
+                                css: '',
+                                js: '',
+                                layout:'signLayout'
                             });
                         });
                     })
                 }
                 // correct user, wrong email.
                 else {
-                    res.render('sign/registerAccount', {emailMsg : eMsg, nameMsg : nMsg, passwordMsg : pMsg, name: name, email: email});
+                    res.render('sign/registerAccount', {
+                        title: config.name,
+                        metaHead: '',
+                        css: '',
+                        js : '' ,
+                        layout: 'signLayout',
+                        emailMsg : eMsg,
+                        nameMsg : nMsg,
+                        passwordMsg : pMsg,
+                        name: name,
+                        email: email});
                     return;
                 }
             }
@@ -181,13 +236,25 @@ var signup = function (req, res, next) {
             }
 
             // wrong name, maybe correct email address.
-            res.render('sign/registerAccount', {emailMsg : eMsg, nameMsg : nMsg, passwordMsg : pMsg, name: name, email: email});
+            res.render('sign/registerAccount', {
+                title: config.name,
+                metaHead: '',
+                css: '',
+                js : '' ,
+                layout: 'signLayout',
+                emailMsg : eMsg, nameMsg : nMsg, passwordMsg : pMsg, name: name, email: email});
             return;
 
         })
     }
     else {
-        res.render('sign/registerAccount', {emailMsg : eMsg, nameMsg : nMsg, passwordMsg : pMsg, name: name, email: email});
+        res.render('sign/registerAccount', {
+            title: config.name,
+            metaHead: '',
+            css: '',
+            js : '' ,
+            layout: 'signLayout',
+            emailMsg : eMsg, nameMsg : nMsg, passwordMsg : pMsg, name: name, email: email});
         return;
     }
 };
@@ -200,7 +267,14 @@ var signup = function (req, res, next) {
  */
 var showLogin = function (req, res) {
     //req.session._loginReferer = req.headers.referer;  //add this later todo: taozan 9.27
-    res.render('sign/login', {errMsg: '', email: '', password: ''});
+    res.render('sign/login', {
+        title: config.name,
+        metaHead: '',
+        css: '',
+        js: '',
+        errMsg: '', email: '', password: '',
+        layout: 'signLayout'
+    });
 };
 
 
@@ -212,9 +286,11 @@ var showLogin = function (req, res) {
 * @param {Function} next
 */
 var login = function (req, res, next) {
-    var loginname = sanitize(req.body.name).trim().toLowerCase();
-    var pass = sanitize(req.body.pass).trim();
+    var loginname = sanitize(req.body.email).trim().toLowerCase();
+    var pass = sanitize(req.body.password).trim();
 
+    console.log("name: %s, %d", loginname, loginname.length);
+    console.log("pass: %s", pass);
     var errMsg = '';
     if(!loginname ){
         if(!pass) errMsg = '<p class="MdMsgError01">Enter your email and password.</p>';
@@ -224,38 +300,109 @@ var login = function (req, res, next) {
     }
 
     if (errMsg){
-        return res.render('sign/login', { errMsg: errMsg, email: loginname, password: pass });
+        return res.render('sign/login', {
+            title: config.name,
+            metaHead: '',
+            css: '',
+            js: '',
+            errMsg: errMsg, email: loginname, password: pass,
+            layout: 'signLayout'
+        });
     }
 
-    User.getUserByLoginName(loginname, function (err, user) {
-        if (err) {
-            return next(err);
-        }
-        if (!user) {
-            return res.render('sign/signin', { error: '这个用户不存在。' });
-        }
-        pass = md5(pass);
-        if (pass !== user.pass) {
-            return res.render('sign/signin', { error: '密码错误。' });
-        }
-        if (!user.active) {
-            // 从新发送激活邮件
-            mail.sendActiveMail(user.email, md5(user.email + config.session_secret), user.name, user.email);
-            return res.render('sign/signin', { error: '此帐号还没有被激活，激活链接已发送到 ' + user.email + ' 邮箱，请查收。' });
-        }
-        // store session cookie
-        gen_session(user, res);
-        //check at some page just jump to home page
-        var refer = req.session._loginReferer || 'home';     // taozan 9.22.2013
-        for (var i = 0, len = notJump.length; i !== len; ++i) {
-            if (refer.indexOf(notJump[i]) >= 0) {
-                refer = 'home';
-                break;
+    // check loginname is a user id or an email address
+    var emailIDFlag = true;
+    if (loginname.indexOf('@') == -1) {
+        emailIDFlag = true;
+        User.getUserByLoginName(loginname, function(err, user){
+            if(err)
+            {return next(err);}
+            if(!user){
+                res.render('sign/login',{
+                    title: config.name,
+                    metaHead: '',
+                    css: '',
+                    js: '',
+                    errMsg: '<p class="MdMsgError01">The username address does not exist.</p>',
+                    email: loginname, password: pass,
+                    layout: 'signLayout'
+                });
+                return;
             }
-        }
-        res.redirect(refer);
-    });
+
+            checkOnlyPassword(pass, user, res);
+
+        })
+    } else
+    {
+        emailIDFlag = false;
+        User.getUserByMail(loginname, function(err, user){
+            if(err){
+                return next(err);
+            }
+            if (!user){
+                res.render('sign/login',{
+                    title: config.name,
+                    metaHead: '',
+                    css: '',
+                    js: '',
+                    errMsg: '<p class="MdMsgError01">The email address does not exist.</p>',
+                    email: user.loginName,
+                    password: pass,
+                    layout: 'signLayout'
+                });
+                return;
+            } // user if
+            checkOnlyPassword(pass, user, res);
+        })
+
+    }
 };
+
+
+//suppose the username id, or email address exists, now check the password:
+function checkOnlyPassword(pass, user, res){
+    //this code will duplicate. bad.
+    pass = md5(pass);
+    if (pass !== user.password){
+        res.render('sign/login',{
+            title: config.name,
+            metaHead: '',
+            css: '',
+            js: '',
+            errMsg: '<p class="MdMsgError01">wrong password.</p>',
+            email: user.loginName,
+            password: '',       // let password be empty
+            layout: 'signLayout'
+        });
+        return;
+    }
+    if (!user.active) {
+        // 从新发送激活邮件
+        mail.sendActiveMail(user.email, md5(user.email + config.session_secret), user.name, user.email);
+        return res.render('sign/login', {     //todo: render to another page.
+            title: config.name,
+            metaHead: '',
+            css: '',
+            js: '',
+            errMsg: '<p class="MdMsgError01">此帐号还没有被激活，激活链接已发送到 ' + user.email + ' 邮箱，请查收。</p>',
+            email: user.loginName,
+            password: '',       // let password be empty
+            layout: 'signLayout'
+            });
+    }
+    // store session cookie
+    gen_session(user, res);
+    //check at some page just jump to home page
+    var refer = req.session._loginReferer || 'home';     // taozan 9.22.2013
+    for (var i = 0, len = notJump.length; i !== len; ++i) {
+        if (refer.indexOf(notJump[i]) >= 0) {
+            refer = 'home';
+            break;
+        }
+    }
+    res.redirect(refer);
+}
 
 // private
 function gen_session(user, res) {
@@ -299,3 +446,4 @@ function randomString(size) {
 exports.showSignUp = showSignUp;
 exports.signup = signup;
 exports.showLogin = showLogin;
+exports.login = login;

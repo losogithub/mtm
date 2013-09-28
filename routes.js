@@ -25,22 +25,23 @@ module.exports = function (app) {
   app.delete('/topic/deleteitem', topic.deleteItem);
 
 
-  // sign up, login, logout
-  app.get('/signup', sign.showSignUp);
-  app.get('/registerAccount', sign.signup);
-  app.post('/signup', sign.signup);
-  app.post('/registerAccount', sign.signup);
-  app.get('/login', sign.showLogin);
-  /*
-   app.get('/signout', sign.signout);
 
-   app.post('/signin', sign.login);
-   app.get('/active_account', sign.active_account);
+    // sign up, login, logout
+    app.get('/signup', sign.showSignUp);
+    app.get('/registerAccount', sign.signup);
+    app.post('/signup', sign.signup);
+    app.post('/registerAccount', sign.signup);
+    app.get('/login', sign.showLogin);
+    /*
+    app.get('/signout', sign.signout);
 
-   // password
-   app.get('/search_pass', sign.showSearchPass);
-   app.post('/search_pass', sign.updateSearchPass);
-   app.get('/reset_pass', sign.reset_pass);
-   app.post('/reset_pass', sign.update_pass);
-   */
+    app.post('/signin', sign.login);
+    app.get('/active_account', sign.active_account);
+
+    // password
+    app.get('/search_pass', sign.showSearchPass);
+    app.post('/search_pass', sign.updateSearchPass);
+    app.get('/reset_pass', sign.reset_pass);
+    app.post('/reset_pass', sign.update_pass);
+*/
 }
