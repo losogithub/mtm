@@ -11,9 +11,9 @@ var ObjectId = mongoose.Schema.ObjectId;
 module.exports = mongoose.model('Topic', {
   title: String,
   author_id: ObjectId,
-  published: { type:Boolean, default: false },
+  published: { type: Boolean, default: false },
   item_count: { type: Number, default: 0 },
-  void_item_id: ObjectId ,//key是type，类型定义不能简写！！！
+  void_item_id: ObjectId,
   create_at: { type: Date, default: Date.now },
   update_at: { type: Date, default: Date.now }
 });

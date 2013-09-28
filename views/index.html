@@ -15,6 +15,16 @@
         <div class="Col02">
           <h2>人气总结</h2>
           <ul class="HotMtmList NegLinkWrapper">
+            <% for (i in hot) { %>
+            <li>
+              <a href="/topic/<%= hot[i].title %>"><img class="MiddleHelper MtmThumb" width="60" height="60" onerror="errorImage(this,'image60x60');" src="http://rr.img.naver.jp:80/mig?src=http%3A%2F%2Fimgcc.naver.jp%2Fkaze%2Fmission%2FUSER%2F20130922%2F14%2F1421764%2F3%2F255x255x2b832d75095ed32a7fe7dab9.jpg%2F120%2F120&twidth=60&theight=60&qlt=80&res_format=jpg&op=sc"></img></a>
+              <div class="MiddleWrapper">
+                <a class="MtmTtl" href="/topic/<%= hot[i].title %>"><%= hot[i].title %></a>
+                <a class="MtmAuthor" href="http://matome.naver.jp/mymatome/akashi2">akashi2</a>
+                <span class="PVCount"><b><%= hot[i].PVCount %></b>view</span>
+              </div>
+            </li>
+            <% } %>
             <li>
               <a href="http://matome.naver.jp/odai/2137983543704186501"><img class="MiddleHelper MtmThumb" width="60" height="60" onerror="errorImage(this,'image60x60');" src="http://rr.img.naver.jp:80/mig?src=http%3A%2F%2Fimgcc.naver.jp%2Fkaze%2Fmission%2FUSER%2F20130922%2F14%2F1421764%2F3%2F255x255x2b832d75095ed32a7fe7dab9.jpg%2F120%2F120&twidth=60&theight=60&qlt=80&res_format=jpg&op=sc"></img></a>
               <div class="MiddleWrapper">
