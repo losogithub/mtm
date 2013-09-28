@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title><%= title %></title>
+  <title><%= locals.title ? title : 'mtm' %></title>
   <link type='text/css' rel='stylesheet' href='/stylesheets/common.css'/>
   <% for (i in locals.css) { %>
   <link type='text/css' rel='stylesheet' href='<%= css[i] %>'/>
