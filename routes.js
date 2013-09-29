@@ -12,6 +12,7 @@ var sign = require('./controllers/sign');
 module.exports = function (app) {
   // home page
   app.get('/', site.index);
+  app.get('/home', site.index);
 
   //console.log("router start");
 
@@ -32,10 +33,11 @@ module.exports = function (app) {
     app.post('/signup', sign.signup);
     app.post('/registerAccount', sign.signup);
     app.get('/login', sign.showLogin);
-    /*
+    app.post('/login', sign.login);
     app.get('/signout', sign.signout);
 
-    app.post('/signin', sign.login);
+
+    /*
     app.get('/active_account', sign.active_account);
 
     // password

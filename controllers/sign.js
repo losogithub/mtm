@@ -122,7 +122,7 @@ var signup = function (req, res, next) {
                         // md5 the pass
                         pass = md5(pass);
 
-                        User.newAndSave(name, loginname, pass, email, false, function (err) {
+                        User.newAndSave(name, loginname, pass, email, true, function (err) { //gaitrue
                             if (err) {
                                 return next(err);
                             }
@@ -190,7 +190,7 @@ var signup = function (req, res, next) {
                         // success
                         // md5 the pass
                         pass = md5(pass);
-                        User.newAndSave(name, loginname, pass, email, false, function (err) {
+                        User.newAndSave(name, loginname, pass, email, true, function (err) { // gaitrue
                             if (err) {
                                 return next(err);
                             }
@@ -266,7 +266,9 @@ var signup = function (req, res, next) {
  * @param  {HttpResponse} res
  */
 var showLogin = function (req, res) {
-    //req.session._loginReferer = req.headers.referer;  //add this later todo: taozan 9.27
+    console.log(req.session);
+    //console.log(req.headers.referrer);
+    req.session._loginReferer = req.headers.referer ;  //add this later todo: taozan 9.27
     res.render('sign/login', {
         title: config.name,
         metaHead: '',
@@ -380,20 +382,21 @@ function checkOnlyPassword(pass, user, res){
     if (!user.active) {
         // 从新发送激活邮件
         mail.sendActiveMail(user.email, md5(user.email + config.session_secret), user.name, user.email);
-        return res.render('sign/login', {     //todo: render to another page.
+        return res.render('sign/activeAccount', {
             title: config.name,
             metaHead: '',
             css: '',
             js: '',
-            errMsg: '<p class="MdMsgError01">此帐号还没有被激活，激活链接已发送到 ' + user.email + ' 邮箱，请查收。</p>',
+            //errMsg: '<p class="MdMsgError01">此帐号还没有被激活，激活链接已发送到 ' + user.email + ' 邮箱，请查收。</p>',
             email: user.loginName,
-            password: '',       // let password be empty
+            //password: '',       // let password be empty
             layout: 'signLayout'
             });
     }
     // store session cookie
-    gen_session(user, res);
+    //gen_session(user, res);
     //check at some page just jump to home page
+    /*
     var refer = req.session._loginReferer || 'home';     // taozan 9.22.2013
     for (var i = 0, len = notJump.length; i !== len; ++i) {
         if (refer.indexOf(notJump[i]) >= 0) {
@@ -401,8 +404,28 @@ function checkOnlyPassword(pass, user, res){
             break;
         }
     }
+
     res.redirect(refer);
+    */
+    res.redirect('home');
 }
+
+
+
+
+
+// sign out
+// need test how this function is worked. especially clearCookie, destroy, redirect
+// taozan 9.22.2013
+var signout = function (req, res, next) {
+    req.session.destroy();
+    res.clearCookie(config.auth_cookie_name, { path: '/' });
+    res.redirect(req.headers.referer || 'home');
+};
+
+
+
+
 
 // private
 function gen_session(user, res) {
@@ -447,3 +470,4 @@ exports.showSignUp = showSignUp;
 exports.signup = signup;
 exports.showLogin = showLogin;
 exports.login = login;
+exports.signout = signout;
