@@ -12,29 +12,41 @@ var Item = require('../proxy').Item;
 
 var index = function (req, res, next) {
   var topicId = req.params.topicId;
-  Topic.validateId(topicId, function (valid) {
-    if (valid) {
-      Topic.getContents(topicId, function (topic, items) {
-        var topicData = {
-          title: topic.title
-        };
-        var itemsData = [];
-        items.forEach(function (item) {
-          itemsData.push({
-            type: item.type,
-            itemId: item._id,
-            text: item.text,
-            title: item.title
+
+  Topic.validateId(topicId, function (valid, topic) {
+    if (valid && topic.published) {
+
+      Topic.increasePVCountBy(topic, 1, function (topic) {
+
+        Topic.getContents(topicId, function (topic, items) {
+          var updateAt = topic.update_at.getFullYear() + '年'
+            + topic.update_at.getMonth() + '月'
+            + topic.update_at.getDate() + '日';
+          var topicData = {
+            title: topic.title,
+            desc: topic.desc,
+            updateAt: updateAt,
+            author: topic.author_id,
+            PVCount: topic.PV_count
+          };
+          var itemsData = [];
+          items.forEach(function (item) {
+            itemsData.push({
+              type: item.type,
+              itemId: item._id,
+              text: item.text,
+              title: item.title
+            });
           });
-        });
-        res.render('topic/index', {
-          css: [
-            '/stylesheets/topic.css'
-          ],
-          topic: topicData,
-          items: itemsData
-        });
-      })
+          res.render('topic/index', {
+            css: [
+              '/stylesheets/topic.css'
+            ],
+            topic: topicData,
+            items: itemsData
+          });
+        })
+      });
     } else {
       res.send('您要查看的总结不存在');
     }
@@ -66,7 +78,8 @@ var getContents = function (req, res, next) {
     if (valid) {
       Topic.getContents(topicId, function (topic, items) {
         var topicData = {
-          title: topic.title
+          title: topic.title,
+          desc: topic.desc
         };
         var itemsData = [];
         items.forEach(function (item) {
@@ -171,7 +184,8 @@ var deleteItem = function (req, res, next) {
 var publish = function (req, res, next) {
   var topicId = req.body.topicId;
   var title = req.body.title;
-  Topic.publish(topicId, title, function () {
+  var desc = req.body.desc;
+  Topic.publish(topicId, title, desc, function () {
     res.send(200);
   });
 }
