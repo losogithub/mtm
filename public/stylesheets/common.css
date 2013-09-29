@@ -42,7 +42,7 @@ table{vertical-align: middle;border-spacing: 0;}
 .ButtonToggleIco{height: 13px;width: 13px;}
 .ButtonToggleClose .ButtonToggleIco{background-position: -15px -170px;}
 .ButtonToggleOpen .ButtonToggleIco{background-position: 0 -170px;}
-.Btn{vertical-align: middle;cursor: pointer;background-image: url(/images/sprite_btn.png)}
+.Btn{display: inline-block;overflow: hidden;text-align: left;text-indent: -9999px;vertical-align: middle;cursor: pointer;background-image: url(/images/sprite_btn.png)}
 .BtnSave{width: 45px;height: 26px;background-position: 0 -60px;}
 .BtnCancel{width: 68px;height: 26px;background-position: 0 -30px}
 /*框架*/
@@ -52,17 +52,15 @@ table{vertical-align: middle;border-spacing: 0;}
 .Sub {position: relative;float: right;width: 300px;padding-bottom: 40px;}
 /*条目*/
 .WidgetItem:hover{background-color: #f8f8f8;}
-.WidgetUtil0{height: 15px}
-.WidgetUtil1{visibility: hidden;display: inline-block;}
-.WidgetUtil2{visibility: hidden;display: inline-block;position: absolute;right: 0}
+.ItemUtil0 {height: 15px}
+.ItemUtil1 {visibility: hidden;display: inline-block;}
+.ItemUtil2 {visibility: hidden;display: inline-block;position: absolute;right: 0}
 .ItemView{word-wrap: break-word;}
 .ItemView.TEXT{line-height: 1.429;color: rgb(102, 102, 102);font-size: 14px;}
 .ItemView.TITLE{line-height: 1.3;font-size: 20px;font-weight: bold;color: #000000;padding-bottom: 5px;border-bottom: 2px solid #EAECEE;}
 .BtnInsert{vertical-align: middle;color: rgb(124, 148, 170);line-height: 1}
 .BtnEdit{vertical-align: middle;color: rgb(124, 148, 170);line-height: 1}
-.BtnIco{vertical-align: middle;display: inline-block;background-image: url(/images/sprite_btn.png);}
-.BtnIcoEdit{background-position: -180px -170px;width: 11px;height: 14px;margin: 0 3px 0 0}
+.BtnIcoEdit{display: inline-block;background-position: -180px -170px;width: 11px;height: 14px;margin: 0 3px 0 0}
 .WidgetUtilSeparator{height: 11px;margin: 0px 5px;border-left: rgb(223, 228, 233) 1px solid;display: inline-block;width: 0px;overflow: hidden;vertical-align: -1px;}
 .BtnDel{vertical-align: middle;color: rgb(124, 148, 170);padding: 0 6px 0 0;line-height: 1}
-.BtnIco{vertical-align: middle;display: inline-block;background-image: url(/images/sprite_btn.png);}
-.BtnIcoDel{background-position: -200px -170px;width: 11px;height: 14px;margin: 0 3px 0 0}
+.BtnIcoDel{display: inline-block;background-position: -200px -170px;width: 11px;height: 14px;margin: 0 3px 0 0}

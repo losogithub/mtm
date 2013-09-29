@@ -13,6 +13,6 @@ module.exports = mongoose.model('VoidItem', {
   topic_id: ObjectId,
   prev_item: { type: { type: String }, id: ObjectId },
   next_item: { type: { type: String }, id: ObjectId },
-  create_at: { type: Date, default: Date.now },
-  update_at: { type: Date, default: Date.now }
+  create_at: { type: Date, default: new Date() },
+  update_at: { type: Date, default: new Date() }
 });

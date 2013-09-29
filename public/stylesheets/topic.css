@@ -9,6 +9,7 @@
 .HeadThumb{float: left;width: 95px;height: 95px;margin-right: 15px;}
 .HeadTxt{float: left;width: 615px;margin-top: -3px;}
 .HeadTtl{display: inline-block;font-size: 32px;line-height: 38px;margin-right: 15px;margin-bottom: 7px;}
+.HeadUtil{display: inline-block;}
 .HeadTtl a{color: rgb(0, 0, 0);}
 .HeadDesc{margin-right: 8px;color: rgb(102, 102, 102);}
 .HeadDate{color: rgb(170, 170, 170);font-family: Tahoma,Arial,Helvetica,sans-serif;}
@@ -20,3 +21,9 @@
 .HeadPVCount{display: inline-block;text-align: center;font-family: Tahoma,Arial,Helvetica,sans-serif;}
 .HeadPVCountNum{display: block;line-height: 1;margin-top: -3px;color: rgb(0, 0, 0);font-size: 22px;font-family: Arial,Helvetica,sans-serif;}
 .HeadPVCountLabel{display: block;margin-top: 3px;line-height: 1;color: rgb(102, 102, 102);font-size: 11px;}
+
+.Main{padding-bottom: 0;}
+.NoItem{position: relative;padding: 140px 0px 160px;text-align: center;}
+.NoItemIco{margin-bottom: 7px;}
+.NoItemTxt{color: rgb(102, 102, 102);margin-bottom: 11px;}
+.BtnAddItem{width: 118px;height: 31px;background-position: -460px -195px;}

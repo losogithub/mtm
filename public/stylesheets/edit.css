@@ -3,6 +3,7 @@
 .EditHeadFixed{position: fixed;top: 0;z-index: 1500;}
 .EditHeadTtl{color: #000000;font-size: 14px;font-weight: bold;}
 .EditHeadBtn{margin-right: 6px;float:right;height: 100%}
+.BtnHeadSave{width: 63px;height: 25px;background-position: 0px 0px;}
 .BtnSaveDraft{background-position: -65px 0;height: 25px;width: 88px;}
 .BtnPublish{background-position: -155px 0;height: 25px;width: 73px;}
 .BtnHeadCancel{background-position: -70px -30px;height: 25px;width: 73px;}
@@ -22,10 +23,10 @@
 .HeightAnimation{transition: height 0.2s ease 0s;}
 .WidgetButton{margin: 14px 0px 0px;letter-spacing:7px}
 .WidgetDragPlaceholder{width: 635px;background: url(/images/bg_WidgetDragPlaceholder.png) repeat 0 0}
-.WidgetItem:hover .WidgetUtil2{visibility: visible}
-.WidgetItem:hover .WidgetUtil1{visibility: visible}
-.ui-sortable-helper:hover .WidgetUtil1{visibility: hidden}
-.ui-sortable-helper:hover .WidgetUtil2{visibility: hidden}
+.WidgetItem:hover .ItemUtil1 {visibility: visible}
+.WidgetItem:hover .ItemUtil2 {visibility: visible}
+.ui-sortable-helper:hover .ItemUtil1 {visibility: hidden}
+.ui-sortable-helper:hover .ItemUtil2 {visibility: hidden}
 /*编辑标题、缩略图、简介*/
 .EditFormBox01 {letter-spacing: -3px;height: 41px;}
 .InputBoxTitle {display: inline-block;width: 779px;padding: 0px 10px;background-color: rgb(255, 254, 238);background-position: 5px 10px;border: 1px solid rgb(40, 185, 55);height: 40px;line-height: 38px;font-size: 23px;font-weight: bold;vertical-align: middle;}

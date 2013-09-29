@@ -16,6 +16,6 @@ module.exports = mongoose.model('Topic', {
   item_count: { type: Number, default: 0 },
   PV_count: { type: Number, default: 0 },
   void_item_id: ObjectId,
-  create_at: { type: Date, default: Date.now },
-  update_at: { type: Date, default: Date.now }
+  create_at: { type: Date, default: new Date() },
+  update_at: { type: Date, default: new Date() }
 });

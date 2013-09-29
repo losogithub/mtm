@@ -20,6 +20,7 @@ module.exports = function (app) {
   app.get('/topic/getid', topic.getId);
   app.get('/topic/getcontents', topic.getContents);
   app.get('/topic/:topicId', topic.index);
+  app.get('/topic/:topicId/edit', topic.edit);
   app.post('/topic/createitem', topic.createItem);
   app.put('/topic/edititem', topic.editItem);
   app.put('/topic/sort', topic.sort);

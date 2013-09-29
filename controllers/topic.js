@@ -20,7 +20,7 @@ var index = function (req, res, next) {
 
         Topic.getContents(topicId, function (topic, items) {
           var updateAt = topic.update_at.getFullYear() + '年'
-            + topic.update_at.getMonth() + '月'
+            + (topic.update_at.getMonth() + 1) + '月'
             + topic.update_at.getDate() + '日';
           var topicData = {
             title: topic.title,
@@ -38,14 +38,19 @@ var index = function (req, res, next) {
               title: item.title
             });
           });
+          res.set('Cache-Control', 'private, no-cache, no-store, must-revalidate, post-check=0, pre-check=0');
+          res.set('Connection', 'close');
+          res.set('Expire', '-1');
+          res.set('Pragma', 'no-cache');
           res.render('topic/index', {
             css: [
               '/stylesheets/topic.css'
             ],
+            url: req.url,
             topic: topicData,
             items: itemsData
           });
-        })
+        });
       });
     } else {
       res.send('您要查看的总结不存在');
@@ -54,6 +59,10 @@ var index = function (req, res, next) {
 }
 
 var create = function (req, res, next) {
+  res.set('Cache-Control', 'private, no-cache, no-store, must-revalidate, post-check=0, pre-check=0');
+  res.set('Connection', 'close');
+  res.set('Expire', '-1');
+  res.set('Pragma', 'no-cache');
   res.render('topic/edit', {
     title: '创建总结-mtm',
     css: [
@@ -66,6 +75,49 @@ var create = function (req, res, next) {
   });
 }
 
+var edit = function (req, res, next) {
+  var topicId = req.params.topicId;
+
+  Topic.validateId(topicId, function (valid, topic) {
+    if (valid && topic.published) {
+
+      Topic.getContents(topicId, function (topic, items) {
+        var topicData = {
+          title: topic.title,
+          desc: topic.desc
+        };
+        var itemsData = [];
+        items.forEach(function (item) {
+          itemsData.push({
+            type: item.type,
+            itemId: item._id,
+            text: item.text,
+            title: item.title
+          });
+        });
+        res.set('Cache-Control', 'private, no-cache, no-store, must-revalidate, post-check=0, pre-check=0');
+        res.set('Connection', 'close');
+        res.set('Expire', '-1');
+        res.set('Pragma', 'no-cache');
+        res.render('topic/edit', {
+          title: '修改总结-mtm',
+          css: [
+            '/stylesheets/edit.css',
+            '/stylesheets/jquery-ui-1.10.3.custom.css'
+          ],
+          js: [
+            '/javascripts/edit.js'
+          ],
+          topic: topicData,
+          items: itemsData
+        });
+      });
+    } else {
+      res.send('您要修改的总结不存在');
+    }
+  });
+}
+
 var getId = function (req, res, next) {
   Topic.newId(function (topicId) {
     res.send({ topicId: topicId });
@@ -74,8 +126,14 @@ var getId = function (req, res, next) {
 
 var getContents = function (req, res, next) {
   var topicId = req.query.topicId;
-  Topic.validateId(topicId, function (valid) {
-    if (valid) {
+  Topic.validateId(topicId, function (valid, topic) {
+    if (!valid) {
+      getId(req, res, next);
+    } else if (topic.published) {
+      res.send({
+        redirect: '/topic/' + topicId + '/edit'
+      });
+    } else {
       Topic.getContents(topicId, function (topic, items) {
         var topicData = {
           title: topic.title,
@@ -95,8 +153,6 @@ var getContents = function (req, res, next) {
           itemsData: itemsData
         });
       })
-    } else {
-      getId(req, res, next);
     }
   })
 }
@@ -192,6 +248,7 @@ var publish = function (req, res, next) {
 
 exports.index = index;
 exports.create = create;
+exports.edit = edit;
 exports.getId = getId;
 exports.getContents = getContents;
 exports.createItem = createItem;

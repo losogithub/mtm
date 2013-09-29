@@ -11,28 +11,8 @@
   var console = window.console || {log: $.noop, error: $.noop};
   //数据库中该总结id
   var topicId = 0;
-
-  /**
-   * 入口函数，必须要从服务器验证或获取topicId才能编辑总结
-   */
-  (function getTopicId() {
-    console.log('getTopicId');
-    //#后面有16进制数字就验证id并获取items，否则获取新id
-    if (location.hash
-      && !isNaN(parseInt(location.hash.substr(1), 16))) {
-      topicId = location.hash.substr(1);
-      $.getJSON('/topic/getcontents', {
-        topicId: topicId
-      }).done(function (data) {
-          _doIfGetIdDone(data);
-        });
-    } else {
-      $.getJSON('/topic/getid')
-        .done(function (data) {
-          _doIfGetIdDone(data);
-        });
-    }
-  })();
+  //
+  var mode = 'create';
 
   /**
    * main function
@@ -40,9 +20,20 @@
    */
   var _doIfGetIdDone = function (data) {
     console.log('doIfGetIdDone');
+
+    if (data.redirect) {
+      window.location.replace(data.redirect);
+      if (typeof window.history.pushState == "function") {
+        window.history.replaceState({}, document.title, window.location.href);
+      }
+    }
+
     if (data.topicId) {
       topicId = data.topicId;
-      location.hash = '#' + topicId;
+      window.location.replace(window.location.pathname + "#" + topicId);
+      if (typeof window.history.pushState == "function") {
+        window.history.replaceState({}, document.title, window.location.href);
+      }
     }
 
     $(function ($) {
@@ -55,6 +46,38 @@
       });
     });
   };
+
+  /**
+   * 入口函数，必须要从服务器验证或获取topicId才能编辑总结
+   */
+  (function getTopicId() {
+    console.log('getTopicId');
+
+    if (location.pathname == '/topic/create') {
+      console.log('/topic/create');
+      mode = 'create';
+
+      //#后面有16进制数字就验证id并获取items，否则获取新id
+      if (location.hash
+        && !isNaN(parseInt(location.hash.substr(1), 16))) {
+        topicId = location.hash.substr(1);
+        $.getJSON('/topic/getcontents', {
+          topicId: topicId
+        }).done(function (data) {
+            _doIfGetIdDone(data);
+          });
+      } else {
+        $.getJSON('/topic/getid')
+          .done(function (data) {
+            _doIfGetIdDone(data);
+          });
+      }
+    } else {
+      topicId = location.pathname.match(/^\/topic\/([0-9a-f]{24})\/edit$/)[1];
+      console.log('topicId=' + topicId);
+      _doIfGetIdDone({});
+    }
+  })();
 
   /**
    * 总结菜单栏固定窗口顶部、监听按钮点击事件
@@ -73,17 +96,29 @@
     $head.find('.BtnPublish').click(function () {
       $('.Top form').submit();
     });
+    $head.find('.BtnHeadSave').click(function () {
+      $('.Top form').submit();
+    });
   }
 
   /**
    * 监听可选项目点击事件
    */
   var __initOption = function () {
+    var $Button = $('.EditFormOption');
+
     //开关可选项目的动画
-    $('.EditFormOption').click(function () {
-      $(this).toggleClass('ButtonToggleClose ButtonToggleOpen')
-      $('.EditFormBox02').toggle('fast')
-    }).fadeIn('slow');
+    $Button.click(function () {
+      $(this).toggleClass('ButtonToggleClose ButtonToggleOpen');
+      $('.EditFormBox02').toggle('fast');
+    });
+
+    if (/showOption=true/.test(location.search)) {
+      $Button.toggleClass('ButtonToggleClose ButtonToggleOpen').show();
+      $('.EditFormBox02').toggle();
+    } else {
+      $Button.fadeIn('slow');
+    }
   }
 
   /**
@@ -517,7 +552,7 @@
           if (errorMap.title) {
             alert(errorMap.title);
           } else if (errorMap.description) {
-              alert(errorMap.description);
+            alert(errorMap.description);
           }
         },
         rules: {
@@ -560,7 +595,7 @@
     },
 
     /**
-     * 初始化item创建menu的点击响应
+     * 初始化条目创建菜单的点击响应
      * @private
      */
     __initMenu: function () {
@@ -578,10 +613,78 @@
      */
     __initItems: function () {
       var self = this;
+      this.widget().find('.WidgetItemList li').each(function (i, li) {
+        self.__initItemListener($(li), $(li).attr('mtm_type'));
+      });
       var prevItem;
       this.options.itemsData.forEach(function (itemData) {
         prevItem = self._insertDisplayItem(itemData, prevItem);
       });
+    },
+
+    __initItemListener: function ($li, type) {
+      var self = this;
+      //绑定插入点击响应
+      $li
+        .find('.BtnInsert')
+        .click(function () {
+          self._createEditWidget($li.attr('mtm_type'), {
+            from: 'DYNAMIC',
+            $prevItem: $li
+          });
+        })
+        .end()
+        //绑定删除点击响应
+        .find('.BtnDel')
+        .click(function () {
+          if (!confirm('条目删除后无法找回，您确定要删除吗？')) {
+            return;
+          }
+          $.ajax('/topic/deleteitem', {
+            type: 'DELETE',
+            data: {
+              topicId: topicId,
+              type: $li.attr('mtm_type'),
+              itemId: $li.attr('mtm_id')
+            }
+          });
+          $li.css('visibility', 'hidden');
+          $li.hide('fast', function () {
+            $li.remove();
+          });
+        })
+        .end();
+
+      switch (type) {
+        case 'TEXT':
+          //绑定修改点击响应
+          $li
+            .find('.BtnEdit')
+            .click(function () {
+              var text = $li.find('.ItemView.TEXT').html().replace(/<br>/g, '\n');
+              self._createEditWidget(type, {
+                from: 'EDIT',
+                text: text,
+                $item: $li
+              });
+            })
+            .end();
+          break;
+        case 'TITLE':
+          //绑定修改点击响应
+          $li
+            .find('.BtnEdit')
+            .click(function () {
+              var title = $li.find('.ItemView.TITLE').html();
+              self._createEditWidget(type, {
+                from: 'EDIT',
+                title: title,
+                $item: $li
+              });
+            })
+            .end();
+          break;
+      }
     },
 
     /**
@@ -751,7 +854,6 @@
         $item.removeAttr('style');
       }
 
-      console.log($item);
       //填充新内容，然后删除旧内容，顺序很重要！！！防止抖动
       $item.prepend($('.templates .Item').clone())
         .find('.Item').children().first()
@@ -760,92 +862,33 @@
         .children().first().next().remove().end().end()
         .end()
         .attr('mtm_type', type)
-        .attr('mtm_id', itemId)
-        //绑定插入点击响应
-        .find('.BtnInsert')
-        .click(function () {
-          self._createEditWidget(type, {
-            from: 'DYNAMIC',
-            $prevItem: $item
-          });
-        })
-        .end()
-        //绑定删除点击相应
-        .find('.BtnDel')
-        .click(function () {
-          if (!confirm('条目删除后无法找回，您确定要删除吗？')) {
-            return;
-          }
-          $.ajax('/topic/deleteitem', {
-            type: 'DELETE',
-            data: {
-              topicId: topicId,
-              type: $item.attr('mtm_type'),
-              itemId: $item.attr('mtm_id')
-            }
-          });
-          $item.css('visibility', 'hidden');
-          $item.hide('fast', function () {
-            $item.remove();
-          });
-        })
-        .end();
+        .attr('mtm_id', itemId);
 
       switch (type) {
         case 'TEXT':
-          this.__createTextItem($item, type, itemId, data);
+          //填充文本
+          var text = data.text;
+          $item
+            .find('.ItemView.TEXT')
+            .html(text.replace(/\n/g, '<br>'))
+            .end();
           break;
         case 'TITLE':
-          this.__createTitleItem($item, type, itemId, data);
+          //填充标题
+          var title = data.title;
+          $item
+            .find('.ItemView.TITLE')
+            .html(title)
+            .end();
           break;
       }
+
+      this.__initItemListener($item, type);
 
       //淡入
       $item
         .css('opacity', 0)
         .animate({ 'opacity': 1}, 'fast');
-    },
-
-    __createTextItem: function ($li, type, itemId, data) {
-      var self = this;
-      var text = data.text;
-      $li
-        //填充文本
-        .find('.ItemView.TEXT')
-        .html(text.replace(/\n/g, '<br>'))
-        .end()
-        //绑定修改点击响应
-        .find('.BtnEdit')
-        .click(function () {
-          var text = $li.find('.ItemView.TEXT').html().replace(/<br>/g, '\n');
-          self._createEditWidget(type, {
-            from: 'EDIT',
-            text: text,
-            $item: $li
-          });
-        })
-        .end();
-    },
-
-    __createTitleItem: function ($li, type, itemId, data) {
-      var self = this;
-      var title = data.title;
-      $li
-        //填充文本
-        .find('.ItemView.TITLE')
-        .html(title)
-        .end()
-        //绑定修改点击响应
-        .find('.BtnEdit')
-        .click(function () {
-          var title = $li.find('.ItemView.TITLE').html();
-          self._createEditWidget(type, {
-            from: 'EDIT',
-            title: title,
-            $item: $li
-          });
-        })
-        .end();
     }
 
   });

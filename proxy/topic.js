@@ -166,7 +166,7 @@ var increasePVCountBy = function (topic, increment, callback) {
 var getHotTopics = function (callback) {
   console.log('getHotTopics');
 
-  TopicModel.find({void_item_id: {$ne: null}, published: true})
+  TopicModel.find({published: true})
     .sort('-_id')
     .exec(function (err, topics) {
       if (err) {
@@ -192,6 +192,7 @@ var publish = function (topicId, title, desc, callback) {
 
       topic.title = title;
       topic.desc = desc;
+      topic.update_at = Date.now();
       topic.published = true;
       topic.save(function (err) {
         if (err) {
