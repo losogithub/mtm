@@ -14,7 +14,10 @@ var index = function (req, res, next) {
   var topicId = req.params.topicId;
   Topic.validateId(topicId, function (valid) {
     if (valid) {
-      Topic.getContents(topicId, function (items) {
+      Topic.getContents(topicId, function (topic, items) {
+        var topicData = {
+          title: topic.title
+        };
         var itemsData = [];
         items.forEach(function (item) {
           itemsData.push({
@@ -28,11 +31,12 @@ var index = function (req, res, next) {
           css: [
             '/stylesheets/topic.css'
           ],
+          topic: topicData,
           items: itemsData
         });
       })
     } else {
-      res.end('您要查看的总结不存在');
+      res.send('您要查看的总结不存在');
     }
   })
 }
@@ -60,7 +64,10 @@ var getContents = function (req, res, next) {
   var topicId = req.query.topicId;
   Topic.validateId(topicId, function (valid) {
     if (valid) {
-      Topic.getContents(topicId, function (items) {
+      Topic.getContents(topicId, function (topic, items) {
+        var topicData = {
+          title: topic.title
+        };
         var itemsData = [];
         items.forEach(function (item) {
           itemsData.push({
@@ -70,7 +77,10 @@ var getContents = function (req, res, next) {
             title: item.title
           });
         });
-        res.send({ itemsData: itemsData });
+        res.send({
+          topicData: topicData,
+          itemsData: itemsData
+        });
       })
     } else {
       getId(req, res, next);
@@ -143,11 +153,10 @@ var sort = function (req, res, next) {
     Item.detachItem(type, itemId, function (item) {
       prevItemType = prevItemType || 'VOID';
       prevItemId = prevItemId || topic.void_item_id;
-      Item.insertItem(item, prevItemType, prevItemId, function () {
-        res.send(0);
-      })
+      Item.insertItem(item, prevItemType, prevItemId);
     })
   })
+  res.send(200);
 }
 
 var deleteItem = function (req, res, next) {
@@ -156,7 +165,15 @@ var deleteItem = function (req, res, next) {
   Item.deleteItem(type, itemId, function (item) {
     Topic.increaseItemCountBy(item.topic_id, -1);
   });
-  res.send(0);
+  res.send(200);
+}
+
+var publish = function (req, res, next) {
+  var topicId = req.body.topicId;
+  var title = req.body.title;
+  Topic.publish(topicId, title, function () {
+    res.send(200);
+  });
 }
 
 exports.index = index;
@@ -167,3 +184,4 @@ exports.createItem = createItem;
 exports.editItem = editItem;
 exports.sort = sort;
 exports.deleteItem = deleteItem;
+exports.publish = publish;

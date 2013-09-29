@@ -101,7 +101,11 @@ var getContents = function (topicId, callback) {
     } else {
 
       //获取该总结的所有条目
-      Item.getItems(topic.void_item_id, topic.item_count, callback);
+      Item.getItems(topic.void_item_id, topic.item_count, function (items) {
+        if (callback) {
+          callback(topic, items);
+        }
+      });
     }
   })
 }
@@ -140,7 +144,7 @@ var increaseItemCountBy = function (topicId, increment) {
 var getHotTopics = function (callback) {
   console.log('getHotTopics');
 
-  TopicModel.find({void_item_id: {$ne: null}})
+  TopicModel.find({void_item_id: {$ne: null}, published: true})
     .sort('-_id')
     .exec(function (err, topics) {
       if (err) {
@@ -153,9 +157,35 @@ var getHotTopics = function (callback) {
     });
 }
 
+var publish = function (topicId, title, callback) {
+  console.log('publish');
+
+  TopicModel.findById(topicId, function (err, topic) {
+    if (err) {
+      console.error('find topic failed:' + err);
+    } else if (!topic) {
+      console.log('topic not found');
+    } else {
+      console.log('find topic done');
+
+      topic.title = title;
+      topic.published = true;
+      topic.save(function (err) {
+        if (err) {
+          console.error('save topic failed:' + err);
+        } else {
+
+          callback();
+        }
+      });
+    }
+  });
+}
+
 exports.newId = newId;//增
 exports.validateId = validateId;
 exports.getContents = getContents;//查
 exports.createVoidItemIfNotExist = createVoidItemIfNotExist;
 exports.increaseItemCountBy = increaseItemCountBy;
 exports.getHotTopics = getHotTopics;
+exports.publish = publish;

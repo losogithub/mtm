@@ -491,6 +491,7 @@
      * @private
      */
     __initTop: function () {
+      var self = this;
       var $form = this.widget().find('.Top form');
       $form.validate({
         debug: false,
@@ -533,13 +534,17 @@
     },
 
     commit: function () {
-      $.ajax('topic/publish', {
+      console.log('commit-topic/publish');
+      $.ajax('/topic/publish', {
         type: 'PUT',
         data: {
           topicId: topicId,
-          title: this.widget().find('.Top ')
+          title: this.widget().find('.Top .InputBoxTitle').val()
         }
       })
+        .done(function () {
+          window.location = '/topic/' + topicId;
+        });
     },
 
     /**
