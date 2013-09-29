@@ -71,6 +71,10 @@ var getUserByQuery = function (name, key, callback) {
     User.findOne({name: name, retrieve_key: key}, callback);
 };
 
+var getUserByEmail = function(email, key, callback){
+    User.findOne({email: email, retrieve_key: key}, callback);
+}
+
 var newAndSave = function (name, loginName, password, email, active, callback) {
     var user = new User();
     user.name = name;
@@ -87,4 +91,5 @@ exports.getUserByName = getUserByName;
 exports.getUserByMail = getUserByMail;
 exports.getUsersByQuery = getUsersByQuery;
 exports.getUserByQuery = getUserByQuery;
+exports.getUserByEmail = getUserByEmail;
 exports.newAndSave = newAndSave;

@@ -36,9 +36,12 @@ module.exports = function (app) {
     app.post('/registerAccount', sign.signup);
     app.get('/login', sign.showLogin);
     app.post('/login', sign.login);
-    app.get('/signout', sign.signout);
-
-
+    app.get('/signout', sign.signout);  //todo: not tested yet.
+    app.get('/forgetPassword', sign.showForgetPassword);
+    app.post('/forgetPassword', sign.forgetPassword);
+    app.get('/resetPassword', sign.showResetPassword);
+    app.post('/resetPassword', sign.resetPassword);
+    app.get('/activeAccount', sign.activeAccount);
     /*
     app.get('/active_account', sign.active_account);
 
