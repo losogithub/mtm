@@ -160,7 +160,9 @@ var insertItem = function (item, prevItemType, prevItemId, callback) {
                       console.log(item);
 
                       //将目标条目传给回调函数
-                      callback(item);
+                      if (callback) {
+                        callback(item);
+                      }
                     }
                   })
                 }
@@ -306,11 +308,15 @@ var getItems = function (voidItemId, itemCount, callback) {
       console.error('find void item failed:' + err);
     } else if (!void_item) {
       console.log('void item not found');
-      callback(items);
+      if (callback) {
+        callback(items);
+      }
     } else {
       console.log('void item found');
       _getItems(itemCount, void_item.next_item.type, void_item.next_item.id, items, function () {
-        callback(items);
+        if (callback) {
+          callback(items);
+        }
       });
     }
   });

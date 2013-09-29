@@ -12,8 +12,10 @@ var index = function (req, res, next) {
     var topicsData = [];
     topics.forEach(function (topic) {
       topicsData.push({
-        title: topic._id,
-        PVCount: topic.item_count
+        id: topic._id,
+        title: topic.title,
+        author: topic.author_id,
+        PVCount: topic.PV_count
       });
     });
     res.render('index', {

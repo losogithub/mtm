@@ -50,14 +50,14 @@ var validateId = function (topicId, callback) {
       console.error('validate topic id failed:' + err);
 
       //验证出错
-      callback(false);
+      callback(false, topic);
 
     } else {
       console.log('validate topic id done');
       console.log(topic);
 
       //验证结果传给回调函数
-      callback(topic ? true : false);
+      callback(topic ? true : false, topic);
     }
   });
 }
@@ -101,7 +101,11 @@ var getContents = function (topicId, callback) {
     } else {
 
       //获取该总结的所有条目
-      Item.getItems(topic.void_item_id, topic.item_count, callback);
+      Item.getItems(topic.void_item_id, topic.item_count, function (items) {
+        if (callback) {
+          callback(topic, items);
+        }
+      });
     }
   })
 }
@@ -123,7 +127,7 @@ var increaseItemCountBy = function (topicId, increment) {
 
       //修改条目数
       topic.item_count += increment;
-      topic.save(function () {
+      topic.save(function (err) {
         if (err) {
           console.error('increase item_count failed:' + err);
         } else {
@@ -135,12 +139,34 @@ var increaseItemCountBy = function (topicId, increment) {
 }
 
 /**
+ * 修改访问量
+ * @param topicId
+ * @param increment
+ */
+var increasePVCountBy = function (topic, increment, callback) {
+  console.log('increasePVCountBy');
+
+  //修改条目数
+  topic.PV_count += increment;
+  topic.save(function (err, topic) {
+    if (err) {
+      console.error('increase PV_count failed:' + err);
+    } else {
+      console.log('increase PV_count done');
+      if (callback) {
+        callback(topic);
+      }
+    }
+  });
+}
+
+/**
  * 获取人气总结
  */
 var getHotTopics = function (callback) {
   console.log('getHotTopics');
 
-  TopicModel.find({void_item_id: {$ne: null}})
+  TopicModel.find({void_item_id: {$ne: null}, published: true})
     .sort('-_id')
     .exec(function (err, topics) {
       if (err) {
@@ -153,9 +179,37 @@ var getHotTopics = function (callback) {
     });
 }
 
+var publish = function (topicId, title, desc, callback) {
+  console.log('publish');
+
+  TopicModel.findById(topicId, function (err, topic) {
+    if (err) {
+      console.error('find topic failed:' + err);
+    } else if (!topic) {
+      console.log('topic not found');
+    } else {
+      console.log('find topic done');
+
+      topic.title = title;
+      topic.desc = desc;
+      topic.published = true;
+      topic.save(function (err) {
+        if (err) {
+          console.error('save topic failed:' + err);
+        } else {
+
+          callback();
+        }
+      });
+    }
+  });
+}
+
 exports.newId = newId;//增
 exports.validateId = validateId;
 exports.getContents = getContents;//查
 exports.createVoidItemIfNotExist = createVoidItemIfNotExist;
 exports.increaseItemCountBy = increaseItemCountBy;
+exports.increasePVCountBy = increasePVCountBy;
 exports.getHotTopics = getHotTopics;
+exports.publish = publish;

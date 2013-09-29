@@ -50,6 +50,7 @@
       __initOption();
       __initSort();
       $(document).editPage({
+        topicData: data.topicData,
         itemsData: data.itemsData
       });
     });
@@ -471,6 +472,8 @@
     callWidgetMethod: $.noop,
 
     options: {
+      //初始化时需要的总结信息
+      topicData: {},
       //初始化时需要的item数据
       itemsData: []
     },
@@ -491,7 +494,16 @@
      * @private
      */
     __initTop: function () {
+      var self = this;
       var $form = this.widget().find('.Top form');
+
+      var title = this.options.topicData.title;
+      var desc = this.options.topicData.desc;
+      if (title) {
+        $form.find('.InputBoxTitle').val(title);
+        $form.find('.InputBoxDesc').val(desc);
+      }
+
       $form.validate({
         debug: false,
         ignore: "",
@@ -533,13 +545,18 @@
     },
 
     commit: function () {
-      $.ajax('topic/publish', {
+      console.log('commit-topic/publish');
+      $.ajax('/topic/publish', {
         type: 'PUT',
         data: {
           topicId: topicId,
-          title: this.widget().find('.Top ')
+          title: this.widget().find('.Top .InputBoxTitle').val(),
+          desc: this.widget().find('.Top .InputBoxDesc').val()
         }
       })
+        .done(function () {
+          window.location = '/topic/' + topicId;
+        });
     },
 
     /**

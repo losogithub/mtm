@@ -22,6 +22,7 @@ table{vertical-align: middle;border-spacing: 0;}
 .Inner.Index{width: 1010px;}
 .Header{z-index: 501;height: 44px;width: 100%;border-top: 3px solid rgb(51, 51, 51);border-bottom: 1px solid rgb(231, 231, 231);}
 .Header.Index{height: 108px;}
+.Contents {padding-bottom: 20px;}
 .Footer{width: 100%; border-top: 1px solid rgb(231, 231, 231);}
 .Footer .Inner{padding: 25px 0;overflow: hidden;}
 .MiddleHelper {height: 100%;display: inline-block;vertical-align: middle;}
