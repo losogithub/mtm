@@ -122,7 +122,7 @@ var signup = function (req, res, next) {
                         // md5 the pass
                         pass = md5(pass);
 
-                        User.newAndSave(name, loginname, pass, email, true, function (err) { //gaitrue
+                        User.newAndSave(name, loginname, pass, email, false, function (err) {
                             if (err) {
                                 return next(err);
                             }
@@ -190,7 +190,7 @@ var signup = function (req, res, next) {
                         // success
                         // md5 the pass
                         pass = md5(pass);
-                        User.newAndSave(name, loginname, pass, email, true, function (err) { // gaitrue
+                        User.newAndSave(name, loginname, pass, email, false, function (err) {
                             if (err) {
                                 return next(err);
                             }
@@ -267,8 +267,8 @@ var signup = function (req, res, next) {
  */
 var showLogin = function (req, res) {
     console.log(req.session);
-    //console.log(req.headers.referrer);
-    req.session._loginReferer = req.headers.referer ;  //add this later todo: taozan 9.27
+    req.session._loginReferer = req.headers.referer ;
+    console.log(req.headers.referrer);
     res.render('sign/login', {
         title: config.name,
         metaHead: '',
@@ -332,7 +332,7 @@ var login = function (req, res, next) {
                 return;
             }
 
-            checkOnlyPassword(pass, user, res);
+            checkOnlyPassword(pass, user, req, res);
 
         })
     } else
@@ -355,16 +355,28 @@ var login = function (req, res, next) {
                 });
                 return;
             } // user if
-            checkOnlyPassword(pass, user, res);
+            checkOnlyPassword(pass, user, req, res);
         })
 
     }
 };
 
 
+
+/**
+ * define some page when login just jump to the home page
+ * @type {Array}
+ */
+var notJump = [
+    '/active_account', //active page
+    '/reset_pass',     //reset password page, avoid to reset twice
+    '/signup',         //regist page
+    '/search_pass'    //serch pass page
+];
+
 //suppose the username id, or email address exists, now check the password:
-function checkOnlyPassword(pass, user, res){
-    //this code will duplicate. bad.
+function checkOnlyPassword(pass, user, req, res){
+    console.log("function: checkonly password");
     pass = md5(pass);
     if (pass !== user.password){
         res.render('sign/login',{
@@ -394,9 +406,9 @@ function checkOnlyPassword(pass, user, res){
             });
     }
     // store session cookie
-    //gen_session(user, res);
+    gen_session(user, res);
     //check at some page just jump to home page
-    /*
+    console.log(req.session._loginReferer);
     var refer = req.session._loginReferer || 'home';     // taozan 9.22.2013
     for (var i = 0, len = notJump.length; i !== len; ++i) {
         if (refer.indexOf(notJump[i]) >= 0) {
@@ -406,8 +418,6 @@ function checkOnlyPassword(pass, user, res){
     }
 
     res.redirect(refer);
-    */
-    res.redirect('home');
 }
 
 
@@ -424,8 +434,243 @@ var signout = function (req, res, next) {
 };
 
 
+var showForgetPassword = function (req, res) {
+    res.render('sign/forgetPassword', {
+        title: config.name,
+        metaHead: '',
+        css: '',
+        js: '',
+        errMsg : '',
+        layout: 'signLayout'
+    });
+};
 
 
+var forgetPassword = function(req, res, next){
+    var email = sanitize(req.body.email).trim().toLowerCase();
+    console.log(email);
+    email = sanitize(email).xss();
+
+    //1. check email format
+    var errMsg = '';
+    if(email === ''){errMsg = 'Enter your email address.'; }
+    else {
+        try {
+            check(email, '不正确的电子邮箱。').isEmail();
+        } catch (e) {
+            errMsg = e.message;
+        }
+    }
+
+    if (errMsg){
+        res.render('sign/forgetPassword', {
+            title: config.name,
+            metaHead: '',
+            css: '',
+            js: '',
+            errMsg : errMsg,
+            layout: 'signLayout'
+        });
+    }
+
+    //2. maybe need to check the existence of the email.
+    User.getUserByMail(email, function(err, user){
+        if(err){
+            return next(err);
+        }
+        //console.log(user);
+        if(!user){
+            res.render('sign/forgetPassword', {
+                title: config.name,
+                metaHead: '',
+                css: '',
+                js: '',
+                errMsg : 'the email address does not exist.',
+                layout: 'signLayout'
+            });
+        }
+        else
+        {
+            // 动态生成retrive_key和timestamp到users collection,之后重置密码进行验证
+            var retrieveKey =    randomString(15);
+            user.retrieve_key =   retrieveKey;
+            user.retrieve_time = new Date().getTime();
+            user.save(function (err) {
+                if (err) {
+                    return next(err);
+                }
+                console.log(user);
+                // 发送重置密码邮件
+                // But if the user hasn't been activated ? how to do ?
+                mail.sendResetPassMail(email, retrieveKey, user.email);
+                res.render('sign/forgetPassSuccessSend', {
+                    title: config.name,
+                    metaHead: '',
+                    css: '',
+                    js: '',
+                    layout: 'signLayout'
+                })
+            });
+        }
+    });
+};
+
+var showResetPassword = function(req, res, next){
+    var key = req.query.key;
+    var email = req.query.email;
+    User.getUserByEmail(email, key, function (err, user) {
+        if (!user) {
+            return res.render('sign/errLink',
+                {
+                    title: config.name,
+                    metaHead: '',
+                    css: '',
+                    js: '',
+                    layout: 'signLayout'
+                });
+        }
+        var now = new Date().getTime();
+        var oneDay = 1000 * 60 * 60 * 24;
+        if (!user.retrieve_time || now - user.retrieve_time > oneDay) {
+            return res.render('sign/errLink',
+                {
+                    title: config.name,
+                    metaHead: '',
+                    css: '',
+                    js: '',
+                    layout: 'signLayout'
+                });
+        }
+        //finally correct
+        return res.render('sign/resetPassword', {
+            title: config.name,
+            metaHead: '',
+            css: '',
+            js: '',
+            layout: 'signLayout',
+            key: key,
+            email: email,
+            errMsg: ''
+        });
+    });
+}
+
+var resetPassword = function(req, res, next){
+    var psw = req.body.newPassword || '';
+    var repsw = req.body.newPasswordConfirm || '';
+    var key = req.body.key || '';
+    var email = req.body.email || '';
+
+    console.log("pass: %s", psw);
+    console.log("repass: %s", repsw);
+    if (psw !== repsw ) { // already include empty situation. !! no !!!
+        return res.render('sign/resetPassword', {
+            title: config.name,
+            metaHead: '',
+            css: '',
+            js: '',
+            layout: 'signLayout',
+            key: key,
+            email: email,
+            errMsg: '两次密码输入不一致'
+        });
+    }
+    if (psw === '' && repsw === '' ){
+        return res.render('sign/resetPassword', {
+            title: config.name,
+            metaHead: '',
+            css: '',
+            js: '',
+            layout: 'signLayout',
+            key: key,
+            email: email,
+            errMsg: '密码不能为空'
+        });
+    }
+    if(psw.length < 4) {
+        return res.render('sign/resetPassword', {
+            title: config.name,
+            metaHead: '',
+            css: '',
+            js: '',
+            layout: 'signLayout',
+            key: key,
+            email: email,
+            errMsg: '密码不能少于4位'
+        });
+    }
+
+    //todo: for password check, maybe lift to a single function for complext password checking.
+    // such as cannot only be alphabeta, cannot only be number.
+
+
+    User.getUserByEmail(email, key, function (err, user) {
+        if (err) {
+            return next(err);
+        }
+        if (!user) {
+            return res.render('sign/errLink',
+                {
+                    title: config.name,
+                    metaHead: '',
+                    css: '',
+                    js: '',
+                    layout: 'signLayout'
+                });
+        }
+        user.pass = md5(psw);
+        user.retrieve_key = null;
+        user.retrieve_time = null;
+        user.active = true; // 用户激活   //But if previously is false. now active. right ! correct.
+        user.save(function (err) {
+            if (err) {
+                return next(err);
+            }
+            return res.render('sign/resetPasswordSuccess', {
+                title: config.name,
+                metaHead: '',
+                css: '',
+                js: '',
+                layout: 'signLayout'
+            });
+        });
+    });
+}
+
+
+var activeAccount = function (req, res, next) {
+    var key = req.query.key;
+    var email = req.query.email;
+
+    User.getUserByMail(email, function (err, user) {
+        if (err) {
+            return next(err);
+        }
+        if (!user || md5(user.email + config.session_secret) !== key || user.active) {
+            return res.render('sign/resetPasswordSuccess', {
+                title: config.name,
+                metaHead: '',
+                css: '',
+                js: '',
+                layout: 'signLayout'
+            });
+        }
+
+        user.active = true;
+        user.save(function (err) {
+            if (err) {
+                return next(err);
+            }
+            res.render('sign/activeAccountSuccess', {
+                title: config.name,
+                metaHead: '',
+                css: '',
+                js: '',
+                layout: 'signLayout'
+            })
+        });
+    });
+};
 
 // private
 function gen_session(user, res) {
@@ -471,3 +716,8 @@ exports.signup = signup;
 exports.showLogin = showLogin;
 exports.login = login;
 exports.signout = signout;
+exports.showForgetPassword = showForgetPassword;
+exports.forgetPassword = forgetPassword;
+exports.showResetPassword = showResetPassword;
+exports.resetPassword = resetPassword;
+exports.activeAccount = activeAccount;

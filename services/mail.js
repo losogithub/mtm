@@ -44,13 +44,13 @@ var sendMail = function (data) {
  * @param {String} name 接收人的用户名
  * @param {String} email 接受人的邮件地址
  */
-exports.sendActiveMail = function (who, token, name) {
+exports.sendActiveMail = function (who, token, name, email) {
     var from = config.mail_opts.auth.user;
     var to = who;
     var subject = config.name + 'mtm 帐号激活';
     var html = '<p>您好：<p/>' +
         '<p>我们收到您在' + config.name + '的注册信息，请点击下面的链接来激活帐户：</p>' +
-        '<a href="' + SITE_ROOT_URL + '/active_account?key=' + token + '&name=' + name + '">激活链接</a>' +
+        '<a href="' + SITE_ROOT_URL + '/activeAccount?key=' + token + '&email=' + email + '">激活链接</a>' +
         '<p>若您没有在' + config.name + '填写过注册信息，说明有人滥用了您的电子邮箱，请删除此邮件，我们对给您造成的打扰感到抱歉。</p>' +
         '<p>' + config.name + ' 谨上。</p>';
 
@@ -74,7 +74,7 @@ exports.sendResetPassMail = function (who, token, name) {
     var subject = config.name + '社区密码重置';
     var html = '<p>您好：<p/>' +
         '<p>我们收到您在' + config.name + '重置密码的请求，请在24小时内单击下面的链接来重置密码：</p>' +
-        '<a href="' + SITE_ROOT_URL + '/reset_pass?key=' + token + '&name=' + name + '">重置密码链接</a>' +
+        '<a href="' + SITE_ROOT_URL + '/resetPassword?key=' + token + '&email=' + name + '">重置密码链接</a>' +
         '<p>若您没有在' + config.name + '填写过注册信息，说明有人滥用了您的电子邮箱，请删除此邮件，我们对给您造成的打扰感到抱歉。</p>' +
         '<p>' + config.name + ' 谨上。</p>';
 
