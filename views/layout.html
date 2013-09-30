@@ -6,7 +6,10 @@
   <% for (i in locals.css) { %>
   <link type='text/css' rel='stylesheet' href='<%= css[i] %>'/>
   <% } %>
-  <script type="text/javascript" src="http://libs.baidu.com/jquery/1.10.2/jquery.min.js"></script>
+  <script type="text/javascript" src="http://libs.baidu.com/jquery/1.10.2/jquery.min.js" defer="defer"></script>
+  <% for (i in locals.js) { %>
+  <script type="text/javascript" src="<%= js[i] %>" defer="defer"></script>
+  <% } %>
 </head>
 <body>
   <% if (locals.index) { %>
@@ -55,8 +58,5 @@
       </div>
     </div>
   </footer>
-  <% for (i in locals.js) { %>
-  <script type="text/javascript" async="async" src="<%= js[i] %>"></script>
-  <% } %>
 </body>
 </html>

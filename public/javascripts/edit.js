@@ -15,71 +15,6 @@
   var mode = 'create';
 
   /**
-   * main function
-   * @param data
-   */
-  var _doIfGetIdDone = function (data) {
-    console.log('doIfGetIdDone');
-
-    if (data.redirect) {
-      window.location.replace(data.redirect);
-      if (typeof window.history.pushState == "function") {
-        window.history.replaceState({}, document.title, window.location.href);
-      }
-    }
-
-    if (data.topicId) {
-      topicId = data.topicId;
-      window.location.replace(window.location.pathname + "#" + topicId);
-      if (typeof window.history.pushState == "function") {
-        window.history.replaceState({}, document.title, window.location.href);
-      }
-    }
-
-    $(function ($) {
-      __initHead();
-      __initOption();
-      __initSort();
-      $(document).editPage({
-        topicData: data.topicData,
-        itemsData: data.itemsData
-      });
-    });
-  };
-
-  /**
-   * 入口函数，必须要从服务器验证或获取topicId才能编辑总结
-   */
-  (function getTopicId() {
-    console.log('getTopicId');
-
-    if (location.pathname == '/topic/create') {
-      console.log('/topic/create');
-      mode = 'create';
-
-      //#后面有16进制数字就验证id并获取items，否则获取新id
-      if (location.hash
-        && !isNaN(parseInt(location.hash.substr(1), 16))) {
-        topicId = location.hash.substr(1);
-        $.getJSON('/topic/getcontents', {
-          topicId: topicId
-        }).done(function (data) {
-            _doIfGetIdDone(data);
-          });
-      } else {
-        $.getJSON('/topic/getid')
-          .done(function (data) {
-            _doIfGetIdDone(data);
-          });
-      }
-    } else {
-      topicId = location.pathname.match(/^\/topic\/([0-9a-f]{24})\/edit$/)[1];
-      console.log('topicId=' + topicId);
-      _doIfGetIdDone({});
-    }
-  })();
-
-  /**
    * 总结菜单栏固定窗口顶部、监听按钮点击事件
    * @private
    */
@@ -178,7 +113,7 @@
           });
         }
       });
-  }
+  };
 
   /*
    * 定义微件：编辑widget的base对象
@@ -308,7 +243,41 @@
   });
 
   /*
-   * 定义微件：TEXT编辑widget
+   * 定义微件：图片编辑微件
+   */
+  $.widget('mtm.imageWidget', $.mtm.editWidget, {
+
+    type: 'IMAGE',
+
+    options: {
+      url: ''
+    },
+
+    /**
+     * 子类的构造函数
+     * @private
+     */
+    __create: function () {
+      var self = this;
+
+      //textarea自适应高度、填充文本、监听文本改变事件
+      this.widget()
+        .find('.WidgetInputBox')
+        .on('input blur mousedown mouseup keydown keypress keyup', function () {
+          if (this.value == self.options.url) {
+            self._trigger('setState', null, 'create');
+          } else {
+            self._trigger('setState', null, 'edit');
+          }
+        })
+        .focus()
+        .end();
+    }
+
+  })
+
+  /*
+   * 定义微件：文本编辑微件
    */
   $.widget('mtm.textWidget', $.mtm.editWidget, {
 
@@ -933,6 +902,71 @@
     }
 
   });
+
+  /**
+   * main function
+   * @param data
+   */
+  var _doIfGetIdDone = function (data) {
+    console.log('doIfGetIdDone');
+
+    if (data.redirect) {
+      window.location.replace(data.redirect);
+      if (typeof window.history.pushState == "function") {
+        window.history.replaceState({}, document.title, window.location.href);
+      }
+    }
+
+    if (data.topicId) {
+      topicId = data.topicId;
+      window.location.replace(window.location.pathname + "#" + topicId);
+      if (typeof window.history.pushState == "function") {
+        window.history.replaceState({}, document.title, window.location.href);
+      }
+    }
+
+    $(function ($) {
+      __initHead();
+      __initOption();
+      __initSort();
+      $(document).editPage({
+        topicData: data.topicData,
+        itemsData: data.itemsData
+      });
+    });
+  };
+
+  /**
+   * 入口函数，必须要从服务器验证或获取topicId才能编辑总结
+   */
+  (function getTopicId() {
+    console.log('getTopicId');
+
+    if (location.pathname == '/topic/create') {
+      console.log('/topic/create');
+      mode = 'create';
+
+      //#后面有16进制数字就验证id并获取items，否则获取新id
+      if (location.hash
+        && !isNaN(parseInt(location.hash.substr(1), 16))) {
+        topicId = location.hash.substr(1);
+        $.getJSON('/topic/getcontents', {
+          topicId: topicId
+        }).done(function (data) {
+            _doIfGetIdDone(data);
+          });
+      } else {
+        $.getJSON('/topic/getid')
+          .done(function (data) {
+            _doIfGetIdDone(data);
+          });
+      }
+    } else {
+      topicId = location.pathname.match(/^\/topic\/([0-9a-f]{24})\/edit$/)[1];
+      console.log('topicId=' + topicId);
+      _doIfGetIdDone({});
+    }
+  })();
 
   /**
    * 移动光标到末尾

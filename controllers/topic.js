@@ -70,6 +70,9 @@ var create = function (req, res, next) {
       '/stylesheets/jquery-ui-1.10.3.custom.css'
     ],
     js: [
+      '/javascripts/jquery.autosize.min.js',
+      '/javascripts/jquery-ui-1.10.3.custom.min.js',
+      'http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js',
       '/javascripts/edit.js'
     ]
   });
@@ -106,6 +109,9 @@ var edit = function (req, res, next) {
             '/stylesheets/jquery-ui-1.10.3.custom.css'
           ],
           js: [
+            '/javascripts/jquery.autosize.min.js',
+            '/javascripts/jquery-ui-1.10.3.custom.min.js',
+            'http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js',
             '/javascripts/edit.js'
           ],
           topic: topicData,
