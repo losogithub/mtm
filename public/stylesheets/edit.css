@@ -13,7 +13,22 @@
 /*微件*/
 .WidgetMenuBtn {text-decoration: none}
 .WidgetItemList {padding-bottom: 1px;}
-.WidgetItemList li{position: relative;background-color: rgb(255, 255, 255)}
+.WidgetItemList>li{position: relative;background-color: rgb(255, 255, 255)}
+.DynamicMenu{height: 33px;
+    line-height: 1.2;
+    border: 1px solid rgb(219, 219, 219);
+    background-color: rgb(239, 239, 239);
+    width: 633px;}
+.DynamicMenu ul{display: inline-block;}
+.DynamicMenu li{display: inline-block;padding-right: 11px;}
+.DynamicMenu a{display: inline-block;padding: 0 5px;color: rgb(0, 0, 0);}
+.DynamicMenuTtl{margin: 0px 21px 0px 13px;
+    color: rgb(131, 131, 131);
+    font-weight: bold;display: inline-block;}
+.DynamicMenuClose{float: right;height: 100%;padding-right: 10px;line-height: 9px;}
+.BtnClose{width: 10px;
+    height: 9px;
+    background-position: -55px -170px;}
 .ui-sortable-helper{background-color: rgba(40, 184, 55, 0.2)!important;-webkit-box-shadow:rgba(0,0,0,0.2) 1px 1px 2px;-moz-box-shadow:rgba(0,0,0,0.2) 1px 1px 2px;box-shadow:rgba(0,0,0,0.2) 1px 1px 2px}
 .WidgetInput.TEXT{min-height: 68px;padding: 5px 5px 0 0;}
 .WidgetInput.TITLE{min-height: 28px;padding: 0 5px;}

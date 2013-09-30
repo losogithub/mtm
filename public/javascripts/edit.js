@@ -191,6 +191,7 @@
     _create: function () {
       console.log('_create');
       var self = this;
+      var empty = !this.widget().children().length;
 
       this.widget()
         .attr('mtm_type', this.type)
@@ -219,14 +220,14 @@
         .end();
 
       //如果是修改就淡入，否则是新建就淡入加展开
-      if (this.widget().attr('mtm_id')) {
+      if (empty) {
+        this.widget().hide().show('fast');
+      } else {
         this.widget()
           .css({ 'opacity': 0 })
           .animate({ 'opacity': 1 }, 'fast', function () {
             self.__animateDone();
           });
-      } else {
-        this.widget().hide().show('fast');
       }
 
       //移动光标到输入框末尾
@@ -628,8 +629,8 @@
       $li
         .find('.BtnInsert')
         .click(function () {
-          self._createEditWidget($li.attr('mtm_type'), {
-            from: 'DYNAMIC',
+          self._createEditWidget('MENU', {
+            from: 'INSERT',
             $prevItem: $li
           });
         })
@@ -719,12 +720,6 @@
          * $.widget框架自动调用的回调事件
          */
         create: function () {
-          console.log('create');
-          self.state = 'create';
-          self.editType = type;
-          self.from = from;
-          self.$editingWidget = $editWidget;
-          self.$editingPrevItem = $prevItem;
         },
 
         /**
@@ -757,7 +752,7 @@
         if ($editingWidget.attr('mtm_type') == type
           && self.from == from
           && (from == 'STATIC'
-          || from == 'DYNAMIC' && self.$editingPrevItem == $prevItem)) {
+          || from == 'INSERT' && self.$editingPrevItem == $prevItem)) {
           console.log('重置焦点');
 
           $editingWidget.find('.WidgetInputBox')
@@ -774,7 +769,16 @@
         }
 
         //删除编辑中的微件
-        this.callWidgetMethod.call($editingWidget, 'remove');
+        if (from != 'DYNAMIC') {
+          if (this.callWidgetMethod) {
+            this.callWidgetMethod.call($editingWidget, 'remove');
+          } else {
+            this.$editingWidget.css('visibility', 'hidden')
+              .hide('fast', function () {
+                $(this).remove();
+              });
+          }
+        }
       }
 
       //如果是修改就用原条目新建微件，否则是插入就复制新的li元素
@@ -790,8 +794,39 @@
         }
       }
 
+      console.log('create');
+      self.state = 'create';
+      self.editType = type;
+      self.from = from;
+      self.$editingWidget = $editWidget;
+      self.$editingPrevItem = $prevItem;
+
       //根据类型选择微件，并保存调用微件方法的函数
       switch (type) {
+        case 'MENU':
+          console.log('_createEditWidget MENU');
+          $editWidget
+            .attr('mtm_type', type)
+            .insertAfter($prevItem)
+            .prepend(self.widget().find('.templates .DynamicMenu').clone())
+            .delegate('.DynamicMenuBtn', 'click', function (event) {
+              self._createEditWidget($(event.target).attr('mtm_type'), {
+                from: 'DYNAMIC',
+                $item: $editWidget
+              });
+            })
+            .find('.BtnClose')
+            .click(function () {
+              self.state = 'default';
+              $editWidget.css('visibility', 'hidden')
+                .hide('fast', function () {
+                  $(this).remove();
+                });
+            })
+            .end()
+            .hide().show('fast');
+          this.callWidgetMethod = null;
+          break;
         case 'TEXT':
           console.log('_createEditWidget TEXT');
           $editWidget.textWidget(options);
