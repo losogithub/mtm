@@ -743,6 +743,14 @@
 
       }, extraOptions);
 
+      var removeDynamicMenu = function ($li) {
+        self.state = 'default';
+        $li.css('visibility', 'hidden')
+          .hide('fast', function () {
+            $(this).remove();
+          });
+      }
+
       //编辑页面不在默认状态
       if (self.state != 'default') {
         console.log('self.state != default');
@@ -773,10 +781,7 @@
           if (this.callWidgetMethod) {
             this.callWidgetMethod.call($editingWidget, 'remove');
           } else {
-            this.$editingWidget.css('visibility', 'hidden')
-              .hide('fast', function () {
-                $(this).remove();
-              });
+            removeDynamicMenu(this.$editingWidget);
           }
         }
       }
@@ -794,13 +799,6 @@
         }
       }
 
-      console.log('create');
-      self.state = 'create';
-      self.editType = type;
-      self.from = from;
-      self.$editingWidget = $editWidget;
-      self.$editingPrevItem = $prevItem;
-
       //根据类型选择微件，并保存调用微件方法的函数
       switch (type) {
         case 'MENU':
@@ -817,15 +815,16 @@
             })
             .find('.BtnClose')
             .click(function () {
-              self.state = 'default';
-              $editWidget.css('visibility', 'hidden')
-                .hide('fast', function () {
-                  $(this).remove();
-                });
+              removeDynamicMenu($editWidget);
             })
             .end()
             .hide().show('fast');
           this.callWidgetMethod = null;
+          break;
+        case 'IMAGE':
+          console.log('_createEditWidget IMAGE');
+          $editWidget.imageWidget(options);
+          this.callWidgetMethod = $editWidget.imageWidget;
           break;
         case 'TEXT':
           console.log('_createEditWidget TEXT');
@@ -839,8 +838,15 @@
           break;
         default :
           $editWidget.remove();
-          break;
+          return;
       }
+
+      console.log('create');
+      self.state = 'create';
+      self.editType = type;
+      self.from = from;
+      self.$editingWidget = $editWidget;
+      self.$editingPrevItem = $prevItem;
     },
 
     /**
