@@ -17,12 +17,32 @@ small{font-size: 100%}
 table{vertical-align: middle;border-spacing: 0;}
 :focus {outline: 0 none;}
 .A1{color: rgb(170, 170, 170)}
+.Btn, .HeaderBtn{display: inline-block;
+    overflow: hidden;
+    padding: 0px;
+    border: 0px none;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    text-align: left;
+    text-indent: -9999px;vertical-align: middle;cursor: pointer;}
+.Btn{background-image: url(/images/sprite_btn.png)}
 .Hide{display: none}
 .Inner{position: relative;width: 960px;margin: 0px auto;min-height: 100%;height: 100%;}
 .Inner.Index{width: 1010px;}
 .Header{z-index: 501;height: 44px;width: 100%;border-top: 3px solid rgb(51, 51, 51);border-bottom: 1px solid rgb(231, 231, 231);}
 .Header.Index{height: 108px;}
+.HeaderBannerWrapper{width: 100%;}
+.HeaderBanner01{display: block;width: 181px;height: 33px;background-position: 0px -30px;margin: 0 auto;}
+.HeaderBanner02{display: block;width: 102px;height: 20px;margin: 0 auto;}
+.HeaderBtn{background-image: url("/images/sprite_head.png");}
+.Nav{position: absolute;right: 0;top: 0;height: 100%;}
+.Nav li{display: inline;}
+.Nav a{color: rgb(84, 84, 84);}
+.NavInner{margin: 10px 0;}
+.BtnOpen{width: 19px;height: 24px;margin-left: -10px;background-position: -132px 2px;}
+
 .Contents {padding-bottom: 20px;}
+
 .Footer{width: 100%; border-top: 1px solid rgb(231, 231, 231);}
 .Footer .Inner{padding: 25px 0;overflow: hidden;}
 .MiddleHelper {height: 100%;display: inline-block;vertical-align: middle;}
@@ -30,6 +50,13 @@ table{vertical-align: middle;border-spacing: 0;}
 .MtmLinkUl{float: left;line-height: 1;}
 .MtmLinkUl li{display: inline;}
 .MtmLinkUl a{color: rgb(51, 51, 51); font-size: 11px;}
+.HeaderSeparator{display: inline-block;
+    width: 0px;
+    overflow: hidden;
+    border-left: 1px solid rgb(234, 234, 234);
+    vertical-align: -1px;
+    height: 11px;
+    margin: 0px 9px 0px 11px;}
 .FooterSeparator{display: inline-block;position: relative;top: 1px;width: 0px;height: 11px;overflow: hidden;margin: 0px 11px 0px 15px;border-left: 1px solid rgb(205, 205, 205);}
 .Copyright{float: right;color: rgb(51, 51, 51);font-family: Tahoma,Arial,sans-serif;font-size: 11px;line-height: 1;}
 .Copyright b{font-weight: normal}
@@ -42,7 +69,6 @@ table{vertical-align: middle;border-spacing: 0;}
 .ButtonToggleIco{height: 13px;width: 13px;}
 .ButtonToggleClose .ButtonToggleIco{background-position: -15px -170px;}
 .ButtonToggleOpen .ButtonToggleIco{background-position: 0 -170px;}
-.Btn{display: inline-block;overflow: hidden;text-align: left;text-indent: -9999px;vertical-align: middle;cursor: pointer;background-image: url(/images/sprite_btn.png)}
 .BtnSave{width: 45px;height: 26px;background-position: 0 -60px;}
 .BtnCancel{width: 68px;height: 26px;background-position: 0 -30px}
 /*框架*/

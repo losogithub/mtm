@@ -28,9 +28,9 @@
 .ui-sortable-helper:hover .ItemUtil1 {visibility: hidden}
 .ui-sortable-helper:hover .ItemUtil2 {visibility: hidden}
 /*编辑标题、缩略图、简介*/
-.EditFormBox01 {letter-spacing: -3px;height: 41px;}
+.EditFormBox01 {height: 41px;}
 .InputBoxTitle {display: inline-block;width: 779px;padding: 0px 10px;background-color: rgb(255, 254, 238);background-position: 5px 10px;border: 1px solid rgb(40, 185, 55);height: 40px;line-height: 38px;font-size: 23px;font-weight: bold;vertical-align: middle;}
-.EditFormOption {margin-left: 18px;display: inline-block;vertical-align: bottom;line-height: 0;letter-spacing: 0;}
+.EditFormOption {margin-left: 15px;display: inline-block;vertical-align: bottom;}
 .EditFormBox02 {margin-top: 25px;}
 .EditFormItem01 {width: 95px;margin-right: 15px;float: left;}
 .EditFormItem02 {float: left;width: 669px;}

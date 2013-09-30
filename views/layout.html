@@ -11,11 +11,31 @@
 <body>
   <% if (locals.index) { %>
   <header class='Header Index'>
-    <div class="Inner Index"></div>
+    <div class="Inner Index">
   <% } else { %>
   <header class='Header'>
-    <div class="Inner"></div>
+    <div class="Inner">
   <% } %>
+      <div class="MiddleHelper"></div>
+      <div class="MiddleWrapper HeaderBannerWrapper">
+        <a class="HeaderBtn <%= locals.index ? 'HeaderBanner01' : 'HeaderBanner02' %>" href="/" title='mtm'>mtm</a>
+      </div>
+      <nav class="Nav">
+        <% if (locals.index) { %>
+        <ul class="NavInner NegLinkWrapper">
+        <% } else { %>
+        <div class="MiddleHelper"></div>
+        <ul class="NavInner NegLinkWrapper MiddleWrapper">
+        <% } %>
+          <li>
+            <a href="/topic/create">创建总结</a><span class="HeaderSeparator"></span>
+          </li>
+          <li>
+            <button class="HeaderBtn BtnOpen" type="button">打开</button>
+          </li>
+        </ul>
+      </nav>
+    </div>
   </header>
 
   <%- body %>
