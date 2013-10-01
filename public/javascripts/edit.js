@@ -165,9 +165,6 @@
           });
       }
 
-      //移动光标到输入框末尾
-      moveSelection2End(this.widget().find('.WidgetInputBox')[0]);
-
       this.__initFormValidation();
     },
 
@@ -259,19 +256,97 @@
      */
     __create: function () {
       var self = this;
+      this.edit();
+    },
 
-      //textarea自适应高度、填充文本、监听文本改变事件
+    edit: function () {
+      this.widget()
+        .find('.WidgetThumb')
+        .attr('src', this.options.url)
+        .attr('onerror', 'console.log("onerror");');
+    }
+
+  });
+
+  /*
+   * 定义微件：图片创建微件
+   */
+  $.widget('mtm.imageWidgetCreate', $.mtm.editWidget, {
+
+    type: 'IMAGE_CREATE',
+
+    /**
+     * 子类的构造函数
+     * @private
+     */
+    __create: function () {
+      var self = this;
+
+      //监听文本改变事件
       this.widget()
         .find('.WidgetInputBox')
         .on('input blur mousedown mouseup keydown keypress keyup', function () {
-          if (this.value == self.options.url) {
-            self._trigger('setState', null, 'create');
+          if (this.value) {
+            self.widget().find('.BtnCheck').removeClass('DISABLED').removeAttr('disabled');
           } else {
-            self._trigger('setState', null, 'edit');
+            self.widget().find('.BtnCheck').addClass('DISABLED').attr('disabled', 'disabled');
           }
         })
         .focus()
         .end();
+
+      //移动光标到输入框末尾
+      moveSelection2End(this.widget().find('.WidgetInputBox')[0]);
+    },
+
+    /**
+     * 子类的表单验证
+     * @private
+     */
+    __initFormValidation: function () {
+      var self = this;
+      this.widget().find('form').validate({
+        debug: false,
+        ignore: "",
+        onkeyup: false,
+        focusInvalid: false,
+        onfocusout: false,
+        submitHandler: function (form) {
+          self.__getImage(form);
+        },
+        showErrors: function (errorMap, errorList) {
+          if (errorMap.url) {
+            alert(errorMap.url);
+          }
+        },
+        rules: {
+          url: {
+            required: true,
+            url: true
+          }
+        },
+        messages: {
+          url: {
+            required: "尚未输入URL。",
+            url: "URL格式错误。"
+          }
+        }
+      });
+    },
+
+    __getImage: function (form) {
+      var self = this;
+      var url = $(form).find('input:text').val();
+      var callback = function () {
+//        self.edit();
+        self.destroy();
+        self.widget().imageWidget({
+          url: url
+        });
+        self._trigger("setState", null, "edit");
+      };
+//      checkDupl(oData, callback);
+      callback();
     }
 
   })
@@ -312,6 +387,9 @@
         })
         .focus()
         .end();
+
+      //移动光标到输入框末尾
+      moveSelection2End(this.widget().find('.WidgetInputBox')[0]);
     },
 
     __animateDone: function () {
@@ -407,6 +485,9 @@
         })
         .focus()
         .end();
+
+      //移动光标到输入框末尾
+      moveSelection2End(this.widget().find('.WidgetInputBox')[0]);
     },
 
     /**
@@ -792,8 +873,8 @@
           break;
         case 'IMAGE':
           console.log('_createEditWidget IMAGE');
-          $editWidget.imageWidget(options);
-          this.callWidgetMethod = $editWidget.imageWidget;
+          $editWidget.imageWidgetCreate(options);
+          this.callWidgetMethod = $editWidget.imageWidgetCreate;
           break;
         case 'TEXT':
           console.log('_createEditWidget TEXT');
@@ -973,6 +1054,10 @@
    * @param textArea
    */
   var moveSelection2End = function (textArea) {
+    if (!textArea) {
+      return;
+    }
+
     var length = textArea.value.length;
     if (document.selection) {
       var selection = textArea.createTextRange();

@@ -134,10 +134,6 @@
       <div class='ItemUtil0'>
       </div>
       <!--插入内容-->
-      <div class="WidgetButton">
-        <button class="Btn BtnSave" type="button"></button>
-        <button class="Btn BtnCancel" type="button"></button>
-      </div>
     </form>
     <div class='Item'>
       <div class='ItemUtil0'>
@@ -153,13 +149,33 @@
       </div>
     </div>
 
+    <div class='WidgetContent IMAGE_CREATE'>
+      <div class="WidgetThumb IMAGE_CREATE"></div>
+      <input class="WidgetInputBox IMAGE_CREATE URL Required" type="text" name="url" placeholder="输入图片URL">
+      <button class="Btn BtnCheck DISABLED" type="button" disabled='disabled'>查看</button>
+      <div class="WidgetButton">
+        <button class="Btn BtnSave" type="button">保存</button>
+        <button class="Btn BtnCancel" type="button">放弃</button>
+      </div>
+    </div>
+
     <div class='WidgetContent IMAGE'>
-      <div class="WidgetThumb IMAGE"></div>
-      <input class="WidgetInputBox IMAGE URL Required" type="text" name="url" placeholder="输入图片URL">
+      <img class='WidgetThumb IMAGE'>
+      <div class="WidgetTxt IMAGE">
+        <input class="WidgetInputBox IMAGE" type="text" placeholder="输入图片标题">
+      </div>
+      <div class="WidgetButton">
+        <button class="Btn BtnSave" type="button">保存</button>
+        <button class="Btn BtnCancel" type="button">放弃</button>
+      </div>
     </div>
 
     <div class='WidgetContent TEXT'>
       <textarea class="WidgetInputBox TEXT Required" name="contents" placeholder="输入文本"></textarea>
+      <div class="WidgetButton">
+        <button class="Btn BtnSave" type="button">保存</button>
+        <button class="Btn BtnCancel" type="button">放弃</button>
+      </div>
     </div>
 
     <div class='ItemContent TEXT'>
@@ -168,6 +184,10 @@
 
     <div class='WidgetContent TITLE'>
       <input class="WidgetInputBox TITLE Required" type="text" name="contents" placeholder="输入标题">
+      <div class="WidgetButton">
+        <button class="Btn BtnSave" type="button">保存</button>
+        <button class="Btn BtnCancel" type="button">放弃</button>
+      </div>
     </div>
 
     <div class='ItemContent TITLE'>
