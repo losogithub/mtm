@@ -130,9 +130,9 @@
 
       this.widget()
         .attr('mtm_type', this.type)
-        .prepend($('.templates .Widget').clone())
+        .prepend($('.Templates .Widget').clone())
         .find('.Widget').children().first()
-        .after($('.templates .WidgetContent.' + this.type).clone())
+        .after($('.Templates .WidgetContent.' + this.type).clone())
         .end().end().end();
 
       this.__create();
@@ -164,9 +164,6 @@
             self.__animateDone();
           });
       }
-
-      //移动光标到输入框末尾
-      moveSelection2End(this.widget().find('.WidgetInputBox')[0]);
 
       this.__initFormValidation();
     },
@@ -259,19 +256,97 @@
      */
     __create: function () {
       var self = this;
+      this.edit();
+    },
 
-      //textarea自适应高度、填充文本、监听文本改变事件
+    edit: function () {
+      this.widget()
+        .find('.WidgetThumb')
+        .attr('src', this.options.url)
+        .attr('onerror', 'console.log("onerror");');
+    }
+
+  });
+
+  /*
+   * 定义微件：图片创建微件
+   */
+  $.widget('mtm.imageWidgetCreate', $.mtm.editWidget, {
+
+    type: 'IMAGE_CREATE',
+
+    /**
+     * 子类的构造函数
+     * @private
+     */
+    __create: function () {
+      var self = this;
+
+      //监听文本改变事件
       this.widget()
         .find('.WidgetInputBox')
         .on('input blur mousedown mouseup keydown keypress keyup', function () {
-          if (this.value == self.options.url) {
-            self._trigger('setState', null, 'create');
+          if (this.value) {
+            self.widget().find('.BtnCheck').removeClass('DISABLED').removeAttr('disabled');
           } else {
-            self._trigger('setState', null, 'edit');
+            self.widget().find('.BtnCheck').addClass('DISABLED').attr('disabled', 'disabled');
           }
         })
         .focus()
         .end();
+
+      //移动光标到输入框末尾
+      moveSelection2End(this.widget().find('.WidgetInputBox')[0]);
+    },
+
+    /**
+     * 子类的表单验证
+     * @private
+     */
+    __initFormValidation: function () {
+      var self = this;
+      this.widget().find('form').validate({
+        debug: false,
+        ignore: "",
+        onkeyup: false,
+        focusInvalid: false,
+        onfocusout: false,
+        submitHandler: function (form) {
+          self.__getImage(form);
+        },
+        showErrors: function (errorMap, errorList) {
+          if (errorMap.url) {
+            alert(errorMap.url);
+          }
+        },
+        rules: {
+          url: {
+            required: true,
+            url: true
+          }
+        },
+        messages: {
+          url: {
+            required: "尚未输入URL。",
+            url: "URL格式错误。"
+          }
+        }
+      });
+    },
+
+    __getImage: function (form) {
+      var self = this;
+      var url = $(form).find('input:text').val();
+      var callback = function () {
+//        self.edit();
+        self.destroy();
+        self.widget().imageWidget({
+          url: url
+        });
+        self._trigger("setState", null, "edit");
+      };
+//      checkDupl(oData, callback);
+      callback();
     }
 
   })
@@ -312,6 +387,9 @@
         })
         .focus()
         .end();
+
+      //移动光标到输入框末尾
+      moveSelection2End(this.widget().find('.WidgetInputBox')[0]);
     },
 
     __animateDone: function () {
@@ -407,6 +485,9 @@
         })
         .focus()
         .end();
+
+      //移动光标到输入框末尾
+      moveSelection2End(this.widget().find('.WidgetInputBox')[0]);
     },
 
     /**
@@ -759,7 +840,7 @@
       if ($item) {
         var $editWidget = $item;
       } else {
-        var $editWidget = this.widget().find('.templates .WidgetItem').clone();
+        var $editWidget = this.widget().find('.Templates .LiWrapper li').clone();
         //如果是动态插入就插入前趋条目的后面，否则是静态插入就插入最前面
         if ($prevItem) {
           $prevItem.after($editWidget);
@@ -775,7 +856,7 @@
           $editWidget
             .attr('mtm_type', type)
             .insertAfter($prevItem)
-            .prepend(self.widget().find('.templates .DynamicMenu').clone())
+            .prepend(self.widget().find('.Templates .DynamicMenu').clone())
             .delegate('.DynamicMenuBtn', 'click', function (event) {
               self._createEditWidget($(event.target).attr('mtm_type'), {
                 from: 'DYNAMIC',
@@ -792,8 +873,8 @@
           break;
         case 'IMAGE':
           console.log('_createEditWidget IMAGE');
-          $editWidget.imageWidget(options);
-          this.callWidgetMethod = $editWidget.imageWidget;
+          $editWidget.imageWidgetCreate(options);
+          this.callWidgetMethod = $editWidget.imageWidgetCreate;
           break;
         case 'TEXT':
           console.log('_createEditWidget TEXT');
@@ -831,7 +912,7 @@
       var type = itemData.type;
       var itemId = itemData.itemId;
 
-      var $displayItem = this.widget().find('.templates .WidgetItem').clone();
+      var $displayItem = this.widget().find('.Templates .LiWrapper li').clone();
       //如果指定了前趋条目就插入其后面，否则插入最前
       if ($prevItem && $prevItem[0]) {
         $prevItem.after($displayItem);
@@ -865,9 +946,9 @@
       }
 
       //填充新内容，然后删除旧内容，顺序很重要！！！防止抖动
-      $item.prepend($('.templates .Item').clone())
+      $item.prepend($('.Templates .Item').clone())
         .find('.Item').children().first()
-        .after($('.templates .ItemContent.' + type).clone())
+        .after($('.Templates .ItemContent.' + type).clone())
         .end().end().end()
         .children().first().next().remove().end().end()
         .end()
@@ -973,6 +1054,10 @@
    * @param textArea
    */
   var moveSelection2End = function (textArea) {
+    if (!textArea) {
+      return;
+    }
+
     var length = textArea.value.length;
     if (document.selection) {
       var selection = textArea.createTextRange();

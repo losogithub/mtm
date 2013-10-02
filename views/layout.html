@@ -6,9 +6,9 @@
   <% for (i in locals.css) { %>
   <link type='text/css' rel='stylesheet' href='<%= css[i] %>'/>
   <% } %>
-  <script type="text/javascript" src="http://libs.baidu.com/jquery/1.10.2/jquery.min.js" defer="defer"></script>
+  <script type="text/javascript" src="http://libs.baidu.com/jquery/1.10.2/jquery.min.js"></script>
   <% for (i in locals.js) { %>
-  <script type="text/javascript" src="<%= js[i] %>" defer="defer"></script>
+  <script type="text/javascript" src="<%= js[i] %>"></script>
   <% } %>
 </head>
 <body>
@@ -19,10 +19,11 @@
   <header class='Header'>
     <div class="Inner">
   <% } %>
-      <div class="MiddleHelper"></div>
-      <div class="MiddleWrapper HeaderBannerWrapper">
-        <a class="HeaderBtn <%= locals.index ? 'HeaderBanner01' : 'HeaderBanner02' %>" href="/" title='mtm'>mtm</a>
-      </div>
+      <table style="width: 100%;">
+        <td>
+          <a class="HeaderBtn <%= locals.index ? 'HeaderBanner01' : 'HeaderBanner02' %>" href="/" title='mtm'>mtm</a>
+        </td>
+      </table>
       <nav class="Nav">
         <% if (locals.index) { %>
         <ul class="NavInner NegLinkWrapper">
