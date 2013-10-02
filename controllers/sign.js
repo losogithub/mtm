@@ -409,6 +409,8 @@ function checkOnlyPassword(pass, user, req, res){
     gen_session(user, res);
     //check at some page just jump to home page
     console.log(req.session._loginReferer);
+    req.session.userId = user._id;
+    /*
     var refer = req.session._loginReferer || 'home';     // taozan 9.22.2013
     for (var i = 0, len = notJump.length; i !== len; ++i) {
         if (refer.indexOf(notJump[i]) >= 0) {
@@ -416,7 +418,8 @@ function checkOnlyPassword(pass, user, req, res){
             break;
         }
     }
-
+      */
+    var refer = '/works';
     res.redirect(refer);
 }
 

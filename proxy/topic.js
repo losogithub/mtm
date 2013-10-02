@@ -206,6 +206,20 @@ var publish = function (topicId, title, desc, callback) {
   });
 }
 
+var getTopicById = function(topicID, callback){
+    console.log('getTopicById');
+    //查找总结
+    TopicModel.findById(topicId, function (err, topic) {
+        if (err) {
+            console.error('find topic failed:' + err);
+        } else {
+            console.log('find topic done');
+            callback(topic);
+        }
+    });
+}
+
+
 exports.newId = newId;//增
 exports.validateId = validateId;
 exports.getContents = getContents;//查
@@ -214,3 +228,4 @@ exports.increaseItemCountBy = increaseItemCountBy;
 exports.increasePVCountBy = increasePVCountBy;
 exports.getHotTopics = getHotTopics;
 exports.publish = publish;
+exports.getTopicById = getTopicById;
