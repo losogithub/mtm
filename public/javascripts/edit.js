@@ -28,10 +28,10 @@
         $head.removeClass('EditHeadFixed');
       }
     });
-    $head.find('.BtnPublish').click(function () {
+    $head.find('.Btn_Publish').click(function () {
       $('.Top form').submit();
     });
-    $head.find('.BtnHeadSave').click(function () {
+    $head.find('.Btn_HeadSave').click(function () {
       $('.Top form').submit();
     });
   }
@@ -142,13 +142,13 @@
         .children().first().next().remove().end().end()
         .end()
         //监听保存按钮点击事件
-        .find('.BtnSave')
+        .find('.Btn_Save')
         .click(function () {
           self.widget().find('form').submit();
         })
         .end()
         //监听放弃按钮点击事件
-        .find('.BtnCancel')
+        .find('.Btn_Cancel')
         .click(function () {
           self._trigger('cancel');
         })
@@ -287,9 +287,9 @@
         .find('.WidgetInputBox')
         .on('input blur mousedown mouseup keydown keypress keyup', function () {
           if (this.value) {
-            self.widget().find('.BtnCheck').removeClass('DISABLED').removeAttr('disabled');
+            self.widget().find('.Btn_Check').removeClass('DISABLED').removeAttr('disabled');
           } else {
-            self.widget().find('.BtnCheck').addClass('DISABLED').attr('disabled', 'disabled');
+            self.widget().find('.Btn_Check').addClass('DISABLED').attr('disabled', 'disabled');
           }
         })
         .focus()
@@ -677,7 +677,7 @@
       var self = this;
       //绑定插入点击响应
       $li
-        .find('.BtnInsert')
+        .find('.Btn_Insert')
         .click(function () {
           self._createEditWidget('MENU', {
             from: 'INSERT',
@@ -686,7 +686,7 @@
         })
         .end()
         //绑定删除点击响应
-        .find('.BtnDel')
+        .find('.Btn_Del')
         .click(function () {
           if (!confirm('条目删除后无法找回，您确定要删除吗？')) {
             return;
@@ -710,7 +710,7 @@
         case 'TEXT':
           //绑定修改点击响应
           $li
-            .find('.BtnEdit')
+            .find('.Btn_Edit')
             .click(function () {
               var text = $li.find('.ItemView.TEXT').html().replace(/<br>/g, '\n');
               self._createEditWidget(type, {
@@ -724,7 +724,7 @@
         case 'TITLE':
           //绑定修改点击响应
           $li
-            .find('.BtnEdit')
+            .find('.Btn_Edit')
             .click(function () {
               var title = $li.find('.ItemView.TITLE').html();
               self._createEditWidget(type, {
@@ -863,7 +863,7 @@
                 $item: $editWidget
               });
             })
-            .find('.BtnClose')
+            .find('.Btn_Close')
             .click(function () {
               removeDynamicMenu($editWidget);
             })

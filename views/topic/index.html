@@ -21,10 +21,10 @@
             <h1 class="HeadTtl NegLinkWrapper"><a href="/"><%= locals.topic ? topic.title : '' %></a></h1>
 
             <div class='HeadUtil'>
-              <a class="BtnEdit" href="<%= locals.url + '/edit?showOption=true' %>"><span class="Btn BtnIcoEdit"></span>修改</a>
+              <a class="Btn_Edit" href="<%= locals.url + '/edit?showOption=true' %>"><span class="Btn Btn_IcoEdit"></span>修改</a>
               <% if (!locals.items || !items.length) { %>
               <span class='WidgetUtilSeparator'>|</span>
-              <a class="BtnDel"><span class="Btn BtnIcoDel"></span>删除</a>
+              <a class="Btn_Del"><span class="Btn Btn_IcoDel"></span>删除</a>
               <% } %>
             </div>
             <p><span class="HeadDesc"><%= topic.desc %></span><span class="HeadDate">更新日: <%= locals.topic ? topic.updateAt : '' %></span>
@@ -78,20 +78,20 @@
             </div>
             <% if (items[i].type == 'TEXT') { %>
             <div class='ItemContent TEXT'>
-              <p class='ItemView TEXT'><%= items[i].text %></p>
+              <p class='ItemView'><%= items[i].text %></p>
             </div>
             <% } else if (items[i].type == 'TITLE') { %>
             <div class='ItemContent TITLE'>
-              <p class='ItemView TITLE'><%= items[i].title %></p>
+              <p class='ItemView'><%= items[i].title %></p>
             </div>
             <% } %>
             <div class='ItemUtil1'>
-              <a class="BtnInsert">插入</a>
+              <a class="Btn_Insert">插入</a>
             </div>
             <div class='ItemUtil2'>
-              <a class="BtnEdit"><span class="Btn BtnIcoEdit"></span>修改</a>
+              <a class="Btn_Edit"><span class="Btn Btn_IcoEdit"></span>修改</a>
               <span class='WidgetUtilSeparator'>|</span>
-              <a class="BtnDel"><span class="Btn BtnIcoDel"></span>删除</a>
+              <a class="Btn_Del"><span class="Btn Btn_IcoDel"></span>删除</a>
             </div>
           </div>
         </li>

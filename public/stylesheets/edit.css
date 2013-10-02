@@ -4,10 +4,10 @@
 .EditHeadTtl{float: left;}
 .EditHeadTtl h1{font-size: 14px;font-weight: bold;}
 .EditHeadBtn{margin-right: 6px;float:right;}
-.BtnHeadSave{width: 63px;height: 25px;background-position: 0 0;}
-.BtnSaveDraft{background-position: -65px 0;height: 25px;width: 88px;}
-.BtnPublish{background-position: -155px 0;height: 25px;width: 73px;}
-.BtnHeadCancel{background-position: -70px -30px;height: 25px;width: 73px;}
+.Btn_HeadSave {width: 63px;height: 25px;background-position: 0 0;}
+.Btn_SaveDraft {background-position: -65px 0;height: 25px;width: 88px;}
+.Btn_Publish {background-position: -155px 0;height: 25px;width: 73px;}
+.Btn_HeadCancel {background-position: -70px -30px;height: 25px;width: 73px;}
 .Top{padding-top: 41px;padding-bottom: 15px;}
 .Heading{padding-top: 26px;padding-bottom: 10px;border-bottom: 3px solid rgb(0, 0, 0);}
 .Required{padding-left: 15px !important;background: url("/images/FormInputGuide.png") no-repeat scroll 5px 8px;}
@@ -27,21 +27,21 @@
     color: rgb(131, 131, 131);
     font-weight: bold;display: inline-block;}
 .DynamicMenuClose{text-align: right;height: 100%;padding-right: 10px;line-height: 9px;}
-.BtnClose{width: 10px;
+.Btn_Close {width: 10px;
     height: 9px;
     background-position: -55px -170px;}
 .ui-sortable-helper{background-color: rgba(40, 184, 55, 0.2)!important;-webkit-box-shadow:rgba(0,0,0,0.2) 1px 1px 2px;-moz-box-shadow:rgba(0,0,0,0.2) 1px 1px 2px;box-shadow:rgba(0,0,0,0.2) 1px 1px 2px}
 .WidgetThumb{float: left;margin-right: 10px;background: url("/images/sprite_WidgetThumb.png") no-repeat scroll 0 0 transparent;}
-.WidgetThumb.IMAGE_CREATE{width: 300px;height: 220px;background-position: 0 0;}
+.IMAGE_CREATE .WidgetThumb{width: 300px;height: 220px;background-position: 0 0;}
 .WidgetTxt{overflow: hidden;}
 .WidgetInputBox{color: rgb(0, 0, 0);padding: 0 4px;background-color: #fff;width: 100%;border-width: 1px;border-style: solid;border-color: rgb(202, 206, 209) rgb(232, 234, 235) rgb(232, 234, 235) rgb(202, 206, 209);}
-.WidgetInputBox.URL{color: rgb(102, 102, 102);}
-.WidgetInputBox.IMAGE_CREATE{float: left;margin-right: 5px;width: 252px;height: 25px;padding-right: 4px;}
-.WidgetInputBox.IMAGE{height: 30px;line-height: 28px;font-size: 14px;font-weight: bold;}
-.BtnCheck{float: left;width: 68px;height: 25px;background-position: 0px -90px;}
-.BtnCheck.DISABLED{background-position: 0px -120px;}
-.WidgetInputBox.TEXT{min-height: 66px;padding: 5px 5px 0 0;resize: none;font-size: 14px}
-.WidgetInputBox.TITLE{font-size: 14px;font-weight: bold;line-height: 28px;height: 30px;}
+.InputBoxUrl{color: rgb(102, 102, 102);}
+.IMAGE_CREATE .WidgetInputBox{float: left;margin-right: 5px;width: 252px;height: 25px;padding-right: 4px;}
+.IMAGE .WidgetInputBox{height: 30px;line-height: 28px;font-size: 14px;font-weight: bold;}
+.Btn_Check {float: left;width: 68px;height: 25px;background-position: 0px -90px;}
+.Btn_Check_Disabled {background-position: 0px -120px;}
+.TEXT .WidgetInputBox{min-height: 66px;padding: 5px 5px 0 0;resize: none;font-size: 14px}
+.TITLE .WidgetInputBox{font-size: 14px;font-weight: bold;line-height: 28px;height: 30px;}
 .HeightAnimation{transition: height 0.2s ease 0s;}
 .WidgetButton{float: left;margin-top: 14px;letter-spacing:7px}
 .WidgetDragPlaceholder{width: 635px;background: url(/images/bg_WidgetDragPlaceholder.png) repeat 0 0}

@@ -8,12 +8,12 @@
     <table class="EditHeadBtn">
       <td>
         <% if (locals.topic) { %>
-        <button class='Btn BtnHeadSave' type="button"></button>
+        <button class='Btn Btn_HeadSave' type="button"></button>
         <% } else { %>
-        <button class='Btn BtnSaveDraft' type="button"></button>
-        <button class='Btn BtnPublish' type="button"></button>
+        <button class='Btn Btn_SaveDraft' type="button"></button>
+        <button class='Btn Btn_Publish' type="button"></button>
         <% } %>
-        <button class='Btn BtnHeadCancel' type="button"></button>
+        <button class='Btn Btn_HeadCancel' type="button"></button>
       </td>
     </table>
   </div>
@@ -86,12 +86,12 @@
             </div>
             <% } %>
             <div class='ItemUtil1'>
-              <a class="BtnInsert">插入</a>
+              <a class="Btn_Insert">插入</a>
             </div>
             <div class='ItemUtil2'>
-              <a class="BtnEdit"><span class="Btn BtnIcoEdit"></span>修改</a>
+              <a class="Btn_Edit"><span class="Btn Btn_IcoEdit"></span>修改</a>
               <span class='WidgetUtilSeparator'>|</span>
-              <a class="BtnDel"><span class="Btn BtnIcoDel"></span>删除</a>
+              <a class="Btn_Del"><span class="Btn Btn_IcoDel"></span>删除</a>
             </div>
           </div>
         </li>
@@ -122,7 +122,7 @@
         </ul>
       </td>
       <td class="DynamicMenuClose">
-        <button class="Btn BtnClose" title='关闭' type='button'>关闭</button>
+        <button class="Btn Btn_Close" title='关闭' type='button'>关闭</button>
       </td>
     </table>
 
@@ -136,61 +136,61 @@
       </div>
       <!--插入内容-->
       <div class='ItemUtil1'>
-        <a class="BtnInsert">插入</a>
+        <a class="Btn_Insert">插入</a>
       </div>
       <div class='ItemUtil2'>
-        <a class="BtnEdit"><span class="Btn BtnIcoEdit"></span>修改</a>
+        <a class="Btn_Edit"><span class="Btn Btn_IcoEdit"></span>修改</a>
         <span class='WidgetUtilSeparator'>|</span>
-        <a class="BtnDel"><span class="Btn BtnIcoDel"></span>删除</a>
+        <a class="Btn_Del"><span class="Btn Btn_IcoDel"></span>删除</a>
       </div>
     </div>
 
     <div class='WidgetContent IMAGE_CREATE'>
-      <div class="WidgetThumb IMAGE_CREATE"></div>
-      <input class="WidgetInputBox IMAGE_CREATE URL Required" type="text" name="url" placeholder="输入图片URL">
-      <button class="Btn BtnCheck DISABLED" type="button" disabled='disabled'>查看</button>
+      <div class="WidgetThumb"></div>
+      <input class="WidgetInputBox InputBoxUrl Required" type="text" name="url" placeholder="输入图片URL">
+      <button class="Btn Btn_Check Btn_Check_Disabled" type="button" disabled='disabled'>查看</button>
       <div class="WidgetButton">
-        <button class="Btn BtnSave" type="button">保存</button>
-        <button class="Btn BtnCancel" type="button">放弃</button>
+        <button class="Btn Btn_Save" type="button">保存</button>
+        <button class="Btn Btn_Cancel" type="button">放弃</button>
       </div>
     </div>
 
     <div class='WidgetContent IMAGE'>
-      <img class='WidgetThumb IMAGE'>
+      <img class='WidgetThumb'>
 
       <div class="WidgetTxt IMAGE">
-        <input class="WidgetInputBox IMAGE" type="text" placeholder="输入图片标题">
+        <input class="WidgetInputBox" type="text" placeholder="输入图片标题">
       </div>
       <div class="WidgetButton">
-        <button class="Btn BtnSave" type="button">保存</button>
-        <button class="Btn BtnCancel" type="button">放弃</button>
+        <button class="Btn Btn_Save" type="button">保存</button>
+        <button class="Btn Btn_Cancel" type="button">放弃</button>
       </div>
     </div>
 
     <div class='WidgetContent TEXT'>
-      <textarea class="WidgetInputBox TEXT Required" name="contents" placeholder="输入文本"></textarea>
+      <textarea class="WidgetInputBox Required" name="contents" placeholder="输入文本"></textarea>
 
       <div class="WidgetButton">
-        <button class="Btn BtnSave" type="button">保存</button>
-        <button class="Btn BtnCancel" type="button">放弃</button>
+        <button class="Btn Btn_Save" type="button">保存</button>
+        <button class="Btn Btn_Cancel" type="button">放弃</button>
       </div>
     </div>
 
     <div class='ItemContent TEXT'>
-      <p class='ItemView TEXT'></p>
+      <p class='ItemView'></p>
     </div>
 
     <div class='WidgetContent TITLE'>
-      <input class="WidgetInputBox TITLE Required" type="text" name="contents" placeholder="输入标题">
+      <input class="WidgetInputBox Required" type="text" name="contents" placeholder="输入标题">
 
       <div class="WidgetButton">
-        <button class="Btn BtnSave" type="button">保存</button>
-        <button class="Btn BtnCancel" type="button">放弃</button>
+        <button class="Btn Btn_Save" type="button">保存</button>
+        <button class="Btn Btn_Cancel" type="button">放弃</button>
       </div>
     </div>
 
     <div class='ItemContent TITLE'>
-      <p class='ItemView TITLE'></p>
+      <p class='ItemView'></p>
     </div>
 
   </div>

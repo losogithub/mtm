@@ -13,51 +13,48 @@
 </head>
 <body>
   <% if (locals.index) { %>
-  <header class='Header Index'>
-    <div class="Inner Index">
-  <% } else { %>
-  <header class='Header'>
-    <div class="Inner">
+  <div class="INDEX">
   <% } %>
-      <table style="width: 100%;">
-        <td>
-          <a class="HeaderBtn <%= locals.index ? 'HeaderBanner01' : 'HeaderBanner02' %>" href="/" title='mtm'>mtm</a>
-        </td>
-      </table>
-      <nav class="Nav">
-        <% if (locals.index) { %>
-        <ul class="NavInner NegLinkWrapper">
-        <% } else { %>
-        <div class="MiddleHelper"></div>
-        <ul class="NavInner NegLinkWrapper MiddleWrapper">
-        <% } %>
-          <li>
-            <a href="/topic/create">创建总结</a><span class="HeaderSeparator"></span>
-          </li>
-          <li>
-            <button class="HeaderBtn BtnOpen" type="button">打开</button>
-          </li>
-        </ul>
-      </nav>
-    </div>
-  </header>
-
-  <%- body %>
-
-  <footer class='Footer'>
-    <% if (locals.index) { %>
-    <div class='Inner Index'>
-    <% } else { %>
-    <div class='Inner'>
-    <% } %>
-      <ul class='MtmLinkUl NegLinkWrapper'>
-        <li><a>关于我们</a><span class='FooterSeparator'>|</span></li>
-        <li><a>使用条规</a><span class='FooterSeparator'>|</span></li>
-      </ul>
-      <div class='Copyright'>
-        <small>© <b>mtm</b></small>
+    <header class='Header'>
+      <div class="Inner">
+        <table style="width: 100%;">
+          <td>
+            <a class="HeaderBtn <%= locals.index ? 'HeaderBanner01' : 'HeaderBanner02' %>" href="/" title='mtm'>mtm</a>
+          </td>
+        </table>
+        <nav class="Nav">
+          <% if (locals.index) { %>
+          <ul class="NavInner NegLinkWrapper">
+          <% } else { %>
+          <div class="MiddleHelper"></div>
+          <ul class="NavInner NegLinkWrapper MiddleWrapper">
+          <% } %>
+            <li>
+              <a href="/topic/create">创建总结</a><span class="HeaderSeparator"></span>
+            </li>
+            <li>
+              <button class="HeaderBtn BtnOpen" type="button">打开</button>
+            </li>
+          </ul>
+        </nav>
       </div>
-    </div>
-  </footer>
+    </header>
+
+    <%- body %>
+
+    <footer class='Footer'>
+      <div class='Inner'>
+        <ul class='MtmLinkUl NegLinkWrapper'>
+          <li><a>关于我们</a><span class='FooterSeparator'>|</span></li>
+          <li><a>使用条规</a><span class='FooterSeparator'>|</span></li>
+        </ul>
+        <div class='Copyright'>
+          <small>© <b>mtm</b></small>
+        </div>
+      </div>
+    </footer>
+  <% if (locals.index) { %>
+  </div>
+  <% } %>
 </body>
 </html>
