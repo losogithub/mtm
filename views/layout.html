@@ -17,28 +17,34 @@
   <% } %>
     <header class='Header'>
       <div class="Inner">
-        <table style="width: 100%;">
-          <td>
-            <a class="HeaderBtn <%= locals.index ? 'HeaderBanner01' : 'HeaderBanner02' %>" href="/" title='mtm'>mtm</a>
-          </td>
-        </table>
-        <nav class="Nav">
-          <% if (locals.index) { %>
-          <ul class="NavInner NegLinkWrapper">
-          <% } else { %>
-          <div class="MiddleHelper"></div>
-          <ul class="NavInner NegLinkWrapper MiddleWrapper">
-          <% } %>
-            <li>
-              <a href="/topic/create">创建总结</a><span class="HeaderSeparator"></span>
-            </li>
-            <li>
-              <button class="HeaderBtn BtnOpen" type="button">打开</button>
-            </li>
-          </ul>
-        </nav>
-      </div>
-    </header>
+      <table style="width: 100%;">
+        <td>
+          <a class="HeaderBtn <%= locals.index ? 'HeaderBanner01' : 'HeaderBanner02' %>" href="/" title='mtm'>mtm</a>
+        </td>
+      </table>
+      <nav class="Nav">
+        <% if (locals.index) { %>
+        <ul class="NavInner NegLinkWrapper">
+        <% } else { %>
+        <div class="MiddleHelper"></div>
+        <ul class="NavInner NegLinkWrapper MiddleWrapper">
+        <% } %>
+          <li>
+            <a href="/topic/create">创建总结</a><span class="HeaderSeparator"></span>
+          </li>
+          <li>
+            <a href="/signup" data-na="NL:join">register</a><span class="HeaderSeparator"> |</span>
+          </li>
+          <li>
+            <a href="/login" data-na="NC:login">login</a><span class="HeaderSeparator"> |</span>
+          </li>
+          <li>
+            <button class="HeaderBtn BtnOpen" type="button">打开</button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
 
     <%- body %>
 

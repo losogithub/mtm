@@ -8,6 +8,8 @@
 var site = require('./controllers/site');
 var topic = require('./controllers/topic');
 var sign = require('./controllers/sign');
+var personal = require('./controllers/personal');
+
 
 module.exports = function (app) {
   // home page
@@ -42,6 +44,14 @@ module.exports = function (app) {
     app.get('/resetPassword', sign.showResetPassword);
     app.post('/resetPassword', sign.resetPassword);
     app.get('/activeAccount', sign.activeAccount);
+
+
+   //personal management
+    app.get('/works', personal.showWorks);
+    app.get('/favourites', personal.showFavourite);
+    app.get('/settings', personal.showSettings);
+    //app.get('/account/');
+
     /*
     app.get('/active_account', sign.active_account);
 

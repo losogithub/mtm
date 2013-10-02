@@ -85,7 +85,19 @@ var newAndSave = function (name, loginName, password, email, active, callback) {
     user.save(callback);
 };
 
+/**
+ * 根据用户ID，查找用户
+ * Callback:
+ * - err, 数据库异常
+ * - user, 用户
+ * @param {String} id 用户ID
+ * @param {Function} callback 回调函数
+ */
+var getUserById = function (id, callback) {
+    User.findOne({_id: id}, callback);
+};
 
+exports.getUserById = getUserById;
 exports.getUserByLoginName = getUserByLoginName;
 exports.getUserByName = getUserByName;
 exports.getUserByMail = getUserByMail;

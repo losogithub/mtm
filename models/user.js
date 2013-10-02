@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var  Schema = mongoose.Schema;
-
+var ObjectId = mongoose.Schema.ObjectId;
 
 var UserSchema = new Schema({
     name: {type: String, index: true},
@@ -12,7 +12,12 @@ var UserSchema = new Schema({
     active: {type: Boolean, default: true},
 
     retrieve_time: {type: Number},
-    retrieve_key: {type: String}
+    retrieve_key: {type: String},
+
+    //topics array
+    topics : [ObjectId ],
+    topicCount : {type: Number, default:0},
+    pageviewCount:  {type: Number, default:0}
 });
 
 mongoose.model('User', UserSchema);
