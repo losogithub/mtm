@@ -130,9 +130,9 @@
 
       this.widget()
         .attr('mtm_type', this.type)
-        .prepend($('.templates .Widget').clone())
+        .prepend($('.Templates .Widget').clone())
         .find('.Widget').children().first()
-        .after($('.templates .WidgetContent.' + this.type).clone())
+        .after($('.Templates .WidgetContent.' + this.type).clone())
         .end().end().end();
 
       this.__create();
@@ -840,7 +840,7 @@
       if ($item) {
         var $editWidget = $item;
       } else {
-        var $editWidget = this.widget().find('.templates .WidgetItem').clone();
+        var $editWidget = this.widget().find('.Templates .LiWrapper li').clone();
         //如果是动态插入就插入前趋条目的后面，否则是静态插入就插入最前面
         if ($prevItem) {
           $prevItem.after($editWidget);
@@ -856,7 +856,7 @@
           $editWidget
             .attr('mtm_type', type)
             .insertAfter($prevItem)
-            .prepend(self.widget().find('.templates .DynamicMenu').clone())
+            .prepend(self.widget().find('.Templates .DynamicMenu').clone())
             .delegate('.DynamicMenuBtn', 'click', function (event) {
               self._createEditWidget($(event.target).attr('mtm_type'), {
                 from: 'DYNAMIC',
@@ -912,7 +912,7 @@
       var type = itemData.type;
       var itemId = itemData.itemId;
 
-      var $displayItem = this.widget().find('.templates .WidgetItem').clone();
+      var $displayItem = this.widget().find('.Templates .LiWrapper li').clone();
       //如果指定了前趋条目就插入其后面，否则插入最前
       if ($prevItem && $prevItem[0]) {
         $prevItem.after($displayItem);
@@ -946,9 +946,9 @@
       }
 
       //填充新内容，然后删除旧内容，顺序很重要！！！防止抖动
-      $item.prepend($('.templates .Item').clone())
+      $item.prepend($('.Templates .Item').clone())
         .find('.Item').children().first()
-        .after($('.templates .ItemContent.' + type).clone())
+        .after($('.Templates .ItemContent.' + type).clone())
         .end().end().end()
         .children().first().next().remove().end().end()
         .end()

@@ -1,13 +1,12 @@
-
 <div class="EditHead">
   <div class="Inner">
-    <div class='MiddleHelper'></div>
-    <div class="MiddleWrapper">
-      <h1 class='EditHeadTtl'><%= locals.topic ? '修改' : '创建' %>总结</h1>
-    </div>
-    <div class="EditHeadBtn">
-      <div class='MiddleHelper'></div>
-      <div class="MiddleWrapper">
+    <table class='EditHeadTtl'>
+      <td>
+        <h1><%= locals.topic ? '修改' : '创建' %>总结</h1>
+      </td>
+    </table>
+    <table class="EditHeadBtn">
+      <td>
         <% if (locals.topic) { %>
         <button class='Btn BtnHeadSave' type="button"></button>
         <% } else { %>
@@ -15,8 +14,8 @@
         <button class='Btn BtnPublish' type="button"></button>
         <% } %>
         <button class='Btn BtnHeadCancel' type="button"></button>
-      </div>
-    </div>
+      </td>
+    </table>
   </div>
 </div>
 <div class="Contents">
@@ -26,7 +25,8 @@
         <form>
           <fieldset class="EditForm">
             <div class="EditFormBox01">
-              <input class="InputBoxTitle Required" type="text" placeholder="输入总结标题（50字以内）" name='title' value="<%= locals.topic ? topic.title : '' %>"/>
+              <input class="InputBoxTitle Required" type="text" placeholder="输入总结标题（50字以内）" name='title'
+                     value="<%= locals.topic ? topic.title : '' %>"/>
               <a class='EditFormOption ButtonToggle ButtonToggleClose' style='display: none'>可选项目<span
                 class="ButtonToggleIco"></span></a>
             </div>
@@ -43,16 +43,16 @@
               <dl class="EditFormItem02">
                 <dt class="Hide">总结说明</dt>
                 <dd>
-                  <textarea class="InputBoxDesc" placeholder="输入总结描述（150字以内，换行符无效）" name='description'><%= locals.topic ? topic.desc : '' %></textarea>
+                  <textarea class="InputBoxDesc" placeholder="输入总结描述（150字以内，换行符无效）" name='description'><%= locals.topic
+                    ? topic.desc : '' %></textarea>
                 </dd>
               </dl>
             </div>
           </fieldset>
         </form>
       </div>
-      <div class="WidgetMenu01">
-        <div class="MiddleHelper"></div>
-        <div class="MiddleWrapper">
+      <table class="WidgetMenu01">
+        <td>
           <div class="WidgetUtilTtl01"><b>添加条目</b></div>
           <ul>
             <li><a class="WidgetMenuBtn" mtm_type="Link">链接</a></li>
@@ -62,8 +62,8 @@
             <li><a class="WidgetMenuBtn" mtm_type="TEXT">文本</a></li>
             <li><a class="WidgetMenuBtn" mtm_type="TITLE">标题</a></li>
           </ul>
-        </div>
-      </div>
+        </td>
+      </table>
     </div>
   </div>
 
@@ -72,7 +72,7 @@
     <div class="Main">
       <ul class="WidgetItemList">
         <% for (i in locals.items) { %>
-        <li class="WidgetItem" mtm_type='<%= items[i].type %>' mtm_id='<%= items[i].itemId %>'>
+        <li mtm_type='<%= items[i].type %>' mtm_id='<%= items[i].itemId %>'>
           <div class='Item'>
             <div class='ItemUtil0'>
             </div>
@@ -103,15 +103,14 @@
   </div>
 
   <!--模板2-->
-  <div class="templates" style="display:none;">
+  <div class="Templates" style="display:none;">
 
-    <ul>
-      <li class="WidgetItem"></li>
+    <ul class="LiWrapper">
+      <li></li>
     </ul>
 
-    <div class="DynamicMenu">
-      <div class="MiddleHelper"></div>
-      <div class="MiddleWrapper">
+    <table class="DynamicMenu">
+      <td>
         <p class="DynamicMenuTtl">添加条目</p>
         <ul class="DynamicMenuList NegLinkWrapper">
           <li><a class="DynamicMenuBtn" mtm_type="Link">链接</a></li>
@@ -121,14 +120,11 @@
           <li><a class="DynamicMenuBtn" mtm_type="TEXT">文本</a></li>
           <li><a class="DynamicMenuBtn" mtm_type="TITLE">标题</a></li>
         </ul>
-      </div>
-      <div class="DynamicMenuClose">
-        <div class="MiddleHelper"></div>
-        <div class="MiddleWrapper">
-          <button class="Btn BtnClose" title='关闭' type='button'>关闭</button>
-        </div>
-      </div>
-    </div>
+      </td>
+      <td class="DynamicMenuClose">
+        <button class="Btn BtnClose" title='关闭' type='button'>关闭</button>
+      </td>
+    </table>
 
     <form class="Widget">
       <div class='ItemUtil0'>
@@ -161,6 +157,7 @@
 
     <div class='WidgetContent IMAGE'>
       <img class='WidgetThumb IMAGE'>
+
       <div class="WidgetTxt IMAGE">
         <input class="WidgetInputBox IMAGE" type="text" placeholder="输入图片标题">
       </div>
@@ -172,6 +169,7 @@
 
     <div class='WidgetContent TEXT'>
       <textarea class="WidgetInputBox TEXT Required" name="contents" placeholder="输入文本"></textarea>
+
       <div class="WidgetButton">
         <button class="Btn BtnSave" type="button">保存</button>
         <button class="Btn BtnCancel" type="button">放弃</button>
@@ -184,6 +182,7 @@
 
     <div class='WidgetContent TITLE'>
       <input class="WidgetInputBox TITLE Required" type="text" name="contents" placeholder="输入标题">
+
       <div class="WidgetButton">
         <button class="Btn BtnSave" type="button">保存</button>
         <button class="Btn BtnCancel" type="button">放弃</button>
