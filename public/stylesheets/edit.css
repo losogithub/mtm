@@ -37,7 +37,9 @@
 .WidgetInputBox{color: rgb(0, 0, 0);padding: 0 4px;background-color: #fff;width: 100%;border-width: 1px;border-style: solid;border-color: rgb(202, 206, 209) rgb(232, 234, 235) rgb(232, 234, 235) rgb(202, 206, 209);}
 .InputBoxUrl{color: rgb(102, 102, 102);}
 .IMAGE_CREATE .WidgetInputBox{float: left;margin-right: 5px;width: 252px;height: 25px;padding-right: 4px;}
-.IMAGE .WidgetInputBox{height: 30px;line-height: 28px;font-size: 14px;font-weight: bold;}
+.IMAGE .WidgetInputBox_Ttl{height: 30px;font-size: 14px;font-weight: bold;margin-bottom: 7px;}
+.IMAGE .WidgetInputBox_Url{height: 25px;margin-bottom: 10px;}
+.IMAGE .WidgetInputBox_Cmt{min-height: 85px;padding: 5px 5px 0 5px;}
 .Btn_Check {float: left;width: 68px;height: 25px;background-position: 0px -90px;}
 .Btn_Check_Disabled {background-position: 0px -120px;}
 .TEXT .WidgetInputBox{min-height: 66px;padding: 5px 5px 0 0;resize: none;font-size: 14px}

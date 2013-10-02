@@ -41,7 +41,7 @@
                 </dd>
               </dl>
               <dl class="EditFormItem02">
-                <dt class="Hide">总结说明</dt>
+                <dt class="Hide">总结描述</dt>
                 <dd>
                   <textarea class="InputBoxDesc" placeholder="输入总结描述（150字以内，换行符无效）" name='description'><%= locals.topic
                     ? topic.desc : '' %></textarea>
@@ -56,7 +56,7 @@
           <div class="WidgetUtilTtl01"><b>添加条目</b></div>
           <ul>
             <li><a class="WidgetMenuBtn" mtm_type="Link">链接</a></li>
-            <li><a class="WidgetMenuBtn" mtm_type="IMAGE">图片</a></li>
+            <li><a class="WidgetMenuBtn" mtm_type="IMAGE_CREATE">图片</a></li>
             <li><a class="WidgetMenuBtn" mtm_type="Video">视频</a></li>
             <li><a class="WidgetMenuBtn" mtm_type="Quote">引用</a></li>
             <li><a class="WidgetMenuBtn" mtm_type="TEXT">文本</a></li>
@@ -114,7 +114,7 @@
         <p class="DynamicMenuTtl">添加条目</p>
         <ul class="DynamicMenuList NegLinkWrapper">
           <li><a class="DynamicMenuBtn" mtm_type="Link">链接</a></li>
-          <li><a class="DynamicMenuBtn" mtm_type="IMAGE">图片</a></li>
+          <li><a class="DynamicMenuBtn" mtm_type="IMAGE_CREATE">图片</a></li>
           <li><a class="DynamicMenuBtn" mtm_type="Video">视频</a></li>
           <li><a class="DynamicMenuBtn" mtm_type="Quote">引用</a></li>
           <li><a class="DynamicMenuBtn" mtm_type="TEXT">文本</a></li>
@@ -147,7 +147,7 @@
 
     <div class='WidgetContent IMAGE_CREATE'>
       <div class="WidgetThumb"></div>
-      <input class="WidgetInputBox InputBoxUrl Required" type="text" name="url" placeholder="输入图片URL">
+      <input class="WidgetInputBox InputBoxUrl Required AutoFocus" type="text" name="url" placeholder="输入图片URL">
       <button class="Btn Btn_Check Btn_Check_Disabled" type="button" disabled='disabled'>查看</button>
       <div class="WidgetButton">
         <button class="Btn Btn_Save" type="button">保存</button>
@@ -159,7 +159,9 @@
       <img class='WidgetThumb'>
 
       <div class="WidgetTxt IMAGE">
-        <input class="WidgetInputBox" type="text" placeholder="输入图片标题">
+        <input class="WidgetInputBox WidgetInputBox_Ttl" type="text" placeholder="输入图片标题">
+        <input class="WidgetInputBox WidgetInputBox_Url Required" type="text" placeholder="输入图片来源网页URL">
+        <textarea class="WidgetInputBox WidgetInputBox_Cmt Required AutoFocus" name="contents" placeholder="输入图片简介、评论"></textarea>
       </div>
       <div class="WidgetButton">
         <button class="Btn Btn_Save" type="button">保存</button>
@@ -168,7 +170,7 @@
     </div>
 
     <div class='WidgetContent TEXT'>
-      <textarea class="WidgetInputBox Required" name="contents" placeholder="输入文本"></textarea>
+      <textarea class="WidgetInputBox Required AutoFocus" name="contents" placeholder="输入文本"></textarea>
 
       <div class="WidgetButton">
         <button class="Btn Btn_Save" type="button">保存</button>
@@ -181,7 +183,7 @@
     </div>
 
     <div class='WidgetContent TITLE'>
-      <input class="WidgetInputBox Required" type="text" name="contents" placeholder="输入标题">
+      <input class="WidgetInputBox Required AutoFocus" type="text" name="contents" placeholder="输入标题">
 
       <div class="WidgetButton">
         <button class="Btn Btn_Save" type="button">保存</button>

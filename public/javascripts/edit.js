@@ -256,14 +256,36 @@
      */
     __create: function () {
       var self = this;
-      this.edit();
-    },
 
-    edit: function () {
+      //填充图片、textarea自适应高度、填充文本、监听文本改变事件
       this.widget()
         .find('.WidgetThumb')
         .attr('src', this.options.url)
-        .attr('onerror', 'console.log("onerror");');
+        .end()
+        .find('.WidgetInputBox_Cmt')
+        .autosize({
+          append: '\n'
+        })
+        .val(this.options.text)
+        .trigger('autosize.resize')
+        .on('input blur mousedown mouseup keydown keypress keyup', function () {
+          if (this.value == self.options.text) {
+            self._trigger('setState', null, 'create');
+          } else {
+            self._trigger('setState', null, 'edit');
+          }
+        })
+        .focus()
+        .end();
+
+      //移动光标到输入框末尾
+      moveSelection2End(this.widget().find('.WidgetInputBox_Cmt')[0]);
+    },
+
+    __animateDone: function () {
+      this.widget()
+        .find('.WidgetInputBox_Cmt')
+        .addClass('HeightAnimation');
     }
 
   });
@@ -287,9 +309,9 @@
         .find('.WidgetInputBox')
         .on('input blur mousedown mouseup keydown keypress keyup', function () {
           if (this.value) {
-            self.widget().find('.Btn_Check').removeClass('DISABLED').removeAttr('disabled');
+            self.widget().find('.Btn_Check').removeClass('Btn_Check_Disabled').removeAttr('disabled');
           } else {
-            self.widget().find('.Btn_Check').addClass('DISABLED').attr('disabled', 'disabled');
+            self.widget().find('.Btn_Check').addClass('Btn_Check_Disabled').attr('disabled', 'disabled');
           }
         })
         .focus()
@@ -338,9 +360,11 @@
       var self = this;
       var url = $(form).find('input:text').val();
       var callback = function () {
-//        self.edit();
         self.destroy();
-        self.widget().imageWidget({
+        self._trigger('createEditWidget', null, {
+          from: self.options.from,
+          type: 'IMAGE',
+          $item: self.widget(),
           url: url
         });
         self._trigger("setState", null, "edit");
@@ -756,6 +780,15 @@
       var options = $.extend({
 
         /**
+         * 编辑微件通知编辑页面创建微件的回调事件
+         * @param event
+         * @param data
+         */
+        createEditWidget: function (event, data) {
+          self._createEditWidget(data.type, data);
+        },
+
+        /**
          * 编辑微件通知编辑页面创建条目的回调事件
          * @param event
          * @param data
@@ -807,13 +840,14 @@
 
         //编辑中的微件和目标微件:类型相同、来源相同，只需给输入框焦点
         var $editingWidget = self.$editingWidget;
-        if ($editingWidget.attr('mtm_type') == type
+        if (($editingWidget.attr('mtm_type') == type
+          || $editingWidget.attr('mtm_type') + '_CREATE' == type)
           && self.from == from
           && (from == 'STATIC'
-          || from == 'INSERT' && self.$editingPrevItem == $prevItem)) {
+          || from == 'DYNAMIC' && self.$editingPrevItem == $prevItem)) {
           console.log('重置焦点');
 
-          $editingWidget.find('.WidgetInputBox')
+          $editingWidget.find('.AutoFocus')
             .focus()
             .end();
           //todo 优化：是否要移动光标？
@@ -829,7 +863,9 @@
         //删除编辑中的微件
         if (from != 'DYNAMIC') {
           if (this.callWidgetMethod) {
-            this.callWidgetMethod.call($editingWidget, 'remove');
+            if ($editingWidget.attr('mtm_type') != type + '_CREATE') {
+              this.callWidgetMethod.call($editingWidget, 'remove');
+            }
           } else {
             removeDynamicMenu(this.$editingWidget);
           }
@@ -871,10 +907,15 @@
             .hide().show('fast');
           this.callWidgetMethod = null;
           break;
-        case 'IMAGE':
-          console.log('_createEditWidget IMAGE');
+        case 'IMAGE_CREATE':
+          console.log('_createEditWidget IMAGE_CREATE');
           $editWidget.imageWidgetCreate(options);
           this.callWidgetMethod = $editWidget.imageWidgetCreate;
+          break;
+        case 'IMAGE':
+          console.log('_createEditWidget IMAGE');
+          $editWidget.imageWidget(options);
+          this.callWidgetMethod = $editWidget.imageWidget;
           break;
         case 'TEXT':
           console.log('_createEditWidget TEXT');
@@ -893,7 +934,6 @@
 
       console.log('create');
       self.state = 'create';
-      self.editType = type;
       self.from = from;
       self.$editingWidget = $editWidget;
       self.$editingPrevItem = $prevItem;
@@ -960,7 +1000,7 @@
           //填充文本
           var text = data.text;
           $item
-            .find('.ItemView.TEXT')
+            .find('.ItemView')
             .html(text.replace(/\n/g, '<br>'))
             .end();
           break;
@@ -968,7 +1008,7 @@
           //填充标题
           var title = data.title;
           $item
-            .find('.ItemView.TITLE')
+            .find('.ItemView')
             .html(title)
             .end();
           break;
