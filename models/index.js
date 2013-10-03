@@ -21,6 +21,7 @@ require('./user');
 exports.TopicModel = require('./topic');
 exports.ItemModels = {
   'VOID': require('./void_item'),
+  'IMAGE': require('./image_item'),
   'TEXT': require('./text_item'),
   'TITLE': require('./title_item')
 }

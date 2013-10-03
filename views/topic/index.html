@@ -18,15 +18,18 @@
                src="http://rr.img.naver.jp:80/mig?src=http%3A%2F%2Fimgcc.naver.jp%2Fkaze%2Fmission%2FUSER%2F20130922%2F14%2F1421764%2F3%2F255x255x2b832d75095ed32a7fe7dab9.jpg%2F300%2F600&twidth=95&theight=95&qlt=80&res_format=jpg&op=sc">
 
           <div class="HeadTxt">
-            <h1 class="HeadTtl NegLinkWrapper"><a href="/"><%= locals.topic ? topic.title : '' %></a></h1>
-
-            <div class='HeadUtil'>
-              <a class="Btn_Edit" href="<%= locals.url + '/edit?showOption=true' %>"><span class="Btn Btn_IcoEdit"></span>修改</a>
-              <% if (!locals.items || !items.length) { %>
-              <span class='WidgetUtilSeparator'>|</span>
-              <a class="Btn_Del"><span class="Btn Btn_IcoDel"></span>删除</a>
-              <% } %>
+            <div class="HeadTtlWrapper">
+              <h1 class="HeadTtl NegLinkWrapper"><a href="/"><%= locals.topic ? topic.title : '' %></a></h1>
+              <div class='HeadUtil'>
+                <a class="Btn_Edit" href="<%= locals.url + '/edit?showOption=true' %>"><span
+                  class="Btn Btn_IcoEdit"></span>修改</a>
+                <% if (!locals.items || !items.length) { %>
+                <span class='WidgetUtilSeparator'>|</span>
+                <a class="Btn_Del"><span class="Btn Btn_IcoDel"></span>删除</a>
+                <% } %>
+              </div>
             </div>
+
             <p><span class="HeadDesc"><%= topic.desc %></span><span class="HeadDate">更新日: <%= locals.topic ? topic.updateAt : '' %></span>
             </p>
 
@@ -76,9 +79,22 @@
           <div class='Item'>
             <div class='ItemUtil0'>
             </div>
-            <% if (items[i].type == 'TEXT') { %>
+            <% if (items[i].type == 'IMAGE') { %>
+            <div class='ItemContent IMAGE'>
+              <div class='ItemContent IMAGE'>
+                <div class="WidgetItemImg">
+                  <a class="ImageLink" href='<%= items[i].url %>'><img class='WidgetItemThumb' src='<%= items[i].url %>'></a>
+                  <p class="ItemQuoteWrapper"><span class="ItemQuoteHeader">来源</span><span class="ItemQuoteOuter"><a class="ItemQuote" href="<%= items[i].quote %>"><%= (items[i].quote = items[i].quote.match(/^((http[s]?|ftp):\/)?\/?((([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]))(:([^\/]*))?((\/\w+)*\/)?([\w\-\.]+[^#?\s]+)?(\?([^#]*))?(#(.*))?$/)) ? items[i].quote[3] : '' %></a></span></p>
+                </div>
+                <div class="ItemTxt NegLinkWrapper">
+                  <a class="ItemTtl ImageLink" href='<%= items[i].url %>'><%= items[i].title %></a>
+                  <p class="ItemDesc"><%- items[i].description.replace(/\n/g, "<br>") %></p>
+                </div>
+              </div>
+            </div>
+            <% } else if (items[i].type == 'TEXT') { %>
             <div class='ItemContent TEXT'>
-              <p class='ItemView'><%= items[i].text %></p>
+              <p class='ItemView'><%- items[i].text.replace(/\n/g, "<br>") %></p>
             </div>
             <% } else if (items[i].type == 'TITLE') { %>
             <div class='ItemContent TITLE'>

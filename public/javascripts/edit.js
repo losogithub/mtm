@@ -9,6 +9,8 @@
 (function ($) {
 
   var console = window.console || {log: $.noop, error: $.noop};
+  var REGEXP_URL = /^((http[s]?|ftp):\/)?\/?((([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]))(:([^\/]*))?((\/\w+)*\/)?([\w\-\.]+[^#?\s]+)?(\?([^#]*))?(#(.*))?$/;
+  var REGEXP_URL_NO_PROTOCOL = /^((http[s]?|ftp):\/)?\/?((([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]))(:([^\/]*))?((\/\w+)*\/)?([\w\-\.]+[^#?\s]+)?(\?([^#]*))?(#(.*))?$/;
   //数据库中该总结id
   var topicId = 0;
   //
@@ -221,7 +223,7 @@
       var self = this;
       console.log('commit');
 
-      //ajax完成后修改widget为显示item
+      //ajax完成后将微件改为条目
       var doneCallback = function (data) {
         data.$li = self.widget();
         self._trigger('createDisplayItem', null, data);
@@ -263,7 +265,10 @@
     type: 'IMAGE',
 
     options: {
-      url: ''
+      url: '',
+      title: '',
+      quote: '',
+      description: ''
     },
 
     /**
@@ -273,34 +278,121 @@
     __create: function () {
       var self = this;
 
-      //填充图片、textarea自适应高度、填充文本、监听文本改变事件
+      //填充图片、textarea自适应高度、填充文本
+      var urlParts = this.options.url.match(REGEXP_URL);
       this.widget()
-        .find('.WidgetThumb')
+        .find('.WidgetItemThumb')
         .attr('src', this.options.url)
         .end()
-        .find('.WidgetInputBox_Cmt')
+        .find('.WidgetInputBox_Desc')
         .autosize({
           append: '\n'
         })
-        .val(this.options.text)
+        .val(this.options.description)
         .trigger('autosize.resize')
-        .on('input blur mousedown mouseup keydown keypress keyup', function () {
-          if (this.value == self.options.text) {
-            self._trigger('setState', null, 'create');
-          } else {
-            self._trigger('setState', null, 'edit');
-          }
-        })
+        .end()
+        .find('.WidgetInputBox_Ttl')
+        .val(this.options.title)
+        .end()
+        .find('.WidgetInputBox_Quo')
+        .val(this.options.quote ? this.options.quote : urlParts ? urlParts[2] + '://' + urlParts[3] : 'http://')
         .end();
 
       //移动光标到输入框末尾
-      moveSelection2End(this.widget().find('.WidgetInputBox_Cmt')[0]);
+      moveSelection2End(this.widget().find('.WidgetInputBox_Desc')[0]);
     },
 
     __animateDone: function () {
       this.widget()
-        .find('.WidgetInputBox_Cmt')
+        .find('.WidgetInputBox_Desc')
         .addClass('HeightAnimation');
+    },
+
+    /**
+     * 子类的表单验证
+     * @private
+     */
+    __initFormValidation: function () {
+      var self = this;
+      this.widget().find('form')
+        .submit(function () {
+          var $quote = self.widget().find('.WidgetInputBox_Quo');
+          var quote = $quote.val();
+          console.log('quote=' + quote);
+          var urlParts = quote.match(REGEXP_URL_NO_PROTOCOL);
+          console.log('urlParts[2]=' + urlParts[2]);
+          if (urlParts && urlParts[3] && !urlParts[2]) {
+            $quote.val('http://' + quote);
+          }
+        })
+        .validate({
+        debug: false,
+        ignore: "",
+        onkeyup: false,
+        focusInvalid: false,
+        onfocusout: false,
+        submitHandler: function (form) {
+          self.commit();
+        },
+        showErrors: function (errorMap, errorList) {
+          if (errorList.length) {
+            alert(errorMap.title || errorMap.description || errorMap.quote);
+          }
+        },
+        rules: {
+          title: {
+            maxlength: 100,
+            required: false
+          },
+          quote: {
+            required: true,
+            url: true
+          },
+          description: {
+            maxlength: 300,
+            required: false
+          }
+        },
+        messages: {
+          title: {
+            maxlength: '图片标题太长，请缩写到100字以内。'
+          },
+          quote: {
+            required: '尚未输入图片来源网页URL。',
+            url: '图片来源网页URL格式错误。'
+          },
+          description: {
+            maxlength: '图片简介、评论太长，请缩写到300字以内。'
+          }
+        }
+      });
+    },
+
+    /**
+     * 子类提交给服务器的数据
+     * @returns {{text: *}}
+     * @private
+     */
+    _getCommitData: function () {
+      return {
+        url: this.options.url,
+        title: this.widget().find('.WidgetInputBox_Ttl').val(),
+        quote: this.widget().find('.WidgetInputBox_Quo').val(),
+        description: this.widget().find('.WidgetInputBox_Desc').val()
+      }
+    },
+
+    /**
+     * 子类的原始数据
+     * @private
+     */
+    _getOriginalData: function () {
+      return {
+        url: this.options.url,
+        title: this.options.title,
+        quote: this.options.quote,
+        description: this.options.description
+      }
     }
 
   });
@@ -464,7 +556,7 @@
         messages: {
           contents: {
             required: "尚未输入文本。",
-            maxlength: "请输入2000字以内文本。"
+            maxlength: "文本太长，请缩写到2000字以内。"
           }
         }
       });
@@ -555,7 +647,7 @@
         messages: {
           contents: {
             required: "尚未输入标题。",
-            maxlength: "请输入100字以内标题。"
+            maxlength: "标题太长，请缩写到100字以内。"
           }
         }
       });
@@ -656,11 +748,11 @@
         messages: {
           title: {
             required: "请输入5～50字的总结标题。",
-            minlength: "请输入5～50字的总结标题。",
-            maxlength: "请输入5～50字的总结标题。"
+            minlength: "总结标题太短，请控制在5～50字之间。",
+            maxlength: "总结标题太长，请控制在5～50字之间。"
           },
           description: {
-            maxlength: "总结描述超出150字限制。"
+            maxlength: "总结描述太长，请缩写到150字以内。"
           }
         }
       });
@@ -743,12 +835,32 @@
         .end();
 
       switch (type) {
+        case 'IMAGE':
+          //绑定修改点击响应
+          $li
+            .find('.Btn_Edit')
+            .click(function () {
+              var url = $li.find('.IMAGE .WidgetItemThumb').attr('src');
+              var title = $li.find('.ItemTtl').html();
+              var quote = $li.find('.ItemQuote').attr('href');
+              var description = $li.find('.ItemDesc').html().replace(/<br>/g, '\n');
+              self._createEditWidget(type, {
+                from: 'EDIT',
+                url: url,
+                title: title,
+                quote: quote,
+                description: description,
+                $item: $li
+              });
+            })
+            .end();
+          break;
         case 'TEXT':
           //绑定修改点击响应
           $li
             .find('.Btn_Edit')
             .click(function () {
-              var text = $li.find('.ItemView.TEXT').html().replace(/<br>/g, '\n');
+              var text = $li.find('.TEXT .ItemView').html().replace(/<br>/g, '\n');
               self._createEditWidget(type, {
                 from: 'EDIT',
                 text: text,
@@ -762,7 +874,7 @@
           $li
             .find('.Btn_Edit')
             .click(function () {
-              var title = $li.find('.ItemView.TITLE').html();
+              var title = $li.find('.TITLE .ItemView').html();
               self._createEditWidget(type, {
                 from: 'EDIT',
                 title: title,
@@ -987,14 +1099,8 @@
       var self = this;
 
       //销毁编辑微件，填充新内容后再remove以防抖动
-      if ($item.data('mtm-textWidget')) {
-        console.log('destroy');
-        $item.textWidget('destroy');
-        $item.removeAttr('style');
-      } else if ($item.data('mtm-titleWidget')) {
-        console.log('destroy');
-        $item.titleWidget('destroy');
-        $item.removeAttr('style');
+      if (this.callWidgetMethod) {
+        this.callWidgetMethod.call($item, 'destroy');
       }
 
       //填充新内容，然后删除旧内容，顺序很重要！！！防止抖动
@@ -1008,6 +1114,32 @@
         .attr('mtm_id', itemId);
 
       switch (type) {
+        case 'IMAGE':
+          //填充图片信息
+          var url = data.url;
+          var title = data.title;
+          var quote = data.quote;
+          var description = data.description;
+          var urlParts = quote.match(REGEXP_URL);
+          $item
+            .find('.WidgetItemThumb')
+            .attr('src', url)
+            .end()
+            .find('.ImageLink')
+            .attr('href', url)
+            .end()
+            .find('.ItemTtl')
+            .attr('href', url)
+            .html(title)
+            .end()
+            .find('.ItemQuote')
+            .attr('href', quote)
+            .html(urlParts ? urlParts[3] : '')
+            .end()
+            .find('.ItemDesc')
+            .html(description.replace(/\n/g, '<br>'))
+            .end();
+          break;
         case 'TEXT':
           //填充文本
           var text = data.text;

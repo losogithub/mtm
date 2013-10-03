@@ -12,9 +12,10 @@
 .Heading{padding-top: 26px;padding-bottom: 10px;border-bottom: 3px solid rgb(0, 0, 0);}
 .Required{padding-left: 15px !important;background: url("/images/FormInputGuide.png") no-repeat scroll 5px 8px;}
 /*微件*/
+.WidgetContent{overflow: hidden;}
 .WidgetMenuBtn {text-decoration: none}
 .WidgetItemList {padding-bottom: 1px;}
-.WidgetItemList>li{position: relative;background-color: rgb(255, 255, 255);overflow: hidden;}
+.WidgetItemList>li{position: relative;background-color: rgb(255, 255, 255);}
 .DynamicMenu{height: 33px;
     line-height: 1.2;
     border: 1px solid rgb(219, 219, 219);
@@ -31,15 +32,13 @@
     height: 9px;
     background-position: -55px -170px;}
 .ui-sortable-helper{background-color: rgba(40, 184, 55, 0.2)!important;-webkit-box-shadow:rgba(0,0,0,0.2) 1px 1px 2px;-moz-box-shadow:rgba(0,0,0,0.2) 1px 1px 2px;box-shadow:rgba(0,0,0,0.2) 1px 1px 2px}
-.WidgetThumb{float: left;margin-right: 10px;background: url("/images/sprite_WidgetThumb.png") no-repeat scroll 0 0 transparent;}
-.IMAGE_CREATE .WidgetThumb{width: 300px;height: 220px;background-position: 0 0;}
 .WidgetTxt{overflow: hidden;}
 .WidgetInputBox{color: rgb(0, 0, 0);padding: 0 4px;background-color: #fff;width: 100%;border-width: 1px;border-style: solid;border-color: rgb(202, 206, 209) rgb(232, 234, 235) rgb(232, 234, 235) rgb(202, 206, 209);}
 .InputBoxUrl{color: rgb(102, 102, 102);}
 .IMAGE_CREATE .WidgetInputBox{float: left;margin-right: 5px;width: 252px;height: 25px;padding-right: 4px;}
 .IMAGE .WidgetInputBox_Ttl{height: 30px;font-size: 14px;font-weight: bold;margin-bottom: 7px;}
-.IMAGE .WidgetInputBox_Url{height: 25px;margin-bottom: 10px;}
-.IMAGE .WidgetInputBox_Cmt{min-height: 85px;padding: 5px 5px 0 5px;}
+.IMAGE .WidgetInputBox_Quo {height: 25px;margin-bottom: 10px;}
+.IMAGE .WidgetInputBox_Desc {min-height: 85px;padding: 5px 5px 0 5px;resize: none;}
 .Btn_Check {float: left;width: 68px;height: 25px;background-position: 0px -90px;}
 .Btn_Check_Disabled {background-position: 0px -120px;}
 .TEXT .WidgetInputBox{min-height: 66px;padding: 5px 5px 0 0;resize: none;font-size: 14px}

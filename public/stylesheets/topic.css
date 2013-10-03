@@ -8,7 +8,8 @@
 .HeadMain{float: left;width: 725px;}
 .HeadThumb{float: left;width: 95px;height: 95px;margin-right: 15px;}
 .HeadTxt{float: left;width: 615px;margin-top: -3px;}
-.HeadTtl{display: inline-block;font-size: 32px;line-height: 38px;margin-right: 15px;margin-bottom: 7px;}
+.HeadTtlWrapper{margin-bottom: 7px;}
+.HeadTtl{display: inline;font-size: 32px;line-height: 38px;margin-right: 15px;}
 .HeadUtil{display: inline-block;}
 .HeadTtl a{color: rgb(0, 0, 0);}
 .HeadDesc{margin-right: 8px;color: rgb(102, 102, 102);}

@@ -77,18 +77,14 @@ var createVoidItem = function (topic, callback) {
  * @param topic
  * @param prevItemType
  * @param prevItemId
- * @param type
  * @param data
  * @param callback
  */
-var createItem = function (topic, prevItemType, prevItemId, type, data, callback) {
+var createItem = function (topic, prevItemType, prevItemId, data, callback) {
   console.log('createItem');
 
   //创建条目
-  var item = new ItemModels[type]();
-  item.type = type;
-  item.text = data.text;
-  item.title = data.title;
+  var item = new ItemModels[data.type](data);
 
   //插入条目
   insertItem(
@@ -266,11 +262,11 @@ var deleteItem = function (type, itemId, callback) {
  * @param data
  * @param callback
  */
-var editItem = function (type, itemId, data, callback) {
+var editItem = function (data, callback) {
   console.log('editItem');
 
   //查找条目
-  ItemModels[type].findById(itemId, function (err, item) {
+  ItemModels[data.type].findById(data._id, function (err, item) {
     if (err) {
       console.error('find item failed:' + err);
     } else if (!item) {
@@ -278,8 +274,12 @@ var editItem = function (type, itemId, data, callback) {
     } else {
 
       //修改条目
-      item.text = data.text;
-      item.title = data.title;
+        for (var key in data) {
+          item[key] =  data[key];
+        }
+//      item.extend(data);
+//      item.text = data.text;
+//      item.title = data.title;
       item.save(function (err, item) {
         if (err) {
           console.error('save item failed:' + err);

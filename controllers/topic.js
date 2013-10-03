@@ -31,12 +31,7 @@ var index = function (req, res, next) {
           };
           var itemsData = [];
           items.forEach(function (item) {
-            itemsData.push({
-              type: item.type,
-              itemId: item._id,
-              text: item.text,
-              title: item.title
-            });
+            itemsData.push(_getItemData(item));
           });
           res.set('Cache-Control', 'private, no-cache, no-store, must-revalidate, post-check=0, pre-check=0');
           res.set('Connection', 'close');
@@ -91,12 +86,7 @@ var edit = function (req, res, next) {
         };
         var itemsData = [];
         items.forEach(function (item) {
-          itemsData.push({
-            type: item.type,
-            itemId: item._id,
-            text: item.text,
-            title: item.title
-          });
+          itemsData.push(_getItemData(item));
         });
         res.set('Cache-Control', 'private, no-cache, no-store, must-revalidate, post-check=0, pre-check=0');
         res.set('Connection', 'close');
@@ -111,7 +101,7 @@ var edit = function (req, res, next) {
           js: [
             '/javascripts/jquery.autosize.min.js',
             '/javascripts/jquery-ui-1.10.3.custom.min.js',
-            'http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js',
+            '/javascripts/jquery.validate.min.js',
             '/javascripts/edit.js'
           ],
           topic: topicData,
@@ -147,12 +137,7 @@ var getContents = function (req, res, next) {
         };
         var itemsData = [];
         items.forEach(function (item) {
-          itemsData.push({
-            type: item.type,
-            itemId: item._id,
-            text: item.text,
-            title: item.title
-          });
+          itemsData.push(_getItemData(item));
         });
         res.send({
           topicData: topicData,
@@ -167,14 +152,10 @@ var createItem = function (req, res, next) {
   var topicId = req.body.topicId;
   var prevItemType = req.body.prevItemType;
   var prevItemId = req.body.prevItemId;
-  var type = req.body.type;
-  var text = sanitize(req.body.text).trim();
-  text = sanitize(text).xss();
-  var title = sanitize(req.body.title).trim();
-  title = sanitize(title).xss();
-  var data = {
-    text: text,
-    title: title
+
+  var data = _getData(req);
+  if (!data) {
+    return;
   }
 
   Topic.createVoidItemIfNotExist(topicId, function (topic) {
@@ -182,39 +163,103 @@ var createItem = function (req, res, next) {
       topic,
       prevItemType,
       prevItemId,
-      type,
       data,
       function (item) {
         Topic.increaseItemCountBy(topicId, 1);
         console.log('create item done.');
-        res.send({
-          itemId: item._id,
-          type: item.type,
-          text: item.text,
-          title: item.title
-        });
+        res.send(_getItemData(item));
       })
   })
 }
 
-var editItem = function (req, res, next) {
+var _getData = function (req, _id) {
   var type = req.body.type;
-  var itemId = req.body.itemId;
-  var text = sanitize(req.body.text).trim();
-  text = sanitize(text).xss();
-  var title = sanitize(req.body.title).trim();
-  title = sanitize(title).xss();
-  var data = {
-    text: text,
-    title: title
+  var data;
+
+  switch (type) {
+    case 'IMAGE':
+      var url = sanitize(req.body.url).trim();
+      url = sanitize(url).xss();
+      var title = sanitize(req.body.title).trim();
+      title = sanitize(title).xss();
+      var quote = sanitize(req.body.quote).trim();
+      quote = sanitize(quote).xss();
+      var description = sanitize(req.body.description).trim();
+      description = sanitize(description).xss();
+
+      data = {
+        url: url,
+        title: title,
+        quote: quote,
+        description: description
+      }
+      break;
+    case 'TEXT':
+      var text = sanitize(req.body.text).trim();
+      text = sanitize(text).xss();
+
+      data = {
+        text: text
+      }
+      break;
+    case 'TITLE':
+      var title = sanitize(req.body.title).trim();
+      title = sanitize(title).xss();
+
+      data = {
+        title: title
+      }
+      break;
+    default :
+      break;
   }
-  Item.editItem(type, itemId, data, function (item) {
-    res.send({
-      itemId: item._id,
-      type: item.type,
-      text: item.text,
-      title: item.title
-    });
+  data.type = type;
+  if (_id) {
+    data._id = _id;
+  }
+  return data;
+}
+
+var _getItemData = function (item) {
+  var itemData;
+
+  switch (item.type) {
+    case 'IMAGE':
+      itemData = {
+        itemId: item._id,
+        type: item.type,
+        url: item.url,
+        title: item.title,
+        quote: item.quote,
+        description: item.description
+      }
+      break;
+    case 'TEXT':
+      itemData = {
+        itemId: item._id,
+        type: item.type,
+        text: item.text
+      }
+      break;
+    case 'TITLE':
+      itemData = {
+        itemId: item._id,
+        type: item.type,
+        title: item.title
+      }
+      break;
+    default:
+      break;
+  }
+  return itemData;
+}
+
+var editItem = function (req, res, next) {
+  var itemId = req.body.itemId;
+
+  var data = _getData(req, itemId);
+  Item.editItem(data, function (item) {
+    res.send(_getItemData(item));
   });
 }
 

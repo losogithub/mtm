@@ -76,9 +76,22 @@
           <div class='Item'>
             <div class='ItemUtil0'>
             </div>
-            <% if (items[i].type == 'TEXT') { %>
+            <% if (items[i].type == 'IMAGE') { %>
+            <div class='ItemContent IMAGE'>
+              <div class='ItemContent IMAGE'>
+                <div class="WidgetItemImg">
+                  <a class="ImageLink" href='<%= items[i].url %>'><img class='WidgetItemThumb' src='<%= items[i].url %>'></a>
+                  <p class="ItemQuoteWrapper"><span class="ItemQuoteHeader">来源</span><span class="ItemQuoteOuter"><a class="ItemQuote" href="<%= items[i].quote %>"><%= (items[i].quote = items[i].quote.match(/^((http[s]?|ftp):\/)?\/?((([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]))(:([^\/]*))?((\/\w+)*\/)?([\w\-\.]+[^#?\s]+)?(\?([^#]*))?(#(.*))?$/)) ? items[i].quote[3] : '' %></a></span></p>
+                </div>
+                <div class="ItemTxt NegLinkWrapper">
+                  <a class="ItemTtl ImageLink" href='<%= items[i].url %>'><%= items[i].title %></a>
+                  <p class="ItemDesc"><%- items[i].description.replace(/\n/g, "<br>") %></p>
+                </div>
+              </div>
+            </div>
+            <% } else if (items[i].type == 'TEXT') { %>
             <div class='ItemContent TEXT'>
-              <p class='ItemView TEXT'><%= items[i].text %></p>
+              <p class='ItemView TEXT'><%- items[i].text.replace(/\n/g, "<br>") %></p>
             </div>
             <% } else if (items[i].type == 'TITLE') { %>
             <div class='ItemContent TITLE'>
@@ -146,7 +159,9 @@
     </div>
 
     <div class='WidgetContent IMAGE_CREATE'>
-      <div class="WidgetThumb"></div>
+      <div class="WidgetItemImg">
+        <div class="WidgetItemThumb"></div>
+      </div>
       <input class="WidgetInputBox InputBoxUrl Required AutoFocus" type="text" name="url" placeholder="输入图片URL">
       <button class="Btn Btn_Check Btn_Check_Disabled" type="button" disabled='disabled'>查看</button>
       <div class="WidgetButton">
@@ -156,16 +171,29 @@
     </div>
 
     <div class='WidgetContent IMAGE'>
-      <img class='WidgetThumb'>
+      <div class="WidgetItemImg">
+        <img class='WidgetItemThumb'>
+      </div>
 
-      <div class="WidgetTxt IMAGE">
-        <input class="WidgetInputBox WidgetInputBox_Ttl" type="text" placeholder="输入图片标题">
-        <input class="WidgetInputBox WidgetInputBox_Url Required" type="text" placeholder="输入图片来源网页URL">
-        <textarea class="WidgetInputBox WidgetInputBox_Cmt Required AutoFocus" name="contents" placeholder="输入图片简介、评论"></textarea>
+      <div class="WidgetTxt">
+        <input class="WidgetInputBox WidgetInputBox_Ttl AutoFocus" type="text" name="title" placeholder="输入图片标题">
+        <input class="WidgetInputBox WidgetInputBox_Quo Required" type="text" name="quote" placeholder="输入图片来源网页URL">
+        <textarea class="WidgetInputBox WidgetInputBox_Desc" name="description" placeholder="输入图片简介、评论"></textarea>
       </div>
       <div class="WidgetButton">
         <button class="Btn Btn_Save" type="button">保存</button>
         <button class="Btn Btn_Cancel" type="button">放弃</button>
+      </div>
+    </div>
+
+    <div class='ItemContent IMAGE'>
+      <div class="WidgetItemImg">
+        <a class="ImageLink"><img class='WidgetItemThumb'></a>
+        <p class="ItemQuoteWrapper"><span class="ItemQuoteHeader">来源</span><span class="ItemQuoteOuter"><a class="ItemQuote"></a></span></p>
+      </div>
+      <div class="ItemTxt NegLinkWrapper">
+        <a class="ItemTtl ImageLink"></a>
+        <p class="ItemDesc"></p>
       </div>
     </div>
 
