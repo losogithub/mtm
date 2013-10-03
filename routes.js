@@ -38,7 +38,7 @@ module.exports = function (app) {
     app.post('/registerAccount', sign.signup);
     app.get('/login', sign.showLogin);
     app.post('/login', sign.login);
-    app.get('/signout', sign.signout);  //todo: not tested yet.
+    app.get('/logout', sign.signout);  //todo: not tested yet.
     app.get('/forgetPassword', sign.showForgetPassword);
     app.post('/forgetPassword', sign.forgetPassword);
     app.get('/resetPassword', sign.showResetPassword);
@@ -50,7 +50,9 @@ module.exports = function (app) {
     app.get('/works', personal.showWorks);
     app.get('/favourites', personal.showFavourite);
     app.get('/settings', personal.showSettings);
-    //app.get('/account/');
+    //todo
+    //app.get('/notifications', personal)
+
 
     /*
     app.get('/active_account', sign.active_account);
