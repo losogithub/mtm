@@ -15,7 +15,8 @@
 .WidgetContent{overflow: hidden;}
 .WidgetMenuBtn {text-decoration: none}
 .WidgetItemList {padding-bottom: 1px;}
-.WidgetItemList>li{position: relative;background-color: rgb(255, 255, 255);}
+.WidgetItemList>li{overflow: hidden;background-color: rgb(255, 255, 255);}
+.WidgetContent{overflow: hidden;}
 .DynamicMenu{height: 33px;
     line-height: 1.2;
     border: 1px solid rgb(219, 219, 219);

@@ -184,10 +184,14 @@
     __initFormValidation: $.noop,
 
     autoFocus: function () {
-      this.widget().find('.AutoFocus')
+      var self = this;
+      this.widget()
+        .scroll(function () {
+          self.widget().scrollTop(0);
+        })
+        .find('.AutoFocus')
         .focus()
-        .end()
-        .scrollTop(0);
+        .end();
     },
 
     /**
@@ -1122,14 +1126,13 @@
           var description = data.description;
           var urlParts = quote.match(REGEXP_URL);
           $item
-            .find('.WidgetItemThumb')
-            .attr('src', url)
-            .end()
             .find('.ImageLink')
             .attr('href', url)
             .end()
+            .find('.WidgetItemThumb')
+            .attr('src', url)
+            .end()
             .find('.ItemTtl')
-            .attr('href', url)
             .html(title)
             .end()
             .find('.ItemQuote')
