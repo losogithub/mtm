@@ -156,14 +156,23 @@
 
       //如果是修改就淡入，否则是新建就淡入加展开
       if (empty) {
-        this.widget().hide().show('fast');
+        this.widget()
+          .hide()
+          .css({ 'opacity': 0 })
+          .slideDown({
+            duration: 'fast',
+            queue: false
+          })
+          .fadeTo(400, 1);
       } else {
         this.widget()
           .css({ 'opacity': 0 })
-          .animate({ 'opacity': 1 }, 'fast', function () {
+          .fadeTo('fast', 1, function () {
             self.__animateDone();
           });
       }
+
+      this.autoFocus();
 
       this.__initFormValidation();
     },
@@ -171,6 +180,13 @@
     __create: $.noop,
     __animateDone: $.noop,
     __initFormValidation: $.noop,
+
+    autoFocus: function () {
+      this.widget().find('.AutoFocus')
+        .focus()
+        .end()
+        .scrollTop(0);
+    },
 
     /**
      * 不带提示的放弃修改
@@ -275,7 +291,6 @@
             self._trigger('setState', null, 'edit');
           }
         })
-        .focus()
         .end();
 
       //移动光标到输入框末尾
@@ -314,7 +329,6 @@
             self.widget().find('.Btn_Check').addClass('Btn_Check_Disabled').attr('disabled', 'disabled');
           }
         })
-        .focus()
         .end();
 
       //移动光标到输入框末尾
@@ -409,7 +423,6 @@
             self._trigger('setState', null, 'edit');
           }
         })
-        .focus()
         .end();
 
       //移动光标到输入框末尾
@@ -507,7 +520,6 @@
             self._trigger('setState', null, 'edit');
           }
         })
-        .focus()
         .end();
 
       //移动光标到输入框末尾
@@ -847,9 +859,9 @@
           || from == 'DYNAMIC' && self.$editingPrevItem == $prevItem)) {
           console.log('重置焦点');
 
-          $editingWidget.find('.AutoFocus')
-            .focus()
-            .end();
+          if (this.callWidgetMethod) {
+            this.callWidgetMethod.call($editingWidget, 'autoFocus');
+          }
           //todo 优化：是否要移动光标？
           return;
         }
