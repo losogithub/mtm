@@ -77,16 +77,16 @@ table{border-spacing: 0;height: 100%;}
 /*条目*/
 .WidgetItemList>li:hover{background-color: #f8f8f8;}
 .ItemContent{overflow: hidden;}
-.ItemQuoteWrapper{line-height: 1.2;margin-top: 3px;color: rgb(170, 170, 170);}
-.ItemQuoteOuter{display: block;overflow: hidden;}
+.ItemQuoteWrapper{line-height: 1.2;margin-top: 3px;color: rgb(170, 170, 170);min-width: 100px;}
 .ItemQuoteHeader{float: left;margin-right: 5px;}
-.ItemQuote{overflow: hidden;min-width: 100px;color: rgb(170, 170, 170);word-wrap: break-word;}
+.ItemQuoteOuter{display: block;overflow: hidden;}
+.ItemQuote{overflow: hidden;color: rgb(170, 170, 170);word-wrap: break-word;}
 .ItemTxt{overflow: hidden;}
 .ItemTtl{display: inline-block;margin-bottom: 4px;line-height: 1.333;font-weight: bold;font-size: 18px;color: rgb(0, 0, 0);}
 .ItemDesc{line-height: 1.429;color: rgb(102, 102, 102);font-size: 14px;}
 .ItemUtil0 {height: 15px}
-.ItemUtil1 {visibility: hidden;display: inline-block;}
-.ItemUtil2 {visibility: hidden;display: inline-block;position: absolute;right: 0}
+.ItemUtil1 {visibility: hidden;float: left;}
+.ItemUtil2 {visibility: hidden;float: right;}
 .WidgetItemImg {float: left;margin-right: 10px;}
 .WidgetItemThumb {background: url("/images/sprite_WidgetThumb.png") no-repeat scroll 0 0 transparent;}
 .IMAGE_CREATE .WidgetItemThumb {width: 300px;height: 220px;background-position: 0 0;}

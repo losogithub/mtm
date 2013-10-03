@@ -1,0 +1,22 @@
+<% if (item.type == 'IMAGE' || item.type == 'ALL') { %>
+<div class='ItemContent IMAGE'>
+  <div class="WidgetItemImg">
+    <a class="ImageLink" href='<%= item.url ? item.url : "" %>'><img class='WidgetItemThumb' src='<%= item.url ? item.url : "" %>'></a>
+    <p class="ItemQuoteWrapper"><span class="ItemQuoteHeader">来源</span><span class="ItemQuoteOuter"><a class="ItemQuote" href="<%= item.quote ? item.quote : '' %>"><%= item.quote ? (item.quote = item.quote.match(/^((http[s]?|ftp):\/)?\/?((([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]))(:([^\/]*))?(((\/\w+)*\/)([\w\-\.]+[^#?\s]+))?(\?([^#]*))?(#(.*))?$/)) ? item.quote[3] : '' : '' %></a></span></p>
+  </div>
+  <div class="ItemTxt NegLinkWrapper">
+    <a class="ItemTtl ImageLink" href='<%= item.url ? item.url : "" %>'><%= item.title ? item.title : '' %></a>
+    <p class="ItemDesc"><%- item.description ? item.description.replace(/\n/g, "<br>") : '' %></p>
+  </div>
+</div>
+<% } %>
+<% if (item.type == 'TEXT' || item.type == 'ALL') { %>
+<div class='ItemContent TEXT'>
+  <p class='ItemView TEXT'><%- item.text ? item.text.replace(/\n/g, "<br>") : '' %></p>
+</div>
+<% } %>
+<% if (item.type == 'TITLE' || item.type == 'ALL') { %>
+<div class='ItemContent TITLE'>
+  <p class='ItemView TITLE'><%= item.title ? item.title : '' %></p>
+</div>
+<% } %>
