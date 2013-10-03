@@ -420,6 +420,7 @@ function checkOnlyPassword(pass, user, req, res){
     }
       */
     var refer = '/works';
+    console.log(req.session);
     res.redirect(refer);
 }
 
@@ -677,8 +678,12 @@ var activeAccount = function (req, res, next) {
 
 // private
 function gen_session(user, res) {
+    console.log("gen_session");
     var auth_token = encrypt(user._id + '\t' + user.name + '\t' + user.pass + '\t' + user.email, config.session_secret);
-    res.cookie(config.auth_cookie_name, auth_token, {path: '/', maxAge: 1000 * 60 * 60 * 24 * 30}); //cookie 有效期30天
+    //console.log(auth_token);
+    res.cookie(config.auth_cookie_name, auth_token, {path: '/',  maxAge: 1000 * 60 * 60}); //cookie 有效期1 hour
+    //todo: this one not work
+    console.log(res.cookie.name);
 }
 
 function encrypt(str, secret) {

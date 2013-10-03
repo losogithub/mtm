@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=8">
 
 
-<title><%- title %></title>
+
 <title><%- title %></title>
 <% for(i in css) { %>
 <link type='text/css' rel='stylesheet' href='<%= css[i] %>'/>
@@ -41,17 +41,6 @@ tagno: "13800104942008"
 <div class="LyWrap">
 
     <div class="lyWrapInner">
-        <script language="javascript">
-            function goLogout() {
-                location.href="/logout?fromUrl="+encodeURIComponent(location.href);
-            }
-            function goLogin() {
-                location.href="/login?fromUrl="+encodeURIComponent(location.href);
-            }
-        </script>
-
-
-
 
         <header><div class="LyHead">
             <div class="lyHeadWrap">
@@ -65,22 +54,22 @@ tagno: "13800104942008"
                         <nav>
                             <h2 class="MdHide">My Page</h2>
                             <ul class="MdHeadNav01">
-                                <li class="mdHeadNav01Li"><a href="/favorites" data-na="NC:favorites">お気に入り</a></li>
-                                <li class="mdHeadNav01Li ExSelected"><a href="/works" data-na="NC:works">まとめ管理</a></li>
+                                <li class="mdHeadNav01Li"><a href="/favourites" data-na="NC:favourites">favourite</a></li>
+                                <li class="mdHeadNav01Li ExSelected"><a href="/works" data-na="NC:works">管理</a></li>
                                 <li class="mdHeadNav01Li"><a href="/connections" data-na="NC:connections">外部連携</a></li>
                                 <!--/MdHeadNav01--></ul>
                         </nav>
                         <nav>
                             <ul class="MdHeadUtil01 mdHeadUtil01Login" data-na="NA:gnbLogin"><!--
 
---><li class="mdHeadUtil01Li"><a href="/favorites" data-na="NL:favorites"><img id="" width="20" height="20" src="images/personal/user_20x20.png" onerror="errorImage(this,&#39;user20x20&#39;);" class="mdHeadUtil01Thumb">stefanzan</a><span class="MdHeadSeparator01">|</span></li><!--
---><li class="mdHeadUtil01Li"><a href="/notifications" data-na="NL:notifications">お知らせ</a><span class="mdHeadUtil01Count" style="display: none;"><span class="mdHeadUtil01CountInner">0</span></span><span class="MdHeadSeparator01">|</span></li><!--
---><li class="mdHeadUtil01Li"><a href="/odai/new" data-na="NL:matomenew">まとめ作成</a><span class="MdHeadSeparator01">|</span></li><!--
---><li class="mdHeadUtil01Li"><button class="mdHeadUtil01Open" data-na="NC:open">開く</button><!--
+--><li class="mdHeadUtil01Li"><a href="/favourites" data-na="NL:favorites"><img id="" width="20" height="20" src="images/personal/user_20x20.png" onerror="errorImage(this,&#39;user20x20&#39;);" class="mdHeadUtil01Thumb">stefanzan</a><span class="MdHeadSeparator01">|</span></li><!--
+--><li class="mdHeadUtil01Li"><a href="/notifications" data-na="NL:notifications">notifications</a><span class="mdHeadUtil01Count" style="display: none;"><span class="mdHeadUtil01CountInner">0</span></span><span class="MdHeadSeparator01">|</span></li><!--
+--><li class="mdHeadUtil01Li"><a href="/odai/new" data-na="NL:matomenew">create</a><span class="MdHeadSeparator01">|</span></li><!--
+--><li class="mdHeadUtil01Li"><button class="mdHeadUtil01Open" data-na="NC:open">open</button><!--
 --><ul class="mdHeadUtil01Sub" style="display: none;"><!--
---><li class="mdHeadUtil01SubLi"><a href="/settings" data-na="NC:setting">設定</a></li><!--
---><li class="mdHeadUtil01SubLi"><a href="/faq?serviceNo=4" data-na="NC:help">ヘルプ</a></li><!--
---><li class="mdHeadUtil01SubLi mdHeadUtil01SubLiLast"><a href="javascript:goLogout()" data-na="NC:logout">ログアウト</a><span class="mdHeadUtil01SubPointer"></span></li><!--
+--><li class="mdHeadUtil01SubLi"><a href="/settings" data-na="NC:setting">setting</a></li><!--
+--><li class="mdHeadUtil01SubLi"><a href="/faq?serviceNo=4" data-na="NC:help">help</a></li><!--
+--><li class="mdHeadUtil01SubLi mdHeadUtil01SubLiLast"><a href="/logout" data-na="NC:logout">logout</a><span class="mdHeadUtil01SubPointer"></span></li><!--
 --></ul><!--
 --></li><!--
 --><!--/MdHeadUtil01--></ul>

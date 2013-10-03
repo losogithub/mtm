@@ -15,7 +15,7 @@ module.exports = {
     db: 'mongodb://127.0.0.1/mtm',
 
     session_secret: 'mtm',
-
+    auth_cookie_name: 'mtmCookie',
     mail_opts : {
         /* host: '' ,
          port: 25, */
