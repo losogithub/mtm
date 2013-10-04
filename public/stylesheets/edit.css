@@ -48,7 +48,7 @@
 .WidgetItemList>li:hover .ItemUtil2 {visibility: visible}
 .ui-sortable-helper:hover .ItemUtil1 {visibility: hidden}
 .ui-sortable-helper:hover .ItemUtil2 {visibility: hidden}
-.Movable{cursor: move;}
+.MoveHandle {cursor: move;}
 /*编辑标题、缩略图、简介*/
 .EditFormBox01 {height: 41px;}
 .InputBoxTitle {display: inline-block;width: 779px;padding: 0px 10px;background-color: rgb(255, 254, 238);background-position: 5px 10px;border: 1px solid rgb(40, 185, 55);height: 40px;font-size: 23px;font-weight: bold;vertical-align: middle;}

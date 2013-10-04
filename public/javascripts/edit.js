@@ -80,7 +80,7 @@
         opacity: 0.5,
         tolerance: "pointer",
         cursor: 'move',
-        handle: '.Movable',
+        handle: '.MoveHandle',
         scrollSensitivity: 100,
         scrollSpeed: 10,
 
@@ -846,9 +846,9 @@
             .find('.Btn_Edit')
             .click(function () {
               var url = $li.find('.IMAGE .WidgetItemThumb').attr('src');
-              var title = $li.find('.ItemTtl').html();
+              var title = $li.find('.ItemTtl').text();
               var quote = $li.find('.ItemQuote').attr('href');
-              var description = $li.find('.ItemDesc').html().replace(/<br>/g, '\n');
+              var description = $('<div/>').html($li.find('.ItemDesc').html().replace(/<br>/g, '\n')).text();
               self._createEditWidget(type, {
                 from: 'EDIT',
                 url: url,
@@ -865,7 +865,7 @@
           $li
             .find('.Btn_Edit')
             .click(function () {
-              var text = $li.find('.TEXT .ItemView').html().replace(/<br>/g, '\n');
+              var text = $('<div/>').html($li.find('.ItemView').html().replace(/<br>/g, '\n')).text();
               self._createEditWidget(type, {
                 from: 'EDIT',
                 text: text,
@@ -879,7 +879,7 @@
           $li
             .find('.Btn_Edit')
             .click(function () {
-              var title = $li.find('.TITLE .ItemView').html();
+              var title = $li.find('.ItemView').text();
               self._createEditWidget(type, {
                 from: 'EDIT',
                 title: title,
@@ -1134,14 +1134,14 @@
             .attr('src', url)
             .end()
             .find('.ItemTtl')
-            .html(title)
+            .text(title)
             .end()
             .find('.ItemQuote')
             .attr('href', quote)
-            .html(urlParts ? urlParts[3] : '')
+            .text(urlParts ? urlParts[3] : '')
             .end()
             .find('.ItemDesc')
-            .html(description.replace(/\n/g, '<br>'))
+            .html($('<div/>').text(description).html().replace(/\n/g, '<br>'))
             .end();
           break;
         case 'TEXT':
@@ -1149,7 +1149,7 @@
           var text = data.text;
           $item
             .find('.ItemView')
-            .html(text.replace(/\n/g, '<br>'))
+            .html($('<div/>').text(text).html().replace(/\n/g, '<br>'))
             .end();
           break;
         case 'TITLE':
@@ -1157,7 +1157,7 @@
           var title = data.title;
           $item
             .find('.ItemView')
-            .html(title)
+            .text(title)
             .end();
           break;
       }

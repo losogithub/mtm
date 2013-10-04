@@ -6,6 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 var sanitize = require('validator').sanitize;
+var escape = require('escape-html');
 
 var Topic = require('../proxy').Topic;
 var Item = require('../proxy').Item;
@@ -41,6 +42,7 @@ var index = function (req, res, next) {
             css: [
               '/stylesheets/topic.css'
             ],
+            escape: escape,
             url: req.url,
             topic: topicData,
             items: itemsData
@@ -104,6 +106,7 @@ var edit = function (req, res, next) {
             '/javascripts/jquery.validate.min.js',
             '/javascripts/edit.js'
           ],
+          escape: escape,
           topic: topicData,
           items: itemsData
         });
@@ -179,13 +182,9 @@ var _getData = function (req, _id) {
   switch (type) {
     case 'IMAGE':
       var url = sanitize(req.body.url).trim();
-      url = sanitize(url).xss();
       var title = sanitize(req.body.title).trim();
-      title = sanitize(title).xss();
       var quote = sanitize(req.body.quote).trim();
-      quote = sanitize(quote).xss();
       var description = sanitize(req.body.description).trim();
-      description = sanitize(description).xss();
 
       data = {
         url: url,
@@ -196,7 +195,6 @@ var _getData = function (req, _id) {
       break;
     case 'TEXT':
       var text = sanitize(req.body.text).trim();
-      text = sanitize(text).xss();
 
       data = {
         text: text
@@ -204,7 +202,6 @@ var _getData = function (req, _id) {
       break;
     case 'TITLE':
       var title = sanitize(req.body.title).trim();
-      title = sanitize(title).xss();
 
       data = {
         title: title
@@ -259,6 +256,7 @@ var editItem = function (req, res, next) {
 
   var data = _getData(req, itemId);
   Item.editItem(data, function (item) {
+    console.log(item.text);
     res.send(_getItemData(item));
   });
 }
