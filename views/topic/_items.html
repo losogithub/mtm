@@ -1,18 +1,13 @@
-<% for (i in locals.items) { %>
-<li mtm_type='<%= items[i].type %>' mtm_id='<%= items[i].itemId %>'>
-  <div class='Item'>
-    <div class='ItemUtil0'>
-    </div>
-    <% var item = items[i] %>
-    <% include _contents.html %>
-    <div class='ItemUtil1'>
-      <a class="Btn_Insert">插入</a>
-    </div>
-    <div class='ItemUtil2'>
-      <a class="Btn_Edit"><span class="Btn Btn_IcoEdit"></span>修改</a>
-      <span class='WidgetUtilSeparator'>|</span>
-      <a class="Btn_Del"><span class="Btn Btn_IcoDel"></span>删除</a>
-    </div>
+<div class='Item'>
+  <div class='ItemUtil0'>
   </div>
-</li>
-<% } %>
+  <% if (item) { %>
+  <% include _contents.html %>
+  <% } %>
+  <div class='ItemUtil1'>
+    <a class="Btn_Insert">插入</a>
+  </div>
+  <div class='ItemUtil2'>
+    <a class="Btn_Edit"><span class="Btn Btn_IcoEdit"></span>修改</a><span class='WidgetUtilSeparator'>|</span><a class="Btn_Del"><span class="Btn Btn_IcoDel"></span>删除</a>
+  </div>
+</div>

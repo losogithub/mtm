@@ -80,6 +80,7 @@
         opacity: 0.5,
         tolerance: "pointer",
         cursor: 'move',
+        handle: '.ItemUtil0',
         scrollSensitivity: 100,
         scrollSpeed: 10,
 
