@@ -17,7 +17,7 @@
 .HotTopicList li:first-child{margin-top: 0;padding-top: 0;border-top: 0 none;}
 .TopicThumb {margin-right: 14px}
 .TopicTtl {display: block;margin-bottom: 5px;}
-.TopicTtl a{line-height: 1.25;font-size: 16px;word-break: break-all;color: rgb(0, 0, 0);}
+.TopicTtl a{line-height: 20px;font-size: 16px;word-break: break-all;color: rgb(0, 0, 0);}
 .TopicAuthor {float: left;color: rgb(155, 155, 155);font-size: 11px;line-height: 1;}
 .PVCount{float: right;color: rgb(155, 155, 155);font-family: Arial,sans-serif;font-size: 11px;line-height: 1;}
 .PVCount b{margin-right: 2px;font-size: 12px;}

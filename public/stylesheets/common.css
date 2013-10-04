@@ -58,7 +58,7 @@ table{border-spacing: 0;height: 100%;}
 .FooterSeparator{display: inline-block;position: relative;top: 1px;width: 0px;height: 11px;overflow: hidden;margin: 0px 11px 0px 15px;border-left: 1px solid rgb(205, 205, 205);}
 .Copyright{float: right;color: rgb(51, 51, 51);font-family: Tahoma,Arial,sans-serif;font-size: 11px;line-height: 1;}
 .Copyright b{font-weight: normal}
-.ButtonToggle{line-height: 12px;font-size: 12px;vertical-align: middle;}
+.ButtonToggle{line-height: 1;font-size: 12px;vertical-align: middle;}
 .ButtonToggle{cursor: pointer;}
 .ButtonToggle{color: rgb(102, 102, 102);}
 .ButtonToggleIco{display: inline-block;overflow: hidden;margin: 0px 0px 0px 3px;border: 0px none;background: transparent 0px 0px no-repeat;text-align: left;text-indent: -9999px;}
@@ -72,7 +72,7 @@ table{border-spacing: 0;height: 100%;}
 /*框架*/
 .ContentsWrapper {width: 960px;min-height: 81px;margin: 0px auto;overflow: hidden;background: url("/images/bg_ContentsWrapper.png") repeat-y scroll 660px 0px transparent;}
 .Main {float: left;width: 635px;min-height: 41px;padding-bottom: 40px;}
-.Pagination {line-height: 1.2;margin: 30px 0px 40px 0;font-family: Arial,Helvetica,sans-serif;font-size: 16px;text-align: center;}
+.Pagination {line-height: 19px;margin: 30px 0px 40px 0;font-family: Arial,Helvetica,sans-serif;font-size: 16px;text-align: center;}
 .Sub {position: relative;float: right;width: 300px;padding-bottom: 40px;}
 /*条目*/
 .WidgetItemList {padding-bottom: 1px;}
@@ -80,13 +80,13 @@ table{border-spacing: 0;height: 100%;}
 .WidgetItemList>li:hover{background-color: #f8f8f8;}
 .Item{overflow: hidden;}
 .ItemContent{overflow: hidden;}
-.ItemQuoteWrapper{line-height: 1.2;margin-top: 3px;color: rgb(170, 170, 170);min-width: 100px;}
+.ItemQuoteWrapper{line-height: 14px;margin-top: 3px;color: rgb(170, 170, 170);min-width: 100px;}
 .ItemQuoteHeader{float: left;margin-right: 5px;}
 .ItemQuoteOuter{overflow: hidden;}
 .ItemQuote{color: rgb(170, 170, 170);word-wrap: break-word;}
 .ItemTxt{overflow: hidden;}
-.ItemTtl{display: inline-block;margin-bottom: 4px;line-height: 1.333;font-weight: bold;font-size: 18px;color: rgb(0, 0, 0);}
-.ItemDesc{line-height: 1.429;color: rgb(102, 102, 102);font-size: 14px;}
+.ItemTtl{display: inline-block;margin-bottom: 4px;line-height: 24px;font-weight: bold;font-size: 18px;color: rgb(0, 0, 0);}
+.ItemDesc{line-height: 20px;color: rgb(102, 102, 102);font-size: 14px;}
 .ItemUtil0 {height: 15px}
 .ItemUtil1 {visibility: hidden;float: left;padding-left: 3px;}
 .ItemUtil2 {visibility: hidden;float: right;padding-right: 3px;}
@@ -96,8 +96,8 @@ table{border-spacing: 0;height: 100%;}
 .IMAGE .WidgetItemImg {max-width: 300px;}
 .IMAGE .WidgetItemThumb {background-position: 0 0;}
 .ItemView{word-wrap: break-word;}
-.TEXT .ItemView{line-height: 1.429;color: rgb(102, 102, 102);font-size: 14px;}
-.TITLE .ItemView{line-height: 1.3;font-size: 20px;font-weight: bold;color: #000000;padding-bottom: 5px;border-bottom: 2px solid #EAECEE;}
+.TEXT .ItemView{line-height: 20px;color: rgb(102, 102, 102);font-size: 14px;}
+.TITLE .ItemView{line-height: 26px;font-size: 20px;font-weight: bold;color: #000000;padding-bottom: 5px;border-bottom: 2px solid #EAECEE;}
 .Btn_Insert {color: rgb(124, 148, 170);line-height: 1}
 .Btn_Edit {color: rgb(124, 148, 170);line-height: 1}
 .Btn_IcoEdit {background-position: -180px -170px;width: 11px;height: 14px;margin-right: 3px}
