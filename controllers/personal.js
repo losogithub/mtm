@@ -6,7 +6,8 @@
  * To change this template use File | Settings | File Templates.
  */
 
-
+var User = require('../proxy').User;
+var Topic = require('../proxy').Topic;
 var config = require('../config');
 
 var showWorks = function (req, res) {
@@ -23,12 +24,33 @@ var showWorks = function (req, res) {
     // image,
     // topics
 
+  var userId = req.session.userId;
+  User.getUserById(userId, function(err, user){
+    var topics = user.topics;
+    var topicsInfos = [];
+    for (var i = 0; i < topics.length; i++){
+        Topic.getTopicById(topics[i], function(err, topic){
+          topic._id = "http://" + config.hostname + ":" + config.port + "/" + topic._id;
+          topicsInfos.push(topic);
+        });
+    }
+
     res.render('personal/works', {
-        title: config.name,
-        css: '',
-        js : '' ,
-        layout: 'personalLayout'
+      title: config.name,
+      css: '',
+      js : '' ,
+      layout: 'personalLayout',
+      username: user.loginName,
+      favourite: user.favourite,
+      topicsCount: user.topicCount,
+      topicsPageView: user.pageviewCount,
+      topics: topicsInfos
     });
+
+
+  });
+
+
 }
 
 var showFavourite = function(req, res){

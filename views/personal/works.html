@@ -7,7 +7,7 @@
 
 
                 <div class="MdMypageHead01" data-na="NA:header">
-                    <h1 class="mdMypageHead01Ttl01">stefanzanさんのまとめ</h1>
+                    <h1 class="mdMypageHead01Ttl01"><%- username %> </h1>
                     <!--/MdMypageHead01--></div>
 
                 <div class="MdMPMTMDetail" data-na="NA:list">
@@ -39,46 +39,9 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>
-
-                                <div class="MdMTMTtl01">
-                                    <div class="mdMTMTtl01Txt">
-
-                                        <p class="mdMTMTtl01Ttl">
-                                            <a href="http://matome.naver.jp/odai/2138050310210134201" data-na="NL:title">Haskell books</a>
-                                        </p>
-                                        <p class="mdMTMTtl01Date">作成： 2013年9月30日</p>
-                                    </div>
-                                    <!--/MdMTMTtl01--></div>
-                            </td>
-                            <td class="mdMPMTMTbl01TdPV">
-                                8
-                            </td>
-                            <td class="mdMPMTMTbl01TdRate">
-                                <b class="mdMPMTMTbl01RateNum">0</b>%
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="MdMTMTtl01">
-                                    <div class="mdMTMTtl01Txt">
-                                        <p class="mdMTMTtl01Ttl">
-                                            <a href="http://matome.naver.jp/odai/2137290463370208201" data-na="NL:title">東京　神保町　おいしい　四川料理　ところ</a>
-                                        </p>
-                                        <p class="mdMTMTtl01Date">作成： 2013年7月4日</p>
-                                    </div>
-                                    <!--/MdMTMTtl01--></div>
-
-                            </td>
-                            <td class="mdMPMTMTbl01TdPV">
-                                19
-                            </td>
-                            <td class="mdMPMTMTbl01TdRate">
-                                <span class="MdIco01Up02">Up</span><b class="mdMPMTMTbl01RateNum">600</b>%
-                            </td>
-                        </tr>
-
+                        <% for (i in locals.topics) { %>
+                         <% include topicShort.html %>
+                        <% } %>
                         </tbody>
 
                         <!--/MdMPMTMTbl01--></table>
@@ -98,23 +61,23 @@
                         <div class="mdMySubProf01Unit01">
                             <ul class="mdMySubProf01PV">
                                 <li class="mdMySubProf01PVItem01">
-                                    <span class="mdMySubProf01PVCount">2</span>
+                                    <span class="mdMySubProf01PVCount"><%= topicsCount %></span>
                                     <span class="mdMySubProf01PVLabelMTMNumber">まとめ作成数</span>
                                 </li>
                                 <li class="mdMySubProf01PVItem02">
-                                    <span class="mdMySubProf01PVCount">35</span>
+                                    <span class="mdMySubProf01PVCount"><%= topicsPageView %></span>
                                     <span class="mdMySubProf01PVLabelMonthly">月間ページビュー</span>
                                 </li>
                             </ul>
                             <div class="MdThumb01">
                                 <span class="mdThumb01Inner"><img src="/images/personal/user_120x120.png"></span>
                             </div>
-                            <h3 class="mdMySubProf01Ttl"><span class="mdMySubProf01UserName">stefanzan</span>さん</h3>
+                            <h3 class="mdMySubProf01Ttl"><span class="mdMySubProf01UserName"><%= username %></span>さん</h3>
 
 
                             <p class="mdMySubProf01Btn"><span class="MdMPBtn01P03"><a href="/settings" class="mdMPBtn01P03Btn">設定</a></span></p>
                             <div class="mdMySubProf01FV">
-                                <span class="MdFVCount01"><span class="mdFVCount01Ico"></span><span class="mdFVCount01Num">0</span></span>
+                                <span class="MdFVCount01"><span class="mdFVCount01Ico"></span><span class="mdFVCount01Num"><%= favourite %></span></span>
                             </div>
                         </div>
                         <!--/MdMySubProf01--></div>

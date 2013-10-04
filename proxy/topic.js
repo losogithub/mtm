@@ -206,7 +206,7 @@ var publish = function (topicId, title, desc, callback) {
   });
 }
 
-var getTopicById = function(topicID, callback){
+var getTopicById = function(topicId, callback){
     console.log('getTopicById');
     //查找总结
     TopicModel.findById(topicId, function (err, topic) {
