@@ -21,6 +21,7 @@ var showWorks = function (req, res) {
         return;
     }
   console.log("render show works page");
+
     //before rendering, prepare enough information.
     // according to the user name to find out :
     // image,
@@ -29,6 +30,7 @@ var showWorks = function (req, res) {
   var userId = req.session.userId;
   console.log("userId: %s", userId);
   User.getUserById(userId, function(err, user){
+
     var topics = user.topics;
     var topicsInfos = [];
     for (var i = 0; i < topics.length; i++){
@@ -74,17 +76,26 @@ var showFavourite = function(req, res){
 }
 
 var showSettings = function(req, res){
-    console.log('render settings  page');
-    /*
-     if(!req.session.userId){
-     res.redirect('home');
-     }  */
+  console.log('render settings  page');
+
+  if(!req.session.userId){
+    res.redirect('home');
+    return;
+  }
+  var userId = req.session.userId;
+  User.getUserById(userId, function(err, user){
     res.render('personal/settings', {
-        title: config.name,
-        css: '',
-        js: '',
-        layout: 'personalLayout'
-    })
+      title: config.name,
+      css: '',
+      js: '',
+      layout: 'personalLayout',
+      username: user.loginName,
+      favourite: user.favourite,
+      topicsCount: user.topicCount,
+      topicsPageView: user.pageviewCount
+    });
+  });
+
 }
 
 
