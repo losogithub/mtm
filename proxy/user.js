@@ -18,7 +18,7 @@ var User = models.User;
  * @param {Function} callback 回调函数
  */
 var getUserByLoginName = function (loginName, callback) {
-    User.findOne({'loginName': loginName}, callback);
+  User.findOne({'loginName': loginName}, callback);
 };
 
 /**
@@ -30,7 +30,7 @@ var getUserByLoginName = function (loginName, callback) {
  * @param {Function} callback 回调函数
  */
 var getUserByName = function (name, callback) {
-    User.findOne({name: name}, callback);
+  User.findOne({name: name}, callback);
 };
 
 /**
@@ -42,7 +42,7 @@ var getUserByName = function (name, callback) {
  * @param {Function} callback 回调函数
  */
 var getUserByMail = function (email, callback) {
-    User.findOne({email: email}, callback);
+  User.findOne({email: email}, callback);
 };
 
 /**
@@ -55,7 +55,7 @@ var getUserByMail = function (email, callback) {
  * @param {Function} callback 回调函数
  */
 var getUsersByQuery = function (query, opt, callback) {
-    User.find(query, {}, opt, callback);   // change the second arguments from [] to {}
+  User.find(query, {}, opt, callback);   // change the second arguments from [] to {}
 };
 
 /**
@@ -68,21 +68,21 @@ var getUsersByQuery = function (query, opt, callback) {
  * @param {Function} callback 回调函数
  */
 var getUserByQuery = function (name, key, callback) {
-    User.findOne({name: name, retrieve_key: key}, callback);
+  User.findOne({name: name, retrieve_key: key}, callback);
 };
 
-var getUserByEmail = function(email, key, callback){
-    User.findOne({email: email, retrieve_key: key}, callback);
+var getUserByEmail = function (email, key, callback) {
+  User.findOne({email: email, retrieve_key: key}, callback);
 }
 
 var newAndSave = function (name, loginName, password, email, active, callback) {
-    var user = new User();
-    user.name = name;
-    user.loginName = loginName;
-    user.password = password;
-    user.email = email;
-    user.active = active;
-    user.save(callback);
+  var user = new User();
+  user.name = name;
+  user.loginName = loginName;
+  user.password = password;
+  user.email = email;
+  user.active = active;
+  user.save(callback);
 };
 
 /**
@@ -94,27 +94,26 @@ var newAndSave = function (name, loginName, password, email, active, callback) {
  * @param {Function} callback 回调函数
  */
 var getUserById = function (id, callback) {
-    User.findOne({_id: id}, callback);
+  User.findOne({_id: id}, callback);
 };
 
-var appendTopic = function(id, topicId, callback){
+var appendTopic = function (id, topicId, callback) {
   //User.update();
-  User.findById(id, function(err, user){
-    if(err){
-          }
+  User.findById(id, function (err, user) {
+    if (err) {
+    }
     var topics = user.topics;
     var length = topics.length;
-    for (var i = 0; i < length; i++)
-    {
-      if(topics[i] == topicId){
-        if(callback) callback();  //typeof function
+    for (var i = 0; i < length; i++) {
+      if (topics[i] == topicId) {
+        if (callback) callback(user);  //typeof function
       }
     }
     user.topics.push(topicId);
     user.topicCount++;
     user.save();
-    if(callback) //typeof function
-      callback();
+    if (callback) //typeof function
+      callback(user);
   })
 }
 

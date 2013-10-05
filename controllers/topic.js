@@ -27,7 +27,7 @@ var index = function (req, res, next) {
             title: topic.title,
             desc: topic.desc,
             updateAt: updateAt,
-            author: topic.author_id,
+            author: topic.author_name,
             PVCount: topic.PV_count
           };
           var itemsData = [];

@@ -14,7 +14,7 @@ var index = function (req, res, next) {
       topicsData.push({
         id: topic._id,
         title: topic.title,
-        author: topic.author_id,
+        author: topic.author_name,
         PVCount: topic.PV_count
       });
     });

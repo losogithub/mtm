@@ -124,6 +124,7 @@
   $.widget('mtm.editWidget', {
 
     options: {
+      from: ''
     },
 
     _create: function () {
@@ -183,6 +184,14 @@
     __create: $.noop,
     __animateDone: $.noop,
     __initFormValidation: $.noop,
+
+    stateHandler: function (defaultValue, event) {
+      if (event.target.value == defaultValue) {
+        this._trigger('setState', null, 'create');
+      } else {
+        this._trigger('setState', null, 'edit');
+      }
+    },
 
     autoFocus: function () {
       var self = this;
@@ -284,7 +293,6 @@
       var self = this;
 
       //填充图片、textarea自适应高度、填充文本
-      var urlParts = this.options.url.match(REGEXP_URL);
       this.widget()
         .find('.WidgetItemThumb')
         .attr('src', this.options.url)
@@ -295,12 +303,21 @@
         })
         .val(this.options.description)
         .trigger('autosize.resize')
+        .on('input blur mousedown mouseup keydown keypress keyup', this.options.from != 'EDIT' ? $.noop : function (event) {
+          self.stateHandler(self.options.description, event);
+        })
         .end()
         .find('.WidgetInputBox_Ttl')
         .val(this.options.title)
+        .on('input blur mousedown mouseup keydown keypress keyup', this.options.from != 'EDIT' ? $.noop : function (event) {
+          self.stateHandler(self.options.title, event);
+        })
         .end()
         .find('.WidgetInputBox_Quo')
-        .val(this.options.quote ? this.options.quote : urlParts ? urlParts[2] + '://' + urlParts[3] : 'http://')
+        .val(this.options.quote)
+        .on('input blur mousedown mouseup keydown keypress keyup', this.options.from != 'EDIT' ? $.noop : function (event) {
+          self.stateHandler(self.options.quote, event);
+        })
         .end();
 
       //移动光标到输入框末尾
@@ -325,7 +342,6 @@
           var quote = $quote.val();
           console.log('quote=' + quote);
           var urlParts = quote.match(REGEXP_URL_NO_PROTOCOL);
-          console.log('urlParts[2]=' + urlParts[2]);
           if (urlParts && urlParts[3] && !urlParts[2]) {
             $quote.val('http://' + quote);
           }
@@ -350,8 +366,8 @@
             required: false
           },
           quote: {
-            required: true,
-            url: true
+            url: true,
+            required: false
           },
           description: {
             maxlength: 300,
@@ -363,7 +379,6 @@
             maxlength: '图片标题太长，请缩写到100字以内。'
           },
           quote: {
-            required: '尚未输入图片来源网页URL。',
             url: '图片来源网页URL格式错误。'
           },
           description: {
@@ -379,10 +394,14 @@
      * @private
      */
     _getCommitData: function () {
+      var quote = this.widget().find('.WidgetInputBox_Quo').val();
+      var urlParts = this.options.url.match(REGEXP_URL);
       return {
         url: this.options.url,
         title: this.widget().find('.WidgetInputBox_Ttl').val(),
-        quote: this.widget().find('.WidgetInputBox_Quo').val(),
+        quote: quote
+          ? quote : urlParts ? urlParts[2] + '://' + urlParts[3]
+          : '',
         description: this.widget().find('.WidgetInputBox_Desc').val()
       }
     },
@@ -513,12 +532,8 @@
         })
         .val(this.options.text)
         .trigger('autosize.resize')
-        .on('input blur mousedown mouseup keydown keypress keyup', function () {
-          if (this.value == self.options.text) {
-            self._trigger('setState', null, 'create');
-          } else {
-            self._trigger('setState', null, 'edit');
-          }
+        .on('input blur mousedown mouseup keydown keypress keyup', function (event) {
+          self.stateHandler(self.options.text, event);
         })
         .end();
 
@@ -610,12 +625,8 @@
       this.widget()
         .find('.WidgetInputBox')
         .val(this.options.title)
-        .on('input blur mousedown mouseup keydown keypress keyup', function () {
-          if (this.value == self.options.title) {
-            self._trigger('setState', null, 'create');
-          } else {
-            self._trigger('setState', null, 'edit');
-          }
+        .on('input blur mousedown mouseup keydown keypress keyup', function (event) {
+          self.stateHandler(self.options.title, event);
         })
         .end();
 
@@ -973,7 +984,7 @@
           || $editingWidget.attr('mtm_type') + '_CREATE' == type)
           && self.from == from
           && (from == 'STATIC'
-          || from == 'DYNAMIC' && self.$editingPrevItem == $prevItem)) {
+          || from == 'DYNAMIC' && self.$editingPrevItem.is($prevItem))) {
           console.log('重置焦点');
 
           if (this.callWidgetMethod) {
@@ -992,7 +1003,7 @@
         //删除编辑中的微件
         if (from != 'DYNAMIC') {
           if (this.callWidgetMethod) {
-            if ($editingWidget.attr('mtm_type') != type + '_CREATE') {
+            if (!$editingWidget.is($item)) {
               this.callWidgetMethod.call($editingWidget, 'remove');
             }
           } else {
@@ -1062,10 +1073,10 @@
       }
 
       console.log('create');
-      self.state = 'create';
-      self.from = from;
-      self.$editingWidget = $editWidget;
-      self.$editingPrevItem = $prevItem;
+      this.state = 'create';
+      this.from = from;
+      this.$editingWidget = $editWidget;
+      this.$editingPrevItem = $prevItem;
     },
 
     /**

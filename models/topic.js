@@ -12,6 +12,7 @@ module.exports = mongoose.model('Topic', {
   title: String,
   desc: String,
   author_id: ObjectId,
+  author_name: String,
   published: { type: Boolean, default: false },
   item_count: { type: Number, default: 0 },
   PV_count: { type: Number, default: 0 },
