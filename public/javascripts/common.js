@@ -6,5 +6,8 @@
  * To change this template use File | Settings | File Templates.
  */
 var errorImage = function (img, name) {
-  $(img).attr('src', '/images/no_img/' + name + '.png');
+  var url = '/images/no_img/' + name + '.png';
+  if (url != $(img).attr('src')) {
+    $(img).attr('src', url);
+  }
 }
