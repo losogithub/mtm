@@ -4,14 +4,13 @@
 <meta name="ROBOTS" content="NOODP">
 <meta http-equiv="X-UA-Compatible" content="IE=8">
 
-
-
 <title><%- title %></title>
 <% for(i in css) { %>
 <link type='text/css' rel='stylesheet' href='<%= css[i] %>'/>
 <% } %>
 <link rel="stylesheet" href="/stylesheets/personalAccountManage/MTM_common.css">
 <link rel="stylesheet" href="/stylesheets/personalAccountManage/MTM_mypage_admin_13800104942008.css">
+
 
 <script type="text/javascript" async="" src="/javascripts/personalAccountManage/ga.js"></script>
 <script type="text/javascript" charset="utf-8" src="/javascripts/personalAccountManage/jquery_13800104942008.js"></script>
@@ -27,6 +26,7 @@ tagno: "13800104942008"
 </script><script type="text/javascript" charset="utf-8" src="/javascripts/personalAccountManage/manage_files/nj.matome.manage.top_13800104942008.js"></script>
 
 <!-- using google analytics-->
+
 <script type="text/javascript">
     var _gaq = _gaq || [];
     _gaq.push(['_setAccount', 'UA-*****-*']);
@@ -61,8 +61,8 @@ tagno: "13800104942008"
                         </nav>
                         <nav>
                             <ul class="MdHeadUtil01 mdHeadUtil01Login" data-na="NA:gnbLogin"><!--
-
---><li class="mdHeadUtil01Li"><a href="/favourites" data-na="NL:favorites"><img id="" width="20" height="20" src="images/personal/user_20x20.png" onerror="errorImage(this,&#39;user20x20&#39;);" class="mdHeadUtil01Thumb">stefanzan</a><span class="MdHeadSeparator01">|</span></li><!--
+<!-- todo: personal image
+--><li class="mdHeadUtil01Li"><a href="/favourites" data-na="NL:favorites"><img id="" width="20" height="20" src="images/personal/user_20x20.png" onerror="errorImage(this,&#39;user20x20&#39;);" class="mdHeadUtil01Thumb"><%= username %></a><span class="MdHeadSeparator01">|</span></li><!--
 --><li class="mdHeadUtil01Li"><a href="/notifications" data-na="NL:notifications">notifications</a><span class="mdHeadUtil01Count" style="display: none;"><span class="mdHeadUtil01CountInner">0</span></span><span class="MdHeadSeparator01">|</span></li><!--
 --><li class="mdHeadUtil01Li"><a href="/odai/new" data-na="NL:matomenew">create</a><span class="MdHeadSeparator01">|</span></li><!--
 --><li class="mdHeadUtil01Li"><button class="mdHeadUtil01Open" data-na="NC:open">open</button><!--

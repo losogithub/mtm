@@ -7,6 +7,7 @@ var UserSchema = new Schema({
     loginName : {type: String, unique: true},
     password: {type: String},
     email: {type: String, unique: true},
+    favourite: {type: Number, default: 0},
     url: {type: String},
 
     active: {type: Boolean, default: true},
