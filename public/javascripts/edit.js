@@ -56,6 +56,25 @@
     } else {
       $Button.fadeIn('slow');
     }
+
+    var $link = $('.TopicThumbLink');
+    var $edit = $('.TopicThumbEdit');
+    var $input = $edit.find('.InputBox');
+    var $save = $edit.find('.Btn_Save');
+    var $cancel = $edit.find('.Btn_Cancel');
+    $link.click(function () {
+      $edit.toggle('fast');
+    });
+    $cancel.click(function () {
+      $edit.attr('visibility', 'hidden')
+        .hide('fast', function () {
+          $edit.removeAttr('visibility');
+        })
+    });
+    $save.click(function () {
+      $link.find('img').attr('src', $input.val());
+      $cancel.click();
+    });
   }
 
   /**
@@ -347,45 +366,45 @@
           }
         })
         .validate({
-        debug: false,
-        ignore: "",
-        onkeyup: false,
-        focusInvalid: false,
-        onfocusout: false,
-        submitHandler: function (form) {
-          self.commit();
-        },
-        showErrors: function (errorMap, errorList) {
-          if (errorList.length) {
-            alert(errorMap.title || errorMap.description || errorMap.quote);
+          debug: false,
+          ignore: "",
+          onkeyup: false,
+          focusInvalid: false,
+          onfocusout: false,
+          submitHandler: function (form) {
+            self.commit();
+          },
+          showErrors: function (errorMap, errorList) {
+            if (errorList.length) {
+              alert(errorMap.title || errorMap.description || errorMap.quote);
+            }
+          },
+          rules: {
+            title: {
+              maxlength: 100,
+              required: false
+            },
+            quote: {
+              url: true,
+              required: false
+            },
+            description: {
+              maxlength: 300,
+              required: false
+            }
+          },
+          messages: {
+            title: {
+              maxlength: '图片标题太长，请缩写到100字以内。'
+            },
+            quote: {
+              url: '图片来源网页URL格式错误。'
+            },
+            description: {
+              maxlength: '图片简介、评论太长，请缩写到300字以内。'
+            }
           }
-        },
-        rules: {
-          title: {
-            maxlength: 100,
-            required: false
-          },
-          quote: {
-            url: true,
-            required: false
-          },
-          description: {
-            maxlength: 300,
-            required: false
-          }
-        },
-        messages: {
-          title: {
-            maxlength: '图片标题太长，请缩写到100字以内。'
-          },
-          quote: {
-            url: '图片来源网页URL格式错误。'
-          },
-          description: {
-            maxlength: '图片简介、评论太长，请缩写到300字以内。'
-          }
-        }
-      });
+        });
     },
 
     /**
@@ -437,7 +456,7 @@
 
       //监听文本改变事件
       this.widget()
-        .find('.WidgetInputBox')
+        .find('.InputBox')
         .on('input blur mousedown mouseup keydown keypress keyup', function () {
           if (this.value) {
             self.widget().find('.Btn_Check').removeClass('Btn_Check_Disabled').removeAttr('disabled');
@@ -448,7 +467,7 @@
         .end();
 
       //移动光标到输入框末尾
-      moveSelection2End(this.widget().find('.WidgetInputBox')[0]);
+      moveSelection2End(this.widget().find('.InputBox')[0]);
     },
 
     /**
@@ -526,7 +545,7 @@
 
       //textarea自适应高度、填充文本、监听文本改变事件
       this.widget()
-        .find('.WidgetInputBox')
+        .find('.InputBox')
         .autosize({
           append: '\n'
         })
@@ -538,12 +557,12 @@
         .end();
 
       //移动光标到输入框末尾
-      moveSelection2End(this.widget().find('.WidgetInputBox')[0]);
+      moveSelection2End(this.widget().find('.InputBox')[0]);
     },
 
     __animateDone: function () {
       this.widget()
-        .find('.WidgetInputBox')
+        .find('.InputBox')
         .addClass('HeightAnimation')
     },
 
@@ -588,7 +607,7 @@
      * @private
      */
     _getCommitData: function () {
-      return { text: this.widget().find('.WidgetInputBox').val() }
+      return { text: this.widget().find('.InputBox').val() }
     },
 
     /**
@@ -623,7 +642,7 @@
 
       //填充文本、监听文本改变事件
       this.widget()
-        .find('.WidgetInputBox')
+        .find('.InputBox')
         .val(this.options.title)
         .on('input blur mousedown mouseup keydown keypress keyup', function (event) {
           self.stateHandler(self.options.title, event);
@@ -631,7 +650,7 @@
         .end();
 
       //移动光标到输入框末尾
-      moveSelection2End(this.widget().find('.WidgetInputBox')[0]);
+      moveSelection2End(this.widget().find('.InputBox')[0]);
     },
 
     /**
@@ -675,7 +694,7 @@
      * @private
      */
     _getCommitData: function () {
-      return { title: this.widget().find('.WidgetInputBox').val() }
+      return { title: this.widget().find('.InputBox').val() }
     },
 
     /**
@@ -728,10 +747,12 @@
       var $form = this.widget().find('.Top form');
 
       var title = this.options.topicData.title;
-      var desc = this.options.topicData.desc;
+      var coverUrl = this.options.topicData.coverUrl;
+      var description = this.options.topicData.description;
       if (title) {
-        $form.find('.InputBoxTitle').val(title);
-        $form.find('.InputBoxDesc').val(desc);
+        $form.find('.InputBoxTitle').val(title ? title : '');
+        $form.find('.TopicThumbLink img').attr('src', coverUrl ? coverUrl : '');
+        $form.find('.InputBoxDesc').val(description ? description : '');
       }
 
       $form.validate({
@@ -781,7 +802,8 @@
         data: {
           topicId: topicId,
           title: this.widget().find('.Top .InputBoxTitle').val(),
-          desc: this.widget().find('.Top .InputBoxDesc').val()
+          coverUrl: this.widget().find('.Top .TopicThumbLink img').attr('src'),
+          description: this.widget().find('.Top .InputBoxDesc').val()
         }
       })
         .done(function () {

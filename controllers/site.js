@@ -13,6 +13,7 @@ var index = function (req, res, next) {
     topics.forEach(function (topic) {
       topicsData.push({
         id: topic._id,
+        coverUrl: topic.cover_url,
         title: topic.title,
         author: topic.author_name,
         PVCount: topic.PV_count

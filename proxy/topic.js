@@ -180,7 +180,7 @@ var getHotTopics = function (callback) {
     });
 }
 
-var publish = function (authorId, topicId, title, desc, callback) {
+var publish = function (authorId, topicId, title, coverUrl, description, callback) {
   console.log('publish');
 
   TopicModel.findById(topicId, function (err, topic) {
@@ -199,7 +199,8 @@ var publish = function (authorId, topicId, title, desc, callback) {
         topic.author_id = authorId;
         topic.author_name = author.loginName;
         topic.title = title;
-        topic.desc = desc;
+        topic.cover_url = coverUrl;
+        topic.description = description;
         topic.update_at = Date.now();
         topic.published = true;
         topic.save(function (err) {

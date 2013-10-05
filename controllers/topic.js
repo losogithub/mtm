@@ -24,8 +24,10 @@ var index = function (req, res, next) {
             + (topic.update_at.getMonth() + 1) + '月'
             + topic.update_at.getDate() + '日';
           var topicData = {
+            topicUrl: req.url,
             title: topic.title,
-            desc: topic.desc,
+            coverUrl: topic.cover_url,
+            description: topic.description,
             updateAt: updateAt,
             author: topic.author_name,
             PVCount: topic.PV_count
@@ -84,7 +86,8 @@ var edit = function (req, res, next) {
       Topic.getContents(topicId, function (topic, items) {
         var topicData = {
           title: topic.title,
-          desc: topic.desc
+          coverUrl: topic.cover_url,
+          description: topic.description
         };
         var itemsData = [];
         items.forEach(function (item) {
@@ -136,7 +139,8 @@ var getContents = function (req, res, next) {
       Topic.getContents(topicId, function (topic, items) {
         var topicData = {
           title: topic.title,
-          desc: topic.desc
+          coverUrl: topic.cover_url,
+          description: topic.description
         };
         var itemsData = [];
         items.forEach(function (item) {
@@ -290,9 +294,10 @@ var publish = function (req, res, next) {
   var authorId =  req.session.userId;
   var topicId = req.body.topicId;
   var title = req.body.title;
-  var desc = req.body.desc;
+  var coverUrl = req.body.coverUrl;
+  var description = req.body.description;
 
-  Topic.publish( authorId,topicId, title, desc, function () {
+  Topic.publish( authorId,topicId, title, coverUrl, description, function () {
 
     res.send(200);
   });

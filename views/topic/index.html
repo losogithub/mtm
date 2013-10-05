@@ -14,12 +14,14 @@
     <div class="Inner">
       <div class="Head02">
         <div class="HeadMain">
-          <img class="HeadThumb" width="95" height="95" onerror="errorImage(this,'image95x95');" alt=""
-               src="http://rr.img.naver.jp:80/mig?src=http%3A%2F%2Fimgcc.naver.jp%2Fkaze%2Fmission%2FUSER%2F20130922%2F14%2F1421764%2F3%2F255x255x2b832d75095ed32a7fe7dab9.jpg%2F300%2F600&twidth=95&theight=95&qlt=80&res_format=jpg&op=sc">
+          <img class="HeadThumb" width="95" height="95" onerror="errorImage(this,'image_95x95');" alt=""
+               src="<%= locals.topic ? topic.coverUrl : '/images/no_img/image_95x95.png' %>">
 
           <div class="HeadTxt">
             <div class="HeadTtlWrapper">
-              <h1 class="HeadTtl NegLinkWrapper"><a href="/"><%= locals.topic ? topic.title : '' %></a></h1>
+              <h1 class="HeadTtl NegLinkWrapper"><a href="<%= !locals.topicUrl ? '' : locals.topicUrl %>"><%=
+                locals.topic ? topic.title : '' %></a></h1>
+
               <div class='HeadUtil'>
                 <a class="Btn_Edit" href="<%= locals.url + '/edit?showOption=true' %>"><span
                   class="Btn Btn_IcoEdit"></span>修改</a>
@@ -30,17 +32,17 @@
               </div>
             </div>
 
-            <p><span class="HeadDesc"><%= topic.desc %></span><span class="HeadDate">更新日: <%= locals.topic ? topic.updateAt : '' %></span>
+            <p><span class="HeadDesc"><%= topic.description %></span><span class="HeadDate">更新日: <%= locals.topic ? topic.updateAt : '' %></span>
             </p>
 
             <div class="HeadOption">
               <div class="HeadUser">
                 <table style="height: 30px;">
                   <td>
-                    <a class="HeadUserThumb" href="http://matome.naver.jp/mymatome/akashi2"><img width="30" height="30"
-                                                                                                 onerror="errorImage(this,'user30x30');"
-                                                                                                 src="/images/user_40x40.png"
-                                                                                                 title="akashi2さん"></a>
+                    <a class="HeadUserThumb" href="/u/<%= topic.author %>"><img width="30" height="30"
+                                                                                onerror="errorImage(this,'user_40x40');"
+                                                                                src="/images/mo_img/user_40x40.png"
+                                                                                title="<%= topic.author %>"></a>
                   </td>
                   <td class="NegLinkWrapper">
                     <a class="HeadUserName" href="/u/<%= topic.author %>"><%= topic.author %></a>

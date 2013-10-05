@@ -10,7 +10,8 @@ var ObjectId = mongoose.Schema.ObjectId;
 
 module.exports = mongoose.model('Topic', {
   title: String,
-  desc: String,
+  cover_url: String,
+  description: String,
   author_id: ObjectId,
   author_name: String,
   published: { type: Boolean, default: false },
