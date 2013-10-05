@@ -11,20 +11,23 @@ var Topic = require('../proxy').Topic;
 var config = require('../config');
 
 var showWorks = function (req, res) {
-    console.log("render show works page");
-    console.log(req.session);
+
+    //console.log(req.session);
     //req.session.destroy();
     //res.clearCookie(config.auth_cookie_name, { path: '/' });
     if (!req.session.userId){
+      console.log("back to home page, null userId");
         res.redirect('home');
+        return;
     }
-
+  console.log("render show works page");
     //before rendering, prepare enough information.
     // according to the user name to find out :
     // image,
     // topics
 
   var userId = req.session.userId;
+  console.log("userId: %s", userId);
   User.getUserById(userId, function(err, user){
     var topics = user.topics;
     var topicsInfos = [];
@@ -38,7 +41,7 @@ var showWorks = function (req, res) {
     res.render('personal/works', {
       title: config.name,
       css: '',
-      js : '' ,
+      js : '',
       layout: 'personalLayout',
       username: user.loginName,
       favourite: user.favourite,
