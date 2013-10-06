@@ -119,7 +119,7 @@ var edit = function (req, res, next) {
 
 var getId = function (req, res, next) {
   Topic.newId(function (topicId) {
-    res.send({ topicId: topicId });
+    res.json({ topicId: topicId });
   });
 }
 
@@ -129,7 +129,7 @@ var getContents = function (req, res, next) {
     if (!valid) {
       getId(req, res, next);
     } else if (topic.published) {
-      res.send({
+      res.json({
         redirect: '/topic/' + topicId + '/edit'
       });
     } else {
@@ -142,7 +142,7 @@ var getContents = function (req, res, next) {
         items.forEach(function (item) {
           itemsData.push(_getItemData(item));
         });
-        res.send({
+        res.json({
           topicData: topicData,
           itemsData: itemsData
         });
@@ -170,7 +170,7 @@ var createItem = function (req, res, next) {
       function (item) {
         Topic.increaseItemCountBy(topicId, 1);
         console.log('create item done.');
-        res.send(_getItemData(item));
+        res.json(_getItemData(item));
       })
   })
 }
@@ -257,7 +257,7 @@ var editItem = function (req, res, next) {
   var data = _getData(req, itemId);
   Item.editItem(data, function (item) {
     console.log(item.text);
-    res.send(_getItemData(item));
+    res.json(_getItemData(item));
   });
 }
 
