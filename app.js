@@ -36,7 +36,7 @@ app.use(express.cookieParser());
 app.use(express.session(
   {
     secret: config.session_secret,
-    store: new RedisStore({host: 'localhost', port: 6379, client: redis, ttl: 10}),
+    store: new RedisStore({host: 'localhost', port: 6379, client: redis, ttl: 3*24*60*60}),
     cookie: {maxAge: 3*24*60*60*1000}
   }
 ));
