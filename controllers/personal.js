@@ -44,7 +44,6 @@ var showWorks = function (req, res, next) {
     });
   } else {
     //console.log(req.cookies.logintoken);
-    var topics = req.currentUser.topics;
     var topicsInfos = [];
     getTopics(0, null, topicsInfos, {}, res);
   }
@@ -52,26 +51,31 @@ var showWorks = function (req, res, next) {
 // a function for recursively retrieve the topic information,
 // finally render them.
 var getTopics = function (i, topics, topicsInfos, user, res) {
-  if (i < topics.length) {
+  if (topics && i) {
 
     Topic.getTopicById(topics[i], function (err, topic) {
       if (err) {
-        console.log("no topic ?");
+        console.error("find topic failed");
+      } else if (!topic) {
+        console.log("topic not found");
+      } else {
+        console.log("find topic done");
+        console.log(topic);
+        console.log("topic id: %s", topic._id);
+        topic.topicUrl = "/topic/" + topic._id;
+        topic.create_date = topic.create_at.getFullYear() + '年'
+          + (topic.create_at.getMonth() + 1) + '月'
+          + topic.create_at.getDate() + '日';
+        topicsInfos.push(topic);
       }
-      console.log("topic");
-      console.log(topic);
-      console.log("topic id: %s", topic._id);
-      topic.topicUrl = "/topic/" + topic._id;
-      topic.create_date = topic.create_at.getFullYear() + '年'
-        + (topic.create_at.getMonth() + 1) + '月'
-        + topic.create_at.getDate() + '日';
-      topicsInfos.push(topic);
-      getTopics(++i, topics, topicsInfos, user, res);
+      getTopics(--i, topics, topicsInfos, user, res);
     });
   } else {
     res.render('personal/index', {
       title: config.name,
-      css: '',
+      css: [
+        '/stylesheets/personal.css'
+      ],
       js: '',
       pageType: 'PERSONAL',
       personalType: 'WORKS',

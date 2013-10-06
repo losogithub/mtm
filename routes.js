@@ -18,7 +18,7 @@ module.exports = function (app) {
 
   //console.log("router start");
 
-  app.get('/topic/create', auth.loadUser, topic.create);
+  app.get('/topic/create', auth.loadUser, auth.userInfo, topic.create);
   app.get('/topic/getid', topic.getId);
   app.get('/topic/getcontents', topic.getContents);
   app.get('/topic/:topicId', auth.userInfo, topic.index);
@@ -36,7 +36,7 @@ module.exports = function (app) {
   app.post('/signup', sign.signup);
   app.post('/registerAccount', sign.signup);
   app.get('/login', sign.showLogin);
-  app.post('/login', sign.login);
+  app.post('/login', auth.loadLogin, sign.login);
   app.get('/logout', sign.signout);  //todo: not tested yet.
   app.get('/forgetPassword', sign.showForgetPassword);
   app.post('/forgetPassword', sign.forgetPassword);
@@ -46,9 +46,9 @@ module.exports = function (app) {
 
 
   //personal management
-  app.get('/works', auth.userInfo, personal.showWorks);
-  app.get('/favourites', auth.userInfo, personal.showFavourite);
-  app.get('/settings', auth.userInfo, personal.showSettings);
+  app.get('/works', auth.loadUser, auth.userInfo, personal.showWorks);
+  app.get('/favourites', auth.loadUser, auth.userInfo, personal.showFavourite);
+  app.get('/settings', auth.loadUser, auth.userInfo, personal.showSettings);
   //todo
   //app.get('/notifications', personal)
 
