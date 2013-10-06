@@ -97,6 +97,28 @@ var getUserById = function (id, callback) {
     User.findOne({_id: id}, callback);
 };
 
+var appendTopic = function(id, topicId, callback){
+  //User.update();
+  User.findById(id, function(err, user){
+    if(err){
+          }
+    var topics = user.topics;
+    var length = topics.length;
+    for (var i = 0; i < length; i++)
+    {
+      if(topics[i] == topicId){
+        if(callback) callback();  //typeof function
+      }
+    }
+    user.topics.push(topicId);
+    user.topicCount++;
+    user.save();
+    if(callback) //typeof function
+      callback();
+  })
+}
+
+
 exports.getUserById = getUserById;
 exports.getUserByLoginName = getUserByLoginName;
 exports.getUserByName = getUserByName;
@@ -105,3 +127,4 @@ exports.getUsersByQuery = getUsersByQuery;
 exports.getUserByQuery = getUserByQuery;
 exports.getUserByEmail = getUserByEmail;
 exports.newAndSave = newAndSave;
+exports.appendTopic = appendTopic;

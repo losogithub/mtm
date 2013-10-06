@@ -9,7 +9,7 @@ var site = require('./controllers/site');
 var topic = require('./controllers/topic');
 var sign = require('./controllers/sign');
 var personal = require('./controllers/personal');
-
+var auth = require('./middlewares/auth');
 
 module.exports = function (app) {
   // home page
@@ -18,7 +18,7 @@ module.exports = function (app) {
 
   //console.log("router start");
 
-  app.get('/topic/create', topic.create);
+  app.get('/topic/create', auth.loginRequired, topic.create);
   app.get('/topic/getid', topic.getId);
   app.get('/topic/getcontents', topic.getContents);
   app.get('/topic/:topicId', topic.index);
@@ -26,7 +26,7 @@ module.exports = function (app) {
   app.post('/topic/createitem', topic.createItem);
   app.put('/topic/edititem', topic.editItem);
   app.put('/topic/sort', topic.sort);
-  app.put('/topic/publish', topic.publish);
+  app.put('/topic/publish', auth.loginRequired, topic.publish);
   app.delete('/topic/deleteitem', topic.deleteItem);
 
 

@@ -287,10 +287,13 @@ var deleteItem = function (req, res, next) {
 }
 
 var publish = function (req, res, next) {
+  var authorId =  req.session.userId;
   var topicId = req.body.topicId;
   var title = req.body.title;
   var desc = req.body.desc;
-  Topic.publish(topicId, title, desc, function () {
+
+  Topic.publish( authorId,topicId, title, desc, function () {
+
     res.send(200);
   });
 }

@@ -40,6 +40,7 @@
                         </thead>
                         <tbody>
                         <% for (i in locals.topics) { %>
+                        <% var topic = topics[i] %>
                          <% include topicShort.html %>
                         <% } %>
                         </tbody>

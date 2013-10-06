@@ -11,6 +11,7 @@ var ObjectId = require('mongoose').Types.ObjectId;
 var models = require('../models');
 var TopicModel = models.TopicModel;
 var Item = require('./item');
+var User= require('./user');
 
 /**
  * 获取新总结id
@@ -179,7 +180,7 @@ var getHotTopics = function (callback) {
     });
 }
 
-var publish = function (topicId, title, desc, callback) {
+var publish = function (authorId, topicId, title, desc, callback) {
   console.log('publish');
 
   TopicModel.findById(topicId, function (err, topic) {
@@ -190,6 +191,12 @@ var publish = function (topicId, title, desc, callback) {
     } else {
       console.log('find topic done');
 
+      //append this topic into user information
+      console.log("topic Id: %s", topicId);
+      console.log("author Id: %s", authorId);
+      User.appendTopic(authorId, topicId);
+
+      topic.author_id = authorId;
       topic.title = title;
       topic.desc = desc;
       topic.update_at = Date.now();
@@ -214,7 +221,7 @@ var getTopicById = function(topicId, callback){
             console.error('find topic failed:' + err);
         } else {
             console.log('find topic done');
-            callback(topic);
+            callback(err, topic);
         }
     });
 }

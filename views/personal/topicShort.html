@@ -5,13 +5,13 @@
       <div class="mdMTMTtl01Txt">
 
         <p class="mdMTMTtl01Ttl">
-          <a href="<%= topicUrl %>" data-na="NL:title"><%= title %></a>
+          <a href="<%= topic.topicUrl %>" data-na="NL:title"><%= topic.title %></a>
         </p>
-        <p class="mdMTMTtl01Date">作成： <%= create_at %></p>
+        <p class="mdMTMTtl01Date">作成： <%= topic.create_at %></p>
       </div>
       <!--/MdMTMTtl01--></div>
   </td>
   <td class="mdMPMTMTbl01TdPV">
-    <%= PV_count %>
+    <%= topic.PV_count %>
   </td>
 </tr>
