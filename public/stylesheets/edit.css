@@ -31,8 +31,6 @@
     background-position: -55px -170px;}
 .ui-sortable-helper{background-color: rgba(40, 184, 55, 0.2)!important;}
 .WidgetTxt{overflow: hidden;}
-.InputBox {color: rgb(0, 0, 0);padding: 0 4px;background-color: #fff;width: 100%;border-width: 1px;border-style: solid;border-color: rgb(202, 206, 209) rgb(232, 234, 235) rgb(232, 234, 235) rgb(202, 206, 209);}
-.InputBoxUrl{color: rgb(102, 102, 102);}
 .IMAGE_CREATE .InputBox {float: left;margin-right: 5px;width: 252px;height: 25px;padding-right: 4px;}
 .IMAGE .WidgetInputBox_Ttl{height: 30px;font-size: 14px;font-weight: bold;margin-bottom: 7px;}
 .IMAGE .WidgetInputBox_Quo {height: 25px;margin-bottom: 10px;}
@@ -58,8 +56,7 @@
 .EditFormItem02 {overflow: hidden;}
 .TopicThumbLink {float: left;display: block;margin-right: 15px;width: 95px;height: 95px;background: url("/images/photo_95x95.png");}
 .TopicThumbLink img{width: 95px;height: 95px;}
-.TopicThumbEdit{float: left;width: 252px;margin-right: 15px;display: none;}
-.TopicThumbEdit .InputBox{height: 25px;}
+.ThumbEdit {float: left;width: 252px;margin-right: 15px;display: none;}
 .EditFormImgArea01 {position: relative;width: 95px;height: 140px;background: url("/images/photo_95x95.png") no-repeat scroll 0px 0px transparent;}
 .EditFormImgAddList01 {position: absolute;top: 98px;left: 0px;margin-top: 3px;}
 .InputBoxDesc {border-style: solid;border-width: 1px;border-color: rgb(201, 205, 208) rgb(232, 234, 235) rgb(232, 234, 235) rgb(201, 205, 208);min-height: 95px;height: 95px;width: 100%;overflow: auto;padding: 5px}

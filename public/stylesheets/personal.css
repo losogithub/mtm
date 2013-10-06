@@ -1,10 +1,11 @@
 .Contents{padding: 25px 0;overflow: hidden;}
 .Sub{float: left;width: 239px;padding-right: 25px;}
-.SubThumb{display: block;border-radius: 3px 3px 3px 3px;border: 1px solid rgb(221, 221, 221);}
+.PersonalThumbWrapper{float: left; margin-right: 20px;}
+.PersonalThumb {display: block;border-radius: 3px 3px 3px 3px;border: 1px solid rgb(221, 221, 221);}
 .SubPV{float: right;width: 102px;margin-top: 2px;}
 .SubPV>li{padding: 9px 0 9px;}
 .SubPV>li>p:first-child{color: rgb(51, 51, 51);font-size: 20px;font-family: Arial,Helvetica,sans-serif;line-height: 1;}
-.Seperator{border-top: 1px solid rgb(221, 221, 221);}
+.Separator {border-top: 1px solid rgb(221, 221, 221);}
 .SubPV>li>p:last-child{color: rgb(84, 84, 84);font-size: 10px;margin-top: 8px;line-height: 1;}
 .SubTtl{margin-top: 12px;color: rgb(51, 51, 51);font-size: 14px;font-weight: bold;}
 .BtnSettings{
@@ -41,10 +42,12 @@
 
 .Main{border-left: 1px solid rgb(221, 221, 221);float: right;width: 670px;min-height: 550px;padding: 0 0 50px 25px;}
 .MainHead{margin-bottom: 10px;}
-.MainHead>h1{line-height: 20px;
+.MainHead>h1{
+    line-height: 20px;
     color: rgb(0, 0, 0);
     font-weight: bold;
     font-size: 16px;}
+.MainHead a{position: absolute;right: 0;bottom: 0;color: rgb(153, 153, 153);}
 .MainTbl{width: 100%;}
 .MainTbl th{padding: 9px 15px;
     border-top: 1px solid rgb(232, 233, 234);
@@ -84,3 +87,20 @@
 .MainTblDate{color: rgb(153, 153, 153);}
 .MainTblPV{font-size: 18px;}
 .MainTblRate{font-size: 10px;}
+.SettingsForm{padding-top: 20px;color: rgb(153, 153, 153);}
+.SettingsForm li{padding-bottom: 20px;overflow: hidden;}
+.SettingsForm li>h3{
+    display: block;
+    float: left;
+    width: 130px;
+    min-height: 1px;
+    color: rgb(51, 51, 51);
+    font-weight: bold;}
+.InputBox_Introduce{padding: 8px;height: 100px;resize: none;color: rgb(102, 102, 102);}
+.IntroduceCount{position: absolute;right: 0;top: 0;font-family: Tahoma,Arial,Helvetica,sans-serif;font-size: 10px;}
+.IntroduceCount>span{font-weight: bold;}
+.InputBox_Homepage{padding: 3px 5px;color: rgb(102, 102, 102);}
+.BtnSettingsSave{width: 160px;
+    height: 40px;
+    background: url("/images/personal/sprite_admin.png") no-repeat scroll -330px -165px transparent;
+    cursor: pointer;}

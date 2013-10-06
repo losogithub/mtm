@@ -9,11 +9,12 @@
 $(function ($) {
   $(".NavInner .BtnOpen")
     .click(function () {
-      $menu = $('.SubNav').toggle();
+      var $menu = $('.SubNav').toggle();
 
       $(document).one("click", function () {
         $menu.hide();
       });
+
       return false;
     })
 });

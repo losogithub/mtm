@@ -58,7 +58,7 @@
     }
 
     var $link = $('.TopicThumbLink');
-    var $edit = $('.TopicThumbEdit');
+    var $edit = $('.ThumbEdit');
     var $input = $edit.find('.InputBox');
     var $save = $edit.find('.Btn_Save');
     var $cancel = $edit.find('.Btn_Cancel');
