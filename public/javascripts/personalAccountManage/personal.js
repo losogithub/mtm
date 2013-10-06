@@ -8,12 +8,6 @@
 
 $(function ($) {
   $(".NavInner .BtnOpen")
-    .button({
-      text: false,
-      icons: {
-        primary: "ui-icon-triangle-1-s"
-      }
-    })
     .click(function () {
       $menu = $('.SubNav').toggle();
 
