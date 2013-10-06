@@ -49,6 +49,9 @@ var getTopics = function(i, topics, topicsInfos, user, res){
        console.log(topic);
        console.log("topic id: %s", topic._id);
        topic.topicUrl = "/topic/" + topic._id;
+       topic.create_date = topic.create_at.getFullYear() + '年'
+         + (topic.create_at.getMonth() + 1) + '月'
+         + topic.create_at.getDate() + '日';
        topicsInfos.push(topic);
        getTopics(++i, topics, topicsInfos, user, res);
      });

@@ -406,7 +406,7 @@ function checkOnlyPassword(pass, user, req, res){
             });
     }
     // store session cookie
-    gen_session(user, res);
+    //gen_session(user, res);
     //check at some page just jump to home page
     console.log(req.session._loginReferer);
     req.session.userId = user._id;
@@ -683,7 +683,7 @@ function gen_session(user, res) {
     //console.log(auth_token);
     res.cookie(config.auth_cookie_name, auth_token, {path: '/',  maxAge: 1000 * 60 * 60}); //cookie 有效期1 hour
     //todo: this one not work
-    console.log(res.cookie.name);
+    console.log(res.cookie);
 }
 
 function encrypt(str, secret) {

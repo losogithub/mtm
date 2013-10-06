@@ -6,6 +6,11 @@ var express = require('express');
 var ejs = require('ejs');
 var partials = require('express-partials');
 
+//using redis to store session data
+var RedisStore = require("connect-redis")(express);
+var redis = require('redis').createClient();
+
+
 var config = require('./config');
 var routes = require('./routes');
 
@@ -27,8 +32,14 @@ app.engine('html', ejs.renderFile);
 app.use(express.bodyParser());
 app.use(partials());
 
-app.use(express.cookieParser(config.session_secret));
-app.use(express.session());
+app.use(express.cookieParser());
+app.use(express.session(
+  {
+    secret: config.session_secret,
+    store: new RedisStore({host: 'localhost', port: 6379, client: redis}),
+    cookie: {maxAge: 24*60*60*1000}
+  }
+));
 app.use(app.router);
 app.use(express.static(path.join(__dirname , '/public')));
 
