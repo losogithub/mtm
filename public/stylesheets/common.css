@@ -32,22 +32,44 @@ table{border-spacing: 0;height: 100%;}
 .INDEX .Inner{width: 1010px;}
 .Header{z-index: 501;height: 44px;width: 100%;border-top: 3px solid rgb(51, 51, 51);border-bottom: 1px solid rgb(231, 231, 231);}
 .INDEX .Header{height: 108px;}
+.PERSONAL .Header{height: 60px;}
 .HeaderBanner01{display: block;width: 181px;height: 33px;background-position: 0px -30px;margin: 0 auto;}
 .HeaderBanner02{display: block;width: 102px;height: 20px;margin: 0 auto;}
 .HeaderBtn{background-image: url("/images/sprite_head.png");}
 .Nav{position: absolute;right: 0;top: 0;height: 100%;}
-.Nav li{display: inline;}
+.Nav_Left{left: 0;right: auto;}
+.Nav_LeftInner>li{display: inline;margin-right: 30px;}
+.Nav_LeftInner .SELECTED a{font-weight: bold;color: rgb(0, 0, 0);}
+.NavInner>li{display: inline;}
 .Nav a{color: rgb(84, 84, 84);}
 .NavInner{margin: 10px 0;}
+.NavInner img{margin-right: 5px;vertical-align: middle;}
 .BtnOpen{width: 19px;height: 24px;margin-left: -10px;background-position: -132px 2px;}
+.SubNav{position: absolute;
+    right: 0px;
+    z-index: 501;
+    width: 98px;
+    height: 90px;
+    overflow: hidden;
+    border: 1px solid rgb(207, 207, 207);
+    background-color: rgb(255, 255, 255);
+    text-align: left;
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);}
+.SubNav a{color: rgb(84, 84, 84);
+    display: block;
+    height: 30px;
+    line-height: 30px;
+    padding: 0px 8px;}
+.SubNav a:hover,.SubNav a:active,.SubNav a:focus{background-color:#f0f0f0;text-decoration:none}
 
 .Contents {padding-bottom: 20px;}
 
-.Footer{width: 100%; border-top: 1px solid rgb(231, 231, 231);}
-.Footer .Inner{padding: 25px 0;overflow: hidden;}
+.Footer{width: 100%; border-top: 1px solid rgb(231, 231, 231);height: 63px;}
+.PERSONAL .Footer{height: 43px;}
 .MtmLinkUl{float: left;line-height: 1;}
 .MtmLinkUl li{display: inline;}
 .MtmLinkUl a{color: rgb(51, 51, 51); font-size: 11px;}
+.PERSONAL .MtmLinkUl a{color: rgb(170, 170, 170);}
 .HeaderSeparator{display: inline-block;
     width: 0px;
     overflow: hidden;
@@ -57,6 +79,7 @@ table{border-spacing: 0;height: 100%;}
     margin: 0px 9px 0px 11px;}
 .FooterSeparator{display: inline-block;position: relative;top: 1px;width: 0px;height: 11px;overflow: hidden;margin: 0px 11px 0px 15px;border-left: 1px solid rgb(205, 205, 205);}
 .Copyright{float: right;color: rgb(51, 51, 51);font-family: Tahoma,Arial,sans-serif;font-size: 11px;line-height: 1;}
+.PERSONAL .Copyright{color: rgb(170, 170, 170);}
 .Copyright b{font-weight: normal}
 .ButtonToggle{line-height: 1;font-size: 12px;vertical-align: middle;}
 .ButtonToggle{cursor: pointer;}

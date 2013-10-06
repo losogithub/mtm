@@ -1,0 +1,84 @@
+<div class="LyWrap">
+
+  <div class="lyWrapInner">
+    <!--/HEADER-AREA-->
+
+
+    <!--CONTENTS-AREA-->
+    <div class="LyContents MdCF" data-na="NA:works">
+      <!--CONTENTS-WRAP-AREA-->
+      <div class="lyContentsWrap MdCF">
+
+        <% if (locals.personalType == 'WORKS') { %>
+        <% include _works.html %>
+        <% } else if (locals.personalType == 'SETTINGS') { %>
+        <% include _settings.html %>
+        <% } %>
+
+        <div class="LySub">
+
+          <div class="ArMySub01" data-na="NA:userinfo">
+            <div class="arMySub01Inner">
+              <div class="MdMySubProf01">
+                <div class="mdMySubProf01Unit01">
+                  <ul class="mdMySubProf01PV">
+                    <li class="mdMySubProf01PVItem01">
+                      <span class="mdMySubProf01PVCount"><%= topicsCount %></span>
+                      <span class="mdMySubProf01PVLabelMTMNumber">总结数</span>
+                    </li>
+                    <li class="mdMySubProf01PVItem02">
+                      <span class="mdMySubProf01PVCount"><%= topicsPageView %></span>
+                      <span class="mdMySubProf01PVLabelMonthly">月访问量</span>
+                    </li>
+                  </ul>
+                  <div class="MdThumb01">
+                    <span class="mdThumb01Inner"><img src="/images/personal/user_120x120.png"></span>
+                  </div>
+                  <h3 class="mdMySubProf01Ttl"><span class="mdMySubProf01UserName"><%= username %></span>さん</h3>
+
+
+                  <p class="mdMySubProf01Btn"><span class="MdMPBtn01P03"><a href="/settings"
+                                                                            class="mdMPBtn01P03Btn">設定</a></span></p>
+
+                  <div class="mdMySubProf01FV">
+                    <span class="MdFVCount01"><span class="mdFVCount01Ico"></span><span class="mdFVCount01Num"><%= favourite %></span></span>
+                  </div>
+                </div>
+                <!--/MdMySubProf01--></div>
+            </div>
+            <!--/ArMySub01--></div>
+
+          <div class="ArMySubSeparator01">
+            <hr>
+          </div>
+
+
+          <div class="ArMySub02">
+            <ul class="MdMySubNav02" data-na="NA:ownerlink">
+              <!-- <li class="mdMySubNav02Item01"><a href="/faq?groupNo=147" data-na="NL:click">インセンティブ利用ガイド</a></li> -->
+              <li class="mdMySubNav02Item01"><a href="/bookmarklet" data-na="NL:bookmarklet">bookmarklet</a></li>
+              <!--/MdMySubNav02--></ul>
+            <!--/ArMySub02--></div>
+
+          <!--/LySub--></div>
+
+        <!--/lyContentsWrap--></div>
+      <!--/LyContents--></div>
+    <!--/CONTENTS-AREA-->
+<div id="ui-datepicker-div" class="ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all"></div>
+<div class="diigolet notice" id="diigolet-notice" style="display: none;">
+  <div><b>&nbsp;</b>
+
+    <p>Ok, done!</p><span id="close"></span></div>
+</div>
+<div id="diigolet-csm" style="position: absolute; left: -9764px; top: 206px; display: none;" class="yellow"><a
+  id="diigolet-csm-highlight" href="javascript:void(0);"></a><a id="diigolet-csm-search" href="javascript:void(0);"></a>
+
+  <div id="diigolet-csm-color" class="small hidden" style="height: 0px;"><a class="diigolet-csm-coloritem"
+                                                                            id="diigolet-csm-yellow"
+                                                                            style="height: 0px;"></a><a
+    class="diigolet-csm-coloritem" id="diigolet-csm-blue" style="height: 0px;"></a><a class="diigolet-csm-coloritem"
+                                                                                      id="diigolet-csm-green"
+                                                                                      style="height: 0px;"></a><a
+    class="diigolet-csm-coloritem" id="diigolet-csm-pink" style="height: 0px;"></a></div>
+</div>

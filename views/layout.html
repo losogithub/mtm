@@ -3,47 +3,74 @@
 <head>
   <title><%= locals.title ? title : 'mtm' %></title>
   <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=10">
   <link type='text/css' rel='stylesheet' href='/stylesheets/common.css'/>
   <% for (i in locals.css) { %>
   <link type='text/css' rel='stylesheet' href='<%= css[i] %>'/>
   <% } %>
   <script type="text/javascript" src="/javascripts/common.js"></script>
   <script type="text/javascript" src="http://libs.baidu.com/jquery/1.10.2/jquery.min.js"></script>
+  <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+  <script type="text/javascript" chartset="utf-8" src="/javascripts/personalAccountManage/personal.js"></script>
   <% for (i in locals.js) { %>
   <script type="text/javascript" src="<%= js[i] %>"></script>
   <% } %>
 </head>
 <body>
-  <% if (locals.index) { %>
-  <div class="INDEX">
-  <% } %>
+  <div class="<%= !locals.pageType ? '' : pageType %>">
     <div class='Header'>
       <div class="Inner">
+        <% if (locals.pageType == 'PERSONAL') { %>
+        <nav class="Nav Nav_Left">
+          <table>
+            <td>
+              <ul class="Nav_LeftInner NegLinkWrapper">
+                <li class="<%= locals.path != '/favourites' ? '' : 'SELECTED' %>"><a href="/favourites">收藏</a></li>
+                <li class="<%= locals.path != '/works' ? '' : 'SELECTED' %>"><a href="/works">管理</a></li>
+                <li class="<%= locals.path != '/connections' ? '' : 'SELECTED' %>"><a href="/connections">外部链接</a></li>
+              </ul>
+            </td>
+          </table>
+        </nav>
+        <% } %>
         <table style="width: 100%;">
           <td>
-            <a class="HeaderBtn <%= locals.index ? 'HeaderBanner01' : 'HeaderBanner02' %>" href="/" title='mtm'>mtm</a>
+            <a class="HeaderBtn <%= locals.pageType == 'INDEX' ? 'HeaderBanner01' : 'HeaderBanner02' %>" href="/" title='mtm'>mtm</a>
           </td>
         </table>
         <nav class="Nav">
-          <% if (!locals.index) { %>
+          <% if (locals.pageType != 'INDEX') { %>
           <table>
           <td>
           <% } %>
+          <% if (!locals.username) { %>
           <ul class="NavInner NegLinkWrapper">
-            <li>
-              <a href="/topic/create">创建总结</a><span class="HeaderSeparator">｜</span>
-            </li>
-            <li>
-              <a href="/signup" data-na="NL:join">register</a><span class="HeaderSeparator">｜</span>
-            </li>
-            <li>
-              <a href="/login" data-na="NC:login">login</a><span class="HeaderSeparator">｜</span>
-            </li>
-            <li>
-              <button class="HeaderBtn BtnOpen" type="button">打开</button>
-            </li>
+            <li><a href="/topic/create">创建总结</a><span class="HeaderSeparator">｜</span></li>
+            <li><a href="/signup">注册</a><span class="HeaderSeparator">｜</span></li>
+            <li><a href="/login">登录</a></li>
           </ul>
-          <% if (!locals.index) { %>
+          <% } else { %>
+          <ul class="NavInner NegLinkWrapper">
+            <li><a href="/favourites"><img width="20" height="20"
+                                           src="images/no_img/user_20x20.png"
+                                           onerror="mtm.errorImage(this,'user_20x20');"><%= username %></a><span
+              class="HeaderSeparator">|</span></li>
+            <li><a href="/notifications">通知</a><span class="mdHeadUtil01Count"
+                                                     style="display: none;"><span
+              class="mdHeadUtil01CountInner">0</span></span><span class="HeaderSeparator">|</span></li>
+            <li><a href="/topic/create">创建</a><span class="HeaderSeparator">|</span></li>
+            <li>
+              <button class="HeaderBtn BtnOpen" type="button" title="更多">更多</button>
+            </li>
+            <ul class="SubNav" style="display: none;">
+              <li><a href="/settings">设置</a></li>
+              <li><a href="/faq?serviceNo=4">帮助</a></li>
+              <li><a href="/logout">登出</a><span
+                class="mdHeadUtil01SubPointer"></span></li>
+            </ul>
+          </ul>
+          <% } %>
+          <% if (locals.pageType != 'INDEX') { %>
           </td>
           </table>
           <% } %>
@@ -55,17 +82,19 @@
 
     <div class='Footer'>
       <div class='Inner'>
-        <ul class='MtmLinkUl NegLinkWrapper'>
-          <li><a>关于我们</a><span class='FooterSeparator'>|</span></li>
-          <li><a>使用条规</a><span class='FooterSeparator'>|</span></li>
-        </ul>
-        <div class='Copyright'>
-          <small>© <b>mtm</b></small>
-        </div>
+        <table style="width: 100%;">
+          <td>
+            <ul class='MtmLinkUl NegLinkWrapper'>
+              <li><a>关于我们</a><span class='FooterSeparator'>|</span></li>
+              <li><a>使用条规</a><span class='FooterSeparator'>|</span></li>
+            </ul>
+            <div class='Copyright'>
+              <small>© <b>mtm</b></small>
+            </div>
+          </td>
+        </table>
       </div>
     </div>
-  <% if (locals.index) { %>
   </div>
-  <% } %>
 </body>
 </html>

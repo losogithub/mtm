@@ -22,25 +22,25 @@ var loginRequired = function (req, res, next) {
 };
 
 
-var authenticateFromLoginToken = function(req, res, next) {
+var authenticateFromLoginToken = function (req, res, next) {
   console.log("loginToken: ", req.cookies.logintoken);
   var cookie = JSON.parse(req.cookies.logintoken);
 
-  LoginToken.find(cookie.email, cookie.series, cookie.token ,
-    function(err, token) {
+  LoginToken.find(cookie.email, cookie.series, cookie.token,
+    function (err, token) {
       if (err) {
         console.log("cannot find in LoginToken");
         res.redirect('/home');
         return;
       }
       console.log("authenticate Token findByEmail: %s", token);
-      User.getUserByMail(token.email, function(err, user) {
+      User.getUserByMail(token.email, function (err, user) {
         if (user) {
           req.session.userId = user._id;
           req.currentUser = user;
 
           token.token = LoginToken.randomToken();
-          token.save(function() {
+          token.save(function () {
             console.log("token.save function in authenticateFromLoginToken");
             res.cookie('logintoken', token.cookieValue, { expires: new Date(Date.now() + 2 * 604800000), path: '/' });
             next();
@@ -55,8 +55,8 @@ var loadUser = function (req, res, next) {
   console.log("loadUser");
   if (req.session.userId) {        // session stores the userId information. means after login
     console.log("loadUser userId: %s", req.session.userId);
-    User.getUserById(req.session.userId, function(err, user) {
-      if(err){
+    User.getUserById(req.session.userId, function (err, user) {
+      if (err) {
         return next(err);
       }
       if (user) {
@@ -67,7 +67,7 @@ var loadUser = function (req, res, next) {
         res.redirect('/home');
       }
     });
-  } else if (req.cookies.logintoken && req.cookies.logintoken !== 'undefined'){
+  } else if (req.cookies.logintoken && req.cookies.logintoken !== 'undefined') {
     //if(req.cookies.logintoken == 'undefined'){console.log("undefined logintoken");}
     console.log("loadUser: auto login, check cookies.logintoken");
     authenticateFromLoginToken(req, res, next);
@@ -85,8 +85,8 @@ var loadLogin = function (req, res, next) {
   console.log("loadLogin");
   if (req.session.userId) {        // session stores the userId information. means after login
     console.log("loadLogin userId: %s", req.session.userId);
-    User.getUserById(req.session.userId, function(err, user) {
-      if(err){
+    User.getUserById(req.session.userId, function (err, user) {
+      if (err) {
         return next(err);
       }
       if (user) {
@@ -96,7 +96,7 @@ var loadLogin = function (req, res, next) {
         next(); //revised: go to login page
       }
     });
-  } else if (req.cookies.logintoken && req.cookies.logintoken !== 'undefined'){
+  } else if (req.cookies.logintoken && req.cookies.logintoken !== 'undefined') {
     //if(req.cookies.logintoken == 'undefined'){console.log("undefined logintoken");}
     console.log("loadUser: auto login, check cookies.logintoken");
     loginAuthenticateFromLoginToken(req, res, next);
@@ -110,11 +110,11 @@ var loadLogin = function (req, res, next) {
   }
 }
 
-var loginAuthenticateFromLoginToken = function(req, res, next) {
+var loginAuthenticateFromLoginToken = function (req, res, next) {
   var cookie = JSON.parse(req.cookies.logintoken);
 
-  LoginToken.find(cookie.email, cookie.series, cookie.token ,
-    function(err, token) {
+  LoginToken.find(cookie.email, cookie.series, cookie.token,
+    function (err, token) {
       if (err) {
         console.log("cannot find in LoginToken");
         //res.redirect('/home');
@@ -122,13 +122,13 @@ var loginAuthenticateFromLoginToken = function(req, res, next) {
         return;
       }
       console.log("authenticate Token findByEmail: %s", token);
-      User.getUserByMail(token.email, function(err, user) {
+      User.getUserByMail(token.email, function (err, user) {
         if (user) {
           req.session.userId = user._id;
           req.currentUser = user;
 
           token.token = LoginToken.randomToken();
-          token.save(function() {
+          token.save(function () {
             console.log("token.save function in authenticateFromLoginToken");
             res.cookie('logintoken', token.cookieValue, { expires: new Date(Date.now() + 2 * 604800000), path: '/' });
             //next();
@@ -143,7 +143,19 @@ var loginAuthenticateFromLoginToken = function(req, res, next) {
     });
 }
 
+var userInfo = function (req, res, next) {
+  if (!req.session || !req.session.userId) {
+    return next();
+  }
+  User.getUserById(req.session.userId, function (err, user) {
+    if (user) {
+      res.locals.username = user.loginName;
+    }
+    return next();
+  });
+};
 
 exports.loginRequired = loginRequired;
 exports.loadUser = loadUser;
 exports.loadLogin = loadLogin;
+exports.userInfo = userInfo;

@@ -23,7 +23,7 @@ var index = function (req, res, next) {
       title: 'mtm[我设计的信息。策展平台]',
       css: ['/stylesheets/index.css'],
       js: ['/javascripts/index.js'],
-      index: 1,
+      pageType: 'INDEX',
       hot: topicsData
     });
   });

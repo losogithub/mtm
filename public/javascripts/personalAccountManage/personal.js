@@ -7,7 +7,7 @@
  */
 
 $(function ($) {
-  $(".mdHeadUtil01Open")
+  $(".NavInner .BtnOpen")
     .button({
       text: false,
       icons: {
@@ -15,14 +15,10 @@ $(function ($) {
       }
     })
     .click(function () {
-      $(this).next().toggle();
-      var menu = $(this).next().position({
-        my: "left top",
-        at: "left bottom",
-        of: this
-      });
+      $menu = $('.SubNav').toggle();
+
       $(document).one("click", function () {
-        menu.hide();
+        $menu.hide();
       });
       return false;
     })
