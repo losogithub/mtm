@@ -73,7 +73,9 @@ var getTopics = function (i, topics, topicsInfos, user, res) {
   } else {
     res.render('personal/index', {
       title: config.name,
-      css: '',
+      css: [
+        '/stylesheets/personal.css'
+      ],
       js: '',
       pageType: 'PERSONAL',
       personalType: 'WORKS',
@@ -104,7 +106,7 @@ var showFavourite = function (req, res) {
   res.render('personal/favourite', {
     title: config.name,
     css: [
-      '/stylesheets/personalAccountManage/MTM_mypage_newsfeed_13800104942008.css'
+      '/stylesheets/personal.css'
     ],
     js: '',
     pageType: 'PERSONAL'
@@ -125,7 +127,9 @@ var showSettings = function (req, res) {
   User.getUserById(userId, function (err, user) {
     res.render('personal/index', {
       title: config.name,
-      css: '',
+      css: [
+        '/stylesheets/personal.css'
+      ],
       js: '',
       pageType: 'PERSONAL',
       personalType: 'SETTINGS',

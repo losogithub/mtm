@@ -1,1 +1,86 @@
-.Contents{margin: 25px 0;}
+.Contents{padding: 25px 0;}
+.Sub{float: left;width: 239px;padding-right: 25px;}
+.SubThumb{display: block;border-radius: 3px 3px 3px 3px;border: 1px solid rgb(221, 221, 221);}
+.SubPV{float: right;width: 102px;margin-top: 2px;}
+.SubPV>li{padding: 9px 0px 9px;}
+.SubPV>li>p:first-child{color: rgb(51, 51, 51);font-size: 20px;font-family: Arial,Helvetica,sans-serif;line-height: 1;}
+.Seperator{border-top: 1px solid rgb(221, 221, 221);}
+.SubPV>li>p:last-child{color: rgb(84, 84, 84);font-size: 10px;margin-top: 8px;line-height: 1;}
+.SubTtl{margin: 12px 0px 0px;color: rgb(51, 51, 51);font-size: 14px;font-weight: bold;}
+.BtnSettings{
+    margin-top: 10px;
+    display: block;
+    width: 44px;
+    height: 30px;
+    line-height: 31px;
+    font-size: 11px;
+    background: url("/images/personal/sprite_admin.png") -330px -210px;
+    text-align: center;
+    color: rgb(0, 0, 0);
+    font-weight: bold;
+    text-decoration: none!important;}
+.SubFV{
+    bottom: 0px;
+    right: 0px;
+    position: absolute;}
+.FVIco{
+    display: inline-block;
+    margin: 0px 3px 0px 0px;
+    vertical-align: -2px;
+    width: 15px;
+    height: 14px;
+    background: url("/images/personal/sprite_FVBtn.png") -40px -240px;
+}
+.SubSeparator{border-top: 1px solid rgb(221, 221, 221);margin: 25px 0;}
+.PersonalSubNav{margin-bottom: 20px;}
+.PersonalSubNav>li{line-height: 1;
+    margin-bottom: 10px;
+    padding-left: 7px;
+    background: url("/images/personal/sprite_Sub.png") no-repeat -135px 0;}
+.PersonalSubNav>li>a{color: rgb(102, 102, 102);}
+
+.Main{border-left: 1px solid rgb(221, 221, 221);float: right;width: 670px;min-height: 550px;padding: 0 0 50px 25px;}
+.MainHead{margin-bottom: 10px;}
+.MainHead>h1{line-height: 20px;
+    color: rgb(0, 0, 0);
+    font-weight: bold;
+    font-size: 16px;}
+.MainTbl{width: 100%;}
+.MainTbl th{padding: 9px 15px;
+    border-top: 1px solid rgb(232, 233, 234);
+    border-bottom: 1px solid rgb(232, 233, 234);
+    background: url("/images/personal/bg_Tbl.png") no-repeat scroll 0 4px whitesmoke;
+    color: rgb(153, 153, 153);
+    font-weight: normal;
+    line-height: 1;}
+.MainTbl th:first-child{background-image: none;text-align: left;}
+.MainTbl th .SELECTED{color: rgb(0, 0, 0);}
+.MainTbl th a{color: rgb(153, 153, 153);}
+.MainTblSortSub{float: right;font-size: 10px;}
+.MainTblSortIco{display: inline-block;
+    width: 11px;
+    height: 10px;
+    overflow: hidden;
+    margin-left: 1px;
+    padding: 0;
+    border: 0 none;
+    background: url("/images/personal/sprite_admin.png") no-repeat scroll -135px 0 transparent;}
+.MainTbl tbody tr{
+    }
+.MainTbl td{
+    padding: 9px 10px;
+    border-bottom: 1px solid rgb(242, 242, 242);
+    color: rgb(0, 0, 0);
+    text-align: center;
+    vertical-align: middle;
+    word-wrap: break-word;height: 61px;}
+.MainTbl td:first-child{text-align: left;}
+.MainTblTtl{
+    line-height: 1.3;
+    margin-bottom: 3px;
+    font-size: 16px;
+}
+.MainTblTtl a{color: rgb(0, 0, 0);}
+.MainTblDate{color: rgb(153, 153, 153);}
+.MainTblPV{font-size: 18px;}
+.MainTblRate{font-size: 10px;}

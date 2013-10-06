@@ -1,52 +1,46 @@
-<div class="Contents">
-        <div class="LyMain" role="main" data-na="NA:main">
-            <div class="ArMain01">
+<div class="Main">
 
+  <div class="MainHead">
+    <h1><%= username %> 的总结</h1>
+  </div>
 
-                <div class="MdMypageHead01" data-na="NA:header">
-                    <h1 class="mdMypageHead01Ttl01"><%- username %>  的总结</h1>
-                    <!--/MdMypageHead01--></div>
+  <div class="MainDetail">
+    <table class="MainTbl">
+      <colgroup>
+        <col style="width:404px;*width:374px;">
+        <col style="width:115px;*width:85px;">
+        <col style="width:94px;*width:64px;">
+        <col>
+      </colgroup>
+      <thead>
+      <tr class="NegLinkWrapper">
+        <th>
+          标题
+          <div class="MainTblSortSub">
+            <a data-value="c" data-order="a">创建日期<span
+              class="MainTblSortIco"></span></a>
+            <a data-value="u" data-order="d">更新日期<span
+              class="MainTblSortIco"></span></a>
+          </div>
+        </th>
+        <th>
+          <a class="MainTblSort SELECTED" data-value="p" data-order="d">访问量<span
+            class="MainTblSortIco"></span></a>
+        </th>
+        <th>
+          <a class="MainTblSort" data-value="r" data-order="d">上升率<span
+            class="MainTblSortIco"></span></a>
+        </th>
+        <th><span class="Hide">页面详细链接</span></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% for (i in locals.topics) { %>
+      <% var topic = topics[i] %>
+      <% include _topicShort.html %>
+      <% } %>
+      </tbody>
+    </table>
+  </div>
 
-                <div class="MdMPMTMDetail" data-na="NA:list">
-                    <table class="MdMPMTMTbl01">
-                        <colgroup>
-                            <col style="width:404px;*width:374px;">
-                            <col style="width:115px;*width:85px;">
-                            <col style="width:94px;*width:64px;">
-                            <col>
-                        </colgroup>
-                        <thead>
-                        <tr>
-
-                            <th class="mdMPMTMTbl01ThMTM MdAlignLeft">
-                              标题
-                                <div class="mdMPMTMTbl01Date">
-                                    <span data-na="NC:sortcreated" class="mdMPMTMTbl01Sort ExSelected" data-value="c" data-order="a">创建时间<span class="mdMPMTMTbl01SortIco"></span></span>
-                                    <span data-na="NC:sortupdated" class="mdMPMTMTbl01Sort" data-value="u" data-order="d">更新时间<span class="mdMPMTMTbl01SortIco"></span></span>
-                                </div>
-                            </th>
-                            <th class="mdMPMTMTbl01ThPV">
-                                <span data-na="NC:sortpageview" class="mdMPMTMTbl01Sort" data-value="p" data-order="d">访问量<span class="mdMPMTMTbl01SortIco"></span></span>
-                            </th>
-                            <th class="mdMPMTMTbl01ThRate">
-                                <span data-na="NC:sortper" class="mdMPMTMTbl01Sort" data-value="r" data-order="d">上升率<span class="mdMPMTMTbl01SortIco"></span></span>
-
-                            </th>
-                            <th class="mdMPMTMTbl01ThAnalysis"><span class="MdNonDisp">页面详细链接</span></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <% for (i in locals.topics) { %>
-                        <% var topic = topics[i] %>
-                         <% include topicShort.html %>
-                        <% } %>
-                        </tbody>
-
-                        <!--/MdMPMTMTbl01--></table>
-                    <!--/MdMPMTMDetail--></div>
-
-
-                <!--/ArMyMain01--></div>
-
-            <!--/LyMain--></div>
 </div>

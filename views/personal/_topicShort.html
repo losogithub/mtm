@@ -1,0 +1,16 @@
+<tr>
+  <td>
+    <p class="MainTblTtl NegLinkWrapper">
+      <a href="<%= topic.topicUrl %>"><%= topic.title %></a>
+    </p>
+
+    <p class="MainTblDate">创建： <%= topic.create_date %></p>
+  </td>
+  <td class="MainTblPV">
+    <%= !topic.PV_count ? '-' : topic.PV_count %>
+  </td>
+  <td class="MainTblRate">-
+  </td>
+  <td>
+  </td>
+</tr>
