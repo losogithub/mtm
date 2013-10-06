@@ -14,7 +14,7 @@
     <div class="Inner">
       <div class="Head02">
         <div class="HeadMain">
-          <img class="HeadThumb" width="95" height="95" onerror="errorImage(this,'image_95x95');" alt=""
+          <img class="HeadThumb" width="95" height="95" onerror="mtm.errorImage(this,'image_95x95');" alt=""
                src="<%= locals.topic ? topic.coverUrl : '/images/no_img/image_95x95.png' %>">
 
           <div class="HeadTxt">
@@ -39,10 +39,10 @@
               <div class="HeadUser">
                 <table style="height: 30px;">
                   <td>
-                    <a class="HeadUserThumb" href="/u/<%= topic.author %>"><img width="30" height="30"
-                                                                                onerror="errorImage(this,'user_40x40');"
-                                                                                src="/images/mo_img/user_40x40.png"
-                                                                                title="<%= topic.author %>"></a>
+                    <a class="HeadUserThumb" href="/u/<%= topic.author %>"><img
+                      onerror="mtm.errorImage(this,'user_40x40');"
+                      src="/images/mo_img/user_40x40.png"
+                      title="<%= topic.author %>"></a>
                   </td>
                   <td class="NegLinkWrapper">
                     <a class="HeadUserName" href="/u/<%= topic.author %>"><%= topic.author %></a>

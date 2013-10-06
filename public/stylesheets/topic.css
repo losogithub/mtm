@@ -17,6 +17,7 @@
 .HeadOption{margin-top: 13px;}
 .HeadUser{margin-right: 6px;}
 .HeadUserThumb{display: block;width: 30px;height: 30px;margin-right: 10px;}
+.HeadUserThumb img{width: 30px;height: 30px;}
 .HeadUserName{color: rgb(0, 0, 0) !important;font-weight: bold;}
 .HeadSub{float: right;width: 220px;text-align: right;}
 .HeadPVCount{display: inline-block;text-align: center;font-family: Tahoma,Arial,Helvetica,sans-serif;}
