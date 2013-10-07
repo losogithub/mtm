@@ -31,22 +31,35 @@
                 class="ButtonToggleIco"></span></a>
             </div>
             <div class="EditFormBox02" style='display: none'>
-              <dl class="EditFormItem01">
-                <dt class="Hide">标题图片</dt>
-                <dd class="EditFormImgArea01">
-                  <ul class="EditFormImgAddList01">
-                    <li><a class="A1">搜索图片</a></li>
-                    <li><a class="A1">上传图片</a></li>
-                  </ul>
-                </dd>
-              </dl>
-              <dl class="EditFormItem02">
-                <dt class="Hide">总结描述</dt>
-                <dd>
-                  <textarea class="InputBoxDesc" placeholder="输入总结描述（150字以内，换行符无效）" name='description'><%= locals.topic
-                    ? topic.desc : '' %></textarea>
-                </dd>
-              </dl>
+              <!--<dl class="EditFormItem01">-->
+              <!--<dt class="Hide">标题图片</dt>-->
+              <!--<dd class="EditFormImgArea01">-->
+              <!--<ul class="EditFormImgAddList01">-->
+              <!--<li><a class="A1">搜索图片</a></li>-->
+              <!--<li><a class="A1">上传图片</a></li>-->
+              <!--</ul>-->
+              <!--</dd>-->
+              <!--</dl>-->
+              <div class="EditFormItem02">
+                <a class="TopicThumbLink" title="设置总结封面">
+                  <img class='WidgetItemThumb' src="<%= !locals.topic ? '' : !topic.coverUrl ? '' : topic.coverUrl %>">
+                </a>
+
+                <div class="TopicThumbEdit">
+                  <input class="InputBox InputBoxUrl" type="text" name="url" placeholder="输入图片URL"
+                         value="<%= !locals.topic ? '' : !topic.coverUrl ? '' : topic.coverUrl %>">
+
+                  <div class="WidgetButton">
+                    <button class="Btn Btn_Save" type="button">保存</button>
+                    <button class="Btn Btn_Cancel" type="button">放弃</button>
+                  </div>
+                </div>
+                <div class="EditFormItem02">
+                  <textarea class="InputBoxDesc" placeholder="输入总结描述（150字以内，换行符无效）" name='description'><%= !locals.topic
+                    ? '' : !topic.description
+                    ? '' : topic.description %></textarea>
+                </div>
+              </div>
             </div>
           </fieldset>
         </form>
@@ -107,7 +120,7 @@
           <div class="WidgetItemImg">
             <div class="WidgetItemThumb"></div>
           </div>
-          <input class="WidgetInputBox InputBoxUrl Required AutoFocus" type="text" name="url" placeholder="输入图片URL">
+          <input class="InputBox InputBoxUrl Required AutoFocus" type="text" name="url" placeholder="输入图片URL">
           <button class="Btn Btn_Check Btn_Check_Disabled" type="button" disabled='disabled'>查看</button>
           <div class="WidgetButton">
             <button class="Btn Btn_Save" type="button">保存</button>
@@ -117,13 +130,13 @@
 
         <div class='WidgetContent IMAGE'>
           <div class="WidgetItemImg">
-            <img class='WidgetItemThumb'>
+            <img class='WidgetItemThumb' onerror="mtm.errorImage(this,'default_120x120');">
           </div>
 
           <div class="WidgetTxt">
-            <input class="WidgetInputBox WidgetInputBox_Ttl AutoFocus" type="text" name="title" placeholder="输入图片标题">
-            <input class="WidgetInputBox WidgetInputBox_Quo Required" type="text" name="quote" placeholder="输入图片来源网页URL">
-            <textarea class="WidgetInputBox WidgetInputBox_Desc" name="description" placeholder="输入图片简介、评论"></textarea>
+            <input class="InputBox WidgetInputBox_Ttl AutoFocus" type="text" name="title" placeholder="输入图片标题">
+            <input class="InputBox WidgetInputBox_Quo" type="text" name="quote" placeholder="输入图片来源网页URL">
+            <textarea class="InputBox WidgetInputBox_Desc" name="description" placeholder="输入图片简介、评论"></textarea>
           </div>
           <div class="WidgetButton">
             <button class="Btn Btn_Save" type="button">保存</button>
@@ -132,7 +145,7 @@
         </div>
 
         <div class='WidgetContent TEXT'>
-          <textarea class="WidgetInputBox Required AutoFocus" name="contents" placeholder="输入文本"></textarea>
+          <textarea class="InputBox Required AutoFocus" name="contents" placeholder="输入文本"></textarea>
 
           <div class="WidgetButton">
             <button class="Btn Btn_Save" type="button">保存</button>
@@ -141,7 +154,7 @@
         </div>
 
         <div class='WidgetContent TITLE'>
-          <input class="WidgetInputBox Required AutoFocus" type="text" name="contents" placeholder="输入标题">
+          <input class="InputBox Required AutoFocus" type="text" name="contents" placeholder="输入标题">
 
           <div class="WidgetButton">
             <button class="Btn Btn_Save" type="button">保存</button>

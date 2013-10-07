@@ -2,7 +2,9 @@
 <% if (item.type == 'IMAGE' || item.type == 'ALL') { %>
 <div class='ItemContent IMAGE'>
   <div class="WidgetItemImg">
-    <a class="ImageLink" href='<%= item.url ? item.url : "" %>'><img class='WidgetItemThumb' src='<%= item.url ? item.url : "" %>'></a>
+    <a class="ImageLink" href='<%= item.url ? item.url : "" %>'>
+      <img class='WidgetItemThumb' onerror="mtm.errorImage(this,'default_120x120');" src='<%= item.url ? item.url : "" %>'>
+    </a>
     <div class="ItemQuoteWrapper">
       <div class="ItemQuoteHeader">来源</div>
       <div class="ItemQuoteOuter NegLinkWrapper">

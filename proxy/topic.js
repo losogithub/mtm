@@ -180,7 +180,7 @@ var getHotTopics = function (callback) {
     });
 }
 
-var publish = function (authorId, topicId, title, desc, callback) {
+var publish = function (authorId, topicId, title, coverUrl, description, callback) {
   console.log('publish');
 
   TopicModel.findById(topicId, function (err, topic) {
@@ -194,20 +194,23 @@ var publish = function (authorId, topicId, title, desc, callback) {
       //append this topic into user information
       console.log("topic Id: %s", topicId);
       console.log("author Id: %s", authorId);
-      User.appendTopic(authorId, topicId);
+      User.appendTopic(authorId, topicId, function (author) {
 
-      topic.author_id = authorId;
-      topic.title = title;
-      topic.desc = desc;
-      topic.update_at = Date.now();
-      topic.published = true;
-      topic.save(function (err) {
-        if (err) {
-          console.error('save topic failed:' + err);
-        } else {
+        topic.author_id = authorId;
+        topic.author_name = author.loginName;
+        topic.title = title;
+        topic.cover_url = coverUrl;
+        topic.description = description;
+        topic.update_at = Date.now();
+        topic.published = true;
+        topic.save(function (err) {
+          if (err) {
+            console.error('save topic failed:' + err);
+          } else {
 
-          callback();
-        }
+            callback();
+          }
+        });
       });
     }
   });

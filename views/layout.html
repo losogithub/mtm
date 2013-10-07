@@ -7,6 +7,7 @@
   <% for (i in locals.css) { %>
   <link type='text/css' rel='stylesheet' href='<%= css[i] %>'/>
   <% } %>
+  <script type="text/javascript" src="/javascripts/common.js"></script>
   <script type="text/javascript" src="http://libs.baidu.com/jquery/1.10.2/jquery.min.js"></script>
   <% for (i in locals.js) { %>
   <script type="text/javascript" src="<%= js[i] %>"></script>
@@ -30,13 +31,13 @@
           <% } %>
           <ul class="NavInner NegLinkWrapper">
             <li>
-              <a href="/topic/create">创建总结</a><span class="HeaderSeparator"></span>
+              <a href="/topic/create">创建总结</a><span class="HeaderSeparator">｜</span>
             </li>
             <li>
-              <a href="/signup" data-na="NL:join">register</a><span class="HeaderSeparator"> |</span>
+              <a href="/signup" data-na="NL:join">register</a><span class="HeaderSeparator">｜</span>
             </li>
             <li>
-              <a href="/login" data-na="NC:login">login</a><span class="HeaderSeparator"> |</span>
+              <a href="/login" data-na="NC:login">login</a><span class="HeaderSeparator">｜</span>
             </li>
             <li>
               <button class="HeaderBtn BtnOpen" type="button">打开</button>
