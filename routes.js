@@ -13,12 +13,12 @@ var auth = require('./middlewares/auth');
 
 module.exports = function (app) {
   // home page
-  app.get('/', site.index);
+  app.get('/',  site.index);
   app.get('/home', site.index);
 
   //console.log("router start");
 
-  app.get('/topic/create', auth.loginRequired, topic.create);
+  app.get('/topic/create', auth.loadUser, topic.create);
   app.get('/topic/getid', topic.getId);
   app.get('/topic/getcontents', topic.getContents);
   app.get('/topic/:topicId', topic.index);
@@ -36,7 +36,7 @@ module.exports = function (app) {
     app.get('/registerAccount', sign.signup);
     app.post('/signup', sign.signup);
     app.post('/registerAccount', sign.signup);
-    app.get('/login', sign.showLogin);
+    app.get('/login', auth.loadLogin, sign.showLogin);
     app.post('/login', sign.login);
     app.get('/logout', sign.signout);  //todo: not tested yet.
     app.get('/forgetPassword', sign.showForgetPassword);
@@ -47,9 +47,9 @@ module.exports = function (app) {
 
 
    //personal management
-    app.get('/works', personal.showWorks);
-    app.get('/favourites', personal.showFavourite);
-    app.get('/settings', personal.showSettings);
+    app.get('/works', auth.loadUser, personal.showWorks);
+    app.get('/favourites', auth.loadUser, personal.showFavourite);
+    app.get('/settings', auth.loadUser, personal.showSettings);
     //todo
     //app.get('/notifications', personal)
 

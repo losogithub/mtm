@@ -70,7 +70,7 @@ var getUsersByQuery = function (query, opt, callback) {
 var getUserByQuery = function (name, key, callback) {
     User.findOne({name: name, retrieve_key: key}, callback);
 };
-
+// here is Email need a key
 var getUserByEmail = function(email, key, callback){
     User.findOne({email: email, retrieve_key: key}, callback);
 }

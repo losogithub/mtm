@@ -13,7 +13,10 @@ var config = require('../config');
 
 
 var User = require('../proxy').User;
+var LoginToken = require('../proxy').LoginToken;
 var mail = require('../services/mail');
+
+
 
 var showSignUp = function (req, res) {
     console.log("render singup page");
@@ -266,17 +269,18 @@ var signup = function (req, res, next) {
  * @param  {HttpResponse} res
  */
 var showLogin = function (req, res) {
-    console.log(req.session);
-    req.session._loginReferer = req.headers.referer ;
-    console.log(req.headers.referrer);
-    res.render('sign/login', {
+  console.log("session: ");
+  console.log(req.session);
+  req.session._loginReferer = req.headers.referer ;
+  console.log(req.headers.referrer);
+  return res.render('sign/login', {
         title: config.name,
         metaHead: '',
         css: '',
         js: '',
         errMsg: '', email: '', password: '',
         layout: 'signLayout'
-    });
+      });
 };
 
 
@@ -290,9 +294,12 @@ var showLogin = function (req, res) {
 var login = function (req, res, next) {
     var loginname = sanitize(req.body.email).trim().toLowerCase();
     var pass = sanitize(req.body.password).trim();
+    var autoLogin = sanitize(req.body.autoLogin).trim();
 
-    console.log("name: %s, %d", loginname, loginname.length);
+    console.log("name: %s", loginname);
     console.log("pass: %s", pass);
+  console.log("autoLogin: %s", autoLogin);
+
     var errMsg = '';
     if(!loginname ){
         if(!pass) errMsg = '<p class="MdMsgError01">Enter your email and password.</p>';
@@ -314,7 +321,7 @@ var login = function (req, res, next) {
 
     // check loginname is a user id or an email address
     var emailIDFlag = true;
-    if (loginname.indexOf('@') == -1) {
+    if (loginname.indexOf('@') == -1) { //todo: check email is not correct !!
         emailIDFlag = true;
         User.getUserByLoginName(loginname, function(err, user){
             if(err)
@@ -332,7 +339,7 @@ var login = function (req, res, next) {
                 return;
             }
 
-            checkOnlyPassword(pass, user, req, res);
+            checkOnlyPassword(pass, autoLogin, user, req, res);
 
         })
     } else
@@ -355,7 +362,7 @@ var login = function (req, res, next) {
                 });
                 return;
             } // user if
-            checkOnlyPassword(pass, user, req, res);
+            checkOnlyPassword(pass, autoLogin, user, req, res);
         })
 
     }
@@ -375,7 +382,7 @@ var notJump = [
 ];
 
 //suppose the username id, or email address exists, now check the password:
-function checkOnlyPassword(pass, user, req, res){
+function checkOnlyPassword(pass, autoLogin, user, req, res){
     console.log("function: checkonly password");
     pass = md5(pass);
     if (pass !== user.password){
@@ -405,11 +412,20 @@ function checkOnlyPassword(pass, user, req, res){
             layout: 'signLayout'
             });
     }
-    // store session cookie
-    //gen_session(user, res);
-    //check at some page just jump to home page
-    console.log(req.session._loginReferer);
+
     req.session.userId = user._id;
+    req.currentUser = user;
+  console.log("currentUser: %s", req.currentUser);
+    if (autoLogin == 'Y'){
+      // Remember me
+        //var loginToken = new LoginToken({ email: user.email });
+        LoginToken.save(user.email, function(loginToken) {
+          console.log("logintoken: %s", loginToken.cookieValue);
+          res.cookie('logintoken', loginToken.cookieValue, { expires: new Date(Date.now() + 2 * 604800000), path: '/' });
+        });
+  }
+
+
     /*
     var refer = req.session._loginReferer || 'home';     // taozan 9.22.2013
     for (var i = 0, len = notJump.length; i !== len; ++i) {
@@ -420,7 +436,7 @@ function checkOnlyPassword(pass, user, req, res){
     }
       */
     var refer = '/works';
-    console.log(req.session);
+    //console.log(req.session);
     res.redirect(refer);
 }
 
@@ -432,8 +448,15 @@ function checkOnlyPassword(pass, user, req, res){
 // need test how this function is worked. especially clearCookie, destroy, redirect
 // taozan 9.22.2013
 var signout = function (req, res, next) {
-    req.session.destroy();
-    res.clearCookie(config.auth_cookie_name, { path: '/' });
+  if (req.session) {
+    console.log("signout: currentUser: %s" , req.currentUser);
+    if(req.currentUser){
+      LoginToken.remove({ email: req.currentUser.email }, function() {});
+    }
+    res.clearCookie('logintoken');
+    req.session.destroy(function() {});
+  }
+    //res.clearCookie(config.auth_cookie_name, { path: '/' });
     res.redirect(req.headers.referer || 'home');
 };
 

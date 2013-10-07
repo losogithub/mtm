@@ -10,16 +10,17 @@ var User = require('../proxy').User;
 var Topic = require('../proxy').Topic;
 var config = require('../config');
 
-var showWorks = function (req, res) {
+var showWorks = function (req, res, next) {
 
-    //console.log(req.session);
+  console.log(req.session);
     //req.session.destroy();
     //res.clearCookie(config.auth_cookie_name, { path: '/' });
-    if (!req.session.userId){
+  /*
+    if ((!req.session) || (!req.session.userId)){
       console.log("back to home page, null userId");
         res.redirect('home');
         return;
-    }
+    }*/
   console.log("render show works page");
 
     //before rendering, prepare enough information.
@@ -27,14 +28,23 @@ var showWorks = function (req, res) {
     // image,
     // topics
 
-  var userId = req.session.userId;
-  console.log("userId: %s", userId);
-  User.getUserById(userId, function(err, user){
+  //var userId = req.session.userId;
+  //console.log("userId: %s", userId);
+
+  if(req.session && req.session.userId && req.session.userId !== 'undefined'){
+  User.getUserById(req.session.userId, function(err, user){
+    if(err){return next(err)};
+    req.currentUser = user;
     var topics = user.topics;
     var topicsInfos = [];
     getTopics(0, topics, topicsInfos, user, res);
   });
-
+  } else {
+    //console.log(req.cookies.logintoken);
+    var topics = req.currentUser.topics;
+    var topicsInfos = [];
+    getTopics(0, topics, topicsInfos, user, res);
+  }
 }
 // a function for recursively retrieve the topic information,
 // finally render them.

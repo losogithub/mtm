@@ -17,6 +17,7 @@ mongoose.connect(config.db, function (err) {
 
 //models
 require('./user');
+require('./loginToken');
 
 exports.TopicModel = require('./topic');
 exports.ItemModels = {
@@ -27,3 +28,4 @@ exports.ItemModels = {
 }
 
 exports.User = mongoose.model('User');
+exports.LoginToken = mongoose.model('LoginToken');
