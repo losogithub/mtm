@@ -1,4 +1,4 @@
-.Contents{padding: 25px 0;}
+.Contents{padding: 25px 0;overflow: hidden;}
 .Sub{float: left;width: 239px;padding-right: 25px;}
 .SubThumb{display: block;border-radius: 3px 3px 3px 3px;border: 1px solid rgb(221, 221, 221);}
 .SubPV{float: right;width: 102px;margin-top: 2px;}
