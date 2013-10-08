@@ -26,63 +26,63 @@ loadUser fail will always leads to home page
  */
 var loadUser = function (req, res, next) {
   console.log("loadUser");
-  if (req.session && req.session.userId) {        // session stores the userId information. means after login
-    console.log("loadUser userId: %s", req.session.userId);
+  if (req.session && req.session.userId) {
+   // session stores the userId information. means after login
+    //console.log("loadUser userId: %s", req.session.userId);
     User.getUserById(req.session.userId, function (err, user) {
       if (err) {
         return next(err);
       }
       if (user) {
         req.currentUser = user; //check whether currentUser is the same with this Id.
-        res.locals.username = user.loginName;
+        res.locals.username = user.loginName; // used in html template to judefy and display uername
         next();
       } else {
-        //check fail: unlogin
-        console.log("redirect --> home")
-        res.redirect('/home');
+        //check fail: not login
+        next();//just call next, in the next function, will check the userId property of req.session
       }
     });
   } else if (req.cookies.logintoken && req.cookies.logintoken !== 'undefined') {
-    console.log("loadUser: auto login, check cookies.logintoken");
+    //persistent login
+    //console.log("loadUser: auto login, check cookies.logintoken");
     authenticateFromLoginToken(req, res, next);
   }
   else {
     //not login
-    //this revising is amazing. jsut replace the redirect with next(), then will call another get('\login')
-    console.log("else case");
-    res.redirect('/home');
+    next();//just call next, in the next function, will check the userId property of req.session
   }
 }
 
 
 var authenticateFromLoginToken = function (req, res, next) {
   console.log("loginToken: ", req.cookies.logintoken);
+
   var cookie = JSON.parse(req.cookies.logintoken);
 
+  //todo: here security shall be better. check cookie.email and cookie.series if exist then check cookie.token.
   LoginToken.find(cookie.email, cookie.series, cookie.token,
     function (err, token) {
       if (err) {
         console.log("cannot find in LoginToken");
         //not login
-        res.redirect('/home');
-        return;
+        next();
       }
-      console.log("authenticate Token findByEmail: %s", token);
       User.getUserByMail(token.email, function (err, user) {
         if (user) {
           req.session.userId = user._id;
-          req.currentUser = user;
+          req.currentUser = user; //what does this used for ?? todo
 
-          //to identify login or not
+          //used in html template to judgfy and display user name.
           res.locals.username = user.loginName;
+          //update the token
           token.token = LoginToken.randomToken();
           token.save(function () {
-            console.log("token.save function in authenticateFromLoginToken");
-            res.cookie('logintoken', token.cookieValue, { expires: new Date(Date.now() + 2 * 604800000), path: '/' });
+            //console.log("token.save function in authenticateFromLoginToken");
+            res.cookie('logintoken', token.cookieValue, { expires: new Date(Date.now() + 2 * 604800000), path: '/' }); //todo 7 hours ? or 20 years
             next();
           });
         } else {
-          res.redirect('/home');
+          next();
         }
       });
     });
@@ -95,7 +95,8 @@ otherwise require login.
  */
 var loadLogin = function (req, res, next) {
   console.log("loadLogin");
-  if (req.session.userId) {        // session stores the userId information. means after login
+  if (req.session.userId) {
+  // session stores the userId information. means after login
     console.log("loadLogin userId: %s", req.session.userId);
     User.getUserById(req.session.userId, function (err, user) {
       if (err) {
@@ -112,11 +113,10 @@ var loadLogin = function (req, res, next) {
       }
     });
   } else if (req.cookies.logintoken && req.cookies.logintoken !== 'undefined') {
-    console.log("loadUser: auto login, check cookies.logintoken");
+    //console.log("loadUser: auto login, check cookies.logintoken");
     loginAuthenticateFromLoginToken(req, res, next);
   }
   else {
-    console.log("else case");
     //require login
     next();
   }
@@ -135,9 +135,7 @@ var loginAuthenticateFromLoginToken = function (req, res, next) {
       if (err) {
         console.log("cannot find in LoginToken");
         next(); //require login
-        return;
       }
-      console.log("authenticate Token findByEmail: %s", token);
       User.getUserByMail(token.email, function (err, user) {
         if (user) {
           req.session.userId = user._id;
@@ -148,8 +146,6 @@ var loginAuthenticateFromLoginToken = function (req, res, next) {
           token.save(function () {
             console.log("token.save function in authenticateFromLoginToken");
             res.cookie('logintoken', token.cookieValue, { expires: new Date(Date.now() + 2 * 604800000), path: '/' }); //cookie still has expire time ?
-            //console.log("go to home!!!!");
-            //logged in
             res.redirect('/home');
           });
         } else {
@@ -160,7 +156,7 @@ var loginAuthenticateFromLoginToken = function (req, res, next) {
 }
 
 
-//todo: revise userinfo function.
+// deprecated
 var userInfo = function (req, res, next) {
   if (!req.session || !req.session.userId) {
     return next();

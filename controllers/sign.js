@@ -272,7 +272,7 @@ var showLogin = function (req, res) {
   console.log("show login session: ");
   console.log(req.session);
   req.session._loginReferer = req.headers.referer ;
-  console.log(req.headers.referrer);
+  //console.log(req.headers.referrer);//undefined
   return res.render('sign/login', {
         title: config.name,
         metaHead: '',
@@ -370,16 +370,7 @@ var login = function (req, res, next) {
 
 
 
-/**
- * define some page when login just jump to the home page
- * @type {Array}
- */
-var notJump = [
-    '/active_account', //active page
-    '/reset_pass',     //reset password page, avoid to reset twice
-    '/signup',         //regist page
-    '/search_pass'    //serch pass page
-];
+
 
 //suppose the username id, or email address exists, now check the password:
 function checkOnlyPassword(pass, autoLogin, user, req, res){
@@ -451,13 +442,15 @@ function checkOnlyPassword(pass, autoLogin, user, req, res){
 // taozan 9.22.2013
 var signout = function (req, res, next) {
   if (req.session) {
-    console.log("signout: currentUser: %s" , req.currentUser);
+    //console.log("signout: currentUser: %s" , req.currentUser);
+    console.log("signout: currentUser: %s" , res.locals.username);
     req.session.destroy(function() {});
   }
   if(req.currentUser){
     LoginToken.remove({ email: req.currentUser.email }, function() {});
   }
   res.clearCookie('logintoken');
+  //todo: redirect to thanks page.
   res.redirect(req.headers.referer || 'home');
 };
 

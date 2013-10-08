@@ -58,6 +58,11 @@ var index = function (req, res, next) {
 }
 
 var create = function (req, res, next) {
+  //add by zan for checking login
+  if((!req.session) || (!req.session.userId) || (req.session.userId == 'undefined')){
+    res.redirect('/login');
+  }
+
   res.set('Cache-Control', 'private, no-cache, no-store, must-revalidate, post-check=0, pre-check=0');
   res.set('Connection', 'close');
   res.set('Expire', '-1');
