@@ -36,8 +36,8 @@ app.use(express.cookieParser());
 app.use(express.session(
   {
     secret: config.session_secret,
-    store: new RedisStore({host: 'localhost', port: 6379, client: redis, ttl: 60*60*2}),//2 hours
-    cookie: {maxAge: 3*24*60*60*1000}     //3 days
+    store: new RedisStore({host: 'localhost', port: 6379, client: redis, ttl: 3*24*60*60}),
+    cookie: {maxAge: 3*24*60*60*1000}
   }
 ));
 app.use(app.router);
@@ -49,5 +49,7 @@ http.createServer(app).listen(config.port, function(){
     console.log('Listening on port ' + config.port);
 });
 
+//app.listen(config.port);
+//console.log('Listening on port ' + config.port);
 
 module.expports = app;
