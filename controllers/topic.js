@@ -60,7 +60,11 @@ var index = function (req, res, next) {
 var create = function (req, res, next) {
   //add by zan for checking login
   if((!req.session) || (!req.session.userId) || (req.session.userId == 'undefined')){
-    res.redirect('/login');
+    console.log("not login, create page");
+    console.log(req.headers['referrer']);// even I click on the crate button, still undefined !
+    console.log(req.session._loginReferer);
+    req.session._loginReferer = req.headers.referer ;
+    res.redirect('/login?fromUrl' + req.url);
   }
 
   res.set('Cache-Control', 'private, no-cache, no-store, must-revalidate, post-check=0, pre-check=0');

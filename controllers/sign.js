@@ -271,8 +271,9 @@ var signup = function (req, res, next) {
 var showLogin = function (req, res) {
   console.log("show login session: ");
   console.log(req.session);
-  req.session._loginReferer = req.headers.referer ;
-  //console.log(req.headers.referrer);//undefined
+  //console.log(req.session._loginReferer);
+  //req.session._loginReferer = req.headers.referer ;
+  //console.log(req.headers.referrer); // undefined
   return res.render('sign/login', {
         title: config.name,
         metaHead: '',
@@ -370,7 +371,17 @@ var login = function (req, res, next) {
 
 
 
-
+/**
+ * define some page when login just jump to the home page
+ * @type {Array}
+ */
+  //notJump means not jump back
+var notJump = [
+  '/activeAccount', //active page
+  '/resetPassword',     //reset password page, avoid to reset twice
+  '/signup',         //register page
+  '/forgetPassword'    //forgetpassword
+];
 
 //suppose the username id, or email address exists, now check the password:
 function checkOnlyPassword(pass, autoLogin, user, req, res){
@@ -415,22 +426,21 @@ function checkOnlyPassword(pass, autoLogin, user, req, res){
         });
   }
 
-
-    /*
-    var refer = req.session._loginReferer || 'home';     // taozan 9.22.2013
-    for (var i = 0, len = notJump.length; i !== len; ++i) {
-        if (refer.indexOf(notJump[i]) >= 0) {
-            refer = 'home';
-            break;
-        }
+  var refer = req.session._loginReferer || 'home';     // taozan 9.22.2013
+  console.log("loginReferer");
+  console.log(req.session._loginReferer);
+  //console.log(req.headers.referer);
+  for (var i = 0, len = notJump.length; i !== len; ++i) {
+    if (refer.indexOf(notJump[i]) >= 0) {
+      refer = 'home';
+      break;
     }
-      */
+  }
   /*
-  todo: later refer shall be home or the previous visit page.
+  * todo: later refer shall be home or the previous visit page.
+  * e.g; you want to go to create page, then first jump to login page. after you login, then jump back to previous page.
    */
-    var refer = '/works';
-    //console.log(req.session);
-    res.redirect(refer);
+      res.redirect(refer);
 }
 
 
@@ -447,11 +457,12 @@ var signout = function (req, res, next) {
     req.session.destroy(function() {});
   }
   if(req.currentUser){
+    //todo here use currentUser, need a way to solve it.
     LoginToken.remove({ email: req.currentUser.email }, function() {});
   }
   res.clearCookie('logintoken');
   //todo: redirect to thanks page.
-  res.redirect(req.headers.referer || 'home');
+  res.redirect('/home');
 };
 
 

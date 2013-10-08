@@ -39,7 +39,10 @@ var loadUser = function (req, res, next) {
         next();
       } else {
         //check fail: not login
-        next();//just call next, in the next function, will check the userId property of req.session
+        //todo: in this case, no corresponding user in the db. so shall go to err page.
+        console.err("wrong uerId");
+        req.session.userId = null;
+        next();//todo
       }
     });
   } else if (req.cookies.logintoken && req.cookies.logintoken !== 'undefined') {
@@ -49,6 +52,8 @@ var loadUser = function (req, res, next) {
   }
   else {
     //not login
+    //test
+    req.session.userId = null;
     next();//just call next, in the next function, will check the userId property of req.session
   }
 }
@@ -65,6 +70,10 @@ var authenticateFromLoginToken = function (req, res, next) {
       if (err) {
         console.log("cannot find in LoginToken");
         //not login
+        //here shall be wrong. no correspondence.
+        console.log("err maybe theft")
+        //todo
+        req.session.userId = null;
         next();
       }
       User.getUserByMail(token.email, function (err, user) {
@@ -82,6 +91,10 @@ var authenticateFromLoginToken = function (req, res, next) {
             next();
           });
         } else {
+          //cannot find user
+          console.log("cannot find user! err")
+          req.session.userId = null;
+          //todo
           next();
         }
       });
@@ -95,7 +108,9 @@ otherwise require login.
  */
 var loadLogin = function (req, res, next) {
   console.log("loadLogin");
-  if (req.session.userId) {
+  console.log(req.query.fromUrl);
+  req.session._loginReferer = req.query.fromUrl;
+  if (req.session && req.session.userId) {
   // session stores the userId information. means after login
     console.log("loadLogin userId: %s", req.session.userId);
     User.getUserById(req.session.userId, function (err, user) {
@@ -109,6 +124,7 @@ var loadLogin = function (req, res, next) {
         res.redirect('/home');
       } else {
         //not login
+        req.session.userId = null;
         next(); //revised: go to login page
       }
     });
@@ -118,6 +134,7 @@ var loadLogin = function (req, res, next) {
   }
   else {
     //require login
+    req.session.userId = null;
     next();
   }
 }
@@ -133,7 +150,10 @@ var loginAuthenticateFromLoginToken = function (req, res, next) {
   LoginToken.find(cookie.email, cookie.series, cookie.token,
     function (err, token) {
       if (err) {
-        console.log("cannot find in LoginToken");
+        console.err("cannot find in LoginToken");
+        console.log("maybe theft");
+        //in fact, here userId is null, but in order to make sure.
+        res.session.userId = null;
         next(); //require login
       }
       User.getUserByMail(token.email, function (err, user) {
@@ -149,6 +169,8 @@ var loginAuthenticateFromLoginToken = function (req, res, next) {
             res.redirect('/home');
           });
         } else {
+          console.log("according to email, no user");
+          req.session.userId = null;
           next(); //require login
         }
       });
@@ -156,20 +178,8 @@ var loginAuthenticateFromLoginToken = function (req, res, next) {
 }
 
 
-// deprecated
-var userInfo = function (req, res, next) {
-  if (!req.session || !req.session.userId) {
-    return next();
-  }
-  User.getUserById(req.session.userId, function (err, user) {
-    if (user) {
-      res.locals.username = user.loginName;
-    }
-    return next();
-  });
-};
 
 exports.loginRequired = loginRequired;
 exports.loadUser = loadUser;
 exports.loadLogin = loadLogin;
-exports.userInfo = userInfo;
+

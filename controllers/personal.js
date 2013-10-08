@@ -37,25 +37,16 @@ var showWorks = function (req, res, next) {
   }  else{
     return res.redirect('/home');
   }
-  /*else if (req.currentUser){
-    //console.log(req.cookies.logintoken);
-    var topics = req.currentUser.topics;
-    var topicsInfos = [];
-    getTopics(0, null, topicsInfos, {}, res);
-  } */
 }
 // a function for recursively retrieve the topic information,
 // finally render them.
 var getTopics = function (i, topics, topicsInfos, user, res, next) {
-  if (i < topics.length) {
-var getTopics = function (i, topics, topicsInfos, user, res) {
   if (topics && i) {
-
-    Topic.getTopicById(topics[i], function (err, topic) {
+    //bug : not topics[i], but topics[i-1] 20:57, 10.8, 2013
+    Topic.getTopicById(topics[i-1], function (err, topic) {
       if (err) {
-        console.log("no topic ?");
-        next(err);
         console.error("find topic failed");
+        next(err);
       } else if (!topic) {
         console.log("topic not found");
       } else {
@@ -68,15 +59,7 @@ var getTopics = function (i, topics, topicsInfos, user, res) {
           + topic.create_at.getDate() + '日';
         topicsInfos.push(topic);
       }
-      //console.log("topic");
-      //console.log(topic);
-      //console.log("topic id: %s", topic._id);
-      topic.topicUrl = "/topic/" + topic._id;
-      topic.create_date = topic.create_at.getFullYear() + '年'
-        + (topic.create_at.getMonth() + 1) + '月'
-        + topic.create_at.getDate() + '日';
-      topicsInfos.push(topic);
-      getTopics(++i, topics, topicsInfos, user, res);
+
       getTopics(--i, topics, topicsInfos, user, res);
     });
   } else {

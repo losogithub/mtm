@@ -21,8 +21,8 @@ module.exports = function (app) {
   app.get('/topic/create', auth.loadUser, topic.create);
   app.get('/topic/getid', topic.getId);
   app.get('/topic/getcontents', topic.getContents);
-  app.get('/topic/:topicId', auth.userInfo, topic.index);
-  app.get('/topic/:topicId/edit', auth.loadUser, auth.userInfo, topic.edit);
+  app.get('/topic/:topicId', auth.loadUser, topic.index);
+  app.get('/topic/:topicId/edit', auth.loadUser, topic.edit);
   app.post('/topic/createitem', topic.createItem);
   app.put('/topic/edititem', topic.editItem);
   app.put('/topic/sort', topic.sort);
