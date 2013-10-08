@@ -2,11 +2,11 @@
 .Sub{float: left;width: 239px;padding-right: 25px;}
 .SubThumb{display: block;border-radius: 3px 3px 3px 3px;border: 1px solid rgb(221, 221, 221);}
 .SubPV{float: right;width: 102px;margin-top: 2px;}
-.SubPV>li{padding: 9px 0px 9px;}
+.SubPV>li{padding: 9px 0 9px;}
 .SubPV>li>p:first-child{color: rgb(51, 51, 51);font-size: 20px;font-family: Arial,Helvetica,sans-serif;line-height: 1;}
 .Seperator{border-top: 1px solid rgb(221, 221, 221);}
 .SubPV>li>p:last-child{color: rgb(84, 84, 84);font-size: 10px;margin-top: 8px;line-height: 1;}
-.SubTtl{margin: 12px 0px 0px;color: rgb(51, 51, 51);font-size: 14px;font-weight: bold;}
+.SubTtl{margin-top: 12px;color: rgb(51, 51, 51);font-size: 14px;font-weight: bold;}
 .BtnSettings{
     margin-top: 10px;
     display: block;
@@ -20,12 +20,12 @@
     font-weight: bold;
     text-decoration: none!important;}
 .SubFV{
-    bottom: 0px;
-    right: 0px;
+    bottom: 0;
+    right: 0;
     position: absolute;}
 .FVIco{
     display: inline-block;
-    margin: 0px 3px 0px 0px;
+    margin-right: 3px;
     vertical-align: -2px;
     width: 15px;
     height: 14px;
