@@ -64,7 +64,7 @@ var create = function (req, res, next) {
     console.log(req.headers['referrer']);// even I click on the crate button, still undefined !
     console.log(req.session._loginReferer);
     req.session._loginReferer = req.headers.referer ;
-    res.redirect('/login?fromUrl' + req.url);
+    res.redirect('/login?fromUrl=' + req.url);
   }
 
   res.set('Cache-Control', 'private, no-cache, no-store, must-revalidate, post-check=0, pre-check=0');

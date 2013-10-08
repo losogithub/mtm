@@ -37,7 +37,7 @@ module.exports = function (app) {
   app.post('/registerAccount', sign.signup);
   app.get('/login', auth.loadLogin, sign.showLogin);
   app.post('/login', sign.login);
-  app.get('/logout', sign.signout);  //todo: not tested yet.
+  app.get('/logout', auth.loadUser, sign.signout);  //todo: not tested yet.
   app.get('/forgetPassword', sign.showForgetPassword);
   app.post('/forgetPassword', sign.forgetPassword);
   app.get('/resetPassword', sign.showResetPassword);

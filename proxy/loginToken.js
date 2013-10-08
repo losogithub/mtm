@@ -25,6 +25,15 @@ var find = function(email,series, token, callback){
   LoginToken.findOne({email: email, series: series, token: token}, callback);
 }
 
+var remove = function(email, callback){
+  LoginToken.remove({email: email}, function(err){
+    //handle err
+    if(err){
+      console.log("LoginToken remove err");
+    }
+  })
+}
 exports.save = save;
 exports.randomToken = randomToken;
 exports.find = find;
+exports.remove = remove;

@@ -20,6 +20,7 @@ var mail = require('../services/mail');
 
 var showSignUp = function (req, res) {
     console.log("render singup page");
+  console.log(req.session._loginReferer);
     res.render('sign/signup', {
         title: config.name,
         metaHead: '',
@@ -32,6 +33,7 @@ var showSignUp = function (req, res) {
 
 var signup = function (req, res, next) {
     console.log("now sign up !");
+  console.log(req.session._loginReferer);
     var name = sanitize(req.body.username).trim();
     name = sanitize(name).xss();
     var loginname = name.toLowerCase();
@@ -271,9 +273,13 @@ var signup = function (req, res, next) {
 var showLogin = function (req, res) {
   console.log("show login session: ");
   console.log(req.session);
-  //console.log(req.session._loginReferer);
-  //req.session._loginReferer = req.headers.referer ;
-  //console.log(req.headers.referrer); // undefined
+  console.log(req.headers.referer);
+  //todo: here we will use some middleware to assign to it.
+  //if it is null, then assign to this.
+  //otherwise it was assigned by some middleware.
+  if (!req.session._loginReferer){
+    req.session._loginReferer = req.headers.referer || 'home' ;
+  }
   return res.render('sign/login', {
         title: config.name,
         metaHead: '',
@@ -426,10 +432,11 @@ function checkOnlyPassword(pass, autoLogin, user, req, res){
         });
   }
 
-  var refer = req.session._loginReferer || 'home';     // taozan 9.22.2013
+  var refer = req.session._loginReferer;
   console.log("loginReferer");
   console.log(req.session._loginReferer);
-  //console.log(req.headers.referer);
+
+  //todo: maybe later: these for code will be deleted.
   for (var i = 0, len = notJump.length; i !== len; ++i) {
     if (refer.indexOf(notJump[i]) >= 0) {
       refer = 'home';
@@ -453,9 +460,13 @@ function checkOnlyPassword(pass, autoLogin, user, req, res){
 var signout = function (req, res, next) {
   if (req.session) {
     //console.log("signout: currentUser: %s" , req.currentUser);
-    console.log("signout: currentUser: %s" , res.locals.username);
+    console.log("logout: session userId: %s", req.session.userId);
     req.session.destroy(function() {});
   }
+  // here currentUser maybe empty
+  console.log("curent user;")
+  console.log(req.currentUser);
+  //I see, currentUser only passed between middleware and the final call.
   if(req.currentUser){
     //todo here use currentUser, need a way to solve it.
     LoginToken.remove({ email: req.currentUser.email }, function() {});
