@@ -269,7 +269,7 @@ var signup = function (req, res, next) {
  * @param  {HttpResponse} res
  */
 var showLogin = function (req, res) {
-  console.log("session: ");
+  console.log("show login session: ");
   console.log(req.session);
   req.session._loginReferer = req.headers.referer ;
   console.log(req.headers.referrer);
@@ -406,7 +406,6 @@ function checkOnlyPassword(pass, autoLogin, user, req, res){
             metaHead: '',
             css: '',
             js: '',
-            //errMsg: '<p class="MdMsgError01">此帐号还没有被激活，激活链接已发送到 ' + user.email + ' 邮箱，请查收。</p>',
             email: user.loginName,
             //password: '',       // let password be empty
             layout: 'signLayout'
@@ -435,6 +434,9 @@ function checkOnlyPassword(pass, autoLogin, user, req, res){
         }
     }
       */
+  /*
+  todo: later refer shall be home or the previous visit page.
+   */
     var refer = '/works';
     //console.log(req.session);
     res.redirect(refer);
@@ -450,14 +452,13 @@ function checkOnlyPassword(pass, autoLogin, user, req, res){
 var signout = function (req, res, next) {
   if (req.session) {
     console.log("signout: currentUser: %s" , req.currentUser);
-    if(req.currentUser){
-      LoginToken.remove({ email: req.currentUser.email }, function() {});
-    }
-    res.clearCookie('logintoken');
     req.session.destroy(function() {});
   }
-    //res.clearCookie(config.auth_cookie_name, { path: '/' });
-    res.redirect(req.headers.referer || 'home');
+  if(req.currentUser){
+    LoginToken.remove({ email: req.currentUser.email }, function() {});
+  }
+  res.clearCookie('logintoken');
+  res.redirect(req.headers.referer || 'home');
 };
 
 

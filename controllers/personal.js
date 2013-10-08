@@ -12,15 +12,6 @@ var config = require('../config');
 
 var showWorks = function (req, res, next) {
 
-  console.log(req.session);
-  //req.session.destroy();
-  //res.clearCookie(config.auth_cookie_name, { path: '/' });
-  /*
-   if ((!req.session) || (!req.session.userId)){
-   console.log("back to home page, null userId");
-   res.redirect('home');
-   return;
-   }*/
   console.log("render show works page");
 
   //before rendering, prepare enough information.
@@ -44,7 +35,7 @@ var showWorks = function (req, res, next) {
       getTopics(0, topics, topicsInfos, user, res);
     });
   } else {
-    //console.log(req.cookies.logintoken);
+    console.log("show works checked by persistent cookie");
     var topics = req.currentUser.topics;
     var topicsInfos = [];
     getTopics(0, topics, topicsInfos, user, res);
@@ -52,16 +43,17 @@ var showWorks = function (req, res, next) {
 }
 // a function for recursively retrieve the topic information,
 // finally render them.
-var getTopics = function (i, topics, topicsInfos, user, res) {
+var getTopics = function (i, topics, topicsInfos, user, res, next) {
   if (i < topics.length) {
 
     Topic.getTopicById(topics[i], function (err, topic) {
       if (err) {
         console.log("no topic ?");
+        next(err);
       }
-      console.log("topic");
-      console.log(topic);
-      console.log("topic id: %s", topic._id);
+      //console.log("topic");
+      //console.log(topic);
+      //console.log("topic id: %s", topic._id);
       topic.topicUrl = "/topic/" + topic._id;
       topic.create_date = topic.create_at.getFullYear() + '年'
         + (topic.create_at.getMonth() + 1) + '月'
@@ -87,19 +79,8 @@ var getTopics = function (i, topics, topicsInfos, user, res) {
 
 
 var showFavourite = function (req, res) {
-  if (!req.session.userId) {
-    res.redirect('home');
-    return;
-  }
-
   console.log('render show favourite page');
-
   res.locals.path = req.path.replace(/\/$/, '');
-  // console.log(req.session);
-  /*
-   if(!req.session.userId){
-   res.redirect('home');
-   }  */
   res.render('personal/favourite', {
     title: config.name,
     css: [
@@ -111,15 +92,7 @@ var showFavourite = function (req, res) {
 }
 
 var showSettings = function (req, res) {
-
-  if (!req.session.userId) {
-    res.redirect('home');
-    return;
-  }
-
   console.log('render settings  page');
-
-
   var userId = req.session.userId;
   User.getUserById(userId, function (err, user) {
     res.render('personal/index', {
