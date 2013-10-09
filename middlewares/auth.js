@@ -53,6 +53,7 @@ var loadUser = function (req, res, next) {
   else {
     //not login
     //test
+    req.session.userId = null;
     next();//just call next, in the next function, will check the userId property of req.session
   }
 }
