@@ -155,12 +155,23 @@
         .attr('mtm_type', this.type)
         .prepend($('.Templates .Widget').clone())
         .find('.Widget').children().first()
-        .after($('.Templates .WidgetContent.' + this.type).clone())
-        .end().end().end();
+        .after($('.Templates .WidgetContent.' + this.type).clone()).end().end()
+        .end()
+        //textarea自适应高度
+        .find('textarea')
+        .css('resize', 'none')
+        .autosize({
+          append: '\n'
+        })
+        .end();
 
       this.__create();
 
       this.widget()
+        //textarea赋值后出发resize事件
+        .find('textarea')
+        .trigger('autosize.resize')
+        .end()
         //自适应高度结束后再删除旧内容，以防抖动
         .children().first().next().remove().end().end()
         .end()
@@ -177,6 +188,13 @@
         })
         .end();
 
+      var animateDone = function () {
+        self.widget()
+          .find('textarea')
+          .addClass('HeightAnimation')
+          .end();
+      }
+
       //如果是修改就淡入，否则是新建就淡入加展开
       if (empty) {
         this.widget()
@@ -186,13 +204,11 @@
             duration: 'fast',
             queue: false
           })
-          .fadeTo(400, 1);
+          .fadeTo(400, 1, animateDone);
       } else {
         this.widget()
           .css({ 'opacity': 0 })
-          .fadeTo('fast', 1, function () {
-            self.__animateDone();
-          });
+          .fadeTo('fast', 1, animateDone);
       }
 
       this.autoFocus();
@@ -201,7 +217,6 @@
     },
 
     __create: $.noop,
-    __animateDone: $.noop,
     __initFormValidation: $.noop,
 
     stateHandler: function (defaultValue, event) {
@@ -311,17 +326,13 @@
     __create: function () {
       var self = this;
 
-      //填充图片、textarea自适应高度、填充文本
+      //填充图片、填充文本
       this.widget()
         .find('.WidgetItemThumb')
         .attr('src', this.options.url)
         .end()
         .find('.WidgetInputBox_Desc')
-        .autosize({
-          append: '\n'
-        })
         .val(this.options.description)
-        .trigger('autosize.resize')
         .on('input blur mousedown mouseup keydown keypress keyup', this.options.from != 'EDIT' ? $.noop : function (event) {
           self.stateHandler(self.options.description, event);
         })
@@ -341,12 +352,6 @@
 
       //移动光标到输入框末尾
       moveSelection2End(this.widget().find('.WidgetInputBox_Desc')[0]);
-    },
-
-    __animateDone: function () {
-      this.widget()
-        .find('.WidgetInputBox_Desc')
-        .addClass('HeightAnimation');
     },
 
     /**
@@ -395,13 +400,13 @@
           },
           messages: {
             title: {
-              maxlength: '图片标题太长，请缩写到100字以内。'
+              maxlength: '标题太长，请缩写到100字以内。'
             },
             quote: {
-              url: '图片来源网页URL格式错误。'
+              url: 'URL格式错误。'
             },
             description: {
-              maxlength: '图片简介、评论太长，请缩写到300字以内。'
+              maxlength: '介绍、评论太长，请缩写到300字以内。'
             }
           }
         });
@@ -409,7 +414,6 @@
 
     /**
      * 子类提交给服务器的数据
-     * @returns {{text: *}}
      * @private
      */
     _getCommitData: function () {
@@ -522,7 +526,153 @@
       callback();
     }
 
-  })
+  });
+
+  /*
+   * 定义微件：引用微件
+   */
+  $.widget('mtm.citeWidget', $.mtm.editWidget, {
+
+    type: 'CITE',
+
+    options: {
+      //初始值
+      cite: '',
+      url: '',
+      title: '',
+      description: ''
+    },
+
+    /**
+     * 子类的构造函数
+     * @private
+     */
+    __create: function () {
+      var self = this;
+
+      //填充文本
+      this.widget()
+        .find('.WidgetInputBox_Cite')
+        .val(this.options.cite)
+        .on('input blur mousedown mouseup keydown keypress keyup', function (event) {
+          self.stateHandler(self.options.cite, event);
+        })
+        .end()
+        .find('.WidgetInputBox_Url')
+        .val(this.options.url)
+        .on('input blur mousedown mouseup keydown keypress keyup', function (event) {
+          self.stateHandler(self.options.url, event);
+        })
+        .end()
+        .find('.WidgetInputBox_Ttl')
+        .val(this.options.title)
+        .on('input blur mousedown mouseup keydown keypress keyup', function (event) {
+          self.stateHandler(self.options.title, event);
+        })
+        .end()
+        .find('.WidgetInputBox_Desc')
+        .val(this.options.description)
+        .on('input blur mousedown mouseup keydown keypress keyup', function (event) {
+          self.stateHandler(self.options.description, event);
+        })
+        .end();
+
+      //移动光标到输入框末尾
+      moveSelection2End(this.widget().find('.WidgetInputBox_Quo')[0]);
+    },
+
+    /**
+     * 子类的表单验证
+     * @private
+     */
+    __initFormValidation: function () {
+      var self = this;
+      this.widget().find('form')
+        .submit(function () {
+          var $url = self.widget().find('.WidgetInputBox_Url');
+          var url = $url.val();
+          var urlParts = url.match(REGEXP_URL_NO_PROTOCOL);
+          if (urlParts && urlParts[3] && !urlParts[2]) {
+            $url.val('http://' + url);
+          }
+        })
+        .validate({
+          debug: false,
+          ignore: "",
+          onkeyup: false,
+          focusInvalid: false,
+          onfocusout: false,
+          submitHandler: function (form) {
+            self.commit();
+          },
+          showErrors: function (errorMap, errorList) {
+            if (errorList.length) {
+              alert(errorMap.cite || errorMap.url || errorMap.title || errorMap.description);
+            }
+          },
+          rules: {
+            cite: {
+              required: true,
+              maxlength: 500
+            },
+            url: {
+              required: false,
+              url: true
+            },
+            title: {
+              required: false,
+              maxlength: 100
+            },
+            description: {
+              required: false,
+              maxlength: 300
+            }
+          },
+          messages: {
+            cite: {
+              required: "尚未输入引文。",
+              maxlength: "引文太长，请缩写到500字以内。"
+            },
+            url: {
+              url: 'URL格式错误。'
+            },
+            title: {
+              maxlength: "网页标题太长，请缩写到100字以内。"
+            },
+            description: {
+              maxlength: "介绍、评论太长，请缩写到300字以内。"
+            }
+          }
+        });
+    },
+
+    /**
+     * 子类提交给服务器的数据
+     * @private
+     */
+    _getCommitData: function () {
+      return {
+        cite: this.widget().find('.WidgetInputBox_Cite').val(),
+        url: this.widget().find('.WidgetInputBox_Url').val(),
+        title: this.widget().find('.WidgetInputBox_Ttl').val(),
+        description: this.widget().find('.WidgetInputBox_Desc').val()
+      }
+    },
+
+    /**
+     * 子类的原始数据
+     * @private
+     */
+    _getOriginalData: function () {
+      return {
+        cite: this.options.cite,
+        url: this.options.url,
+        title: this.options.title,
+        description: this.options.description
+      }
+    }
+
+  });
 
   /*
    * 定义微件：文本编辑微件
@@ -543,14 +693,10 @@
     __create: function () {
       var self = this;
 
-      //textarea自适应高度、填充文本、监听文本改变事件
+      //填充文本、监听文本改变事件
       this.widget()
         .find('.InputBox')
-        .autosize({
-          append: '\n'
-        })
         .val(this.options.text)
-        .trigger('autosize.resize')
         .on('input blur mousedown mouseup keydown keypress keyup', function (event) {
           self.stateHandler(self.options.text, event);
         })
@@ -558,12 +704,6 @@
 
       //移动光标到输入框末尾
       moveSelection2End(this.widget().find('.InputBox')[0]);
-    },
-
-    __animateDone: function () {
-      this.widget()
-        .find('.InputBox')
-        .addClass('HeightAnimation')
     },
 
     /**
@@ -878,7 +1018,7 @@
           $li
             .find('.Btn_Edit')
             .click(function () {
-              var url = $li.find('.IMAGE .WidgetItemThumb').attr('src');
+              var url = $li.find('.WidgetItemThumb').attr('src');
               var title = $li.find('.ItemTtl').text();
               var quote = $li.find('.ItemQuote').attr('href');
               var description = $('<div/>').html($li.find('.ItemDesc').html().replace(/<br>/g, '\n')).text();
@@ -887,6 +1027,26 @@
                 url: url,
                 title: title,
                 quote: quote,
+                description: description,
+                $item: $li
+              });
+            })
+            .end();
+          break;
+        case 'CITE':
+          //绑定修改点击响应
+          $li
+            .find('.Btn_Edit')
+            .click(function () {
+              var cite = $('<div/>').html($li.find('.ItemCite q').html().replace(/<br>/g, '\n')).text();
+              var url = $li.find('.ItemQuote a').attr('href');
+              var title = url ? $li.find('.ItemQuote span:last-child').text() : $li.find('.ItemQuote span:nth-child(2)').text();
+              var description = $('<div/>').html($li.find('.ItemDesc').html().replace(/<br>/g, '\n')).text();
+              self._createEditWidget(type, {
+                from: 'EDIT',
+                cite: cite,
+                url: url,
+                title: title,
                 description: description,
                 $item: $li
               });
@@ -1079,6 +1239,11 @@
           $editWidget.imageWidget(options);
           this.callWidgetMethod = $editWidget.imageWidget;
           break;
+        case 'CITE':
+          console.log('_createEditWidget CITE');
+          $editWidget.citeWidget(options);
+          this.callWidgetMethod = $editWidget.citeWidget;
+          break;
         case 'TEXT':
           console.log('_createEditWidget TEXT');
           $editWidget.textWidget(options);
@@ -1172,6 +1337,29 @@
             .find('.ItemQuote')
             .attr('href', quote)
             .text(urlParts ? urlParts[3] : '')
+            .end()
+            .find('.ItemDesc')
+            .html($('<div/>').text(description).html().replace(/\n/g, '<br>'))
+            .end();
+          break;
+        case 'CITE':
+          //填充引用信息
+          var cite = data.cite;
+          var url = data.url;
+          var title = data.title;
+          var description = data.description;
+          $item
+            .find('.ItemCite q')
+            .html($('<div/>').text(cite).html().replace(/\n/g, '<br>'))
+            .end()
+            .find('.ItemQuote span:nth-child(2)')
+            .text(url ? '' : title)
+            .end()
+            .find('.ItemQuote span:last-child')
+            .text(!url ? '' : title)
+            .end()
+            .find('.ItemQuote a')
+            .attr('href', url)
             .end()
             .find('.ItemDesc')
             .html($('<div/>').text(description).html().replace(/\n/g, '<br>'))

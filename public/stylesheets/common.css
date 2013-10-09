@@ -106,13 +106,6 @@ table{border-spacing: 0;height: 100%;}
 .WidgetItemList>li:hover{background-color: #f8f8f8;}
 .Item{overflow: hidden;}
 .ItemContent{overflow: hidden;}
-.ItemQuoteWrapper{line-height: 14px;margin-top: 3px;color: rgb(170, 170, 170);min-width: 100px;max-width: 300px;}
-.ItemQuoteHeader{float: left;margin-right: 5px;}
-.ItemQuoteOuter{overflow: hidden;}
-.ItemQuote{color: rgb(170, 170, 170);word-wrap: break-word;}
-.ItemTxt{overflow: hidden;}
-.ItemTtl{display: inline-block;margin-bottom: 4px;line-height: 24px;font-weight: bold;font-size: 18px;color: rgb(0, 0, 0);}
-.ItemDesc{line-height: 20px;color: rgb(102, 102, 102);font-size: 14px;}
 .ItemUtil0 {height: 15px}
 .ItemUtil1 {visibility: hidden;float: left;padding-left: 3px;}
 .ItemUtil2 {visibility: hidden;float: right;padding-right: 3px;}
@@ -120,6 +113,19 @@ table{border-spacing: 0;height: 100%;}
 .WidgetItemThumb {vertical-align: top;background: url("/images/sprite_WidgetThumb.png") no-repeat scroll 0 0 transparent;max-width: 300px;max-height: 600px;}
 .IMAGE_CREATE .WidgetItemThumb {width: 300px;height: 220px;background-position: 0 0;}
 .IMAGE .WidgetItemThumb {background-position: 0 0;}
+.IMAGE .ItemQuoteWrapper{line-height: 14px;margin-top: 3px;color: rgb(170, 170, 170);min-width: 100px;max-width: 300px;}
+.IMAGE .ItemQuoteHeader{float: left;margin-right: 5px;}
+.IMAGE .ItemQuoteOuter{overflow: hidden;}
+.IMAGE .ItemQuote{color: rgb(170, 170, 170);word-wrap: break-word;}
+.IMAGE .ItemTxt{overflow: hidden;}
+.IMAGE .ItemTtl{display: inline-block;margin-bottom: 4px;line-height: 24px;font-weight: bold;font-size: 18px;color: rgb(0, 0, 0);}
+.IMAGE .ItemDesc{line-height: 20px;color: rgb(102, 102, 102);font-size: 14px;}
+.CITE .ItemCite{line-height: 26px;color: rgb(102, 102, 102);font-weight: bold;font-size: 20px;}
+.CITE .ItemCite span{display: inline-block;width: 20px;height: 17px;background: url("/images/sprite_Widget.png") no-repeat scroll -365px -30px transparent;}
+.CITE .ItemCite q{quotes: none;}
+.CITE .ItemQuote{color: rgb(170, 170, 170);font-size: 11px;line-height: 13px;display: block;margin-top: 7px;}
+.CITE .ItemQuote a{color: rgb(170, 170, 170);}
+.CITE .ItemDesc{margin-top: 10px;padding-left: 6px;border-left: 2px solid rgb(208, 208, 208);color: rgb(102, 102, 102);font-size: 14px;line-height: 20px;}
 .ItemView{word-wrap: break-word;}
 .TEXT .ItemView{line-height: 20px;color: rgb(102, 102, 102);font-size: 14px;}
 .TITLE .ItemView{line-height: 26px;font-size: 20px;font-weight: bold;color: #000000;padding-bottom: 5px;border-bottom: 2px solid #EAECEE;}

@@ -24,7 +24,6 @@ var index = function (req, res, next) {
             + (topic.update_at.getMonth() + 1) + '月'
             + topic.update_at.getDate() + '日';
           var topicData = {
-            topicUrl: req.url,
             title: topic.title,
             coverUrl: topic.cover_url,
             description: topic.description,
@@ -58,16 +57,6 @@ var index = function (req, res, next) {
 }
 
 var create = function (req, res, next) {
-  //add by zan for checking login
-  /*
-  if((!req.session) || (!req.session.userId) || (req.session.userId == 'undefined')){
-    console.log("not login, create page");
-    console.log(req.headers['referrer']);// even I click on the crate button, still undefined !
-    console.log(req.session._loginReferer);
-    req.session._loginReferer = req.headers.referer ;
-    res.redirect('/login?fromUrl=' + req.url);
-  } */
-
   res.set('Cache-Control', 'private, no-cache, no-store, must-revalidate, post-check=0, pre-check=0');
   res.set('Connection', 'close');
   res.set('Expire', '-1');
@@ -207,6 +196,19 @@ var _getData = function (req, _id) {
         description: description
       }
       break;
+    case 'CITE':
+      var cite = sanitize(req.body.cite).trim();
+      var url = sanitize(req.body.url).trim();
+      var title = sanitize(req.body.title).trim();
+      var description = sanitize(req.body.description).trim();
+
+      data = {
+        cite: cite,
+        url: url,
+        title: title,
+        description: description
+      }
+      break;
     case 'TEXT':
       var text = sanitize(req.body.text).trim();
 
@@ -242,6 +244,16 @@ var _getItemData = function (item) {
         url: item.url,
         title: item.title,
         quote: item.quote,
+        description: item.description
+      }
+      break;
+    case 'CITE':
+      itemData = {
+        itemId: item._id,
+        type: item.type,
+        cite: item.cite,
+        url: item.url,
+        title: item.title,
         description: item.description
       }
       break;

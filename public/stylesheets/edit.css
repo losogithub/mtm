@@ -37,7 +37,11 @@
 .IMAGE .WidgetInputBox_Desc {min-height: 85px;padding: 5px 5px 0 5px;resize: none;}
 .Btn_Check {float: left;width: 68px;height: 25px;background-position: 0px -90px;}
 .Btn_Check_Disabled {background-position: 0px -120px;}
-.TEXT .InputBox {min-height: 66px;padding: 5px 5px 0 0;resize: none;font-size: 14px}
+.CITE .WidgetInputBox_Cite{min-height: 95px;padding: 5px 5px 0 0;font-size: 14px;resize: none;margin-bottom: 10px;}
+.CITE .WidgetInputBox_Url{height: 25px;line-height: 23px;margin-bottom: 7px;}
+.CITE .WidgetInputBox_Ttl {height: 25px;margin-bottom: 10px;}
+.CITE .WidgetInputBox_Desc {min-height: 45px;padding: 5px 5px 0 5px;resize: none;}
+.TEXT .InputBox {min-height: 66px;padding: 5px 5px 0 0;font-size: 14px}
 .TITLE .InputBox {font-size: 14px;font-weight: bold;height: 30px;}
 .HeightAnimation{transition: height 0.2s ease 0s;}
 .WidgetButton{float: left;margin-top: 14px;letter-spacing:7px}
