@@ -108,6 +108,7 @@ var appendTopic = function (id, topicId, callback) {
       for (var i = 0; i < length; i++) {
         if (topics[i] == topicId) {
           if (callback) callback(user);  //typeof function
+          return;
         }
       }
       user.topics.push(topicId);
