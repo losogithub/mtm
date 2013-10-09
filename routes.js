@@ -38,7 +38,7 @@ module.exports = function (app) {
   app.post('/registerAccount', sign.signup);
   app.get('/login', auth.loadUser, sign.showLogin);
   app.post('/login', sign.login);
-  app.get('/logout', auth.loadUser, sign.signout);  //todo: not tested yet.
+  app.get('/logout', auth.loadUser, sign.signout);
   app.get('/forgetPassword', sign.showForgetPassword);
   app.post('/forgetPassword', sign.forgetPassword);
   app.get('/resetPassword', sign.showResetPassword);
@@ -47,11 +47,16 @@ module.exports = function (app) {
 
 
   //personal management
+  //app.get('/u/:id', auth.loadUser, personal.showPersonal);
   app.get('/works', auth.loadUser, personal.showWorks);
   app.get('/favourites', auth.loadUser, personal.showFavourite);
   app.get('/settings', auth.loadUser, personal.showSettings);
+
+
   //todo
   //app.get('/notifications', personal)
+
+
 
 
   /*
