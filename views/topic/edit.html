@@ -64,18 +64,10 @@
           </fieldset>
         </form>
       </div>
-      <table class="WidgetMenu01">
-        <td>
-          <div class="WidgetUtilTtl01"><b>添加条目</b></div>
-          <ul>
-            <li><a class="WidgetMenuBtn" mtm_type="Link">链接</a></li>
-            <li><a class="WidgetMenuBtn" mtm_type="IMAGE_CREATE">图片</a></li>
-            <li><a class="WidgetMenuBtn" mtm_type="Video">视频</a></li>
-            <li><a class="WidgetMenuBtn" mtm_type="CITE">引用</a></li>
-            <li><a class="WidgetMenuBtn" mtm_type="TEXT">文本</a></li>
-            <li><a class="WidgetMenuBtn" mtm_type="TITLE">标题</a></li>
-          </ul>
-        </td>
+      <table class="StaticMenu">
+
+        <% include _menu.html %>
+
       </table>
     </div>
   </div>
@@ -93,18 +85,10 @@
           <li></li>
         </ul>
 
-        <table class="DynamicMenu">
-          <td>
-            <p class="DynamicMenuTtl">添加条目</p>
-            <ul class="DynamicMenuList NegLinkWrapper">
-              <li><a class="DynamicMenuBtn" mtm_type="Link">链接</a></li>
-              <li><a class="DynamicMenuBtn" mtm_type="IMAGE_CREATE">图片</a></li>
-              <li><a class="DynamicMenuBtn" mtm_type="Video">视频</a></li>
-              <li><a class="DynamicMenuBtn" mtm_type="CITE">引用</a></li>
-              <li><a class="DynamicMenuBtn" mtm_type="TEXT">文本</a></li>
-              <li><a class="DynamicMenuBtn" mtm_type="TITLE">标题</a></li>
-            </ul>
-          </td>
+        <table class="DynamicMenu NegLinkWrapper">
+
+          <% include _menu.html %>
+
           <td class="DynamicMenuClose">
             <button class="Btn Btn_Close" title='关闭' type='button'>关闭</button>
           </td>

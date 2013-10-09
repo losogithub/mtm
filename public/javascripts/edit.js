@@ -957,7 +957,7 @@
      */
     __initMenu: function () {
       var self = this;
-      this.widget().delegate('.WidgetMenu01 .WidgetMenuBtn', 'click', function (event) {
+      this.widget().delegate('.StaticMenu li>a', 'click', function (event) {
         self._createEditWidget($(event.target).attr('mtm_type'), {
           from: 'STATIC'
         });
@@ -1215,7 +1215,7 @@
             .attr('mtm_type', type)
             .insertAfter($prevItem)
             .prepend(self.widget().find('.Templates .DynamicMenu').clone())
-            .delegate('.DynamicMenuBtn', 'click', function (event) {
+            .delegate('li>a', 'click', function (event) {
               self._createEditWidget($(event.target).attr('mtm_type'), {
                 from: 'DYNAMIC',
                 $item: $editWidget

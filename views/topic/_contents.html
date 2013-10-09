@@ -24,7 +24,7 @@
 <div class='ItemContent CITE'>
   <p class="ItemCite">
     <span></span>
-    <q><%= item.cite ? item.cite : "" %></q>
+    <q><%- item.cite ? escape(item.cite).replace(/\n/g, "<br>") : '' %></q>
   </p>
   <p class="ItemQuote NegLinkWrapper">
     <span>来源</span>
