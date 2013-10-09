@@ -101,6 +101,9 @@ var appendTopic = function(id, topicId, callback){
   //User.update();
   User.findById(id, function(err, user){
     if(err){
+      console.log("cannot find user for appendTopic");
+      console.log(err);
+      //return;
           }
     var topics = user.topics;
     var length = topics.length;

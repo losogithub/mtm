@@ -26,6 +26,11 @@ loadUser fail will always leads to home page
  */
 var loadUser = function (req, res, next) {
   console.log("loadUser");
+  console.log(req.query.fromUrl);
+ // the first priority is req.query.fromUrl, then referer, finally home
+  req.session._loginReferer = req.query.fromUrl || req.headers.referer || 'home';
+  console.log(req.session._loginReferer);
+
   if (req.session && req.session.userId) {
    // session stores the userId information. means after login
     //console.log("loadUser userId: %s", req.session.userId);
@@ -37,9 +42,12 @@ var loadUser = function (req, res, next) {
         req.currentUser = user; //check whether currentUser is the same with this Id.
         res.locals.username = user.loginName; // used in html template to judefy and display uername
         next();
+        //note: when it showlogin, the next shall be redirect to home.
+	//  res.redirect('/home');
       } else {
         //check fail: not login
         //todo: in this case, no corresponding user in the db. so shall go to err page.
+	  // if it is showlogin, jump to login.
         console.err("wrong uerId");
         req.session.userId = null;
         next();//todo
@@ -53,6 +61,9 @@ var loadUser = function (req, res, next) {
   else {
     //not login
     //test
+    //todo: there is a situation that if user's cookie was stolen and cleared by the theft.
+    // the theft still can login. this is a problem.
+    //todo: let user reset userpassword
     req.session.userId = null;
     next();//just call next, in the next function, will check the userId property of req.session
   }
@@ -79,7 +90,7 @@ var authenticateFromLoginToken = function (req, res, next) {
       User.getUserByMail(token.email, function (err, user) {
         if (user) {
           req.session.userId = user._id;
-          req.currentUser = user; //what does this used for ?? todo
+          req.currentUser = user; //what does this used for ?? get it, passed to the next middleware.
 
           //used in html template to judgfy and display user name.
           res.locals.username = user.loginName;
@@ -89,6 +100,7 @@ var authenticateFromLoginToken = function (req, res, next) {
             //console.log("token.save function in authenticateFromLoginToken");
             res.cookie('logintoken', token.cookieValue, { expires: new Date(Date.now() + 2 * 604800000), path: '/' }); //todo 7 hours ? or 20 years
             next();
+            //if showlogin, redirect to home
           });
         } else {
           //cannot find user
@@ -112,7 +124,7 @@ var loadLogin = function (req, res, next) {
   req.session._loginReferer = req.query.fromUrl;
   if (req.session && req.session.userId) {
   // session stores the userId information. means after login
-    console.log("loadLogin userId: %s", req.session.userId);
+  //  console.log("loadLogin userId: %s", req.session.userId);
     User.getUserById(req.session.userId, function (err, user) {
       if (err) {
         return next(err);
@@ -124,6 +136,7 @@ var loadLogin = function (req, res, next) {
         res.redirect('/home');
       } else {
         //not login
+	  console.log("wrong userId");
         req.session.userId = null;
         next(); //revised: go to login page
       }

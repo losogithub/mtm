@@ -280,6 +280,7 @@ var showLogin = function (req, res) {
   if (!req.session._loginReferer){
     req.session._loginReferer = req.headers.referer || 'home' ;
   }
+  console.log(req.session._loginReferer);
   return res.render('sign/login', {
         title: config.name,
         metaHead: '',
@@ -436,16 +437,7 @@ function checkOnlyPassword(pass, autoLogin, user, req, res){
   console.log("loginReferer");
   console.log(req.session._loginReferer);
 
-  //todo: maybe later: these for code will be deleted.
-  for (var i = 0, len = notJump.length; i !== len; ++i) {
-    if (refer.indexOf(notJump[i]) >= 0) {
-      refer = 'home';
-      break;
-    }
-  }
-  /*
-  * todo: later refer shall be home or the previous visit page.
-  * e.g; you want to go to create page, then first jump to login page. after you login, then jump back to previous page.
+  /* e.g; you want to go to create page, then first jump to login page. after you login, then jump back to previous page.
    */
       res.redirect(refer);
 }
