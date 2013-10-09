@@ -10,7 +10,7 @@ var topic = require('./controllers/topic');
 var sign = require('./controllers/sign');
 var personal = require('./controllers/personal');
 var auth = require('./middlewares/auth');
-var jump = require('./middlewares/jump');
+
 
 module.exports = function (app) {
   // home page
@@ -19,7 +19,7 @@ module.exports = function (app) {
 
   //console.log("router start");
 
-  app.get('/topic/create', auth.loadUser, jump.jumpToLogin , topic.create);
+  app.get('/topic/create', auth.loadUser, auth.loginRequired , topic.create);
   app.get('/topic/getid', topic.getId);
   app.get('/topic/getcontents', topic.getContents);
   app.get('/topic/:topicId', auth.loadUser, topic.index);
@@ -36,7 +36,7 @@ module.exports = function (app) {
   app.get('/registerAccount', sign.signup);
   app.post('/signup', sign.signup);
   app.post('/registerAccount', sign.signup);
-  app.get('/login', auth.loadUser, jump.loginTo, sign.showLogin);
+  app.get('/login', auth.loadUser, sign.showLogin);
   app.post('/login', sign.login);
   app.get('/logout', auth.loadUser, sign.signout);  //todo: not tested yet.
   app.get('/forgetPassword', sign.showForgetPassword);

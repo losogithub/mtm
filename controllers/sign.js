@@ -264,6 +264,21 @@ var signup = function (req, res, next) {
     }
 };
 
+
+
+/**
+ * define some page when login just jump to the home page
+ * @type {Array}
+ */
+//notJump means not jump back
+//todo: need check
+var notJump = [
+  '/activeAccount', //active page
+  '/resetPassword',     //reset password page, avoid to reset twice
+  '/signup',         //register page
+  '/forgetPassword'    //forgetpassword
+];
+
 /**
  * Show user login page.
  *
@@ -274,21 +289,36 @@ var showLogin = function (req, res) {
   console.log("show login session: ");
   console.log(req.session);
   console.log(req.headers.referer);
-  //todo: here we will use some middleware to assign to it.
+
   //if it is null, then assign to this.
   //otherwise it was assigned by some middleware.
   if (!req.session._loginReferer){
     req.session._loginReferer = req.headers.referer || 'home' ;
   }
   console.log(req.session._loginReferer);
-  return res.render('sign/login', {
-        title: config.name,
-        metaHead: '',
-        css: '',
-        js: '',
-        errMsg: '', email: '', password: '',
-        layout: 'signLayout'
-      });
+
+  var refer = req.session._loginReferer;
+  if(req.session && req.session.userId && req.session.userId !== 'undefined'){
+    //if logged in, jump to refer page.
+    //note: not all page jump to loginReferer.
+    for (var i = 0, len = notJump.length; i !== len; ++i) {
+      if (refer.indexOf(notJump[i]) >= 0) {
+        refer = 'home';
+        break;
+      }
+    }
+    return res.redirect(refer);
+  }
+  else{
+    return res.render('sign/login', {
+      title: config.name,
+      metaHead: '',
+      css: '',
+      js: '',
+      errMsg: '', email: '', password: '',
+      layout: 'signLayout'
+    });
+  }
 };
 
 
@@ -378,17 +408,7 @@ var login = function (req, res, next) {
 
 
 
-/**
- * define some page when login just jump to the home page
- * @type {Array}
- */
-  //notJump means not jump back
-var notJump = [
-  '/activeAccount', //active page
-  '/resetPassword',     //reset password page, avoid to reset twice
-  '/signup',         //register page
-  '/forgetPassword'    //forgetpassword
-];
+
 
 //suppose the username id, or email address exists, now check the password:
 function checkOnlyPassword(pass, autoLogin, user, req, res){

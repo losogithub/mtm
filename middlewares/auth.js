@@ -13,23 +13,35 @@ var User = require('../proxy').User;
 var LoginToken = require('../proxy').LoginToken;
 
 
-var loginRequired = function (req, res, next) {
-  if (!req.session.userId) {
-    return res.redirect('/login');
-    //todo:  show a login frame.
+
+/* if logged in, jump to fromUrl page.
+ toto: it seems: just use next. we don't need fromUrl.
+ which was stored at _loginReferer.
+ */
+var loginRequired = function(req, res, next){
+  console.log("LoginRequired");
+  console.log("loginReferer: %s", req.session._loginReferer);
+  if((!req.session) || (!req.session.userId) || (req.session.userId == 'undefined')){
+    res.redirect('/login?fromUrl=' + req.url);
+  }else
+  {
+    next();
   }
-  next();
-};
+}
+
 
 /*
 loadUser fail will always leads to home page
  */
 var loadUser = function (req, res, next) {
   console.log("loadUser");
-  console.log(req.query.fromUrl);
+  console.log("from Url: %s", req.query.fromUrl);
+  console.log("before the logineReferer: %s", req.session._loginReferer);
  // the first priority is req.query.fromUrl, then referer, finally home
+  //note: some req.headers.referer cannot be rendered !!!
+  //e.g. if it is login, you shall not jump back to login page.
   req.session._loginReferer = req.query.fromUrl || req.headers.referer || 'home';
-  console.log(req.session._loginReferer);
+  console.log("loginReferer: %s", req.session._loginReferer);
 
   if (req.session && req.session.userId) {
    // session stores the userId information. means after login
