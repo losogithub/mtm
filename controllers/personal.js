@@ -29,7 +29,15 @@ var showWorks = function (req, res, next) {
       if (err) {
         return next(err)
       }
-      req.currentUser = user;
+      if(!user){
+        //if cannot find user by userId. the userId must be wrong.
+        //usually this shall not happen. If user have already login.
+        console.err("cannot find user by userId");
+        req.session.userId = null;
+        return res.render('/login');
+      }
+
+      //req.currentUser = user;
       var topics = user.topics;
       var topicsInfos = [];
       getTopics(topics.length, topics, topicsInfos, user, res);
@@ -63,21 +71,37 @@ var getTopics = function (i, topics, topicsInfos, user, res, next) {
       getTopics(--i, topics, topicsInfos, user, res);
     });
   } else {
-    res.render('personal/index', {
-      title: config.name,
-      css: [
-        '/stylesheets/personal.css'
-      ],
-      js: '',
-      pageType: 'PERSONAL',
-      personalType: 'WORKS',
-      username: user.loginName,
-      favourite: user.favourite,
-      topicsCount: user.topicCount,
-      topicsPageView: user.pageviewCount,
-      topics: topicsInfos
-    });
+    //todo: here add the sort strategy
+    renderWorks(user, topicsInfos, res);
   }
+}
+
+/*
+according to different type to sort topics.
+e.g.: createDate, updateDate, pageView, rate
+order: ascending, descending.
+ */
+//todo:
+var sortTopics = function(type, order, topicsInfos){
+
+}
+
+
+var renderWorks = function(user, topicsInfos,  res, next){
+  res.render('personal/index', {
+    title: config.name,
+    css: [
+      '/stylesheets/personal.css'
+    ],
+    js: '',
+    pageType: 'PERSONAL',
+    personalType: 'WORKS',
+    username: user.loginName,
+    favourite: user.favourite,
+    topicsCount: user.topicCount,
+    topicsPageView: user.pageviewCount,
+    topics: topicsInfos
+  });
 }
 
 

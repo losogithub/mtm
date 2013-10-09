@@ -124,6 +124,7 @@ var authenticateFromLoginToken = function (req, res, next) {
             req.session.userId = null;
             //2. redirect to reset password
             //ask user to reset password from email.
+            //todo: a new page to inform user his cookie maybe stolen.
             return res.redirect('/forgetPassword');
           } else
           //find in LoginToken db.
