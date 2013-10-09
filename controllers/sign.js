@@ -488,8 +488,8 @@ var signout = function (req, res, next) {
   console.log(req.currentUser);
   //I see, currentUser only passed between middleware and the final call.
   if (req.currentUser) {
-    LoginToken.remove({ email: req.currentUser.email }, function () {
-    });
+    //combine email and series to make sure only only clear from on computer.
+    LoginToken.remove(req.currentUser.email, req.currentUser.series);
   }
   res.clearCookie('logintoken');
   //res.redirect('/home');
