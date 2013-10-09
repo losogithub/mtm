@@ -19,7 +19,7 @@
 
           <div class="HeadTxt">
             <div class="HeadTtlWrapper">
-              <h1 class="HeadTtl NegLinkWrapper"><a href=""><%=
+              <h1 class="HeadTtl NegLinkWrapper"><a href="<%= !locals.url ? '' : url %>"><%=
                 locals.topic ? topic.title : '' %></a></h1>
 
               <div class='HeadUtil'>
