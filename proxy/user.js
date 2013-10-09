@@ -18,7 +18,7 @@ var User = models.User;
  * @param {Function} callback 回调函数
  */
 var getUserByLoginName = function (loginName, callback) {
-    User.findOne({'loginName': loginName}, callback);
+  User.findOne({'loginName': loginName}, callback);
 };
 
 /**
@@ -30,7 +30,7 @@ var getUserByLoginName = function (loginName, callback) {
  * @param {Function} callback 回调函数
  */
 var getUserByName = function (name, callback) {
-    User.findOne({name: name}, callback);
+  User.findOne({name: name}, callback);
 };
 
 /**
@@ -42,7 +42,7 @@ var getUserByName = function (name, callback) {
  * @param {Function} callback 回调函数
  */
 var getUserByMail = function (email, callback) {
-    User.findOne({email: email}, callback);
+  User.findOne({email: email}, callback);
 };
 
 /**
@@ -55,7 +55,7 @@ var getUserByMail = function (email, callback) {
  * @param {Function} callback 回调函数
  */
 var getUsersByQuery = function (query, opt, callback) {
-    User.find(query, {}, opt, callback);   // change the second arguments from [] to {}
+  User.find(query, {}, opt, callback);   // change the second arguments from [] to {}
 };
 
 /**
@@ -68,21 +68,21 @@ var getUsersByQuery = function (query, opt, callback) {
  * @param {Function} callback 回调函数
  */
 var getUserByQuery = function (name, key, callback) {
-    User.findOne({name: name, retrieve_key: key}, callback);
+  User.findOne({name: name, retrieve_key: key}, callback);
 };
 // here is Email need a key
-var getUserByEmail = function(email, key, callback){
-    User.findOne({email: email, retrieve_key: key}, callback);
+var getUserByEmail = function (email, key, callback) {
+  User.findOne({email: email, retrieve_key: key}, callback);
 }
 
 var newAndSave = function (name, loginName, password, email, active, callback) {
-    var user = new User();
-    user.name = name;
-    user.loginName = loginName;
-    user.password = password;
-    user.email = email;
-    user.active = active;
-    user.save(callback);
+  var user = new User();
+  user.name = name;
+  user.loginName = loginName;
+  user.password = password;
+  user.email = email;
+  user.active = active;
+  user.save(callback);
 };
 
 /**
@@ -101,9 +101,6 @@ var appendTopic = function(id, topicId, callback){
   //User.update();
   User.findById(id, function(err, user){
     if(err){
-      console.log("cannot find user for appendTopic");
-      console.log(err);
-      //return;
           }
     var topics = user.topics;
     var length = topics.length;

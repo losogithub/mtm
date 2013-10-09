@@ -24,7 +24,7 @@
           <table>
             <td>
               <ul class="Nav_LeftInner NegLinkWrapper">
-                <li class="<%= locals.path != '/favourites' ? '' : 'SELECTED' %>"><a href="/favourites">收藏</a></li>
+                <!--<li class="<%= locals.path != '/favourites' ? '' : 'SELECTED' %>"><a href="/favourites">收藏</a></li>-->
                 <li class="<%= locals.path != '/works' ? '' : 'SELECTED' %>"><a href="/works">管理</a></li>
                 <li class="<%= locals.path != '/connections' ? '' : 'SELECTED' %>"><a href="/connections">外部链接</a></li>
               </ul>
@@ -50,7 +50,7 @@
           </ul>
           <% } else { %>
           <ul class="NavInner NegLinkWrapper">
-            <li><a href="/favourites"><img width="20" height="20"
+            <li><a href="/works"><img width="20" height="20"
                                            src="images/no_img/user_20x20.png"
                                            onerror="mtm.errorImage(this,'user_20x20');"><%= username %></a><span
               class="HeaderSeparator">|</span></li>
