@@ -94,27 +94,29 @@ var newAndSave = function (name, loginName, password, email, active, callback) {
  * @param {Function} callback 回调函数
  */
 var getUserById = function (id, callback) {
-    User.findOne({_id: id}, callback);
+  User.findOne({_id: id}, callback);
 };
 
-var appendTopic = function(id, topicId, callback){
+var appendTopic = function (id, topicId, callback) {
   //User.update();
-  User.findById(id, function(err, user){
-    if(err){
-          }
-    var topics = user.topics;
-    var length = topics.length;
-    for (var i = 0; i < length; i++)
-    {
-      if(topics[i] == topicId){
-        if(callback) callback();  //typeof function
+  User.findById(id, function (err, user) {
+    if (err) {
+    } else if (!user) {
+    } else {
+      var topics = user.topics;
+      var length = topics.length;
+      for (var i = 0; i < length; i++) {
+        if (topics[i] == topicId) {
+          if (callback) callback(user);  //typeof function
+          return;
+        }
       }
+      user.topics.push(topicId);
+      user.topicCount++;
+      user.save();
+      if (callback) //typeof function
+        callback(user);
     }
-    user.topics.push(topicId);
-    user.topicCount++;
-    user.save();
-    if(callback) //typeof function
-      callback();
   })
 }
 
