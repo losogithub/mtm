@@ -17,18 +17,18 @@
         <th>
           标题
           <div class="MainTblSortSub">
-            <a data-value="c" data-order="a">创建日期<span
+            <a  class='<%= isSelectC %>' href='?mt=c&amp;mo=<%= createV %>'>创建日期<span
               class="MainTblSortIco"></span></a>
-            <a data-value="u" data-order="d">更新日期<span
+            <a class='<%= isSelectU %>' href='?mt=u&amp;mo=<%= updateV%>'>更新日期<span
               class="MainTblSortIco"></span></a>
           </div>
         </th>
         <th>
-          <a class="MainTblSort SELECTED" data-value="p" data-order="d">访问量<span
+          <a class="MainTblSort <%= isSelectP %>" href='?mt=p&amp;mo=<%= pageViewV%>' >访问量<span
             class="MainTblSortIco"></span></a>
         </th>
         <th>
-          <a class="MainTblSort" data-value="r" data-order="d">上升率<span
+          <a class="MainTblSort <%= isSelectR %>" href='?mt=r&amp;mo=<%= rateV %>'>上升率<span
             class="MainTblSortIco"></span></a>
         </th>
         <th><span class="Hide">页面详细链接</span></th>
