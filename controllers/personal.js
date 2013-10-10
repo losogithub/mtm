@@ -23,6 +23,9 @@ var showWorks = function (req, res, next) {
   //console.log("userId: %s", userId);
   res.locals.path = req.path.replace(/\/$/, '');
 
+  var isAjaxReq = req.xhr;
+  console.log("ajax ? %s", isAjaxReq);
+
   if (req.session && req.session.userId && req.session.userId !== 'undefined') {
     console.log("render show works page");
     User.getUserById(req.session.userId, function (err, user) {
@@ -37,7 +40,6 @@ var showWorks = function (req, res, next) {
         return res.render('/login');
       }
 
-      //req.currentUser = user;
       var topics = user.topics;
       var topicsInfos = [];
       getTopics(topics.length, topics, topicsInfos, user, res);
