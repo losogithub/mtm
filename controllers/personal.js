@@ -25,7 +25,24 @@ var showWorks = function (req, res, next) {
 
   var isAjaxReq = req.xhr;
   console.log("ajax ? %s", isAjaxReq);
+  console.log("render show works page");
+  User.getUserById(req.session.userId, function (err, user) {
+    if (err) {
+      return next(err)
+    }
+    if(!user){
+      //if cannot find user by userId. the userId must be wrong.
+      //usually this shall not happen. If user have already login.
+      console.err("cannot find user by userId");
+      req.session.userId = null;
+      return res.render('/login');
+    }
 
+    var topics = user.topics;
+    var topicsInfos = [];
+    getTopics(topics.length, topics, topicsInfos, user, res);
+  });
+ /*
   if (req.session && req.session.userId && req.session.userId !== 'undefined') {
     console.log("render show works page");
     User.getUserById(req.session.userId, function (err, user) {
@@ -47,7 +64,9 @@ var showWorks = function (req, res, next) {
   }  else{
     return res.redirect('/home');
   }
+  */
 }
+
 // a function for recursively retrieve the topic information,
 // finally render them.
 var getTopics = function (i, topics, topicsInfos, user, res, next) {
