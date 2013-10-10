@@ -229,6 +229,21 @@ var getTopicById = function(topicId, callback){
     });
 }
 
+var getTopicsByIdsSorted = function(topicIds, opt, callback){
+  TopicModel.find({'_id' : {"$in" : topicIds}})
+    .sort(opt)
+    .exec(function (err, topics){
+      if(err){
+        console.err("cannot find topics by ids: " + err);
+        //todo: return null ok or not
+        return ;
+      }else{
+        //console.log("model return topics");
+        //console.log(topics);
+        callback(err, topics);
+      }
+    })
+}
 
 exports.newId = newId;//增
 exports.validateId = validateId;
@@ -239,3 +254,4 @@ exports.increasePVCountBy = increasePVCountBy;
 exports.getHotTopics = getHotTopics;
 exports.publish = publish;
 exports.getTopicById = getTopicById;
+exports.getTopicsByIdsSorted = getTopicsByIdsSorted;

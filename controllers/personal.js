@@ -13,81 +13,122 @@ var config = require('../config');
 var showWorks = function (req, res, next) {
 
   //console.log(req.session);
+  console.log("sort strategy: ")
+  console.log(req.query.mt);
+  console.log(req.query.mo);
 
-  //before rendering, prepare enough information.
-  // according to the user name to find out :
-  // image,
-  // topics
-
-  //var userId = req.session.userId;
-  //console.log("userId: %s", userId);
   res.locals.path = req.path.replace(/\/$/, '');
 
-  if (req.session && req.session.userId && req.session.userId !== 'undefined') {
-    console.log("render show works page");
-    User.getUserById(req.session.userId, function (err, user) {
-      if (err) {
-        return next(err)
-      }
-      if(!user){
-        //if cannot find user by userId. the userId must be wrong.
-        //usually this shall not happen. If user have already login.
-        console.err("cannot find user by userId");
-        req.session.userId = null;
-        return res.render('/login');
-      }
+  console.log("render show works page");
+  User.getUserById(req.session.userId, function (err, user) {
+    if (err) {
+      return next(err)
+    }
+    if(!user){
+      //if cannot find user by userId. the userId must be wrong.
+      //usually this shall not happen. If user have already login.
+      console.err("cannot find user by userId");
+      req.session.userId = null;
+      return res.render('/login');
+    }
 
-      //req.currentUser = user;
-      var topics = user.topics;
-      var topicsInfos = [];
-      getTopics(topics.length, topics, topicsInfos, user, res);
-    });
-  }  else{
-    return res.redirect('/home');
-  }
-}
-// a function for recursively retrieve the topic information,
-// finally render them.
-var getTopics = function (i, topics, topicsInfos, user, res, next) {
-  if (topics && i) {
-    //bug : not topics[i], but topics[i-1] 20:57, 10.8, 2013
-    Topic.getTopicById(topics[i-1], function (err, topic) {
-      if (err) {
-        console.error("find topic failed");
-        next(err);
-      } else if (!topic) {
-        console.log("topic not found");
-      } else {
-        console.log("find topic done");
-        console.log(topic);
-        console.log("topic id: %s", topic._id);
-        topic.topicUrl = "/topic/" + topic._id;
-        topic.create_date = topic.create_at.getFullYear() + '年'
-          + (topic.create_at.getMonth() + 1) + '月'
-          + topic.create_at.getDate() + '日';
-        topicsInfos.push(topic);
-      }
+    var topics = user.topics;
+    //var topicsInfos = [];
+    var mt = req.query.mt || 'p';
+    var mo = req.query.mo || 'd';
 
-      getTopics(--i, topics, topicsInfos, user, res);
+    //empty topics
+    if(!topics){
+      return renderWorks(user, [], '', '', '', res);
+    }
+    //use this function to get all the details of topics.
+    getAndSortTopics(mt, mo, topics, function(err, topicDetails){
+      if(err){
+        console.log("err");
+        return;
+      }else{
+        //use a for to add some attributes
+        if(!topicDetails){
+          console.log("err, cannot get topic details, but have topic ids");
+          //???? shall return or not
+          return;
+        }
+
+        for (var i =0; i < topicDetails.length; i++){
+          topicDetails[i].topicUrl= "/topic/" + topicDetails[i]._id;
+          topicDetails[i].create_date = topicDetails[i].create_at.getFullYear() + '年'
+            + (topicDetails[i].create_at.getMonth() + 1) + '月'
+            + topicDetails[i].create_at.getDate() + '日';
+        }
+
+        //render according to different attributes.
+        if(mt == 'c'){
+         if(mo == 'd'){
+           return renderWorks(user, topicDetails, 'SELECTED', '', '', '', 'a', 'd', 'd', 'd' ,res);
+         } else {
+           return renderWorks(user, topicDetails, 'SELECTED', '', '', '', 'd', 'd', 'd', 'd' ,res);
+         }
+        }
+        if(mt == 'u'){
+          if(mo == 'd'){
+            return renderWorks(user, topicDetails, '', 'SELECTED', '', '', 'd', 'a', 'd', 'd' ,res);
+          }else {
+            return renderWorks(user, topicDetails, '', 'SELECTED', '', '', 'd', 'd', 'd', 'd' ,res);
+          }
+        }
+        if(mt =='p'){
+          if(mo == 'd'){
+            return renderWorks(user, topicDetails, '', '', 'SELECTED', '', 'd', 'd', 'a', 'd' ,res);
+          } else {
+            return renderWorks(user, topicDetails, '', '', 'SELECTED', '', 'd', 'd', 'd', 'd' ,res);
+          }
+        }
+        if(mt == 'r'){
+          if(mo == 'd'){
+            return renderWorks(user, topicDetails, '', '', '', 'SELECTED', 'd', 'd', 'd', 'a' ,res);
+          }else {
+            return renderWorks(user, topicDetails, '', '', '', 'SELECTED', 'd', 'd', 'd', 'd' ,res);
+          }
+        }
+      }
     });
-  } else {
-    //todo: here add the sort strategy
-    renderWorks(user, topicsInfos, res);
-  }
+  });
+
 }
 
 /*
-according to different type to sort topics.
-e.g.: createDate, updateDate, pageView, rate
-order: ascending, descending.
+ Find topics inside TopicModel and sort them in a certain order.
  */
-//todo:
-var sortTopics = function(type, order, topicsInfos){
+var getAndSortTopics = function(mt, mo, topics, callback){
+  if(mt == 'c'){
+    var order ='create_at';
+    if (mo == 'd'){order = '-' + order;}
+    return Topic.getTopicsByIdsSorted(topics, order, callback);
+  }
+  if(mt == 'u'){
+    var order ='update_at';
+    if (mo == 'd'){order = '-' + order;}
+    return Topic.getTopicsByIdsSorted(topics, order, callback);
 
+  }
+  if(mt == 'p'){
+    var order ='PV_count';
+    if (mo == 'd'){order = '-' + order;}
+    console.log("sort by pv");
+    return Topic.getTopicsByIdsSorted(topics, order, callback);
+  }
+  if(mt == 'r'){
+    //todo  how to count the rate.
+    var order ='create_at';
+    if (mo == 'd'){order = '-' + order;}
+    return Topic.getTopicsByIdsSorted(topics, order, callback);
+  }
 }
 
 
-var renderWorks = function(user, topicsInfos,  res, next){
+var renderWorks = function(user, topicsInfos, isSelectC, isSelectU, isSelectP, isSelectR,
+                           createV, updateV, pageViewV, rateV,
+                           res, next){
   res.render('personal/index', {
     title: config.name,
     css: [
@@ -100,7 +141,15 @@ var renderWorks = function(user, topicsInfos,  res, next){
     favourite: user.favourite,
     topicsCount: user.topicCount,
     topicsPageView: user.pageviewCount,
-    topics: topicsInfos
+    topics: topicsInfos,
+    isSelectC: isSelectC,
+    isSelectU: isSelectU,
+    isSelectP: isSelectP,
+    isSelectR: isSelectR,
+    createV: createV,
+    updateV: updateV,
+    pageViewV: pageViewV,
+    rateV: rateV
   });
 }
 

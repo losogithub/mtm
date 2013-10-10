@@ -101,14 +101,16 @@ var appendTopic = function (id, topicId, callback) {
   //User.update();
   User.findById(id, function (err, user) {
     if (err) {
+      console.err("err happened in User.appendTopic.")
     } else if (!user) {
+      console.log("cannot find user for appending Topic. userId : %id", id);
+      //todo: what to do ?
     } else {
       var topics = user.topics;
       var length = topics.length;
       for (var i = 0; i < length; i++) {
         if (topics[i] == topicId) {
-          if (callback) callback(user);  //typeof function
-          return;
+          if (callback) return callback(user);  //typeof function
         }
       }
       user.topics.push(topicId);
