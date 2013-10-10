@@ -236,6 +236,9 @@
         .find('.AutoFocus')
         .focus()
         .end();
+
+      //移动光标到输入框末尾
+      moveSelection2End(this.widget().find('.AutoFocus')[0]);
     },
 
     /**
@@ -331,12 +334,6 @@
         .find('.WidgetItemThumb')
         .attr('src', this.options.url)
         .end()
-        .find('.WidgetInputBox_Desc')
-        .val(this.options.description)
-        .on('input blur mousedown mouseup keydown keypress keyup', this.options.from != 'EDIT' ? $.noop : function (event) {
-          self.stateHandler(self.options.description, event);
-        })
-        .end()
         .find('.WidgetInputBox_Ttl')
         .val(this.options.title)
         .on('input blur mousedown mouseup keydown keypress keyup', this.options.from != 'EDIT' ? $.noop : function (event) {
@@ -348,10 +345,13 @@
         .on('input blur mousedown mouseup keydown keypress keyup', this.options.from != 'EDIT' ? $.noop : function (event) {
           self.stateHandler(self.options.quote, event);
         })
+        .end()
+        .find('.WidgetInputBox_Desc')
+        .val(this.options.description)
+        .on('input blur mousedown mouseup keydown keypress keyup', this.options.from != 'EDIT' ? $.noop : function (event) {
+          self.stateHandler(self.options.description, event);
+        })
         .end();
-
-      //移动光标到输入框末尾
-      moveSelection2End(this.widget().find('.WidgetInputBox_Desc')[0]);
     },
 
     /**
@@ -381,7 +381,7 @@
           },
           showErrors: function (errorMap, errorList) {
             if (errorList.length) {
-              alert(errorMap.title || errorMap.description || errorMap.quote);
+              alert(errorMap.title || errorMap.quote || errorMap.description);
             }
           },
           rules: {
@@ -469,9 +469,6 @@
           }
         })
         .end();
-
-      //移动光标到输入框末尾
-      moveSelection2End(this.widget().find('.InputBox')[0]);
     },
 
     /**
@@ -517,6 +514,227 @@
         self._trigger('createEditWidget', null, {
           from: self.options.from,
           type: 'IMAGE',
+          $item: self.widget(),
+          url: url
+        });
+        self._trigger("setState", null, "edit");
+      };
+//      checkDupl(oData, callback);
+      callback();
+    }
+
+  });
+
+  /*
+   * 定义微件：视频微件
+   */
+  $.widget('mtm.videoWidget', $.mtm.editWidget, {
+
+    type: 'VIDEO',
+
+    options: {
+      url: '',
+      title: '',
+      description: ''
+    },
+
+    /**
+     * 子类的构造函数
+     * @private
+     */
+    __create: function () {
+      var self = this;
+      var urlParts = this.options.url.match(REGEXP_URL);
+      var temp;
+      var quote = !urlParts ? null : !urlParts[3] ? null : !(temp = urlParts[3].match(/^[^\.]+\.(([^\.]+)\.([^\.]+\.)*[^\.]+)$/)) ? null : !temp[1] ? null : temp[1];
+      var type = temp[2].toUpperCase();
+      var vid;
+      console.log(this.type);
+
+      switch (type) {
+        case 'YOUKU':
+          vid = !(temp = this.options.url) ? '' : !(temp = temp.substring(temp.length - 18, temp.length - 5)) ? '' : temp;
+          break;
+        case 'TUDOU':
+          vid = !(temp = this.options.url) ? '#vid#' : !(temp = temp.match(/([^\/]{11})(\/|\.html)$/)) ? '#vid#' : !temp[1] ? '#vid#' : temp[1];
+          break;
+      }
+
+      $.get('http://v.youku.com/v_show/id_XNjE5MjEwNTI0.html')
+        .always(function () {
+          console.log('always');
+        })
+        .done(function () {
+          console.log('done');
+        })
+        .fail(function (err) {
+          console.log('fail'+err);
+        });
+
+      //填充视频、填充文本
+      this.widget()
+        .find('.' + type)
+        .attr('src', this.widget().find('.' + type).attr('src').replace('#vid#', vid))
+        .removeAttr('style')
+        .end()
+        .find('.VIDEO_URL')
+        .attr('href', this.options.url)
+        .end()
+        .find('.ItemQuote')
+        .text(quote)
+        .end()
+        .find('.WidgetInputBox_Ttl')
+        .val(this.options.title)
+        .on('input blur mousedown mouseup keydown keypress keyup', this.options.from != 'EDIT' ? $.noop : function (event) {
+          self.stateHandler(self.options.title, event);
+        })
+        .end()
+        .find('.WidgetInputBox_Desc')
+        .val(this.options.description)
+        .on('input blur mousedown mouseup keydown keypress keyup', this.options.from != 'EDIT' ? $.noop : function (event) {
+          self.stateHandler(self.options.description, event);
+        })
+        .end();
+    },
+
+    /**
+     * 子类的表单验证
+     * @private
+     */
+    __initFormValidation: function () {
+      var self = this;
+      this.widget().find('form')
+        .validate({
+          debug: false,
+          ignore: "",
+          onkeyup: false,
+          focusInvalid: false,
+          onfocusout: false,
+          submitHandler: function (form) {
+            self.commit();
+          },
+          showErrors: function (errorMap, errorList) {
+            if (errorList.length) {
+              alert(errorMap.title || errorMap.description);
+            }
+          },
+          rules: {
+            title: {
+              maxlength: 100,
+              required: false
+            },
+            description: {
+              maxlength: 300,
+              required: false
+            }
+          },
+          messages: {
+            title: {
+              maxlength: '标题太长，请缩写到100字以内。'
+            },
+            description: {
+              maxlength: '介绍、评论太长，请缩写到300字以内。'
+            }
+          }
+        });
+    },
+
+    /**
+     * 子类提交给服务器的数据
+     * @private
+     */
+    _getCommitData: function () {
+      return {
+        url: this.options.url,
+        title: this.widget().find('.WidgetInputBox_Ttl').val(),
+        description: this.widget().find('.WidgetInputBox_Desc').val()
+      }
+    },
+
+    /**
+     * 子类的原始数据
+     * @private
+     */
+    _getOriginalData: function () {
+      return {
+        url: this.options.url,
+        title: this.options.title,
+        description: this.options.description
+      }
+    }
+
+  });
+
+  /*
+   * 定义微件：视频创建微件
+   */
+  $.widget('mtm.videoWidgetCreate', $.mtm.editWidget, {
+
+    type: 'VIDEO_CREATE',
+
+    /**
+     * 子类的构造函数
+     * @private
+     */
+    __create: function () {
+      var self = this;
+
+      //监听文本改变事件
+      this.widget()
+        .find('.InputBox')
+        .on('input blur mousedown mouseup keydown keypress keyup', function () {
+          if (this.value) {
+            self.widget().find('.Btn_Check').removeClass('Btn_Check_Disabled').removeAttr('disabled');
+          } else {
+            self.widget().find('.Btn_Check').addClass('Btn_Check_Disabled').attr('disabled', 'disabled');
+          }
+        })
+        .end();
+    },
+
+    /**
+     * 子类的表单验证
+     * @private
+     */
+    __initFormValidation: function () {
+      var self = this;
+      this.widget().find('form').validate({
+        debug: false,
+        ignore: "",
+        onkeyup: false,
+        focusInvalid: false,
+        onfocusout: false,
+        submitHandler: function (form) {
+          self.__getVideo(form);
+        },
+        showErrors: function (errorMap, errorList) {
+          if (errorMap.url) {
+            alert(errorMap.url);
+          }
+        },
+        rules: {
+          url: {
+            required: true,
+            url: true
+          }
+        },
+        messages: {
+          url: {
+            required: "尚未输入URL。",
+            url: "URL格式错误。"
+          }
+        }
+      });
+    },
+
+    __getVideo: function (form) {
+      var self = this;
+      var url = $(form).find('input:text').val();
+      var callback = function () {
+        self.destroy();
+        self._trigger('createEditWidget', null, {
+          from: self.options.from,
+          type: 'VIDEO',
           $item: self.widget(),
           url: url
         });
@@ -576,9 +794,6 @@
           self.stateHandler(self.options.description, event);
         })
         .end();
-
-      //移动光标到输入框末尾
-      moveSelection2End(this.widget().find('.WidgetInputBox_Quo')[0]);
     },
 
     /**
@@ -701,9 +916,6 @@
           self.stateHandler(self.options.text, event);
         })
         .end();
-
-      //移动光标到输入框末尾
-      moveSelection2End(this.widget().find('.InputBox')[0]);
     },
 
     /**
@@ -788,9 +1000,6 @@
           self.stateHandler(self.options.title, event);
         })
         .end();
-
-      //移动光标到输入框末尾
-      moveSelection2End(this.widget().find('.InputBox')[0]);
     },
 
     /**
@@ -958,7 +1167,7 @@
     __initMenu: function () {
       var self = this;
       this.widget().delegate('.StaticMenu li>a', 'click', function (event) {
-        self._createEditWidget($(event.target).attr('mtm_type'), {
+        self._createEditWidget($(event.target).data('type'), {
           from: 'STATIC'
         });
       });
@@ -971,7 +1180,7 @@
     __initItems: function () {
       var self = this;
       this.widget().find('.WidgetItemList li').each(function (i, li) {
-        self.__initItemListener($(li), $(li).attr('mtm_type'));
+        self.__initItemListener($(li), $(li).data('type'));
       });
       var prevItem;
       this.options.itemsData.forEach(function (itemData) {
@@ -980,6 +1189,7 @@
     },
 
     __initItemListener: function ($li, type) {
+      console.log('__initItemListener');
       var self = this;
       //绑定插入点击响应
       $li
@@ -1001,8 +1211,8 @@
             type: 'DELETE',
             data: {
               topicId: topicId,
-              type: $li.attr('mtm_type'),
-              itemId: $li.attr('mtm_id')
+              type: $li.data('type'),
+              itemId: $li.data('id')
             }
           });
           $li.css('visibility', 'hidden');
@@ -1027,6 +1237,25 @@
                 url: url,
                 title: title,
                 quote: quote,
+                description: description,
+                $item: $li
+              });
+            })
+            .end();
+          break;
+        case 'VIDEO':
+          //绑定修改点击响应
+          console.log('VIDEO');
+          $li
+            .find('.Btn_Edit')
+            .click(function () {
+              var url = $li.find('.ItemQuote').attr('href');
+              var title = $li.find('.ItemTtl').text();
+              var description = $('<div/>').html($li.find('.ItemDesc').html().replace(/<br>/g, '\n')).text();
+              self._createEditWidget(type, {
+                from: 'EDIT',
+                url: url,
+                title: title,
                 description: description,
                 $item: $li
               });
@@ -1162,8 +1391,8 @@
 
         //编辑中的微件和目标微件:类型相同、来源相同，只需给输入框焦点
         var $editingWidget = self.$editingWidget;
-        if (($editingWidget.attr('mtm_type') == type
-          || $editingWidget.attr('mtm_type') + '_CREATE' == type)
+        if (($editingWidget.data('type') == type
+          || $editingWidget.data('type') + '_CREATE' == type)
           && self.from == from
           && (from == 'STATIC'
           || from == 'DYNAMIC' && self.$editingPrevItem.is($prevItem))) {
@@ -1212,11 +1441,11 @@
         case 'MENU':
           console.log('_createEditWidget MENU');
           $editWidget
-            .attr('mtm_type', type)
+            .data('type', type)
             .insertAfter($prevItem)
             .prepend(self.widget().find('.Templates .DynamicMenu').clone())
             .delegate('li>a', 'click', function (event) {
-              self._createEditWidget($(event.target).attr('mtm_type'), {
+              self._createEditWidget($(event.target).data('type'), {
                 from: 'DYNAMIC',
                 $item: $editWidget
               });
@@ -1238,6 +1467,16 @@
           console.log('_createEditWidget IMAGE');
           $editWidget.imageWidget(options);
           this.callWidgetMethod = $editWidget.imageWidget;
+          break;
+        case 'VIDEO_CREATE':
+          console.log('_createEditWidget VIDEO_CREATE');
+          $editWidget.videoWidgetCreate(options);
+          this.callWidgetMethod = $editWidget.videoWidgetCreate;
+          break;
+        case 'VIDEO':
+          console.log('_createEditWidget VIDEO');
+          $editWidget.videoWidget(options);
+          this.callWidgetMethod = $editWidget.videoWidget;
           break;
         case 'CITE':
           console.log('_createEditWidget CITE');
@@ -1313,8 +1552,8 @@
         .end().end().end()
         .children().first().next().remove().end().end()
         .end()
-        .attr('mtm_type', type)
-        .attr('mtm_id', itemId);
+        .data('type', type)
+        .data('id', itemId);
 
       switch (type) {
         case 'IMAGE':
@@ -1337,6 +1576,44 @@
             .find('.ItemQuote')
             .attr('href', quote)
             .text(urlParts ? urlParts[3] : '')
+            .end()
+            .find('.ItemDesc')
+            .html($('<div/>').text(description).html().replace(/\n/g, '<br>'))
+            .end();
+          break;
+        case 'VIDEO':
+          //填充图片信息
+          var url = data.url;
+          var title = data.title;
+          var description = data.description;
+          var urlParts = url.match(REGEXP_URL);
+          var temp;
+          var quote = !urlParts ? null : !urlParts[3] ? null : !(temp = urlParts[3].match(/^[^\.]+\.(([^\.]+)\.([^\.]+\.)*[^\.]+)$/)) ? null : !temp[1] ? null : temp[1];
+          var videoType = temp[2].toUpperCase();
+          var vid;
+
+          switch (videoType) {
+            case 'YOUKU':
+              vid = !(temp = url) ? '' : !(temp = temp.substring(temp.length - 18, temp.length - 5)) ? '' : temp;
+              break;
+            case 'TUDOU':
+              vid = !(temp = url) ? '#vid#' : !(temp = temp.match(/([^\/]{11})(\/|\.html)$/)) ? '#vid#' : !temp[1] ? '#vid#' : temp[1];
+              break;
+          }
+
+          $item
+            .find('.' + videoType)
+            .attr('src', $item.find('.' + videoType).attr('src').replace('#vid#', vid))
+            .removeAttr('style')
+            .end()
+            .find('.VIDEO_URL')
+            .attr('href', url)
+            .end()
+            .find('.ItemQuote')
+            .text(quote)
+            .end()
+            .find('.ItemTtl')
+            .text(title)
             .end()
             .find('.ItemDesc')
             .html($('<div/>').text(description).html().replace(/\n/g, '<br>'))

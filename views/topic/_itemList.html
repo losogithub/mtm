@@ -1,7 +1,7 @@
 <ul class="WidgetItemList">
   <% for (i in locals.items) { %>
   <% var item = items[i] %>
-  <li mtm_type='<%= item.type %>' mtm_id='<%= item.itemId %>'>
+  <li data-type='<%= item.type %>' data-id='<%= item.itemId %>'>
     <% include _items.html %>
   </li>
   <% } %>

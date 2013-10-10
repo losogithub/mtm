@@ -196,6 +196,17 @@ var _getData = function (req, _id) {
         description: description
       }
       break;
+    case 'VIDEO':
+      var url = sanitize(req.body.url).trim();
+      var title = sanitize(req.body.title).trim();
+      var description = sanitize(req.body.description).trim();
+
+      data = {
+        url: url,
+        title: title,
+        description: description
+      }
+      break;
     case 'CITE':
       var cite = sanitize(req.body.cite).trim();
       var url = sanitize(req.body.url).trim();
@@ -244,6 +255,15 @@ var _getItemData = function (item) {
         url: item.url,
         title: item.title,
         quote: item.quote,
+        description: item.description
+      }
+      break;
+    case 'VIDEO':
+      itemData = {
+        itemId: item._id,
+        type: item.type,
+        url: item.url,
+        title: item.title,
         description: item.description
       }
       break;

@@ -102,7 +102,7 @@ table{border-spacing: 0;height: 100%;}
 .Sub {position: relative;float: right;width: 300px;padding-bottom: 40px;}
 /*条目*/
 .WidgetItemList {padding-bottom: 1px;}
-.WidgetItemList>li{overflow: hidden;background-color: rgb(255, 255, 255);}
+.WidgetItemList>li{overflow: hidden;background-color: rgb(255, 255, 255);word-wrap: break-word;}
 .WidgetItemList>li:hover{background-color: #f8f8f8;}
 .Item{overflow: hidden;}
 .ItemContent{overflow: hidden;}
@@ -120,13 +120,20 @@ table{border-spacing: 0;height: 100%;}
 .IMAGE .ItemTxt{overflow: hidden;}
 .IMAGE .ItemTtl{display: inline-block;margin-bottom: 4px;line-height: 24px;font-weight: bold;font-size: 18px;color: rgb(0, 0, 0);}
 .IMAGE .ItemDesc{line-height: 20px;color: rgb(102, 102, 102);font-size: 14px;}
+.VIDEO_CREATE .WidgetItemThumb {width: 300px;height: 220px;background-position: -305px 0;}
+.VIDEO .WidgetItemThumb {background-position: -305px 0;min-width: 300px;min-height: 220px;}
+.VIDEO .ItemQuoteWrapper{line-height: 14px;margin-top: 3px;color: rgb(170, 170, 170);min-width: 100px;}
+.VIDEO .ItemQuoteHeader{float: left;margin-right: 5px;}
+.VIDEO .ItemQuoteOuter{overflow: hidden;}
+.VIDEO .ItemQuote{color: rgb(170, 170, 170);word-wrap: break-word;}
+.VIDEO .ItemTtl{display: inline-block;margin-top: 8px;line-height: 24px;font-weight: bold;font-size: 18px;color: rgb(0, 0, 0);}
+.VIDEO .ItemDesc{margin-top: 10px;padding-left: 6px;border-left: 2px solid rgb(208, 208, 208);color: rgb(102, 102, 102);font-size: 14px;line-height: 20px;}
 .CITE .ItemCite{line-height: 26px;color: rgb(102, 102, 102);font-weight: bold;font-size: 20px;}
 .CITE .ItemCite span{display: inline-block;width: 20px;height: 17px;background: url("/images/sprite_Widget.png") no-repeat scroll -365px -30px transparent;}
 .CITE .ItemCite q{quotes: none;}
 .CITE .ItemQuote{color: rgb(170, 170, 170);font-size: 11px;line-height: 13px;display: block;margin-top: 7px;}
 .CITE .ItemQuote a{color: rgb(170, 170, 170);}
 .CITE .ItemDesc{margin-top: 10px;padding-left: 6px;border-left: 2px solid rgb(208, 208, 208);color: rgb(102, 102, 102);font-size: 14px;line-height: 20px;}
-.ItemView{word-wrap: break-word;}
 .TEXT .ItemView{line-height: 20px;color: rgb(102, 102, 102);font-size: 14px;}
 .TITLE .ItemView{line-height: 26px;font-size: 20px;font-weight: bold;color: #000000;padding-bottom: 5px;border-bottom: 2px solid #EAECEE;}
 .Btn_Insert {color: rgb(124, 148, 170);line-height: 1}

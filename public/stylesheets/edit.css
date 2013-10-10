@@ -22,12 +22,15 @@
 .Btn_Close {width: 10px;height: 9px;background-position: -55px -170px;}
 .ui-sortable-helper{background-color: rgba(40, 184, 55, 0.2)!important;}
 .WidgetTxt{overflow: hidden;}
-.IMAGE_CREATE .InputBox {float: left;margin-right: 5px;width: 252px;height: 25px;padding-right: 4px;}
+.IMAGE_CREATE .InputBox {float: left;width: 252px;height: 25px;line-height: 23px;padding-right: 4px;}
 .IMAGE .WidgetInputBox_Ttl{height: 30px;font-size: 14px;font-weight: bold;margin-bottom: 7px;}
 .IMAGE .WidgetInputBox_Quo {height: 25px;margin-bottom: 10px;}
 .IMAGE .WidgetInputBox_Desc {min-height: 85px;padding: 5px 5px 0 5px;resize: none;}
-.Btn_Check {float: left;width: 68px;height: 25px;background-position: 0px -90px;}
-.Btn_Check_Disabled {background-position: 0px -120px;}
+.Btn_Check {float: right;width: 68px;height: 25px;background-position: 0px -90px;}
+.Btn_Check_Disabled {background-position: 0 -120px;}
+.VIDEO_CREATE .InputBox{float: left;width: 562px;height: 25px;line-height: 23px;padding-right: 4px;}
+.VIDEO .WidgetInputBox_Ttl{height: 30px;font-size: 14px;font-weight: bold;margin-bottom: 7px;}
+.VIDEO .WidgetInputBox_Desc {min-height: 85px;padding: 5px 5px 0 5px;resize: none;}
 .CITE .WidgetInputBox_Cite{min-height: 95px;padding: 5px 5px 0 0;font-size: 14px;resize: none;margin-bottom: 10px;}
 .CITE .WidgetInputBox_Url{height: 25px;line-height: 23px;margin-bottom: 7px;}
 .CITE .WidgetInputBox_Ttl {height: 25px;margin-bottom: 10px;}
