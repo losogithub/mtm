@@ -7,9 +7,13 @@
  */
 var sanitize = require('validator').sanitize;
 var escape = require('escape-html');
+var iconv = require('iconv-lite');
+var BufferHelper = require('bufferhelper');
 
 var Topic = require('../proxy').Topic;
 var Item = require('../proxy').Item;
+
+var REGEXP_URL = /^((http[s]?|ftp):\/)?\/?((([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]))(:([^\/]*))?(((\/\w+)*\/)([\w\-\.]+[^#?\s]+))?(\?([^#]*))?(#(.*))?$/;
 
 var index = function (req, res, next) {
   var topicId = req.params.topicId;
@@ -333,16 +337,65 @@ var deleteItem = function (req, res, next) {
 }
 
 var publish = function (req, res, next) {
-  var authorId =  req.session.userId;
+  var authorId = req.session.userId;
   var topicId = req.body.topicId;
   var title = req.body.title;
   var coverUrl = req.body.coverUrl;
   var description = req.body.description;
 
-  Topic.publish( authorId,topicId, title, coverUrl, description, function () {
+  Topic.publish(authorId, topicId, title, coverUrl, description, function () {
 
     res.send(200);
   });
+}
+
+var getVideoTitle = function (req, res, next) {
+  var url = req.query.url;
+
+  require('http').get(url, function (response) {
+    var bufferHelper = new BufferHelper();
+    response.on('data', function (chunk) {
+      bufferHelper.concat(chunk);
+    });
+    response.on('end', function () {
+      var temp;
+      var charset = !(temp = response.headers['content-type']) ? '' :
+        !(temp = temp.match(/charset=([^;]+)/i)) ? '' :
+          !temp[1] ? '' : temp[1];
+      console.log(charset);
+      var html = iconv.decode(bufferHelper.toBuffer(), charset);
+      var urlParts = url.match(REGEXP_URL);
+      var domain = !urlParts ? null : urlParts[3];
+      var title;
+      console.log(domain);
+      if (domain && /tudou\.com$/.test(domain)) {
+        console.log('tudou.com');
+        //plan A
+        //,kw: '爆笑恶搞淮秀帮-超强阵容配音坑爹的谣言时代（淮秀帮 出品）-2bzhan.cc'
+        //,kw:"校长 开房找我啊"
+        //,kw: "星映话之《金刚狼2：狼叔来袭》上集"
+        title = (!(temp = html.match(/,kw:\s*('|")(.*)('|")/)) ? null : !temp[2] ? null : temp[2])
+          //plan B1
+          //<h4 class="vcate_title" id="vcate_title"><a href="http://www.tudou.com/albumcover/RHCS8jx9TQo.html" target="_blank">星映话之《金刚狼2：狼叔来袭》上集</a></h4>
+          || (!(temp = html.match(/<h4 class="vcate_title" id="vcate_title"><a(.*)>(.*)<\/a><\/h4>/)) ? null : !temp[2] ? null : temp[2])
+          //plan B2
+          //<h1 class="kw" id="videoKw" title="爆笑恶搞淮秀帮-超强阵容配音坑爹的谣言时代（淮秀帮 出品）-2bzhan.cc">爆笑恶搞淮秀帮-超强阵容配音坑爹的谣言时代（淮秀帮 出品）-2bzhan.cc</h1>
+          || (!(temp = html.match(/<h1 class="kw" id="videoKw"(.*)>(.*)<\/h1>/)) ? null : !temp[2] ? null : temp[2])
+          //plan B3
+          //<span id="vcate_title" class="vcate_title">校长 开房找我啊</span>
+          || (!(temp = html.match(/<span id="vcate_title" class="vcate_title">(.*)<\/span>/)) ? null : !temp[1] ? null : temp[1])
+          //plan C
+          || (!(temp = html.match(/<title>([^_]+)(.*)<\/title>/)) ? null : !temp[1] ? null : temp[1]);
+        console.log(title);
+      }
+      res.json({ title: title});
+    })
+  })
+    //必须处理error，否则抛出异常
+    .on('error', function (err) {
+      console.log(err.message);
+      res.json({ title: null});
+    });
 }
 
 exports.index = index;
@@ -355,3 +408,4 @@ exports.editItem = editItem;
 exports.sort = sort;
 exports.deleteItem = deleteItem;
 exports.publish = publish;
+exports.getVideoTitle = getVideoTitle;

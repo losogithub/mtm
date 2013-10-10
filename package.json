@@ -5,17 +5,18 @@
   "private": true,
 
   "dependencies": {
+    "bufferhelper": "*",
     "eventproxy": "*",
     "express": "*",
     "ejs": "*",
     "escape-html": "*",
     "express-partials": "*",
+    "iconv-lite": "*",
     "mongoose": "*",
     "validator": "*",
     "nodemailer": "*",
     "xss": "*" ,
     "redis": "*",
-    "connect-redis": "*" ,
-    "node-persistent-auth": "*"
+    "connect-redis": "*"
   }
 }

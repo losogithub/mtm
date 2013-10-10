@@ -108,18 +108,18 @@
           console.log('sort');
           data.item.prev().prev().prev();
           //拖动的item是editWidget，不用重排
-          var itemId = data.item.attr('mtm_id');
+          var itemId = data.item.data('id');
           if (!itemId) {
             return;
           }
           //拖动的item放在了editWidget下面，用
-          var prevItemType = data.item.prev().attr('mtm_type');
+          var prevItemType = data.item.prev().data('type');
           if (!prevItemType) {
-            prevItemType = data.item.prev().prev().attr('mtm_type');
+            prevItemType = data.item.prev().prev().data('type');
           }
-          var prevItemId = data.item.prev().attr('mtm_id');
+          var prevItemId = data.item.prev().data('id');
           if (!prevItemId) {
-            prevItemId = data.item.prev().prev().attr('mtm_id');
+            prevItemId = data.item.prev().prev().data('id');
           }
           //拖动改变了列表顺序，通知服务器将item插入他前一个item的后面
           // TODO 安全起见topicId由服务器计算
@@ -127,7 +127,7 @@
             type: 'PUT',
             data: {
               topicId: topicId,
-              type: data.item.attr('mtm_type'),
+              type: data.item.data('type'),
               itemId: itemId,
               prevItemType: prevItemType,
               prevItemId: prevItemId
@@ -152,7 +152,7 @@
       var empty = !this.widget().children().length;
 
       this.widget()
-        .attr('mtm_type', this.type)
+        .data('type', this.type)
         .prepend($('.Templates .Widget').clone())
         .find('.Widget').children().first()
         .after($('.Templates .WidgetContent.' + this.type).clone()).end().end()
@@ -249,7 +249,7 @@
       var self = this;
 
       //如果是新建的就删除dom元素，否则是修改就新建条目dom元素
-      var itemId = this.widget().attr('mtm_id');
+      var itemId = this.widget().data('id');
       if (!itemId) {
         this.widget().css('visibility', 'hidden');
         this.widget().hide('fast', function () {
@@ -282,7 +282,7 @@
 
       //如果是修改则传itemId，否则是新建则传prevId
       var data = this._getCommitData();
-      var itemId = this.widget().attr('mtm_id');
+      var itemId = this.widget().data('id');
       if (itemId) {
         $.ajax('/topic/edititem', {
           type: 'PUT',
@@ -292,8 +292,8 @@
           }, data)
         }).done(doneCallback);
       } else {
-        var prevItemType = this.widget().prev().attr('mtm_type');
-        var prevItemId = this.widget().prev().attr('mtm_id');
+        var prevItemType = this.widget().prev().data('type');
+        var prevItemId = this.widget().prev().data('id');
         $.post('/topic/createitem', $.extend({
             topicId: topicId,
             prevItemType: prevItemType,
@@ -560,17 +560,6 @@
           break;
       }
 
-      $.get('http://v.youku.com/v_show/id_XNjE5MjEwNTI0.html')
-        .always(function () {
-          console.log('always');
-        })
-        .done(function () {
-          console.log('done');
-        })
-        .fail(function (err) {
-          console.log('fail'+err);
-        });
-
       //填充视频、填充文本
       this.widget()
         .find('.' + type)
@@ -698,7 +687,8 @@
      */
     __initFormValidation: function () {
       var self = this;
-      this.widget().find('form').validate({
+      this.widget().find('form')
+        .validate({
         debug: false,
         ignore: "",
         onkeyup: false,
@@ -730,18 +720,19 @@
     __getVideo: function (form) {
       var self = this;
       var url = $(form).find('input:text').val();
-      var callback = function () {
+
+      var callback = function (data) {
         self.destroy();
         self._trigger('createEditWidget', null, {
           from: self.options.from,
           type: 'VIDEO',
           $item: self.widget(),
-          url: url
+          url: url,
+          title: data.title
         });
         self._trigger("setState", null, "edit");
       };
-//      checkDupl(oData, callback);
-      callback();
+      $.getJSON('/topic/video_title', { url: url }, callback);
     }
 
   });
@@ -1391,6 +1382,7 @@
 
         //编辑中的微件和目标微件:类型相同、来源相同，只需给输入框焦点
         var $editingWidget = self.$editingWidget;
+        console.log($editingWidget.data('type'));
         if (($editingWidget.data('type') == type
           || $editingWidget.data('type') + '_CREATE' == type)
           && self.from == from

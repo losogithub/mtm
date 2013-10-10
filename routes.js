@@ -22,6 +22,7 @@ module.exports = function (app) {
   app.get('/topic/create', auth.loadUser, auth.loginRequired , topic.create);
   app.get('/topic/getid', topic.getId);
   app.get('/topic/getcontents', topic.getContents);
+  app.get('/topic/video_title', topic.getVideoTitle);
   app.get('/topic/:topicId', auth.loadUser, topic.index);
   app.get('/topic/:topicId/edit', auth.loadUser, topic.edit);
   app.post('/topic/createitem', topic.createItem);
