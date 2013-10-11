@@ -1,0 +1,75 @@
+<!--[[HEADER-AREA]]-->
+<header><div class="LyHead02">
+  <div class="lyHead02Inner MdCF">
+
+    <hgroup role="banner">
+      <h1 class="MdGnbTtl01"><a href="/">MTM</a></h1>
+      <h2 class="MdGnbTtl02"><span>MTM Account</span></h2>
+    </hgroup>
+
+    <nav role="navigation"><ul class="MdGnbUtil02">
+
+      <li class="mdGnbUtil02Li"><a href="/">MTM China</a></li>
+      <!--/MdGnbUtil02--></ul></nav>
+
+    <!--/lyHead02Inner--></div>
+  <!--/LyHead02--></div></header>
+<!--[[/HEADER-AREA]]-->
+
+<!--contents-->
+
+<!--[[CONTENTS-AREA]]-->
+<div class="LyContents02">
+  <div class="ArMain01">
+    <form method="post" action="/account" id="_registForm" onsubmit="return validatePass()">
+      <input type="hidden" name="fromUrl" id="fromUrl" value="/accountVerify">
+      <input type="hidden" name="username" value="<%= username%>" id="_username">
+
+
+
+      <h2 class="MdTtl01">密码确认</h2>
+      <div class="MdTxtWrap01">
+        <p class="MdTxt01">为了您的账户安全，请再次登录。</p>
+        <!--/MdTxtWrap01--></div>
+      <div class="MdSting02">
+        <table>
+          <tbody>
+          <tr class="firstChild">
+            <th class="mdSting02Th04">用户名</th>
+            <td class="mdSting02Td04"><span class="MdTxt02"><%= username %></span></td>
+          </tr>
+          <tr class="lastChild">
+            <th class="mdSting02Th04">密码</th>
+            <td class="mdSting02Td04"><span class="MdInput01"><input class="mdInput01Input mdInput01Active" type="password" id="_passwd" name="password" maxlength="20"><span class="mdInput01Corner01"></span><span class="mdInput01Corner02"></span><span class="mdInput01Corner03"></span><span class="mdInput01Corner04"></span></span>
+              <span class="MdErr01"><%= locals.errMsg ? locals.errMsg : ''%></span>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        <!--/MdSting02--></div>
+      <p class="MdSubmit01"><input class="mdSubmit01Input05" type="submit" value="登录"></p>
+    </form>
+    <span class="arMain01Corner01"></span>
+    <span class="arMain01Corner02"></span>
+    <span class="arMain01Corner03"></span>
+    <span class="arMain01Corner04"></span>
+    <!--/ArMain01--></div>
+  <!--//contents-->
+  <script>
+    $().ready(function(){
+      init();
+      new nj.account.initMailChangeForm();
+    });
+    function validatePass(){
+      var password = $("#_passwd").val();
+      if(!password){
+        $('span[class="MdErr01"]').text('请输入密码');
+        return false;
+      }
+    }
+      function init(){
+      $("#_passwd").attr('disabled', '');
+    }
+    </script>
+
+</div>

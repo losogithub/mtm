@@ -5,10 +5,16 @@
  * Time: 11:16 PM
  * To change this template use File | Settings | File Templates.
  */
+var check = require('validator').check,
+  sanitize = require('validator').sanitize;
+
+var encryp = require('../helper/encryp');
 
 var User = require('../proxy').User;
 var Topic = require('../proxy').Topic;
 var config = require('../config');
+var LoginToken = require('../proxy').LoginToken;
+
 
 var showWorks = function (req, res, next) {
 
@@ -236,7 +242,356 @@ var updateSettings = function(req, res){
 
 
 
+var showConfirmPassword = function(req, res){
+  res.render('personal/accountVerify', {
+    title: config.name,
+    metaHead: '',
+    css: '',
+    js: [
+      'javascripts/account/account_common.js'
+    ],
+    layout: 'signLayout'
+  })
+}
 
+
+/*
+  When user want to change his/her personal information.
+  login first.
+ */
+ var passwordVerify = function(req, res){
+   //user name alos unique
+   var username = sanitize(req.body.username).trim().toLowerCase();
+   var pass = sanitize(req.body.password).trim();
+   //console.log(req.body);
+   console.log("name: %s", username);
+   console.log("pass: %s", pass);
+   res.locals.username = username;
+   User.getUserByLoginName(username, function(err, user){
+     if(err){
+       console.log("cannot find user by name: %s", username);
+     }
+     else if(!user){
+       console.log("null user");
+       //but this shall not happen.
+       //how to do ?
+       res.render('personal/accountVerify', {
+         title: config.name,
+         metaHead: '',
+         css: '',
+         js: [
+           'javascripts/account/account_common.js'
+         ],
+         errMsg: '找不到该用户',
+         layout: 'signLayout'
+       })
+
+     }
+     else{
+       //check the password
+       //need md5 function
+       console.log("check password");
+
+       if (encryp.md5(pass) !== user.password){
+         //wrong password
+         console.log("wrong password");
+         //res.locals.errMsg =  '密码不正确';
+         return res.render('personal/accountVerify', {
+           title: config.name,
+           metaHead: '',
+           css: '',
+           js: [
+             'javascripts/account/account_common.js'
+           ],
+           errMsg: '密码不正确',
+           layout: 'signLayout'
+         })
+       }
+       else {
+         //correct password
+         //redirect to other page: account private information setting.
+         //here why redirect to login page ???
+         var date = new Date(Date.now()).getTime().toString();
+         console.log("current time: ");
+         console.log(date);
+         var auth = encryp.encrypt(date, 'mtm');
+         return res.redirect('/accountModify?auth=' + auth);
+       }
+
+     }
+   })
+
+ }
+
+/*
+* show the account private info page.
+* */
+var showAccountModify = function(req, res){
+
+  console.log("show AccountModify page");
+  console.log(req.query);
+  //check how long after login
+  var auth = req.query.auth.toString();
+
+  timeSpanCheck(auth, req, res);
+
+  console.log(req.session.userId);
+  User.getUserById(req.session.userId, function(err, user){
+     if(err){
+       console.log("err in showAccountModify");
+     } else if (!user){
+       console.log("cannot find user By Id: %s", req.session.userId);
+     } else {
+
+       //get user gender;
+       var genderTypeCd = user.gender;
+       var fChecked = '';
+       var mChecked = '';
+       var uChecked = '';
+       if(genderTypeCd == 'F'){ fChecked = 'checked';}
+       else if(genderTypeCd == 'M'){ mChecked = 'checked';}
+       else if(genderTypeCd == 'U'){uChecked = 'checked';}
+       else {fChecked = 'checked';}
+
+       return res.render('personal/privateInfoSetting', {
+         title: config.name,
+         metaHead: '',
+         css: '',
+         js: [
+           'javascripts/account/account_common.js'
+         ],
+         layout: 'signLayout',
+         fChecked: fChecked,
+         mChecked: mChecked,
+         uChecked: uChecked,
+         auth: auth
+       })
+
+     }
+  });
+}
+
+
+var timeSpanCheck = function(auth, req, res){
+  var loginTime = encryp.decrypt(auth, 'mtm');
+  console.log("time stamp: %s", loginTime);
+  var timeNow = new Date().getTime();
+  if(timeNow - loginTime > 1*60*1000) //15 minutes
+  {
+    console.log("timeNow: %s", timeNow);
+    console.log("need re-login");
+    var auth = encryp.encrypt(timeNow.toString(), 'mtm');
+    //clear everything ? yes in case you change your password
+
+    if (req.session) {
+
+      User.getUserById(req.session.userId, function(err, user){
+        if(err){
+          console.log("err");
+        }
+        else if(!user){
+          console.log("cannot find user by ID: %s", req.session.userId);
+        }
+        else {
+          //combine email and series to make sure only only clear from on computer.
+          LoginToken.removeAll(user.email);
+
+        }
+      })
+      console.log("logout: session userId: %s", req.session.userId);
+      req.session.destroy(function () { });
+    }
+
+    res.clearCookie('logintoken');
+    var url = '/login?fromUrl=/accountModify?auth=' + auth;
+    console.log(url);
+    return res.redirect(url);
+  }
+}
+
+
+/**
+ * update account private information page.
+ *
+ */
+var accountModify = function(req, res){
+
+  console.log(req.body);
+  var auth = req.body.auth.toString();
+  timeSpanCheck(auth, req, res);
+
+  console.log("accountModify");
+  //console.log(req.body);
+  //do password check then store in the db.
+  //show update notification.
+  var newPassword =req.body.newPassword;
+  var newPasswordConfirm = req.body.newPasswordConfirm;
+  var genderTypeCd = req.body.genderTypeCd;
+  var birthYear = req.body.birthYear;
+
+  //gender selection
+  var fChecked = '';
+  var mChecked = '';
+  var uChecked = '';
+  if(genderTypeCd == 'F'){ fChecked = 'checked';}
+  else if(genderTypeCd == 'M'){ mChecked = 'checked';}
+  else if(genderTypeCd == 'U'){uChecked = 'checked';}
+
+//at least one is not empty
+// e ne
+// ne e
+// ne ne
+if( newPassword || newPasswordConfirm)
+{
+  //empty and not empty
+  if((!newPassword) && newPasswordConfirm){
+    var infoMsg = "请输入密码";
+
+    return res.render('personal/privateInfoNotify', {
+      title: config.name,
+      metaHead: '',
+      css: '',
+      js: [
+        'javascripts/account/account_common.js'
+      ],
+      layout: 'signLayout',
+      infoMsg: infoMsg,
+      fChecked: fChecked,
+      mChecked: mChecked,
+      uChecked: uChecked,
+      auth : auth
+    })
+  }
+
+  // first not empty. check length.
+ else if( newPassword.length < 6 || newPassword > 20){
+    var infoMsg = "密码长度介于6-20位数之间";
+
+    return res.render('personal/privateInfoNotify', {
+      title: config.name,
+      metaHead: '',
+      css: '',
+      js: [
+        'javascripts/account/account_common.js'
+      ],
+      layout: 'signLayout',
+      infoMsg: infoMsg,
+      fChecked: fChecked,
+      mChecked: mChecked,
+      uChecked: uChecked,
+      auth: auth
+    })
+  }
+
+  // check equal
+  else if(newPassword !== newPasswordConfirm){
+    var infoMsg = "两次密码不一样";
+
+    return res.render('personal/privateInfoNotify', {
+      title: config.name,
+      metaHead: '',
+      css: '',
+      js: [
+        'javascripts/account/account_common.js'
+      ],
+      layout: 'signLayout',
+      infoMsg: infoMsg,
+      fChecked: fChecked,
+      mChecked: mChecked,
+      uChecked: uChecked,
+      auth: auth
+    })
+  }
+}
+
+
+  //Finally, update user info in DB.
+  //console.log(req.session.userId);
+  User.getUserById(req.session.userId, function(err, user){
+    if(err){
+      console.log("err happened");
+    }else
+    if(!user){
+      console.log("cannot find user by Id: %s", req.session.userId);
+    }else
+    {
+      var uPFlag = false;
+      var uGFlag = false;
+      var uYFlag = false;
+
+      //password updated
+      if(newPassword){
+        console.log("newpass: %s", newPassword);
+        uPFlag = true;
+        user.password = encryp.md5(newPassword);
+      }
+      //gender updated
+     if(user.gender !== genderTypeCd){
+       uGFlag = true;
+       user.gender = genderTypeCd;
+     }
+      //birthday updated
+     if(user.birthday !== birthYear){
+       uYFlag = true;
+       user.birthday = birthYear;
+     }
+
+      console.log(user);
+
+      if( (!uPFlag) && (!uYFlag) && (!uGFlag)){
+        //nothing is updated
+        return res.render('personal/privateInfoSetting', {
+          title: config.name,
+          metaHead: '',
+          css: '',
+          js: [
+            'javascripts/account/account_common.js'
+          ],
+          layout: 'signLayout',
+          fChecked: fChecked,
+          mChecked: mChecked,
+          uChecked: uChecked,
+          auth: auth
+        })
+      }
+
+        //save
+      user.save(function(err){
+        if(err){
+          console.log("save user infor err. userId: %s", req.session.userId);
+        } else{
+          console.log("update user info success");
+          var infoMsg = '';
+
+          //this contain 3 true case
+          if((uPFlag && uGFlag) || (uPFlag && uYFlag) || (uGFlag && uYFlag) || uGFlag || uYFlag){
+            infoMsg ='个人信息更新成功';
+          }
+          else if(uPFlag){
+            infoMsg ='密码更新成功';
+          }
+
+          return res.render('personal/privateInfoNotify', {
+             title: config.name,
+             metaHead: '',
+             css: '',
+             js: [
+               'javascripts/account/account_common.js'
+             ],
+             layout: 'signLayout',
+             infoMsg: infoMsg,
+             fChecked: fChecked,
+             mChecked: mChecked,
+            uChecked: uChecked,
+            auth: auth
+          })
+
+        }
+      })
+    }
+  })
+
+}
 
 
 
@@ -263,3 +618,7 @@ exports.showWorks = showWorks;
 exports.showFavourite = showFavourite;
 exports.showSettings = showSettings;
 exports.updateSettings = updateSettings;
+exports.showConfirmPassword = showConfirmPassword;
+exports.passwordVerify = passwordVerify;
+exports.showAccountModify = showAccountModify;
+exports.accountModify = accountModify;

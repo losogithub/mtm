@@ -36,8 +36,18 @@ var remove = function(email, series){
     }
   });
 }
+
+var removeAll = function(email){
+  LoginToken.remove({email: email}, function(err){
+    if (err){
+      console.log("cannot find user email from LoginToken.");
+    }
+  });
+}
+
 exports.save = save;
 exports.randomToken = randomToken;
 exports.find = find;
 exports.remove = remove;
 exports.findByEmailAndSeries = findByEmailAndSeries;
+exports.removeAll = removeAll;

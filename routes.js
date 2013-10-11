@@ -53,6 +53,14 @@ module.exports = function (app) {
   app.get('/favourites', auth.loadUser, personal.showFavourite);
   app.get('/settings', auth.loadUser, auth.loginRequired, personal.showSettings);
   app.post('/settings', auth.loadUser, personal.updateSettings); //yes, otherwise update whose info
+  app.get('/account', auth.loadUser, auth.loginRequired, personal.showConfirmPassword);
+  app.post('/account', personal.passwordVerify);
+
+  //eventhough logged in, still check
+  //at the same time, get username from db.
+  app.get('/accountModify',auth.loadUser, auth.loginRequired , personal.showAccountModify);
+  //think more later.
+  app.post('/accountModify', auth.loadUser, auth.loginRequired, personal.accountModify);
 
   //todo
   //app.get('/notifications', personal)

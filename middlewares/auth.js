@@ -22,7 +22,7 @@ var loginRequired = function (req, res, next) {
   console.log("loginReferer: %s", req.session._loginReferer);
   //if not login, then redirect to login page.
   if ((!req.session) || (!req.session.userId) || (req.session.userId == 'undefined')) {
-    res.redirect('/login?fromUrl=' + req.url);
+    return res.redirect('/login?fromUrl=' + req.url);
   } else {
     next();
   }

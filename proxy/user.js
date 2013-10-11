@@ -29,6 +29,9 @@ var getUserByLoginName = function (loginName, callback) {
  * @param {String} name 用户名
  * @param {Function} callback 回调函数
  */
+  //deprecated
+//not use this one.
+  //use LoginName
 var getUserByName = function (name, callback) {
   User.findOne({name: name}, callback);
 };

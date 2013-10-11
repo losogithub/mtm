@@ -8,7 +8,7 @@
 var check = require('validator').check,
   sanitize = require('validator').sanitize;
 
-var crypto = require('crypto');
+var encryp = require('../helper/encryp');
 var config = require('../config');
 
 
@@ -97,7 +97,7 @@ var signup = function (req, res, next) {
   }
 
   if (nFlag) {
-    User.getUserByName(loginname, function (err, user) {
+    User.getUserByLoginName(loginname, function (err, user) {
       if (err) {
         return next(err);
       }
@@ -137,14 +137,14 @@ var signup = function (req, res, next) {
 
             // success
             // md5 the pass
-            pass = md5(pass);
+            pass = encryp.md5(pass);
 
             User.newAndSave(name, loginname, pass, email, false, function (err) {
               if (err) {
                 return next(err);
               }
               // 发送激活邮件
-              mail.sendActiveMail(email, md5(email + config.session_secret), name, email);
+              mail.sendActiveMail(email, encryp.md5(email + config.session_secret), name, email);
               res.render('sign/success_signup', {
                 title: config.name,
                 emailAddress: email,
@@ -206,13 +206,13 @@ var signup = function (req, res, next) {
 
             // success
             // md5 the pass
-            pass = md5(pass);
+            pass = encryp.md5(pass);
             User.newAndSave(name, loginname, pass, email, false, function (err) {
               if (err) {
                 return next(err);
               }
               // 发送激活邮件
-              mail.sendActiveMail(email, md5(email + config.session_secret), name, email);
+              mail.sendActiveMail(email, encryp.md5(email + config.session_secret), name, email);
               res.render('sign/success_signup', {
                 title: config.name,
                 emailAddress: email,
@@ -318,6 +318,7 @@ var showLogin = function (req, res) {
         break;
       }
     }
+
     return res.redirect(refer);
   }
   else {
@@ -371,7 +372,7 @@ var login = function (req, res, next) {
   // check loginname is a user id or an email address
   var emailIDFlag = true;
   if (loginname.indexOf('@') == -1) { //todo: check email is not correct !!
-    emailIDFlag = true;
+    emailIDFlag = false;
     User.getUserByLoginName(loginname, function (err, user) {
       if (err) {
         return next(err);
@@ -389,11 +390,11 @@ var login = function (req, res, next) {
         return;
       }
 
-      checkOnlyPassword(pass, autoLogin, user, req, res);
+      checkOnlyPassword(emailIDFlag, pass, autoLogin, user, req, res);
 
     })
   } else {
-    emailIDFlag = false;
+    emailIDFlag = true;
     User.getUserByMail(loginname, function (err, user) {
       if (err) {
         return next(err);
@@ -411,7 +412,7 @@ var login = function (req, res, next) {
         });
         return;
       } // user if
-      checkOnlyPassword(pass, autoLogin, user, req, res);
+      checkOnlyPassword(emailIDFlag, pass, autoLogin, user, req, res);
     })
 
   }
@@ -419,9 +420,13 @@ var login = function (req, res, next) {
 
 
 //suppose the username id, or email address exists, now check the password:
-function checkOnlyPassword(pass, autoLogin, user, req, res) {
+function checkOnlyPassword(emailIDFlag , pass, autoLogin, user, req, res) {
   console.log("function: checkonly password");
-  pass = md5(pass);
+  pass = encryp.md5(pass);
+  var email = user.email;
+  if(!emailIDFlag){
+      email = user.username;
+  }
   if (pass !== user.password) {
     res.render('sign/login', {
       title: config.name,
@@ -429,7 +434,7 @@ function checkOnlyPassword(pass, autoLogin, user, req, res) {
       css: '',
       js: '',
       errMsg: '<p class="MdMsgError01">wrong password.</p>',
-      email: user.loginName,
+      email: email,
       password: '',       // let password be empty
       layout: 'signLayout'
     });
@@ -437,13 +442,13 @@ function checkOnlyPassword(pass, autoLogin, user, req, res) {
   }
   if (!user.active) {
     // 从新发送激活邮件
-    mail.sendActiveMail(user.email, md5(user.email + config.session_secret), user.name, user.email);
+    mail.sendActiveMail(user.email, encryp.md5(user.email + config.session_secret), user.name, user.email);
     return res.render('sign/activeAccount', {
       title: config.name,
       metaHead: '',
       css: '',
       js: '',
-      email: user.loginName,
+      email: email,
       //password: '',       // let password be empty
       layout: 'signLayout'
     });
@@ -461,7 +466,7 @@ function checkOnlyPassword(pass, autoLogin, user, req, res) {
     });
   }
 
-  var refer = req.session._loginReferer;
+  var refer = req.session._loginReferer || 'home';
   console.log("loginReferer");
   console.log(req.session._loginReferer);
 
@@ -562,7 +567,7 @@ var forgetPassword = function (req, res, next) {
     }
     else {
       // 动态生成retrive_key和timestamp到users collection,之后重置密码进行验证
-      var retrieveKey = randomString(15);
+      var retrieveKey = encryp.randomString(15);
       user.retrieve_key = retrieveKey;
       user.retrieve_time = new Date().getTime();
       user.save(function (err) {
@@ -657,7 +662,7 @@ var resetPassword = function (req, res, next) {
       errMsg: '密码不能为空'
     });
   }
-  if (psw.length < 4) {
+  if (psw.length < 6) {
     return res.render('sign/resetPassword', {
       title: config.name,
       metaHead: '',
@@ -666,7 +671,7 @@ var resetPassword = function (req, res, next) {
       layout: 'signLayout',
       key: key,
       email: email,
-      errMsg: '密码不能少于4位'
+      errMsg: '密码不能少于6位'
     });
   }
 
@@ -688,7 +693,9 @@ var resetPassword = function (req, res, next) {
           layout: 'signLayout'
         });
     }
-    user.pass = md5(psw);
+    console.log(encryp.md5(psw));
+    //bug fixed: 10.11.2013. user.pass
+    user.password = encryp.md5(psw);
     user.retrieve_key = null;
     user.retrieve_time = null;
     user.active = true; // 用户激活   //But if previously is false. now active. right ! correct.
@@ -696,6 +703,7 @@ var resetPassword = function (req, res, next) {
       if (err) {
         return next(err);
       }
+
       return res.render('sign/resetPasswordSuccess', {
         title: config.name,
         metaHead: '',
@@ -716,7 +724,7 @@ var activeAccount = function (req, res, next) {
     if (err) {
       return next(err);
     }
-    if (!user || md5(user.email + config.session_secret) !== key || user.active) {
+    if (!user || encryp.md5(user.email + config.session_secret) !== key || user.active) {
       return res.render('sign/resetPasswordSuccess', {
         title: config.name,
         metaHead: '',
@@ -745,45 +753,13 @@ var activeAccount = function (req, res, next) {
 // private
 function gen_session(user, res) {
   console.log("gen_session");
-  var auth_token = encrypt(user._id + '\t' + user.name + '\t' + user.pass + '\t' + user.email, config.session_secret);
+  var auth_token = encryp.encrypt(user._id + '\t' + user.name + '\t' + user.pass + '\t' + user.email, config.session_secret);
   //console.log(auth_token);
   res.cookie(config.auth_cookie_name, auth_token, {path: '/', maxAge: 1000 * 60 * 60}); //cookie 有效期1 hour
   //todo: this one not work
   console.log(res.cookie);
 }
 
-function encrypt(str, secret) {
-  var cipher = crypto.createCipher('aes192', secret);
-  var enc = cipher.update(str, 'utf8', 'hex');
-  enc += cipher.final('hex');
-  return enc;
-}
-
-function decrypt(str, secret) {
-  var decipher = crypto.createDecipher('aes192', secret);
-  var dec = decipher.update(str, 'hex', 'utf8');
-  dec += decipher.final('utf8');
-  return dec;
-}
-
-function md5(str) {
-  var md5sum = crypto.createHash('md5');
-  md5sum.update(str);
-  str = md5sum.digest('hex');
-  return str;
-}
-
-function randomString(size) {
-  size = size || 6;
-  var code_string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  var max_num = code_string.length + 1;
-  var new_pass = '';
-  while (size > 0) {
-    new_pass += code_string.charAt(Math.floor(Math.random() * max_num));
-    size--;
-  }
-  return new_pass;
-}
 
 exports.showSignUp = showSignUp;
 exports.signup = signup;

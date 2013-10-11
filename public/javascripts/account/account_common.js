@@ -1805,54 +1805,19 @@ if (typeof nj.account == "undefined") nj.account = {};
 		}
 	});
 })(jQuery);
+
 /**
- * アカウント情報変更ページ
- * https://ssl.naver.jp/account
+ *  private personal information change
+ *  including set a new-password, birhtday, gender.
  **/
 (function($){
 	nj.account.initAccountInfoChangeForm = function(){
-		this.setSelectMenu();
-		this.setConfirmMail();
 		this.setPasswdCheckConfirm("mdSting01Err02");
 		this.setFocusEvent();
 		this.setBlurEvent();
 		this.setSubmitEvent();
 	}
 	$.extend(nj.account.initAccountInfoChangeForm.prototype, nj.account.validate.prototype, {
-		setConfirmMail : function(){
-			var self = this;
-			$("a.mdMailCheck01Btn01").njConfirmMail({
-				url       : "/api/certifyMail",
-				onSuccess : function(data, dataType){
-					// 成功時
-					if(data.result.status == "W"){
-						$("P.MdMailCheck01").html(self.resend.send);
-					}else{
-						$("P.MdMailCheck01").html(self.resend.error);
-					}
-				},
-				onError : function(XMLHttpRequest, textStatus, errorThrown){
-					$("P.MdMailCheck01").html(self.resend.error);
-				}
-			});		
-		},
-		setSelectMenu : function(){
-			$("#_careerSelect").selectmenu({
-				style: 'dropdown',
-				width: '146px',
-				open : function(){
-					if($.browser.mozilla){
-						$("UL.ui-selectmenu-menu").css("margin", "1px");
-					}
-				},
-				close: function(){
-					if($.browser.mozilla){
-						$("UL.ui-selectmenu-menu").css("margin", "0px");
-					}
-				}
-			});	
-			$('.MdSelect01').css({'position':'relative'});
-		},
 		setSubmitEvent : function(){
 			$("#_registForm").submit(function(){
 				// submit時パスワードがエラーの場合、クリアする
