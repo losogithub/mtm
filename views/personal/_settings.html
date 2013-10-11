@@ -10,21 +10,25 @@
 
   <div class="Separator"></div>
 
-  <form class="SettingsForm">
+  <form class="SettingsForm" action="/settings" method="post" >
+    <input type="hidden" name="fromUrl" value="/settings" />
     <fieldset>
       <legend class="Hide">个人简介设置</legend>
       <ul>
         <li>
           <h3>头像</h3>
           <div class="PersonalThumbWrapper">
-            <img width="120" height="120" class="PersonalThumb" src="/images/no_img/user_120x120.png">
+            <img width="120" height="120" class="PersonalThumb" id="setImage"
+                 src="<%= locals.imageUrl ? locals.imageUrl : '/images/no_img/user_120x120.png' %>">
+
           </div>
 
           <div style="overflow: hidden;">
             <input class="InputBox InputBoxUrl" type="text" name="url" placeholder="输入图片URL">
+                   <!-- value="<%- locals.imageUrl ? locals.imageUrl : '' %>" > -->
 
             <div class="WidgetButton">
-              <button class="Btn Btn_Save" type="button">保存</button>
+              <button class="Btn Btn_Save" type="button">预览</button>
             </div>
           </div>
         </li>
@@ -32,7 +36,7 @@
           <h3>自我介绍</h3>
 
           <div style="overflow: hidden;">
-            <textarea class="InputBox InputBox_Introduce" placeholder="请填写您的自我介绍"></textarea>
+            <textarea class="InputBox InputBox_Introduce" placeholder="请填写您的自我介绍"><%= description %></textarea>
           </div>
           <div style="position: relative;">
             <p class="IntroduceCount"><span>0</span>/100</p>
@@ -42,7 +46,9 @@
           <h3>个人主页</h3>
 
           <div style="overflow: hidden;">
-            <input class="InputBox InputBox_Homepage" type="text" size="100" placeholder="请填写您的网站或者个人博客地址">
+            <input class="InputBox InputBox_Homepage" type="text" size="100" placeholder="请填写您的网站或者个人博客地址"
+                   value="<%- locals.connectUrl ? locals.connectUrl : '' %>"
+              >
           </div>
         </li>
         <li>

@@ -115,12 +115,15 @@ var appendTopic = function (id, topicId, callback) {
       }
       user.topics.push(topicId);
       user.topicCount++;
-      user.save();
+      user.save(function(err){
+        console.log("appendTopic save err");
+      });
       if (callback) //typeof function
         callback(user);
     }
   })
 }
+
 
 
 exports.getUserById = getUserById;

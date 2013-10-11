@@ -55,6 +55,8 @@ var loadUser = function (req, res, next) {
       if (user) {
         req.currentUser = user; //check whether currentUser is the same with this Id.
         res.locals.username = user.loginName; // used in html template to judefy and display uername
+        //added 10.11 2013
+        res.locals.imageUrl = user.url;
         next();
       } else {
         //check fail: not login. user cookie contain session id, but not correct.
@@ -142,6 +144,8 @@ var authenticateFromLoginToken = function (req, res, next) {
 
               //used in html template to judgfy and display user name.
               res.locals.username = user.loginName;
+              //added 10.11 2013
+              res.locals.imageUrl = user.url;
               //update the token
               token.token = LoginToken.randomToken();
               token.save(function () {

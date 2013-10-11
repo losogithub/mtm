@@ -15,7 +15,6 @@
     "nodemailer": "*",
     "xss": "*" ,
     "redis": "*",
-    "connect-redis": "*" ,
-    "node-persistent-auth": "*"
+    "connect-redis": "*"
   }
 }

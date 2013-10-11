@@ -20,20 +20,3 @@ $(function ($) {
 });
 
 
-/*
-  works page, sort by crete date, update date ...
-  */
-
-$(function($){
-  $(".MainTblSortSub a[data-value='c']")
-    .click(function(){
-      var order = $.data('order');
-      if  (order == 'a') {
-        $.ajax({
-          type: 'get',
-          url: '/works',
-          success: function(){}
-        })
-      }
-    })
-})

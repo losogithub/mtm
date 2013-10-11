@@ -149,9 +149,97 @@ var renderWorks = function(user, topicsInfos, isSelectC, isSelectU, isSelectP, i
     createV: createV,
     updateV: updateV,
     pageViewV: pageViewV,
-    rateV: rateV
+    rateV: rateV,
+    imageUrl: user.url
   });
 }
+
+
+
+
+var showSettings = function (req, res) {
+  console.log('render settings  page');
+
+  var userId = req.session.userId;
+  User.getUserById(userId, function (err, user) {
+    console.log(user);
+    var description = user.description;
+    if(!description || description == 'undefined'){
+      description = '';
+    }
+    res.render('personal/index', {
+      title: config.name,
+      css: [
+        '/stylesheets/personal.css'
+      ],
+      js: [
+        '/javascripts/personalAccountManage/setting.js'
+      ],
+      pageType: 'PERSONAL',
+      personalType: 'SETTINGS',
+      username: user.loginName,
+      favourite: user.favourite,
+      topicsCount: user.topicCount,
+      topicsPageView: user.pageviewCount,
+      imageUrl: user.url,
+      description: description,
+      connectUrl: user.personalSite,
+      imageUrl: user.url
+    });
+  });
+}
+
+var updateSettings = function(req, res){
+  console.log("update Settings");
+  var imageUrl = req.body.imageUrl;
+  var description = req.body.description;
+  var connectUrl = req.body.connectUrl;
+  //console.log(imageUrl);
+  //console.log(description);
+  //console.log(connectUrl);
+  //console.log(req.session.userId);
+  var userId = req.session.userId;
+
+  User.getUserById(userId, function(err, user){
+     if(err){
+       console.log("cannot find userid: %s", userId);
+     }
+    if(!user){
+      console.log("err cannot find user");
+    } else {
+      if(imageUrl){user.url = imageUrl;}
+      if(description) {user.description = description;}
+      if(connectUrl){
+        user.personalSite = connectUrl;
+      }
+
+      //console.log(user);
+
+      user.save(function(err){
+        if(err){
+        console.log("save user info err in updateUser Info.");
+        console.log(err);
+        return;
+        }
+      });
+      res.header('Access-Control-Allow-Credentials', 'true')
+      res.contentType('json');
+      //res.writeHead(200);
+      res.send({success:  JSON.stringify("success") });
+    }
+  })
+
+  return ;
+}
+
+
+
+
+
+
+
+
+
 
 
 var showFavourite = function (req, res) {
@@ -171,32 +259,7 @@ var showFavourite = function (req, res) {
   }
 
 }
-
-var showSettings = function (req, res) {
-  if(req.session && req.session.userId && req.session.userId !== 'undefined'){
-    console.log('render settings  page');
-    var userId = req.session.userId;
-    User.getUserById(userId, function (err, user) {
-      res.render('personal/index', {
-        title: config.name,
-        css: [
-          '/stylesheets/personal.css'
-        ],
-        js: '',
-        pageType: 'PERSONAL',
-        personalType: 'SETTINGS',
-        username: user.loginName,
-        favourite: user.favourite,
-        topicsCount: user.topicCount,
-        topicsPageView: user.pageviewCount
-      });
-    });
-  } else {
-    return res.redirect('/home');
-  }
-}
-
-
 exports.showWorks = showWorks;
 exports.showFavourite = showFavourite;
 exports.showSettings = showSettings;
+exports.updateSettings = updateSettings;

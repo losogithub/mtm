@@ -50,8 +50,8 @@ module.exports = function (app) {
   //app.get('/u/:id', auth.loadUser, personal.showPersonal);
   app.get('/works', auth.loadUser, auth.loginRequired, personal.showWorks);
   app.get('/favourites', auth.loadUser, personal.showFavourite);
-  app.get('/settings', auth.loadUser, personal.showSettings);
-
+  app.get('/settings', auth.loadUser, auth.loginRequired, personal.showSettings);
+  app.post('/settings', auth.loadUser, personal.updateSettings); //yes, otherwise update whose info
 
   //todo
   //app.get('/notifications', personal)

@@ -18,7 +18,8 @@
           <p>月访问量</p>
         </li>
       </ul>
-      <img width="120" height="120" class="PersonalThumb" src="/images/no_img/user_120x120.png">
+      <img width="120" height="120" class="PersonalThumb"
+           src="<%= locals.imageUrl ? locals.imageUrl : '/images/no_img/user_120x120.png' %>">
 
       <h3 class="SubTtl"><%= username %></h3>
 

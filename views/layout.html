@@ -51,8 +51,8 @@
           <% } else { %>
           <ul class="NavInner NegLinkWrapper">
             <li><a href="/works"><img width="20" height="20"
-                                           src="images/no_img/user_20x20.png"
-                                           onerror="mtm.errorImage(this,'user_20x20');"><%= username %></a><span
+                                      src="<%= locals.imageUrl ? locals.imageUrl : '/images/no_img/user_20x20.png' %>"
+                                      onerror="mtm.errorImage(this,'user_20x20');"><%= username %></a><span
               class="HeaderSeparator">|</span></li>
             <li><a href="/notifications">通知</a><span class="mdHeadUtil01Count"
                                                      style="display: none;"><span
