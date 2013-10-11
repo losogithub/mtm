@@ -74,7 +74,7 @@ var create = function (req, res, next) {
     js: [
       '/javascripts/jquery.autosize.min.js',
       '/javascripts/jquery-ui-1.10.3.custom.min.js',
-      'http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js',
+      '/javascripts/jquery.validate.min.js',
       '/javascripts/edit.js'
     ]
   });
@@ -113,6 +113,7 @@ var edit = function (req, res, next) {
             '/javascripts/edit.js'
           ],
           escape: escape,
+          backUrl: req.headers.referer,
           topic: topicData,
           items: itemsData
         });

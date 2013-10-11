@@ -1,14 +1,13 @@
-.Top{margin-bottom: 20px;border-bottom: 1px solid rgb(231, 231, 231);position: relative;height: 40px;}
+.Top{margin-bottom: 20px;border-bottom: 1px solid rgb(231, 231, 231);position: relative;height: 41px;}
 .Contents{overflow: hidden;}
 .Main{float: left;width: 685px;padding: 0 25px 5px 0;}
-.ColWrapper{}
 
 .Col01{float: left;width: 120px;margin-right: 20px;}
 .Col01 li{margin-bottom: 5px;}
 .Col01 a{display: block;padding: 6px 6px 5px;color: rgb(91, 91, 91);font-size: 11px;}
 .Col01 a:hover,.Col01 a:active{background-color: rgb(240, 240, 240);}
-.Selected{background-color: rgb(240, 240, 240);}
-.Selected a{color: rgb(0, 0, 0);font-weight: bold;}
+.Col01 .SELECTED{background-color: rgb(240, 240, 240);}
+.Col01 .SELECTED a{color: #000;font-weight: bold;}
 
 .Col02{float: left;width: 335px;margin-right: 25px;}
 .Col02 h2{color: rgb(0, 0, 0);font-weight: bold;margin-bottom: 10px;}
@@ -16,8 +15,8 @@
 .HotTopicList li{margin-top: 15px;padding-top: 15px;border-top: 1px solid rgb(242, 242, 242);}
 .HotTopicList li:first-child{margin-top: 0;padding-top: 0;border-top: 0 none;}
 .TopicThumb {margin-right: 14px}
-.TopicTtl {display: block;margin-bottom: 5px;}
-.TopicTtl a{line-height: 20px;font-size: 16px;word-break: break-all;color: rgb(0, 0, 0);}
+.TopicTtl {display: block;margin-bottom: 5px;word-break: break-all;}
+.TopicTtl a{line-height: 20px;font-size: 16px;color: rgb(0, 0, 0);}
 .TopicAuthor {float: left;color: rgb(155, 155, 155);font-size: 11px;line-height: 1;}
 .PVCount{float: right;color: rgb(155, 155, 155);font-family: Arial,sans-serif;font-size: 11px;line-height: 1;}
 .PVCount b{margin-right: 2px;font-size: 12px;}

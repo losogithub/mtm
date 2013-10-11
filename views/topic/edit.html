@@ -8,12 +8,12 @@
     <table class="EditHeadBtn">
       <td>
         <% if (locals.topic) { %>
-        <button class='Btn Btn_HeadSave' type="button"></button>
+        <button name="save" class='button button-tiny button-action' data-loading-text="保存中..." type="button">保存</button>
         <% } else { %>
-        <button class='Btn Btn_SaveDraft' type="button"></button>
-        <button class='Btn Btn_Publish' type="button"></button>
+        <button class='button button-tiny button-action' type="button">保存草稿</button>
+        <button name="publish" class='button button-tiny button-action' data-loading-text="发布中..." type="button">发布</button>
         <% } %>
-        <button class='Btn Btn_HeadCancel' type="button"></button>
+        <a href="<%= locals.backUrl ? backUrl : './' %>"><button class='button button-tiny' type="button">返回</button></a>
       </td>
     </table>
   </div>
@@ -27,32 +27,30 @@
             <div class="EditFormBox01">
               <input class="InputBoxTitle Required" type="text" placeholder="输入总结标题（50字以内）" name='title'
                      value="<%= locals.topic ? topic.title : '' %>"/>
-              <a class='EditFormOption ButtonToggle ButtonToggleClose' style='display: none'>可选项目<span
-                class="ButtonToggleIco"></span></a>
+              <a class='EditFormOption' style='display: none'>可选项目<span
+                class="Btn BtnToggle"></span></a>
             </div>
             <div class="EditFormBox02" style='display: none'>
               <!--<dl class="EditFormItem01">-->
               <!--<dt class="Hide">标题图片</dt>-->
               <!--<dd class="EditFormImgArea01">-->
               <!--<ul class="EditFormImgAddList01">-->
-              <!--<li><a class="A1">搜索图片</a></li>-->
-              <!--<li><a class="A1">上传图片</a></li>-->
+              <!--<li><a>搜索图片</a></li>-->
+              <!--<li><a>上传图片</a></li>-->
               <!--</ul>-->
               <!--</dd>-->
               <!--</dl>-->
               <div class="EditFormItem02">
                 <a class="TopicThumbLink" title="设置总结封面">
-                  <img class='WidgetItemThumb' src="<%= !locals.topic ? '' : !topic.coverUrl ? '' : topic.coverUrl %>">
+                  <img src="<%= !locals.topic ? '' : !topic.coverUrl ? '' : topic.coverUrl %>">
                 </a>
 
                 <div class="ThumbEdit">
-                  <input class="InputBox InputBoxUrl" type="text" name="url" placeholder="输入图片URL"
+                  <input class="InputBoxUrl" type="text" name="url" placeholder="输入图片URL"
                          value="<%= !locals.topic ? '' : !topic.coverUrl ? '' : topic.coverUrl %>">
 
-                  <div class="WidgetButton">
-                    <button class="Btn Btn_Save" type="button">保存</button>
-                    <button class="Btn Btn_Cancel" type="button">放弃</button>
-                  </div>
+                  <% include _widget_BtnSet.html %>
+
                 </div>
                 <div class="EditFormItem02">
                   <textarea class="InputBoxDesc" placeholder="输入总结描述（150字以内，换行符无效）" name='description'><%= !locals.topic
@@ -73,7 +71,7 @@
   </div>
 
   <!--内容-->
-  <div class="ContentsWrapper">
+  <div class="TopicWrapper">
     <div class="Main">
 
       <% include _itemList.html %>
@@ -85,7 +83,7 @@
           <li></li>
         </ul>
 
-        <table class="DynamicMenu NegLinkWrapper">
+        <table class="DynamicMenu">
 
           <% include _menu.html %>
 
@@ -100,50 +98,44 @@
           <!--插入内容-->
         </form>
 
-        <div class='WidgetContent IMAGE_CREATE'>
-          <div class="WidgetItemImg">
-            <div class="WidgetItemThumb"></div>
-          </div>
-          <input class="InputBox InputBoxUrl Required AutoFocus" type="text" name="url" placeholder="输入图片URL">
-          <button class="Btn Btn_Check Btn_Check_Disabled" type="button" disabled='disabled'>查看</button>
-          <div class="WidgetButton">
-            <button class="Btn Btn_Save" type="button">保存</button>
-            <button class="Btn Btn_Cancel" type="button">放弃</button>
-          </div>
-        </div>
+        <div class="Widget">
 
-        <div class='WidgetContent IMAGE'>
-          <div class="WidgetItemImg">
-            <img class='WidgetItemThumb' onerror="mtm.errorImage(this,'default_120x120');">
-          </div>
-
-          <div class="WidgetTxt">
-            <input class="InputBox WidgetInputBox_Ttl AutoFocus" type="text" name="title" placeholder="输入图片标题">
-            <input class="InputBox WidgetInputBox_Quo" type="text" name="quote" placeholder="输入图片来源网页URL">
-            <textarea class="InputBox WidgetInputBox_Desc" name="description" placeholder="输入图片介绍、评论"></textarea>
-          </div>
-          <div class="WidgetButton">
-            <button class="Btn Btn_Save" type="button">保存</button>
-            <button class="Btn Btn_Cancel" type="button">放弃</button>
-          </div>
-        </div>
-
-        <div class='WidgetContent VIDEO_CREATE'>
-          <div class="WidgetItemVideo">
-            <div class="WidgetItemThumb"></div>
-          </div>
-          <div>
-            <input class="InputBox InputBoxUrl Required AutoFocus" type="text" name="url" placeholder="输入视频URL">
+          <div class='Content IMAGE_CREATE'>
+            <div class="Image"></div>
+            <input class="InputBoxUrl Required AUTO_FOCUS" type="text" name="url" placeholder="输入图片URL">
             <button class="Btn Btn_Check Btn_Check_Disabled" type="button" disabled='disabled'>查看</button>
-          </div>
-          <div class="WidgetButton">
-            <button class="Btn Btn_Save" type="button">保存</button>
-            <button class="Btn Btn_Cancel" type="button">放弃</button>
-          </div>
-        </div>
 
-        <div class='WidgetContent VIDEO'>
-          <div class="WidgetItemThumb">
+            <% include _widget_BtnSet.html %>
+
+          </div>
+
+          <div class='Content IMAGE'>
+            <div class="Image">
+              <img onerror="mtm.errorImage(this,'default_120x120');">
+            </div>
+
+            <div class="WidgetTxt">
+              <input class="WidgetInputBox_Ttl AUTO_FOCUS" type="text" name="title" placeholder="输入图片标题">
+              <input class="WidgetInputBox_Quo" type="text" name="quote" placeholder="输入图片来源网页URL">
+              <textarea class="WidgetInputBox_Desc" name="description" placeholder="输入图片介绍、评论"></textarea>
+            </div>
+
+            <% include _widget_BtnSet.html %>
+
+          </div>
+
+          <div class='Content VIDEO_CREATE'>
+            <div class="Thumb"></div>
+            <div>
+              <input class="InputBoxUrl Required AUTO_FOCUS" type="text" name="url" placeholder="输入视频URL">
+              <button class="Btn Btn_Check Btn_Check_Disabled" type="button" disabled='disabled'>查看</button>
+            </div>
+
+            <% include _widget_BtnSet.html %>
+
+          </div>
+
+          <div class='Content VIDEO'>
             <embed style="display: none;" class="YOUKU" src="http://static.youku.com/v/swf/qplayer.swf?winType=adshow&amp;VideoIDS=#vid#" wmode="transparent" width="480" align="center" border="0" height="400">
             <embed style="display: none;" class="TUDOU"
                    src="http://www.tudou.com/v/#vid#/v.swf"
@@ -152,63 +144,59 @@
                    wmode="opaque"
                    width="480"
                    height="400">
-          </div>
-          <div class="ItemQuoteWrapper">
-            <div class="ItemQuoteHeader">来源</div>
-            <div class="ItemQuoteOuter NegLinkWrapper">
-              <a class="ItemQuote VIDEO_URL"></a>
+            <div class="Quote">
+              <span>来源</span>
+              <div>
+                <a class="VIDEO_URL"></a>
+              </div>
             </div>
+
+            <input class="WidgetInputBox_Ttl" type="text" name="title" placeholder="输入视频标题">
+            <textarea class="WidgetInputBox_Desc AUTO_FOCUS" name="description" placeholder="输入视频介绍、评论"></textarea>
+
+            <% include _widget_BtnSet.html %>
+
           </div>
 
-          <input class="InputBox WidgetInputBox_Ttl AutoFocus" type="text" name="title" placeholder="输入视频标题">
-          <textarea class="InputBox WidgetInputBox_Desc" name="description" placeholder="输入视频介绍、评论"></textarea>
+          <div class='Content CITE'>
+            <textarea class="WidgetInputBox_Cite AUTO_FOCUS Required" name="cite" placeholder="输入引文"></textarea>
+            <input class="WidgetInputBox_Url" type="text" name="url" placeholder="输入引文来源网页URL">
+            <input class="WidgetInputBox_Ttl" type="text" name="title" placeholder="输入引文来源网页标题">
+            <textarea class="WidgetInputBox_Desc" name="description" placeholder="输入引文介绍、评论"></textarea>
 
-          <div class="WidgetButton">
-            <button class="Btn Btn_Save" type="button">保存</button>
-            <button class="Btn Btn_Cancel" type="button">放弃</button>
+            <% include _widget_BtnSet.html %>
+
           </div>
-        </div>
 
-        <div class='WidgetContent CITE'>
-          <textarea class="InputBox WidgetInputBox_Cite AutoFocus Required" name="cite" placeholder="输入引文"></textarea>
-          <input class="InputBox WidgetInputBox_Url" type="text" name="url" placeholder="输入引文来源网页URL">
-          <input class="InputBox WidgetInputBox_Ttl" type="text" name="title" placeholder="输入引文来源网页标题">
-          <textarea class="InputBox WidgetInputBox_Desc" name="description" placeholder="输入引文介绍、评论"></textarea>
+          <div class='Content TEXT'>
+            <textarea class="Required AUTO_FOCUS" name="contents" placeholder="输入文本"></textarea>
 
-          <div class="WidgetButton">
-            <button class="Btn Btn_Save" type="button">保存</button>
-            <button class="Btn Btn_Cancel" type="button">放弃</button>
+            <% include _widget_BtnSet.html %>
+
           </div>
-        </div>
 
-        <div class='WidgetContent TEXT'>
-          <textarea class="InputBox Required AutoFocus" name="contents" placeholder="输入文本"></textarea>
+          <div class='Content TITLE'>
+            <input class="Required AUTO_FOCUS" name="contents" placeholder="输入标题" type="text">
 
-          <div class="WidgetButton">
-            <button class="Btn Btn_Save" type="button">保存</button>
-            <button class="Btn Btn_Cancel" type="button">放弃</button>
+            <% include _widget_BtnSet.html %>
+
           </div>
-        </div>
 
-        <div class='WidgetContent TITLE'>
-          <input class="InputBox Required AutoFocus" type="text" name="contents" placeholder="输入标题">
-
-          <div class="WidgetButton">
-            <button class="Btn Btn_Save" type="button">保存</button>
-            <button class="Btn Btn_Cancel" type="button">放弃</button>
-          </div>
         </div>
 
         <% var item = null; %>
         <% include _items.html %>
 
-        <% var item = { type: 'ALL' }; %>
-        <% include _contents.html %>
+        <div class="Item">
+
+          <% var item = { type: 'ALL' }; %>
+          <% include _item_contents.html %>
+
+        </div>
 
       </div>
       <div class="Pagination"></div>
     </div>
     <div class="Sub"></div>
   </div>
-
 </div>

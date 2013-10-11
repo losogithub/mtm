@@ -30,10 +30,12 @@
         $head.removeClass('EditHeadFixed');
       }
     });
-    $head.find('.Btn_Publish').click(function () {
+    $head.find('button[name="publish"]').click(function () {
+      $(this).button('loading');
       $('.Top form').submit();
     });
-    $head.find('.Btn_HeadSave').click(function () {
+    $head.find('button[name="save"]').click(function () {
+      $(this).button('loading');
       $('.Top form').submit();
     });
   }
@@ -46,12 +48,16 @@
 
     //开关可选项目的动画
     $Button.click(function () {
-      $(this).toggleClass('ButtonToggleClose ButtonToggleOpen');
+      $(this).find('.BtnToggle').toggleClass('BtnToggleClose');
       $('.EditFormBox02').toggle('fast');
     });
 
     if (/showOption=true/.test(location.search)) {
-      $Button.toggleClass('ButtonToggleClose ButtonToggleOpen').show();
+      $Button
+        .find('.BtnToggle')
+        .toggleClass('BtnToggleClose')
+        .end()
+        .show();
       $('.EditFormBox02').toggle();
     } else {
       $Button.fadeIn('slow');
@@ -59,16 +65,16 @@
 
     var $link = $('.TopicThumbLink');
     var $edit = $('.ThumbEdit');
-    var $input = $edit.find('.InputBox');
-    var $save = $edit.find('.Btn_Save');
-    var $cancel = $edit.find('.Btn_Cancel');
+    var $input = $edit.find('input');
+    var $save = $edit.find('button[name="save"]');
+    var $cancel = $edit.find('button[name="cancel"]');
     $link.click(function () {
       $edit.toggle('fast');
     });
     $cancel.click(function () {
-      $edit.attr('visibility', 'hidden')
+      $edit.css('visibility', 'hidden')
         .hide('fast', function () {
-          $edit.removeAttr('visibility');
+          $edit.css('visibility', 'visible');
         })
     });
     $save.click(function () {
@@ -96,7 +102,7 @@
         //sortable微件的标准参数
         placeholder: 'Widget WidgetDragPlaceholder',
         forcePlaceholderSize: true,
-        opacity: 0.5,
+        opacity: 0.8,
         tolerance: "pointer",
         cursor: 'move',
         handle: '.MoveHandle',
@@ -153,9 +159,9 @@
 
       this.widget()
         .data('type', this.type)
-        .prepend($('.Templates .Widget').clone())
+        .prepend($('.Templates .Widget:first').clone())
         .find('.Widget').children().first()
-        .after($('.Templates .WidgetContent.' + this.type).clone()).end().end()
+        .after($('.Templates .Widget .' + this.type).clone()).end().end()
         .end()
         //textarea自适应高度
         .find('textarea')
@@ -176,13 +182,14 @@
         .children().first().next().remove().end().end()
         .end()
         //监听保存按钮点击事件
-        .find('.Btn_Save')
+        .find('button[name="save"]')
         .click(function () {
+          $(this).button('loading');
           self.widget().find('form').submit();
         })
         .end()
         //监听放弃按钮点击事件
-        .find('.Btn_Cancel')
+        .find('button[name="cancel"]')
         .click(function () {
           self._trigger('cancel');
         })
@@ -233,12 +240,12 @@
         .scroll(function () {
           self.widget().scrollTop(0);
         })
-        .find('.AutoFocus')
+        .find('.AUTO_FOCUS')
         .focus()
         .end();
 
       //移动光标到输入框末尾
-      moveSelection2End(this.widget().find('.AutoFocus')[0]);
+      moveSelection2End(this.widget().find('.AUTO_FOCUS')[0]);
     },
 
     /**
@@ -248,6 +255,7 @@
       console.log('remove');
       var self = this;
 
+      this.disable();
       //如果是新建的就删除dom元素，否则是修改就新建条目dom元素
       var itemId = this.widget().data('id');
       if (!itemId) {
@@ -276,6 +284,9 @@
 
       //ajax完成后将微件改为条目
       var doneCallback = function (data) {
+        if (self.options.disabled) {
+          return;
+        }
         data.$li = self.widget();
         self._trigger('createDisplayItem', null, data);
       }
@@ -331,7 +342,7 @@
 
       //填充图片、填充文本
       this.widget()
-        .find('.WidgetItemThumb')
+        .find('img')
         .attr('src', this.options.url)
         .end()
         .find('.WidgetInputBox_Ttl')
@@ -383,6 +394,7 @@
             if (errorList.length) {
               alert(errorMap.title || errorMap.quote || errorMap.description);
             }
+            self.widget().find('button[name="save"]').button('reset');
           },
           rules: {
             title: {
@@ -460,7 +472,7 @@
 
       //监听文本改变事件
       this.widget()
-        .find('.InputBox')
+        .find('input')
         .on('input blur mousedown mouseup keydown keypress keyup', function () {
           if (this.value) {
             self.widget().find('.Btn_Check').removeClass('Btn_Check_Disabled').removeAttr('disabled');
@@ -490,6 +502,7 @@
           if (errorMap.url) {
             alert(errorMap.url);
           }
+          self.widget().find('button[name="save"]').button('reset');
         },
         rules: {
           url: {
@@ -569,7 +582,7 @@
         .find('.VIDEO_URL')
         .attr('href', this.options.url)
         .end()
-        .find('.ItemQuote')
+        .find('.Quote a')
         .text(quote)
         .end()
         .find('.WidgetInputBox_Ttl')
@@ -606,6 +619,7 @@
             if (errorList.length) {
               alert(errorMap.title || errorMap.description);
             }
+            self.widget().find('button[name="save"]').button('reset');
           },
           rules: {
             title: {
@@ -670,7 +684,7 @@
 
       //监听文本改变事件
       this.widget()
-        .find('.InputBox')
+        .find('input')
         .on('input blur mousedown mouseup keydown keypress keyup', function () {
           if (this.value) {
             self.widget().find('.Btn_Check').removeClass('Btn_Check_Disabled').removeAttr('disabled');
@@ -689,32 +703,33 @@
       var self = this;
       this.widget().find('form')
         .validate({
-        debug: false,
-        ignore: "",
-        onkeyup: false,
-        focusInvalid: false,
-        onfocusout: false,
-        submitHandler: function (form) {
-          self.__getVideo(form);
-        },
-        showErrors: function (errorMap, errorList) {
-          if (errorMap.url) {
-            alert(errorMap.url);
+          debug: false,
+          ignore: "",
+          onkeyup: false,
+          focusInvalid: false,
+          onfocusout: false,
+          submitHandler: function (form) {
+            self.__getVideo(form);
+          },
+          showErrors: function (errorMap, errorList) {
+            if (errorMap.url) {
+              alert(errorMap.url);
+            }
+            self.widget().find('button[name="save"]').button('reset');
+          },
+          rules: {
+            url: {
+              required: true,
+              url: true
+            }
+          },
+          messages: {
+            url: {
+              required: "尚未输入URL。",
+              url: "URL格式错误。"
+            }
           }
-        },
-        rules: {
-          url: {
-            required: true,
-            url: true
-          }
-        },
-        messages: {
-          url: {
-            required: "尚未输入URL。",
-            url: "URL格式错误。"
-          }
-        }
-      });
+        });
     },
 
     __getVideo: function (form) {
@@ -722,6 +737,9 @@
       var url = $(form).find('input:text').val();
 
       var callback = function (data) {
+        if (self.options.disabled) {
+          return;
+        }
         self.destroy();
         self._trigger('createEditWidget', null, {
           from: self.options.from,
@@ -815,6 +833,7 @@
             if (errorList.length) {
               alert(errorMap.cite || errorMap.url || errorMap.title || errorMap.description);
             }
+            self.widget().find('button[name="save"]').button('reset');
           },
           rules: {
             cite: {
@@ -901,7 +920,7 @@
 
       //填充文本、监听文本改变事件
       this.widget()
-        .find('.InputBox')
+        .find('textarea')
         .val(this.options.text)
         .on('input blur mousedown mouseup keydown keypress keyup', function (event) {
           self.stateHandler(self.options.text, event);
@@ -928,6 +947,7 @@
           if (errorMap.contents) {
             alert(errorMap.contents);
           }
+          self.widget().find('button[name="save"]').button('reset');
         },
         rules: {
           contents: {
@@ -950,7 +970,7 @@
      * @private
      */
     _getCommitData: function () {
-      return { text: this.widget().find('.InputBox').val() }
+      return { text: this.widget().find('textarea').val() }
     },
 
     /**
@@ -985,7 +1005,7 @@
 
       //填充文本、监听文本改变事件
       this.widget()
-        .find('.InputBox')
+        .find('input')
         .val(this.options.title)
         .on('input blur mousedown mouseup keydown keypress keyup', function (event) {
           self.stateHandler(self.options.title, event);
@@ -1012,6 +1032,7 @@
           if (errorMap.contents) {
             alert(errorMap.contents);
           }
+          self.widget().find('button[name="save"]').button('reset');
         },
         rules: {
           contents: {
@@ -1034,7 +1055,7 @@
      * @private
      */
     _getCommitData: function () {
-      return { title: this.widget().find('.InputBox').val() }
+      return { title: this.widget().find('input').val() }
     },
 
     /**
@@ -1110,6 +1131,8 @@
           } else if (errorMap.description) {
             alert(errorMap.description);
           }
+          self.widget().find('button[name="publish"]').button('reset');
+          self.widget().find('button[name="save"]').button('reset');
         },
         rules: {
           title: {
@@ -1184,7 +1207,7 @@
       var self = this;
       //绑定插入点击响应
       $li
-        .find('.Btn_Insert')
+        .find('.INSERT')
         .click(function () {
           self._createEditWidget('MENU', {
             from: 'INSERT',
@@ -1193,7 +1216,7 @@
         })
         .end()
         //绑定删除点击响应
-        .find('.Btn_Del')
+        .find('.DELETE')
         .click(function () {
           if (!confirm('条目删除后无法找回，您确定要删除吗？')) {
             return;
@@ -1217,12 +1240,12 @@
         case 'IMAGE':
           //绑定修改点击响应
           $li
-            .find('.Btn_Edit')
+            .find('.EDIT')
             .click(function () {
-              var url = $li.find('.WidgetItemThumb').attr('src');
-              var title = $li.find('.ItemTtl').text();
-              var quote = $li.find('.ItemQuote').attr('href');
-              var description = $('<div/>').html($li.find('.ItemDesc').html().replace(/<br>/g, '\n')).text();
+              var url = $li.find('img').attr('src');
+              var title = $li.find('.Text a').text();
+              var quote = $li.find('.Quote a').attr('href');
+              var description = $('<div/>').html($li.find('.Text p').html().replace(/<br>/g, '\n')).text();
               self._createEditWidget(type, {
                 from: 'EDIT',
                 url: url,
@@ -1238,11 +1261,11 @@
           //绑定修改点击响应
           console.log('VIDEO');
           $li
-            .find('.Btn_Edit')
+            .find('.EDIT')
             .click(function () {
-              var url = $li.find('.ItemQuote').attr('href');
-              var title = $li.find('.ItemTtl').text();
-              var description = $('<div/>').html($li.find('.ItemDesc').html().replace(/<br>/g, '\n')).text();
+              var url = $li.find('.Quote a').attr('href');
+              var title = $li.find('.Text a').text();
+              var description = $('<div/>').html($li.find('.Text p').html().replace(/<br>/g, '\n')).text();
               self._createEditWidget(type, {
                 from: 'EDIT',
                 url: url,
@@ -1256,12 +1279,12 @@
         case 'CITE':
           //绑定修改点击响应
           $li
-            .find('.Btn_Edit')
+            .find('.EDIT')
             .click(function () {
-              var cite = $('<div/>').html($li.find('.ItemCite q').html().replace(/<br>/g, '\n')).text();
-              var url = $li.find('.ItemQuote a').attr('href');
-              var title = url ? $li.find('.ItemQuote span:last-child').text() : $li.find('.ItemQuote span:nth-child(2)').text();
-              var description = $('<div/>').html($li.find('.ItemDesc').html().replace(/<br>/g, '\n')).text();
+              var cite = $('<div/>').html($li.find('.Cite q').html().replace(/<br>/g, '\n')).text();
+              var url = $li.find('.Quote a').attr('href');
+              var title = $li.find('.Quote a').text();
+              var description = $('<div/>').html($li.find('.Description').html().replace(/<br>/g, '\n')).text();
               self._createEditWidget(type, {
                 from: 'EDIT',
                 cite: cite,
@@ -1276,9 +1299,9 @@
         case 'TEXT':
           //绑定修改点击响应
           $li
-            .find('.Btn_Edit')
+            .find('.EDIT')
             .click(function () {
-              var text = $('<div/>').html($li.find('.ItemView').html().replace(/<br>/g, '\n')).text();
+              var text = $('<div/>').html($li.find('p').html().replace(/<br>/g, '\n')).text();
               self._createEditWidget(type, {
                 from: 'EDIT',
                 text: text,
@@ -1290,9 +1313,9 @@
         case 'TITLE':
           //绑定修改点击响应
           $li
-            .find('.Btn_Edit')
+            .find('.EDIT')
             .click(function () {
-              var title = $li.find('.ItemView').text();
+              var title = $li.find('p').text();
               self._createEditWidget(type, {
                 from: 'EDIT',
                 title: title,
@@ -1538,10 +1561,10 @@
       }
 
       //填充新内容，然后删除旧内容，顺序很重要！！！防止抖动
-      $item.prepend($('.Templates .Item').clone())
+      $item.prepend($('.Templates .Item:first').clone())
         .find('.Item').children().first()
-        .after($('.Templates .ItemContent.' + type).clone())
-        .end().end().end()
+        .after($('.Templates .Item .' + type).clone()).end().end()
+        .end()
         .children().first().next().remove().end().end()
         .end()
         .data('type', type)
@@ -1556,20 +1579,20 @@
           var description = data.description;
           var urlParts = quote.match(REGEXP_URL);
           $item
-            .find('.ImageLink')
+            .find('.IMAGE_LINK')
             .attr('href', url)
             .end()
-            .find('.WidgetItemThumb')
+            .find('img')
             .attr('src', url)
             .end()
-            .find('.ItemTtl')
+            .find('.Text a')
             .text(title)
             .end()
-            .find('.ItemQuote')
+            .find('.Quote a')
             .attr('href', quote)
             .text(urlParts ? urlParts[3] : '')
             .end()
-            .find('.ItemDesc')
+            .find('.Text p')
             .html($('<div/>').text(description).html().replace(/\n/g, '<br>'))
             .end();
           break;
@@ -1601,15 +1624,21 @@
             .find('.VIDEO_URL')
             .attr('href', url)
             .end()
-            .find('.ItemQuote')
+            .find('.Quote a')
             .text(quote)
             .end()
-            .find('.ItemTtl')
+            .find('.Text a')
             .text(title)
             .end()
-            .find('.ItemDesc')
+            .find('.Text p')
             .html($('<div/>').text(description).html().replace(/\n/g, '<br>'))
             .end();
+          if (!title) {
+            $item.find('.Text a').hide();
+          }
+          if (!description) {
+            $item.find('.Text p').hide();
+          }
           break;
         case 'CITE':
           //填充引用信息
@@ -1618,27 +1647,30 @@
           var title = data.title;
           var description = data.description;
           $item
-            .find('.ItemCite q')
+            .find('.Cite q')
             .html($('<div/>').text(cite).html().replace(/\n/g, '<br>'))
             .end()
-            .find('.ItemQuote span:nth-child(2)')
-            .text(url ? '' : title)
+            .find('.Quote a')
+            .text(title || url)
             .end()
-            .find('.ItemQuote span:last-child')
-            .text(!url ? '' : title)
-            .end()
-            .find('.ItemQuote a')
+            .find('.Quote a')
             .attr('href', url)
             .end()
-            .find('.ItemDesc')
+            .find('.Description')
             .html($('<div/>').text(description).html().replace(/\n/g, '<br>'))
             .end();
+          if (!title && !url) {
+            $item.find('.Quote').hide();
+          }
+          if (!description) {
+            $item.find('.Description').hide();
+          }
           break;
         case 'TEXT':
           //填充文本
           var text = data.text;
           $item
-            .find('.ItemView')
+            .find('p')
             .html($('<div/>').text(text).html().replace(/\n/g, '<br>'))
             .end();
           break;
@@ -1646,7 +1678,7 @@
           //填充标题
           var title = data.title;
           $item
-            .find('.ItemView')
+            .find('p')
             .text(title)
             .end();
           break;

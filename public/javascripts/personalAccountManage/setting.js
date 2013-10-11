@@ -11,49 +11,48 @@
  button click
  */
 
-$(function ($){
-  $('button[class="Btn Btn_Save"]')
-    .click(function(){
+$(function ($) {
+  $('button[name="preview"]')
+    .click(function () {
       console.log("click on url button");
-      var $url =$('input[name="url" ]').val();
+      var $url = $('input[name="url" ]').val();
       console.log($url);
-      if($url){
+      if ($url) {
         //first check the url.
-        if(/^(http|https|ftp):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/i.test($url))
-        {
-        $('#setImage').attr("src", $url).error(function(){
-          alert('该图片无法正常显示,');
-          $('#setImage').attr("src", "/images/no_img/user_120x120.png");
-        });
-        }else {
+        if (/^(http|https|ftp):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/i.test($url)) {
+          $('#setImage').attr("src", $url).error(function () {
+            alert('该图片无法正常显示,');
+            $('#setImage').attr("src", "/images/no_img/user_120x120.png");
+          });
+        } else {
           alert('invalid url');
         }
-        }
+      }
       return false;
     })
 })
 
-$(function($){
-  $('button[class="BtnSettingsSave"]')
-    .click(function(){
+$(function ($) {
+  $('button[name="save"]')
+    .click(function () {
       console.log("click on save settings button");
-      var imageUrl =$('input[name="url" ]').val();
-      var description = $('textarea[class="InputBox InputBox_Introduce"]').val();
-      var connectUrl = $('input[class="InputBox InputBox_Homepage"]').val();
+      var imageUrl = $('input[name="url" ]').val();
+      var description = $('textarea[class="InputBox_Introduce"]').val();
+      var connectUrl = $('input[class="InputBox_Homepage"]').val();
       console.log(imageUrl);
       console.log(description);
       console.log(connectUrl);
       //then send ajax to server.
       $.ajax({
         type: 'POST',
-        url:'/settings',
+        url: '/settings',
         xhrFields: { withCredentials: true },
-        data: {imageUrl:imageUrl, description:description,connectUrl:connectUrl},
-        success: function(){
+        data: {imageUrl: imageUrl, description: description, connectUrl: connectUrl},
+        success: function () {
           //alert('personal information updated !');
           return;
         },
-        error : function(){
+        error: function () {
           alert('failed');
         }
       });

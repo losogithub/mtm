@@ -1,46 +1,42 @@
-<div class="Main">
+<div class="MainHead">
+  <h1><%= username %> 的总结</h1>
+</div>
 
-  <div class="MainHead">
-    <h1><%= username %> 的总结</h1>
-  </div>
-
-  <div class="MainDetail">
-    <table class="MainTbl">
-      <colgroup>
-        <col style="width:404px;*width:374px;">
-        <col style="width:115px;*width:85px;">
-        <col style="width:94px;*width:64px;">
-        <col>
-      </colgroup>
-      <thead>
-      <tr class="NegLinkWrapper">
-        <th>
-          标题
-          <div class="MainTblSortSub">
-            <a  class='<%= isSelectC %>' href='?mt=c&amp;mo=<%= createV %>'>创建日期<span
-              class="MainTblSortIco"></span></a>
-            <a class='<%= isSelectU %>' href='?mt=u&amp;mo=<%= updateV%>'>更新日期<span
-              class="MainTblSortIco"></span></a>
-          </div>
-        </th>
-        <th>
-          <a class="MainTblSort <%= isSelectP %>" href='?mt=p&amp;mo=<%= pageViewV%>' >访问量<span
+<div class="MainDetail">
+  <table class="MainTbl">
+    <colgroup>
+      <col style="width:404px;*width:374px;">
+      <col style="width:115px;*width:85px;">
+      <col style="width:94px;*width:64px;">
+      <col>
+    </colgroup>
+    <thead>
+    <tr>
+      <th>
+        标题
+        <div class="MainTblSortSub">
+          <a class='<%= isSelectC %>' href='?mt=c&amp;mo=<%= createV %>'>创建日期<span
             class="MainTblSortIco"></span></a>
-        </th>
-        <th>
-          <a class="MainTblSort <%= isSelectR %>" href='?mt=r&amp;mo=<%= rateV %>'>上升率<span
+          <a class='<%= isSelectU %>' href='?mt=u&amp;mo=<%= updateV%>'>更新日期<span
             class="MainTblSortIco"></span></a>
-        </th>
-        <th><span class="Hide">页面详细链接</span></th>
-      </tr>
-      </thead>
-      <tbody>
-      <% for (i in locals.topics) { %>
-      <% var topic = topics[i] %>
-      <% include _topicShort.html %>
-      <% } %>
-      </tbody>
-    </table>
-  </div>
-
+        </div>
+      </th>
+      <th>
+        <a class="MainTblSort <%= isSelectP %>" href='?mt=p&amp;mo=<%= pageViewV%>'>访问量<span
+          class="MainTblSortIco"></span></a>
+      </th>
+      <th>
+        <a class="MainTblSort <%= isSelectR %>" href='?mt=r&amp;mo=<%= rateV %>'>上升率<span
+          class="MainTblSortIco"></span></a>
+      </th>
+      <th><span class="Hide">页面详细链接</span></th>
+    </tr>
+    </thead>
+    <tbody>
+    <% for (i in locals.topics) { %>
+    <% var topic = topics[i] %>
+    <% include _topicShort.html %>
+    <% } %>
+    </tbody>
+  </table>
 </div>
