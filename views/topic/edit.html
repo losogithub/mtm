@@ -128,11 +128,53 @@
           </div>
         </div>
 
+        <div class='WidgetContent VIDEO_CREATE'>
+          <div class="WidgetItemVideo">
+            <div class="WidgetItemThumb"></div>
+          </div>
+          <div>
+            <input class="InputBox InputBoxUrl Required AutoFocus" type="text" name="url" placeholder="输入视频URL">
+            <button class="Btn Btn_Check Btn_Check_Disabled" type="button" disabled='disabled'>查看</button>
+          </div>
+          <div class="WidgetButton">
+            <button class="Btn Btn_Save" type="button">保存</button>
+            <button class="Btn Btn_Cancel" type="button">放弃</button>
+          </div>
+        </div>
+
+        <div class='WidgetContent VIDEO'>
+          <div class="WidgetItemThumb">
+            <embed style="display: none;" class="YOUKU" src="http://static.youku.com/v/swf/qplayer.swf?winType=adshow&amp;VideoIDS=#vid#" wmode="transparent" width="480" align="center" border="0" height="400">
+            <embed style="display: none;" class="TUDOU"
+                   src="http://www.tudou.com/v/#vid#/v.swf"
+                   type="application/x-shockwave-flash"
+                   allowfullscreen="true"
+                   wmode="opaque"
+                   width="480"
+                   height="400">
+          </div>
+          <div class="ItemQuoteWrapper">
+            <div class="ItemQuoteHeader">来源</div>
+            <div class="ItemQuoteOuter NegLinkWrapper">
+              <a class="ItemQuote VIDEO_URL"></a>
+            </div>
+          </div>
+
+          <input class="InputBox WidgetInputBox_Ttl AutoFocus" type="text" name="title" placeholder="输入视频标题">
+          <textarea class="InputBox WidgetInputBox_Desc" name="description" placeholder="输入视频介绍、评论"></textarea>
+
+          <div class="WidgetButton">
+            <button class="Btn Btn_Save" type="button">保存</button>
+            <button class="Btn Btn_Cancel" type="button">放弃</button>
+          </div>
+        </div>
+
         <div class='WidgetContent CITE'>
           <textarea class="InputBox WidgetInputBox_Cite AutoFocus Required" name="cite" placeholder="输入引文"></textarea>
           <input class="InputBox WidgetInputBox_Url" type="text" name="url" placeholder="输入引文来源网页URL">
           <input class="InputBox WidgetInputBox_Ttl" type="text" name="title" placeholder="输入引文来源网页标题">
           <textarea class="InputBox WidgetInputBox_Desc" name="description" placeholder="输入引文介绍、评论"></textarea>
+
           <div class="WidgetButton">
             <button class="Btn Btn_Save" type="button">保存</button>
             <button class="Btn Btn_Cancel" type="button">放弃</button>

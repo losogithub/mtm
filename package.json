@@ -5,11 +5,13 @@
   "private": true,
 
   "dependencies": {
+    "bufferhelper": "*",
     "eventproxy": "*",
     "express": "*",
     "ejs": "*",
     "escape-html": "*",
     "express-partials": "*",
+    "iconv-lite": "*",
     "mongoose": "*",
     "validator": "*",
     "nodemailer": "*",
