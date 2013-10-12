@@ -42,33 +42,33 @@
           <table>
           <td>
           <% } %>
-          <% if (!locals.username) { %>
-          <ul class="NavInner NegLinkWrapper">
-            <li><a href="/topic/create">创建总结</a><span class="HeaderSeparator">｜</span></li>
-            <li><a href="/signup">注册</a><span class="HeaderSeparator">｜</span></li>
-            <li><a href="/login">登录</a></li>
-          </ul>
-          <% } else { %>
-          <ul class="NavInner NegLinkWrapper">
-            <li><a href="/works"><img width="20" height="20"
-                                      src="<%= locals.imageUrl ? locals.imageUrl : '/images/no_img/user_20x20.png' %>"
-                                      onerror="mtm.errorImage(this,'user_20x20');"><%= username %></a><span
-              class="HeaderSeparator">|</span></li>
-            <li><a href="/notifications">通知</a><span class="mdHeadUtil01Count"
-                                                     style="display: none;"><span
-              class="mdHeadUtil01CountInner">0</span></span><span class="HeaderSeparator">|</span></li>
-            <li><a href="/topic/create">创建总结</a><span class="HeaderSeparator">|</span></li>
-            <li>
-              <button class="HeaderBtn BtnOpen" type="button" title="更多">更多</button>
-            </li>
-            <ul class="SubNav" style="display: none;">
-              <li><a href="/settings">设置</a></li>
-              <li><a href="/faq?serviceNo=4">帮助</a></li>
-              <li><a href="/logout">登出</a><span
-                class="mdHeadUtil01SubPointer"></span></li>
+            <% if (!locals.username) { %>
+            <ul class="NavInner NegLinkWrapper">
+              <li><a href="/topic/create">创建总结</a><span class="HeaderSeparator">｜</span></li>
+              <li><a href="/signup">注册</a><span class="HeaderSeparator">｜</span></li>
+              <li><a href="/login">登录</a></li>
             </ul>
-          </ul>
-          <% } %>
+            <% } else { %>
+            <ul class="NavInner NegLinkWrapper">
+              <li><a href="/works"><img width="20" height="20"
+                                        src="<%= locals.imageUrl ? locals.imageUrl : '/images/no_img/user_20x20.png' %>"
+                                        onerror="mtm.errorImage(this,'user_20x20');"><%= username %></a><span
+                class="HeaderSeparator">|</span></li>
+              <li><a href="/notifications">通知</a><span class="mdHeadUtil01Count"
+                                                       style="display: none;"><span
+                class="mdHeadUtil01CountInner">0</span></span><span class="HeaderSeparator">|</span></li>
+              <li><a href="/topic/create">创建总结</a><span class="HeaderSeparator">|</span></li>
+              <li>
+                <button class="HeaderBtn BtnOpen" type="button" title="更多">更多</button>
+              </li>
+              <ul class="SubNav" style="display: none;">
+                <li><a href="/settings">设置</a></li>
+                <li><a href="/faq?serviceNo=4">帮助</a></li>
+                <li><a href="/logout">登出</a><span
+                  class="mdHeadUtil01SubPointer"></span></li>
+              </ul>
+            </ul>
+            <% } %>
           <% if (locals.pageType != 'INDEX') { %>
           </td>
           </table>
@@ -78,6 +78,7 @@
     </div>
 
     <%- body %>
+
 
     <div class='Footer'>
       <div class='Inner'>

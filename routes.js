@@ -48,7 +48,7 @@ module.exports = function (app) {
 
 
   //personal management
-  //app.get('/u/:id', auth.loadUser, personal.showPersonal);
+
   app.get('/works', auth.loadUser, auth.loginRequired, personal.showWorks);
   app.get('/favourites', auth.loadUser, personal.showFavourite);
   app.get('/settings', auth.loadUser, auth.loginRequired, personal.showSettings);
@@ -66,7 +66,8 @@ module.exports = function (app) {
   //app.get('/notifications', personal)
 
 
-
+  //show personal page
+  app.get('/u/:authorName', auth.loadUser, personal.showPersonal);
 
   /*
    app.get('/active_account', sign.active_account);

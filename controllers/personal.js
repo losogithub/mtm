@@ -9,6 +9,7 @@ var check = require('validator').check,
   sanitize = require('validator').sanitize;
 
 var encryp = require('../helper/encryp');
+var helper = require('../helper/helper');
 
 var User = require('../proxy').User;
 var Topic = require('../proxy').Topic;
@@ -596,6 +597,73 @@ if( newPassword || newPasswordConfirm)
 
 
 
+var showPersonal = function(req, res){
+
+  //before render: check whether visitor is itself or not.
+  //if so, jump to works page.
+  //else show.
+
+  //visitor is not login ok
+  //visitor has login then check whether the same.
+  var authorName = req.params.authorName;
+  console.log( "authorName: %s", req.params.authorName);
+  console.log("req.url: %s", req.url);
+
+  //login user and the same with the author of this one
+  // jump to works page
+  if(req.session.userId && req.currentUser){
+    if(req.currentUser.loginName == authorName){
+      //jump to works page
+      console.log("the same person, jump to works");
+      return res.redirect('/works');
+    }
+  }
+
+  //normal case
+
+  User.getUserByLoginName(authorName, function(err, user){
+    if(err){
+      console.log("err: ");
+      console.log(err);
+    } else if(!user){
+      //not such user
+      console.log("not such user in DB. username: %s", authorName);
+      //todo: then do what
+    } else {
+      //found the author information in DB
+
+      //todo: revise thisUrl
+      var thisUrl = "http://www." + config.host + req.url;
+
+      var description = helper.linkify(user.description);
+      console.log(description);
+
+      res.render('personal/showPersonal', {
+        title: config.name,
+        css: [
+          '/stylesheets/showPerson/personal-common.css',
+          '/stylesheets/showPerson/profile.css'
+        ],
+        js: '',
+        layout: 'showPersonLayout',
+        authorName: authorName,
+        authorImage: user.url,
+        authorDescription: description,
+        authorPersonalUrl: user.personalSite,
+        authorWorkCount: user.topicCount,
+        authorMonthPV: user.pageviewCount,
+        authorFavourite: user.favourite,
+        thisUrl: thisUrl
+      });
+      return;
+    }
+
+  })
+}
+
+
+
+
 
 var showFavourite = function (req, res) {
   res.locals.path = req.path.replace(/\/$/, '');
@@ -622,3 +690,4 @@ exports.showConfirmPassword = showConfirmPassword;
 exports.passwordVerify = passwordVerify;
 exports.showAccountModify = showAccountModify;
 exports.accountModify = accountModify;
+exports.showPersonal = showPersonal;
