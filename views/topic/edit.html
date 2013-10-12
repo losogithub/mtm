@@ -8,12 +8,18 @@
     <table class="EditHeadBtn">
       <td>
         <% if (locals.topic) { %>
-        <button name="save" class='button button-tiny button-action' data-loading-text="保存中..." type="button">保存</button>
+        <button name="save" class='button button-tiny button-action'
+                data-loading-text="保存 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;" type="button">保存
+        </button>
         <% } else { %>
         <button class='button button-tiny button-action' type="button">保存草稿</button>
-        <button name="publish" class='button button-tiny button-action' data-loading-text="发布中..." type="button">发布</button>
+        <button name="publish" class='button button-tiny button-action'
+                data-loading-text="发布 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;" type="button">发布
+        </button>
         <% } %>
-        <a href="<%= locals.backUrl ? backUrl : './' %>"><button class='button button-tiny' type="button">返回</button></a>
+        <a href="<%= locals.backUrl ? backUrl : './' %>">
+          <button class='button button-tiny' type="button">返回</button>
+        </a>
       </td>
     </table>
   </div>

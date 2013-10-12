@@ -315,7 +315,11 @@
       }
     },
 
-    _getCommitData: $.noop
+    _getCommitData: $.noop,
+
+    resetButton: function() {
+      this.widget().find('button[name="save"]').button('reset');
+    }
 
   });
 
@@ -392,9 +396,9 @@
           },
           showErrors: function (errorMap, errorList) {
             if (errorList.length) {
+              self.resetButton();
               alert(errorMap.title || errorMap.quote || errorMap.description);
             }
-            self.widget().find('button[name="save"]').button('reset');
           },
           rules: {
             title: {
@@ -499,10 +503,10 @@
           self.__getImage(form);
         },
         showErrors: function (errorMap, errorList) {
-          if (errorMap.url) {
+          if (errorList.length) {
+            self.resetButton();
             alert(errorMap.url);
           }
-          self.widget().find('button[name="save"]').button('reset');
         },
         rules: {
           url: {
@@ -617,9 +621,9 @@
           },
           showErrors: function (errorMap, errorList) {
             if (errorList.length) {
+              self.resetButton();
               alert(errorMap.title || errorMap.description);
             }
-            self.widget().find('button[name="save"]').button('reset');
           },
           rules: {
             title: {
@@ -712,10 +716,10 @@
             self.__getVideo(form);
           },
           showErrors: function (errorMap, errorList) {
-            if (errorMap.url) {
+            if (errorList.length) {
+              self.resetButton();
               alert(errorMap.url);
             }
-            self.widget().find('button[name="save"]').button('reset');
           },
           rules: {
             url: {
@@ -831,9 +835,9 @@
           },
           showErrors: function (errorMap, errorList) {
             if (errorList.length) {
+              self.resetButton();
               alert(errorMap.cite || errorMap.url || errorMap.title || errorMap.description);
             }
-            self.widget().find('button[name="save"]').button('reset');
           },
           rules: {
             cite: {
@@ -944,10 +948,10 @@
           self.commit();
         },
         showErrors: function (errorMap, errorList) {
-          if (errorMap.contents) {
+          if (errorList.length) {
+            self.resetButton();
             alert(errorMap.contents);
           }
-          self.widget().find('button[name="save"]').button('reset');
         },
         rules: {
           contents: {
@@ -1029,10 +1033,10 @@
           self.commit();
         },
         showErrors: function (errorMap, errorList) {
-          if (errorMap.contents) {
+          if (errorList.length) {
+            self.resetButton();
             alert(errorMap.contents);
           }
-          self.widget().find('button[name="save"]').button('reset');
         },
         rules: {
           contents: {
@@ -1126,13 +1130,11 @@
           self.commit();
         },
         showErrors: function (errorMap, errorList) {
-          if (errorMap.title) {
-            alert(errorMap.title);
-          } else if (errorMap.description) {
-            alert(errorMap.description);
+          if (errorList.length) {
+            self.widget().find('button[name="publish"]').button('reset');
+            self.widget().find('button[name="save"]').button('reset');
+            alert(errorMap.title || errorMap.description);
           }
-          self.widget().find('button[name="publish"]').button('reset');
-          self.widget().find('button[name="save"]').button('reset');
         },
         rules: {
           title: {
