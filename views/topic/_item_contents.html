@@ -1,23 +1,24 @@
-<% var REGEXP_URL = /^((http[s]?|ftp):\/)?\/?((([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]))(:([^\/]*))?(((\/\w+)*\/)([\w\-\.]+[^#?\s]+))?(\?([^#]*))?(#(.*))?$/; %>
-<% var REGEXP_YOUKU = /http:\/\/v.youku.com\/v_show\/id_(.+)\.html/ %>
-<% var REGEXP_YOUKU = /http:\/\/www.tudou.com\/programs\/view\/(.*)\// %>
+<% var REGEXP_URL = /^(https?|ftp):\/\/(([\w\-]+\.)+[\w\-]+)(\/|\?|$)/i; %>
 <% if (item.type == 'IMAGE' || item.type == 'ALL') { %>
 <div class='Content IMAGE'>
   <div class="Image">
     <a class="IMAGE_LINK" href='<%= item.url ? item.url : "" %>'>
       <img onerror="mtm.errorImage(this,'default_120x120');" src='<%= item.url ? item.url : "" %>'>
     </a>
+
     <div class="Quote">
       <span>来源</span>
+
       <div>
         <a href="<%= item.quote ? item.quote : '' %>">
-          <%= item.quote ? (item.quote = item.quote.match(REGEXP_URL)) ? item.quote[3] : '' : '' %>
+          <%= item.quote ? (item.quote = item.quote.match(REGEXP_URL)) ? item.quote[2] : '' : '' %>
         </a>
       </div>
     </div>
   </div>
   <div class="Text">
     <a class="IMAGE_LINK" href='<%= item.url ? item.url : "" %>'><%= item.title ? item.title : '' %></a>
+
     <p><%- item.description ? escape(item.description).replace(/\n/g, "<br>") : '' %></p>
   </div>
 </div>
@@ -26,35 +27,41 @@
 <div class='Content VIDEO'>
   <% var urlParts = !item.url ? null : item.url.match(REGEXP_URL); %>
   <% var temp; %>
-  <% var quote = !urlParts ? null : !urlParts[3] ? null : !(temp = urlParts[3].match(/^[^\.]+\.(([^\.]+)\.([^\.]+\.)*[^\.]+)$/)) ? null : !temp[1] ? null : temp[1]; %>
-  <% temp = !(temp = item.url) ? '#vid#' : !(temp = temp.substring(temp.length - 18, temp.length - 5)) ? '#vid#' : temp %>
-  <embed style="display: <%= quote != 'youku.com' ? 'none' : 'block' %>;"
+  <% var quote = !urlParts ? null : !urlParts[2] ? null : !(temp = urlParts[2].match(/youku\.com|tudou\.com$/)) ? null : temp[0]; %>
+  <% var vid = !(temp = item.url) ? '#vid#' : !(temp = temp.match(/id_([\w\-]{13})\.html\/?(\?|$)/)) ? '#vid#' : !temp[1] ? '#vid#' : temp[1]; %>
+  <% var showThis = quote == 'youku.com' && vid != '#vid#'; %>
+  <% var showOne = showOne || showThis; %>
+  <embed style="display: <%= !showThis ? 'none' : 'block' %>;"
          class="YOUKU"
-         src="http://static.youku.com/v/swf/qplayer.swf?winType=adshow&amp;VideoIDS=<%= temp %>"
+         src="http://static.youku.com/v/swf/qplayer.swf?winType=adshow&amp;VideoIDS=<%= vid %>"
          wmode="transparent"
          width="480"
          height="400"
          align="center"
          border="0">
-  <% temp = !(temp = item.url) ? '#vid#' : !(temp = temp.match(/([^\/]{11})(\/|\.html)$/)) ? '#vid#' : !temp[1] ? '#vid#' : temp[1] %>
-  <embed style="display: <%= quote != 'tudou.com' ? 'none' : 'block' %>;"
+  <% vid = !(temp = item.url) ? '#vid#' : !(temp = temp.match(/([\w\-]{11})(\.html)?\/?(\?|$)/)) ? '#vid#' : !temp[1] ? '#vid#' : temp[1]; %>
+  <% var showThis = quote == 'tudou.com' && vid != '#vid#'; %>
+  <% var showOne = showOne || showThis; %>
+  <embed style="display: <%= !showThis ? 'none' : 'block' %>;"
          class="TUDOU"
-    src="http://www.tudou.com/v/<%= temp %>/v.swf"
-    type="application/x-shockwave-flash"
-    allowfullscreen="true"
-    wmode="opaque"
-    width="480"
-    height="400">
+         src="http://www.tudou.com/v/<%= vid %>/v.swf"
+         type="application/x-shockwave-flash"
+         allowfullscreen="true"
+         wmode="opaque"
+         width="480"
+         height="400">
+  <div class="Thumb" style="display: <%= showOne ? 'none' : 'block' %>;"></div>
   <div class="Quote">
     <span>来源</span>
     <a class="VIDEO_URL" href="<%= item.url ? item.url : '' %>">
-      <%= !quote ? '' : quote %>
+      <%= quote ? quote : item.url ? item.url : '' %>
     </a>
   </div>
-  <div class="Text">
+  <p class="Title" style="display: <%= (item.type != 'ALL') && !item.title ? 'none' : 'block' %>;">
     <a class="VIDEO_URL" href='<%= item.url ? item.url : "" %>'><%= item.title ? item.title : '' %></a>
-    <p><%- item.description ? escape(item.description).replace(/\n/g, "<br>") : '' %></p>
-  </div>
+  </p>
+  <p class="Description" style="display: <%= (item.type != 'ALL') && !item.description ? 'none' : 'block' %>;"><%- item.description ?
+    escape(item.description).replace(/\n/g, "<br>") : '' %></p>
 </div>
 <% } %>
 <% if (item.type == 'CITE' || item.type == 'ALL') { %>
@@ -63,11 +70,14 @@
     <span></span>
     <q><%- item.cite ? escape(item.cite).replace(/\n/g, "<br>") : '' %></q>
   </p>
-  <div class="Quote">
+
+  <div class="Quote" style="display: <%= (item.type != 'ALL') && !item.url && !item.title ? 'none' : 'block' %>;">
     <span>来源</span>
-    <a href="<%= item.url ? item.url : '' %>"><%= !item.title ? '' : item.title %></a>
+    <a href="<%= !item.url ? '' : item.url %>"><%= !item.url ? '' : !item.title ? item.url : item.title %></a>
+    <span ><%= item.url ? '' : !item.title ? '' : item.title %></span>
   </div>
-  <p class="Description"><%- item.description ? escape(item.description).replace(/\n/g, "<br>") : '' %></p>
+  <p class="Description" style="display: <%= (item.type != 'ALL') && !item.description ? 'none' : 'block' %>;"><%- item.description ?
+    escape(item.description).replace(/\n/g, "<br>") : '' %></p>
 </div>
 <% } %>
 <% if (item.type == 'TEXT' || item.type == 'ALL') { %>

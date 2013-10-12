@@ -97,9 +97,9 @@ body{font: 12px/1.5 "微软雅黑",arial,sans-serif;word-wrap: break-word;}
 .IMAGE .Text a{margin-bottom: 4px;line-height: 24px;font-weight: bold;font-size: 18px;}
 .IMAGE .Text p{line-height: 20px;color: rgb(102, 102, 102);font-size: 14px;}
 
-.VIDEO_CREATE .Thumb{width: 300px;height: 220px;background: url("/images/sprite_WidgetThumb.png") no-repeat -305px 0;margin-bottom: 7px;}
-.VIDEO .Text a{margin-top: 8px;line-height: 24px;font-weight: bold;font-size: 18px;}
-.VIDEO .Text p{margin-top: 10px;padding-left: 6px;border-left: 2px solid #ddd;color: rgb(102, 102, 102);font-size: 14px;line-height: 20px;}
+.VIDEO_CREATE .Thumb, .VIDEO .Thumb{width: 300px;height: 220px;background: url("/images/sprite_WidgetThumb.png") no-repeat -305px 0;}
+.VIDEO .Title{margin-top: 8px;line-height: 24px;font-weight: bold;font-size: 18px;}
+.VIDEO .Description{margin-top: 10px;padding-left: 6px;border-left: 2px solid #ddd;color: rgb(102, 102, 102);font-size: 14px;line-height: 20px;}
 
 .CITE .Cite{line-height: 26px;color: rgb(102, 102, 102);font-weight: bold;font-size: 20px;}
 .CITE .Cite span{display: inline-block;width: 20px;height: 17px;background: url("/images/sprite_Widget.png") no-repeat scroll -365px -30px transparent;}
