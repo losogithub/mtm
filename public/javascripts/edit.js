@@ -124,10 +124,50 @@
   var __initSort = function () {
     $('.WidgetItemList')
       //防止拖动开始时高度减小导致的抖动
-      .mousedown(function () {
+      .mousedown(function (e) {
+        console.log('mousedown');
         $(this).css('min-height', $(this).height());
+//        var t;
+//        var that = this;
+//        var event = e;
+//        var needTrigger = true;
+//        $(window).on('scroll.mousemove', function () {
+//          console.log('scroll');
+//          if (!event) {
+//            return false;
+//          }
+//          console.log('$(window).scrollTop()'+$(window).scrollTop());
+//          var e = $.extend({}, event, {
+////            pageY: event.clientY + $(window).scrollTop(),
+//            tag: 1
+//          });
+//          if (needTrigger) {
+//            console.log('timeout');
+//            t = setTimeout(function () {
+//              console.log('trigger');
+//              $(that).trigger(e);
+//            }, 1000);
+//          }
+//        });
+//        $(this).mousemove(function (e) {
+//          console.log('mousemove');
+//          console.log('e.teg'+ e.tag);
+//          if (e.tag) {
+//            e.pageX = e.clientY + $(window).scrollTop();
+//          }
+//          if (needTrigger
+//            && e.pageX == event.pageX && e.pageY == event.pageY
+//            && e.clientX == event.clientX && e.clientY == event.clientY
+//            && (e.tag || event.tag)) {
+//            console.log('needTrigger = false');
+//            needTrigger = false;
+//          }
+//          clearTimeout(t);
+//          event = e;
+//        });
       })
       .mouseup(function () {
+//        $(window).unbind('scroll.mousemove');
         $(this).removeAttr('style');
       })
 
@@ -136,13 +176,35 @@
 
         //sortable微件的标准参数
         placeholder: 'Widget WidgetDragPlaceholder',
-        forcePlaceholderSize: true,
-        opacity: 0.8,
-        tolerance: "pointer",
+//        forcePlaceholderSize: true,
+        opacity: 0.4,
+//        tolerance: "pointer",
         cursor: 'move',
         handle: '.MoveHandle',
         scrollSensitivity: 100,
         scrollSpeed: 10,
+        axis: 'y',
+        containment: 'body',
+
+        start: function () {
+          console.log('start');
+          $(this)
+            .mousemove(function (e) {
+              var marginTop = e.clientY;
+              var marginBottom = $(window).height() - e.clientY;
+              var margin = Math.min(marginTop > 0 ? marginTop : 0, marginBottom > 0 ? marginBottom : 0);
+              var scrollSensitivity = 100;
+              if (margin < scrollSensitivity) {
+                $(this).sortable('option', 'scrollSpeed', 50 * (1 - margin * margin / (scrollSensitivity * scrollSensitivity)));
+              }
+            })
+            .sortable('refreshPositions');//因为item缩小了，所以要清除缓存大小
+        },
+
+        stop: function () {
+          console.log('stop');
+          $(this).unbind('mousemove');
+        },
 
         //列表顺序改变后的回调函数
         update: function (event, data) {
@@ -419,11 +481,6 @@
           }
         })
         .validate({
-          debug: false,
-          ignore: "",
-          onkeyup: false,
-          focusInvalid: false,
-          onfocusout: false,
           submitHandler: function (form) {
             self.commit();
           },
@@ -522,11 +579,6 @@
     __initFormValidation: function () {
       var self = this;
       this.widget().find('form').validate({
-        debug: false,
-        ignore: "",
-        onkeyup: false,
-        focusInvalid: false,
-        onfocusout: false,
         submitHandler: function (form) {
           self.__getImage(form);
         },
@@ -618,11 +670,6 @@
       var self = this;
       this.widget().find('form')
         .validate({
-          debug: false,
-          ignore: "",
-          onkeyup: false,
-          focusInvalid: false,
-          onfocusout: false,
           submitHandler: function (form) {
             self.commit();
           },
@@ -713,11 +760,6 @@
       var self = this;
       this.widget().find('form')
         .validate({
-          debug: false,
-          ignore: "",
-          onkeyup: false,
-          focusInvalid: false,
-          onfocusout: false,
           submitHandler: function (form) {
             self.__getVideo(form);
           },
@@ -830,11 +872,6 @@
           }
         })
         .validate({
-          debug: false,
-          ignore: "",
-          onkeyup: false,
-          focusInvalid: false,
-          onfocusout: false,
           submitHandler: function (form) {
             self.commit();
           },
@@ -943,11 +980,6 @@
     __initFormValidation: function () {
       var self = this;
       this.widget().find('form').validate({
-        debug: false,
-        ignore: "",
-        onkeyup: false,
-        focusInvalid: false,
-        onfocusout: false,
         submitHandler: function (form) {
           self.commit();
         },
@@ -1027,11 +1059,6 @@
     __initFormValidation: function () {
       var self = this;
       this.widget().find('form').validate({
-        debug: false,
-        ignore: "",
-        onkeyup: false,
-        focusInvalid: false,
-        onfocusout: false,
         submitHandler: function (form) {
           self.commit();
         },
@@ -1123,11 +1150,6 @@
       }
 
       $form.validate({
-        debug: false,
-        ignore: "",
-        onkeyup: false,
-        focusInvalid: false,
-        onfocusout: false,
         submitHandler: function (form) {
           self.commit();
         },
@@ -1246,9 +1268,9 @@
             .find('.EDIT')
             .click(function () {
               var url = $li.find('img').attr('src');
-              var title = $li.find('.Text a').text();
+              var title = $li.find('.Title a').text();
               var quote = $li.find('.Quote a').attr('href');
-              var description = $('<div/>').html($li.find('.Text p').html().replace(/<br>/g, '\n')).text();
+              var description = $('<div/>').html($li.find('.Description').html().replace(/<br>/g, '\n')).text();
               self._createEditWidget(type, {
                 from: 'EDIT',
                 url: url,
@@ -1586,14 +1608,14 @@
             .find('img')
             .attr('src', url)
             .end()
-            .find('.Text a')
+            .find('.Title a')
             .text(title)
             .end()
             .find('.Quote a')
             .attr('href', quote)
             .text(urlParts ? urlParts[2] : '')
             .end()
-            .find('.Text p')
+            .find('.Description')
             .html($('<div/>').text(description).html().replace(/\n/g, '<br>'))
             .end();
           break;
@@ -1707,6 +1729,12 @@
     }
 
     $(function ($) {
+      $.validator.setDefaults({
+        debug: false,
+        ignore: "",
+        onkeyup: false,
+        onfocusout: false
+      });
       __initHead();
       __initOption();
       __initSort();

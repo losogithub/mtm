@@ -5,6 +5,7 @@ button, img, fieldset, table, th, td{border: 0 none;}
 input, textarea{font-size: 1em;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;
     padding: 0 4px;background-color: #fff;width: 100%;
     border-width: 1px;border-style: solid;border-color: rgb(202, 206, 209) rgb(232, 234, 235) rgb(232, 234, 235) rgb(202, 206, 209);}
+input:focus, textarea:focus{border: 1px solid rgb(40, 185, 55);box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.1) inset;}
 textarea{font-family: arial,sans-serif;}
 /*a*/
 a{cursor: pointer;}
@@ -69,33 +70,35 @@ body{font: 12px/1.5 "微软雅黑",arial,sans-serif;word-wrap: break-word;}
 .Footer li{display: inline;}
 .Copyright{float: right;color: rgb(51, 51, 51);font-family: Tahoma,Arial,sans-serif;}
 /*内容*/
-.TopicWrapper {width: 960px;min-height: 81px;margin: 0 auto;overflow: hidden;background: url("/images/bg_ContentsWrapper.png") repeat-y scroll 660px 0px transparent;}
+.TopicWrapper {width: 960px;min-height: 81px;margin: 0 auto;background: url("/images/bg_ContentsWrapper.png") repeat-y scroll 660px 0px transparent;}
 .TopicWrapper .Main {float: left;width: 635px;min-height: 41px;padding-bottom: 40px;}
 .TopicWrapper .Pagination {line-height: 19px;margin: 30px 0 40px 0;font-family: Arial,Helvetica,sans-serif;font-size: 16px;text-align: center;}
 .TopicWrapper .Sub {position: relative;float: right;width: 300px;padding-bottom: 40px;}
 /*条目*/
 .WidgetItemList {padding-bottom: 1px;}
-.WidgetItemList>li{overflow: hidden;background-color: rgb(255, 255, 255);}
-.WidgetItemList>li:hover{background-color: #f8f8f8;}
+.WidgetItemList>li{background-color: rgb(255, 255, 255);}
+.WidgetItemList>li:hover .Content{background-color: #f8f8f8;box-shadow: 0 0 0 3px #f8f8f8;}
 .WidgetItemList .Quote{overflow: hidden;line-height: 14px;margin-top: 3px;min-width: 100px;}
 .WidgetItemList .Quote *{color: rgb(170, 170, 170);}
 .WidgetItemList .Quote span{float: left;margin-right: 5px;}
 .WidgetItemList .Quote div{overflow: hidden;}
 .IMAGE .Quote{max-width: 300px;}
+.CITE .Quote{font-size: 11px;line-height: 13px;margin-top: 7px;}
 
-.Item{overflow: hidden;}
+.Item{}
 .Item .Content{overflow: hidden;}
+.Widget .Content{overflow: hidden;}
 .ItemUtil0 {height: 15px}
-.ItemUtil1 {visibility: hidden;float: left;padding-left: 3px;}
-.ItemUtil2 {visibility: hidden;float: right;padding-right: 3px;}
-.ItemUtil1 a, .ItemUtil2 a, .HeadUtil a{color: rgb(124, 148, 170);line-height: 1;vertical-align: middle;}
+.ItemUtil1 {float: left;}
+.ItemUtil2 {float: right;}
+.BottomUtil{visibility: hidden; padding: 0 3px;line-height: 1;}
+.BottomUtil a, .HeadUtil a{color: rgb(124, 148, 170);line-height: 1;vertical-align: middle;}
 
 .IMAGE_CREATE .Image, .IMAGE .Image {float: left;margin-right: 10px;}
 .IMAGE .Image img {max-width: 300px;max-height: 600px;}
 .Widget .IMAGE_CREATE .Image {width: 300px;height: 220px;background: url("/images/sprite_WidgetThumb.png") no-repeat 0 0;}
-.IMAGE .Text{overflow: hidden;}
-.IMAGE .Text a{margin-bottom: 4px;line-height: 24px;font-weight: bold;font-size: 18px;}
-.IMAGE .Text p{line-height: 20px;color: rgb(102, 102, 102);font-size: 14px;}
+.IMAGE .Title{margin-bottom: 4px;line-height: 24px;font-weight: bold;font-size: 18px;}
+.IMAGE .Description{line-height: 20px;color: rgb(102, 102, 102);font-size: 14px;}
 
 .VIDEO_CREATE .Thumb, .VIDEO .Thumb{width: 300px;height: 220px;background: url("/images/sprite_WidgetThumb.png") no-repeat -305px 0;}
 .VIDEO .Title{margin-top: 8px;line-height: 24px;font-weight: bold;font-size: 18px;}
