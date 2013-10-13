@@ -741,6 +741,7 @@ var showPersonal = function(req, res){
           authorFavourite: user.favourite,
           topics: topicsInfo,
           thisUrl: thisUrl,
+          baseUrl: baseUrl,
           thisUrlJoin: baseUrl + '?type=J',
           singleMade: false,
           uSelect: 'true',

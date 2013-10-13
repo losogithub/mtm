@@ -35,8 +35,16 @@ $(
   function($){
     $('.mdSelectBox02Option01 > li')
       .click(function(){
-        window.location = $('li.mdMypageMTMList01TabLi > a').attr('href') + '&order='  + $(this).data('value');
-        return false;
+        var ord = $(this).data('value');
+        var urlBase = $('li.mdMypageMTMList01TabLi > a').attr('href');
+        if (urlBase.indexOf('?') !== -1 ){
+          urlBase = urlBase.split('?')[0] + '?type=P';
+        } else
+        { urlBase = urlBase + '?type=J'; }
+        urlBase = urlBase  + '&order='  + ord;
+        console.log(urlBase);
+        window.location = urlBase;
+         return false;
       })
   }
 )
