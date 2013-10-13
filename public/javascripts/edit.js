@@ -58,20 +58,20 @@
    * @private
    */
   var __initHead = function () {
-    var $head = $('.EditHead');
+    var $head = $('.Band');
     var headPosition = $head.offset().top;
     $(window).scroll(function () {
       if ($(this).scrollTop() >= headPosition) {
-        $head.addClass('EditHeadFixed');
+        $head.addClass('Band-Fixed');
       } else {
-        $head.removeClass('EditHeadFixed');
+        $head.removeClass('Band-Fixed');
       }
     });
     $head.find('button[name="publish"]').click(function () {
-      $('.Top form').submit();
+      $('.Edit_Top form').submit();
     });
     $head.find('button[name="save"]').click(function () {
-      $('.Top form').submit();
+      $('.Edit_Top form').submit();
     });
   }
 
@@ -79,21 +79,21 @@
    * 监听可选项目点击事件
    */
   var __initOption = function () {
-    var $Button = $('.EditFormOption');
+      var $Button = $('.Edit_Top_OptionBtn');
 
     //开关可选项目的动画
     $Button.click(function () {
-      $(this).find('.BtnToggle').toggleClass('BtnToggleClose');
-      $('.EditFormBox02').toggle('fast');
+      $(this).find('i').toggleClass('icon-caret-down icon-caret-up');
+      $('.Edit_Top fieldset:last').toggle('fast');
     });
 
     if (/showOption=true/.test(location.search)) {
       $Button
-        .find('.BtnToggle')
-        .toggleClass('BtnToggleClose')
+        .find('i')
+        .toggleClass('icon-caret-down icon-caret-up')
         .end()
         .show();
-      $('.EditFormBox02').toggle();
+      $('.Edit_Top fieldset:last').toggle();
     } else {
       $Button.fadeIn('slow');
     }
@@ -1138,13 +1138,13 @@
      */
     __initTop: function () {
       var self = this;
-      var $form = this.widget().find('.Top form');
+      var $form = this.widget().find('.Edit_Top form');
 
       var title = this.options.topicData.title;
       var coverUrl = this.options.topicData.coverUrl;
       var description = this.options.topicData.description;
       if (title) {
-        $form.find('.InputBoxTitle').val(title ? title : '');
+        $form.find('input[name="title"]').val(title ? title : '');
         $form.find('.TopicThumbLink img').attr('src', coverUrl ? coverUrl : '');
         $form.find('.InputBoxDesc').val(description ? description : '');
       }
@@ -1185,13 +1185,14 @@
     commit: function () {
       this.widget().find('button[name="publish"]').button('loading');
       this.widget().find('button[name="save"]').button('loading');
+      var $form = this.widget().find('.Edit_Top form');
       $.ajax('/topic/publish', {
         type: 'PUT',
         data: {
           topicId: topicId,
-          title: this.widget().find('.Top .InputBoxTitle').val(),
-          coverUrl: this.widget().find('.Top .TopicThumbLink img').attr('src'),
-          description: this.widget().find('.Top .InputBoxDesc').val()
+          title: $form.find('input[name="title"]').val(),
+          coverUrl: $form.find('.TopicThumbLink img').attr('src'),
+          description: $form.find('.InputBoxDesc').val()
         }
       })
         .done(function () {

@@ -18,11 +18,15 @@
   }
 
   $(function ($) {
-    $(".Nav-Right .Btn-Header-Open")
+    $(".Nav-Right_Inner>li:last>i")
       .click(function () {
+        var that = this;
+        $(this).toggleClass('icon-caret-down icon-caret-up');
         var $menu = $('.Nav-Drop').toggle();
 
         $(document).one("click", function () {
+          $(that).addClass('icon-caret-down');
+          $(that).removeClass('icon-caret-up');
           $menu.hide();
         });
 

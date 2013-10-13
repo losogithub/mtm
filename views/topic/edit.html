@@ -1,68 +1,65 @@
-<div class="EditHead">
-  <div class="Inner">
-    <table class='EditHeadTtl'>
-      <td>
-        <h1><%= locals.topic ? '修改' : '创建' %>总结</h1>
-      </td>
-    </table>
-    <table class="EditHeadBtn">
-      <td>
-        <% if (locals.topic) { %>
-        <button name="save" class='button button-tiny button-action'
-                data-loading-text="保存 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;" type="button">保存
-        </button>
-        <% } else { %>
-        <button class='button button-tiny button-action' type="button">保存草稿</button>
-        <button name="publish" class='button button-tiny button-action'
-                data-loading-text="发布 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;" type="button">发布
-        </button>
-        <% } %>
-        <a href="<%= locals.backUrl ? backUrl : './' %>">
-          <button class='button button-tiny' type="button">返回</button>
-        </a>
-      </td>
-    </table>
-  </div>
-</div>
 <div class="Contents">
-  <div class="Top">
+  <div class="Band">
     <div class="Inner">
-      <div class="Heading">
+      <table class='Band_Ttl'>
+        <td>
+          <h1><%= locals.topic ? '修改' : '创建' %>总结</h1>
+        </td>
+      </table>
+      <table class="Band_Btn">
+        <td>
+          <% if (locals.topic) { %>
+          <button name="save" class='button button-tiny button-action'
+                  data-loading-text="保存 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;" type="button">保存
+          </button>
+          <% } else { %>
+          <button class='button button-tiny button-action' type="button">保存草稿</button>
+          <button name="publish" class='button button-tiny button-action'
+                  data-loading-text="发布 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;" type="button">发布
+          </button>
+          <% } %>
+          <a href="<%= locals.backUrl ? backUrl : './' %>">
+            <button class='button button-tiny' type="button">返回</button>
+          </a>
+        </td>
+      </table>
+    </div>
+  </div>
+  <div class="Edit_Top">
+    <div class="Inner">
+      <div class="Edit_Top_Contents">
         <form>
-          <fieldset class="EditForm">
-            <div class="EditFormBox01">
-              <input class="InputBoxTitle Required" type="text" placeholder="输入总结标题（50字以内）" name='title'
-                     value="<%= locals.topic ? topic.title : '' %>"/>
-              <a class='EditFormOption' style='display: none'>可选项目<span
-                class="Btn BtnToggle"></span></a>
-            </div>
-            <div class="EditFormBox02" style='display: none'>
-              <!--<dl class="EditFormItem01">-->
-              <!--<dt class="Hide">标题图片</dt>-->
-              <!--<dd class="EditFormImgArea01">-->
-              <!--<ul class="EditFormImgAddList01">-->
-              <!--<li><a>搜索图片</a></li>-->
-              <!--<li><a>上传图片</a></li>-->
-              <!--</ul>-->
-              <!--</dd>-->
-              <!--</dl>-->
+          <fieldset>
+            <input name='title' class="Required" value="<%= locals.topic ? topic.title : '' %>"
+                   placeholder="输入总结标题（50字以内）" type="text"/>
+            <a class='Edit_Top_OptionBtn' style='display: none'>可选项目 <i class="icon-caret-down"></i></a>
+          </fieldset>
+          <fieldset style='display: none'>
+            <!--<dl class="EditFormItem01">-->
+            <!--<dt class="Hide">标题图片</dt>-->
+            <!--<dd class="EditFormImgArea01">-->
+            <!--<ul class="EditFormImgAddList01">-->
+            <!--<li><a>搜索图片</a></li>-->
+            <!--<li><a>上传图片</a></li>-->
+            <!--</ul>-->
+            <!--</dd>-->
+            <!--</dl>-->
+            <div class="EditFormItem02">
+              <a class="TopicThumbLink" title="设置总结封面">
+                <img src="<%= !locals.topic ? '' : !topic.coverUrl ? '' : topic.coverUrl %>">
+              </a>
+
+              <div class="ThumbEdit">
+                <input class="InputBoxUrl" type="text" name="url" placeholder="输入图片URL"
+                       value="<%= !locals.topic ? '' : !topic.coverUrl ? '' : topic.coverUrl %>">
+
+                <% include _widget_BtnSet.html %>
+
+              </div>
               <div class="EditFormItem02">
-                <a class="TopicThumbLink" title="设置总结封面">
-                  <img src="<%= !locals.topic ? '' : !topic.coverUrl ? '' : topic.coverUrl %>">
-                </a>
-
-                <div class="ThumbEdit">
-                  <input class="InputBoxUrl" type="text" name="url" placeholder="输入图片URL"
-                         value="<%= !locals.topic ? '' : !topic.coverUrl ? '' : topic.coverUrl %>">
-
-                  <% include _widget_BtnSet.html %>
-
-                </div>
-                <div class="EditFormItem02">
-                  <textarea class="InputBoxDesc" placeholder="输入总结描述（150字以内，换行符无效）" name='description'><%= !locals.topic
-                    ? '' : !topic.description
-                    ? '' : topic.description %></textarea>
-                </div>
+                <textarea class="InputBoxDesc" placeholder="输入总结描述（150字以内，换行符无效）" name='description'><%= !locals.topic
+                  ? '' : !topic.description
+                  ? '' : topic.description %></textarea>
               </div>
             </div>
           </fieldset>
