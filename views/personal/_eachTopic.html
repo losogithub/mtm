@@ -1,0 +1,17 @@
+<li class="mdMTMTtlList01Item">
+  <span class="mdMTMTtlList01Thumb"><a href="<%= topic.topicUrl %>" >
+    <% if (topic.cover_url) { %>
+    <img src="<%= topic.cover_url %>" alt="" onerror="errorImage(this,'image60x60');" />
+    <% } %>
+  </a></span>
+  <div class="mdMTMTtlList01Txt">
+    <h3 class="mdMTMTtlList01Ttl"><a href="<%= topic.topicUrl %>" ><%= topic.title %></a></h3>
+    <p class="mdMTMTtlList01TimeStamp">更新日期: <%= topic.create_date %></p>
+    <ul class="MdSocialCountList01">
+      <li class="mdSocialCountList01Li mdSocialCountList01Facebook"><span class="mdSocialCountList01Ico">新浪微博</span><span class="mdSocialCountList01Num">8</span></li>
+      <li class="mdSocialCountList01Li mdSocialCountList01Hatena"><span class="mdSocialCountList01Ico">微信</span><span class="mdSocialCountList01Num">6</span></li>
+      <li class="mdSocialCountList01Li mdSocialCountList01FV"><span class="MdSeparator01P06">|</span><span class="mdSocialCountList01Ico">收藏</span><span class="mdSocialCountList01Num"><%= topic.PV_count %></span></li>
+      <li class="mdSocialCountList01Li mdSocialCountList01View"><span class="MdSeparator01P06">|</span><span class="mdSocialCountList01Num"><%= topic.PV_count %></span><span class="mdSocialCountList01Label">访问量</span></li>
+    </ul><!-- /MdSocialCountList01 -->
+  </div><!-- /.MdMTMTtlList01Txt -->
+</li><!-- /.MdMTMTtlList01Item -->

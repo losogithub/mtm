@@ -105,6 +105,7 @@ var showWorks = function (req, res, next) {
 
 /*
  Find topics inside TopicModel and sort them in a certain order.
+ * works page
  */
 var getAndSortTopics = function(mt, mo, topics, callback){
   if(mt == 'c'){
@@ -603,12 +604,11 @@ var showPersonal = function(req, res){
   //if so, jump to works page.
   //else show.
 
+  //1.-----------------------------------
   //visitor is not login ok
   //visitor has login then check whether the same.
   var authorName = req.params.authorName;
   console.log( "authorName: %s", req.params.authorName);
-  console.log("req.url: %s", req.url);
-
   //login user and the same with the author of this one
   // jump to works page
   if(req.session.userId && req.currentUser){
@@ -619,7 +619,23 @@ var showPersonal = function(req, res){
     }
   }
 
+  //2---------------------------------------
   //normal case
+  var workType = req.query.type || 'P';
+  // 'P' means made by himself. 'J' means join with others. not himself's topic.
+  //current: first implement 'P'.
+  // for 'J' part, out put empty as default.
+
+  var sortOrder = req.query.order || 'U';
+  // default order is according to update date. 'F' means favourte, i.e. likes
+  // 'N' means name
+
+
+
+  console.log("workType: %s", workType);
+  console.log("sortOrder: %s", sortOrder);
+  console.log("req.url: %s", req.url);
+
 
   User.getUserByLoginName(authorName, function(err, user){
     if(err){
@@ -633,34 +649,134 @@ var showPersonal = function(req, res){
       //found the author information in DB
 
       //todo: revise thisUrl
-      var thisUrl = "http://www." + config.host + req.url;
+      var thisUrl = "http://" + config.host + ':' + config.port + req.url;
+      var baseUrl = thisUrl.split('?')[0];
 
-      var description = helper.linkify(user.description);
-      console.log(description);
+      //if the description contains some text url link.
+      var description = user.description;
+      //here must check whether it is empty or not.
+      //bug fixed.
+      if(description){
+        description = helper.linkify(user.description);
+      }
+      //console.log(description);
 
-      res.render('personal/showPersonal', {
-        title: config.name,
-        css: [
-          '/stylesheets/showPerson/personal-common.css',
-          '/stylesheets/showPerson/profile.css'
-        ],
-        js: '',
-        layout: 'showPersonLayout',
-        authorName: authorName,
-        authorImage: user.url,
-        authorDescription: description,
-        authorPersonalUrl: user.personalSite,
-        authorWorkCount: user.topicCount,
-        authorMonthPV: user.pageviewCount,
-        authorFavourite: user.favourite,
-        thisUrl: thisUrl
-      });
-      return;
+
+      //getAndSort all the topics according to
+      //P or J
+      //Inner: U F N
+
+      //1. Personal work
+      if( workType == 'P'){
+        getandSortTopicsforShow(sortOrder, user.topics, function(err, topicsInfo){
+          if(err){
+            console.log("err");
+          }
+          /*
+          //null topics has no problem
+          else if(!topicsInfo){
+            console.log("err: null topics");
+          }*/
+          else {
+            //sorted topics
+            console.log("topics length: " , topicsInfo.length);
+            console.log(topicsInfo);
+            for (var i =0; i < topicsInfo.length; i++){
+              topicsInfo[i].topicUrl= "/topic/" + topicsInfo[i]._id;
+              topicsInfo[i].create_date = topicsInfo[i].create_at.getFullYear() + '年'
+                + (topicsInfo[i].create_at.getMonth() + 1) + '月'
+                + topicsInfo[i].create_at.getDate() + '日';
+            }
+
+            res.render('personal/showPersonal', {
+              title: config.name,
+              css: [
+                '/stylesheets/showPerson/personal-common.css',
+                '/stylesheets/showPerson/profile.css'
+              ],
+              js: '',
+              layout: 'showPersonLayout',
+              authorName: authorName,
+              authorImage: user.url,
+              authorDescription: description,
+              authorPersonalUrl: user.personalSite,
+              authorWorkCount: user.topicCount,
+              authorMonthPV: user.pageviewCount,
+              authorFavourite: user.favourite,
+              topics: topicsInfo,
+              thisUrl: thisUrl,
+              thisUrlJoin: baseUrl + '?type=J',
+              singleMade: true,
+              sortOrder: '更新日期排序',
+              uSelect: 'true',
+              fSelect: '',
+              nSelect: ''
+            });
+            return;
+
+          }
+
+        });
+      }
+
+      //2. Join work
+      else
+      {
+        //todo: current no join topics stored in DB.
+        var topicsInfo = [];
+        res.render('personal/showPersonal', {
+          title: config.name,
+          css: [
+            '/stylesheets/showPerson/personal-common.css',
+            '/stylesheets/showPerson/profile.css'
+          ],
+          js: '',
+          layout: 'showPersonLayout',
+          authorName: authorName,
+          authorImage: user.url,
+          authorDescription: description,
+          authorPersonalUrl: user.personalSite,
+          authorWorkCount: user.topicCount,
+          authorMonthPV: user.pageviewCount,
+          authorFavourite: user.favourite,
+          topics: topicsInfo,
+          thisUrl: thisUrl,
+          thisUrlJoin: baseUrl + '?type=J',
+          singleMade: false,
+          uSelect: 'true',
+          fSelect: '',
+          nSelect: ''
+        });
+        return;
+
+      }
+
+
+
+
+
     }
 
   })
 }
 
+
+var getandSortTopicsforShow = function(sortName, topics, callback){
+
+  if(sortName == 'U'){
+    //according to update time
+    //this is default
+    return Topic.getTopicsByIdsSorted(topics, '-update_at', callback);
+  }
+  else if(sortName == 'F'){
+    //accordiing to liked count
+    //todo: changed to favourite count.
+    return Topic.getTopicsByIdsSorted(topics, '-PV_count', callback);
+  } else if(sortName == 'N'){
+  //according to Name
+    return Topic.getTopicsByIdsSorted(topics, '-title', callback);
+  }
+}
 
 
 

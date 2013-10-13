@@ -10,7 +10,7 @@ module.exports = {
     debug: true,
     name: "mtm",
     hostname: 'localhost',
-    host:"localhost.mtm.org",
+    host:"localhost", //revise later
     port: 3000,
     db: 'mongodb://127.0.0.1/mtm',
 
