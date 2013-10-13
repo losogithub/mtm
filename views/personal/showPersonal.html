@@ -77,6 +77,71 @@
           <% } %>
         </ul><!-- /.MdMTMTtlList01 -->
       </div>
+
+      <% if (totalPage > 1 ) { %>
+      <div class="MdPagination04" data-na="NA:pager" >
+        <!--display pages  take time 10.13 2013-->
+        <% if (totalPage < 10) { %>
+        <% for (var i = 1 ; i <= totalPage; i++ ) { %>
+        <% if ( i == currentPage) { %>
+        <strong><%= currentPage %></strong>
+        <% } else { %>
+        <a href="#" onclick="goPage(<%= i %>);return false;" data-na="NC:page" ><%= i %></a>
+        <% } %>
+        <% } %>
+        <% } else if ( currentPage < 7) { %>
+        <% for (var i = 1 ; i <= totalPage; i++ ) { %>
+        <% if ( i == currentPage) { %>
+        <strong><%= currentPage %></strong>
+        <% } else if ((i < 8)  || (i == totalPage) || (i == totalPage -1)) { %>
+        <a href="#" onclick="goPage(<%= i %>);return false;" data-na="NC:page" ><%= i %></a>
+        <% } else if (i  == 8) { %>
+        <span class="mdPagination04Break">...</span>
+        <% } else { %>
+        <% continue; %>
+        <% } %>
+        <% } %>
+        <% } else if (totalPage - currentPage < 7) { %>
+        <% for (var i = 1 ; i <= totalPage; i++ ) { %>
+        <% if ( i == currentPage) { %>
+        <strong><%= currentPage %></strong>
+        <% } else if ((totalPage -i < 8) || (i ==1) || (i == 2) ) { %>
+        <a href="#" onclick="goPage(<%= i %>);return false;" data-na="NC:page" ><%= i %></a>
+        <% } else if(totalPage - i == 8) { %>
+        <span class="mdPagination04Break">...</span>
+        <% } else { %>
+        <% continue; %>
+        <% } %>
+        <% } %>
+        <% } else { %>
+        <% for (var i = 1 ; i <= totalPage; i++ ) { %>
+        <% if ( i == currentPage) { %>
+        <strong><%= currentPage %></strong>
+        <% } else if ((i == 1) || (i == 2) || (i == totalPage) || (i == totalPage -1) || ((0 < currentPage -i)&& ( currentPage - i  < 3)) || ( (0 < i - currentPage) && ( i - currentPage < 3) ) ) { %>
+        <a href="#" onclick="goPage(<%= i %>);return false;" data-na="NC:page" ><%= i %></a>
+        <% } else if (( i -3 == currentPage) || (i + 3 == currentPage)) { %>
+        <span class="mdPagination04Break">...</span>
+        <% } else { %>
+        <% continue; %>
+        <% } %>
+        <% } %>
+        <% } %>
+
+        <!--/MdPagination04--></div>
+      <form name="form" action="<%= thisUrl %>" method="get">
+        <input type="hidden" name="page" value="1" />
+        <input type="hidden" name="order" <% if (uSelect)  { %> value="U" <% } else if (fSelect)  { %> value="F" <% } else if (nSelect)  { %> value="N" <% } %> />
+        <input type="hidden" name="type" <%if (singleMade) { %> value="P" <% } else { %> value = "J" <% } %> />
+      </form>
+      <script type="text/javascript">
+        function goPage(page) {
+          document.form.page.value = page;
+          document.form.submit()
+          return false;
+        }
+      </script>
+      <% } %>
+
       <% } else { %>
       <div class="mdMypageMTMList01NoItem mdNoItem01NoLink" data-na="NA:noitem">
         <p class="mdMypageMTMList01NoItemTxt">
@@ -89,42 +154,6 @@
       </div><!--/MdNoItem01-->
 
       <% } %>
-
-      <div class="MdPagination04" data-na="NA:pager" >
-
-
-
-
-        <strong>1</strong>
-        <a href="#" onclick="goPage(2);return false;" data-na="NC:page" >2</a>
-
-
-
-
-        <a href="#" onclick="goPage(3);return false;" data-na="NC:page" >3</a>
-        <a href="#" onclick="goPage(4);return false;" data-na="NC:page" >4</a>
-        <a href="#" onclick="goPage(5);return false;" data-na="NC:page" >5</a>
-
-        <span class="mdPagination04Break">...</span>
-
-        <a href="#" onclick="goPage(222);return false;" data-na="NC:page" >222</a>
-        <a href="#" onclick="goPage(223);return false;" data-na="NC:page" >223</a>
-        <!--/MdPagination04--></div>
-
-      <form name="form" action="/u/username" method="get">
-        <input type="hidden" name="page" value="1" />
-        <input type="hidden" name="order" value="U"/>
-        <input type="hidden" name="type" value="C"/>
-      </form>
-      <script type="text/javascript">
-        function goPage(page) {
-          document.form.page.value = page;
-          document.form.submit()
-          return false;
-        }
-      </script>
-
-
 
     </div><!--/MdMypageMTMList01-->
 

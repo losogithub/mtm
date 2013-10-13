@@ -629,11 +629,19 @@ var showPersonal = function(req, res){
   var sortOrder = req.query.order || 'U';
   // default order is according to update date. 'F' means favourte, i.e. likes
   // 'N' means name
+  var uSelect = false;
+  var fSelect = false;
+  var nSelect = false;
+  if( sortOrder == 'U') { uSelect = true; }
+  else if (sortOrder == 'F') { fSelect = true;}
+  else {nSelect = true;}
 
-
+  var currentPage = req.query.page || '1';
+  //default currentPage is the first page.
 
   console.log("workType: %s", workType);
   console.log("sortOrder: %s", sortOrder);
+  console.log("req.page: %s", currentPage);
   console.log("req.url: %s", req.url);
 
 
@@ -680,13 +688,28 @@ var showPersonal = function(req, res){
           else {
             //sorted topics
             console.log("topics length: " , topicsInfo.length);
-            console.log(topicsInfo);
-            for (var i =0; i < topicsInfo.length; i++){
-              topicsInfo[i].topicUrl= "/topic/" + topicsInfo[i]._id;
-              topicsInfo[i].create_date = topicsInfo[i].create_at.getFullYear() + '年'
+
+            //here according to TotalTopic decide totalPage and currentPage topics
+            var totalPage = Math.ceil(topicsInfo.length / 9) ;
+
+
+
+            //console.log(topicsInfo);
+            //create a template arrary,
+            //then push all the topics into this arrary for show.
+            var topicsForShow = [];
+            for (var i = (currentPage -1)*9; i < topicsInfo.length && i < currentPage*9; i++){
+              var temp = topicsInfo[i];
+              temp.topicUrl= "/topic/" + topicsInfo[i]._id;
+              temp.create_date = topicsInfo[i].create_at.getFullYear() + '年'
                 + (topicsInfo[i].create_at.getMonth() + 1) + '月'
                 + topicsInfo[i].create_at.getDate() + '日';
+              topicsForShow.push(temp);
             }
+
+
+            //before render: deal with more than one page.
+
 
             res.render('personal/showPersonal', {
               title: config.name,
@@ -703,14 +726,15 @@ var showPersonal = function(req, res){
               authorWorkCount: user.topicCount,
               authorMonthPV: user.pageviewCount,
               authorFavourite: user.favourite,
-              topics: topicsInfo,
+              topics: topicsForShow,
               thisUrl: thisUrl,
               thisUrlJoin: baseUrl + '?type=J',
               singleMade: true,
-              sortOrder: '更新日期排序',
-              uSelect: 'true',
-              fSelect: '',
-              nSelect: ''
+              uSelect: uSelect,
+              fSelect: fSelect,
+              nSelect: nSelect,
+              totalPage: totalPage,
+              currentPage: currentPage
             });
             return;
 
@@ -746,7 +770,9 @@ var showPersonal = function(req, res){
           singleMade: false,
           uSelect: 'true',
           fSelect: '',
-          nSelect: ''
+          nSelect: '',
+          totalPage: '10',
+          currentPage: '1'
         });
         return;
 
