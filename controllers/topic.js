@@ -68,8 +68,8 @@ var create = function (req, res, next) {
   res.render('topic/edit', {
     title: '创建总结-mtm',
     css: [
-      '/stylesheets/edit.css',
-      '/stylesheets/jquery-ui-1.10.3.custom.css'
+      '/stylesheets/jquery-ui-1.10.3.custom.css',
+      '/stylesheets/edit.css'
     ],
     js: [
       '/javascripts/jquery.autosize.min.js',

@@ -9,12 +9,49 @@
 (function ($) {
 
   var console = window.console || {log: $.noop, error: $.noop};
-  var REGEXP_URL = /^((http[s]?|ftp):\/)?\/?((([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]))(:([^\/]*))?(((\/\w+)*\/)([\w\-\.]+[^#?\s]+))?(\?([^#]*))?(#(.*))?$/;
-  var REGEXP_URL_NO_PROTOCOL = /^((http[s]?|ftp):\/)?\/?((([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]))(:([^\/]*))?(((\/\w+)*\/)([\w\-\.]+[^#?\s]+))?(\?([^#]*))?(#(.*))?$/;
+  var REGEXP_URL = /^(https?|ftp):\/\/(([\w\-]+\.)+[\w\-]+)(\/|\?|$)/i;
+  var REGEXP_URL_NO_PROTOCOL = /^(([\w\-]+\.)+[\w\-]+)(\/|\?|$)/i;
   //数据库中该总结id
   var topicId = 0;
   //
   var mode = 'create';
+
+  var fillVideo = function ($li, url) {
+    var urlParts = url.match(REGEXP_URL);
+    var temp;
+    var quote = !urlParts ? null : !urlParts[2] ? null : !(temp = urlParts[2].match(/youku\.com|tudou\.com$/i)) ? null : temp[0];
+    var videoType = !quote ? null : !(temp = quote.match(/([^\.]+)\./)) ? null : !temp[1] ? null : temp[1].toUpperCase();
+    var vid;
+
+    switch (videoType) {
+      case 'YOUKU':
+        //http://v.youku.com/v_show/id_XNjEyOTU3NjE2.html?f=20383529&ev=1
+        vid = !(temp = url) ? null : !(temp = temp.match(/id_([\w\-]{13})\.html\/?(\?|$)/i)) ? null : !temp[1] ? null : temp[1];
+        break;
+      case 'TUDOU':
+        //http://www.tudou.com/listplay/pKzzr-WLvwk/snBiS0Y74PQ.html
+        //http://www.tudou.com/programs/view/TtwcrB0saxg
+        vid = !(temp = url) ? null : !(temp = temp.match(/([\w\-]{11})(\.html)?\/?(\?|$)/)) ? null : !temp[1] ? null : temp[1];
+        break;
+    }
+
+    //填充视频
+    if (vid) {
+      $li
+        .find('.' + videoType)
+        .attr('src', !(temp = $li.find('.' + videoType).attr('src')) ? '' : temp.replace('#vid#', vid))
+        .removeAttr('style')
+        .end()
+        .find('.Thumb')
+        .hide()
+        .end();
+    }
+
+    $li
+      .find('.Quote a')
+      .text(quote ? quote : url)
+      .end();
+  }
 
   /**
    * 总结菜单栏固定窗口顶部、监听按钮点击事件
@@ -31,11 +68,9 @@
       }
     });
     $head.find('button[name="publish"]').click(function () {
-      $(this).button('loading');
       $('.Top form').submit();
     });
     $head.find('button[name="save"]').click(function () {
-      $(this).button('loading');
       $('.Top form').submit();
     });
   }
@@ -184,7 +219,6 @@
         //监听保存按钮点击事件
         .find('button[name="save"]')
         .click(function () {
-          $(this).button('loading');
           self.widget().find('form').submit();
         })
         .end()
@@ -203,6 +237,7 @@
       }
 
       //如果是修改就淡入，否则是新建就淡入加展开
+      console.log(empty);
       if (empty) {
         this.widget()
           .hide()
@@ -282,6 +317,7 @@
       var self = this;
       console.log('commit');
 
+      this.widget().find('button[name="save"]').button('loading');
       //ajax完成后将微件改为条目
       var doneCallback = function (data) {
         if (self.options.disabled) {
@@ -377,7 +413,8 @@
           var quote = $quote.val();
           console.log('quote=' + quote);
           var urlParts = quote.match(REGEXP_URL_NO_PROTOCOL);
-          if (urlParts && urlParts[3] && !urlParts[2]) {
+          if (urlParts) {
+            console.log(urlParts[0]);
             $quote.val('http://' + quote);
           }
         })
@@ -394,7 +431,6 @@
             if (errorList.length) {
               alert(errorMap.title || errorMap.quote || errorMap.description);
             }
-            self.widget().find('button[name="save"]').button('reset');
           },
           rules: {
             title: {
@@ -429,14 +465,10 @@
      * @private
      */
     _getCommitData: function () {
-      var quote = this.widget().find('.WidgetInputBox_Quo').val();
-      var urlParts = this.options.url.match(REGEXP_URL);
       return {
         url: this.options.url,
         title: this.widget().find('.WidgetInputBox_Ttl').val(),
-        quote: quote
-          ? quote : urlParts ? urlParts[2] + '://' + urlParts[3]
-          : '',
+        quote: this.widget().find('.WidgetInputBox_Quo').val(),
         description: this.widget().find('.WidgetInputBox_Desc').val()
       }
     },
@@ -499,10 +531,9 @@
           self.__getImage(form);
         },
         showErrors: function (errorMap, errorList) {
-          if (errorMap.url) {
+          if (errorList.length) {
             alert(errorMap.url);
           }
-          self.widget().find('button[name="save"]').button('reset');
         },
         rules: {
           url: {
@@ -557,33 +588,13 @@
      */
     __create: function () {
       var self = this;
-      var urlParts = this.options.url.match(REGEXP_URL);
-      var temp;
-      var quote = !urlParts ? null : !urlParts[3] ? null : !(temp = urlParts[3].match(/^[^\.]+\.(([^\.]+)\.([^\.]+\.)*[^\.]+)$/)) ? null : !temp[1] ? null : temp[1];
-      var type = temp[2].toUpperCase();
-      var vid;
-      console.log(this.type);
 
-      switch (type) {
-        case 'YOUKU':
-          vid = !(temp = this.options.url) ? '' : !(temp = temp.substring(temp.length - 18, temp.length - 5)) ? '' : temp;
-          break;
-        case 'TUDOU':
-          vid = !(temp = this.options.url) ? '#vid#' : !(temp = temp.match(/([^\/]{11})(\/|\.html)$/)) ? '#vid#' : !temp[1] ? '#vid#' : temp[1];
-          break;
-      }
+      fillVideo(this.widget(), this.options.url);
 
-      //填充视频、填充文本
+      //填充文本
       this.widget()
-        .find('.' + type)
-        .attr('src', this.widget().find('.' + type).attr('src').replace('#vid#', vid))
-        .removeAttr('style')
-        .end()
         .find('.VIDEO_URL')
         .attr('href', this.options.url)
-        .end()
-        .find('.Quote a')
-        .text(quote)
         .end()
         .find('.WidgetInputBox_Ttl')
         .val(this.options.title)
@@ -619,7 +630,6 @@
             if (errorList.length) {
               alert(errorMap.title || errorMap.description);
             }
-            self.widget().find('button[name="save"]').button('reset');
           },
           rules: {
             title: {
@@ -712,10 +722,9 @@
             self.__getVideo(form);
           },
           showErrors: function (errorMap, errorList) {
-            if (errorMap.url) {
+            if (errorList.length) {
               alert(errorMap.url);
             }
-            self.widget().find('button[name="save"]').button('reset');
           },
           rules: {
             url: {
@@ -816,7 +825,7 @@
           var $url = self.widget().find('.WidgetInputBox_Url');
           var url = $url.val();
           var urlParts = url.match(REGEXP_URL_NO_PROTOCOL);
-          if (urlParts && urlParts[3] && !urlParts[2]) {
+          if (urlParts) {
             $url.val('http://' + url);
           }
         })
@@ -833,7 +842,6 @@
             if (errorList.length) {
               alert(errorMap.cite || errorMap.url || errorMap.title || errorMap.description);
             }
-            self.widget().find('button[name="save"]').button('reset');
           },
           rules: {
             cite: {
@@ -944,10 +952,9 @@
           self.commit();
         },
         showErrors: function (errorMap, errorList) {
-          if (errorMap.contents) {
+          if (errorList.length) {
             alert(errorMap.contents);
           }
-          self.widget().find('button[name="save"]').button('reset');
         },
         rules: {
           contents: {
@@ -1029,10 +1036,9 @@
           self.commit();
         },
         showErrors: function (errorMap, errorList) {
-          if (errorMap.contents) {
+          if (errorList.length) {
             alert(errorMap.contents);
           }
-          self.widget().find('button[name="save"]').button('reset');
         },
         rules: {
           contents: {
@@ -1126,13 +1132,9 @@
           self.commit();
         },
         showErrors: function (errorMap, errorList) {
-          if (errorMap.title) {
-            alert(errorMap.title);
-          } else if (errorMap.description) {
-            alert(errorMap.description);
+          if (errorList.length) {
+            alert(errorMap.title || errorMap.description);
           }
-          self.widget().find('button[name="publish"]').button('reset');
-          self.widget().find('button[name="save"]').button('reset');
         },
         rules: {
           title: {
@@ -1159,7 +1161,8 @@
     },
 
     commit: function () {
-      console.log('commit-topic/publish');
+      this.widget().find('button[name="publish"]').button('loading');
+      this.widget().find('button[name="save"]').button('loading');
       $.ajax('/topic/publish', {
         type: 'PUT',
         data: {
@@ -1264,8 +1267,8 @@
             .find('.EDIT')
             .click(function () {
               var url = $li.find('.Quote a').attr('href');
-              var title = $li.find('.Text a').text();
-              var description = $('<div/>').html($li.find('.Text p').html().replace(/<br>/g, '\n')).text();
+              var title = $li.find('.Title a').text();
+              var description = $('<div/>').html($li.find('.Description').html().replace(/<br>/g, '\n')).text();
               self._createEditWidget(type, {
                 from: 'EDIT',
                 url: url,
@@ -1283,7 +1286,7 @@
             .click(function () {
               var cite = $('<div/>').html($li.find('.Cite q').html().replace(/<br>/g, '\n')).text();
               var url = $li.find('.Quote a').attr('href');
-              var title = $li.find('.Quote a').text();
+              var title = $li.find('.Quote a').text() || $li.find('.Quote span:last').text();
               var description = $('<div/>').html($li.find('.Description').html().replace(/<br>/g, '\n')).text();
               self._createEditWidget(type, {
                 from: 'EDIT',
@@ -1565,8 +1568,6 @@
         .find('.Item').children().first()
         .after($('.Templates .Item .' + type).clone()).end().end()
         .end()
-        .children().first().next().remove().end().end()
-        .end()
         .data('type', type)
         .data('id', itemId);
 
@@ -1590,54 +1591,35 @@
             .end()
             .find('.Quote a')
             .attr('href', quote)
-            .text(urlParts ? urlParts[3] : '')
+            .text(urlParts ? urlParts[2] : '')
             .end()
             .find('.Text p')
             .html($('<div/>').text(description).html().replace(/\n/g, '<br>'))
             .end();
           break;
         case 'VIDEO':
-          //填充图片信息
+          //填充视频信息
           var url = data.url;
           var title = data.title;
           var description = data.description;
-          var urlParts = url.match(REGEXP_URL);
-          var temp;
-          var quote = !urlParts ? null : !urlParts[3] ? null : !(temp = urlParts[3].match(/^[^\.]+\.(([^\.]+)\.([^\.]+\.)*[^\.]+)$/)) ? null : !temp[1] ? null : temp[1];
-          var videoType = temp[2].toUpperCase();
-          var vid;
 
-          switch (videoType) {
-            case 'YOUKU':
-              vid = !(temp = url) ? '' : !(temp = temp.substring(temp.length - 18, temp.length - 5)) ? '' : temp;
-              break;
-            case 'TUDOU':
-              vid = !(temp = url) ? '#vid#' : !(temp = temp.match(/([^\/]{11})(\/|\.html)$/)) ? '#vid#' : !temp[1] ? '#vid#' : temp[1];
-              break;
-          }
+          fillVideo($item, url);
 
           $item
-            .find('.' + videoType)
-            .attr('src', $item.find('.' + videoType).attr('src').replace('#vid#', vid))
-            .removeAttr('style')
-            .end()
             .find('.VIDEO_URL')
             .attr('href', url)
             .end()
-            .find('.Quote a')
-            .text(quote)
-            .end()
-            .find('.Text a')
+            .find('.Title a')
             .text(title)
             .end()
-            .find('.Text p')
+            .find('.Description')
             .html($('<div/>').text(description).html().replace(/\n/g, '<br>'))
             .end();
           if (!title) {
-            $item.find('.Text a').hide();
+            $item.find('.Title').hide();
           }
           if (!description) {
-            $item.find('.Text p').hide();
+            $item.find('.Description').hide();
           }
           break;
         case 'CITE':
@@ -1651,7 +1633,10 @@
             .html($('<div/>').text(cite).html().replace(/\n/g, '<br>'))
             .end()
             .find('.Quote a')
-            .text(title || url)
+            .text(!url ? '' : !title ? url : title)
+            .end()
+            .find('.Quote span:last')
+            .text(url ? '' : title)
             .end()
             .find('.Quote a')
             .attr('href', url)
@@ -1683,6 +1668,11 @@
             .end();
           break;
       }
+
+      //填充新内容，然后删除旧内容，顺序很重要！！！防止抖动
+      $item
+        .children().first().next().remove().end().end()
+        .end();
 
       this.__initItemListener($item, type);
 

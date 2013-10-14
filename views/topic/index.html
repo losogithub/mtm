@@ -11,11 +11,13 @@
         </table>
       </div>
     </div>
-    <div class="Inner">
-      <div class="Head02">
+    <div class="Head02">
+      <div class="Inner">
         <div class="HeadMain">
-          <img class="HeadThumb" width="95" height="95" onerror="mtm.errorImage(this,'image_95x95');" alt=""
-               src="<%= locals.topic ? topic.coverUrl : '/images/no_img/image_95x95.png' %>">
+          <div class="HeadThumb" style="display: <%= !locals.topic ? 'none' : !topic.coverUrl ? 'none' : 'block' %>;">
+          <img width="95" height="95" onerror="mtm.errorImage(this,'image_95x95');"
+               src="<%= !locals.topic ? '' : !topic.coverUrl ? '' : topic.coverUrl %>">
+          </div>
 
           <div class="HeadTxt">
             <div class="HeadTtlWrapper">
@@ -32,7 +34,7 @@
               </div>
             </div>
 
-            <p><span class="HeadDesc"><%= topic.description %></span><span class="HeadDate">更新日: <%= locals.topic ? topic.updateAt : '' %></span>
+            <p><span class="HeadDesc"><%= topic.description %></span><span class="HeadDate">更新日期: <%= locals.topic ? topic.updateAt : '' %></span>
             </p>
 
             <div class="HeadOption">
@@ -70,10 +72,12 @@
         <img class="NoItemIco" src="/images/sprite_NoItem.png">
 
         <p class="NoItemTxt">このまとめにはまだアイテムの登録がありません。<br>アイテムを追加しますか？</p>
-        <a class="Btn BtnAddItem" href="<%= locals.url + '/edit' %>">添加条目</a>
+      <% } %>
+        <a href="<%= locals.url + '/edit' %>">
+          <button class="button button-small button-action" type="button"><i class="icon-plus-sign icon-large"></i> 添加条目</button>
+        </a>
+      <% if (!locals.items || !items.length) { %>
       </div>
-      <% } else { %>
-      <a class="Btn BtnAddItem" href="<%= locals.url + '/edit' %>">添加条目</a>
       <% } %>
 
       <% include _itemList.html %>
