@@ -68,6 +68,9 @@ module.exports = function (app) {
 
   //show personal page
   app.get('/u/:authorName', auth.loadUser, personal.showPersonal);
+  app.post('/u', auth.loadUser, auth.loginDialog, personal.AddorRemoveLikes);
+
+  app.post('/loginDialogCheck', auth.loginDialogCheck, personal.AddorRemoveLikes);
 
   /*
    app.get('/active_account', sign.active_account);

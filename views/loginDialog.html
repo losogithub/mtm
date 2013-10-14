@@ -1,0 +1,69 @@
+<span id="simplemodal-placeholder" style="display: none;"></span>
+<div id="simplemodal-overlay" class="simplemodal-overlay" style="opacity: 0.5; height: 1056px; width: 1337px; position: fixed; left: 0px; top: 0px; z-index: 1001;"></div>
+<div id="simplemodal-container" class="simplemodal-container" style="position: fixed; z-index: 1002; height: 326px; width: 399px; left: 340px; top: 100px;">
+  <a class="modalCloseImg simplemodal-close" title="Close"></a>
+  <div tabindex="-1" class="simplemodal-wrap" style="height: 100%; outline: 0px; width: 100%; overflow: auto;">
+    <div id="LoginPanel" class="simplemodal-data" style="">
+      <div class="LoginPanelArea">
+        <h1 style="width:345px;">
+          <a href="/">
+            MTM </a>
+          登录</h1>
+        <p class="info">此项功能需要您的登录。</p>
+        <div style="display: block;" id="LoginPanelForm">
+          <form style="margin:0px;padding:0;" name="loginForm" id="loginForm" action="#"  onsubmit="return loginCheck()" novalidate="novalidate">
+            <div class="registerArea">
+              <h2>
+                <a href="/signup">
+                  <img alt="免费会员注册" src="http://static.naver.jp/nvCommon/img/btn_register.gif"></a> <!--todo: image webserver -->
+              </h2>
+              <p>注册MTM的用户<br>使用我们为您
+                提供的各种服务</p>
+            </div><!--/.registerArea-->
+            <div class="loginArea">
+              <h2 style="display:none;">login form</h2>
+              <p id="errMsg" style="display: none; " class="attention"></p>
+              <ul class="formList">
+                <li class="nvrId">
+                  <h3 style="display:none;">邮箱或则用户名</h3>
+                  <div class="cont">
+                    <input id="uName" type="text" value="" class="input required name" name="name" placeholder="邮箱或则用户名"></div>
+                </li>
+                <li class="pass">
+                  <h3 style="display:none;">密码</h3>
+                  <div class="cont">
+                    <input id="uPas" type="password" value="" maxlength="30" class="input" name="password" placeholder="密码">
+                  </div>
+                </li>
+              </ul>
+              <p class="loginBtn">
+                <input type="submit" alt="登录" src="http://static.naver.jp/nvCommon/img/btn_login_s.gif">
+              </p>
+              <ul class="supportNavi">
+                <li class="idSave">
+                  <input type="checkbox" id="idSaveCheck" name="idSaveCheck">
+                  <label for="idSaveCheck"> 记住密码</label>
+                </li>
+                <li class="lost">
+                  <a href="/forgetPassword">忘记密码？</a>
+                </li>
+              </ul><!--20111014-->
+              <!--
+              <div class="linkedAccount">
+                <p class="linkedAccountTxt">他のアカウントでログイン</p>
+                <p><a href="https://ssl.naver.jp/oauth/layerFacebookRequest">
+                  <img width="35" height="36" src="http://static.naver.jp/matome_ver4/img/common/login/img_fb.png" alt="Facebook"></a>
+                  <a href="https://ssl.naver.jp/oauth/layerTwitterRequest"><img width="35" height="36" src="http://static.naver.jp/matome_ver4/img/common/login/img_tw.png" alt="Twitter"></a>
+                  <a href="https://ssl.naver.jp/openid/layerLogin/livedoor?fromUrl=http%3A%2F%2Fmatome.naver.jp%2Fmymatome%2Fwoainiguai"><img width="35" height="36" src="http://static.naver.jp/matome_ver4/img/common/login/img_ld.png" alt="Livedoor"></a><a href="https://ssl.naver.jp/openid/layerLogin/yahoo?fromUrl=http%3A%2F%2Fmatome.naver.jp%2Fmymatome%2Fwoainiguai">
+                    <img width="35" height="36" src="http://static.naver.jp/matome_ver4/img/common/login/img_yh.png" alt="Yahoo!"></a>
+                </p>
+              </div><!--//20111014-->
+            </div><!--/.loginArea-->
+          </form>
+        </div><!--/#LoginPanelForm-->
+        <div id="closeDialog" class="closeBtn simplemodal-close" onclick="closeLoginDialog()"><img width="9" height="9" alt="close" src="http://static.naver.jp/nvCommon/img/btn_close.gif">
+      </div>
+      </div><!--/.LoginPanelArea-->
+    </div>
+  </div>
+</div>

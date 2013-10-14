@@ -10,7 +10,6 @@ var UserSchema = new Schema({
   gender: {type: String},
   password: {type: String},
   email: {type: String, unique: true},
-  favourite: {type: Number, default: 0},
   url: {type: String},
   description: {type: String},
   personalSite: {type: String},
@@ -22,7 +21,13 @@ var UserSchema = new Schema({
   //topics array
   topics: [ObjectId ],
   topicCount: {type: Number, default: 0},
-  pageviewCount: {type: Number, default: 0}
+  pageviewCount: {type: Number, default: 0},
+
+  //support user likes
+  favourite: {type: Number, default: 0},
+  favouriteList: [ObjectId], //liked by someone
+  likeList: [ObjectId] //like some one
+
 });
 
 mongoose.model('User', UserSchema);

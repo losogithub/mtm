@@ -185,7 +185,9 @@
         <p class="mdMySubProf01Link"><a class="MdBtn02Site01" href="<%= authorPersonalUrl %>>" target="_blank" data-na="NL:homepage"><span class="mdBtn02Site01Ico"></span><span class="mdBtn02Site01Txt">联合运营</span></a></p>
 
         <div class="mdMySubProf01FV">
-          <a class="MdFVBtn02" data-favorite="{&quot;url&quot;:&quot;<%= thisUrl %>&quot;}" data-na="NC:addfavorite"><span class="mdFVBtn02Wrap"><span class="mdFVBtn02Ico"></span><span class="mdFVBtn02Txt">添加到收藏</span></span></a>
+          <a
+            <%if (likedBefore) { %> class="MdFVBtn02 ExSelected"  <% } else {%> class="MdFVBtn02" <% } %>
+             data-favorite="{&quot;url&quot;:&quot;<%= thisUrl %>&quot;}" data-na="NC:addfavorite"><span class="mdFVBtn02Wrap"><span class="mdFVBtn02Ico"></span><span class="mdFVBtn02Txt">添加到收藏</span></span></a>
           <span class="MdFVCount01"><span class="mdFVCount01Ico"></span><span class="mdFVCount01Num"><%= authorFavourite %></span></span>
         </div>
       </div>

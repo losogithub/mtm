@@ -9,6 +9,7 @@ var check = require('validator').check,
   sanitize = require('validator').sanitize;
 
 var encryp = require('../helper/encryp');
+var helper = require('../helper/helper');
 var config = require('../config');
 
 
@@ -371,7 +372,7 @@ var login = function (req, res, next) {
 
   // check loginname is a user id or an email address
   var emailIDFlag = true;
-  if (loginname.indexOf('@') == -1) { //todo: check email is not correct !!
+  if (helper.validateEmail(loginname)) {
     emailIDFlag = false;
     User.getUserByLoginName(loginname, function (err, user) {
       if (err) {

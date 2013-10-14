@@ -669,6 +669,20 @@ var showPersonal = function(req, res){
       }
       //console.log(description);
 
+      //check the like, whether the viewer liked author before
+      var likedBefore = false;
+
+      if(req.session.userId && (req.session.userId != 'undefined')){
+        var fList = user.favouriteList;
+        var viewerId = req.session.userId;
+        for(var i = 0; i < fList.length; i++){
+          if( viewerId == fList[i])
+          {
+            likedBefore = true;
+            break;
+          }
+        }
+      }
 
       //getAndSort all the topics according to
       //P or J
@@ -734,7 +748,8 @@ var showPersonal = function(req, res){
               fSelect: fSelect,
               nSelect: nSelect,
               totalPage: totalPage,
-              currentPage: currentPage
+              currentPage: currentPage,
+              likedBefore: likedBefore
             });
             return;
 
@@ -772,7 +787,8 @@ var showPersonal = function(req, res){
           fSelect: '',
           nSelect: '',
           totalPage: '10',
-          currentPage: '1'
+          currentPage: '1',
+          likedBefore: likedBefore
         });
         return;
 
@@ -808,6 +824,120 @@ var getandSortTopicsforShow = function(sortName, topics, callback){
 
 
 
+var AddorRemoveLikes = function(req, res){
+  console.log("add or remove likes");
+  console.log("req Body: %s" , req.body);
+
+  var authorName = req.body.url.split('/').pop();
+
+  //default true case means from unlogin --> login situation.
+  //this also makes the duplication check necessary in later part.
+  var toLike = req.body.toLike || 'true';
+  console.log("authorName: %s", authorName);
+  console.log("toLike: %s", toLike);
+  var viewerId = req.session.userId;
+  //console.log("current User");
+  console.log(req.currentUser);
+
+
+  //extract the author model and update the  favourite and favouriteList.
+  User.getUserByLoginName(authorName, function(err, author){
+    if(err){
+      console.log("find user err");
+    }
+    else if(!author){
+      console.log("cannot find user by name: %s", authorName);
+    }
+    else {
+      //found the user
+      //toLike is string
+      //console.log("toLike:  %s", toLike);
+      //console.log(typeof toLike);
+
+      if (toLike == 'true') {
+        //todo: why is string
+
+        //console.log("add likes");
+        //For safety check:
+        // if Exists do nothing
+        if (author.favouriteList.indexOf(viewerId) == -1){
+          author.favouriteList.push(viewerId);
+          author.favourite += 1;
+          //console.log(author.favouriteList);
+        }
+      } else{
+        //remove from the like list
+        //console.log("remove likes");
+        //if exist in DB
+        var index = author.favouriteList.indexOf(viewerId);
+        if( index > -1) {
+          author.favourite -= 1;
+          author.favouriteList.splice(index, 1);
+        }
+        //console.log(author.favouriteList);
+      }
+      author.save(function(err){
+        if(err){
+          console.log("save err in getUserByLoginName func");
+        }
+      });
+
+      //extract the user and update the likelist
+      User.getUserById(viewerId, function(err, viewer){
+        if(err){
+          console.log('find user err');
+          return;
+        }
+        else if (!viewer){
+          console.log("cannot find the user by id: %s", viewerId);
+          return;
+        }
+        else {
+          //dekida
+          //console.log("view like list: %s", viewer.likeList);
+
+          if(toLike == 'true'){
+            //console.log("add likes");
+            if(viewer.likeList.indexOf(author._id) == -1 ){
+              viewer.likeList.push(author._id);
+            }
+            //console.log(viewer.likeList);
+          } else {
+            //console.log("remove likes");
+            var index = viewer.likeList.indexOf(author._id);
+            if(index > -1 ){
+              viewer.likeList.splice(index, 1);
+            }
+            //console.log(viewer.likeList);
+          }
+
+          viewer.save(function(err){
+            if(err){
+              console.log("save err");
+            }
+          })
+
+          //now successfully update info for both author and viewer.
+          //send information back
+          res.header('Access-Control-Allow-Credentials', 'true')
+          res.contentType('json');
+          //res.writeHead(200);
+          //if need login, then in auth.js, loginDialog : true,
+          //correct attribute is used for login Dialog success situation.
+          res.send({loginDialog: false, favourite:  author.favourite, correct: true, userName: viewer.loginName });
+
+        }
+      })
+
+    }
+  })
+
+
+
+
+}
+
+
 var showFavourite = function (req, res) {
   res.locals.path = req.path.replace(/\/$/, '');
   if(req.session && req.session.userId && req.session.userId !== 'undefined'){
@@ -834,3 +964,4 @@ exports.passwordVerify = passwordVerify;
 exports.showAccountModify = showAccountModify;
 exports.accountModify = accountModify;
 exports.showPersonal = showPersonal;
+exports.AddorRemoveLikes = AddorRemoveLikes;

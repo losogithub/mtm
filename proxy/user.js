@@ -73,6 +73,15 @@ var getUsersByQuery = function (query, opt, callback) {
 var getUserByQuery = function (name, key, callback) {
   User.findOne({name: name, retrieve_key: key}, callback);
 };
+
+var getUserByNamePass = function(name, pass, callback){
+  User.findOne({loginName : name, password: pass}, callback);
+}
+
+var getUserByEmailPass = function(email, pass, callback){
+  User.findOne({email: email, password: pass}, callback);
+}
+
 // here is Email need a key
 var getUserByEmail = function (email, key, callback) {
   User.findOne({email: email, retrieve_key: key}, callback);
@@ -138,3 +147,5 @@ exports.getUserByQuery = getUserByQuery;
 exports.getUserByEmail = getUserByEmail;
 exports.newAndSave = newAndSave;
 exports.appendTopic = appendTopic;
+exports.getUserByNamePass = getUserByNamePass;
+exports.getUserByEmailPass = getUserByEmailPass;

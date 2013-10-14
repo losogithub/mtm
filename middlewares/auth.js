@@ -12,7 +12,13 @@
 var User = require('../proxy').User;
 var LoginToken = require('../proxy').LoginToken;
 
+var check = require('validator').check,
+  sanitize = require('validator').sanitize;
+var encryp = require('../helper/encryp');
+var helper = require('../helper/helper');
 
+var fs = require('fs');
+var path = require('path');
 /* if logged in, jump to fromUrl page.
  toto: it seems: just use next. we don't need fromUrl.
  which was stored at _loginReferer.
@@ -170,7 +176,132 @@ var authenticateFromLoginToken = function (req, res, next) {
 }
 
 
+var loginDialog = function(req, res, next){
+  console.log("loginDialog");
+  console.log("loginReferer: %s", req.session._loginReferer);
+
+
+
+
+  //if not login, then redirect to login page.
+  if ((!req.session) || (!req.session.userId) || (req.session.userId == 'undefined')) {
+    console.log("Show LoginDialog");
+    //send loginDialog html back via ajax
+
+    console.log(__dirname);
+    var filename =  __dirname + '/../views/loginDialog.html';
+    console.log(filename);
+    fs.exists(filename, function(fileok){
+      if(!fileok){
+        console.log("cannot read file.");
+        return;
+      }
+      else {
+        fs.readFile(filename, "utf-8", function(err, file) {
+          if(err) {
+            console.log(err);
+            // write an error response or nothing here
+            return;
+          }
+          //console.log("show file detail");
+          //console.log(file);
+          var data = {loginDialog: true, loginHtml: file};
+          res.header('Access-Control-Allow-Credentials', 'true')
+          res.send(data);
+        });
+      }
+    });
+
+  }
+  //if has already logged in, jump to next action.
+  else {
+    next();
+  }
+}
+
+var loginDialogCheck = function(req, res, next){
+  console.log("login dialog check");
+  //console.log(req.body);
+  //console.log("logineReferer: %s", req.session._loginReferer); //http://localhost:3000/u/benben
+  //console.log("body url: %s", req.body.url);
+
+  req.body.url = req.session._loginReferer;
+
+
+  //now login the user.
+  //if not correct, post back
+  //else next()
+  var loginName = sanitize(req.body.userName).trim().toLowerCase();
+  var pass = sanitize(req.body.password).trim();
+  var rememberMe = sanitize(req.body.rememberMe).trim();
+
+
+  //todo1: name can be either name or password
+  //todo2: password need encry
+  if(helper.validateEmail(loginName)){
+    console.log("email address");
+    User.getUserByEmailPass(loginName, encryp.md5(pass), function(err, user){
+      if(err){ console.log("find err: %s", err); return;}
+      else if(!user){
+        console.log("cannot find user by email&pass: %s, %s", loginName, pass);
+        var data = { correct: false}
+        res.header('Access-Control-Allow-Credentials', 'true')
+        return res.send(data);
+      }
+      else {
+        //found user by email and password
+        req.session.userId = user._id;
+        if(rememberMe){
+          //persistent cookie
+          //var loginToken = new LoginToken({ email: user.email });
+          LoginToken.save(user.email, function (loginToken) {
+            console.log("logintoken: %s", loginToken.cookieValue);
+            res.cookie('logintoken', loginToken.cookieValue, { expires: new Date(Date.now() + 2 * 604800000), path: '/' });
+          });
+        }
+
+        //then next
+        next();
+      }
+    })
+  }
+
+ else {
+    //not email, so username
+    User.getUserByNamePass(loginName, encryp.md5(pass) , function(err, user){
+      if(err){
+        console.log("find err: %s", err);
+        return
+      }
+      else if(!user){
+        console.log("cannot find user by name&pass: %s, %s", loginName, pass);
+        var data = { correct: false}
+        res.header('Access-Control-Allow-Credentials', 'true')
+        return res.send(data);
+      }
+      else {
+        //found user by name and password
+        req.session.userId = user._id;
+        if(rememberMe){
+          //persistent cookie
+          //var loginToken = new LoginToken({ email: user.email });
+          LoginToken.save(user.email, function (loginToken) {
+            console.log("logintoken: %s", loginToken.cookieValue);
+            res.cookie('logintoken', loginToken.cookieValue, { expires: new Date(Date.now() + 2 * 604800000), path: '/' });
+          });
+        }
+
+        //then next
+        next();
+      }
+    })
+  }
+
+
+
+}
+
 exports.loginRequired = loginRequired;
 exports.loadUser = loadUser;
-
-
+exports.loginDialog = loginDialog;
+exports.loginDialogCheck = loginDialogCheck;
