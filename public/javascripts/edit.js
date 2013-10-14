@@ -117,7 +117,13 @@
         $head.removeClass('Band-Fixed');
       }
     });
-    $head.find('button[name="publish"]').click(function () {
+    var $publish = $head.find('button[name="publish"]');
+    $head.find('button[name="saveDraft"]').click(function () {
+      $publish.removeAttr('value');
+      $('.Edit_Top form').submit();
+    });
+    $publish.click(function () {
+      $publish.attr('value', 1);
       $('.Edit_Top form').submit();
     });
     $head.find('button[name="save"]').click(function () {
@@ -1185,7 +1191,7 @@
 
       $form.validate({
         submitHandler: function (form) {
-          self.commit();
+          self.commit($('.Band button[name="publish"]').attr('value'));
         },
         showErrors: function (errorMap, errorList) {
           if (errorList.length) {
@@ -1216,21 +1222,31 @@
       });
     },
 
-    commit: function () {
-      this.widget().find('button[name="publish"]').button('loading');
+    commit: function (publish) {
+      console.log(publish);
+      if (publish) {
+        this.widget().find('button[name="publish"]').button('loading');
+      } else {
+        this.widget().find('button[name="saveDraft"]').button('loading');
+      }
       this.widget().find('button[name="save"]').button('loading');
       var $form = this.widget().find('.Edit_Top form');
-      $.ajax('/topic/publish', {
+      $.ajax('/topic/save', {
         type: 'PUT',
         data: {
           topicId: topicId,
           title: $form.find('input[name="title"]').val(),
           coverUrl: $form.find('.Edit_Top_Thumb img').attr('src'),
-          description: $form.find('textarea[name="description"]').val()
+          description: $form.find('textarea[name="description"]').val(),
+          publish: publish
         }
       })
         .done(function () {
-          window.location = '/topic/' + topicId;
+          if (publish) {
+            window.location = '/topic/' + topicId;
+          } else {
+            window.location = '/works';
+          }
         });
     },
 

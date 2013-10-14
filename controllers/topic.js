@@ -19,7 +19,7 @@ var index = function (req, res, next) {
   var topicId = req.params.topicId;
 
   Topic.validateId(topicId, function (valid, topic) {
-    if (valid && topic.published) {
+    if (valid && topic.publishDate) {
 
       Topic.increasePVCountBy(topic, 1, function (topic) {
 
@@ -76,7 +76,8 @@ var create = function (req, res, next) {
       '/javascripts/jquery-ui-1.10.3.custom.min.js',
       '/javascripts/jquery.validate.min.js',
       '/javascripts/edit.js'
-    ]
+    ],
+    backUrl: req.headers.referer ? req.headers.referer : '/works'
   });
 }
 
@@ -84,7 +85,7 @@ var edit = function (req, res, next) {
   var topicId = req.params.topicId;
 
   Topic.validateId(topicId, function (valid, topic) {
-    if (valid && topic.published) {
+    if (valid && topic.publishDate) {
 
       Topic.getContents(topicId, function (topic, items) {
         var topicData = {
@@ -113,7 +114,7 @@ var edit = function (req, res, next) {
             '/javascripts/edit.js'
           ],
           escape: escape,
-          backUrl: req.headers.referer,
+          backUrl: req.headers.referer ? req.headers.referer : './',
           topic: topicData,
           items: itemsData
         });
@@ -135,7 +136,7 @@ var getContents = function (req, res, next) {
   Topic.validateId(topicId, function (valid, topic) {
     if (!valid) {
       getId(req, res, next);
-    } else if (topic.published) {
+    } else if (topic.publishDate) {
       res.json({
         redirect: '/topic/' + topicId + '/edit'
       });
@@ -337,14 +338,15 @@ var deleteItem = function (req, res, next) {
   res.send(200);
 }
 
-var publish = function (req, res, next) {
+var save = function (req, res, next) {
   var authorId = req.session.userId;
   var topicId = req.body.topicId;
   var title = req.body.title;
   var coverUrl = req.body.coverUrl;
   var description = req.body.description;
+  var publish = req.body.publish;
 
-  Topic.publish(authorId, topicId, title, coverUrl, description, function () {
+  Topic.save(authorId, topicId, title, coverUrl, description, publish, function () {
 
     res.send(200);
   });
@@ -408,5 +410,5 @@ exports.createItem = createItem;
 exports.editItem = editItem;
 exports.sort = sort;
 exports.deleteItem = deleteItem;
-exports.publish = publish;
+exports.save = save;
 exports.getVideoTitle = getVideoTitle;

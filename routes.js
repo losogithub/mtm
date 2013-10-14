@@ -28,7 +28,7 @@ module.exports = function (app) {
   app.post('/topic/createitem', topic.createItem);
   app.put('/topic/edititem', topic.editItem);
   app.put('/topic/sort', topic.sort);
-  app.put('/topic/publish', auth.loadUser, topic.publish);
+  app.put('/topic/save', auth.loadUser, topic.save);
   app.delete('/topic/deleteitem', topic.deleteItem);
 
 

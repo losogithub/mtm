@@ -167,7 +167,7 @@ var increasePVCountBy = function (topic, increment, callback) {
 var getHotTopics = function (callback) {
   console.log('getHotTopics');
 
-  TopicModel.find({published: true})
+  TopicModel.find({ publishDate: { $ne: null } })
     .sort('-_id')
     .exec(function (err, topics) {
       if (err) {
@@ -180,7 +180,7 @@ var getHotTopics = function (callback) {
     });
 }
 
-var publish = function (authorId, topicId, title, coverUrl, description, callback) {
+var save = function (authorId, topicId, title, coverUrl, description, publish, callback) {
   console.log('publish');
 
   TopicModel.findById(topicId, function (err, topic) {
@@ -202,7 +202,12 @@ var publish = function (authorId, topicId, title, coverUrl, description, callbac
         topic.cover_url = coverUrl;
         topic.description = description;
         topic.update_at = Date.now();
-        topic.published = true;
+        if (publish) {
+          topic.draft = false;
+          topic.publishDate = new Date();
+        } else if (!topic.publishDate) {
+          topic.draft = true;
+        }
         topic.save(function (err) {
           if (err) {
             console.error('save topic failed:' + err);
@@ -252,6 +257,6 @@ exports.createVoidItemIfNotExist = createVoidItemIfNotExist;
 exports.increaseItemCountBy = increaseItemCountBy;
 exports.increasePVCountBy = increasePVCountBy;
 exports.getHotTopics = getHotTopics;
-exports.publish = publish;
+exports.save = save;
 exports.getTopicById = getTopicById;
 exports.getTopicsByIdsSorted = getTopicsByIdsSorted;

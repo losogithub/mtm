@@ -1,4 +1,4 @@
-.WidgetItemList-Sorting>li{box-shadow: 0 0 0 2px rgb(51, 204, 51);}
+.WidgetItemList-Sorting>li{box-shadow: 0 0 0 2px rgb(51, 204, 0);}
 .WidgetItemList-Sorting>li:hover{background-color: #fff;}
 .WidgetItemList>li:hover .SortUtil {visibility: visible;}
 .WidgetItemList>li:hover .BottomUtil {visibility: visible;}
@@ -7,8 +7,8 @@
 .ui-sortable-helper{background-color: transparent !important;box-shadow: 0 0 0 0 !important;}
 .ui-sortable-helper .SortUtil>div, .ui-sortable-helper .BottomUtil {visibility: hidden !important;}
 .ui-sortable-helper>div>*:first-child{max-height: 100px !important;margin: 0 0 0 200px !important;
-    background-color: rgba(51, 204, 51, 0.2) !important;
-    box-shadow: 0 0 0 3px rgba(51, 204, 51, 0.2) !important;}
+    background-color: rgba(51, 204, 0, 0.2) !important;
+    box-shadow: 0 0 0 3px rgba(51, 204, 0, 0.2) !important;}
 .ui-sortable-helper .MoveUtil{background-color: transparent !important;visibility: visible !important;}
 /*悬浮菜单栏*/
 .Band{position: absolute;top: 48px;left: 0;width: 100%;min-width: 960px;height: 42px;border-bottom: 1px solid rgb(231, 231, 231);background: none repeat scroll 0 0 rgb(249, 249, 249);}

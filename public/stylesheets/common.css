@@ -5,7 +5,7 @@ button, img, fieldset, table, th, td{border: 0 none;}
 input, textarea{font-size: 1em;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;
     padding: 0 4px;background-color: #fff;width: 100%;
     border-width: 1px;border-style: solid;border-color: rgb(202, 206, 209) rgb(232, 234, 235) rgb(232, 234, 235) rgb(202, 206, 209);}
-input:focus, textarea:focus{border: 1px solid #33cc33;box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.1) inset;}
+input:focus, textarea:focus{border: 1px solid #33cc00;box-shadow: 0 0 3px rgba(0, 0, 0, 0.1) inset;}
 textarea{font-family: arial,sans-serif;}
 /*a*/
 a{cursor: pointer;}
