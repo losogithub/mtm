@@ -85,13 +85,15 @@ var edit = function (req, res, next) {
   var topicId = req.params.topicId;
 
   Topic.validateId(topicId, function (valid, topic) {
-    if (valid && topic.publishDate) {
-
+    if (!valid) {
+      res.send('您要修改的总结不存在');
+    } else {
       Topic.getContents(topicId, function (topic, items) {
         var topicData = {
           title: topic.title,
           coverUrl: topic.cover_url,
-          description: topic.description
+          description: topic.description,
+          publishDate: topic.publishDate
         };
         var itemsData = [];
         items.forEach(function (item) {
@@ -119,8 +121,6 @@ var edit = function (req, res, next) {
           items: itemsData
         });
       });
-    } else {
-      res.send('您要修改的总结不存在');
     }
   });
 }
@@ -347,7 +347,6 @@ var save = function (req, res, next) {
   var publish = req.body.publish;
 
   Topic.save(authorId, topicId, title, coverUrl, description, publish, function () {
-
     res.send(200);
   });
 }
