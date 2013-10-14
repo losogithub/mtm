@@ -83,7 +83,6 @@ var create = function (req, res, next) {
 
 var edit = function (req, res, next) {
   var topicId = req.params.topicId;
-
   Topic.validateId(topicId, function (valid, topic) {
     if (!valid) {
       res.send('您要修改的总结不存在');

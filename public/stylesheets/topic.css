@@ -20,9 +20,32 @@
 .HeadUserThumb img{width: 30px;height: 30px;}
 .HeadUserName{color: rgb(0, 0, 0) !important;font-weight: bold;}
 .HeadSub{width: 220px;text-align: right;position: absolute;top: 15px; right: 0;}
+.HeadCount{margin:0 0 8px;*margin-bottom:5px}
+.HeadFVCount{display:inline-block;*display:inline;*zoom:1;padding-right:13px;*padding-right:17px;vertical-align:top;text-align:center}
+.HeadFVCountNum{display:block;line-height:1;*line-height:1.15;margin-top:-3px;*margin-top:0;color:#000;font-size:22px;font-family:Arial,Helvetica,sans-serif}
+.HeadFVIco{margin:0 3px 0 0;vertical-align:baseline;*vertical-align:middle;width:15px;height:14px;background-position:-40px -240px; background-image: url("/images/personal/sprite_MdFVBtn_130610.png"); display:inline-block;*display:inline;*zoom:1;overflow:hidden;padding:0;border:0;background-color:transparent;background-repeat:no-repeat;text-align:left;text-indent:-9999px;*text-indent:0;*line-height:9999px;*word-wrap:normal)}
+.HeadFVCountLabel{display:block;margin-top:3px;*margin-top:0;line-height:1;*line-height:1.15;color:#666;font-size:11px}
 .HeadPVCount{display: inline-block;text-align: center;font-family: Tahoma,Arial,Helvetica,sans-serif;}
 .HeadPVCountNum{display: block;line-height: 1;margin-top: -3px;color: rgb(0, 0, 0);font-size: 22px;font-family: Arial,Helvetica,sans-serif;}
 .HeadPVCountLabel{display: block;margin-top: 3px;line-height: 1;color: rgb(102, 102, 102);font-size: 11px;}
+.HeadFVBtn{cursor:pointer;display:inline-block;*display:inline;*zoom:1;height:39px;line-height:39px;padding-left:11px;background-repeat:no-repeat; background-image: url("/images/personal/sprite_MdFVBtn_130610.png")}
+.HeadFVBtnWrap{display:inline-block;*display:inline;*zoom:1;padding-right:12px;background-repeat:no-repeat;background-position:right 0;background-image: url("/images/personal/sprite_MdFVBtn_130610.png")}
+.HeadFVBtnIco{margin-right:7px;vertical-align:-2px;*vertical-align:middle;background-position:-20px -240px;width:17px;height:16px;background-image: url("/images/personal/sprite_MdFVBtn_130610.png");display:inline-block;*display:inline;*zoom:1;overflow:hidden;padding:0;border:0;background-color:transparent;background-repeat:no-repeat;text-align:left;text-indent:-9999px;*text-indent:0;*line-height:9999px;*word-wrap:normal)}
+.HeadFVBtnTxt{color:#000;font-weight:bold;font-size:14px}
+
+.SubInner{}
+.SubSeparator{background: #fff}
+.SubAuthor{border:5px solid #e2e5e8}
+.SubAuthorProfile{padding:15px 15px 15px}
+.SubAuthorProfileUnit{position:relative;min-height:80px;padding:0 0 0 90px}
+.SubAuthorProfileUnitTitle{line-height:1.2;padding:0 0 7px;color:#666}
+.SubAuthorProfileUnitTitleUserName{}
+.SubAuthorProfileUnit .SubAuthorProfileUnitTitle a {color: #000; font-weight: bold;}
+.SubAuthorProfileUnitTitleUserNameThumb{display:block;position:absolute;top:0;left:0;width:80px;height:80px}
+.SubAuthorProfileUnitLink{}
+.SubAuthorProfileUnitLinkSite{}
+.SubAuthorProfileUnitLinkSiteBtn{width:86px;height:23px;background-position:-70px -90px; background-image: url("/images/personal/sprite_MdFVBtn_130918.png");}
+.SubAuthorProfileTxt{line-height:1.5;margin:7px 0 -4px;word-wrap:break-word;color:#666}
 
 .Main{padding-bottom: 0;}
 .NoItem{position: relative;padding: 140px 0px 160px;text-align: center;}

@@ -55,10 +55,22 @@
           </div>
         </div>
         <div class="HeadSub">
-          <span class="HeadPVCount">
-            <span class="HeadPVCountNum"><%= topic.PVCount %></span>
-            <span class="HeadPVCountLabel">view</span>
-          </span>
+          <div class="HeadCount">
+            <span class="HeadFVCount">
+              <span class="HeadFVCountNum"><span class="HeadFVIco"></span> <%= topic.PVCount %></span>
+              <span class="HeadFVCountLabel">favourite</span>
+            </span>
+            <span class="HeadPVCount">
+              <span class="HeadPVCountNum"><%= topic.PVCount %></span>
+              <span class="HeadPVCountLabel">view</span>
+            </span>
+            </div>
+            <a class="HeadFVBtn" data-favorite="{&quot;url&quot;:&quot;=thisUrl&quot;}">
+              <span class="HeadFVBtnWrap">
+                <span class="HeadFVBtnIco"></span>
+                <span class="HeadFVBtnTxt">添加到收藏</span>
+              </span>
+            </a>
         </div>
       </div>
     </div>
@@ -84,7 +96,33 @@
 
       <div class="Pagination"></div>
     </div>
-    <div class="Sub"></div>
+    <div class="Sub"><!--right side--->
+      <div class="SubInner">
+
+        <div class="SubSeparator" style="height: 20px;"><hr></div>
+        <div class="SubAuthor">
+          <div class="SubAuthorProfile">
+            <div class="SubAuthorProfileUnit">
+              <h2 class="SubAuthorProfileUnitTitle">
+                <a href="" class="SubAuthorProfileUnitTitleUserName">
+                  <img title="" width="80" height="80" src="" class="SubAuthorProfileUnitTitleUserNameThumb"> username
+                </a>
+                san
+              </h2>
+              <p class="SubAuthorProfileUnitLink">
+                 <span class="SubAuthorProfileUnitLinkSite">
+                   <span class="SubAuthorProfileUnitLinkSiteBtn">个人网站</span>
+                 </span>
+              </p>
+            </div>
+            <p class="SubAuthorProfileTxt">user description text ! </p>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
     <div style="clear: both;"></div>
-  </div>
+  </div><!--TopicWrapper-->
+
 </div>
