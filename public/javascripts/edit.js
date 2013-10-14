@@ -49,27 +49,29 @@
       .end();
   }
 
-  var fadeSlideDown = function ($el, callback) {
-    $el
-      .hide()
-      .css({ 'opacity': 0 })
-      .animate({
-        opacity: 0.5,
-        height: 'toggle'
-      }, 'fast')
-      .fadeTo('fast', 1, callback);
-  }
+  $.fn.extend({
+    fadeSlideDown: function (callback) {
+      return this
+        .hide()
+        .css({ 'opacity': 0 })
+        .animate({
+          opacity: 0.5,
+          height: 'toggle'
+        }, 'fast')
+        .fadeTo('fast', 1, callback);
+    },
 
-  var hiddenSlideUp = function ($el, callback) {
-    $el
-      .css('visibility', 'hidden')
-      .slideUp('fast', function () {
-        $el.css('visibility', 'visible');
-        if (callback) {
-          callback();
-        }
-      });
-  }
+    hiddenSlideUp: function (callback) {
+      return this
+        .css('visibility', 'hidden')
+        .slideUp('fast', function () {
+          $(this).css('visibility', 'visible');
+          if ($.isFunction(callback)) {
+            callback.call(this);
+          }
+        });
+    }
+  });
 
   var updateList = function ($li) {
     //拖动的item是editWidget，不用重排
@@ -181,7 +183,7 @@
 
       //如果是修改就淡入，否则是新建就淡入加展开
       if (!$old.length) {
-        fadeSlideDown(this.widget(), animateDone);
+        this.widget().fadeSlideDown(animateDone);
       } else {
         this.widget()
           .css({ 'opacity': 0 })
@@ -229,8 +231,8 @@
       //如果是新建的就删除dom元素，否则是修改就新建条目dom元素
       var itemId = this.widget().data('id');
       if (!itemId) {
-        hiddenSlideUp(this.widget(), function () {
-          self.widget().remove();
+        this.widget().hiddenSlideUp(function () {
+          $(this).remove();
         });
         this._trigger('setState', null, 'default');
       } else {
@@ -988,18 +990,17 @@
   var __initTop = function () {
     $form = $('.Edit_Top form');
 
-    var title = topicData ? topicData.title : null;
-    var coverUrl = topicData ? topicData.coverUrl : null;
-    var description = topicData ? topicData.description : null;
-
-    if (title) {
+    if (topicData) {
+      var title = topicData.title;
+      var coverUrl = topicData.coverUrl;
+      var description = topicData.description;
       $form.find('input[name="title"]').val(title ? title : '');
       $form.find('.Edit_Top_Thumb img').attr('src', coverUrl ? coverUrl : '');
       $form.find('textarea[name="description"]').val(description ? description : '');
     }
 
     $form.validate({
-      submitHandler: function (form) {
+      submitHandler: function () {
         __commit();
       },
       showErrors: function (errorMap, errorList) {
@@ -1028,6 +1029,57 @@
           maxlength: "总结描述太长，请缩写到150字以内。"
         }
       }
+    });
+
+    var $Button = $form.find('.Edit_Top_OptionBtn');
+    var $options = $form.find('fieldset:last');
+
+    //开关可选项目的动画
+    $Button.click(function () {
+      if ($(this).find('i').is('.icon-caret-down')) {
+        $options.fadeSlideDown();
+      } else {
+        $options.hiddenSlideUp();
+      }
+      $(this).find('i').toggleClass('icon-caret-down icon-caret-up');
+    });
+
+    $options
+      .show()
+      .find('textarea').autosize({
+        append: '\n'
+      })
+      .end()
+      .hide();
+
+    if (/showOption=true/.test(location.search)) {
+      $Button
+        .find('i')
+        .toggleClass('icon-caret-down icon-caret-up')
+        .end()
+        .show();
+      $options.toggle();
+    } else {
+      $Button.fadeIn('slow');
+    }
+
+    var $thumb = $('.Edit_Top_Thumb');
+    var $extra = $('.Edit_Top_Thumb_Extra');
+    var $input = $extra.find('input');
+    var $save = $extra.find('button[name="save"]');
+    var $cancel = $extra.find('button[name="cancel"]');
+    $thumb.click(function () {
+      $extra.toggle('fast');
+    });
+    $cancel.click(function () {
+      $extra.css('visibility', 'hidden')
+        .hide('fast', function () {
+          $extra.css('visibility', 'visible');
+        })
+    });
+    $save.click(function () {
+      $thumb.find('img').attr('src', $input.val());
+      $cancel.click();
     });
   }
 
@@ -1076,63 +1128,6 @@
       $form
         .data('submitType', name)
         .submit();
-    });
-  }
-
-  /**
-   * 监听可选项目点击事件
-   */
-  var __initOption = function () {
-    var $editTop = $('.Edit_Top_Contents');
-    var $Button = $editTop.find('.Edit_Top_OptionBtn');
-    var $options = $editTop.find('fieldset:last');
-
-    //开关可选项目的动画
-    $Button.click(function () {
-      if ($(this).find('i').is('.icon-caret-down')) {
-        fadeSlideDown($options);
-      } else {
-        hiddenSlideUp($options);
-      }
-      $(this).find('i').toggleClass('icon-caret-down icon-caret-up');
-    });
-
-    $options
-      .show()
-      .find('textarea').autosize({
-        append: '\n'
-      })
-      .end()
-      .hide();
-
-    if (/showOption=true/.test(location.search)) {
-      $Button
-        .find('i')
-        .toggleClass('icon-caret-down icon-caret-up')
-        .end()
-        .show();
-      $options.toggle();
-    } else {
-      $Button.fadeIn('slow');
-    }
-
-    var $thumb = $('.Edit_Top_Thumb');
-    var $extra = $('.Edit_Top_Thumb_Extra');
-    var $input = $extra.find('input');
-    var $save = $extra.find('button[name="save"]');
-    var $cancel = $extra.find('button[name="cancel"]');
-    $thumb.click(function () {
-      $extra.toggle('fast');
-    });
-    $cancel.click(function () {
-      $extra.css('visibility', 'hidden')
-        .hide('fast', function () {
-          $extra.css('visibility', 'visible');
-        })
-    });
-    $save.click(function () {
-      $thumb.find('img').attr('src', $input.val());
-      $cancel.click();
     });
   }
 
@@ -1466,8 +1461,8 @@
 
       var removeDynamicMenu = function ($li) {
         self.state = 'default';
-        hiddenSlideUp($li, function () {
-          $li.remove();
+        $li.hiddenSlideUp(function () {
+          $(this).remove();
         });
       }
 
@@ -1544,7 +1539,7 @@
               removeDynamicMenu($editWidget);
             })
             .end();
-          fadeSlideDown($editWidget);
+          $editWidget.fadeSlideDown();
           this.callWidgetMethod = null;
           break;
         case 'IMAGE_CREATE':
@@ -1790,7 +1785,6 @@
       topicData = data.topicData;
       __initTop();
       __initBand();
-      __initOption();
       __initSort();
       $(document).editPage({
         topicData: data.topicData,
