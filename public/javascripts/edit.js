@@ -53,6 +53,56 @@
       .end();
   }
 
+  var fadeSlideDown = function ($el, callback) {
+    $el
+      .hide()
+      .css({ 'opacity': 0 })
+      .animate({
+        opacity: 0.5,
+        height: 'toggle'
+      }, 'fast')
+      .fadeTo('fast', 1, callback);
+  }
+
+  var hiddenSlideUp = function ($el, callback) {
+    $el
+      .css('visibility', 'hidden')
+      .slideUp('fast', function () {
+        $el.css('visibility', 'visible');
+        if (callback) {
+          callback();
+        }
+      });
+  }
+
+  var updateList = function ($li) {
+    //拖动的item是editWidget，不用重排
+    var itemId = $li.data('id');
+    if (!itemId) {
+      return;
+    }
+    //拖动的item放在了editWidget下面，用
+    var prevItem = $li.prev();
+    var prevItemType = prevItem.data('type');
+    var prevItemId = prevItem.data('id');
+    if (!prevItemId) {
+      prevItemType = prevItem.prev().data('type');
+      prevItemId = prevItem.prev().data('id');
+    }
+    //拖动改变了列表顺序，通知服务器将item插入他前一个item的后面
+    // TODO 安全起见topicId由服务器计算
+    $.ajax('/topic/sort', {
+      type: 'PUT',
+      data: {
+        topicId: topicId,
+        type: $li.data('type'),
+        itemId: itemId,
+        prevItemType: prevItemType,
+        prevItemId: prevItemId
+      }
+    });
+  }
+
   /**
    * 总结菜单栏固定窗口顶部、监听按钮点击事件
    * @private
@@ -79,13 +129,27 @@
    * 监听可选项目点击事件
    */
   var __initOption = function () {
-      var $Button = $('.Edit_Top_OptionBtn');
+    var $editTop = $('.Edit_Top_Contents');
+    var $Button = $editTop.find('.Edit_Top_OptionBtn');
+    var $options = $editTop.find('fieldset:last');
 
     //开关可选项目的动画
     $Button.click(function () {
+      if ($(this).find('i').is('.icon-caret-down')) {
+        fadeSlideDown($options);
+      } else {
+        hiddenSlideUp($options);
+      }
       $(this).find('i').toggleClass('icon-caret-down icon-caret-up');
-      $('.Edit_Top fieldset:last').toggle('fast');
     });
+
+    $options
+      .show()
+      .find('textarea').autosize({
+        append: '\n'
+      })
+      .end()
+      .hide();
 
     if (/showOption=true/.test(location.search)) {
       $Button
@@ -93,27 +157,27 @@
         .toggleClass('icon-caret-down icon-caret-up')
         .end()
         .show();
-      $('.Edit_Top fieldset:last').toggle();
+      $options.toggle();
     } else {
       $Button.fadeIn('slow');
     }
 
-    var $link = $('.TopicThumbLink');
-    var $edit = $('.ThumbEdit');
-    var $input = $edit.find('input');
-    var $save = $edit.find('button[name="save"]');
-    var $cancel = $edit.find('button[name="cancel"]');
-    $link.click(function () {
-      $edit.toggle('fast');
+    var $thumb = $('.Edit_Top_Thumb');
+    var $extra = $('.Edit_Top_Thumb_Extra');
+    var $input = $extra.find('input');
+    var $save = $extra.find('button[name="save"]');
+    var $cancel = $extra.find('button[name="cancel"]');
+    $thumb.click(function () {
+      $extra.toggle('fast');
     });
     $cancel.click(function () {
-      $edit.css('visibility', 'hidden')
+      $extra.css('visibility', 'hidden')
         .hide('fast', function () {
-          $edit.css('visibility', 'visible');
+          $extra.css('visibility', 'visible');
         })
     });
     $save.click(function () {
-      $link.find('img').attr('src', $input.val());
+      $thumb.find('img').attr('src', $input.val());
       $cancel.click();
     });
   }
@@ -125,7 +189,6 @@
     $('.WidgetItemList')
       //防止拖动开始时高度减小导致的抖动
       .mousedown(function (e) {
-        console.log('mousedown');
         $(this).css('min-height', $(this).height());
 //        var t;
 //        var that = this;
@@ -180,15 +243,17 @@
         opacity: 0.4,
 //        tolerance: "pointer",
         cursor: 'move',
-        handle: '.MoveHandle',
+        handle: '.MoveUtil',
         scrollSensitivity: 100,
         scrollSpeed: 10,
         axis: 'y',
         containment: 'body',
+//        cursorAt: { top: 10 },
 
         start: function () {
           console.log('start');
           $(this)
+            .addClass('WidgetItemList-Sorting')
             .mousemove(function (e) {
               var marginTop = e.clientY;
               var marginBottom = $(window).height() - e.clientY;
@@ -203,39 +268,15 @@
 
         stop: function () {
           console.log('stop');
-          $(this).unbind('mousemove');
+          $(this)
+            .removeClass('WidgetItemList-Sorting')
+            .unbind('mousemove');
         },
 
         //列表顺序改变后的回调函数
         update: function (event, data) {
           console.log('sort');
-          data.item.prev().prev().prev();
-          //拖动的item是editWidget，不用重排
-          var itemId = data.item.data('id');
-          if (!itemId) {
-            return;
-          }
-          //拖动的item放在了editWidget下面，用
-          var prevItemType = data.item.prev().data('type');
-          if (!prevItemType) {
-            prevItemType = data.item.prev().prev().data('type');
-          }
-          var prevItemId = data.item.prev().data('id');
-          if (!prevItemId) {
-            prevItemId = data.item.prev().prev().data('id');
-          }
-          //拖动改变了列表顺序，通知服务器将item插入他前一个item的后面
-          // TODO 安全起见topicId由服务器计算
-          $.ajax('/topic/sort', {
-            type: 'PUT',
-            data: {
-              topicId: topicId,
-              type: data.item.data('type'),
-              itemId: itemId,
-              prevItemType: prevItemType,
-              prevItemId: prevItemId
-            }
-          });
+          updateList(data.item);
         }
       });
   };
@@ -252,13 +293,15 @@
     _create: function () {
       console.log('_create');
       var self = this;
-      var empty = !this.widget().children().length;
+      var $old = this.widget().find('.SortUtil').prev();
 
       this.widget()
         .data('type', this.type)
-        .prepend($('.Templates .Widget:first').clone())
-        .find('.Widget').children().first()
-        .after($('.Templates .Widget .' + this.type).clone()).end().end()
+        .find('>div')
+        .prepend($('.TEMPLATES .Widget:first').clone())
+        .end()
+        .find('.Widget')
+        .prepend($('.TEMPLATES .Widget .' + this.type).clone())
         .end()
         //textarea自适应高度
         .find('textarea')
@@ -275,9 +318,6 @@
         .find('textarea')
         .trigger('autosize.resize')
         .end()
-        //自适应高度结束后再删除旧内容，以防抖动
-        .children().first().next().remove().end().end()
-        .end()
         //监听保存按钮点击事件
         .find('button[name="save"]')
         .click(function () {
@@ -291,6 +331,9 @@
         })
         .end();
 
+      //自适应高度结束后再删除旧内容，以防抖动
+      $old.remove();
+
       var animateDone = function () {
         self.widget()
           .find('textarea')
@@ -299,16 +342,8 @@
       }
 
       //如果是修改就淡入，否则是新建就淡入加展开
-      console.log(empty);
-      if (empty) {
-        this.widget()
-          .hide()
-          .css({ 'opacity': 0 })
-          .slideDown({
-            duration: 'fast',
-            queue: false
-          })
-          .fadeTo(400, 1, animateDone);
+      if (!$old.length) {
+        fadeSlideDown(this.widget(), animateDone);
       } else {
         this.widget()
           .css({ 'opacity': 0 })
@@ -356,8 +391,7 @@
       //如果是新建的就删除dom元素，否则是修改就新建条目dom元素
       var itemId = this.widget().data('id');
       if (!itemId) {
-        this.widget().css('visibility', 'hidden');
-        this.widget().hide('fast', function () {
+        hiddenSlideUp(this.widget(), function () {
           $(this).remove();
         });
         this._trigger('setState', null, 'default');
@@ -985,17 +1019,17 @@
         },
         showErrors: function (errorMap, errorList) {
           if (errorList.length) {
-            alert(errorMap.contents);
+            alert(errorMap.text);
           }
         },
         rules: {
-          contents: {
+          text: {
             required: true,
             maxlength: 2000
           }
         },
         messages: {
-          contents: {
+          text: {
             required: "尚未输入文本。",
             maxlength: "文本太长，请缩写到2000字以内。"
           }
@@ -1064,17 +1098,17 @@
         },
         showErrors: function (errorMap, errorList) {
           if (errorList.length) {
-            alert(errorMap.contents);
+            alert(errorMap.title);
           }
         },
         rules: {
-          contents: {
+          title: {
             required: true,
             maxlength: 100
           }
         },
         messages: {
-          contents: {
+          title: {
             required: "尚未输入标题。",
             maxlength: "标题太长，请缩写到100字以内。"
           }
@@ -1145,8 +1179,8 @@
       var description = this.options.topicData.description;
       if (title) {
         $form.find('input[name="title"]').val(title ? title : '');
-        $form.find('.TopicThumbLink img').attr('src', coverUrl ? coverUrl : '');
-        $form.find('.InputBoxDesc').val(description ? description : '');
+        $form.find('.Edit_Top_Thumb img').attr('src', coverUrl ? coverUrl : '');
+        $form.find('textarea[name="description"]').val(description ? description : '');
       }
 
       $form.validate({
@@ -1191,8 +1225,8 @@
         data: {
           topicId: topicId,
           title: $form.find('input[name="title"]').val(),
-          coverUrl: $form.find('.TopicThumbLink img').attr('src'),
-          description: $form.find('.InputBoxDesc').val()
+          coverUrl: $form.find('.Edit_Top_Thumb img').attr('src'),
+          description: $form.find('textarea[name="description"]').val()
         }
       })
         .done(function () {
@@ -1219,7 +1253,7 @@
      */
     __initItems: function () {
       var self = this;
-      this.widget().find('.WidgetItemList li').each(function (i, li) {
+      this.$ul.find('>li').each(function (i, li) {
         self.__initItemListener($(li), $(li).data('type'));
       });
       var prevItem;
@@ -1231,8 +1265,33 @@
     __initItemListener: function ($li, type) {
       console.log('__initItemListener');
       var self = this;
-      //绑定插入点击响应
       $li
+        //排序按钮
+        .find('.SortUtil>div:first>i:first')
+        .click(function () {
+          $li.prependTo(self.$ul);
+          updateList($li);
+        })
+        .end()
+        .find('.SortUtil>div:first>i:last')
+        .click(function () {
+          $li.after($li.prev());
+          updateList($li);
+        })
+        .end()
+        .find('.SortUtil>div:last>i:first')
+        .click(function () {
+          $li.before($li.next());
+          updateList($li);
+        })
+        .end()
+        .find('.SortUtil>div:last>i:last')
+        .click(function () {
+          $li.appendTo(self.$ul);
+          updateList($li);
+        })
+        .end()
+        //绑定插入点击响应
         .find('.INSERT')
         .click(function () {
           self._createEditWidget('MENU', {
@@ -1419,10 +1478,9 @@
 
       var removeDynamicMenu = function ($li) {
         self.state = 'default';
-        $li.css('visibility', 'hidden')
-          .hide('fast', function () {
-            $(this).remove();
-          });
+        hiddenSlideUp($li, function () {
+          $li.remove();
+        });
       }
 
       //编辑页面不在默认状态
@@ -1436,7 +1494,7 @@
           || $editingWidget.data('type') + '_CREATE' == type)
           && self.from == from
           && (from == 'STATIC'
-          || from == 'DYNAMIC' && self.$editingPrevItem.is($prevItem))) {
+          || from == 'INSERT' && self.$editingPrevItem.is($prevItem))) {
           console.log('重置焦点');
 
           if (this.callWidgetMethod) {
@@ -1468,7 +1526,7 @@
       if ($item) {
         var $editWidget = $item;
       } else {
-        var $editWidget = this.widget().find('.Templates .LiWrapper li').clone();
+        var $editWidget = this.widget().find('.TEMPLATES>ul>li').clone();
         //如果是动态插入就插入前趋条目的后面，否则是静态插入就插入最前面
         if ($prevItem) {
           $prevItem.after($editWidget);
@@ -1484,19 +1542,21 @@
           $editWidget
             .data('type', type)
             .insertAfter($prevItem)
-            .prepend(self.widget().find('.Templates .DynamicMenu').clone())
+            .find('>div')
+            .prepend(self.widget().find('.TEMPLATES .DynamicMenu').clone())
             .delegate('li>a', 'click', function (event) {
               self._createEditWidget($(event.target).data('type'), {
                 from: 'DYNAMIC',
                 $item: $editWidget
               });
             })
-            .find('.Btn_Close')
+            .end()
+            .find('.DynamicMenu_Close i')
             .click(function () {
               removeDynamicMenu($editWidget);
             })
-            .end()
-            .hide().show('fast');
+            .end();
+          fadeSlideDown($editWidget);
           this.callWidgetMethod = null;
           break;
         case 'IMAGE_CREATE':
@@ -1559,7 +1619,7 @@
       var type = itemData.type;
       var itemId = itemData.itemId;
 
-      var $displayItem = this.widget().find('.Templates .LiWrapper li').clone();
+      var $displayItem = this.widget().find('.TEMPLATES>ul>li').clone();
       //如果指定了前趋条目就插入其后面，否则插入最前
       if ($prevItem && $prevItem[0]) {
         $prevItem.after($displayItem);
@@ -1587,12 +1647,15 @@
       }
 
       //填充新内容，然后删除旧内容，顺序很重要！！！防止抖动
-      $item.prepend($('.Templates .Item:first').clone())
-        .find('.Item').children().first()
-        .after($('.Templates .Item .' + type).clone()).end().end()
-        .end()
+      $item
         .data('type', type)
-        .data('id', itemId);
+        .data('id', itemId)
+        .find('>div')
+        .prepend($('.TEMPLATES .Item:first').clone())
+        .end()
+        .find('.Item')
+        .prepend($('.TEMPLATES .Item .' + type).clone())
+        .end();
 
       switch (type) {
         case 'IMAGE':
@@ -1693,9 +1756,7 @@
       }
 
       //填充新内容，然后删除旧内容，顺序很重要！！！防止抖动
-      $item
-        .children().first().next().remove().end().end()
-        .end();
+      $item.find('.Widget').remove();
 
       this.__initItemListener($item, type);
 

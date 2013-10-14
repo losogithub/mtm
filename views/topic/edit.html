@@ -29,38 +29,29 @@
     <div class="Inner">
       <div class="Edit_Top_Contents">
         <form>
-          <fieldset>
+          <fieldset style="position: relative;">
             <input name='title' class="Required" value="<%= locals.topic ? topic.title : '' %>"
                    placeholder="输入总结标题（50字以内）" type="text"/>
-            <a class='Edit_Top_OptionBtn' style='display: none'>可选项目 <i class="icon-caret-down"></i></a>
+            <a class='Edit_Top_OptionBtn' style='display: none'>可选项目
+              <i style="" class="icon-caret-down"></i>
+            </a>
           </fieldset>
-          <fieldset style='display: none'>
-            <!--<dl class="EditFormItem01">-->
-            <!--<dt class="Hide">标题图片</dt>-->
-            <!--<dd class="EditFormImgArea01">-->
-            <!--<ul class="EditFormImgAddList01">-->
-            <!--<li><a>搜索图片</a></li>-->
-            <!--<li><a>上传图片</a></li>-->
-            <!--</ul>-->
-            <!--</dd>-->
-            <!--</dl>-->
-            <div class="EditFormItem02">
-              <a class="TopicThumbLink" title="设置总结封面">
-                <img src="<%= !locals.topic ? '' : !topic.coverUrl ? '' : topic.coverUrl %>">
-              </a>
+          <fieldset style='display: none;overflow: hidden;'>
+            <a class="Edit_Top_Thumb" title="设置总结封面">
+              <img style="display: block;" width="95" height="95" onerror="mtm.errorImage(this, 'image_95x95')" src="<%= !locals.topic ? '' : !topic.coverUrl ? '' : topic.coverUrl %>">
+            </a>
 
-              <div class="ThumbEdit">
-                <input class="InputBoxUrl" type="text" name="url" placeholder="输入图片URL"
-                       value="<%= !locals.topic ? '' : !topic.coverUrl ? '' : topic.coverUrl %>">
+            <div class="Edit_Top_Thumb_Extra">
+              <input name="url" value="<%= !locals.topic ? '' : !topic.coverUrl ? '' : topic.coverUrl %>"
+                     placeholder="输入图片URL" type="text">
 
-                <% include _widget_BtnSet.html %>
+              <% include _widget_BtnSet.html %>
 
-              </div>
-              <div class="EditFormItem02">
-                <textarea class="InputBoxDesc" placeholder="输入总结描述（150字以内，换行符无效）" name='description'><%= !locals.topic
-                  ? '' : !topic.description
-                  ? '' : topic.description %></textarea>
-              </div>
+            </div>
+            <div style='overflow: hidden;'>
+              <textarea name='description' class="HeightAnimation" placeholder="输入总结描述（150字以内，换行符无效）"><%= !locals.topic
+                ? '' : !topic.description
+                ? '' : topic.description %></textarea>
             </div>
           </fieldset>
         </form>
@@ -77,27 +68,28 @@
   <div class="TopicWrapper">
     <div class="Main">
 
-      <% include _itemList.html %>
+      <% include _ul.html %>
 
       <!--模板-->
-      <div class="Templates" style="display:none;">
+      <div class="TEMPLATES" style="display:none;">
 
-        <ul class="LiWrapper">
-          <li></li>
+        <ul>
+          <% var item = null; %>
+          <% include _ul_li.html %>
         </ul>
 
-        <table class="DynamicMenu">
+        <div class="DynamicMenu">
+          <table>
 
-          <% include _menu.html %>
+            <% include _menu.html %>
 
-          <td class="DynamicMenuClose">
-            <button class="Btn Btn_Close" title='关闭' type='button'>关闭</button>
-          </td>
-        </table>
+            <td class="DynamicMenu_Close">
+              <i class="icon-remove" title="关闭"></i>
+            </td>
+          </table>
+        </div>
 
         <form class="Widget">
-          <div class='ItemUtil0 MoveHandle'>
-          </div>
           <!--插入内容-->
         </form>
 
@@ -105,7 +97,7 @@
 
           <div class='Content IMAGE_CREATE'>
             <div class="Image"></div>
-            <input class="InputBoxUrl Required AUTO_FOCUS" type="text" name="url" placeholder="输入图片URL">
+            <input class="Required AUTO_FOCUS" type="text" name="url" placeholder="输入图片URL">
             <button class="Btn Btn_Check Btn_Check_Disabled" type="button" disabled='disabled'>查看</button>
 
             <% include _widget_BtnSet.html %>
@@ -130,7 +122,7 @@
           <div class='Content VIDEO_CREATE'>
             <div class="Thumb"></div>
             <div style="margin-top: 7px;">
-              <input class="InputBoxUrl Required AUTO_FOCUS" type="text" name="url" placeholder="输入视频URL">
+              <input class="Required AUTO_FOCUS" type="text" name="url" placeholder="输入视频URL">
               <button class="Btn Btn_Check Btn_Check_Disabled" type="button" disabled='disabled'>查看</button>
             </div>
 
@@ -173,14 +165,14 @@
           </div>
 
           <div class='Content TEXT'>
-            <textarea class="Required AUTO_FOCUS" name="contents" placeholder="输入文本"></textarea>
+            <textarea name="text" class="Required AUTO_FOCUS" placeholder="输入文本"></textarea>
 
             <% include _widget_BtnSet.html %>
 
           </div>
 
           <div class='Content TITLE'>
-            <input class="Required AUTO_FOCUS" name="contents" placeholder="输入标题" type="text">
+            <input name="title" class="Required AUTO_FOCUS" placeholder="输入标题" type="text">
 
             <% include _widget_BtnSet.html %>
 
@@ -189,12 +181,12 @@
         </div>
 
         <% var item = null; %>
-        <% include _items.html %>
+        <% include _ul_li_item.html %>
 
         <div class="Item">
 
           <% var item = { type: 'ALL' }; %>
-          <% include _item_contents.html %>
+          <% include _ul_li_item_contents.html %>
 
         </div>
 

@@ -5,7 +5,7 @@ button, img, fieldset, table, th, td{border: 0 none;}
 input, textarea{font-size: 1em;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;
     padding: 0 4px;background-color: #fff;width: 100%;
     border-width: 1px;border-style: solid;border-color: rgb(202, 206, 209) rgb(232, 234, 235) rgb(232, 234, 235) rgb(202, 206, 209);}
-input:focus, textarea:focus{border: 1px solid rgb(40, 185, 55);box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.1) inset;}
+input:focus, textarea:focus{border: 1px solid #33cc33;box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.1) inset;}
 textarea{font-family: arial,sans-serif;}
 /*a*/
 a{cursor: pointer;}
@@ -35,7 +35,7 @@ body{font: 12px/1.5 "微软雅黑",arial,sans-serif;word-wrap: break-word;}
 .Btn-Header-Banner01 {display: block;width: 181px;height: 33px;background-position: 0 -30px;margin: 0 auto;}
 .Btn-Header-Banner02 {display: block;width: 102px;height: 20px;margin: 0 auto;}
 
-.InputBoxUrl{color: rgb(102, 102, 102);height: 26px;line-height: 24px;}
+input[name='url']{color: rgb(102, 102, 102);height: 26px;line-height: 24px;}
 /*分割线*/
 .VLine{position: relative;top: 1px;width: 0;height: 11px;border-left: 1px solid #eee;vertical-align: middle;}
 .VLine-Header{margin: 0 9px 0 11px;}
@@ -75,24 +75,24 @@ body{font: 12px/1.5 "微软雅黑",arial,sans-serif;word-wrap: break-word;}
 .TopicWrapper .Pagination {line-height: 19px;margin: 30px 0 40px 0;font-family: Arial,Helvetica,sans-serif;font-size: 16px;text-align: center;}
 .TopicWrapper .Sub {position: relative;float: right;width: 300px;padding-bottom: 40px;}
 /*条目*/
-.WidgetItemList {padding-bottom: 1px;}
-.WidgetItemList>li{background-color: rgb(255, 255, 255);}
-.WidgetItemList>li:hover .Content{background-color: #f8f8f8;box-shadow: 0 0 0 3px #f8f8f8;}
+.WidgetItemList>li{background-color: rgb(255, 255, 255);margin: 0 0 15px 0;}
+.WidgetItemList>li:hover{background-color: #f8f8f8;box-shadow: 0 0 0 3px #f8f8f8;}
+.WidgetItemList>li>div>*:first-child{overflow: hidden;}
+.WidgetItemList .Content{overflow: hidden;}
 .WidgetItemList .Quote{overflow: hidden;line-height: 14px;margin-top: 3px;min-width: 100px;}
 .WidgetItemList .Quote *{color: rgb(170, 170, 170);}
 .WidgetItemList .Quote span{float: left;margin-right: 5px;}
 .WidgetItemList .Quote div{overflow: hidden;}
 .IMAGE .Quote{max-width: 300px;}
 .CITE .Quote{font-size: 11px;line-height: 13px;margin-top: 7px;}
-
-.Item{}
-.Item .Content{overflow: hidden;}
-.Widget .Content{overflow: hidden;}
-.ItemUtil0 {height: 15px}
-.ItemUtil1 {float: left;}
-.ItemUtil2 {float: right;}
+/*工具栏*/
+.SortUtil {position: absolute;top: 0px;right: -20px;width: 20px;visibility: hidden;}
+.SortUtil i{display: block;line-height: 19px;width: 20px;height: 19px;text-align: center;cursor: pointer;}
+.MoveUtil{cursor: move;}
 .BottomUtil{visibility: hidden; padding: 0 3px;line-height: 1;}
 .BottomUtil a, .HeadUtil a{color: rgb(124, 148, 170);line-height: 1;vertical-align: middle;}
+.ItemUtil1 {float: left;}
+.ItemUtil2 {float: right;}
 
 .IMAGE_CREATE .Image, .IMAGE .Image {float: left;margin-right: 10px;}
 .IMAGE .Image img {max-width: 300px;max-height: 600px;}

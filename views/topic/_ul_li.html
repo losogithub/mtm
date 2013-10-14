@@ -1,0 +1,20 @@
+<li data-type="<%= !item ? '' : !item.type ? '' : item.type %>" data-id="<%= !item ? '' : !item.itemId ? '' : item.itemId %>">
+  <div style="position: relative;">
+
+    <% if (item) { %>
+    <% include _ul_li_item.html %>
+    <% } %>
+
+    <div class="SortUtil">
+      <i class="MoveUtil icon-move"></i>
+      <div>
+        <i class="icon-double-angle-up"></i>
+        <i class="icon-angle-up"></i>
+      </div>
+      <div>
+        <i class="icon-angle-down"></i>
+        <i class="icon-double-angle-down"></i>
+      </div>
+    </div>
+  </div>
+</li>

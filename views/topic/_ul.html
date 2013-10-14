@@ -1,8 +1,8 @@
 <ul class="WidgetItemList">
   <% for (i in locals.items) { %>
   <% var item = items[i] %>
-  <li data-type='<%= item.type %>' data-id='<%= item.itemId %>'>
-    <% include _items.html %>
-  </li>
+
+  <% include _ul_li.html %>
+
   <% } %>
 </ul>
