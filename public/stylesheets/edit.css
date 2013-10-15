@@ -1,16 +1,16 @@
-.WidgetItemList-Sorting>li{box-shadow: 0 0 0 2px rgb(51, 204, 0);}
-.WidgetItemList-Sorting>li:hover{background-color: #fff;}
 .WidgetItemList>li:hover .SortUtil {visibility: visible;}
 .WidgetItemList>li:hover .BottomUtil {visibility: visible;}
 .WidgetItemList>li:first-child .SortUtil>div:first-of-type{visibility: hidden;}
 .WidgetItemList>li:last-child .SortUtil>div:last-of-type{visibility: hidden;}
-.ui-sortable-helper{background-color: transparent !important;box-shadow: 0 0 0 0 !important;}
+.WidgetItemList-Sorting>li>div{box-shadow: 0 0 0 2px rgb(51, 204, 0);}
+.WidgetItemList-Sorting>li>div:hover{background-color: #fff;}
+.ui-sortable-helper>div{background-color: transparent !important;box-shadow: 0 0 0 0 !important;}
+.ui-sortable-helper>div>:first-child{max-height: 100px !important;margin-left: 200px !important;
+    background-color: rgba(51, 204, 0, 0.2) !important;box-shadow: 0 0 0 3px rgba(51, 204, 0, 0.2) !important;}
 .ui-sortable-helper .SortUtil>div, .ui-sortable-helper .BottomUtil {visibility: hidden !important;}
-.ui-sortable-helper>div>*:first-child{max-height: 100px !important;margin: 0 0 0 200px !important;
-    background-color: rgba(51, 204, 0, 0.2) !important;
-    box-shadow: 0 0 0 3px rgba(51, 204, 0, 0.2) !important;}
-.ui-sortable-helper .MoveUtil{background-color: transparent !important;visibility: visible !important;
-    font-size: 18px !important;outline: none !important;}
+.ui-sortable-helper .MoveUtil{visibility: visible !important;outline: none !important;}
+.WidgetDragPlaceholder{margin-bottom: 15px;height: 20px;
+    background: url(/images/bg_WidgetDragPlaceholder.png) repeat;box-shadow: 0 0 0 0 !important;}
 /*悬浮菜单栏*/
 .Band{position: absolute;top: 48px;left: 0;width: 100%;min-width: 960px;height: 42px;border-bottom: 1px solid rgb(231, 231, 231);background: none repeat scroll 0 0 rgb(249, 249, 249);}
 .Band-Fixed{position: fixed;top: 0;z-index: 1001;}
@@ -63,7 +63,3 @@ textarea[name='description'] {resize: none;padding: 5px 5px 0;}
 .CITE .WidgetInputBox_Desc {min-height: 45px;padding: 5px 5px 0 5px;resize: none;}
 .TEXT textarea {min-height: 75px;padding: 5px 5px 0;font-size: 14px}
 .TITLE input {font-size: 14px;font-weight: bold;height: 30px;}
-.HeightAnimation{transition: height 0.2s ease 0s;}
-.WidgetDragPlaceholder{width: 100%;background: url(/images/bg_WidgetDragPlaceholder.png) repeat 0 0;height: 20px;box-shadow: 0 0 0 0 !important;}
-
-.BtnToggleClose {background-position: 0 -170px;}

@@ -53,19 +53,19 @@
     fadeSlideDown: function (callback) {
       return this
         .hide()
-        .css({ 'opacity': 0 })
+//        .css({ 'opacity': 0 })
         .animate({
-          opacity: 0.5,
+          opacity: 1,
           height: 'toggle'
-        }, 'fast')
-        .fadeTo('fast', 1, callback);
+        }, 10000)
+        .fadeTo(10000, 1, callback);
     },
 
     hiddenSlideUp: function (callback) {
       return this
-        .css('visibility', 'hidden')
-        .slideUp('fast', function () {
-          $(this).css('visibility', 'visible');
+//        .css('visibility', 'hidden')
+        .slideUp(10000, function () {
+//          $(this).css('visibility', 'visible');
           if ($.isFunction(callback)) {
             callback.call(this);
           }
@@ -1466,7 +1466,7 @@
       .sortable({
 
         //sortable微件的标准参数
-        placeholder: 'Widget WidgetDragPlaceholder',
+        placeholder: 'WidgetDragPlaceholder',
         opacity: 0.4,
         cursor: 'move',
         handle: '.MoveUtil',
@@ -1493,7 +1493,7 @@
 
         stop: function () {
           console.log('stop');
-          $(this)
+          $(this).disableSelection()
             .removeClass('WidgetItemList-Sorting')
             .unbind('mousemove');
         },

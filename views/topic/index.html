@@ -25,11 +25,10 @@
                 locals.topic ? topic.title : '' %></a></h1>
 
               <div class='HeadUtil'>
-                <a href="<%= locals.url + '/edit?showOption=true' %>"><span
-                  class="Btn Btn-Edit"></span>修改</a>
+                <a href="<%= locals.url + '/edit?showOption=true' %>"><i class="icon-pencil"></i> 修改</a>
                 <% if (!locals.items || !items.length) { %>
                 <span class='VLine VLine-Util'></span>
-                <a><span class="Btn Btn-Del"></span>删除</a>
+                <a><i class="icon-trash"></i> 删除</a>
                 <% } %>
               </div>
             </div>

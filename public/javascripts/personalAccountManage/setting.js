@@ -38,7 +38,7 @@ $(function ($) {
       console.log("click on save settings button");
       var imageUrl = $('input[name="url" ]').val();
       var description = $('textarea[class="InputBox_Introduce"]').val();
-      var connectUrl = $('input[class="InputBox_Homepage"]').val();
+      var connectUrl = $('input[name="site"]').val();
       console.log(imageUrl);
       console.log(description);
       console.log(connectUrl);
