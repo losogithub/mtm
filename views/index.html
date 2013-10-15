@@ -65,17 +65,21 @@
     </div>
     <div class="Sub">
       <div class="SubSeparator"><hr></div>
+
+
       <!---the guide of making --->
       <div class="SubContent">
         <ul class="GuideBanner">
           <li>
-             <a href="">
-               <img src="/images/bnr_guide.png" alt="制作指导">
-             </a>
+            <a href="">
+              <img src="/images/bnr_guide.png" alt="制作指导">
+            </a>
           </li>
         </ul>
       </div>
       <div class="SubSeparator"><hr></div>
+
+
       <!--the newest summarise-->
       <div class="SubContent">
         <div class="SubContentTopicListBox">
@@ -85,26 +89,28 @@
           <ul class="SubContentTopicListList">
             <% for (i in hot) { %>
             <li class="SubContentTopicListListItem">
-            <div class="SubContentTopicListListItemThumb">
-              <a href="/topic/<%= hot[i].id %>">
-                <img width="45" height="45"
-                     onerror="mtm.errorImage(this,'image_45x45');"
-                     src="<%= !hot[i].coverUrl ? '/images/no_img/image_45x45.png' : hot[i].coverUrl %>">
-              </a>
-            </div>
-            <div class="SubContentTopicListListItemTxt">
-              <h3 class="SubContentTopicListListItemTxtLink">
-                <a href="/topic/<%= hot[i].id %>"><%= hot[i].title %></a>
-              </h3>
-              <p class="SubContentTopicListListItemUserName">
-                <a href=""><%= hot[i].author%></a>
-              </p>
-            </div>
+              <div class="SubContentTopicListListItemThumb">
+                <a href="/topic/<%= hot[i].id %>">
+                  <img width="45" height="45"
+                       onerror="mtm.errorImage(this,'image_45x45');"
+                       src="<%= !hot[i].coverUrl ? '/images/no_img/image_45x45.png' : hot[i].coverUrl %>">
+                </a>
+              </div>
+              <div class="SubContentTopicListListItemTxt">
+                <h3 class="SubContentTopicListListItemTxtLink">
+                  <a href="/topic/<%= hot[i].id %>"><%= hot[i].title %></a>
+                </h3>
+                <p class="SubContentTopicListListItemUserName">
+                  <a href=""><%= hot[i].author%></a>
+                </p>
+              </div>
             </li>
             <% } %>
           </ul>
         </div>
       </div>
+
+
     </div>
   </div>
 </div>
