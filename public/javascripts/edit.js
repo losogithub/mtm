@@ -126,22 +126,28 @@
    */
   $.widget('mtm.editWidget', {
 
+    type: undefined,
+
     options: {
+      id: undefined,
       from: ''
     },
 
     _create: function () {
       console.log('_create');
       var self = this;
-      var $old = this.widget().find('.SortUtil').prev();
 
       this.widget()
         .data('type', this.type)
+        .data('id', this.options.id)
+        .scroll(function () {
+          self.widget().scrollTop(0);
+        })
         .find('>div')
-        .prepend($('.TEMPLATES .Widget:first').clone())
+        .prepend($templates.find('.Widget:first').clone())
         .end()
         .find('.Widget')
-        .prepend($('.TEMPLATES .Widget .' + this.type).clone())
+        .prepend($templates.find('.Widget .' + this.type).clone())
         .end()
         //textarea自适应高度
         .find('textarea')
@@ -154,41 +160,16 @@
       this.__create();
 
       this.widget()
-        //textarea赋值后出发resize事件
+        //textarea赋值后触发resize事件
         .find('textarea')
         .trigger('autosize.resize')
         .end()
-        //监听保存按钮点击事件
-        .find('button[name="save"]')
-        .click(function () {
-          self.widget().find('form').submit();
-        })
-        .end()
-        //监听放弃按钮点击事件
-        .find('button[name="cancel"]')
-        .click(function () {
-          self._trigger('cancel');
-        })
-        .end();
-
-      //自适应高度结束后再删除旧内容，以防抖动
-      $old.remove();
-
-      var animateDone = function () {
-        self.widget()
-          .find('textarea')
-          .addClass('HeightAnimation')
-          .end();
-      }
-
-      //如果是修改就淡入，否则是新建就淡入加展开
-      if (!$old.length) {
-        this.widget().fadeSlideDown(animateDone);
-      } else {
-        this.widget()
-          .css({ 'opacity': 0 })
-          .fadeTo('fast', 1, animateDone);
-      }
+        .fadeSlideDown(function () {
+          self.widget()
+            .find('textarea')
+            .addClass('HeightAnimation')
+            .end();
+        });
 
       this.autoFocus();
 
@@ -200,18 +181,14 @@
 
     stateHandler: function (defaultValue, event) {
       if (event.target.value == defaultValue) {
-        this._trigger('setState', null, 'create');
+        setState('create');
       } else {
-        this._trigger('setState', null, 'edit');
+        setState('edit');
       }
     },
 
     autoFocus: function () {
-      var self = this;
       this.widget()
-        .scroll(function () {
-          self.widget().scrollTop(0);
-        })
         .find('.AUTO_FOCUS')
         .focus()
         .end();
@@ -225,23 +202,22 @@
      */
     remove: function () {
       console.log('remove');
-      var self = this;
 
       this.disable();
       //如果是新建的就删除dom元素，否则是修改就新建条目dom元素
-      var itemId = this.widget().data('id');
-      if (!itemId) {
-        this.widget().hiddenSlideUp(function () {
-          $(this).remove();
-        });
-        this._trigger('setState', null, 'default');
-      } else {
-        this._trigger('createDisplayItem', null, $.extend({
-          $li: self.widget(),
-          itemId: itemId,
+      var id = this.widget().data('id');
+      this.widget().hiddenSlideUp(function () {
+        $(this).remove();
+      });
+      if (id) {
+        var data = $.extend({
+          $li: this.widget(),
+          itemId: id,
           type: this.type
-        }, this._getOriginalData()));
+        }, this._getOriginalData());
+        createItem(this.widget().prev(), this.type, id, data);
       }
+      setState('default');
     },
 
     _getOriginalData: $.noop,
@@ -259,18 +235,21 @@
         if (self.options.disabled) {
           return;
         }
-        data.$li = self.widget();
-        self._trigger('createDisplayItem', null, data);
+        self.widget().hiddenSlideUp(function () {
+          $(this).remove();
+        });
+        createItem(self.widget().prev(), self.type, data.itemId, data);
+        setState('default');
       }
 
       //如果是修改则传itemId，否则是新建则传prevId
       var data = this._getCommitData();
-      var itemId = this.widget().data('id');
-      if (itemId) {
+      var id = this.widget().data('id');
+      if (id) {
         $.ajax('/topic/edititem', {
           type: 'PUT',
           data: $.extend({
-            itemId: itemId,
+            itemId: id,
             type: self.type
           }, data)
         }).done(doneCallback);
@@ -288,6 +267,26 @@
     },
 
     _getCommitData: $.noop
+
+  });
+
+  /*
+   * 定义微件：动态菜单
+   */
+  $.widget('mtm.menuWidget', $.mtm.editWidget, {
+
+    type: 'MENU',
+
+    __create: function () {
+      var self = this;
+      this.widget()
+        .on('click', 'li>a', function (event) {
+          createWidget($(event.target).data('type'), {
+            from: 'DYNAMIC',
+            $prevItem: self.widget().prev()
+          });
+        });
+    }
 
   });
 
@@ -422,7 +421,7 @@
   /*
    * 定义微件：图片创建微件
    */
-  $.widget('mtm.imageWidgetCreate', $.mtm.editWidget, {
+  $.widget('mtm.image_createWidget', $.mtm.editWidget, {
 
     type: 'IMAGE_CREATE',
 
@@ -480,14 +479,13 @@
       var self = this;
       var url = $(form).find('input:text').val();
       var callback = function () {
-        self.destroy();
-        self._trigger('createEditWidget', null, {
+        createWidget('IMAGE', {
           from: self.options.from,
           type: 'IMAGE',
-          $item: self.widget(),
+          $prevItem: self.widget().prev(),
           url: url
         });
-        self._trigger("setState", null, "edit");
+        setState('edit');
       };
 //      checkDupl(oData, callback);
       callback();
@@ -602,7 +600,7 @@
   /*
    * 定义微件：视频创建微件
    */
-  $.widget('mtm.videoWidgetCreate', $.mtm.editWidget, {
+  $.widget('mtm.video_createWidget', $.mtm.editWidget, {
 
     type: 'VIDEO_CREATE',
 
@@ -665,15 +663,14 @@
         if (self.options.disabled) {
           return;
         }
-        self.destroy();
-        self._trigger('createEditWidget', null, {
+        createWidget('VIDEO', {
           from: self.options.from,
           type: 'VIDEO',
-          $item: self.widget(),
+          $prevItem: self.widget().prev(),
           url: url,
           title: data.title
         });
-        self._trigger("setState", null, "edit");
+        setState('edit');
       };
       $.getJSON('/topic/video_title', { url: url }, callback);
     }
@@ -977,17 +974,339 @@
   });
 
   //数据库中该总结id
-  var topicId = 0;
-  var topicData;
+  var topicId;
+  var state = 'default';
+  var from;
+  var editingWidgetName;
+  var $editingWidget;
+  var $editingPrevItem;
 
   var $form;
   var $band;
+  var $ul;
+  var $templates;
+
+  var setState = function (newState) {
+    console.log(newState);
+    state = newState;
+  }
+
+  /**
+   * 创建一个编辑微件
+   * @param type
+   * @param options
+   * @private
+   */
+  var createWidget = function (type, options) {
+    console.log('createWidget');
+
+    var newFrom = options.from;
+    var $prevItem = options.$prevItem;
+
+    //编辑页面不在默认状态
+    if (state != 'default') {
+      console.log('state != default');
+
+      //编辑中的微件和目标微件:类型相同、来源相同，只需给输入框焦点
+      console.log($editingWidget.data('type'));
+      if ($editingWidget.data('type') == type
+        && from == newFrom
+        && (newFrom == 'STATIC'
+        || newFrom == 'INSERT' && $editingPrevItem.is($prevItem))) {
+        console.log('重置焦点');
+
+        if (editingWidgetName) {
+          $editingWidget[editingWidgetName]('autoFocus');
+        }
+        //todo 优化：是否要移动光标？
+        return;
+      }
+
+      //编辑中的微件处在已修改状态
+      if (state == 'edit'
+        && !confirm('您有正在编辑的内容，确定要放弃然后添加其他类型的条目吗？')) {
+        return;
+      }
+
+      //删除编辑中的微件
+      if (editingWidgetName) {
+        $editingWidget[editingWidgetName]('remove');
+      }
+    }
+
+    //如果是修改就用原条目新建微件，否则是插入就复制新的li元素
+    var $editWidget = $templates.find('>ul>li').clone();
+    //如果是动态插入就插入前趋条目的后面，否则是静态插入就插入最前面
+    if ($prevItem && $prevItem.length) {
+      $prevItem.after($editWidget);
+    } else {
+      $ul.prepend($editWidget);
+    }
+
+    //根据类型选择微件，并保存调用微件方法的函数
+    console.log('_createEditWidget ' + type);
+    editingWidgetName = type.toLowerCase() + 'Widget';
+    $editWidget[editingWidgetName](options);
+
+    console.log('create');
+    state = 'create';
+    from = newFrom;
+    $editingWidget = $editWidget;
+    $editingPrevItem = $prevItem;
+  }
+
+  /**
+   * 创建条目
+   * @param type
+   * @param data
+   * @private
+   */
+  var createItem = function ($prevItem, type, id, data) {
+    console.log('createItem');
+
+    var $item = $templates.find('>ul>li').clone();
+    //如果指定了前趋条目就插入其后面，否则插入最前
+    if ($prevItem && $prevItem[0]) {
+      $prevItem.after($item);
+    } else {
+      $ul.prepend($item);
+    }
+
+    //填充新内容，然后删除旧内容，顺序很重要！！！防止抖动
+    $item
+      .data('type', type)
+      .data('id', id)
+      .find('>div')
+      .prepend($templates.find('.Item:first').clone())
+      .end()
+      .find('.Item')
+      .prepend($templates.find('.Item .' + type).clone())
+      .end();
+
+    switch (type) {
+      case 'IMAGE':
+        //填充图片信息
+        var url = data.url;
+        var title = data.title;
+        var quote = data.quote;
+        var description = data.description;
+        var urlParts = quote.match(REGEXP_URL);
+        $item
+          .find('.IMAGE_LINK')
+          .attr('href', url)
+          .end()
+          .find('img')
+          .attr('src', url)
+          .end()
+          .find('.Title a')
+          .text(title)
+          .end()
+          .find('.Quote a')
+          .attr('href', quote)
+          .text(urlParts ? urlParts[2] : '')
+          .end()
+          .find('.Description')
+          .html($('<div/>').text(description).html().replace(/\n/g, '<br>'))
+          .end();
+        break;
+      case 'VIDEO':
+        //填充视频信息
+        var url = data.url;
+        var title = data.title;
+        var description = data.description;
+
+        fillVideo($item, url);
+
+        $item
+          .find('.VIDEO_URL')
+          .attr('href', url)
+          .end()
+          .find('.Title a')
+          .text(title)
+          .end()
+          .find('.Description')
+          .html($('<div/>').text(description).html().replace(/\n/g, '<br>'))
+          .end();
+        if (!title) {
+          $item.find('.Title').hide();
+        }
+        if (!description) {
+          $item.find('.Description').hide();
+        }
+        break;
+      case 'CITE':
+        //填充引用信息
+        var cite = data.cite;
+        var url = data.url;
+        var title = data.title;
+        var description = data.description;
+        $item
+          .find('.Cite q')
+          .html($('<div/>').text(cite).html().replace(/\n/g, '<br>'))
+          .end()
+          .find('.Quote a')
+          .text(!url ? '' : !title ? url : title)
+          .end()
+          .find('.Quote span:last')
+          .text(url ? '' : title)
+          .end()
+          .find('.Quote a')
+          .attr('href', url)
+          .end()
+          .find('.Description')
+          .html($('<div/>').text(description).html().replace(/\n/g, '<br>'))
+          .end();
+        if (!title && !url) {
+          $item.find('.Quote').hide();
+        }
+        if (!description) {
+          $item.find('.Description').hide();
+        }
+        break;
+      case 'TEXT':
+        //填充文本
+        var text = data.text;
+        $item
+          .find('p')
+          .html($('<div/>').text(text).html().replace(/\n/g, '<br>'))
+          .end();
+        break;
+      case 'TITLE':
+        //填充标题
+        var title = data.title;
+        $item
+          .find('p')
+          .text(title)
+          .end();
+        break;
+    }
+
+    $item.fadeSlideDown();
+
+    return $item;
+  }
+
+  var __init = function () {
+    $ul = $('.WidgetItemList');
+    $templates = $('.TEMPLATES');
+  }
+
+  var __initListListener = function () {
+    console.log('__initListListener');
+    $ul
+      .on('click', '.SortUtil i', function () {
+        var $this = $(this);
+        var $li = $this.closest('li');
+        if ($this.is($li.find('.SortUtil>div:first>i:first'))) {
+          $li.prependTo($ul);
+          updateList($li);
+        } else if ($this.is($li.find('.SortUtil>div:first>i:last'))) {
+          $li.after($li.prev());
+          updateList($li);
+        } else if ($this.is($li.find('.SortUtil>div:last>i:first'))) {
+          $li.before($li.next());
+          updateList($li);
+        } else if ($this.is($li.find('.SortUtil>div:last>i:last'))) {
+          $li.appendTo($ul);
+          updateList($li);
+        }
+      })
+      //监听保存按钮点击事件
+      .on('click', 'button[name="save"]', function () {
+        var $li = $(this).closest('li');
+        $li.find('form').submit();
+      })
+      //监听放弃按钮点击事件
+      .on('click', '[name="cancel"]', function () {
+        if (state == 'edit'
+          && !confirm('您编辑的内容将被丢弃，确定要放弃吗？')) {
+          return;
+        }
+
+        var $li = $(this).closest('li');
+        $li[editingWidgetName]('remove');
+      })
+      //绑定插入点击响应
+      .on('click', '.INSERT', function () {
+        createWidget('MENU', {
+          from: 'INSERT',
+          $prevItem: $(this).closest('li')
+        });
+      })
+      //绑定删除点击响应
+      .on('click', '.DELETE', function () {
+        var $li = $(this).closest('li');
+        if (!confirm('条目删除后无法找回，您确定要删除吗？')) {
+          return;
+        }
+        $.ajax('/topic/deleteitem', {
+          type: 'DELETE',
+          data: {
+            topicId: topicId,
+            type: $li.data('type'),
+            itemId: $li.data('id')
+          }
+        });
+        $li.hiddenSlideUp(function () {
+          $(this).remove();
+        })
+      })
+      //绑定修改点击响应
+      .on('click', '.EDIT', function () {
+        var $li = $(this).closest('li');
+        var type = $li.data('type');
+        var data;
+        switch (type) {
+          case 'IMAGE':
+            data = {
+              url: $li.find('img').attr('src'),
+              title: $li.find('.Title a').text(),
+              quote: $li.find('.Quote a').attr('href'),
+              description: $('<div/>').html($li.find('.Description').html().replace(/<br>/g, '\n')).text()
+            }
+            break;
+          case 'VIDEO':
+            data = {
+              url: $li.find('.Quote a').attr('href'),
+              title: $li.find('.Title a').text(),
+              description: $('<div/>').html($li.find('.Description').html().replace(/<br>/g, '\n')).text()
+            }
+            break;
+          case 'CITE':
+            data = {
+              cite: $('<div/>').html($li.find('.Cite q').html().replace(/<br>/g, '\n')).text(),
+              url: $li.find('.Quote a').attr('href'),
+              title: $li.find('.Quote a').text() || $li.find('.Quote span:last').text(),
+              description: $('<div/>').html($li.find('.Description').html().replace(/<br>/g, '\n')).text()
+            }
+            break;
+          case 'TEXT':
+            data = {
+              text: $('<div/>').html($li.find('p').html().replace(/<br>/g, '\n')).text()
+            }
+            break;
+          case 'TITLE':
+            data = {
+              title: $li.find('p').text()
+            }
+            break;
+        }
+        $li.hiddenSlideUp(function () {
+          $(this).remove();
+        });
+        createWidget(type, $.extend({
+          id: $li.data('id'),
+          from: 'EDIT',
+          $prevItem: $li.prev()
+        }, data));
+      })
+  }
 
   /**
    * 初始化总结标题，总结描述
    * @private
    */
-  var __initTop = function () {
+  var __initTop = function (topicData) {
     $form = $('.Edit_Top form');
 
     if (topicData) {
@@ -1135,7 +1454,7 @@
    * 启用列表排序微件
    */
   var __initSort = function () {
-    $('.WidgetItemList')
+    $ul
       //防止拖动开始时高度减小导致的抖动
       .mousedown(function (e) {
         $(this).css('min-height', $(this).height());
@@ -1143,7 +1462,6 @@
       .mouseup(function () {
         $(this).removeAttr('style');
       })
-
       //启用sortable微件
       .sortable({
 
@@ -1188,568 +1506,31 @@
       });
   }
 
-  /*
-   * 定义微件：包含菜单和条目列表
+  /**
+   * 初始化条目创建菜单的点击响应
+   * @private
    */
-  $.widget('mtm.editPage', {
-
-    //编辑状态标志
-    state: 'default',
-    //条目列表$对象
-    $ul: null,
-    //调用微件方法的函数
-    callWidgetMethod: $.noop,
-
-    options: {
-      //初始化时需要的总结信息
-      topicData: {},
-      //初始化时需要的item数据
-      itemsData: []
-    },
-
-    /**
-     * $.widget框架自动调用的构造函数
-     * @private
-     */
-    _create: function () {
-      this.$ul = this.widget().find('.WidgetItemList');
-      this.__initMenu();
-      this.__initItems();
-    },
-
-    /**
-     * 初始化条目创建菜单的点击响应
-     * @private
-     */
-    __initMenu: function () {
-      var self = this;
-      this.widget().delegate('.StaticMenu li>a', 'click', function (event) {
-        self._createEditWidget($(event.target).data('type'), {
-          from: 'STATIC'
-        });
+  var __initMenu = function () {
+    $('.StaticMenu').on('click', 'li>a', function (event) {
+      createWidget($(event.target).data('type'), {
+        from: 'STATIC'
       });
-    },
+    });
+  }
 
-    /**
-     * 对于已经存在的总结，往条目列表填充服务器返回的数据
-     * @private
-     */
-    __initItems: function () {
-      var self = this;
-      this.$ul.find('>li').each(function (i, li) {
-        self.__initItemListener($(li), $(li).data('type'));
-      });
-      var prevItem;
-      this.options.itemsData.forEach(function (itemData) {
-        prevItem = self._insertDisplayItem(itemData, prevItem);
-      });
-    },
-
-    __initItemListener: function ($li, type) {
-      console.log('__initItemListener');
-      var self = this;
-      $li
-        //排序按钮
-        .find('.SortUtil>div:first>i:first')
-        .click(function () {
-          $li.prependTo(self.$ul);
-          updateList($li);
-        })
-        .end()
-        .find('.SortUtil>div:first>i:last')
-        .click(function () {
-          $li.after($li.prev());
-          updateList($li);
-        })
-        .end()
-        .find('.SortUtil>div:last>i:first')
-        .click(function () {
-          $li.before($li.next());
-          updateList($li);
-        })
-        .end()
-        .find('.SortUtil>div:last>i:last')
-        .click(function () {
-          $li.appendTo(self.$ul);
-          updateList($li);
-        })
-        .end()
-        //绑定插入点击响应
-        .find('.INSERT')
-        .click(function () {
-          self._createEditWidget('MENU', {
-            from: 'INSERT',
-            $prevItem: $li
-          });
-        })
-        .end()
-        //绑定删除点击响应
-        .find('.DELETE')
-        .click(function () {
-          if (!confirm('条目删除后无法找回，您确定要删除吗？')) {
-            return;
-          }
-          $.ajax('/topic/deleteitem', {
-            type: 'DELETE',
-            data: {
-              topicId: topicId,
-              type: $li.data('type'),
-              itemId: $li.data('id')
-            }
-          });
-          $li.css('visibility', 'hidden');
-          $li.hide('fast', function () {
-            $li.remove();
-          });
-        })
-        .end();
-
-      switch (type) {
-        case 'IMAGE':
-          //绑定修改点击响应
-          $li
-            .find('.EDIT')
-            .click(function () {
-              var url = $li.find('img').attr('src');
-              var title = $li.find('.Title a').text();
-              var quote = $li.find('.Quote a').attr('href');
-              var description = $('<div/>').html($li.find('.Description').html().replace(/<br>/g, '\n')).text();
-              self._createEditWidget(type, {
-                from: 'EDIT',
-                url: url,
-                title: title,
-                quote: quote,
-                description: description,
-                $item: $li
-              });
-            })
-            .end();
-          break;
-        case 'VIDEO':
-          //绑定修改点击响应
-          console.log('VIDEO');
-          $li
-            .find('.EDIT')
-            .click(function () {
-              var url = $li.find('.Quote a').attr('href');
-              var title = $li.find('.Title a').text();
-              var description = $('<div/>').html($li.find('.Description').html().replace(/<br>/g, '\n')).text();
-              self._createEditWidget(type, {
-                from: 'EDIT',
-                url: url,
-                title: title,
-                description: description,
-                $item: $li
-              });
-            })
-            .end();
-          break;
-        case 'CITE':
-          //绑定修改点击响应
-          $li
-            .find('.EDIT')
-            .click(function () {
-              var cite = $('<div/>').html($li.find('.Cite q').html().replace(/<br>/g, '\n')).text();
-              var url = $li.find('.Quote a').attr('href');
-              var title = $li.find('.Quote a').text() || $li.find('.Quote span:last').text();
-              var description = $('<div/>').html($li.find('.Description').html().replace(/<br>/g, '\n')).text();
-              self._createEditWidget(type, {
-                from: 'EDIT',
-                cite: cite,
-                url: url,
-                title: title,
-                description: description,
-                $item: $li
-              });
-            })
-            .end();
-          break;
-        case 'TEXT':
-          //绑定修改点击响应
-          $li
-            .find('.EDIT')
-            .click(function () {
-              var text = $('<div/>').html($li.find('p').html().replace(/<br>/g, '\n')).text();
-              self._createEditWidget(type, {
-                from: 'EDIT',
-                text: text,
-                $item: $li
-              });
-            })
-            .end();
-          break;
-        case 'TITLE':
-          //绑定修改点击响应
-          $li
-            .find('.EDIT')
-            .click(function () {
-              var title = $li.find('p').text();
-              self._createEditWidget(type, {
-                from: 'EDIT',
-                title: title,
-                $item: $li
-              });
-            })
-            .end();
-          break;
-      }
-    },
-
-    /**
-     * 创建一个编辑微件
-     * @param type
-     * @param extraOptions
-     * @private
-     */
-    _createEditWidget: function (type, extraOptions) {
-      console.log('_createEditWidget');
-      var self = this;
-
-      var from = extraOptions.from;
-      var $prevItem = extraOptions.$prevItem;
-      var $item = extraOptions.$item;
-
-      //传给微件的选项
-      var options = $.extend({
-
-        /**
-         * 编辑微件通知编辑页面创建微件的回调事件
-         * @param event
-         * @param data
-         */
-        createEditWidget: function (event, data) {
-          self._createEditWidget(data.type, data);
-        },
-
-        /**
-         * 编辑微件通知编辑页面创建条目的回调事件
-         * @param event
-         * @param data
-         */
-        createDisplayItem: function (event, data) {
-          self._createDisplayItem(data.$li, data.type, data.itemId, data);
-          console.log('default');
-          self.state = 'default';
-        },
-
-        /**
-         * $.widget框架自动调用的回调事件
-         */
-        create: function () {
-        },
-
-        /**
-         * 带提示的放弃修改
-         */
-        cancel: function () {
-          console.log('cancel');
-          if (self.state == 'edit') {
-            if (!confirm('您编辑的内容将被丢弃，确定要放弃吗？')) {
-              return;
-            }
-          }
-
-          self.callWidgetMethod.call($(this), 'remove');
-        },
-
-        setState: function (event, state) {
-          console.log(state);
-          self.state = state;
-        }
-
-      }, extraOptions);
-
-      var removeDynamicMenu = function ($li) {
-        self.state = 'default';
-        $li.hiddenSlideUp(function () {
-          $(this).remove();
-        });
-      }
-
-      //编辑页面不在默认状态
-      if (self.state != 'default') {
-        console.log('self.state != default');
-
-        //编辑中的微件和目标微件:类型相同、来源相同，只需给输入框焦点
-        var $editingWidget = self.$editingWidget;
-        console.log($editingWidget.data('type'));
-        if (($editingWidget.data('type') == type
-          || $editingWidget.data('type') + '_CREATE' == type)
-          && self.from == from
-          && (from == 'STATIC'
-          || from == 'INSERT' && self.$editingPrevItem.is($prevItem))) {
-          console.log('重置焦点');
-
-          if (this.callWidgetMethod) {
-            this.callWidgetMethod.call($editingWidget, 'autoFocus');
-          }
-          //todo 优化：是否要移动光标？
-          return;
-        }
-
-        //编辑中的微件处在已修改状态
-        if (this.state == 'edit'
-          && !confirm('您有正在编辑的内容，确定要放弃然后添加其他类型的条目吗？')) {
-          return;
-        }
-
-        //删除编辑中的微件
-        if (from != 'DYNAMIC') {
-          if (this.callWidgetMethod) {
-            if (!$editingWidget.is($item)) {
-              this.callWidgetMethod.call($editingWidget, 'remove');
-            }
-          } else {
-            removeDynamicMenu(this.$editingWidget);
-          }
-        }
-      }
-
-      //如果是修改就用原条目新建微件，否则是插入就复制新的li元素
-      if ($item) {
-        var $editWidget = $item;
-      } else {
-        var $editWidget = this.widget().find('.TEMPLATES>ul>li').clone();
-        //如果是动态插入就插入前趋条目的后面，否则是静态插入就插入最前面
-        if ($prevItem) {
-          $prevItem.after($editWidget);
-        } else {
-          this.$ul.prepend($editWidget);
-        }
-      }
-
-      //根据类型选择微件，并保存调用微件方法的函数
-      switch (type) {
-        case 'MENU':
-          console.log('_createEditWidget MENU');
-          $editWidget
-            .data('type', type)
-            .insertAfter($prevItem)
-            .find('>div')
-            .prepend(self.widget().find('.TEMPLATES .DynamicMenu').clone())
-            .delegate('li>a', 'click', function (event) {
-              self._createEditWidget($(event.target).data('type'), {
-                from: 'DYNAMIC',
-                $item: $editWidget
-              });
-            })
-            .end()
-            .find('.DynamicMenu_Close i')
-            .click(function () {
-              removeDynamicMenu($editWidget);
-            })
-            .end();
-          $editWidget.fadeSlideDown();
-          this.callWidgetMethod = null;
-          break;
-        case 'IMAGE_CREATE':
-          console.log('_createEditWidget IMAGE_CREATE');
-          $editWidget.imageWidgetCreate(options);
-          this.callWidgetMethod = $editWidget.imageWidgetCreate;
-          break;
-        case 'IMAGE':
-          console.log('_createEditWidget IMAGE');
-          $editWidget.imageWidget(options);
-          this.callWidgetMethod = $editWidget.imageWidget;
-          break;
-        case 'VIDEO_CREATE':
-          console.log('_createEditWidget VIDEO_CREATE');
-          $editWidget.videoWidgetCreate(options);
-          this.callWidgetMethod = $editWidget.videoWidgetCreate;
-          break;
-        case 'VIDEO':
-          console.log('_createEditWidget VIDEO');
-          $editWidget.videoWidget(options);
-          this.callWidgetMethod = $editWidget.videoWidget;
-          break;
-        case 'CITE':
-          console.log('_createEditWidget CITE');
-          $editWidget.citeWidget(options);
-          this.callWidgetMethod = $editWidget.citeWidget;
-          break;
-        case 'TEXT':
-          console.log('_createEditWidget TEXT');
-          $editWidget.textWidget(options);
-          this.callWidgetMethod = $editWidget.textWidget;
-          break;
-        case 'TITLE':
-          console.log('_createEditWidget TITLE');
-          $editWidget.titleWidget(options);
-          this.callWidgetMethod = $editWidget.titleWidget;
-          break;
-        default :
-          $editWidget.remove();
-          return;
-      }
-
-      console.log('create');
-      this.state = 'create';
-      this.from = from;
-      this.$editingWidget = $editWidget;
-      this.$editingPrevItem = $prevItem;
-    },
-
-    /**
-     * 插入一个显示item
-     * @param itemData
-     * @param $prevItem
-     * @returns {*}
-     * @private
-     */
-    _insertDisplayItem: function (itemData, $prevItem) {
-      console.log('_insertDisplayItem');
-
-      var type = itemData.type;
-      var itemId = itemData.itemId;
-
-      var $displayItem = this.widget().find('.TEMPLATES>ul>li').clone();
-      //如果指定了前趋条目就插入其后面，否则插入最前
-      if ($prevItem && $prevItem[0]) {
-        $prevItem.after($displayItem);
-      } else {
-        this.$ul.prepend($displayItem);
-      }
-
-      this._createDisplayItem($displayItem, type, itemId, itemData);
-      return $displayItem;
-    },
-
-    /**
-     * 创建条目
-     * @param type
-     * @param data
-     * @private
-     */
-    _createDisplayItem: function ($item, type, itemId, data) {
-      console.log('_createDisplayItem');
-      var self = this;
-
-      //销毁编辑微件，填充新内容后再remove以防抖动
-      if (this.callWidgetMethod) {
-        this.callWidgetMethod.call($item, 'destroy');
-      }
-
-      //填充新内容，然后删除旧内容，顺序很重要！！！防止抖动
-      $item
-        .data('type', type)
-        .data('id', itemId)
-        .find('>div')
-        .prepend($('.TEMPLATES .Item:first').clone())
-        .end()
-        .find('.Item')
-        .prepend($('.TEMPLATES .Item .' + type).clone())
-        .end();
-
-      switch (type) {
-        case 'IMAGE':
-          //填充图片信息
-          var url = data.url;
-          var title = data.title;
-          var quote = data.quote;
-          var description = data.description;
-          var urlParts = quote.match(REGEXP_URL);
-          $item
-            .find('.IMAGE_LINK')
-            .attr('href', url)
-            .end()
-            .find('img')
-            .attr('src', url)
-            .end()
-            .find('.Title a')
-            .text(title)
-            .end()
-            .find('.Quote a')
-            .attr('href', quote)
-            .text(urlParts ? urlParts[2] : '')
-            .end()
-            .find('.Description')
-            .html($('<div/>').text(description).html().replace(/\n/g, '<br>'))
-            .end();
-          break;
-        case 'VIDEO':
-          //填充视频信息
-          var url = data.url;
-          var title = data.title;
-          var description = data.description;
-
-          fillVideo($item, url);
-
-          $item
-            .find('.VIDEO_URL')
-            .attr('href', url)
-            .end()
-            .find('.Title a')
-            .text(title)
-            .end()
-            .find('.Description')
-            .html($('<div/>').text(description).html().replace(/\n/g, '<br>'))
-            .end();
-          if (!title) {
-            $item.find('.Title').hide();
-          }
-          if (!description) {
-            $item.find('.Description').hide();
-          }
-          break;
-        case 'CITE':
-          //填充引用信息
-          var cite = data.cite;
-          var url = data.url;
-          var title = data.title;
-          var description = data.description;
-          $item
-            .find('.Cite q')
-            .html($('<div/>').text(cite).html().replace(/\n/g, '<br>'))
-            .end()
-            .find('.Quote a')
-            .text(!url ? '' : !title ? url : title)
-            .end()
-            .find('.Quote span:last')
-            .text(url ? '' : title)
-            .end()
-            .find('.Quote a')
-            .attr('href', url)
-            .end()
-            .find('.Description')
-            .html($('<div/>').text(description).html().replace(/\n/g, '<br>'))
-            .end();
-          if (!title && !url) {
-            $item.find('.Quote').hide();
-          }
-          if (!description) {
-            $item.find('.Description').hide();
-          }
-          break;
-        case 'TEXT':
-          //填充文本
-          var text = data.text;
-          $item
-            .find('p')
-            .html($('<div/>').text(text).html().replace(/\n/g, '<br>'))
-            .end();
-          break;
-        case 'TITLE':
-          //填充标题
-          var title = data.title;
-          $item
-            .find('p')
-            .text(title)
-            .end();
-          break;
-      }
-
-      //填充新内容，然后删除旧内容，顺序很重要！！！防止抖动
-      $item.find('.Widget').remove();
-
-      this.__initItemListener($item, type);
-
-      //淡入
-      $item
-        .css('opacity', 0)
-        .animate({ 'opacity': 1}, 'fast');
+  /**
+   * 对于已经存在的总结，往条目列表填充服务器返回的数据
+   * @private
+   */
+  var __initItems = function (itemsData) {
+    if (!itemsData) {
+      return;
     }
-
-  });
+    var prevItem;
+    itemsData.forEach(function (itemData) {
+      prevItem = createItem(prevItem, itemData.type, itemData.itemId, itemData);
+    });
+  }
 
   /**
    * main function
@@ -1782,14 +1563,13 @@
         onkeyup: false,
         onfocusout: false
       });
-      topicData = data.topicData;
-      __initTop();
+      __init();
+      __initListListener();
+      __initTop(data.topicData);
       __initBand();
+      __initMenu();
       __initSort();
-      $(document).editPage({
-        topicData: data.topicData,
-        itemsData: data.itemsData
-      });
+      __initItems(data.itemsData);
     });
   };
 
