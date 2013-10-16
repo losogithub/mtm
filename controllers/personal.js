@@ -13,6 +13,7 @@ var escape = require('escape-html');
 var encryp = require('../helper/encryp');
 var helper = require('../helper/helper');
 
+
 var User = require('../proxy').User;
 var Topic = require('../proxy').Topic;
 var config = require('../config');
@@ -46,6 +47,10 @@ var showWorks = function (req, res, next) {
     var mt = req.query.mt || 'p';
     var mo = req.query.mo || 'd';
 
+    //the page to show. default 1
+    var currentPage = req.query.page || 1;
+
+
     //empty topics
     //todo: empty topics shall show you have no topics
     if(!topics){
@@ -64,43 +69,49 @@ var showWorks = function (req, res, next) {
           return;
         }
 
-        for (var i =0; i < topicDetails.length; i++){
-          topicDetails[i].topicUrl= "/topic/" + topicDetails[i]._id;
-          topicDetails[i].create_date = topicDetails[i].create_at.getFullYear() + '年'
+        //count the totalPage for show
+        var totalPage = Math.ceil(topicDetails.length / 10) ;
+
+
+        var topicsForShow = [];
+        for (var i = (currentPage -1)*10; i < topicDetails.length && i < currentPage*10; i++){
+          var temp = topicDetails[i];
+          temp.topicUrl= "/topic/" + topicDetails[i]._id;
+          temp.create_date = topicDetails[i].create_at.getFullYear() + '年'
             + (topicDetails[i].create_at.getMonth() + 1) + '月'
             + topicDetails[i].create_at.getDate() + '日';
-          //if this topic is a draft, then add draft string to the title.
-          //no, not ok, it directly append. the color is the same with title.
-          //shall distinguish.
+          topicsForShow.push(temp);
         }
+
+
 
         //render according to different attributes.
         if(mt == 'c'){
          if(mo == 'd'){
-           return renderWorks(user, topicDetails, 'SELECTED', '', '', '', 'a', 'd', 'd', 'd' ,res);
+           return renderWorks(user, topicsForShow, 'SELECTED', '', '', '', 'a', 'd', 'd', 'd' , currentPage, totalPage , res);
          } else {
-           return renderWorks(user, topicDetails, 'SELECTED', '', '', '', 'd', 'd', 'd', 'd' ,res);
+           return renderWorks(user, topicsForShow, 'SELECTED', '', '', '', 'd', 'd', 'd', 'd' , currentPage, totalPage , res);
          }
         }
         if(mt == 'u'){
           if(mo == 'd'){
-            return renderWorks(user, topicDetails, '', 'SELECTED', '', '', 'd', 'a', 'd', 'd' ,res);
+            return renderWorks(user, topicsForShow, '', 'SELECTED', '', '', 'd', 'a', 'd', 'd', currentPage, totalPage ,res);
           }else {
-            return renderWorks(user, topicDetails, '', 'SELECTED', '', '', 'd', 'd', 'd', 'd' ,res);
+            return renderWorks(user, topicsForShow, '', 'SELECTED', '', '', 'd', 'd', 'd', 'd' ,currentPage, totalPage ,res);
           }
         }
         if(mt =='p'){
           if(mo == 'd'){
-            return renderWorks(user, topicDetails, '', '', 'SELECTED', '', 'd', 'd', 'a', 'd' ,res);
+            return renderWorks(user, topicsForShow, '', '', 'SELECTED', '', 'd', 'd', 'a', 'd' ,currentPage, totalPage ,res);
           } else {
-            return renderWorks(user, topicDetails, '', '', 'SELECTED', '', 'd', 'd', 'd', 'd' ,res);
+            return renderWorks(user, topicsForShow, '', '', 'SELECTED', '', 'd', 'd', 'd', 'd' ,currentPage, totalPage ,res);
           }
         }
         if(mt == 'r'){
           if(mo == 'd'){
-            return renderWorks(user, topicDetails, '', '', '', 'SELECTED', 'd', 'd', 'd', 'a' ,res);
+            return renderWorks(user, topicsForShow, '', '', '', 'SELECTED', 'd', 'd', 'd', 'a' ,currentPage, totalPage ,res);
           }else {
-            return renderWorks(user, topicDetails, '', '', '', 'SELECTED', 'd', 'd', 'd', 'd' ,res);
+            return renderWorks(user, topicsForShow, '', '', '', 'SELECTED', 'd', 'd', 'd', 'd' ,currentPage, totalPage ,res);
           }
         }
       }
@@ -141,7 +152,7 @@ var getAndSortTopics = function(mt, mo, topics, callback){
 
 
 var renderWorks = function(user, topicsInfos, isSelectC, isSelectU, isSelectP, isSelectR,
-                           createV, updateV, pageViewV, rateV,
+                           createV, updateV, pageViewV, rateV, currentPage, totalPage,
                            res, next){
   res.render('personal/index', {
     title: config.name,
@@ -164,7 +175,9 @@ var renderWorks = function(user, topicsInfos, isSelectC, isSelectU, isSelectP, i
     updateV: updateV,
     pageViewV: pageViewV,
     rateV: rateV,
-    imageUrl: user.url
+    imageUrl: user.url,
+    currentPage: currentPage,
+    totalPage: totalPage
   });
 }
 
@@ -677,6 +690,7 @@ var showPersonal = function(req, res){
       //bug fixed.
       if(description){
         description = escape(user.description);
+        //description = balinkify.linkify(description, {target: " "})  ;
         description = helper.linkify(description);
       }
       //console.log(description);

@@ -12,6 +12,7 @@ var BufferHelper = require('bufferhelper');
 
 var helper = require('../helper/helper');
 
+
 var User = require('../proxy').User;
 
 var Topic = require('../proxy').Topic;
@@ -23,6 +24,7 @@ var index = function (req, res, next) {
 
   console.log("topic index");
   var topicId = req.params.topicId;
+  var currentPage = req.query.page || 1 ;
 
   Topic.validateId(topicId, function (valid, topic) {
     if (valid && topic.publishDate) {
@@ -44,6 +46,7 @@ var index = function (req, res, next) {
             var authorData = {
               author: user.loginName,
               imgUrl:  user.url,
+              //description: balinkify.linkify(escape(user.description), {target: " "}),
               description: helper.linkify(escape(user.description)),
               personalSite: user.personalSite
             };
@@ -94,7 +97,9 @@ var index = function (req, res, next) {
               topic: topicData,
               items: itemsData ,
               authorInfo: authorData,
-              liked: liked
+              liked: liked,
+              currentPage: currentPage,
+              totalPage: 4
             });
 
           })

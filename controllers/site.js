@@ -8,6 +8,10 @@
 var Topic = require('../proxy').Topic;
 
 var index = function (req, res, next) {
+
+  //set default to the first page.
+  var currentPage = req.query.page || '1';
+
   Topic.getHotTopics(function (topics) {
     var topicsData = [];
     topics.forEach(function (topic) {
@@ -29,7 +33,9 @@ var index = function (req, res, next) {
       dayInChn : DateObj.dayInChn,
       today: DateObj.today,
       today1: DateObj.today1,
-      hot: topicsData
+      hot: topicsData,
+      totalPage: 50,
+      currentPage: currentPage
     });
   });
 }
