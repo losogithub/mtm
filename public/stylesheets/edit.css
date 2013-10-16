@@ -1,3 +1,5 @@
+button[name='preview']{float: right;width: 62px;padding: 0;}
+/*li*/
 .WidgetItemList>li:hover .SortUtil {visibility: visible;}
 .WidgetItemList>li:hover .BottomUtil {visibility: visible;}
 .WidgetItemList>li:first-child .SortUtil>div:first-of-type{visibility: hidden;}
@@ -48,13 +50,13 @@ textarea[name='description'] {resize: none;padding: 5px 5px 0;}
 .MENU_Close i{cursor: pointer;line-height: 33px;padding: 0 12px;display: inline-block;}
 
 .WidgetTxt{overflow: hidden;}
-.IMAGE_CREATE input {float: left;width: 252px;height: 25px;line-height: 23px;padding-right: 4px;}
+.IMAGE_CREATE input {float: left;width: 258px;height: 25px;line-height: 23px;padding-right: 4px;}
 .IMAGE .WidgetInputBox_Ttl{height: 30px;font-size: 14px;font-weight: bold;margin-bottom: 7px;}
 .IMAGE .WidgetInputBox_Quo {height: 25px;margin-bottom: 10px;}
 .IMAGE .WidgetInputBox_Desc {min-height: 85px;padding: 5px 5px 0 5px;resize: none;}
 .Btn_Check {float: right;width: 68px;height: 25px;background-position: 0 -90px;}
 .Btn_Check_Disabled {background-position: 0 -120px;}
-.VIDEO_CREATE input{float: left;width: 562px;height: 25px;line-height: 23px;padding-right: 4px;}
+.VIDEO_CREATE input{float: left;width: 570px;height: 25px;line-height: 23px;padding-right: 4px;}
 .VIDEO .WidgetInputBox_Ttl{height: 30px;font-size: 14px;font-weight: bold;margin-top: 8px;}
 .VIDEO .WidgetInputBox_Desc {min-height: 85px;padding: 5px 5px 0 5px;resize: none;margin-top: 10px;}
 .CITE .WidgetInputBox_Cite{min-height: 95px;padding: 5px 5px 0 0;font-size: 14px;resize: none;margin-bottom: 10px;}

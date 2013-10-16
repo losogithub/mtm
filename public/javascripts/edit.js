@@ -36,7 +36,7 @@
       $li
         .find('.' + videoType)
         .attr('src', !(temp = $li.find('.' + videoType).attr('src')) ? '' : temp.replace('#vid#', vid))
-        .removeAttr('style')
+        .css('display', 'block')
         .end()
         .find('.Thumb')
         .hide()
@@ -53,19 +53,19 @@
     fadeSlideDown: function (callback) {
       return this
         .hide()
-//        .css({ 'opacity': 0 })
+        .css({ 'opacity': 0 })
         .animate({
-          opacity: 1,
+          opacity: 0.5,
           height: 'toggle'
-        }, 10000)
-        .fadeTo(10000, 1, callback);
+        }, 100)
+        .fadeTo(100, 1, callback);
     },
 
     hiddenSlideUp: function (callback) {
       return this
-//        .css('visibility', 'hidden')
-        .slideUp(10000, function () {
-//          $(this).css('visibility', 'visible');
+        .css('visibility', 'hidden')
+        .slideUp(100, function () {
+          $(this).css('visibility', 'visible');
           if ($.isFunction(callback)) {
             callback.call(this);
           }
@@ -226,10 +226,18 @@
      * 保存修改验证表格通过后的发送新文本到服务器
      */
     commit: function () {
-      var self = this;
-      console.log('commit');
+      if (this.widget().find('form').data('submitType') == 'save') {
+        this.widget().find('button[name="save"]').button('loading');
+        this.widget().find('button[name="preview"]').attr('disabled', 'disabled');
+        this.save();
+      } else {
+        this.widget().find('button[name="preview"]').button('loading');
+        this.preview();
+      }
+    },
 
-      this.widget().find('button[name="save"]').button('loading');
+    save: function () {
+      var self = this;
       //ajax完成后将微件改为条目
       var doneCallback = function (data) {
         if (self.options.disabled) {
@@ -238,7 +246,7 @@
         self.widget().hiddenSlideUp(function () {
           $(this).remove();
         });
-        createItem(self.widget().prev(), self.type, data.itemId, data);
+        createItem(self.widget().prev(), self.type.replace('_CREATE', ''), data.itemId, data);
         setState('default');
       }
 
@@ -266,6 +274,7 @@
       }
     },
 
+    preview: $.noop,
     _getCommitData: $.noop
 
   });
@@ -436,10 +445,11 @@
       this.widget()
         .find('input')
         .on('input blur mousedown mouseup keydown keypress keyup', function () {
+          var $preview = self.widget().find('button[name="preview"]');
           if (this.value) {
-            self.widget().find('.Btn_Check').removeClass('Btn_Check_Disabled').removeAttr('disabled');
+            $preview.removeAttr('disabled');
           } else {
-            self.widget().find('.Btn_Check').addClass('Btn_Check_Disabled').attr('disabled', 'disabled');
+            $preview.attr('disabled', 'disabled');
           }
         })
         .end();
@@ -452,8 +462,8 @@
     __initFormValidation: function () {
       var self = this;
       this.widget().find('form').validate({
-        submitHandler: function (form) {
-          self.__getImage(form);
+        submitHandler: function () {
+          self.commit();
         },
         showErrors: function (errorMap, errorList) {
           if (errorList.length) {
@@ -475,20 +485,25 @@
       });
     },
 
-    __getImage: function (form) {
-      var self = this;
-      var url = $(form).find('input:text').val();
-      var callback = function () {
-        createWidget('IMAGE', {
-          from: self.options.from,
-          type: 'IMAGE',
-          $prevItem: self.widget().prev(),
-          url: url
-        });
-        setState('edit');
-      };
-//      checkDupl(oData, callback);
-      callback();
+    preview: function () {
+      createWidget('IMAGE', {
+        from: this.options.from,
+        type: 'IMAGE',
+        $prevItem: this.widget().prev(),
+        $li: this.widget(),
+        url: this.widget().find('input').val()
+      });
+      setState('edit');
+    },
+
+    /**
+     * 子类提交给服务器的数据
+     * @private
+     */
+    _getCommitData: function () {
+      return {
+        url: this.widget().find('input').val()
+      }
     }
 
   });
@@ -615,10 +630,11 @@
       this.widget()
         .find('input')
         .on('input blur mousedown mouseup keydown keypress keyup', function () {
+          var $preview = self.widget().find('button[name="preview"]');
           if (this.value) {
-            self.widget().find('.Btn_Check').removeClass('Btn_Check_Disabled').removeAttr('disabled');
+            $preview.removeAttr('disabled');
           } else {
-            self.widget().find('.Btn_Check').addClass('Btn_Check_Disabled').attr('disabled', 'disabled');
+            $preview.attr('disabled', 'disabled');
           }
         })
         .end();
@@ -632,8 +648,8 @@
       var self = this;
       this.widget().find('form')
         .validate({
-          submitHandler: function (form) {
-            self.__getVideo(form);
+          submitHandler: function () {
+            self.commit();
           },
           showErrors: function (errorMap, errorList) {
             if (errorList.length) {
@@ -655,9 +671,9 @@
         });
     },
 
-    __getVideo: function (form) {
+    preview: function () {
       var self = this;
-      var url = $(form).find('input:text').val();
+      var url = this.widget().find('input').val();
 
       var callback = function (data) {
         if (self.options.disabled) {
@@ -667,12 +683,23 @@
           from: self.options.from,
           type: 'VIDEO',
           $prevItem: self.widget().prev(),
+          $li: self.widget(),
           url: url,
           title: data.title
         });
         setState('edit');
       };
       $.getJSON('/topic/video_title', { url: url }, callback);
+    },
+
+    /**
+     * 子类提交给服务器的数据
+     * @private
+     */
+    _getCommitData: function () {
+      return {
+        url: this.widget().find('input').val()
+      }
     }
 
   });
@@ -1002,6 +1029,7 @@
 
     var newFrom = options.from;
     var $prevItem = options.$prevItem;
+    var $li = options.$li;
 
     //编辑页面不在默认状态
     if (state != 'default') {
@@ -1032,6 +1060,12 @@
       if (editingWidgetName) {
         $editingWidget[editingWidgetName]('remove');
       }
+    }
+
+    if ($li) {
+      $li.hiddenSlideUp(function () {
+        $(this).remove();
+      });
     }
 
     //如果是修改就用原条目新建微件，否则是插入就复制新的li元素
@@ -1090,7 +1124,7 @@
         var title = data.title;
         var quote = data.quote;
         var description = data.description;
-        var urlParts = quote.match(REGEXP_URL);
+        var urlParts = !quote ? null : quote.match(REGEXP_URL);
         $item
           .find('.IMAGE_LINK')
           .attr('href', url)
@@ -1211,10 +1245,19 @@
           updateList($li);
         }
       })
+      //监听预览按钮点击事件
+      .on('click', 'button[name="preview"]', function () {
+        var $li = $(this).closest('li');
+        $li.find('form')
+          .data('submitType', 'preview')
+          .submit();
+      })
       //监听保存按钮点击事件
       .on('click', 'button[name="save"]', function () {
         var $li = $(this).closest('li');
-        $li.find('form').submit();
+        $li.find('form')
+          .data('submitType', 'save')
+          .submit();
       })
       //监听放弃按钮点击事件
       .on('click', '[name="cancel"]', function () {
@@ -1291,13 +1334,11 @@
             }
             break;
         }
-        $li.hiddenSlideUp(function () {
-          $(this).remove();
-        });
         createWidget(type, $.extend({
           id: $li.data('id'),
           from: 'EDIT',
-          $prevItem: $li.prev()
+          $prevItem: $li.prev(),
+          $li: $li
         }, data));
       })
   }
@@ -1320,7 +1361,7 @@
 
     $form.validate({
       submitHandler: function () {
-        __commit();
+        ___commit();
       },
       showErrors: function (errorMap, errorList) {
         if (errorList.length) {
@@ -1402,7 +1443,7 @@
     });
   }
 
-  var __commit = function () {
+  var ___commit = function () {
     var submitType = $form.data('submitType');
     $band.find('button[name="' + submitType + '"]').button('loading');
 

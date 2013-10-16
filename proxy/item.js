@@ -84,6 +84,7 @@ var createItem = function (topic, prevItemType, prevItemId, data, callback) {
   console.log('createItem');
 
   //创建条目
+  data.type = data.type.replace('_CREATE', '');
   var item = new ItemModels[data.type](data);
 
   //插入条目

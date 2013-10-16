@@ -98,7 +98,8 @@
           <div class='Content IMAGE_CREATE'>
             <div class="Image"></div>
             <input class="Required AUTO_FOCUS" type="text" name="url" placeholder="输入图片URL">
-            <button class="Btn Btn_Check Btn_Check_Disabled" type="button" disabled='disabled'>查看</button>
+            <button name="preview" class="button button-tiny" type="button" disabled='disabled'
+                    data-loading-text="预览 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;">预览</button>
 
             <% include _widget_BtnSet.html %>
 
@@ -123,7 +124,8 @@
             <div class="Thumb"></div>
             <div style="margin-top: 7px;">
               <input class="Required AUTO_FOCUS" type="text" name="url" placeholder="输入视频URL">
-              <button class="Btn Btn_Check Btn_Check_Disabled" type="button" disabled='disabled'>查看</button>
+              <button name="preview" class="button button-tiny" type="button" disabled='disabled'
+                      data-loading-text="预览 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;">预览</button>
             </div>
 
             <% include _widget_BtnSet.html %>

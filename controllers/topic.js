@@ -216,25 +216,43 @@ var createItem = function (req, res, next) {
     return;
   }
 
-  Topic.createVoidItemIfNotExist(topicId, function (topic) {
-    Item.createItem(
-      topic,
-      prevItemType,
-      prevItemId,
-      data,
-      function (item) {
-        Topic.increaseItemCountBy(topicId, 1);
-        console.log('create item done.');
-        res.json(_getItemData(item));
-      })
-  })
+  var createItem = function () {
+    Topic.createVoidItemIfNotExist(topicId, function (topic) {
+      Item.createItem(
+        topic,
+        prevItemType,
+        prevItemId,
+        data,
+        function (item) {
+          Topic.increaseItemCountBy(topicId, 1);
+          console.log('create item done.');
+          res.json(_getItemData(item));
+        })
+    })
+  }
+
+  if (data.type && data.type != 'VIDEO_CREATE') {
+    createItem();
+  } else {
+    _getVideoTitle(data.url, function (title) {
+      data.title = title;
+      createItem();
+    });
+  }
 }
 
 var _getData = function (req, _id) {
   var type = req.body.type;
-  var data;
+  var data = {};
 
   switch (type) {
+    case 'IMAGE_CREATE':
+      var url = sanitize(req.body.url).trim();
+
+      data = {
+        url: url
+      }
+      break;
     case 'IMAGE':
       var url = sanitize(req.body.url).trim();
       var title = sanitize(req.body.title).trim();
@@ -246,6 +264,13 @@ var _getData = function (req, _id) {
         title: title,
         quote: quote,
         description: description
+      }
+      break;
+    case 'VIDEO_CREATE':
+      var url = sanitize(req.body.url).trim();
+
+      data = {
+        url: url
       }
       break;
     case 'VIDEO':
@@ -397,9 +422,7 @@ var save = function (req, res, next) {
   });
 }
 
-var getVideoTitle = function (req, res, next) {
-  var url = req.query.url;
-
+var _getVideoTitle = function (url, done, fail) {
   require('http').get(url, function (response) {
     var bufferHelper = new BufferHelper();
     response.on('data', function (chunk) {
@@ -436,14 +459,23 @@ var getVideoTitle = function (req, res, next) {
           || (!(temp = html.match(/<title>([^_]+)(.*)<\/title>/)) ? null : !temp[1] ? null : temp[1]);
         console.log(title);
       }
-      res.json({ title: title});
+      done(title);
     })
   })
     //必须处理error，否则抛出异常
     .on('error', function (err) {
       console.log(err.message);
-      res.json({ title: null});
+      fail(err);
     });
+}
+
+var getVideoTitle = function (req, res, next) {
+  var url = req.query.url;
+  _getVideoTitle(url, function (title) {
+    res.json({ title: title});
+  }), function () {
+    res.json({ title: undefined});
+  }
 }
 
 var AddorRemoveLikes = function(req, res){
