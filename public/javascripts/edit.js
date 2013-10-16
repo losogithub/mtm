@@ -279,6 +279,21 @@
 
   });
 
+  $.widget('mtm.edit_createWidget', $.mtm.editWidget, {
+
+    createPreviewWidget: function (data) {
+      var type = this.type.replace('_CREATE', '');
+      createWidget(type, $.extend({
+        from: this.options.from,
+        type: type,
+        $prevItem: this.widget().prev(),
+        $li: this.widget()
+      }, data));
+      setState('edit');
+    }
+
+  })
+
   /*
    * 定义微件：动态菜单
    */
@@ -430,7 +445,7 @@
   /*
    * 定义微件：图片创建微件
    */
-  $.widget('mtm.image_createWidget', $.mtm.editWidget, {
+  $.widget('mtm.image_createWidget', $.mtm.edit_createWidget, {
 
     type: 'IMAGE_CREATE',
 
@@ -486,14 +501,7 @@
     },
 
     preview: function () {
-      createWidget('IMAGE', {
-        from: this.options.from,
-        type: 'IMAGE',
-        $prevItem: this.widget().prev(),
-        $li: this.widget(),
-        url: this.widget().find('input').val()
-      });
-      setState('edit');
+      this.createPreviewWidget(this._getCommitData());
     },
 
     /**
@@ -615,7 +623,7 @@
   /*
    * 定义微件：视频创建微件
    */
-  $.widget('mtm.video_createWidget', $.mtm.editWidget, {
+  $.widget('mtm.video_createWidget', $.mtm.edit_createWidget, {
 
     type: 'VIDEO_CREATE',
 
@@ -679,16 +687,8 @@
         if (self.options.disabled) {
           return;
         }
-        createWidget('VIDEO', {
-          from: self.options.from,
-          type: 'VIDEO',
-          $prevItem: self.widget().prev(),
-          $li: self.widget(),
-          url: url,
-          title: data.title
-        });
-        setState('edit');
-      };
+        self.createPreviewWidget(data);
+      }
       $.getJSON('/topic/video_title', { url: url }, callback);
     },
 

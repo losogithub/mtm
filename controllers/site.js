@@ -28,7 +28,6 @@ var index = function (req, res, next) {
     res.render('index', {
       title: 'mtm[我设计的信息。策展平台]',
       css: ['/stylesheets/index.css'],
-      js: ['/javascripts/index.js'],
       pageType: 'INDEX',
       dayInChn : DateObj.dayInChn,
       today: DateObj.today,

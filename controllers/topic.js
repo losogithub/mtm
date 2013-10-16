@@ -477,9 +477,15 @@ var _getVideoTitle = function (url, done, fail) {
 var getVideoTitle = function (req, res, next) {
   var url = req.query.url;
   _getVideoTitle(url, function (title) {
-    res.json({ title: title});
+    res.json({
+      url: url,
+      title: title
+    });
   }), function () {
-    res.json({ title: undefined});
+    res.json({
+      url: url,
+      title: undefined
+    });
   }
 }
 
