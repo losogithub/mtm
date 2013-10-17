@@ -46,6 +46,7 @@ var showWorks = function (req, res, next) {
     var mo = req.query.mo || 'd';
 
     //empty topics
+    //todo: empty topics shall show you have no topics
     if(!topics){
       return renderWorks(user, [], '', '', '', res);
     }
@@ -67,6 +68,9 @@ var showWorks = function (req, res, next) {
           topicDetails[i].create_date = topicDetails[i].create_at.getFullYear() + '年'
             + (topicDetails[i].create_at.getMonth() + 1) + '月'
             + topicDetails[i].create_at.getDate() + '日';
+          //if this topic is a draft, then add draft string to the title.
+          //no, not ok, it directly append. the color is the same with title.
+          //shall distinguish.
         }
 
         //render according to different attributes.

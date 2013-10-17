@@ -2,6 +2,9 @@
   <td>
     <p class="MainTblTtl">
       <a href="<%= topic.topicUrl %>"><%= topic.title %></a>
+      <% if (topic.draft) { %>
+      <span class="MainTblDraft">（草稿）</span>
+      <% } %>
     </p>
 
     <p class="MainTblDate">创建： <%= topic.create_date %></p>
