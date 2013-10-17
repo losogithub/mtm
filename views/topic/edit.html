@@ -8,7 +8,7 @@
       </table>
       <table class="Band_Btn">
         <td>
-          <% if (locals.topic) { %>
+          <% if (locals.topic && topic.publishDate) { %>
           <button name="save" class='button button-tiny button-action'
                   data-loading-text="保存 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;" type="button">保存
           </button>

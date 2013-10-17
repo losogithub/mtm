@@ -11,10 +11,6 @@
   var console = window.console || {log: $.noop, error: $.noop};
   var REGEXP_URL = /^(https?|ftp):\/\/(([\w\-]+\.)+[\w\-]+)(\/|\?|$)/i;
   var REGEXP_URL_NO_PROTOCOL = /^(([\w\-]+\.)+[\w\-]+)(\/|\?|$)/i;
-  //数据库中该总结id
-  var topicId = 0;
-  //
-  var mode = 'create';
 
   var fillVideo = function ($li, url) {
     var urlParts = url.match(REGEXP_URL);
@@ -104,188 +100,24 @@
   }
 
   /**
-   * 总结菜单栏固定窗口顶部、监听按钮点击事件
-   * @private
+   * 移动光标到末尾
+   * @param textArea
    */
-  var __initHead = function () {
-    var $head = $('.Band');
-    var headPosition = $head.offset().top;
-    $(window).scroll(function () {
-      if ($(this).scrollTop() >= headPosition) {
-        $head.addClass('Band-Fixed');
-      } else {
-        $head.removeClass('Band-Fixed');
-      }
-    });
-    var $publish = $head.find('button[name="publish"]');
-    $head.find('button[name="saveDraft"]').click(function () {
-      $publish.removeAttr('value');
-      $('.Edit_Top form').submit();
-    });
-    $publish.click(function () {
-      $publish.attr('value', 1);
-      $('.Edit_Top form').submit();
-    });
-    $head.find('button[name="save"]').click(function () {
-      $('.Edit_Top form').submit();
-    });
-  }
-
-  /**
-   * 监听可选项目点击事件
-   */
-  var __initOption = function () {
-    var $editTop = $('.Edit_Top_Contents');
-    var $Button = $editTop.find('.Edit_Top_OptionBtn');
-    var $options = $editTop.find('fieldset:last');
-
-    //开关可选项目的动画
-    $Button.click(function () {
-      if ($(this).find('i').is('.icon-caret-down')) {
-        fadeSlideDown($options);
-      } else {
-        hiddenSlideUp($options);
-      }
-      $(this).find('i').toggleClass('icon-caret-down icon-caret-up');
-    });
-
-    $options
-      .show()
-      .find('textarea').autosize({
-        append: '\n'
-      })
-      .end()
-      .hide();
-
-    if (/showOption=true/.test(location.search)) {
-      $Button
-        .find('i')
-        .toggleClass('icon-caret-down icon-caret-up')
-        .end()
-        .show();
-      $options.toggle();
-    } else {
-      $Button.fadeIn('slow');
+  var moveSelection2End = function (textArea) {
+    if (!textArea) {
+      return;
     }
 
-    var $thumb = $('.Edit_Top_Thumb');
-    var $extra = $('.Edit_Top_Thumb_Extra');
-    var $input = $extra.find('input');
-    var $save = $extra.find('button[name="save"]');
-    var $cancel = $extra.find('button[name="cancel"]');
-    $thumb.click(function () {
-      $extra.toggle('fast');
-    });
-    $cancel.click(function () {
-      $extra.css('visibility', 'hidden')
-        .hide('fast', function () {
-          $extra.css('visibility', 'visible');
-        })
-    });
-    $save.click(function () {
-      $thumb.find('img').attr('src', $input.val());
-      $cancel.click();
-    });
+    var length = textArea.value.length;
+    if (document.selection) {
+      var selection = textArea.createTextRange();
+      selection.moveStart('character', length);
+      selection.collapse();
+      selection.select();
+    } else if (typeof textArea.selectionStart == 'number') {
+      textArea.selectionStart = textArea.selectionEnd = length;
+    }
   }
-
-  /**
-   * 启用列表排序微件
-   */
-  var __initSort = function () {
-    $('.WidgetItemList')
-      //防止拖动开始时高度减小导致的抖动
-      .mousedown(function (e) {
-        $(this).css('min-height', $(this).height());
-//        var t;
-//        var that = this;
-//        var event = e;
-//        var needTrigger = true;
-//        $(window).on('scroll.mousemove', function () {
-//          console.log('scroll');
-//          if (!event) {
-//            return false;
-//          }
-//          console.log('$(window).scrollTop()'+$(window).scrollTop());
-//          var e = $.extend({}, event, {
-////            pageY: event.clientY + $(window).scrollTop(),
-//            tag: 1
-//          });
-//          if (needTrigger) {
-//            console.log('timeout');
-//            t = setTimeout(function () {
-//              console.log('trigger');
-//              $(that).trigger(e);
-//            }, 1000);
-//          }
-//        });
-//        $(this).mousemove(function (e) {
-//          console.log('mousemove');
-//          console.log('e.teg'+ e.tag);
-//          if (e.tag) {
-//            e.pageX = e.clientY + $(window).scrollTop();
-//          }
-//          if (needTrigger
-//            && e.pageX == event.pageX && e.pageY == event.pageY
-//            && e.clientX == event.clientX && e.clientY == event.clientY
-//            && (e.tag || event.tag)) {
-//            console.log('needTrigger = false');
-//            needTrigger = false;
-//          }
-//          clearTimeout(t);
-//          event = e;
-//        });
-      })
-      .mouseup(function () {
-//        $(window).unbind('scroll.mousemove');
-        $(this).removeAttr('style');
-      })
-
-      //启用sortable微件
-      .sortable({
-
-        //sortable微件的标准参数
-        placeholder: 'Widget WidgetDragPlaceholder',
-//        forcePlaceholderSize: true,
-        opacity: 0.4,
-//        tolerance: "pointer",
-        cursor: 'move',
-        handle: '.MoveUtil',
-        scrollSensitivity: 100,
-        scrollSpeed: 10,
-        axis: 'y',
-        containment: 'body',
-//        cursorAt: { top: 10 },
-
-        start: function () {
-          console.log('start');
-          $(this)
-            .addClass('WidgetItemList-Sorting')
-            .mousemove(function (e) {
-              var marginTop = e.clientY;
-              var marginBottom = $(window).height() - e.clientY;
-              var margin = Math.min(marginTop > 0 ? marginTop : 0, marginBottom > 0 ? marginBottom : 0);
-              var scrollSensitivity = 100;
-              if (margin < scrollSensitivity) {
-                $(this).sortable('option', 'scrollSpeed', 50 * (1 - margin * margin / (scrollSensitivity * scrollSensitivity)));
-              }
-            })
-            .sortable('refreshPositions');//因为item缩小了，所以要清除缓存大小
-        },
-
-        stop: function () {
-          console.log('stop');
-          $(this)
-            .removeClass('WidgetItemList-Sorting')
-            .unbind('mousemove');
-        },
-
-        //列表顺序改变后的回调函数
-        update: function (event, data) {
-          console.log('sort');
-          updateList(data.item);
-        }
-      });
-  };
 
   /*
    * 定义微件：编辑widget的base对象
@@ -398,7 +230,7 @@
       var itemId = this.widget().data('id');
       if (!itemId) {
         hiddenSlideUp(this.widget(), function () {
-          $(this).remove();
+          self.widget().remove();
         });
         this._trigger('setState', null, 'default');
       } else {
@@ -1142,6 +974,225 @@
 
   });
 
+  //数据库中该总结id
+  var topicId = 0;
+  var topicData;
+
+  var $form;
+  var $band;
+
+  /**
+   * 初始化总结标题，总结描述
+   * @private
+   */
+  var __initTop = function () {
+    $form = $('.Edit_Top form');
+
+    var title = topicData ? topicData.title : null;
+    var coverUrl = topicData ? topicData.coverUrl : null;
+    var description = topicData ? topicData.description : null;
+
+    if (title) {
+      $form.find('input[name="title"]').val(title ? title : '');
+      $form.find('.Edit_Top_Thumb img').attr('src', coverUrl ? coverUrl : '');
+      $form.find('textarea[name="description"]').val(description ? description : '');
+    }
+
+    $form.validate({
+      submitHandler: function (form) {
+        __commit();
+      },
+      showErrors: function (errorMap, errorList) {
+        if (errorList.length) {
+          alert(errorMap.title || errorMap.description);
+        }
+      },
+      rules: {
+        title: {
+          required: true,
+          minlength: 5,
+          maxlength: 50
+        },
+        description: {
+          required: false,
+          maxlength: 150
+        }
+      },
+      messages: {
+        title: {
+          required: "请输入5～50字的总结标题。",
+          minlength: "总结标题太短，请控制在5～50字之间。",
+          maxlength: "总结标题太长，请控制在5～50字之间。"
+        },
+        description: {
+          maxlength: "总结描述太长，请缩写到150字以内。"
+        }
+      }
+    });
+  }
+
+  var __commit = function () {
+    var submitType = $form.data('submitType');
+    $band.find('button[name="' + submitType + '"]').button('loading');
+
+    $.ajax('/topic/save', {
+      type: 'PUT',
+      data: {
+        topicId: topicId,
+        title: $form.find('input[name="title"]').val(),
+        coverUrl: $form.find('.Edit_Top_Thumb img').attr('src'),
+        description: $form.find('textarea[name="description"]').val(),
+        publish: submitType == 'publish' ? 1 : undefined
+      }
+    })
+      .done(function () {
+        if (submitType == 'saveDraft') {
+          window.location = '/works';
+        } else {
+          window.location = '/topic/' + topicId;
+        }
+      });
+  }
+
+  /**
+   * 总结菜单栏固定窗口顶部、监听按钮点击事件
+   * @private
+   */
+  var __initBand = function () {
+    $band = $('.Band');
+
+    var headPosition = $band.offset().top;
+    $(window).scroll(function () {
+      if ($(this).scrollTop() >= headPosition) {
+        $band.addClass('Band-Fixed');
+      } else {
+        $band.removeClass('Band-Fixed');
+      }
+    });
+
+    $band.on('click', 'button', function (event) {
+      var $target = $(event.target);
+      var name = $target.attr('name');
+      $form
+        .data('submitType', name)
+        .submit();
+    });
+  }
+
+  /**
+   * 监听可选项目点击事件
+   */
+  var __initOption = function () {
+    var $editTop = $('.Edit_Top_Contents');
+    var $Button = $editTop.find('.Edit_Top_OptionBtn');
+    var $options = $editTop.find('fieldset:last');
+
+    //开关可选项目的动画
+    $Button.click(function () {
+      if ($(this).find('i').is('.icon-caret-down')) {
+        fadeSlideDown($options);
+      } else {
+        hiddenSlideUp($options);
+      }
+      $(this).find('i').toggleClass('icon-caret-down icon-caret-up');
+    });
+
+    $options
+      .show()
+      .find('textarea').autosize({
+        append: '\n'
+      })
+      .end()
+      .hide();
+
+    if (/showOption=true/.test(location.search)) {
+      $Button
+        .find('i')
+        .toggleClass('icon-caret-down icon-caret-up')
+        .end()
+        .show();
+      $options.toggle();
+    } else {
+      $Button.fadeIn('slow');
+    }
+
+    var $thumb = $('.Edit_Top_Thumb');
+    var $extra = $('.Edit_Top_Thumb_Extra');
+    var $input = $extra.find('input');
+    var $save = $extra.find('button[name="save"]');
+    var $cancel = $extra.find('button[name="cancel"]');
+    $thumb.click(function () {
+      $extra.toggle('fast');
+    });
+    $cancel.click(function () {
+      $extra.css('visibility', 'hidden')
+        .hide('fast', function () {
+          $extra.css('visibility', 'visible');
+        })
+    });
+    $save.click(function () {
+      $thumb.find('img').attr('src', $input.val());
+      $cancel.click();
+    });
+  }
+
+  /**
+   * 启用列表排序微件
+   */
+  var __initSort = function () {
+    $('.WidgetItemList')
+      //防止拖动开始时高度减小导致的抖动
+      .mousedown(function (e) {
+        $(this).css('min-height', $(this).height());
+      })
+      .mouseup(function () {
+        $(this).removeAttr('style');
+      })
+
+      //启用sortable微件
+      .sortable({
+
+        //sortable微件的标准参数
+        placeholder: 'Widget WidgetDragPlaceholder',
+        opacity: 0.4,
+        cursor: 'move',
+        handle: '.MoveUtil',
+        scrollSensitivity: 100,
+        scrollSpeed: 10,
+        axis: 'y',
+        containment: 'body',
+
+        start: function () {
+          console.log('start');
+          $(this)
+            .addClass('WidgetItemList-Sorting')
+            .mousemove(function (e) {
+              var marginTop = e.clientY;
+              var marginBottom = $(window).height() - e.clientY;
+              var margin = Math.min(marginTop > 0 ? marginTop : 0, marginBottom > 0 ? marginBottom : 0);
+              var scrollSensitivity = 100;
+              if (margin < scrollSensitivity) {
+                $(this).sortable('option', 'scrollSpeed', 50 * (1 - margin * margin / (scrollSensitivity * scrollSensitivity)));
+              }
+            })
+            .sortable('refreshPositions');//因为item缩小了，所以要清除缓存大小
+        },
+
+        stop: function () {
+          console.log('stop');
+          $(this)
+            .removeClass('WidgetItemList-Sorting')
+            .unbind('mousemove');
+        },
+
+        //列表顺序改变后的回调函数
+        update: function (event, data) {
+          console.log('sort');
+          updateList(data.item);
+        }
+      });
+  }
+
   /*
    * 定义微件：包含菜单和条目列表
    */
@@ -1167,87 +1218,8 @@
      */
     _create: function () {
       this.$ul = this.widget().find('.WidgetItemList');
-      this.__initTop();
       this.__initMenu();
       this.__initItems();
-    },
-
-    /**
-     * 初始化总结标题，总结描述
-     * @private
-     */
-    __initTop: function () {
-      var self = this;
-      var $form = this.widget().find('.Edit_Top form');
-
-      var title = this.options.topicData.title;
-      var coverUrl = this.options.topicData.coverUrl;
-      var description = this.options.topicData.description;
-      if (title) {
-        $form.find('input[name="title"]').val(title ? title : '');
-        $form.find('.Edit_Top_Thumb img').attr('src', coverUrl ? coverUrl : '');
-        $form.find('textarea[name="description"]').val(description ? description : '');
-      }
-
-      $form.validate({
-        submitHandler: function (form) {
-          self.commit($('.Band button[name="publish"]').attr('value'));
-        },
-        showErrors: function (errorMap, errorList) {
-          if (errorList.length) {
-            alert(errorMap.title || errorMap.description);
-          }
-        },
-        rules: {
-          title: {
-            required: true,
-            minlength: 5,
-            maxlength: 50
-          },
-          description: {
-            required: false,
-            maxlength: 150
-          }
-        },
-        messages: {
-          title: {
-            required: "请输入5～50字的总结标题。",
-            minlength: "总结标题太短，请控制在5～50字之间。",
-            maxlength: "总结标题太长，请控制在5～50字之间。"
-          },
-          description: {
-            maxlength: "总结描述太长，请缩写到150字以内。"
-          }
-        }
-      });
-    },
-
-    commit: function (publish) {
-      console.log(publish);
-      if (publish) {
-        this.widget().find('button[name="publish"]').button('loading');
-      } else {
-        this.widget().find('button[name="saveDraft"]').button('loading');
-      }
-      this.widget().find('button[name="save"]').button('loading');
-      var $form = this.widget().find('.Edit_Top form');
-      $.ajax('/topic/save', {
-        type: 'PUT',
-        data: {
-          topicId: topicId,
-          title: $form.find('input[name="title"]').val(),
-          coverUrl: $form.find('.Edit_Top_Thumb img').attr('src'),
-          description: $form.find('textarea[name="description"]').val(),
-          publish: publish
-        }
-      })
-        .done(function () {
-          if (publish) {
-            window.location = '/topic/' + topicId;
-          } else {
-            window.location = '/works';
-          }
-        });
     },
 
     /**
@@ -1790,12 +1762,14 @@
    */
   var _doIfGetIdDone = function (data) {
     console.log('doIfGetIdDone');
+    data = data || {};
 
     if (data.redirect) {
       window.location.replace(data.redirect);
       if (typeof window.history.pushState == "function") {
         window.history.replaceState({}, document.title, window.location.href);
       }
+      return;
     }
 
     if (data.topicId) {
@@ -1813,7 +1787,9 @@
         onkeyup: false,
         onfocusout: false
       });
-      __initHead();
+      topicData = data.topicData;
+      __initTop();
+      __initBand();
       __initOption();
       __initSort();
       $(document).editPage({
@@ -1831,7 +1807,6 @@
 
     if (location.pathname == '/topic/create') {
       console.log('/topic/create');
-      mode = 'create';
 
       //#后面有16进制数字就验证id并获取items，否则获取新id
       if (location.hash
@@ -1840,39 +1815,25 @@
         $.getJSON('/topic/getcontents', {
           topicId: topicId
         }).done(function (data) {
+
             _doIfGetIdDone(data);
+
           });
       } else {
         $.getJSON('/topic/getid')
           .done(function (data) {
+
             _doIfGetIdDone(data);
+
           });
       }
     } else {
       topicId = location.pathname.match(/^\/topic\/([0-9a-f]{24})\/edit$/)[1];
       console.log('topicId=' + topicId);
-      _doIfGetIdDone({});
+
+      _doIfGetIdDone();
+
     }
   })();
-
-  /**
-   * 移动光标到末尾
-   * @param textArea
-   */
-  var moveSelection2End = function (textArea) {
-    if (!textArea) {
-      return;
-    }
-
-    var length = textArea.value.length;
-    if (document.selection) {
-      var selection = textArea.createTextRange();
-      selection.moveStart('character', length);
-      selection.collapse();
-      selection.select();
-    } else if (typeof textArea.selectionStart == 'number') {
-      textArea.selectionStart = textArea.selectionEnd = length;
-    }
-  }
 
 })(jQuery);
