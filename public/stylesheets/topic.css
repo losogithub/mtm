@@ -44,7 +44,7 @@
 .SubAuthorProfileUnitTitleUserNameThumb{display:block;position:absolute;top:0;left:0;width:80px;height:80px}
 .SubAuthorProfileUnitLink{}
 .SubAuthorProfileUnitLinkSite{}
-.SubAuthorProfileUnitLinkSiteBtn{width:86px;height:23px;background-position:-70px -90px; background-image: url("/images/personal/sprite_MdFVBtn_130918.png");}
+.SubAuthorProfileUnitLinkSiteBtn{width:86px;height:23px;background-position:-70px -90px; background-image: url("/images/personal/sprite_MdFVBtn_130918.png");display:inline-block;*display:inline;*zoom:1;overflow:hidden;padding:0;border:0;background-color:transparent;background-position:0 0;background-repeat:no-repeat;text-align:left;text-indent:-9999px;*text-indent:0;*line-height:9999px;*word-wrap:normal}
 .SubAuthorProfileTxt{line-height:1.5;margin:7px 0 -4px;word-wrap:break-word;color:#666}
 
 .Main{padding-bottom: 0;}
