@@ -18,7 +18,7 @@
 .Band_Btn{margin-right: 6px;float:right;}
 /*编辑标题、缩略图、简介*/
 .Edit_Top{padding-top: 42px;padding-bottom: 15px;}
-.Edit_Top_Contents{padding-top: 25px;padding-bottom: 11px;border-bottom: 3px solid rgb(0, 0, 0);}
+.Edit_Top form{padding-top: 25px;padding-bottom: 11px;border-bottom: 3px solid rgb(0, 0, 0);}
 .Edit_Top fieldset:first-child {height: 40px;}
 .Edit_Top input[name="title"] {display: inline-block;width: 779px;padding: 0 10px;height: 40px;line-height: 38px;font-size: 23px;font-weight: bold;
     background-color: rgb(255, 254, 238);background-position: 5px 10px;}
@@ -29,7 +29,7 @@
 .EditFormImgArea01 {position: relative;width: 95px;height: 140px;background: url("/images/photo_95x95.png") no-repeat scroll 0px 0px transparent;}
 .EditFormImgAddList01 {position: absolute;top: 98px;left: 0;margin-top: 3px;}
 textarea[name='description'] {resize: none;padding: 5px 5px 0;}
-.Edit_Top_Contents textarea[name='description']{min-height: 95px;height: 95px;}
+.Edit_Top form textarea[name='description']{min-height: 95px;height: 95px;}
 /*静态菜单*/
 .StaticMenu {width: 100%;height: 43px;margin-bottom: 10px;background: url("/images/bg_widgetUtil01.png");}
 .StaticMenu td{padding: 0 5px;}
