@@ -1,77 +1,43 @@
 /**
  * Created with JetBrains WebStorm.
  * User: stefanzan
- * Date: 10/13/13
- * Time: 9:08 AM
+ * Date: 10/18/13
+ * Time: 1:01 PM
  * To change this template use File | Settings | File Templates.
  */
 
-$(function ($) {
-  $(".mdHeadUtil01Open")
-    .click(function () {
-      console.log("click on  open button");
-      var $menu = $('.mdHeadUtil01Sub').toggle();
-
-      $(document).one("click", function () {
-        $menu.hide();
-      });
-
-      return false;
-    })
-});
-
-$(function($){
-   $(".mdSelectBox02Label01")
-     .click(function(){
-       var $menu = $(".mdSelectBox02Option01").slideToggle(50);
-       $(document).one("click", function () {
-         $menu.hide();
-       });
-       return false;
-     })
-});
-
+//click on add FV
 $(
   function($){
-    $('.mdSelectBox02Option01 > li')
+    $('.HeadFVBtn')
       .click(function(){
-        var ord = $(this).data('value');
-        var urlBase = $('li.mdMypageMTMList01TabLi > a').attr('href');
-        if (urlBase.indexOf('?') !== -1 ){
-          urlBase = urlBase.split('?')[0] + '?type=P';
-        } else
-        { urlBase = urlBase + '?type=J'; }
-        urlBase = urlBase  + '&order='  + ord;
-        console.log(urlBase);
-        window.location = urlBase;
-         return false;
-      })
-  }
-);
-
-$(
-  function($){
-    $('.mdMySubProf01FV > a.MdFVBtn02')
-      .click(function(){
-        var url = $(this).data('favorite').url ;// Object {url: "http://localhost:3000/u/benben"
+        console.log("click on add fav");
+        var topicId = $(this).data('favorite').topicId;
+        console.log(topicId);
         var className = $(this).attr('class');
         var toLike = true;
         if ( className.split(' ').indexOf('ExSelected') > -1){ toLike = false;}
+        console.log(toLike);
+
         $.ajax({
           type: 'POST',
-          url: '/u',
+          url: '/topic',
           xhrFields: { withCredentials: true },
-          data: {url: url, toLike: toLike},
+          data: {topicId: topicId, toLike: toLike},
           success: function(data){
             console.log("login dialog: %s", data.loginDialog);
             console.log(typeof data.loginDialog);
             if(!data.loginDialog){
-              if(toLike){
-                $('.mdMySubProf01FV > a.MdFVBtn02').addClass('ExSelected');
+              console.log("toLike type: ")
+              console.log(typeof  data.toLike);
+              console.log(data.toLike);
+              if(data.toLike == "true"){
+                $('a[class="HeadFVBtn"]').addClass('ExSelected');
               } else {
-                $('.mdMySubProf01FV > a.MdFVBtn02').removeClass('ExSelected');
+                $('.HeadFVBtn').removeClass('ExSelected');
               }
-              $('.mdFVCount01Num').text(data.favourite);
+              //$('.HeadFVCountNum').text(data.FVCount);
+              $('.HeadFVIco').next().text(data.FVCount);
             }
             else {
               console.log("need login");
@@ -106,6 +72,7 @@ $(
   }
 )
 
+
 //loginDialog close
 var closeLoginDialog = function(){
   $('#simplemodal-placeholder').remove();
@@ -135,39 +102,50 @@ var loginCheck = function(){
   }
 
 
+  //: post topicId and toLike again
+  var topicId = $('.HeadFVBtn').data('favorite').topicId;
+  console.log(topicId);
+
+
+  var className = $('.HeadFVBtn').attr('class');
+
+  var toLike = true;
+  if ( className.split(' ').indexOf('ExSelected') > -1){ toLike = false;} //usually shallbe true.
+  console.log(toLike);
+
   //using an ajax send to server to check for login.
+  //what is wrong ? why not send ???????????? 10.18 23:39 2013
   $.ajax({
     type: 'POST',
-    url: '/loginDialogCheck',
+    url: '/topic/loginDialogCheck',
     xhrFields: { withCredentials: true },
-    data: {userName: username, password: password, rememberMe : rememberMe},
+    data: {userName: username, password: password, rememberMe : rememberMe, topicId: topicId, toLike: toLike},
     success: function(data){
 
+      console.log("POST return, topic/loginDialogCheck");
+      console.log(typeof data.correct);
       if(!data.correct){
         $('#errMsg').attr('style', 'display: true');
         $('#errMsg').text('用户名或则密码不正确。');
         return false;
       }
-      //todo: correct situation.
       else {
         //remove dialog
-        var toLike = true;
-        var likeStar = $('.mdMySubProf01FV > a.MdFVBtn02');
-        if ( likeStar.attr('class').split(' ').indexOf('ExSelected') > -1)
-        {
-          toLike = false;
-        }
+        //todo: toLike is not correct
+        var toLike = data.toLike;
+        console.log("type tolike: %s", typeof toLike);
 
         $('#simplemodal-placeholder').remove();
         $('#simplemodal-overlay').remove();
         $('#simplemodal-container').remove();
-        if(toLike){
-          likeStar.addClass('ExSelected');
-        } else {
-          likeStar.removeClass('ExSelected');
-        }
-        $('.mdFVCount01Num').text(data.favourite);
 
+        if(data.toLike == "true"){
+          $('a[class="HeadFVBtn"]').addClass('ExSelected');
+        } else {
+          $('.HeadFVBtn').removeClass('ExSelected');
+        }
+        //$('.HeadFVCountNum').text( '<span class="HeadFVIco"></span>' + data.FVCount);
+        $('.HeadFVIco').next().text(data.FVCount);
         //one more thing: right head part from un-login to login
         //not to do now.
         /*
@@ -185,6 +163,6 @@ var loginCheck = function(){
 
   });
 
-
   return false;
 }
+

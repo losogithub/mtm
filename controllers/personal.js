@@ -223,6 +223,11 @@ var updateSettings = function(req, res){
       if(imageUrl){user.url = imageUrl;}
       if(description) {user.description = description;}
       if(connectUrl){
+        var REGEXP_URL_NO_PROTOCOL = /^(([\w\-]+\.)+[\w\-]+)(\/|\?|$)/i;
+        var urlParts = connectUrl.match(REGEXP_URL_NO_PROTOCOL);
+        if(urlParts){
+          connectUrl = 'http://' + connectUrl;
+        }
         user.personalSite = connectUrl;
       }
 
@@ -837,7 +842,7 @@ var AddorRemoveLikes = function(req, res){
 
   //default true case means from unlogin --> login situation.
   //this also makes the duplication check necessary in later part.
-  var toLike = req.body.toLike || 'true';
+  var toLike = req.body.toLike || 'true';   //but after login, maybe already liked that why need check before add.
   console.log("authorName: %s", authorName);
   console.log("toLike: %s", toLike);
   var viewerId = req.session.userId;

@@ -20,5 +20,7 @@ module.exports = mongoose.model('Topic', {
   create_at: { type: Date, default: new Date() },
   update_at: { type: Date, default: new Date() },
   draft: { type: Boolean, default: false },
-  publishDate: Date
+  publishDate: Date,
+  FVCount : {type: Number, default:0},
+  FVList:[ObjectId ]
 });

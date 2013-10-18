@@ -10,12 +10,18 @@ var escape = require('escape-html');
 var iconv = require('iconv-lite');
 var BufferHelper = require('bufferhelper');
 
+var helper = require('../helper/helper');
+
+var User = require('../proxy').User;
+
 var Topic = require('../proxy').Topic;
 var Item = require('../proxy').Item;
 
 var REGEXP_URL = /^((http[s]?|ftp):\/)?\/?((([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]))(:([^\/]*))?(((\/\w+)*\/)([\w\-\.]+[^#?\s]+))?(\?([^#]*))?(#(.*))?$/;
 
 var index = function (req, res, next) {
+
+  console.log("topic index");
   var topicId = req.params.topicId;
 
   Topic.validateId(topicId, function (valid, topic) {
@@ -27,31 +33,72 @@ var index = function (req, res, next) {
           var updateAt = topic.update_at.getFullYear() + '年'
             + (topic.update_at.getMonth() + 1) + '月'
             + topic.update_at.getDate() + '日';
-          var topicData = {
-            title: topic.title,
-            coverUrl: topic.cover_url,
-            description: topic.description,
-            updateAt: updateAt,
-            author: topic.author_name,
-            PVCount: topic.PV_count
-          };
-          var itemsData = [];
-          items.forEach(function (item) {
-            itemsData.push(_getItemData(item));
-          });
-          res.set('Cache-Control', 'private, no-cache, no-store, must-revalidate, post-check=0, pre-check=0');
-          res.set('Connection', 'close');
-          res.set('Expire', '-1');
-          res.set('Pragma', 'no-cache');
-          res.render('topic/index', {
-            css: [
-              '/stylesheets/topic.css'
-            ],
-            escape: escape,
-            url: req.url,
-            topic: topicData,
-            items: itemsData
-          });
+
+          //author information: website url, description, images.
+          User.getUserByLoginName(topic.author_name, function(err, user){
+            if(err){ console.log(err); return;}
+            else if (!user){
+              console.log("cannot find user");
+              return;
+            }
+            var authorData = {
+              author: user.loginName,
+              imgUrl:  user.url,
+              description: helper.linkify(user.description),
+              personalSite: user.personalSite
+            };
+            //console.log("author Data:-------------------");
+            //console.log(authorData);
+
+            var topicData = {
+              topicId: topic._id,
+              title: topic.title,
+              coverUrl: topic.cover_url,
+              description: topic.description,
+              updateAt: updateAt,
+              author: topic.author_name,
+              PVCount: topic.PV_count,
+              FVCount: topic.FVCount
+            };
+
+            var itemsData = [];
+            items.forEach(function (item) {
+              itemsData.push(_getItemData(item));
+            });
+
+            var liked = false; //default, not login user.
+            //If a login user, check liked before or not.
+            if(req.session && req.session.userId){
+              //console.log("currentUser", req.currentUser);
+              //check in FVTopicList
+              var likeList = req.currentUser.FVTopicList;
+              if (likeList.indexOf(topic._id) > -1){
+                console.log("liked befoere");
+                liked = true;
+              }
+            }
+
+            res.set('Cache-Control', 'private, no-cache, no-store, must-revalidate, post-check=0, pre-check=0');
+            res.set('Connection', 'close');
+            res.set('Expire', '-1');
+            res.set('Pragma', 'no-cache');
+            res.render('topic/index', {
+              css: [
+                '/stylesheets/topic.css'
+              ],
+              js:[
+                '/javascripts/showTopic.js'
+              ],
+              escape: escape,
+              url: req.url,
+              topic: topicData,
+              items: itemsData ,
+              authorInfo: authorData,
+              liked: liked
+            });
+
+          })
+
         });
       });
     } else {
@@ -399,6 +446,97 @@ var getVideoTitle = function (req, res, next) {
     });
 }
 
+var AddorRemoveLikes = function(req, res){
+  console.log("add or remove likes for topic");
+  var topicId = req.body.topicId;
+  var toLike = req.body.toLike || "true";
+  console.log(topicId);
+  console.log(toLike);//string
+
+  //what need to do is.
+  //1. add/remove likes in topic
+  //2. add/remove topicId in likeList for the current user.
+
+  //get current viewer info according to userId
+  if(req.session && req.session.userId){
+    User.getUserById(req.session.userId, function(err, user){
+      if(err){console.log(err); return;}
+      else if(!user){console.log("cannot find user by id"); return;}
+      else {
+        //found the user
+        if(toLike == "true"){
+          //if does not in the array, push.
+          if(user.FVTopicList.indexOf(topicId) == -1){
+            user.FVTopicList.push(topicId);
+          }
+          //otherwise do nothing.
+        } else {
+          //toLike "false"
+          var index = user.FVTopicList.indexOf(topicId);
+          if( index > -1) {
+            user.FVTopicList.splice(index, 1);
+          }
+        }
+
+        user.save(function(err){
+          if(err){
+            console.log("user save err ");
+            return;
+          }
+        })
+
+        //update topic info
+        Topic.getTopicById(topicId, function(err, topic){
+          if(err){console.log(err); return;}
+          else if(!topic){console.log("cannot find topic"); return;}
+          else{
+            //found the topic according to id.
+            var userId = user._id;
+            console.log("----------------------")
+            console.log(typeof toLike);
+            if(toLike == "true"){
+              if(topic.FVList.indexOf(userId) == -1){
+                //not exist
+                topic.FVList.push(userId);
+                topic.FVCount += 1;
+                }
+              //otherwise already found. do nothing
+            }
+            else
+            {
+              //toLike == "false"
+              var index = topic.FVList.indexOf(userId);
+              if( index > -1) {
+                topic.FVList.splice(index, 1);
+                topic.FVCount -= 1;
+              }
+              //otherwise do nothing
+            }
+
+            topic.save(function(err){
+              if(err){ console.log("topic save err");}
+            });
+            console.log("-------------------------------");
+            //console.log(user);
+            console.log("-------------------------------");
+            //console.log(topic);
+            //now successfully update info for both author and viewer.
+            //send information back
+            res.header('Access-Control-Allow-Credentials', 'true')
+            res.contentType('json');
+            //res.writeHead(200);
+            //if need login, then in auth.js, loginDialog : true,
+            //correct attribute is used for login Dialog success situation.
+            res.send({loginDialog: false, FVCount: topic.FVCount , correct: true, userName: user.loginName, toLike: toLike });
+
+          }
+        })
+      }
+    })
+  }
+
+}
+
 exports.index = index;
 exports.create = create;
 exports.edit = edit;
@@ -410,3 +548,4 @@ exports.sort = sort;
 exports.deleteItem = deleteItem;
 exports.save = save;
 exports.getVideoTitle = getVideoTitle;
+exports.AddorRemoveLikes = AddorRemoveLikes;

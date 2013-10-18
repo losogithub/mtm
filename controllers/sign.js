@@ -372,7 +372,7 @@ var login = function (req, res, next) {
 
   // check loginname is a user id or an email address
   var emailIDFlag = true;
-  if (helper.validateEmail(loginname)) {
+  if (! helper.validateEmail(loginname)) {
     emailIDFlag = false;
     User.getUserByLoginName(loginname, function (err, user) {
       if (err) {
@@ -384,7 +384,7 @@ var login = function (req, res, next) {
           metaHead: '',
           css: '',
           js: '',
-          errMsg: '<p class="MdMsgError01">The username address does not exist.</p>',
+          errMsg: '<p class="MdMsgError01">The username does not exist.</p>',
           email: loginname, password: pass,
           layout: 'signLayout'
         });

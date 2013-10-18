@@ -41,9 +41,8 @@
               <div class="HeadUser">
                 <table style="height: 30px;">
                   <td>
-                    <a class="HeadUserThumb" href="/u/<%= topic.author %>"><img
+                    <a class="HeadUserThumb" href="/u/<%= topic.author %>"><img src="<%= authorInfo.imgUrl ? authorInfo.imgUrl : '/images/no_img/user_40x40.png' %>"
                       onerror="mtm.errorImage(this,'user_40x40');"
-                      src="/images/mo_img/user_40x40.png"
                       title="<%= topic.author %>"></a>
                   </td>
                   <td>
@@ -57,7 +56,7 @@
         <div class="HeadSub">
           <div class="HeadCount">
             <span class="HeadFVCount">
-              <span class="HeadFVCountNum"><span class="HeadFVIco"></span> <%= topic.PVCount %></span>
+              <span class="HeadFVCountNum"><span class="HeadFVIco"></span> <span><%= topic.FVCount %></span></span>
               <span class="HeadFVCountLabel">favourite</span>
             </span>
             <span class="HeadPVCount">
@@ -65,7 +64,8 @@
               <span class="HeadPVCountLabel">view</span>
             </span>
             </div>
-            <a class="HeadFVBtn" data-favorite="{&quot;url&quot;:&quot;=thisUrl&quot;}">
+
+          <a <% if(locals.liked) {%> class="HeadFVBtn ExSelected" <% } else { %> class="HeadFVBtn" <% } %>data-favorite="{&quot;topicId&quot;:&quot;<%= topic.topicId %>&quot;}">
               <span class="HeadFVBtnWrap">
                 <span class="HeadFVBtnIco"></span>
                 <span class="HeadFVBtnTxt">添加到收藏</span>
@@ -83,7 +83,7 @@
       <div class="NoItem">
         <img class="NoItemIco" src="/images/sprite_NoItem.png">
 
-        <p class="NoItemTxt">このまとめにはまだアイテムの登録がありません。<br>アイテムを追加しますか？</p>
+        <p class="NoItemTxt">这个总结还没有内容。<br>要添加吗？</p>
       <% } %>
         <a href="<%= locals.url + '/edit' %>">
           <button class="button button-small button-action" type="button"><i class="icon-plus-sign icon-large"></i> 添加条目</button>
@@ -105,17 +105,24 @@
             <div class="SubAuthorProfileUnit">
               <h2 class="SubAuthorProfileUnitTitle">
                 <a href="" class="SubAuthorProfileUnitTitleUserName">
-                  <img title="" width="80" height="80" src="" class="SubAuthorProfileUnitTitleUserNameThumb"> username
+                  <img title="" width="80" height="80" src="<%= authorInfo.imgUrl ? authorInfo.imgUrl : '/images/no_img/user_80x80.png' %>" onerror="errorImage(this,'user80x80');"
+                       class="SubAuthorProfileUnitTitleUserNameThumb"> <%= topic.author %>
                 </a>
                 san
               </h2>
               <p class="SubAuthorProfileUnitLink">
+                <% if (authorInfo.personalSite) { %>
+                 <span class="SubAuthorProfileUnitLinkSite">
+                   <a href="<%= authorInfo.personalSite %>" class="SubAuthorProfileUnitLinkSiteBtn" target="_blank">个人网站</a>
+                 </span>
+                <% } else { %>
                  <span class="SubAuthorProfileUnitLinkSite ExDisabled">
                    <span class="SubAuthorProfileUnitLinkSiteBtn">个人网站</span>
                  </span>
+                <% } %>
               </p>
             </div>
-            <p class="SubAuthorProfileTxt">user description text ! </p>
+            <p class="SubAuthorProfileTxt"><%- authorInfo.description %></p>
           </div>
 
         </div>

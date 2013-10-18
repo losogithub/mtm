@@ -26,7 +26,10 @@ var UserSchema = new Schema({
   //support user likes
   favourite: {type: Number, default: 0},
   favouriteList: [ObjectId], //liked by someone
-  likeList: [ObjectId] //like some one
+  likeList: [ObjectId], //like some one
+
+  //the topics that user like
+  FVTopicList: [ObjectId]
 
 });
 

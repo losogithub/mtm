@@ -18,6 +18,8 @@ module.exports = function (app) {
   app.get('/home', auth.loadUser, site.index);
 
   //console.log("router start");
+  app.post('/topic', auth.loadUser, auth.loginDialog, topic.AddorRemoveLikes);
+  app.post('/topic/loginDialogCheck', auth.loginDialogCheck, topic.AddorRemoveLikes);
 
   app.get('/topic/create', auth.loadUser, auth.loginRequired , topic.create);
   app.get('/topic/getid', topic.getId);
@@ -30,6 +32,7 @@ module.exports = function (app) {
   app.put('/topic/sort', topic.sort);
   app.put('/topic/save', auth.loadUser, topic.save);
   app.delete('/topic/deleteitem', topic.deleteItem);
+
 
 
   // sign up, login, logout

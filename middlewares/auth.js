@@ -271,7 +271,7 @@ var loginDialogCheck = function(req, res, next){
     User.getUserByNamePass(loginName, encryp.md5(pass) , function(err, user){
       if(err){
         console.log("find err: %s", err);
-        return
+        return ;
       }
       else if(!user){
         console.log("cannot find user by name&pass: %s, %s", loginName, pass);
