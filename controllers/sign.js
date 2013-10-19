@@ -490,8 +490,8 @@ var signout = function (req, res, next) {
   // here currentUser maybe empty
   // no problem: since it will use auth to check. at that time currentUser is assigned.
   // so not null
-  console.log("curent user;")
-  console.log(req.currentUser);
+  //console.log("curent user;")
+  //console.log(req.currentUser);
   //I see, currentUser only passed between middleware and the final call.
   if (req.currentUser) {
     //combine email and series to make sure only only clear from on computer.
@@ -499,12 +499,15 @@ var signout = function (req, res, next) {
   }
   res.clearCookie('logintoken');
   //res.redirect('/home');
+  console.log(req.headers.referer);
+  var refer = req.headers.referer || 'home';
   return res.render('sign/logoutMessage', {
     title: config.name,
     metaHead: '',
     css: '',
     js: '',
-    layout: 'signLayout'
+    layout: 'signLayout',
+    refer : refer
   })
 };
 
