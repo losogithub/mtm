@@ -288,7 +288,8 @@ var notJump = [
   '/activeAccount', //active page
   '/resetPassword',     //reset password page, avoid to reset twice
   '/signup',         //register page
-  '/forgetPassword'    //forgetpassword
+  '/forgetPassword',    //forgetpassword
+  '/login'
 ];
 
 /**
@@ -500,7 +501,14 @@ var signout = function (req, res, next) {
   res.clearCookie('logintoken');
   //res.redirect('/home');
   console.log(req.headers.referer);
+  //need a black list
   var refer = req.headers.referer || 'home';
+  for (var i = 0, len = notJump.length; i !== len; ++i) {
+    if (refer.indexOf(notJump[i]) >= 0) {
+      refer = 'home';
+      break;
+    }
+  }
   return res.render('sign/logoutMessage', {
     title: config.name,
     metaHead: '',

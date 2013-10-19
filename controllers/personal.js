@@ -8,6 +8,7 @@
  */
 var check = require('validator').check,
   sanitize = require('validator').sanitize;
+var escape = require('escape-html');
 
 var encryp = require('../helper/encryp');
 var helper = require('../helper/helper');
@@ -675,7 +676,8 @@ var showPersonal = function(req, res){
       //here must check whether it is empty or not.
       //bug fixed.
       if(description){
-        description = helper.linkify(user.description);
+        description = escape(user.description);
+        description = helper.linkify(description);
       }
       //console.log(description);
 

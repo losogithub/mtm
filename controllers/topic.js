@@ -44,7 +44,7 @@ var index = function (req, res, next) {
             var authorData = {
               author: user.loginName,
               imgUrl:  user.url,
-              description: helper.linkify(user.description),
+              description: helper.linkify(escape(user.description)),
               personalSite: user.personalSite
             };
             //console.log("author Data:-------------------");
