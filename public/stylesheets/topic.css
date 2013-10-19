@@ -113,3 +113,13 @@ body #LoginPanel h1{height:11px!important;line-height:11px!important}
 .NoItem{position: relative;padding: 140px 0px 160px;text-align: center;}
 .NoItemIco{margin-bottom: 7px;}
 .NoItemTxt{color: rgb(102, 102, 102);margin-bottom: 11px;}
+
+
+.TopicPagination{margin-bottom: 40px; line-height: 1.2; margin: 30px 0; font-family: Arial, Helvetica,sans-serif; font-size: 16px; text-align: center}
+.TPagination{margin-bottom: 40px; line-height:1.2;margin:30px 0;font-family:Arial,Helvetica,sans-serif;font-size:16px;text-align:center}
+.TPaginationBreak{display: inline-block; margin: 0 2px; padding: 8px 11px; font-weight: bold; vertical-align: top}
+.TPagination strong {padding: 9px 11px; color: #000; display: inline-block; margin: 0 2px; font-weight: bold; vertical-align: top;}
+.TPagination a {display: inline-block; margin: 0 2px; padding: 8px 11px; font-weight: bold; vertical-align: top}
+
+.TPagination a:link,.Pagination a:visited{border:1px solid #ebebeb;color:#999;text-decoration:none}
+.TPagination a:hover,.TPagination a:active,.TPagination a:focus{cursor:pointer;background-color:#f0f0f0;color:#000;text-decoration:none}

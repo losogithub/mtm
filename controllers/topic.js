@@ -24,6 +24,7 @@ var index = function (req, res, next) {
 
   console.log("topic index");
   var topicId = req.params.topicId;
+  var currentPage = req.query.page || 1 ;
 
   Topic.validateId(topicId, function (valid, topic) {
     if (valid && topic.publishDate) {
@@ -96,7 +97,9 @@ var index = function (req, res, next) {
               topic: topicData,
               items: itemsData ,
               authorInfo: authorData,
-              liked: liked
+              liked: liked,
+              currentPage: currentPage,
+              totalPage: 4
             });
 
           })
