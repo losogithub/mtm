@@ -28,7 +28,7 @@ var linkify = function (inputText) {
   replacePattern3 = /(\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,6})/gim;
   replacedText = replacedText.replace(replacePattern3, '<a href="mailto:$1">$1</a>');
 
-  return replacedText.replace(/(\n)+/g, '<br />');
+  return replacedText.replace(/(\n)+/g, '<br>');
 }
 
 

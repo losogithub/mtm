@@ -12,6 +12,7 @@ var BufferHelper = require('bufferhelper');
 
 var helper = require('../helper/helper');
 
+
 var User = require('../proxy').User;
 
 var Topic = require('../proxy').Topic;
@@ -44,6 +45,7 @@ var index = function (req, res, next) {
             var authorData = {
               author: user.loginName,
               imgUrl:  user.url,
+              //description: balinkify.linkify(escape(user.description), {target: " "}),
               description: helper.linkify(escape(user.description)),
               personalSite: user.personalSite
             };

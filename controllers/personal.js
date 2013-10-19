@@ -13,6 +13,7 @@ var escape = require('escape-html');
 var encryp = require('../helper/encryp');
 var helper = require('../helper/helper');
 
+
 var User = require('../proxy').User;
 var Topic = require('../proxy').Topic;
 var config = require('../config');
@@ -677,6 +678,7 @@ var showPersonal = function(req, res){
       //bug fixed.
       if(description){
         description = escape(user.description);
+        //description = balinkify.linkify(description, {target: " "})  ;
         description = helper.linkify(description);
       }
       //console.log(description);
