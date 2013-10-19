@@ -5,7 +5,7 @@ button, img, fieldset, table, th, td{border: 0 none;}
 input, textarea{font-size: 1em;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;
     padding: 0 4px;background-color: #fff;width: 100%;
     border-width: 1px;border-style: solid;border-color: rgb(202, 206, 209) rgb(232, 234, 235) rgb(232, 234, 235) rgb(202, 206, 209);}
-input:focus, textarea:focus{border: 1px solid #33cc00;box-shadow: 0 0 3px rgba(0, 0, 0, 0.1) inset;}
+input:focus, textarea:focus{border: 1px solid #33cc00;box-shadow: 0 0 3px rgba(0, 0, 0, 0.1) inset;outline: 0 none;}
 textarea{font-family: arial,sans-serif;}
 /*a*/
 a{cursor: pointer;}
@@ -14,7 +14,6 @@ a:hover, a:active, a:focus{color: #000;text-decoration: underline;}
 
 ol, ul{list-style: none;}
 table{height: 100%;}
-:focus {outline: 0 none;}
 html{overflow-y: scroll;}
 body{font: 12px/1.5 "微软雅黑",arial,sans-serif;word-wrap: break-word;}
 
@@ -86,9 +85,10 @@ input[name='url']{color: rgb(102, 102, 102);height: 26px;line-height: 24px;}
 .IMAGE .Quote{max-width: 300px;}
 .CITE .Quote{font-size: 11px;line-height: 13px;margin-top: 7px;}
 /*工具栏*/
-.SortUtil {position: absolute;top: 0px;right: -20px;width: 20px;visibility: hidden;}
-.SortUtil i{display: block;line-height: 19px;width: 20px;height: 19px;text-align: center;cursor: pointer;}
-.MoveUtil{cursor: move;}
+.SortUtil {position: absolute;top: 0px;right: -25px;width: 25px;padding-left: 3px;visibility: hidden;}
+.SortUtil i{display: block;line-height: 22px;width: 22px;height: 22px;text-align: center;cursor: pointer;}
+.SortUtil i:hover{font-size: 18px;outline: dotted 1px;}
+.MoveUtil{cursor: move !important;}
 .BottomUtil{visibility: hidden; padding: 0 3px;line-height: 1;}
 .BottomUtil a, .HeadUtil a{color: rgb(124, 148, 170);line-height: 1;vertical-align: middle;}
 .ItemUtil1 {float: left;}
