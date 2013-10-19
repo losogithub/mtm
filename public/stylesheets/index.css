@@ -32,11 +32,11 @@ em{font-style:normal}
 
 .Col03{float: left;width: 185px;}
 .Col03HotContentList{ overflow: hidden}
-.col03HotContentListItem{margin:13px 0 0;padding:14px 0 0;border-top:1px solid #f2f2f2;vertical-align:top;word-wrap:break-word;word-break:break-all}
-.Col03HotContentListItem:first-child{border-top: 0; margin-top: 0; padding-top: 0}
+.Col03HotContentList .col03HotContentListItem{margin:13px 0 0;padding:14px 0 0;border-top:1px solid #f2f2f2;vertical-align:top;word-wrap:break-word;word-break:break-all}
+.Col03HotContentList li:first-child {border-top: 0; margin-top: 0; padding-top: 0}
 .Col03HotContentListItemTtl{line-height: 1.35; font-size: 12px}
 .Col03HotContentListItemDes{margin-top: 4px; color: #aeaeae; font-size: 11px}
-.Col03HotContentListItemOption{line-height: 1; margin-top: 6px}
+.Col03HotContentList .Col03HotContentListItemOption{line-height: 1; margin-top: 6px}
 .Col03HotContentListItemUserName{float: left; color: #9b9b9b; font-size: 11px}
 .Col03HotContentListItemPVCount{float: right; color: #9b9b9b}
 .Col03HotContentListItemPVCountNum{font-family: Arial,sans-serif; font-weight: bold; font-size: 11px; color: #9b9b9b}
