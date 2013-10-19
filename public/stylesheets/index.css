@@ -54,3 +54,5 @@ em{font-style:normal}
 .SubContentTopicListListItem{display: table; table-layout: fixed; width: 300px; padding: 0 0 8px 0; word-wrap: break-word; word-break: break-all}
 .SubContentTopicListListItemThumb{width: 45px; vertical-align: top; display: table-cell}
 .SubContentTopicListListItemTxt{line-height: 1.3; padding-left: 7px; font-size: 12px; vertical-align: middle; display: table-cell}
+.SubContentTopicListListItemTxtLink{}
+.SubContentTopicListListItemTxtUserName{margin-top: 2px; color: #9b9b9b; font-size: 10px}
