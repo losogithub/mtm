@@ -7,16 +7,19 @@ input, textarea{font-size: 1em;-webkit-box-sizing: border-box;-moz-box-sizing: b
     border-width: 1px;border-style: solid;border-color: rgb(202, 206, 209) rgb(232, 234, 235) rgb(232, 234, 235) rgb(202, 206, 209);}
 input:focus, textarea:focus{border: 1px solid #33cc00;box-shadow: 0 0 3px rgba(0, 0, 0, 0.1) inset;outline: 0 none;}
 textarea{font-family: arial,sans-serif;}
+input[name='url'], input .Url{color: rgb(102, 102, 102);height: 26px;line-height: 24px;}
 /*a*/
 a{cursor: pointer;}
 a, a:link, a:visited{color: #000;text-decoration: none;}
 a:hover, a:active, a:focus{color: #000;text-decoration: underline;}
 
 ol, ul{list-style: none;}
+i{font-size: 14px;}
 table{height: 100%;}
 html{overflow-y: scroll;}
 body{font: 12px/1.5 "微软雅黑",arial,sans-serif;word-wrap: break-word;}
 
+.HeightAnimation{transition: height 0.2s ease 0s;}
 .button{font-weight: bold;}
 .Required{padding-left: 15px !important;background-image: url("/images/FormInputGuide.png");background-position:  5px 8px;background-repeat: no-repeat;}
 .Hide{display: none;}
@@ -28,15 +31,11 @@ body{font: 12px/1.5 "微软雅黑",arial,sans-serif;word-wrap: break-word;}
     color: transparent;font-size:0;line-height:0;
     vertical-align: middle;cursor: pointer;
     background-image: url(/images/sprite_btn.png);}
-.Btn-Edit {background-position: -180px -170px;width: 11px;height: 14px;margin-right: 3px}
-.Btn-Del {background-position: -200px -170px;width: 11px;height: 14px;margin-right: 3px}
 .Btn-Header {background-image: url("/images/sprite_head.png");}
 .Btn-Header-Banner01 {display: block;width: 181px;height: 33px;background-position: 0 -30px;margin: 0 auto;}
 .Btn-Header-Banner02 {display: block;width: 102px;height: 20px;margin: 0 auto;}
-
-input[name='url']{color: rgb(102, 102, 102);height: 26px;line-height: 24px;}
 /*分割线*/
-.VLine{position: relative;top: 1px;width: 0;height: 11px;border-left: 1px solid #eee;vertical-align: middle;}
+.VLine{display: inline-block;width: 0;height: 11px;border-left: 1px solid #eee;vertical-align: middle;}
 .VLine-Header{margin: 0 9px 0 11px;}
 .VLine-Footer{margin: 0 11px 0 15px;}
 .VLine-Util{margin: 0 5px;}
@@ -56,7 +55,7 @@ input[name='url']{color: rgb(102, 102, 102);height: 26px;line-height: 24px;}
 .Nav-Right_Inner{margin: 10px 0;}
 .Nav-Right_Inner img{margin-right: 5px;vertical-align: middle;}
 .Nav-Right_Inner>li:last-of-type>i{margin-left: -6px;padding: 6px;cursor: pointer;font-size: 8px;vertical-align: middle;}
-.Nav-Drop{z-index: 1002;position: absolute;right: 0;width: 98px;height: 90px;
+.Nav-Drop{z-index: 1002;position: absolute;right: 0;width: 98px;
     background-color: rgb(255, 255, 255);border: 1px solid rgb(207, 207, 207);box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);}
 .Nav-Drop a{display: block;height: 30px;line-height: 30px;padding: 0 8px;}
 .Nav-Drop a:hover,.Nav-Drop a:active,.Nav-Drop a:focus{background-color:#f0f0f0;text-decoration:none}
@@ -74,9 +73,9 @@ input[name='url']{color: rgb(102, 102, 102);height: 26px;line-height: 24px;}
 .TopicWrapper .Pagination {line-height: 19px;margin: 30px 0 40px 0;font-family: Arial,Helvetica,sans-serif;font-size: 16px;text-align: center;}
 .TopicWrapper .Sub {position: relative;float: right;width: 300px;padding-bottom: 40px;}
 /*条目*/
-.WidgetItemList>li{background-color: rgb(255, 255, 255);margin: 0 0 15px 0;}
-.WidgetItemList>li:hover{background-color: #f8f8f8;box-shadow: 0 0 0 3px #f8f8f8;}
-.WidgetItemList>li>div>*:first-child{overflow: hidden;}
+.WidgetItemList>li>div{background-color: rgb(255, 255, 255);margin-bottom: 15px;}
+.WidgetItemList>li>div:hover{background-color: #f8f8f8;box-shadow: 0 0 0 3px #f8f8f8;}
+.WidgetItemList>li>div>:first-child{overflow: hidden;}
 .WidgetItemList .Content{overflow: hidden;}
 .WidgetItemList .Quote{overflow: hidden;line-height: 14px;margin-top: 3px;min-width: 100px;}
 .WidgetItemList .Quote *{color: rgb(170, 170, 170);}
@@ -85,12 +84,12 @@ input[name='url']{color: rgb(102, 102, 102);height: 26px;line-height: 24px;}
 .IMAGE .Quote{max-width: 300px;}
 .CITE .Quote{font-size: 11px;line-height: 13px;margin-top: 7px;}
 /*工具栏*/
-.SortUtil {position: absolute;top: 0px;right: -25px;width: 25px;padding-left: 3px;visibility: hidden;}
-.SortUtil i{display: block;line-height: 22px;width: 22px;height: 22px;text-align: center;cursor: pointer;}
-.SortUtil i:hover{font-size: 18px;outline: dotted 1px;}
+.SortUtil {position: absolute;top: 0px;right: -24px;padding-left: 3px;visibility: hidden;}
+.SortUtil i{display: block;line-height: 21px;width: 21px;height: 21px;text-align: center;cursor: pointer;}
+.SortUtil i:hover{outline: dotted 1px;}
 .MoveUtil{cursor: move !important;}
-.BottomUtil{visibility: hidden; padding: 0 3px;line-height: 1;}
-.BottomUtil a, .HeadUtil a{color: rgb(124, 148, 170);line-height: 1;vertical-align: middle;}
+.BottomUtil{visibility: hidden;line-height: 1;}
+.BottomUtil a, .HeadUtil a{color: rgb(124, 148, 170);display: inline-block;}
 .ItemUtil1 {float: left;}
 .ItemUtil2 {float: right;}
 
