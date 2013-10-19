@@ -73,6 +73,7 @@
           </div>
           <ul class="SubContentTopicListList">
             <% for (i in hot) { %>
+            <li class="SubContentTopicListListItem">
             <div class="SubContentTopicListListItemThumb">
               <a href="/topic/<%= hot[i].id %>">
                 <img width="45" height="45"
@@ -88,6 +89,7 @@
                 <a href=""><%= hot[i].author%></a>
               </p>
             </div>
+            </li>
             <% } %>
           </ul>
         </div>
