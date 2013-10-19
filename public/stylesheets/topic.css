@@ -35,7 +35,7 @@
 .HeadFVBtnTxt{color:#000;font-weight:bold;font-size:14px}
 
 .SubInner{}
-.SubSeparator{background: #fff}
+.SubSeparator{height:15px;background: #fff}
 .SubAuthor{border:5px solid #e2e5e8}
 .SubAuthorProfile{padding:15px 15px 15px}
 .SubAuthorProfileUnit{position:relative;min-height:80px;padding:0 0 0 90px}

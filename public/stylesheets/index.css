@@ -1,6 +1,15 @@
 .Top{margin-bottom: 20px;border-bottom: 1px solid rgb(231, 231, 231);position: relative;height: 41px;}
 .Contents{overflow: hidden;}
-.Main{float: left;width: 685px;padding: 0 25px 5px 0;}
+.Main{float: left;width: 710px;padding: 0 25px 5px 0;}/*shall be 685px, but I donn't know why not accept the padding*/
+
+.MdCF{*zoom:1}
+.MdCF:after{content:"";display:block;clear:both}
+
+.TopInner{position: relative; height: 40px; line-height: 40px;padding-bottom: 0}
+.TopInnerDate{color: #999; font-family: Arial,Helvetica,sans-serif; text-align: center}
+.TopInnerDateToday{font-size: 16px;}
+.TopInnerDateWeek{margin-left: 3px; font-size: 11px}
+em{font-style:normal}
 
 .Col01{float: left;width: 120px;margin-right: 20px;}
 .Col01 li{margin-bottom: 5px;}
@@ -22,4 +31,26 @@
 .PVCount b{margin-right: 2px;font-size: 12px;}
 
 .Col03{float: left;width: 185px;}
+.Col03HotContentList{ overflow: hidden}
+.col03HotContentListItem{margin:13px 0 0;padding:14px 0 0;border-top:1px solid #f2f2f2;vertical-align:top;word-wrap:break-word;word-break:break-all}
+.Col03HotContentListItem:first-child{border-top: 0; margin-top: 0; padding-top: 0}
+.Col03HotContentListItemTtl{line-height: 1.35; font-size: 12px}
+.Col03HotContentListItemDes{margin-top: 4px; color: #aeaeae; font-size: 11px}
+.Col03HotContentListItemOption{line-height: 1; margin-top: 6px}
+.Col03HotContentListItemUserName{float: left; color: #9b9b9b; font-size: 11px}
+.Col03HotContentListItemPVCount{float: right; color: #9b9b9b}
+.Col03HotContentListItemPVCountNum{font-family: Arial,sans-serif; font-weight: bold; font-size: 11px; color: #9b9b9b}
+.Col03HotContentListItemPVCountUnit{margin: 0 2px 0 4px; white-space: nowrap; font-family: Arial,sans-serif; font-size: 10px; color: #9b9b9b}
+
+
+
+
 .Sub{float: right;width: 300px;position: relative;padding-bottom: 40px;}
+.SubSeparator{background: #fff; height: 20px}
+.SubContent{background-color: #fff}
+.SubContentTopicListBox{margin-bottom: -8px}
+.SubContentTopicListTtl{margin-bottom: 13px;}
+.SubContentTopicListList{}
+.SubContentTopicListListItem{display: table; table-layout: fixed; width: 300px; padding: 0 0 8px 0; word-wrap: break-word; word-break: break-all}
+.SubContentTopicListListItemThumb{width: 45px; vertical-align: top; display: table-cell}
+.SubContentTopicListListItemTxt{line-height: 1.3; padding-left: 7px; font-size: 12px; vertical-align: middle; display: table-cell}

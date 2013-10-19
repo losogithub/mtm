@@ -1,11 +1,18 @@
 <div class="Contents">
   <div class="Top">
-    <div class="Inner"></div>
+    <div class="TopInner">
+      <p class="TopInnerDate">
+        <time datetime="2013-10-19">
+          <em class="TopInnerDateToday">2013.10.19</em>
+          <span class="TopInnerDateWeek">(周六)</span>
+        </time>
+      </p>
+    </div>
   </div>
 
-  <div class="Inner">
+  <div class="Inner MdCF">
     <div class="Main">
-      <div class="ColWrapper">
+      <div class="ColWrapper MdCF">
         <div class="Col01">
           <ul>
             <li class="SELECTED"><a href="/">综合</a></li>
@@ -27,7 +34,7 @@
                   <div class="">
                     <h3 class="TopicTtl"><a href="/topic/<%= hot[i].id %>"><%= hot[i].title %></a></h3>
                     <a class="TopicAuthor" href="/u/<%= hot[i].author %>"><%= hot[i].author %></a>
-                    <span class="PVCount"><b><%= hot[i].PVCount %></b>view</span>
+                    <span class="PVCount"><b><%= hot[i].PVCount %></b>访问量</span>
                   </div>
                 </td>
               </table>
@@ -35,9 +42,56 @@
             <% } %>
           </ul>
         </div>
-        <div class="Col03"></div>
+        <div class="Col03">
+          <ul class="Col03HotContentList">
+            <% for (i in hot) { %>
+             <li class="col03HotContentListItem">
+               <a href="/topic/<%= hot[i].id %>">
+                 <h3 class="Col03HotContentListItemTtl" title="<%= hot[i].title %>"><%= hot[i].title %></h3>
+                 <p class="Col03HotContentListItemDes"><%= hot[i].des %></p>
+               </a>
+               <div class="Col03HotContentListItemOption">
+                 <p class="Col03HotContentListItemUserName" title="<%= hot[i].author %>"><%= hot[i].author%></p>
+                 <p class="Col03HotContentListItemPVCount">
+                   <span class="Col03HotContentListItemPVCountNum"><%= hot[i].PVCount %></span>
+                   <span class="Col03HotContentListItemPVCountUnit">访问量</span>
+                 </p>
+               </div>
+             </li>
+            <% } %>
+          </ul>
+        </div>
       </div>
     </div>
-    <div class="Sub"></div>
+    <div class="Sub">
+      <div class="SubSeparator"><hr></div>
+      <!--the newest summarise-->
+      <div class="SubContent">
+        <div class="SubContentTopicListBox">
+          <div class="SubContentTopicListTtl">
+            <h2>最新的总结</h2>
+          </div>
+          <ul class="SubContentTopicListList">
+            <% for (i in hot) { %>
+            <div class="SubContentTopicListListItemThumb">
+              <a href="/topic/<%= hot[i].id %>">
+                <img width="45" height="45"
+                     onerror="mtm.errorImage(this,'image_45x45');"
+                     src="<%= !hot[i].coverUrl ? '/images/no_img/image_45x45.png' : hot[i].coverUrl %>">
+              </a>
+            </div>
+            <div class="SubContentTopicListListItemTxt">
+              <h3 class="">
+                <a href="/topic/<%= hot[i].id %>"><%= hot[i].title %></a>
+              </h3>
+              <p class="">
+
+              </p>
+            </div>
+            <% } %>
+          </ul>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

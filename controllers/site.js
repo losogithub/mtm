@@ -16,7 +16,8 @@ var index = function (req, res, next) {
         coverUrl: topic.cover_url,
         title: topic.title,
         author: topic.author_name,
-        PVCount: topic.PV_count
+        PVCount: topic.PV_count,
+        des: topic.description
       });
     });
     res.render('index', {
