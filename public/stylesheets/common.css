@@ -6,8 +6,10 @@ input, textarea{font-size: 1em;-webkit-box-sizing: border-box;-moz-box-sizing: b
     padding: 0 4px;background-color: #fff;width: 100%;
     border-width: 1px;border-style: solid;border-color: rgb(202, 206, 209) rgb(232, 234, 235) rgb(232, 234, 235) rgb(202, 206, 209);}
 input:focus, textarea:focus{border: 1px solid #33cc00;box-shadow: 0 0 3px rgba(0, 0, 0, 0.1) inset;outline: 0 none;}
-textarea{font-family: arial,sans-serif;}
-input[name='url'], input .Url{color: rgb(102, 102, 102);height: 26px;line-height: 24px;}
+input{height: 24px;line-height: 22px;}
+textarea{font-family: arial,sans-serif;min-height: 85px;padding: 5px 5px 0 5px;resize: vertical;}
+input[name='url'], input.Url{color: #999999;}
+input.Bold{font-size: 14px;font-weight: bold;height: 30px;line-height: 28px;}
 /*a*/
 a{cursor: pointer;}
 a, a:link, a:visited{color: #000;text-decoration: none;}

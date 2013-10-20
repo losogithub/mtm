@@ -20,7 +20,7 @@ var Item = require('../proxy').Item;
 
 var REGEXP_URL = /^((http[s]?|ftp):\/)?\/?((([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]))(:([^\/]*))?(((\/\w+)*\/)([\w\-\.]+[^#?\s]+))?(\?([^#]*))?(#(.*))?$/;
 
-var index = function (req, res, next) {
+function index(req, res, next) {
 
   console.log("topic index");
   var topicId = req.params.topicId;
@@ -112,7 +112,7 @@ var index = function (req, res, next) {
   })
 }
 
-var create = function (req, res, next) {
+function create(req, res, next) {
   res.set('Cache-Control', 'private, no-cache, no-store, must-revalidate, post-check=0, pre-check=0');
   res.set('Connection', 'close');
   res.set('Expire', '-1');
@@ -133,7 +133,7 @@ var create = function (req, res, next) {
   });
 }
 
-var edit = function (req, res, next) {
+function edit(req, res, next) {
   var topicId = req.params.topicId;
   Topic.validateId(topicId, function (valid, topic) {
     if (!valid) {
@@ -176,13 +176,13 @@ var edit = function (req, res, next) {
   });
 }
 
-var getId = function (req, res, next) {
+function getId(req, res, next) {
   Topic.newId(function (topicId) {
     res.json({ topicId: topicId });
   });
 }
 
-var getContents = function (req, res, next) {
+function getContents(req, res, next) {
   var topicId = req.query.topicId;
   Topic.validateId(topicId, function (valid, topic) {
     if (!valid) {
@@ -211,7 +211,7 @@ var getContents = function (req, res, next) {
   })
 }
 
-var createItem = function (req, res, next) {
+function createItem(req, res, next) {
   var topicId = req.body.topicId;
   var prevItemType = req.body.prevItemType;
   var prevItemId = req.body.prevItemId;
@@ -246,7 +246,7 @@ var createItem = function (req, res, next) {
   }
 }
 
-var _getData = function (req, _id) {
+function _getData(req, _id) {
   var type = req.body.type;
   var data = {};
 
@@ -326,7 +326,7 @@ var _getData = function (req, _id) {
   return data;
 }
 
-var _getItemData = function (item) {
+function _getItemData(item) {
   var itemData;
 
   switch (item.type) {
@@ -379,7 +379,7 @@ var _getItemData = function (item) {
   return itemData;
 }
 
-var editItem = function (req, res, next) {
+function editItem(req, res, next) {
   var itemId = req.body.itemId;
 
   var data = _getData(req, itemId);
@@ -389,7 +389,7 @@ var editItem = function (req, res, next) {
   });
 }
 
-var sort = function (req, res, next) {
+function sort(req, res, next) {
   var topicId = req.body.topicId;
   var type = req.body.type;
   var itemId = req.body.itemId;
@@ -405,7 +405,7 @@ var sort = function (req, res, next) {
   res.send(200);
 }
 
-var deleteItem = function (req, res, next) {
+function deleteItem(req, res, next) {
   var type = req.body.type;
   var itemId = req.body.itemId;
   Item.deleteItem(type, itemId, function (item) {
@@ -414,7 +414,7 @@ var deleteItem = function (req, res, next) {
   res.send(200);
 }
 
-var save = function (req, res, next) {
+function save(req, res, next) {
   var authorId = req.session.userId;
   var topicId = req.body.topicId;
   var title = req.body.title;
@@ -427,7 +427,7 @@ var save = function (req, res, next) {
   });
 }
 
-var _getVideoTitle = function (url, done, fail) {
+function _getVideoTitle(url, done, fail) {
   require('http').get(url, function (response) {
     var bufferHelper = new BufferHelper();
     response.on('data', function (chunk) {
@@ -474,7 +474,7 @@ var _getVideoTitle = function (url, done, fail) {
     });
 }
 
-var getVideoTitle = function (req, res, next) {
+function getVideoTitle(req, res, next) {
   var url = req.query.url;
   _getVideoTitle(url, function (title) {
     res.json({
@@ -489,7 +489,7 @@ var getVideoTitle = function (req, res, next) {
   }
 }
 
-var AddorRemoveLikes = function(req, res){
+function AddorRemoveLikes(req, res){
   console.log("add or remove likes for topic");
   var topicId = req.body.topicId;
   var toLike = req.body.toLike || "true";

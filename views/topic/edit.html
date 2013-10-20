@@ -97,7 +97,7 @@
 
           <div class='Content IMAGE_CREATE'>
             <div class="Image"></div>
-            <input class="Required AUTO_FOCUS" type="text" name="url" placeholder="输入图片URL">
+            <input name="url" class="Required AUTO_FOCUS" placeholder="输入图片URL" type="text">
             <button name="preview" class="button button-tiny" type="button" disabled='disabled'
                     data-loading-text="预览 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;">预览</button>
 
@@ -111,9 +111,9 @@
             </div>
 
             <div style="overflow: hidden;">
-              <input class="WidgetInputBox_Ttl AUTO_FOCUS" type="text" name="title" placeholder="输入图片标题">
-              <input class="WidgetInputBox_Quo" type="text" name="quote" placeholder="输入图片来源网页URL">
-              <textarea class="WidgetInputBox_Desc" name="description" placeholder="输入图片介绍、评论"></textarea>
+              <input name="title" class="Bold AUTO_FOCUS" placeholder="输入图片标题" type="text">
+              <input name="quote" class="Url" placeholder="输入图片来源网页URL" type="text">
+              <textarea name="description" placeholder="输入图片介绍、评论"></textarea>
             </div>
 
             <% include _widget_BtnSet.html %>
@@ -123,7 +123,7 @@
           <div class='Content VIDEO_CREATE'>
             <div class="Thumb"></div>
             <div style="margin-top: 7px;">
-              <input class="Required AUTO_FOCUS" type="text" name="url" placeholder="输入视频URL">
+              <input name="url" class="Required AUTO_FOCUS" placeholder="输入视频URL" type="text">
               <button name="preview" class="button button-tiny" type="button" disabled='disabled'
                       data-loading-text="预览 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;">预览</button>
             </div>
@@ -149,18 +149,18 @@
               </div>
             </div>
 
-            <input class="WidgetInputBox_Ttl" type="text" name="title" placeholder="输入视频标题">
-            <textarea class="WidgetInputBox_Desc AUTO_FOCUS" name="description" placeholder="输入视频介绍、评论"></textarea>
+            <input name="title" class="Bold" placeholder="输入视频标题" type="text">
+            <textarea class="AUTO_FOCUS" name="description" placeholder="输入视频介绍、评论"></textarea>
 
             <% include _widget_BtnSet.html %>
 
           </div>
 
           <div class='Content CITE'>
-            <textarea class="WidgetInputBox_Cite AUTO_FOCUS Required" name="cite" placeholder="输入引文"></textarea>
-            <input class="WidgetInputBox_Url" type="text" name="url" placeholder="输入引文来源网页URL">
-            <input class="WidgetInputBox_Ttl" type="text" name="title" placeholder="输入引文来源网页标题">
-            <textarea class="WidgetInputBox_Desc" name="description" placeholder="输入引文介绍、评论"></textarea>
+            <textarea class="AUTO_FOCUS Required" name="cite" placeholder="输入引文"></textarea>
+            <input name="url" placeholder="输入引文来源网页URL" type="text">
+            <input name="title" placeholder="输入引文来源网页标题" type="text">
+            <textarea name="description" placeholder="输入引文介绍、评论"></textarea>
 
             <% include _widget_BtnSet.html %>
 
@@ -174,7 +174,7 @@
           </div>
 
           <div class='Content TITLE'>
-            <input name="title" class="Required AUTO_FOCUS" placeholder="输入标题" type="text">
+            <input name="title" class="Bold Required AUTO_FOCUS" placeholder="输入标题" type="text">
 
             <% include _widget_BtnSet.html %>
 

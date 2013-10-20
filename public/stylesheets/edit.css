@@ -29,10 +29,7 @@ button[name='preview']{float: right;width: 62px;padding: 0;}
 .Edit_Top fieldset:last-child {margin-top: 25px;width: 779px;}
 .Edit_Top_Thumb {float: left;margin-right: 15px;background: url("/images/photo_95x95.png");}
 .Edit_Top_Thumb_Extra {float: left;width: 252px;margin-right: 15px;display: none;}
-.EditFormImgArea01 {position: relative;width: 95px;height: 140px;background: url("/images/photo_95x95.png") no-repeat scroll 0px 0px transparent;}
-.EditFormImgAddList01 {position: absolute;top: 98px;left: 0;margin-top: 3px;}
-textarea[name='description'] {resize: none;padding: 5px 5px 0;}
-.Edit_Top form textarea[name='description']{min-height: 95px;height: 95px;}
+.Edit_Top form textarea[name='description']{min-height: 95px;}
 /*静态菜单*/
 .StaticMenu {width: 100%;height: 43px;margin-bottom: 10px;background: url("/images/bg_widgetUtil01.png");}
 .StaticMenu td{padding: 0 5px;}
@@ -49,16 +46,13 @@ textarea[name='description'] {resize: none;padding: 5px 5px 0;}
 .MENU_Close{text-align: right;line-height: 9px;}
 .MENU_Close i{cursor: pointer;line-height: 33px;padding: 0 12px;display: inline-block;}
 
-.IMAGE_CREATE input {float: left;width: 258px;height: 25px;line-height: 23px;padding-right: 4px;}
-.IMAGE .WidgetInputBox_Ttl{height: 30px;font-size: 14px;font-weight: bold;margin-bottom: 7px;}
-.IMAGE .WidgetInputBox_Quo {height: 25px;margin-bottom: 10px;}
-.IMAGE .WidgetInputBox_Desc {min-height: 85px;padding: 5px 5px 0 5px;resize: none;}
-.VIDEO_CREATE input{float: left;width: 570px;height: 25px;line-height: 23px;padding-right: 4px;}
-.VIDEO .WidgetInputBox_Ttl{height: 30px;font-size: 14px;font-weight: bold;margin-top: 8px;}
-.VIDEO .WidgetInputBox_Desc {min-height: 85px;padding: 5px 5px 0 5px;resize: none;margin-top: 10px;}
-.CITE .WidgetInputBox_Cite{min-height: 95px;padding: 5px 5px 0 0;font-size: 14px;resize: none;margin-bottom: 10px;}
-.CITE .WidgetInputBox_Url{height: 25px;line-height: 23px;margin-bottom: 7px;}
-.CITE .WidgetInputBox_Ttl {height: 25px;margin-bottom: 10px;}
-.CITE .WidgetInputBox_Desc {min-height: 45px;padding: 5px 5px 0 5px;resize: none;}
-.TEXT textarea {min-height: 75px;padding: 5px 5px 0;font-size: 14px}
-.TITLE input {font-size: 14px;font-weight: bold;height: 30px;}
+.IMAGE_CREATE input {float: left;width: 258px;padding-right: 4px;}
+.IMAGE input[name='title']{margin-bottom: 7px;}
+.IMAGE input[name='quote'] {margin-bottom: 10px;}
+.VIDEO_CREATE input{float: left;width: 570px;padding-right: 4px;}
+.VIDEO input[name='title']{margin-top: 8px;}
+.VIDEO textarea[name='description'] {margin-top: 10px;}
+.CITE textarea[name='cite']{min-height: 95px;font-size: 14px;margin-bottom: 10px;}
+.CITE input[name='url']{margin-bottom: 7px;}
+.CITE input[name='title'] {height: 25px;margin-bottom: 10px;}
+.CITE textarea[name='description'] {min-height: 45px;}

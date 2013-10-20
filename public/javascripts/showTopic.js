@@ -21,7 +21,7 @@ $(
 
         $.ajax({
           type: 'POST',
-          url: '/topic',
+          url: '/topic/favorite',
           xhrFields: { withCredentials: true },
           data: {topicId: topicId, toLike: toLike},
           success: function(data){

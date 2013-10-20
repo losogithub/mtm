@@ -12,7 +12,7 @@
   var REGEXP_URL = /^(https?|ftp):\/\/(([\w\-]+\.)+[\w\-]+)(\/|\?|$)/i;
   var REGEXP_URL_NO_PROTOCOL = /^(([\w\-]+\.)+[\w\-]+)(\/|\?|$)/i;
 
-  var fillVideo = function ($li, url) {
+  function fillVideo($li, url) {
     var urlParts = url.match(REGEXP_URL);
     var temp;
     var quote = !urlParts ? null : !urlParts[2] ? null : !(temp = urlParts[2].match(/youku\.com|tudou\.com$/i)) ? null : temp[0];
@@ -254,7 +254,7 @@
       var data = this._getCommitData();
       var id = this.widget().data('id');
       if (id) {
-        $.ajax('/topic/edititem', {
+        $.ajax('/topic/item', {
           type: 'PUT',
           data: $.extend({
             itemId: id,
@@ -264,7 +264,7 @@
       } else {
         var prevItemType = this.widget().prev().data('type');
         var prevItemId = this.widget().prev().data('id');
-        $.post('/topic/createitem', $.extend({
+        $.post('/topic/item', $.extend({
             topicId: topicId,
             prevItemType: prevItemType,
             prevItemId: prevItemId,
@@ -340,19 +340,19 @@
         .find('img')
         .attr('src', this.options.url)
         .end()
-        .find('.WidgetInputBox_Ttl')
+        .find('input[name="title"]')
         .val(this.options.title)
         .on('input blur mousedown mouseup keydown keypress keyup', this.options.from != 'EDIT' ? $.noop : function (event) {
           self.stateHandler(self.options.title, event);
         })
         .end()
-        .find('.WidgetInputBox_Quo')
+        .find('input[name="quote"]')
         .val(this.options.quote)
         .on('input blur mousedown mouseup keydown keypress keyup', this.options.from != 'EDIT' ? $.noop : function (event) {
           self.stateHandler(self.options.quote, event);
         })
         .end()
-        .find('.WidgetInputBox_Desc')
+        .find('textarea[name="description"]')
         .val(this.options.description)
         .on('input blur mousedown mouseup keydown keypress keyup', this.options.from != 'EDIT' ? $.noop : function (event) {
           self.stateHandler(self.options.description, event);
@@ -368,7 +368,7 @@
       var self = this;
       this.widget().find('form')
         .submit(function () {
-          var $quote = self.widget().find('.WidgetInputBox_Quo');
+          var $quote = self.widget().find('input[name="quote"]');
           var quote = $quote.val();
           console.log('quote=' + quote);
           var urlParts = quote.match(REGEXP_URL_NO_PROTOCOL);
@@ -421,9 +421,9 @@
     _getCommitData: function () {
       return {
         url: this.options.url,
-        title: this.widget().find('.WidgetInputBox_Ttl').val(),
-        quote: this.widget().find('.WidgetInputBox_Quo').val(),
-        description: this.widget().find('.WidgetInputBox_Desc').val()
+        title: this.widget().find('input[name="title"]').val(),
+        quote: this.widget().find('input[name="quote"]').val(),
+        description: this.widget().find('textarea[name="description"]').val()
       }
     },
 
@@ -543,13 +543,13 @@
         .find('.VIDEO_URL')
         .attr('href', this.options.url)
         .end()
-        .find('.WidgetInputBox_Ttl')
+        .find('input[name="title"]')
         .val(this.options.title)
         .on('input blur mousedown mouseup keydown keypress keyup', this.options.from != 'EDIT' ? $.noop : function (event) {
           self.stateHandler(self.options.title, event);
         })
         .end()
-        .find('.WidgetInputBox_Desc')
+        .find('textarea[name="description"]')
         .val(this.options.description)
         .on('input blur mousedown mouseup keydown keypress keyup', this.options.from != 'EDIT' ? $.noop : function (event) {
           self.stateHandler(self.options.description, event);
@@ -601,8 +601,8 @@
     _getCommitData: function () {
       return {
         url: this.options.url,
-        title: this.widget().find('.WidgetInputBox_Ttl').val(),
-        description: this.widget().find('.WidgetInputBox_Desc').val()
+        title: this.widget().find('input[name="title"]').val(),
+        description: this.widget().find('textarea[name="description"]').val()
       }
     },
 
@@ -728,25 +728,25 @@
 
       //填充文本
       this.widget()
-        .find('.WidgetInputBox_Cite')
+        .find('textarea[name="cite"]')
         .val(this.options.cite)
         .on('input blur mousedown mouseup keydown keypress keyup', function (event) {
           self.stateHandler(self.options.cite, event);
         })
         .end()
-        .find('.WidgetInputBox_Url')
+        .find('input[name="url"]')
         .val(this.options.url)
         .on('input blur mousedown mouseup keydown keypress keyup', function (event) {
           self.stateHandler(self.options.url, event);
         })
         .end()
-        .find('.WidgetInputBox_Ttl')
+        .find('input[name="title"]')
         .val(this.options.title)
         .on('input blur mousedown mouseup keydown keypress keyup', function (event) {
           self.stateHandler(self.options.title, event);
         })
         .end()
-        .find('.WidgetInputBox_Desc')
+        .find('textarea[name="description"]')
         .val(this.options.description)
         .on('input blur mousedown mouseup keydown keypress keyup', function (event) {
           self.stateHandler(self.options.description, event);
@@ -762,7 +762,7 @@
       var self = this;
       this.widget().find('form')
         .submit(function () {
-          var $url = self.widget().find('.WidgetInputBox_Url');
+          var $url = self.widget().find('input[name="url"]');
           var url = $url.val();
           var urlParts = url.match(REGEXP_URL_NO_PROTOCOL);
           if (urlParts) {
@@ -820,10 +820,10 @@
      */
     _getCommitData: function () {
       return {
-        cite: this.widget().find('.WidgetInputBox_Cite').val(),
-        url: this.widget().find('.WidgetInputBox_Url').val(),
-        title: this.widget().find('.WidgetInputBox_Ttl').val(),
-        description: this.widget().find('.WidgetInputBox_Desc').val()
+        cite: this.widget().find('textarea[name="cite"]').val(),
+        url: this.widget().find('input[name="url"]').val(),
+        title: this.widget().find('input[name="title"]').val(),
+        description: this.widget().find('textarea[name="description"]').val()
       }
     },
 
@@ -1026,6 +1026,10 @@
    */
   var createWidget = function (type, options) {
     console.log('createWidget');
+
+    if (!type) {
+      return;
+    }
 
     var newFrom = options.from;
     var $prevItem = options.$prevItem;
@@ -1282,7 +1286,7 @@
         if (!confirm('条目删除后无法找回，您确定要删除吗？')) {
           return;
         }
-        $.ajax('/topic/deleteitem', {
+        $.ajax('/topic/item', {
           type: 'DELETE',
           data: {
             topicId: topicId,
@@ -1627,19 +1631,17 @@
       if (location.hash
         && !isNaN(parseInt(location.hash.substr(1), 16))) {
         topicId = location.hash.substr(1);
-        $.getJSON('/topic/getcontents', {
+        $.getJSON('/topic/contents', {
           topicId: topicId
         }).done(function (data) {
 
             _doIfGetIdDone(data);
-
           });
       } else {
-        $.getJSON('/topic/getid')
+        $.getJSON('/topic/id')
           .done(function (data) {
 
             _doIfGetIdDone(data);
-
           });
       }
     } else {
@@ -1647,7 +1649,6 @@
       console.log('topicId=' + topicId);
 
       _doIfGetIdDone();
-
     }
   })();
 

@@ -13,25 +13,26 @@ var auth = require('./middlewares/auth');
 
 
 module.exports = function (app) {
+  app.get('*', auth.loadUser);
   // home page
-  app.get('/', auth.loadUser, site.index);
-  app.get('/home', auth.loadUser, site.index);
+  app.get('/', site.index);
+  app.get('/home', site.index);
 
   //console.log("router start");
-  app.post('/topic', auth.loadUser, auth.loginDialog, topic.AddorRemoveLikes);
+  app.post('/topic/favorite', auth.loadUser, auth.loginDialog, topic.AddorRemoveLikes);
   app.post('/topic/loginDialogCheck', auth.loginDialogCheck, topic.AddorRemoveLikes);
 
   app.get('/topic/create', auth.loadUser, auth.loginRequired , topic.create);
-  app.get('/topic/getid', topic.getId);
-  app.get('/topic/getcontents', topic.getContents);
+  app.get('/topic/id', topic.getId);
+  app.get('/topic/contents', topic.getContents);
   app.get('/topic/video_title', topic.getVideoTitle);
   app.get('/topic/:topicId', auth.loadUser, topic.index);
   app.get('/topic/:topicId/edit', auth.loadUser, topic.edit);
-  app.post('/topic/createitem', topic.createItem);
-  app.put('/topic/edititem', topic.editItem);
+  app.post('/topic/item', topic.createItem);
+  app.put('/topic/item', topic.editItem);
   app.put('/topic/sort', topic.sort);
   app.put('/topic/save', auth.loadUser, topic.save);
-  app.delete('/topic/deleteitem', topic.deleteItem);
+  app.delete('/topic/item', topic.deleteItem);
 
 
 
