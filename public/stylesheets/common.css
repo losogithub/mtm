@@ -51,9 +51,10 @@ body{font: 12px/1.5 "微软雅黑",arial,sans-serif;word-wrap: break-word;}
 .Nav-Left li{display: inline;margin-right: 30px;}
 .Nav-Left .SELECTED>a{font-weight: bold;color: rgb(0, 0, 0);}
 .Nav-Right {right: 0;position: absolute;top: 0;height: 100%;}
-.Nav-Right_Inner>li{display: inline;}
 .Nav-Right_Inner{margin: 10px 0;}
-.Nav-Right_Inner img{margin-right: 5px;vertical-align: middle;}
+.Nav-Right_Inner img{margin-right: 5px;}
+.Nav-Right_Inner *{vertical-align: middle;}
+.Nav-Right_Inner>li{display: inline;}
 .Nav-Right_Inner>li:last-of-type>i{margin-left: -6px;padding: 6px;cursor: pointer;font-size: 8px;vertical-align: middle;}
 .Nav-Drop{z-index: 1002;position: absolute;right: 0;width: 98px;
     background-color: rgb(255, 255, 255);border: 1px solid rgb(207, 207, 207);box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);}

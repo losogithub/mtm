@@ -6,257 +6,124 @@
  * To change this template use File | Settings | File Templates.
  */
 var EventProxy = require('eventproxy');
-var ObjectId = require('mongoose').Types.ObjectId;
 
 var models = require('../models');
 var TopicModel = models.TopicModel;
 var Item = require('./item');
-var User= require('./user');
+var User = require('./user');
 
 /**
- * 获取新总结id
+ * 新建总结
+ * @param userId
  * @param callback
  */
-var newId = function (callback) {
-  console.log('newId');
+function createTopic(userId, callback) {
+  var ep = EventProxy.create('topic', 'voidItem', function (topic) {
+    if (typeof callback === 'function') {
+      callback(null, topic);
+    }
+  })
+    .fail(callback);
 
-  //新建总结
   var topic = new TopicModel();
-  topic.save(function (err, topic) {
-    if (err) {
-      console.error('get new topic id failed:' + err);
-      callback(null);
-    } else {
-      console.log('get new topic id done');
-      console.log(topic._id);
+  topic.author_id = userId;
+  topic.save(ep.done('topic'));
 
-      //将总结id传给回调函数
-      callback(topic._id);
-    }
-  });
-}
-
-/**
- * 验证总结id
- * @param topicId
- * @param callback
- */
-var validateId = function (topicId, callback) {
-  console.log('validateId===');
-  console.log(topicId);
-
-  //查找总结
-  TopicModel.findById(topicId, function (err, topic) {
-    if (err) {
-      console.error('validate topic id failed:' + err);
-
-      //验证出错
-      callback(false, topic);
-
-    } else {
-      console.log('validate topic id done');
-      console.log(topic);
-
-      //验证结果传给回调函数
-      callback(topic ? true : false, topic);
-    }
-  });
-}
-
-/**
- * 创建条目链表头
- * @param topicId
- * @param callback
- */
-var createVoidItemIfNotExist = function (topicId, callback) {
-  console.log('createVoidItemIfNotExist');
-
-  //查找总结
-  TopicModel.findById(topicId, function (err, topic) {
-    if (err) {
-      console.error('find topic failed:' + err);
-    } else if (!topic) {
-      console.log('topic not found');
-    } else {
-      console.log('topic=======');
-      console.log(topic);
-
-      //创建条目链表头
-      Item.createVoidItem(topic, callback);
-    }
-  });
+  Item.createVoidItem(topic, ep.done('voidItem'));
 }
 
 /**
  * 获取一个总结的所有条目
- * @param topicId
+ * @param topic
  * @param callback
  */
-var getContents = function (topicId, callback) {
-  console.log('getContents');
-
-  //查找总结
-  TopicModel.findById(topicId, function (err, topic) {
-    if (err) {
-      console.error('find topic failed:' + err);
-    } else {
-
-      //获取该总结的所有条目
-      Item.getItems(topic.void_item_id, topic.item_count, function (items) {
-        if (callback) {
-          callback(topic, items);
-        }
-      });
-    }
-  })
+function getContents(topic, callback) {
+  Item.getItems(topic.void_item_id, topic.item_count, callback);
 }
 
 /**
  * 修改条目数
- * @param topicId
+ * @param topic
  * @param increment
  */
-var increaseItemCountBy = function (topicId, increment) {
-  console.log('increaseItemCountBy');
-
-  //查找总结
-  TopicModel.findById(topicId, function (err, topic) {
-    if (err) {
-      console.error('find topic failed:' + err);
-    } else {
-      console.log('find topic done');
-
-      //修改条目数
-      topic.item_count += increment;
-      topic.save(function (err) {
-        if (err) {
-          console.error('increase item_count failed:' + err);
-        } else {
-          console.log('increase item_count done');
-        }
-      });
-    }
-  })
+function increaseItemCountBy(topic, increment, callback) {
+  return topic.update({$inc: {item_count: increment}}, callback);
 }
 
 /**
  * 修改访问量
- * @param topicId
+ * @param topic
  * @param increment
  */
-var increasePVCountBy = function (topic, increment, callback) {
-  console.log('increasePVCountBy');
-
-  //修改条目数
-  topic.PV_count += increment;
-  topic.save(function (err, topic) {
-    if (err) {
-      console.error('increase PV_count failed:' + err);
-    } else {
-      console.log('increase PV_count done');
-      if (callback) {
-        callback(topic);
-      }
-    }
-  });
+function increasePVCountBy(topic, increment, callback) {
+  return topic.update({$inc: {PV_count: increment}}, callback);
 }
 
 /**
  * 获取人气总结
  */
-var getHotTopics = function (callback) {
-  console.log('getHotTopics');
-
+function getHotTopics(callback) {
   TopicModel.find({ publishDate: { $ne: null } })
     .sort('-_id')
-    .exec(function (err, topics) {
-      if (err) {
-        console.error('find topic failed:' + err);
-      } else {
-        console.log('find topic done');
-        console.log(topics.length);
-        callback(topics);
-      }
-    });
+    .exec(callback);
 }
 
-var save = function (authorId, topicId, title, coverUrl, description, publish, callback) {
-  console.log('publish');
+function saveTopic(authorId, topicId, title, coverUrl, description, publish, callback) {
+  var ep = new EventProxy().fail(callback);
 
-  TopicModel.findById(topicId, function (err, topic) {
-    if (err) {
-      console.error('find topic failed:' + err);
-    } else if (!topic) {
-      console.log('topic not found');
-    } else {
-      console.log('find topic done');
-
-      //append this topic into user information
-      console.log("topic Id: %s", topicId);
-      console.log("author Id: %s", authorId);
-      User.appendTopic(authorId, topicId, function (author) {
-
-        topic.author_id = authorId;
-        topic.author_name = author.loginName;
-        topic.title = title;
-        topic.cover_url = coverUrl;
-        topic.description = description;
-        topic.update_at = Date.now();
-        if (publish) {
-          topic.draft = false;
-          topic.publishDate = new Date();
-        } else if (!topic.publishDate) {
-          topic.draft = true;
-        }
-        topic.save(function (err) {
-          if (err) {
-            console.error('save topic failed:' + err);
-          } else {
-
-            callback();
-          }
-        });
-      });
+  TopicModel.findById(topicId, ep.done(function (topic) {
+    if (!topic) {
+      ep.emit('error', new Error('总结不存在'));
+      return;
     }
-  });
-}
 
-var getTopicById = function(topicId, callback){
-    console.log('getTopicById');
-    //查找总结
-    TopicModel.findById(topicId, function (err, topic) {
-        if (err) {
-            console.error('find topic failed:' + err);
-        } else {
-            console.log('find topic done');
-            callback(err, topic);
-        }
-    });
-}
-
-var getTopicsByIdsSorted = function(topicIds, opt, callback){
-  TopicModel.find({'_id' : {"$in" : topicIds}})
-    .sort(opt)
-    .exec(function (err, topics){
-      if(err){
-        console.err("cannot find topics by ids: " + err);
-        //todo: return null ok or not
-        return ;
-      }else{
-        //console.log("model return topics");
-        //console.log(topics);
-        callback(err, topics);
+    User.appendTopic(authorId, topicId, ep.done(function (author) {
+      if (!author) {
+        ep.emit('error', new Error('作者不存在'))
+        return;
       }
-    })
+
+      topic.author_id = authorId;
+      topic.author_name = author.loginName;
+      topic.title = title;
+      topic.cover_url = coverUrl;
+      topic.description = description;
+      topic.update_at = Date.now();
+      if (publish) {
+        topic.draft = false;
+        topic.publishDate = new Date();
+      } else if (!topic.publishDate) {
+        topic.draft = true;
+      }
+      topic.save(ep.done(function () {
+        if (typeof callback === 'function') {
+          callback(null, topic);
+        }
+      }));
+    }));
+  }));
 }
 
-exports.newId = newId;//增
-exports.validateId = validateId;
+/**
+ * 查找总结
+ * @param topicId
+ * @param callback
+ */
+function getTopicById(topicId, callback) {
+  TopicModel.findById(topicId, callback);
+}
+
+function getTopicsByIdsSorted(topicIds, opt, callback) {
+  TopicModel.find({'_id': {"$in": topicIds}})
+    .sort(opt)
+    .exec(callback);
+}
+
+exports.createTopic = createTopic;//增
 exports.getContents = getContents;//查
-exports.createVoidItemIfNotExist = createVoidItemIfNotExist;
 exports.increaseItemCountBy = increaseItemCountBy;
 exports.increasePVCountBy = increasePVCountBy;
 exports.getHotTopics = getHotTopics;
-exports.save = save;
-exports.getTopicById = getTopicById;
+exports.saveTopic = saveTopic;//改
+exports.getTopicById = getTopicById;//查
 exports.getTopicsByIdsSorted = getTopicsByIdsSorted;

@@ -7,13 +7,14 @@
  */
 var Topic = require('../proxy').Topic;
 
-var index = function (req, res, next) {
+function index(req, res, next) {
 
   //set default to the first page.
   var currentPage = req.query.page || '1';
 
-  Topic.getHotTopics(function (topics) {
+  Topic.getHotTopics(function (err, topics) {
     var topicsData = [];
+    topics = topics || [];
     topics.forEach(function (topic) {
       topicsData.push({
         id: topic._id,
@@ -24,12 +25,12 @@ var index = function (req, res, next) {
         des: topic.description
       });
     });
-    var DateObj = showDate();
+    var DateObj = _showDate();
     res.render('index', {
       title: 'mtm[我设计的信息。策展平台]',
       css: ['/stylesheets/index.css'],
       pageType: 'INDEX',
-      dayInChn : DateObj.dayInChn,
+      dayInChn: DateObj.dayInChn,
       today: DateObj.today,
       today1: DateObj.today1,
       hot: topicsData,
@@ -39,15 +40,15 @@ var index = function (req, res, next) {
   });
 }
 
-var showDate = function(){
+function _showDate() {
   var today = new Date();
   console.log("------------today----------");
   console.log(today);
   var day = today.getDay();
-  var dayMap = {0 : "星期日", 1:"星期一", 2:"星期二", 3: "星期三", 4: "星期四", 5:"星期五", 6:"星期六"}
+  var dayMap = {0: "星期日", 1: "星期一", 2: "星期二", 3: "星期三", 4: "星期四", 5: "星期五", 6: "星期六"}
   var dayInChn = dayMap[day];
-  var  showToday = today.getFullYear() + '.' + (today.getMonth() + 1) + "." + today.getDate();
-  var  showToday1 = showToday.replace('.', '-');
+  var showToday = today.getFullYear() + '.' + (today.getMonth() + 1) + "." + today.getDate();
+  var showToday1 = showToday.replace('.', '-');
   return {dayInChn: dayInChn, today: showToday, today1: showToday1};
 }
 

@@ -59,7 +59,7 @@ $(
         if ( className.split(' ').indexOf('ExSelected') > -1){ toLike = false;}
         $.ajax({
           type: 'POST',
-          url: '/u',
+          url: '/u/favorite',
           xhrFields: { withCredentials: true },
           data: {url: url, toLike: toLike},
           success: function(data){

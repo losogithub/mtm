@@ -17,6 +17,13 @@
     }
   }
 
+  $(document).ajaxError(function (event, jqXHR) {
+    if (jqXHR.status == 401
+      && confirm('您的身份信息已过期：\n重新登录请按“确定”，忽略请按“取消”。')) {
+      location = '/login';
+    }
+  });
+
   $(function ($) {
     $(".Nav-Right_Inner>li:last>i")
       .click(function () {
@@ -24,7 +31,7 @@
         $(this).toggleClass('icon-caret-down icon-caret-up');
         var $menu = $('.Nav-Drop').toggle();
 
-        $(document).one("click", function () {
+        $(document).one('click', function () {
           $(that).addClass('icon-caret-down');
           $(that).removeClass('icon-caret-up');
           $menu.hide();

@@ -13,27 +13,25 @@ var auth = require('./middlewares/auth');
 
 
 module.exports = function (app) {
-  app.get('*', auth.loadUser);
   // home page
-  app.get('/', site.index);
-  app.get('/home', site.index);
+  app.get('/', auth.loadUser, site.index);
+  app.get('/home', auth.loadUser, site.index);
 
   //console.log("router start");
   app.post('/topic/favorite', auth.loadUser, auth.loginDialog, topic.AddorRemoveLikes);
-  app.post('/topic/loginDialogCheck', auth.loginDialogCheck, topic.AddorRemoveLikes);
+  app.post('/topic/loginDialogCheck', auth.loadUser, auth.loginDialogCheck, topic.AddorRemoveLikes);
 
-  app.get('/topic/create', auth.loadUser, auth.loginRequired , topic.create);
-  app.get('/topic/id', topic.getId);
-  app.get('/topic/contents', topic.getContents);
+  app.get('/topic/create', auth.loadUser, auth.loginRequired, topic.create);
+  app.get('/topic/contents', auth.loadUser, auth.userRequired, topic.getContents);
   app.get('/topic/video_title', topic.getVideoTitle);
   app.get('/topic/:topicId', auth.loadUser, topic.index);
-  app.get('/topic/:topicId/edit', auth.loadUser, topic.edit);
-  app.post('/topic/item', topic.createItem);
-  app.put('/topic/item', topic.editItem);
-  app.put('/topic/sort', topic.sort);
-  app.put('/topic/save', auth.loadUser, topic.save);
-  app.delete('/topic/item', topic.deleteItem);
-
+  app.get('/topic/:topicId/edit', auth.loadUser, auth.loginRequired, topic.editTopic);
+  app.post('/topic/create', auth.loadUser, auth.userRequired, topic.createTopic);
+  app.post('/topic/item', auth.loadUser, auth.userRequired, topic.createItem);
+  app.put('/topic/item', auth.loadUser, auth.userRequired, topic.editItem);
+  app.put('/topic/sort', auth.loadUser, auth.userRequired, topic.sortItem);
+  app.put('/topic/save', auth.loadUser, auth.userRequired, topic.saveTopic);
+  app.delete('/topic/item', auth.loadUser, auth.userRequired, topic.deleteItem);
 
 
   // sign up, login, logout
@@ -62,7 +60,7 @@ module.exports = function (app) {
 
   //eventhough logged in, still check
   //at the same time, get username from db.
-  app.get('/accountModify',auth.loadUser, auth.loginRequired , personal.showAccountModify);
+  app.get('/accountModify', auth.loadUser, auth.loginRequired, personal.showAccountModify);
   //think more later.
   app.post('/accountModify', auth.loadUser, auth.loginRequired, personal.accountModify);
 
@@ -72,9 +70,9 @@ module.exports = function (app) {
 
   //show personal page
   app.get('/u/:authorName', auth.loadUser, personal.showPersonal);
-  app.post('/u', auth.loadUser, auth.loginDialog, personal.AddorRemoveLikes);
+  app.post('/u/favorite', auth.loadUser, auth.loginDialog, personal.AddorRemoveLikes);
 
-  app.post('/loginDialogCheck', auth.loginDialogCheck, personal.AddorRemoveLikes);
+  app.post('/loginDialogCheck', auth.loadUser, auth.loginDialogCheck, personal.AddorRemoveLikes);
 
   /*
    app.get('/active_account', sign.active_account);

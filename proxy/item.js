@@ -15,283 +15,167 @@ var ItemModels = models.ItemModels;
  * @param topic
  * @param callback
  */
-var createVoidItem = function (topic, callback) {
-  console.log('createVoidItem');
-
-  //查找条目链表头
-  ItemModels['VOID'].findById(topic.void_item_id, function (err, void_item) {
-    if (err) {
-      console.error('find void item failed:' + err);
-    } else if (void_item) {
-      console.log('void item found');
-
-      //将总结返回给回调函数
-      callback(topic);
-
-    } else {
-      console.log('void item not found');
-
-      //创建条目链表头
-      void_item = new ItemModels['VOID']();
-      void_item.save(function (err, void_item) {
-        if (err) {
-          console.error('create void item failed:' + err);
-        } else {
-          console.log('void item created===');
-          console.log(void_item);
-          //保存条目链表头
-          void_item.prev_item
-            = void_item.next_item
-            = { type: 'VOID', id: void_item._id};
-          void_item.topic_id = topic._id;
-          void_item.save(function (err, void_item) {
-            if (err) {
-              console.error('save void item.prev&next failed:' + err);
-            } else {
-              console.log('void_item=======');
-              console.log(void_item);
-
-              //总结指向条目链表头
-              topic.void_item_id = void_item._id;
-              topic.save(function (err, topic) {
-                if (err) {
-                  console.error('save topic.void_item_id failed:' + err);
-                } else {
-                  console.log('topic=======');
-                  console.log(topic);
-
-                  //将总结传给回调函数
-                  callback(topic);
-                }
-              });
-            }
-          })
-        }
-      })
+function createVoidItem(topic, callback) {
+  var ep = EventProxy.create('voidItem', 'topic', function (voidItem) {
+    if (typeof callback === 'function') {
+      callback(null, voidItem);
     }
   })
+    .fail(callback);
+
+  //查找条目链表头
+  getItemById('VOID', topic.void_item_id, ep.done(function (voidItem) {
+    if (voidItem) {
+      ep.unbind();
+      if (typeof callback === 'function') {
+        callback(null, voidItem);
+      }
+      return;
+    }
+
+    //创建条目链表头
+    voidItem = new ItemModels['VOID']();
+    voidItem.save(ep.done(function () {
+      //保存条目链表头
+      voidItem.prev_item
+        = voidItem.next_item
+        = { type: 'VOID', id: voidItem._id};
+      voidItem.topic_id = topic._id;
+      voidItem.save(ep.done('voidItem'));
+
+      //总结指向条目链表头
+      topic.void_item_id = voidItem._id;
+      topic.save(ep.done('topic'));
+    }))
+  }))
 }
 
 /**
  * 创建条目
- * @param topic
- * @param prevItemType
- * @param prevItemId
+ * @param prevItem
  * @param data
  * @param callback
  */
-var createItem = function (topic, prevItemType, prevItemId, data, callback) {
-  console.log('createItem');
+function createItem(prevItem, data, callback) {
+  data.type = data.type.replace('_CREATE', '');
+  if (!ItemModels[data.type]) {
+    callback(new Error('创建条目类型错误：' + data.type));
+    return;
+  }
 
   //创建条目
-  data.type = data.type.replace('_CREATE', '');
   var item = new ItemModels[data.type](data);
-
-  //插入条目
-  insertItem(
-    item,
-    prevItemType ? prevItemType : 'VOID',
-    prevItemId ? prevItemId : topic.void_item_id,
-    function (item) {
-      callback(item);
-    });
+  item.save(function (err) {
+    if (err) {
+      callback(err);
+      return;
+    }
+    //插入条目
+    insertItem(prevItem, item, callback);
+  })
 }
 
 /**
  * 插入条目
+ * @param prevItem
  * @param item
- * @param prevItemType
- * @param prevItemId
  * @param callback
  */
-var insertItem = function (item, prevItemType, prevItemId, callback) {
-  console.log('insertItem.');
-
-  //查找前趋条目
-  ItemModels[prevItemType].findById(prevItemId, function (err, prev_item) {
-    if (err) {
-      console.error('find prev_item failed:' + err);
-    } else if (!prev_item) {
-      console.log('prev_item not found');
-    } else {
-      console.log('prev_item===');
-      console.log(prev_item);
-      //把前趋条目的后继条目改为目标条目
-      var nextItemTypeId = { type: prev_item.next_item.type, id: prev_item.next_item.id };//对前趋条目的next_item属性深拷贝
-      var itemTypeId = { type: item.type, id: item._id }
-      prev_item.next_item = itemTypeId;
-      prev_item.save(function (err, prev_item) {
-        if (err) {
-          console.error('save prev_item failed:' + err);
-        } else {
-          console.log('prev_item===');
-          console.log(prev_item);
-
-          //查找后继条目
-          ItemModels[nextItemTypeId.type].findById(nextItemTypeId.id, function (err, next_item) {
-            if (err) {
-              console.error('find next item failed:' + err);
-            } else if (!next_item) {
-              console.log('next_item not found');
-            } else {
-              console.log('next_item===');
-              console.log(next_item);
-              //后继条目的前趋条目改为目标条目
-              next_item.prev_item = itemTypeId;
-              next_item.save(function (err, next_item) {
-                if (err) {
-                  console.error('save next_item failed:' + err);
-                } else {
-                  console.log('next_item===');
-                  console.log(next_item);
-
-                  //修改目标条目的前趋条目和后续条目
-                  item.prev_item = { type: prevItemType, id: prevItemId };
-                  item.next_item = nextItemTypeId;
-                  item.topic_id = prev_item.topic_id;
-                  item.save(function (err, item) {
-                    if (err) {
-                      console.error('save item failed:' + err);
-                    } else {
-                      console.log('item===');
-                      console.log(item);
-
-                      //将目标条目传给回调函数
-                      if (callback) {
-                        callback(item);
-                      }
-                    }
-                  })
-                }
-              })
-            }
-          })
-        }
-      })
+function insertItem(prevItem, item, callback) {
+  var ep = EventProxy.create('item', 'prevItem', 'nextItem', function (item) {
+    if (typeof callback === 'function') {
+      callback(null, item);
     }
   })
+    .fail(callback);
+
+  //查找前趋条目
+  getItemById(prevItem.type, prevItem._id, ep.done(function (prev_item) {
+    if (!prev_item) {
+      ep.emit('error', new Error('前趋条目不存在'));
+      return;
+    }
+
+    //把前趋条目的后继条目改为目标条目
+    var itemTypeId = { type: item.type, id: item._id };
+    prev_item.update({next_item: itemTypeId}, ep.done('prevItem'));
+    //查找后继条目
+    getItemById(prev_item.next_item.type, prev_item.next_item.id, ep.done(function (next_item) {
+      if (!next_item) {
+        ep.emit('error', new Error('后继条目不存在'));
+        return;
+      }
+
+      //后继条目的前趋条目改为目标条目
+      next_item.update({prev_item: itemTypeId}, ep.done('nextItem'));
+      //修改目标条目的前趋条目和后续条目
+      var fields = {
+        prev_item: { type: prevItem.type, id: prevItem._id },
+        next_item: { type: next_item.type, id: next_item.id },//不用深拷贝会导致死循环
+        topic_id: prev_item.topic_id
+      };
+      item.update(fields, ep.done(function () {
+        //查找更新后的目标条目
+        getItemById(item.type, item._id, ep.done('item'));
+      }));
+    }));
+  }));
 }
 
 /**
  * 卸下条目
- * @param type
- * @param itemId
+ * @param item
  * @param callback
  */
-var detachItem = function (type, itemId, callback) {
-  console.log('detach item.');
-
-  //查找条目
-  ItemModels[type].findById(itemId, function (err, item) {
-    if (err) {
-      console.error('find item failed:' + err);
-    } else if (!item) {
-      console.log('item not found');
-    } else {
-
-      //查找前趋条目
-      ItemModels[item.prev_item.type].findById(item.prev_item.id, function (err, prev_item) {
-        if (err) {
-          console.error('find prev_item failed:' + err);
-        } else if (!prev_item) {
-          console.log('prev_item not found');
-        } else {
-          //前趋条目的后继条目改为目标条目
-          prev_item.next_item = item.next_item;
-          prev_item.save(function (err) {
-            if (err) {
-              console.error('save prev_item failed:' + err);
-            } else {
-
-              //查找后继条目
-              ItemModels[item.next_item.type].findById(item.next_item.id, function (err, next_item) {
-                if (err) {
-                  console.error('find next_item failed:' + err);
-                } else if (!next_item) {
-                  console.log('next_item not found');
-                } else {
-                  //后继条目的前趋条目改为目标条目
-                  next_item.prev_item = item.prev_item;
-                  next_item.save(function (err) {
-                    if (err) {
-                      console.error('save next_item failed:' + err);
-                    } else {
-
-                      //将目标条目传给回调函数
-                      callback(item);
-                    }
-                  })
-                }
-              })
-            }
-          })
-        }
-      })
+function detachItem(item, callback) {
+  var ep = EventProxy.create('prevItem', 'nextItem', function () {
+    if (typeof callback === 'function') {
+      callback(null, item);
     }
   })
+    .fail(callback);
+
+  //查找前趋条目
+  getItemById(item.prev_item.type, item.prev_item.id, ep.done(function (prev_item) {
+    if (!prev_item) {
+      ep.emit('error', new Error('前趋条目不存在'));
+      return;
+    }
+
+    //前趋条目的后继条目改为目标条目
+    prev_item.next_item = item.next_item;
+    prev_item.update({next_item: {type: item.next_item.type, id: item.next_item.id}}, ep.done('prevItem'));
+    //查找后继条目
+    getItemById(item.next_item.type, item.next_item.id, ep.done(function (next_item) {
+      if (!next_item) {
+        ep.emit('error', new Error('后继条目不存在'));
+        return;
+      }
+
+      //后继条目的前趋条目改为目标条目
+      next_item.prev_item = item.prev_item;
+      next_item.update({prev_item: {type: item.prev_item.type, id: item.prev_item.id}}, ep.done('nextItem'));
+    }));
+  }));
 }
 
 /**
  * 删除条目
- * @param type
- * @param itemId
+ * @param item
  * @param callback
  */
-var deleteItem = function (type, itemId, callback) {
-  console.log('deleteItem');
+function deleteItem(item, callback) {
+  var ep = new EventProxy().fail(callback);
 
-  //先卸下目标条目
-  this.detachItem(type, itemId, function (item) {
-    item.remove(function (err) {
-      if (err) {
-        console.error('remove item failed:' + err);
-      } else {
-        console.log('item===');
-        console.log(item);
-
-        //将删除前的条目传给回调函数
-        callback(item);
+  //先从链表卸下目标条目
+  detachItem(item, ep.done(function (item) {
+    item.remove(ep.done(function () {
+      //将删除前的条目传给回调函数
+      if (typeof callback === 'function') {
+        callback(null, item);
       }
-    });
-  })
-}
-
-/**
- * 修改条目
- * @param type
- * @param itemId
- * @param data
- * @param callback
- */
-var editItem = function (data, callback) {
-  console.log('editItem');
-
-  //查找条目
-  ItemModels[data.type].findById(data._id, function (err, item) {
-    if (err) {
-      console.error('find item failed:' + err);
-    } else if (!item) {
-      console.log('item not found');
-    } else {
-
-      //修改条目
-        for (var key in data) {
-          item[key] =  data[key];
-        }
-//      item.extend(data);
-//      item.text = data.text;
-//      item.title = data.title;
-      item.save(function (err, item) {
-        if (err) {
-          console.error('save item failed:' + err);
-        } else {
-
-          //将修改后的条目传给回调函数
-          callback(item);
-        }
-      })
-    }
-  })
+    }));
+  }));
 }
 
 /**
@@ -300,26 +184,17 @@ var editItem = function (data, callback) {
  * @param itemCount
  * @param callback
  */
-var getItems = function (voidItemId, itemCount, callback) {
-  console.log('getItems');
-
-  var items = [];
-  ItemModels['VOID'].findById(voidItemId, function (err, void_item) {
-    if (err) {
-      console.error('find void item failed:' + err);
-    } else if (!void_item) {
-      console.log('void item not found');
-      if (callback) {
-        callback(items);
+function getItems(voidItemId, itemCount, callback) {
+  getItemById('VOID', voidItemId, function (err, voidItem) {
+    if (err || !voidItem) {
+      if (typeof callback === 'function') {
+        callback(err, voidItem);
       }
-    } else {
-      console.log('void item found');
-      _getItems(itemCount, void_item.next_item.type, void_item.next_item.id, items, function () {
-        if (callback) {
-          callback(items);
-        }
-      });
+      return;
     }
+
+    var items = [];
+    _getItems(itemCount, voidItem.next_item.type, voidItem.next_item.id, items, callback);
   });
 }
 
@@ -332,33 +207,48 @@ var getItems = function (voidItemId, itemCount, callback) {
  * @param callback
  * @private
  */
-var _getItems = function (remain_count, type, itemId, items, callback) {
-  console.log('_getItems');
-
+function _getItems(remain_count, type, itemId, items, callback) {
   //通过计数器和条目链表头判断结束条件
-  // 计数器是为了防止链表出错导致死循环！！！
+  //计数器是为了防止链表出错导致死循环！！！
   if (remain_count <= 0
     || type == 'VOID') {
     console.log('no more items, remain_count:' + remain_count);
 
-    //回调函数无参数
-    callback();
+    if (typeof callback === 'function') {
+      callback(null, items);
+    }
     return;
   }
 
   //查找条目
-  ItemModels[type].findById(itemId, function (err, item) {
-    if (err) {
-      console.error('get item failed:' + err);
-    } else if (!item) {
-      console.log('item not found');
-    } else {
-
-      //条目加入结果集，递归查找下一个条目
-      items.push(item);
-      _getItems(--remain_count, item.next_item.type, item.next_item.id, items, callback);
+  getItemById(type, itemId, function (err, item) {
+    if (err || !item) {
+      if (typeof callback === 'function') {
+        callback(null, items);//不发送err，以使前面找到的条目能发回客户端
+      }
+      return;
     }
+
+    //条目加入结果集，递归查找下一个条目
+    items.push(item);
+    _getItems(--remain_count, item.next_item.type, item.next_item.id, items, callback);
   })
+}
+
+/**
+ * 查找条目
+ * @param type
+ * @param itemId
+ * @param callback
+ */
+function getItemById(type, itemId, callback) {
+  if (!ItemModels[type]) {
+    if (typeof callback === 'function') {
+      callback(new Error('查找条目类型错误：' + type));
+    }
+    return;
+  }
+  ItemModels[type].findById(itemId, callback);
 }
 
 exports.createVoidItem = createVoidItem;
@@ -366,5 +256,5 @@ exports.createItem = createItem;//增
 exports.insertItem = insertItem;
 exports.detachItem = detachItem;
 exports.deleteItem = deleteItem;//删
-exports.editItem = editItem;//改
 exports.getItems = getItems;//查
+exports.getItemById = getItemById;

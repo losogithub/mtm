@@ -13,8 +13,8 @@ module.exports = mongoose.model('ImageItem', {
   topic_id: ObjectId,
   prev_item: { type: { type: String }, id: ObjectId },
   next_item: { type: { type: String }, id: ObjectId },
-  create_at: { type: Date, default: new Date() },
-  update_at: { type: Date, default: new Date() },
+  create_at: { type: Date, default: Date.now },
+  update_at: { type: Date, default: Date.now },
 
   url: String,
   title: String,

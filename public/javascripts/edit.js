@@ -88,7 +88,6 @@
       prevItemId = prevItem.prev().data('id');
     }
     //拖动改变了列表顺序，通知服务器将item插入他前一个item的后面
-    // TODO 安全起见topicId由服务器计算
     $.ajax('/topic/sort', {
       type: 'PUT',
       data: {
@@ -257,6 +256,7 @@
         $.ajax('/topic/item', {
           type: 'PUT',
           data: $.extend({
+            topicId: topicId,
             itemId: id,
             type: self.type
           }, data)
@@ -1624,31 +1624,38 @@
   (function getTopicId() {
     console.log('getTopicId');
 
-    if (location.pathname == '/topic/create') {
-      console.log('/topic/create');
-
-      //#后面有16进制数字就验证id并获取items，否则获取新id
-      if (location.hash
-        && !isNaN(parseInt(location.hash.substr(1), 16))) {
-        topicId = location.hash.substr(1);
-        $.getJSON('/topic/contents', {
-          topicId: topicId
-        }).done(function (data) {
-
-            _doIfGetIdDone(data);
-          });
-      } else {
-        $.getJSON('/topic/id')
-          .done(function (data) {
-
-            _doIfGetIdDone(data);
-          });
-      }
-    } else {
+    if (location.pathname != '/topic/create') {
       topicId = location.pathname.match(/^\/topic\/([0-9a-f]{24})\/edit$/)[1];
       console.log('topicId=' + topicId);
 
       _doIfGetIdDone();
+    } else {
+      console.log('/topic/create');
+
+      (function createTopic() {
+        //#后面有16进制数字就验证id并获取items，否则获取新id
+        var jqXHR;
+        if (location.hash
+          && !isNaN(parseInt(location.hash.substr(1), 16))) {
+          topicId = location.hash.substr(1);
+          jqXHR = $.getJSON('/topic/contents', {
+            topicId: topicId
+          });
+        } else {
+          jqXHR = $.ajax('/topic/create', {
+            type: 'POST',
+            dataType: 'json'
+          });
+        }
+        jqXHR
+          .done(_doIfGetIdDone)
+          .fail(function (jqXHR) {
+            if (jqXHR.status == 500
+              && confirm('初始化总结失败：\n重试请按“确定”，忽略请按“取消”。')) {
+              createTopic();
+            }
+          });
+      })();
     }
   })();
 

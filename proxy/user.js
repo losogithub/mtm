@@ -5,6 +5,7 @@
  * Time: 12:21 PM
  * To change this template use File | Settings | File Templates.
  */
+var EventProxy = require('eventproxy');
 
 var models = require('../models');
 var User = models.User;
@@ -29,9 +30,9 @@ var getUserByLoginName = function (loginName, callback) {
  * @param {String} name 用户名
  * @param {Function} callback 回调函数
  */
-  //deprecated
+//deprecated
 //not use this one.
-  //use LoginName
+//use LoginName
 var getUserByName = function (name, callback) {
   User.findOne({name: name}, callback);
 };
@@ -74,11 +75,11 @@ var getUserByQuery = function (name, key, callback) {
   User.findOne({name: name, retrieve_key: key}, callback);
 };
 
-var getUserByNamePass = function(name, pass, callback){
-  User.findOne({loginName : name, password: pass}, callback);
+var getUserByNamePass = function (name, pass, callback) {
+  User.findOne({loginName: name, password: pass}, callback);
 }
 
-var getUserByEmailPass = function(email, pass, callback){
+var getUserByEmailPass = function (email, pass, callback) {
   User.findOne({email: email, password: pass}, callback);
 }
 
@@ -106,36 +107,37 @@ var newAndSave = function (name, loginName, password, email, active, callback) {
  * @param {Function} callback 回调函数
  */
 var getUserById = function (id, callback) {
-  User.findOne({_id: id}, callback);
+  User.findById(id, callback);
 };
 
 var appendTopic = function (id, topicId, callback) {
+  var ep = new EventProxy().fail(callback);
   //User.update();
-  User.findById(id, function (err, user) {
-    if (err) {
-      console.err("err happened in User.appendTopic.")
-    } else if (!user) {
-      console.log("cannot find user for appending Topic. userId : %id", id);
-      //todo: what to do ?
-    } else {
-      var topics = user.topics;
-      var length = topics.length;
-      for (var i = 0; i < length; i++) {
-        if (topics[i] == topicId) {
-          if (callback) return callback(user);  //typeof function
+  User.findById(id, ep.done(function (user) {
+    if (!user) {
+      ep.emit('error', new Error('用户不存在'))
+      return;
+    }
+
+    var topics = user.topics;
+    var length = topics.length;
+    for (var i = 0; i < length; i++) {
+      if (topics[i] == topicId) {
+        if (typeof callback === 'function') {
+          callback(null, user);
+          return;
         }
       }
-      user.topics.push(topicId);
-      user.topicCount++;
-      user.save(function(err){
-        console.log("appendTopic save err");
-      });
-      if (callback) //typeof function
-        callback(user);
     }
-  })
+    user.topics.push(topicId);
+    user.topicCount++;
+    user.save(ep.done(function () {
+      if (typeof callback === 'function') {
+        callback(null, user);
+      }
+    }));
+  }));
 }
-
 
 
 exports.getUserById = getUserById;
