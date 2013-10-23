@@ -1,6 +1,6 @@
 /*
-*  Module dependencies
-*/
+ *  Module dependencies
+ */
 
 var express = require('express');
 var ejs = require('ejs');
@@ -22,7 +22,6 @@ var urlinfo = require('url').parse(config.host);
 config.hostname = urlinfo.hostname || config.host;
 
 
-
 var app = express();
 
 // all environments
@@ -36,17 +35,18 @@ app.use(express.cookieParser());
 app.use(express.session(
   {
     secret: config.session_secret,
-    store: new RedisStore({host: 'localhost', port: 6379, client: redis, ttl: 3*24*60*60}),
-    cookie: {maxAge: 3*24*60*60*1000}
+    store: new RedisStore({host: 'localhost', port: 6379, client: redis, ttl: 3 * 24 * 60 * 60}),
+    cookie: {maxAge: 3 * 24 * 60 * 60 * 1000}
   }
 ));
 app.use(app.router);
-app.use(express.static(path.join(__dirname , '/public')));
+app.use(express.static(path.join(__dirname, '/public')));
+app.use(express.favicon(path.join(__dirname, '/public/images/favicon.ico')));
 
 routes(app);
 
-http.createServer(app).listen(config.port, function(){
-    console.log('Listening on port ' + config.port);
+http.createServer(app).listen(config.port, function () {
+  console.log('Listening on port ' + config.port);
 });
 
 //app.listen(config.port);

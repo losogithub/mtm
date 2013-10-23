@@ -4,15 +4,15 @@
   <title><%= locals.title ? title : 'mtm' %></title>
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <link type='text/css' rel='stylesheet' href='/stylesheets/bootstrap.css'/>
+  <link type='text/css' rel='stylesheet' href='/stylesheets/bootstrap.min.css'/>
+  <link type='text/css' rel='stylesheet' href='/stylesheets/todc-bootstrap.css'/>
   <link type='text/css' rel="stylesheet" href="/stylesheets/font-awesome.min.css">
-  <link type='text/css' rel="stylesheet" href="/stylesheets/buttons.css">
   <link type='text/css' rel='stylesheet' href='/stylesheets/common.css'/>
   <% for (i in locals.css) { %>
   <link type='text/css' rel='stylesheet' href='<%= css[i] %>'/>
   <% } %>
   <script type="text/javascript" src="http://libs.baidu.com/jquery/1.10.2/jquery.min.js"></script>
-  <script type="text/javascript" src="/javascripts/bootstrap.js"></script>
+  <script type="text/javascript" src="/javascripts/bootstrap.min.js"></script>
   <script type="text/javascript" src="/javascripts/common.js"></script>
   <% for (i in locals.js) { %>
   <script type="text/javascript" src="<%= js[i] %>"></script>
@@ -35,9 +35,10 @@
           </table>
         </nav>
         <% } %>
-        <table style="width: 100%;">
+        <table style="margin: 0 auto;">
           <td>
-            <a class="Logo" href="/" title='mtm'>mtm</a>
+            <!--<a class="Logo" href="/" title='mtm'>mtm</a>-->
+            <a class="Logo" href="/">子<small><small>儿</small></small></a>
           </td>
         </table>
         <nav class="Nav Nav-Right">

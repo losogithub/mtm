@@ -5,6 +5,7 @@
  * Time: 12:55 AM
  * To change this template use File | Settings | File Templates.
  */
+var async = require('async');
 var EventProxy = require('eventproxy');
 var sanitize = require('validator').sanitize;
 var escape = require('escape-html');
@@ -44,7 +45,7 @@ function create(req, res, next) {
 }
 
 function createTopic(req, res, next) {
-  console.log('newId=====');
+  console.log('createTopic=====');
   var userId = req.session.userId;
 
   Topic.createTopic(userId, function (err, topic) {
@@ -54,7 +55,7 @@ function createTopic(req, res, next) {
       return;
     }
 
-    console.log('newId done');
+    console.log('createTopic done');
     console.log(topic);
     res.json({ topicId: topic._id })
   });
@@ -89,7 +90,7 @@ function getContents(req, res, next) {
   Topic.getTopicById(topicId, ep.done(function (topic) {
     if (!topic || topic.author_id != userId) {
       ep.unbind();
-      newId(req, res, next);
+      createTopic(req, res, next);
       return;
     }
 
@@ -115,12 +116,49 @@ function getContents(req, res, next) {
 }
 
 function editTopic(req, res, next) {
-  console.log('edit=====');
+  console.log('editTopic=====');
   var userId = req.session.userId;
   var topicId = req.params.topicId;
 
-  var ep = EventProxy.create('topic', 'items', function (topic, items) {
-    console.log('edit done');
+  async.auto({
+    topic: function (callback) {
+      _getTopicWithAuth(callback, topicId, userId);
+    },
+    items: ['topic', function (callback, results) {
+      var topic = results.topic;
+      Topic.getContents(topic, function (err, items) {
+        if (err) {
+          callback(err);
+          return;
+        }
+
+        if (!items) {
+          callback(new Error(404));
+          return;
+        }
+
+        callback(null, items);
+      });
+    }]
+  }, function (err, results) {
+    if (err) {
+      console.error(err.stack);
+      switch (err.message) {
+        case 403:
+          res.send(403, '您无权修改他人的总结');
+          break;
+        case 404:
+          res.send(404, '总结不存在');
+          break;
+        default :
+          res.send(500, '打开总结编辑页面失败');
+          break;
+      }
+      return;
+    }
+
+    var topic = results.topic;
+    var items = results.items;
     var topicData = {
       title: topic.title,
       coverUrl: topic.cover_url,
@@ -152,22 +190,7 @@ function editTopic(req, res, next) {
       topic: topicData,
       items: itemsData
     });
-  })
-    .fail(function (err) {
-      console.error(err);
-      res.send(500, '查找总结失败');
-    });
-
-  _getTopicWithAuth(topicId, userId, ep, res, function (topic) {
-    Topic.getContents(topic, ep.done(function (items) {
-      if (!items) {
-        ep.unbind();
-        res.send(500, '查找条目列表头出错');
-        return;
-      }
-
-      ep.emit('items', items);
-    }));
+    console.log('editTopic done');
   });
 }
 
@@ -176,7 +199,7 @@ function index(req, res, next) {
   var topicId = req.params.topicId;
   var currentPage = req.query.page || 1;
 
-  var ep = EventProxy.create('topic', 'items', 'user', function (topic, items, user) {
+  var ep = EventProxy.create('topic', 'items', 'author', function (topic, items, author) {
     var updateDate = topic.update_at.getFullYear() + '年'
       + (topic.update_at.getMonth() + 1) + '月'
       + topic.update_at.getDate() + '日';
@@ -196,16 +219,12 @@ function index(req, res, next) {
       itemsData.push(_getItemData(item));
     });
 
-    if (!user) {
-      console.log("cannot find user");
-      return;
-    }
     var authorData = {
-      author: user.loginName,
-      imgUrl: user.url,
+      author: author.loginName,
+      imgUrl: author.url,
       //description: balinkify.linkify(escape(user.description), {target: " "}),
-      description: helper.linkify(escape(user.description)),
-      personalSite: user.personalSite
+      description: helper.linkify(escape(author.description)),
+      personalSite: author.personalSite
     };
 
     var liked = false; //default, not login user.
@@ -243,7 +262,7 @@ function index(req, res, next) {
     console.log('index done');
   })
     .fail(function (err) {
-      console.log(err);
+      console.error(err);
       res.send(500, '查找总结失败');
     });
 
@@ -259,21 +278,21 @@ function index(req, res, next) {
     Topic.getContents(topic, ep.done(function (items) {
       if (!items) {
         ep.unbind();
-        res.send(500, '查找总结失败');
+        res.send(404, '条目列表头不存在');
         return;
       }
 
       ep.emit('items', items);
     }));
     //author information: website url, description, images.
-    User.getUserByLoginName(topic.author_name, ep.done(function (user) {
-      if (!user) {
+    User.getUserByLoginName(topic.author_name, ep.done(function (author) {
+      if (!author) {
         ep.unbind();
-        res.send(500, '查找总结失败');
+        res.send(404, '作者不存在');
         return;
       }
 
-      ep.emit('user', user);
+      ep.emit('author', author);
     }));
   }));
 }
@@ -413,65 +432,67 @@ function _getItemData(item) {
   return itemData;
 }
 
-function _getTopicWithAuth(topicId, userId, ep, res, callback) {
-  Topic.getTopicById(topicId, ep.done(function (topic) {
+function _getTopicWithAuth(callback, topicId, userId) {
+  Topic.getTopicById(topicId, function (err, topic) {
+    if (err) {
+      callback(err);
+      return;
+    }
+
     if (!topic) {
-      ep.unbind();
-      res.send(404, '总结不存在');
+      callback(new Error(404));
       return;
     }
 
     if (topic.author_id != userId) {
-      ep.unbind();
-      res.send(403, '您无权修改他人的总结');
+      callback(new Error(403));
       return;
     }
 
-    ep.emit('topic', topic);
-    if (typeof callback === 'function') {
-      callback(topic);
-    }
-  }));
+    callback(null, topic);
+  });
 }
 
-function _getPrevItemWithAuth(prevItemType, prevItemId, topicId, ep, res) {
+function _getPrevItemWithAuth(callback, prevItemType, prevItemId, topicId) {
   if (!prevItemType || !prevItemId) {
-    ep.emit('prevItem');
-  } else {
-    Item.getItemById(prevItemType, prevItemId, ep.done(function (prevItem) {
-      if (!prevItem) {
-        ep.unbind();
-        res.send(404, '无效的插入位置');
-        return;
-      }
-
-      if (prevItem.topic_id != topicId) {
-        ep.unbind();
-        res.send(403, '您无权修改他人的总结');
-        return;
-      }
-
-      ep.emit('prevItem', prevItem);
-    }));
+    callback();
+    return;
   }
+
+  Item.getItemById(prevItemType, prevItemId, function (err, prevItem) {
+    if (!prevItem) {
+      callback(new Error(404));
+      return;
+    }
+
+    if (prevItem.topic_id != topicId) {
+      callback(new Error(403));
+      return;
+    }
+
+    callback(null, prevItem);
+  });
 }
 
-function _getItemWithAuth(type, itemId, topicId, ep, res) {
-  Item.getItemById(type, itemId, ep.done(function (item) {
+function _getItemWithAuth(callback, type, itemId, topicId) {
+  Item.getItemById(type, itemId, function (err, item) {
+    if (err) {
+      callback(err);
+      return;
+    }
+
     if (!item) {
-      ep.unbind();
-      res.send(404, '条目不存在');
+      callback(new Error(404));
       return;
     }
 
     if (item.topic_id != topicId) {
-      ep.unbind();
-      res.send(403, '您无权修改他人的总结');
+      callback(new Error(403));
       return;
     }
 
-    ep.emit('item', item);
-  }));
+    callback(null, item);
+  });
 }
 
 function createItem(req, res, next) {
@@ -486,46 +507,69 @@ function createItem(req, res, next) {
     return;
   }
 
-  var createItem = function () {
-    var ep = EventProxy.create('topic', 'prevItem', function (topic, prevItem) {
+  async.auto({
+    videoTitle: function (callback) {
+      if (data.type != 'VIDEO_CREATE') {
+        callback();
+        return;
+      }
+
+      _getVideoTitle(data.url, function (err, title) {
+        data.title = title;
+        callback();
+      });
+    },
+    topic: function (callback) {
+      _getTopicWithAuth(callback, topicId, userId);
+    },
+    prevItem: function (callback) {
+      _getPrevItemWithAuth(callback, prevItemType, prevItemId, topicId);
+    },
+    item: ['videoTitle', 'topic', 'prevItem', function (callback, results) {
+      var topic = results.topic;
+      var prevItem = results.prevItem;
       if (!prevItem) {
         prevItem = {
           type: 'VOID',
           _id: topic.void_item_id
         };
       }
-      Item.createItem(prevItem, data, ep.done(function (item) {
+      Item.createItem(prevItem, data, function (err, item) {
+        if (err) {
+          callback(err);
+          return;
+        }
+
         if (!item) {
-          ep.unbind();
-          res.send(500, '创建条目失败');
+          callback(new Error(500));
           return;
         }
 
         Topic.increaseItemCountBy(topic, 1).exec();
-        res.json(_getItemData(item));
-        console.log('createItem done');
-      }));
-    })
-      .fail(function (err) {
-        if (err) {
-          console.error(err);
-          res.send(500, '创建条目失败');
-        }
+        callback(null, item);
       });
+    }]
+  }, function (err, results) {
+    if (err) {
+      console.error(err.stack);
+      switch (err.message) {
+        case 403:
+          res.send(403, '您无权修改他人的总结');
+          break;
+        case 404:
+          res.send(404, '总结不存在');
+          break;
+        default :
+          res.send(500, '创建条目失败');
+          break;
+      }
+      return;
+    }
 
-    _getTopicWithAuth(topicId, userId, ep, res);
-
-    _getPrevItemWithAuth(prevItemType, prevItemId, topicId, ep, res);
-  }
-
-  if (data.type && data.type != 'VIDEO_CREATE') {
-    createItem();
-  } else {
-    _getVideoTitle(data.url, function (title) {
-      data.title = title;
-      createItem();
-    });
-  }
+    var item = results.item;
+    res.json(_getItemData(item));
+    console.log('createItem done');
+  });
 }
 
 function sortItem(req, res, next) {
@@ -537,32 +581,67 @@ function sortItem(req, res, next) {
   var prevItemType = req.body.prevItemType;
   var prevItemId = req.body.prevItemId;
 
-  var ep = EventProxy.create('topic', 'prevItem', 'item', function (topic, prevItem, item) {
-    if (!prevItem) {
-      prevItem = {
-        type: 'VOID',
-        _id: topic.void_item_id
-      };
+  async.auto({
+    topic: function (callback) {
+      _getTopicWithAuth(callback, topicId, userId);
+    },
+    prevItem: function (callback) {
+      _getPrevItemWithAuth(callback, prevItemType, prevItemId, topicId);
+    },
+    item: function (callback) {
+      _getItemWithAuth(callback, type, itemId, topicId);
+    },
+    detach: ['topic', 'prevItem', 'item', function (callback, results) {
+      var item = results.item;
+
+      Item.detachItem(item, function (err, item) {
+        if (err) {
+          callback(err);
+          return;
+        }
+
+        callback();
+      });
+    }],
+    insert: ['detach', function (callback, results) {
+      var topic = results.topic;
+      var prevItem = results.prevItem;
+      var item = results.item;
+      if (!prevItem) {
+        prevItem = {
+          type: 'VOID',
+          _id: topic.void_item_id
+        };
+      }
+      Item.insertItem(prevItem, item, function (err, item) {
+        if (err) {
+          callback(err);
+          return;
+        }
+
+        callback();
+      });
+    }]
+  }, function (err, results) {
+    if (err) {
+      console.error(err.stack);
+      switch (err.message) {
+        case 403:
+          res.send(403, '您无权修改他人的总结');
+          break;
+        case 404:
+          res.send(404, '总结不存在');
+          break;
+        default :
+          res.send(500, '排序失败');
+          break;
+      }
+      return;
     }
 
-    Item.detachItem(item, ep.done(function (item) {
-      Item.insertItem(prevItem, item, ep.done(function (item) {
-        console.log('sort done');
-      }));
-    }));
-  })
-    .fail(function (err) {
-      console.error(err);
-      res.send(500, '排序失败');
-    });
-
-  _getTopicWithAuth(topicId, userId, ep, res);
-
-  _getPrevItemWithAuth(prevItemType, prevItemId, topicId, ep, res);
-
-  _getItemWithAuth(type, itemId, topicId, ep, res);
-
-  res.send(200);
+    res.send(200);
+    console.log('sort done');
+  });
 }
 
 function editItem(req, res, next) {
@@ -572,23 +651,56 @@ function editItem(req, res, next) {
   var itemId = req.body.itemId;
   var type = req.body.type;
 
-  var ep = EventProxy.create('item', 'topic', function (item) {
-    var data = _getData(req);
-    item.update(data, ep.done(function () {
-      Item.getItemById(type, itemId, ep.done(function (item) {
-        res.json(_getItemData(item));
-        console.log('editItem done');
-      }));
-    }));
-  })
-    .fail(function (err) {
-      console.error(err);
-      res.send(500, '修改条目失败');
-    });
+  async.auto({
+    topic: function (callback) {
+      _getTopicWithAuth(callback, topicId, userId);
+    },
+    item: function (callback) {
+      _getItemWithAuth(callback, type, itemId, topicId);
+    },
+    update: ['topic', 'item', function (callback, results) {
+      var item = results.item;
+      var data = _getData(req);
+      item.update(data, function (err) {
+        if (err) {
+          callback(err);
+          return;
+        }
 
-  _getItemWithAuth(type, itemId, topicId, ep, res);
+        callback();
+      });
+    }],
+    newItem: ['update', function (callback, results) {
+      Item.getItemById(type, itemId, function (err, item) {
+        if (err) {
+          callback(err);
+          return;
+        }
 
-  _getTopicWithAuth(topicId, userId, ep, res);
+        callback(null, item);
+      });
+    }]
+  }, function (err, results) {
+    if (err) {
+      console.error(err.stack);
+      switch (err.message) {
+        case 403:
+          res.send(403, '您无权修改他人的总结');
+          break;
+        case 404:
+          res.send(404, '总结不存在');
+          break;
+        default :
+          res.send(500, '编辑条目失败');
+          break;
+      }
+      return;
+    }
+
+    var newItem = results.newItem;
+    res.json(_getItemData(newItem));
+    console.log('editItem done');
+  });
 }
 
 function deleteItem(req, res, next) {
@@ -598,22 +710,46 @@ function deleteItem(req, res, next) {
   var type = req.body.type;
   var itemId = req.body.itemId;
 
-  var ep = EventProxy.create('item', 'topic', function (item, topic) {
-    Item.deleteItem(item, ep.done(function (item) {
-      Topic.increaseItemCountBy(topic, -1).exec();
-      console.log('deleteItem done');
-    }));
-  })
-    .fail(function (err) {
-      console.error(err);
-      res.send(500, '删除条目失败');
-    });
+  async.auto({
+    topic: function (callback) {
+      _getTopicWithAuth(callback, topicId, userId);
+    },
+    item: function (callback) {
+      _getItemWithAuth(callback, type, itemId, topicId);
+    },
+    deleteItem: ['topic', 'item', function (callback, results) {
+      var topic = results.topic;
+      var item = results.item;
+      Item.deleteItem(item, function (err, item) {
+        if (err) {
+          callback(err);
+          return;
+        }
 
-  _getItemWithAuth(type, itemId, topicId, ep, res);
+        Topic.increaseItemCountBy(topic, -1).exec();
+        callback();
+      });
+    }]
+  }, function (err, results) {
+    if (err) {
+      console.error(err.stack);
+      switch (err.message) {
+        case 403:
+          res.send(403, '您无权修改他人的总结');
+          break;
+        case 404:
+          res.send(404, '总结不存在');
+          break;
+        default :
+          res.send(500, '删除条目失败');
+          break;
+      }
+      return;
+    }
 
-  _getTopicWithAuth(topicId, userId, ep, res);
-
-  res.send(200);
+    res.send(200);
+    console.log('deleteItem done');
+  });
 }
 
 function saveTopic(req, res, next) {
@@ -631,7 +767,7 @@ function saveTopic(req, res, next) {
   });
 }
 
-function _getVideoTitle(url, done, fail) {
+function _getVideoTitle(url, callback) {
   http.get(url, function (response) {
     var bufferHelper = new BufferHelper();
     response.on('data', function (chunk) {
@@ -668,16 +804,15 @@ function _getVideoTitle(url, done, fail) {
           || (!(temp = html.match(/<title>([^_]+)(.*)<\/title>/)) ? null : !temp[1] ? null : temp[1]);
         console.log(title);
       }
-      if (typeof done == 'function') {
-        done(title);
+      if (typeof callback == 'function') {
+        callback(null, title);
       }
     })
   })
     //必须处理error，否则抛出异常
     .on('error', function (err) {
-      console.log(err.message);
-      if (typeof fail == 'function') {
-        fail(err);
+      if (typeof callback == 'function') {
+        callback(err);
       }
     });
 }
@@ -685,17 +820,12 @@ function _getVideoTitle(url, done, fail) {
 function getVideoTitle(req, res, next) {
   var url = req.query.url;
 
-  _getVideoTitle(url, function (title) {
+  _getVideoTitle(url, function (err, title) {
     res.json({
       url: url,
       title: title
     });
-  }), function () {
-    res.json({
-      url: url,
-      title: undefined
-    });
-  }
+  });
 }
 
 function AddorRemoveLikes(req, res) {

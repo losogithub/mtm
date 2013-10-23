@@ -5,7 +5,7 @@
         <table>
           <td>
             <ol>
-              <li><a href="/">mtm首页</a></li>
+              <li><a href="/">mtm首页</a><i class="icon-angle-right"></i></li>
             </ol>
           </td>
         </table>
@@ -82,13 +82,11 @@
     <div class="Main">
       <% if (!locals.items || !items.length) { %>
       <div class="NoItem">
-        <img class="NoItemIco" src="/images/sprite_NoItem.png">
-
-        <p class="NoItemTxt">这个总结还没有内容。<br>要添加吗？</p>
+        <i class="icon-file-alt" style="font-size: 50px;color: #ccc"></i>
+        <p>这个总结还没有内容。<br>要添加吗？</p>
       <% } %>
-        <a href="<%= locals.url + '/edit' %>">
-          <button class="button button-small button-action" type="button"><i class="icon-plus-sign icon-large"></i> 添加条目</button>
-        </a>
+        <a name="add" class="btn" href="<%= locals.url + '/edit' %>" type="button"><i class="icon-plus-sign"></i>
+          添加条目</a>
       <% if (!locals.items || !items.length) { %>
       </div>
       <% } %>

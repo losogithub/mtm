@@ -163,14 +163,9 @@
         .find('textarea')
         .trigger('autosize.resize')
         .end()
-        .fadeSlideDown(function () {
-          self.widget()
-            .find('textarea')
-            .addClass('HeightAnimation')
-            .end();
-        });
+        .fadeSlideDown();
 
-      this.autoFocus();
+      this.autoFocus();//！！！必须在resize后面设置焦点，因为获取焦点后输入框具有了高度动画属性，否则会导致抖动！！！
 
       this.__initFormValidation();
     },
@@ -1538,7 +1533,7 @@
 
         stop: function () {
           console.log('stop');
-          $(this).disableSelection()
+          $(this)
             .removeClass('WidgetItemList-Sorting')
             .unbind('mousemove');
         },

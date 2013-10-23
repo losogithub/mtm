@@ -9,19 +9,17 @@
       <table class="Band_Btn">
         <td>
           <% if (locals.topic && topic.publishDate) { %>
-          <button name="save" class='button button-tiny button-action'
+          <button name="save" class='btn btn-small btn-inverse'
                   data-loading-text="保存 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;" type="button">保存
           </button>
           <% } else { %>
-          <button name="saveDraft" class='button button-tiny button-action'
+          <button name="saveDraft" class='btn btn-small btn-inverse'
                   data-loading-text="保存草稿 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;" type="button">保存草稿</button>
-          <button name="publish" class='button button-tiny button-action'
+          <button name="publish" class='btn btn-small btn-success'
                   data-loading-text="发布 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;" type="button">发布
           </button>
           <% } %>
-          <a href="<%= locals.backUrl ? backUrl : '/' %>">
-            <button class='button button-tiny' type="button">返回</button>
-          </a>
+          <a class='btn btn-small' href="<%= locals.backUrl ? backUrl : '/' %>">返回</a>
         </td>
       </table>
     </div>
@@ -98,7 +96,7 @@
           <div class='Content IMAGE_CREATE'>
             <div class="Image"></div>
             <input name="url" class="Required AUTO_FOCUS" placeholder="输入图片URL" type="text">
-            <button name="preview" class="button button-tiny" type="button" disabled='disabled'
+            <button name="preview" class="btn btn-small" type="button" disabled='disabled'
                     data-loading-text="预览 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;">预览</button>
 
             <% include _widget_BtnSet.html %>
@@ -124,7 +122,7 @@
             <div class="Thumb"></div>
             <div style="margin-top: 7px;">
               <input name="url" class="Required AUTO_FOCUS" placeholder="输入视频URL" type="text">
-              <button name="preview" class="button button-tiny" type="button" disabled='disabled'
+              <button name="preview" class="btn btn-small" type="button" disabled='disabled'
                       data-loading-text="预览 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;">预览</button>
             </div>
 

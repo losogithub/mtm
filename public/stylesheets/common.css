@@ -1,15 +1,13 @@
-body, h1, h2, h3, h4, h5, h6, p, dl, dt, dd, ul, ol, li, th, td, div, blockquote, pre, form, fieldset, input, textarea {margin: 0;padding: 0;}
+body, h1, h2, h3, h4, h5, h6, p, dl, dt, dd, ul, ol, li, th, td, div, blockquote, pre, form, fieldset, input{margin: 0;padding: 0;}
 h1,h2,h3,h4,h5,h6,p,dl,dt,dd,ul,ol,li,table,th,td,div,blockquote,pre,form,fieldset,legend,header{*zoom:1;}
 h1, h2, h3, h4, h5, h6 {font-size: 100%;font-weight: normal;}
 button, img, fieldset, table, th, td{border: 0 none;}
-input, textarea{font-size: 1em;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;
-    padding: 0 4px;background-color: #fff;width: 100%;
-    border-width: 1px;border-style: solid;border-color: rgb(202, 206, 209) rgb(232, 234, 235) rgb(232, 234, 235) rgb(202, 206, 209);}
-input:focus, textarea:focus{border: 1px solid #33cc00;box-shadow: 0 0 3px rgba(0, 0, 0, 0.1) inset;outline: 0 none;}
-input{height: 24px;line-height: 22px;}
-textarea{font-family: arial,sans-serif;min-height: 85px;padding: 5px 5px 0 5px;resize: vertical;}
+input, textarea{font-size: 1em;width: 100%;}
+input:focus, textarea:focus{outline: 0 none;}
+input{height: 27px;}
+textarea{font-family: arial,sans-serif;min-height: 85px;padding-bottom: 0;resize: vertical;}
 input[name='url'], input.Url{color: #999999;}
-input.Bold{font-size: 14px;font-weight: bold;height: 30px;line-height: 28px;}
+input.Bold{font-size: 14px;font-weight: bold;height: 30px;}
 /*a*/
 a{cursor: pointer;}
 a, a:link, a:visited{color: #000;text-decoration: none;}
@@ -21,19 +19,17 @@ table{height: 100%;}
 html{overflow-y: scroll;}
 body{font: 12px/1.5 "微软雅黑",arial,sans-serif;word-wrap: break-word;}
 
-.HeightAnimation{transition: height 0.2s ease 0s;}
-.button{font-weight: bold;}
 .Required{padding-left: 15px !important;background-image: url("/images/FormInputGuide.png");background-position:  5px 8px;background-repeat: no-repeat;}
 .Hide{display: none;}
 /*按钮*/
 .BtnSet{padding-top: 14px;}
 .Widget .BtnSet{float: left;}
 /*徽标*/
-.Logo {width: 102px;height: 20px;
-    display: block;font-size: 0;line-height: 0;margin: 0 auto;
-    vertical-align: middle;cursor: pointer;color: transparent;
-    background-image: url("/images/sprite_head.png");}
-.INDEX .Logo {width: 181px;height: 33px;background-position: 0 -30px;}
+.Logo {display: block;height: 20px;line-height: 20px;font-weight: bold;
+    color: #cccccc !important;text-decoration: none !important;
+    background: url("/images/logo_20x20.png") no-repeat; padding-left: 22px;}
+.INDEX .Logo {height: 32px;line-height: 32px;font-size: 20px;
+    background: url("/images/logo_32x32.png") no-repeat; padding-left: 34px;}
 /*分割线*/
 .VLine{display: inline-block;width: 0;height: 11px;border-left: 1px solid #eee;vertical-align: middle;}
 .VLine-Header{margin: 0 9px 0 11px;}
@@ -42,7 +38,7 @@ body{font: 12px/1.5 "微软雅黑",arial,sans-serif;word-wrap: break-word;}
 /*页眉*/
 .Inner{width: 960px;margin: 0 auto;min-height: 100%;height: 100%;}
 .INDEX .Inner{width: 1010px;}
-.Header{z-index: 501;height: 48px;width: 100%;border-top: 3px solid rgb(51, 51, 51);border-bottom: 1px solid rgb(231, 231, 231);}
+.Header{z-index: 501;height: 48px;width: 100%;border-top: 3px solid #333333;border-bottom: 1px solid rgb(231, 231, 231);}
 .INDEX .Header{height: 112px;}
 .PERSONAL .Header{height: 64px;}
 /*导航*/
@@ -63,11 +59,11 @@ body{font: 12px/1.5 "微软雅黑",arial,sans-serif;word-wrap: break-word;}
 /*页脚*/
 .Footer{width: 100%; border-top: 1px solid rgb(231, 231, 231);height: 64px;font-size: 11px;margin-top: 20px;}
 .PERSONAL .Footer{height: 44px;}
-.Footer a{color: rgb(51, 51, 51);vertical-align: middle;}
+.Footer a{color: #333333;vertical-align: middle;}
 .INDEX .Footer a{color: #000;}
 .PERSONAL .Footer a{color: rgb(170, 170, 170);}
 .Footer li{display: inline;}
-.Copyright{float: right;color: rgb(51, 51, 51);font-family: Tahoma,Arial,sans-serif;}
+.Copyright{float: right;color: #333333;font-family: Tahoma,Arial,sans-serif;}
 /*内容*/
 .TopicWrapper {width: 960px;min-height: 81px;margin: 0 auto;background: url("/images/bg_ContentsWrapper.png") repeat-y scroll 660px 0px transparent;}
 .TopicWrapper .Main {float: left;width: 635px;min-height: 41px;padding-bottom: 40px;}
