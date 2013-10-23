@@ -41,7 +41,6 @@ app.use(express.session(
 ));
 app.use(app.router);
 app.use(express.static(path.join(__dirname, '/public')));
-app.use(express.favicon(path.join(__dirname, '/public/images/favicon.ico')));
 
 routes(app);
 

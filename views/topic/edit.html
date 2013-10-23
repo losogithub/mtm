@@ -28,7 +28,8 @@
     <div class="Inner">
       <form>
         <fieldset style="position: relative;">
-          <input name='title' class="Required" value="<%= locals.topic ? topic.title : '' %>"
+          <div class="Required Required-4px"></div>
+          <input name='title' class="" value="<%= locals.topic ? topic.title : '' %>"
                  placeholder="输入总结标题（50字以内）" type="text"/>
           <a class='Edit_Top_OptionBtn' style='display: none'>可选项目
             <i style="" class="icon-caret-down"></i>
@@ -95,7 +96,8 @@
 
           <div class='Content IMAGE_CREATE'>
             <div class="Image"></div>
-            <input name="url" class="Required AUTO_FOCUS" placeholder="输入图片URL" type="text">
+            <div class="Required" style="float: left;"></div>
+            <input name="url" class="AUTO_FOCUS" placeholder="输入图片URL" type="text">
             <button name="preview" class="btn btn-small" type="button" disabled='disabled'
                     data-loading-text="预览 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;">预览</button>
 
@@ -121,7 +123,8 @@
           <div class='Content VIDEO_CREATE'>
             <div class="Thumb"></div>
             <div style="margin-top: 7px;">
-              <input name="url" class="Required AUTO_FOCUS" placeholder="输入视频URL" type="text">
+              <div class="Required"></div>
+              <input name="url" class="AUTO_FOCUS" placeholder="输入视频URL" type="text">
               <button name="preview" class="btn btn-small" type="button" disabled='disabled'
                       data-loading-text="预览 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;">预览</button>
             </div>
@@ -155,7 +158,8 @@
           </div>
 
           <div class='Content CITE'>
-            <textarea class="AUTO_FOCUS Required" name="cite" placeholder="输入引文"></textarea>
+            <div class="Required"></div>
+            <textarea class="AUTO_FOCUS" name="cite" placeholder="输入引文"></textarea>
             <input name="url" placeholder="输入引文来源网页URL" type="text">
             <input name="title" placeholder="输入引文来源网页标题" type="text">
             <textarea name="description" placeholder="输入引文介绍、评论"></textarea>
@@ -165,14 +169,16 @@
           </div>
 
           <div class='Content TEXT'>
-            <textarea name="text" class="Required AUTO_FOCUS" placeholder="输入文本"></textarea>
+            <div class="Required"></div>
+            <textarea name="text" class="AUTO_FOCUS" placeholder="输入文本"></textarea>
 
             <% include _widget_BtnSet.html %>
 
           </div>
 
           <div class='Content TITLE'>
-            <input name="title" class="Bold Required AUTO_FOCUS" placeholder="输入标题" type="text">
+            <div class="Required"></div>
+            <input name="title" class="Bold AUTO_FOCUS" placeholder="输入标题" type="text">
 
             <% include _widget_BtnSet.html %>
 

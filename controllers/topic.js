@@ -15,13 +15,11 @@ var BufferHelper = require('bufferhelper');
 
 var helper = require('../helper/helper');
 
-
-var User = require('../proxy').User;
-
 var Topic = require('../proxy').Topic;
 var Item = require('../proxy').Item;
+var User = require('../proxy').User;
 
-var REGEXP_URL = /^((http[s]?|ftp):\/)?\/?((([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]))(:([^\/]*))?(((\/\w+)*\/)([\w\-\.]+[^#?\s]+))?(\?([^#]*))?(#(.*))?$/;
+var utils = require('../public/javascripts/utils');
 
 function create(req, res, next) {
   res.set('Cache-Control', 'private, no-cache, no-store, must-revalidate, post-check=0, pre-check=0');
@@ -38,6 +36,7 @@ function create(req, res, next) {
       '/javascripts/jquery.autosize.min.js',
       '/javascripts/jquery-ui-1.10.3.custom.min.js',
       '/javascripts/jquery.validate.min.js',
+      '/javascripts/utils.js',
       '/javascripts/edit.js'
     ],
     backUrl: req.headers.referer ? req.headers.referer : '/works'
@@ -183,6 +182,7 @@ function editTopic(req, res, next) {
         '/javascripts/jquery.autosize.min.js',
         '/javascripts/jquery-ui-1.10.3.custom.min.js',
         '/javascripts/jquery.validate.min.js',
+        '/javascripts/utils.js',
         '/javascripts/edit.js'
       ],
       escape: escape,
@@ -380,6 +380,7 @@ function _getData(req, _id) {
 
 function _getItemData(item) {
   var itemData;
+  var temp;
 
   switch (item.type) {
     case 'IMAGE':
@@ -389,14 +390,18 @@ function _getItemData(item) {
         url: item.url,
         title: item.title,
         quote: item.quote,
+        quoteDomain: !item.quote ? null : !(temp = item.quote.match(REGEXP_URL)) ? null : temp[2],
         description: item.description
       }
       break;
     case 'VIDEO':
+      var quoteAndVid = utils.getVideoQuoteAndVid(item.url);
       itemData = {
         itemId: item._id,
         type: item.type,
         url: item.url,
+        quote: quoteAndVid.quote,
+        vid: quoteAndVid.vid,
         title: item.title,
         description: item.description
       }
@@ -781,7 +786,7 @@ function _getVideoTitle(url, callback) {
       console.log(charset);
       var html = iconv.decode(bufferHelper.toBuffer(), charset);
       var urlParts = url.match(REGEXP_URL);
-      var domain = !urlParts ? null : urlParts[3];
+      var domain = !urlParts ? null : urlParts[2];
       var title;
       console.log(domain);
       if (/tudou\.com$/.test(domain)) {
@@ -818,6 +823,7 @@ function _getVideoTitle(url, callback) {
 }
 
 function getVideoTitle(req, res, next) {
+  console.log('getVideoTitle');
   var url = req.query.url;
 
   _getVideoTitle(url, function (err, title) {

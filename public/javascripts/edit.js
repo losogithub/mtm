@@ -9,27 +9,14 @@
 (function ($) {
 
   var console = window.console || {log: $.noop, error: $.noop};
-  var REGEXP_URL = /^(https?|ftp):\/\/(([\w\-]+\.)+[\w\-]+)(\/|\?|$)/i;
   var REGEXP_URL_NO_PROTOCOL = /^(([\w\-]+\.)+[\w\-]+)(\/|\?|$)/i;
 
   function fillVideo($li, url) {
-    var urlParts = url.match(REGEXP_URL);
+    var quoteAndVid = mtm.utils.getVideoQuoteAndVid(url);
+    var quote = quoteAndVid.quote;
     var temp;
-    var quote = !urlParts ? null : !urlParts[2] ? null : !(temp = urlParts[2].match(/youku\.com|tudou\.com$/i)) ? null : temp[0];
     var videoType = !quote ? null : !(temp = quote.match(/([^\.]+)\./)) ? null : !temp[1] ? null : temp[1].toUpperCase();
-    var vid;
-
-    switch (videoType) {
-      case 'YOUKU':
-        //http://v.youku.com/v_show/id_XNjEyOTU3NjE2.html?f=20383529&ev=1
-        vid = !(temp = url) ? null : !(temp = temp.match(/id_([\w\-]{13})\.html\/?(\?|$)/i)) ? null : !temp[1] ? null : temp[1];
-        break;
-      case 'TUDOU':
-        //http://www.tudou.com/listplay/pKzzr-WLvwk/snBiS0Y74PQ.html
-        //http://www.tudou.com/programs/view/TtwcrB0saxg
-        vid = !(temp = url) ? null : !(temp = temp.match(/([\w\-]{11})(\.html)?\/?(\?|$)/)) ? null : !temp[1] ? null : temp[1];
-        break;
-    }
+    var vid = quoteAndVid.vid;
 
     //填充视频
     if (vid) {
@@ -1141,6 +1128,9 @@
           .find('.Description')
           .html($('<div/>').text(description).html().replace(/\n/g, '<br>'))
           .end();
+        if (!quote) {
+          $item.find('.Quote').hide();
+        }
         break;
       case 'VIDEO':
         //填充视频信息

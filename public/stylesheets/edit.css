@@ -25,7 +25,7 @@ button[name='preview']{float: right;width: 62px;padding-left: 0;padding-right: 0
 .Edit_Top fieldset:first-child {height: 40px;}
 .Edit_Top input[name="title"] {display: inline-block;width: 779px;padding: 0 10px;height: 40px;line-height: 38px;font-size: 23px;font-weight: bold;
     background-color: rgb(255, 254, 238);background-position: 5px 10px;}
-.Edit_Top_OptionBtn {margin-left: 15px;line-height: 1;color: rgb(102, 102, 102) !important;position: absolute;bottom: 0;}
+.Edit_Top_OptionBtn {margin-left: 15px;line-height: 1;color: #666666 !important;position: absolute;bottom: 0;}
 .Edit_Top fieldset:last-child {margin-top: 25px;width: 779px;}
 .Edit_Top_Thumb {float: left;margin-right: 15px;background: url("/images/photo_95x95.png");}
 .Edit_Top_Thumb_Extra {float: left;width: 252px;margin-right: 15px;display: none;}

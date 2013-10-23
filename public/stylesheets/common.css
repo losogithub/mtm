@@ -19,7 +19,9 @@ table{height: 100%;}
 html{overflow-y: scroll;}
 body{font: 12px/1.5 "微软雅黑",arial,sans-serif;word-wrap: break-word;}
 
-.Required{padding-left: 15px !important;background-image: url("/images/FormInputGuide.png");background-position:  5px 8px;background-repeat: no-repeat;}
+.Required{position: relative;}
+.Required:before{content: '*';position: absolute;left: 3px;top: 4px;color: #f00;font-size: 14px;}
+.Required-4px:before{left: 4px;}
 .Hide{display: none;}
 /*按钮*/
 .BtnSet{padding-top: 14px;}
