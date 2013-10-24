@@ -122,7 +122,7 @@ var signup = function (req, res, next) {
             // finally error render error info page.
             if (eMsg || nMsg || pMsg) {
               console.log("%s", eMsg);
-              res.render('sign/registerAccount', {
+              res.render('sign/signup', {
                 title: config.name,
                 metaHead: '',
                 css: '',
@@ -159,7 +159,7 @@ var signup = function (req, res, next) {
         }
         // not registered user, wrong email.
         else {
-          res.render('sign/registerAccount', {
+          res.render('sign/signup', {
             title: config.name,
             metaHead: '',
             css: '',
@@ -191,7 +191,7 @@ var signup = function (req, res, next) {
             // finally either registerd email address, or wrong password
             if (eMsg || pMsg) {
               console.log("%s", eMsg);
-              res.render('sign/registerAccount', {
+              res.render('sign/signup', {
                 title: config.name,
                 metaHead: '',
                 css: '',
@@ -227,7 +227,7 @@ var signup = function (req, res, next) {
         }
         // correct user, wrong email.
         else {
-          res.render('sign/registerAccount', {
+          res.render('sign/signup', {
             title: config.name,
             metaHead: '',
             css: '',
@@ -254,7 +254,7 @@ var signup = function (req, res, next) {
       }
 
       // wrong name, maybe correct email address.
-      res.render('sign/registerAccount', {
+      res.render('sign/signup', {
         title: config.name,
         metaHead: '',
         css: '',
@@ -266,7 +266,7 @@ var signup = function (req, res, next) {
     })
   }
   else {
-    res.render('sign/registerAccount', {
+    res.render('sign/signup', {
       title: config.name,
       metaHead: '',
       css: '',

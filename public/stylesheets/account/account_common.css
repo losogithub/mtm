@@ -1,8 +1,6 @@
 html{overflow-y:scroll}
 body{_position:relative;font:13px/1.231 arial,sans-serif;font-family:"MS PGothic"\9,arial\9,sans-serif\9}
 body.ExLangEn{font-family:Tahoma,sans-serif}
-a:link,a:hover,a:active,a:focus{color:#1546c3;text-decoration:underline}
-a:visited{color:#672874;text-decoration:underline}
 a img{vertical-align:top}
 :focus{outline:0}
 h1,h2,h3,h4,h5,h6,p,dl,dt,dd,ul,ol,li,table,th,td,div,blockquote,pre,form,fieldset,legend{*zoom:1}
@@ -130,7 +128,7 @@ a.MdTxtLink02:hover,a.MdTxtLink02:active,a.MdTxtLink02:focus{color:#111;text-dec
 .MdTxtList01 li{padding-left:10px;background:url(/images/login/ico_MdTxtList01.png) no-repeat 1px 8px}
 .MdTxtList01.MdColor01 li{background-image:url(/images/login/ico_MdTxtList01_MdColor01.png)}
 .MdTxtList01.MdColor03 li{background-image:url(/images/login/ico_MdTxtList01_MdColor03.png)}
-.MdInputTxt01{padding:0 5px 0 0;background:url(/images/login/sprite_input_right.png?20111007) no-repeat 100% 0}
+.MdInputTxt01{padding:0 5px 0 0;}
 .MdInputTxt01 .mdInputTxt01Inner{height:44px;padding:0 6px 0 11px;background:url(/images/login/sprite_input_left.png?20111007) no-repeat 0 0}
 .MdInputTxt01 .mdInputTxt01Input{width:100%;margin:14px 0 0;border:0;background:0;font-size:14px;font-weight:bold}
 .MdInputTxt01.mdInputTxt01Active{background-position:100% -45px}
@@ -233,7 +231,6 @@ a.MdTxtLink02:hover,a.MdTxtLink02:active,a.MdTxtLink02:focus{color:#111;text-dec
 .ExLangEn .MdFormLogin01 .mdFormLogin01Unit02Ttl{background-image:url(/images/login/sprite_en2.png);background-position:-289px -50px;padding-left:207px}
 .ExLangEn .MdFormLogin01 .mdFormLogin01Unit02Btn li{float:none}
 .ExLangEn .MdRegistHead01 .mdRegistHead01Ttl,.ExLangEn .MdRegistHead01 .mdRegistHead01Txt,.ExLangEn .MdFormRegist01 .mdFormRegist01Ttl01,.ExLangEn .MdFormRegist01 .mdFormRegist01Ttl02,.ExLangEn .MdFormRegist01 .mdFormRegist01Ttl03,.ExLangEn .MdFormRegist01 .mdFormRegist01Ttl04,.ExLangEn .MdFormRegist01 .mdFormRegist01Ttl05,.ExLangEn .MdFormRegist01 .mdFormRegist01Ttl06{background-image:url(/images/login/sprite_en2.png)}
-.ExLangEn .MdRegistHead01{width:704px}
 .ExLangEn .MdRegistHead01 .mdRegistHead01Ttl{background-position:0 -550px;padding-left:704px;height:55px}
 .ExLangEn .MdRegistHead01 .mdRegistHead01Txt{background-position:0 -605px;padding-left:355px;height:12px;margin-left:174px}
 .ExLangEn .MdFormRegist01 .mdFormRegist01Ttl01{background-position:-780px -50px;padding-left:76px;height:14px}
@@ -242,7 +239,12 @@ a.MdTxtLink02:hover,a.MdTxtLink02:active,a.MdTxtLink02:focus{color:#111;text-dec
 .LyPage01{min-width:970px;background:#fff}
 .LyPage02{min-width:770px;background:#f8f8fa}
 .LyPage03{min-width:970px;background:#fff}
-.LyHead01{padding:8px 0 0;background:#fff url(/images/login/bg_LyWrap01.png) repeat-x}
+.LyHead01{padding:8px 0 0;
+    background-image: -moz-linear-gradient(top, #f7f7f7, #ffffff);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#f7f7f7), to(#ffffff));
+    background-image: -webkit-linear-gradient(top, #f7f7f7, #ffffff);
+    background-image: -o-linear-gradient(top, #f7f7f7, #ffffff);
+    background-image: linear-gradient(to bottom, #f7f7f7, #ffffff);}
 .LyHead02{margin:0 0 18px;background:#42bc13 url(/images/login/bg_LyHead02.png) repeat-x 0 100%}
 .LyHead02 .lyHead02Inner{width:750px;height:37px;margin:0 auto}
 .LyHead03{padding:8px 0 0}
@@ -311,7 +313,7 @@ a.MdTxtLink02:hover,a.MdTxtLink02:active,a.MdTxtLink02:focus{color:#111;text-dec
 .MdFormLogin02 .mdFormLogin02Inner{width:830px;margin:0 auto}
 .MdFormLogin02 .mdRegistLink01Btn{float:left;width:390px;padding-right:10px;text-align:right}
 .MdFormLogin02 .mdRegistLink01Txt{float:left;width:430px;margin:0 0 0 -1px;padding:4px 0 0 0;color:#858585}
-.MdRegistHead01{clear:both;width:512px;padding-top:70px;margin:0 auto 46px}
+.MdRegistHead01{clear:both;padding-top:70px;margin:0 auto 46px}
 .MdRegistHead01 .mdRegistHead01Ttl{overflow:hidden;width:0;margin:0 0 14px;height:48px;padding:0 0 0 512px;background:url(/images/login/sprite.png?20111007) no-repeat 0 0}
 .MdRegistHead01 .mdRegistHead01Txt{_display:inline;overflow:hidden;float:left;margin:0 6px 0 120px;width:0;height:13px;padding:0 0 0 279px;background:url(/images/login/sprite.png?20111007) no-repeat 0 -50px}
 .MdRegistHead01 .mdRegistHead01ServiceList{float:left;width:242px}
@@ -320,8 +322,8 @@ a.MdTxtLink02:hover,a.MdTxtLink02:active,a.MdTxtLink02:focus{color:#111;text-dec
 .MdRegistHead01 .mdRegistHead01ServiceLi02{padding:0 0 0 78px;background-position:-235px -50px}
 .MdRegistHead01 .mdRegistHead01ServiceLi03{padding:0 0 0 51px;background-position:-315px -50px}
 .MdRegistHead01 .mdRegistHead01ServiceLi04{padding:0 0 0 54px;background-position:-370px -50px}
-.MdFormRegist01{width:100%;margin:0 0 26px;background:#3eb312 url(/images/login/bg_MdFormRegist01_btm.png) repeat-x 0 100%;color:#fff}
-.MdFormRegist01 .mdFormRegist01Inner{min-height:124px;_height:124px;padding:47px 15px 4px;background:url(/images/login/bg_MdFormRegist01_top.png) repeat-x}
+.MdFormRegist01{width:100%;margin:0 0 26px;background-color:#669966;color:#fff}
+.MdFormRegist01 .mdFormRegist01Inner{min-height:175px;_height:124px;padding:47px 15px 4px;}
 .MdFormRegist01 .mdFormRegist01Inner02{padding:21px 15px 20px;background:url(/images/login/bg_MdFormRegist01_top.png) repeat-x}
 .MdFormRegist01 .mdFormRegist01Body{width:854px;margin:0 auto}
 .MdFormRegist01 .mdFormRegist01BodyInner{overflow:hidden;width:861px;margin-right:-7px}
@@ -393,7 +395,6 @@ img,fieldset,table,th,td{border:0}
 input{*margin:-1px 0}
 input,textarea{font-size:1.0em}
 em,cite{font-style:normal}
-small{font-size:100%}
 .MdTtl01{margin:23px 0 22px 16px;font-size:18px;font-weight:bold}
 .MdTtl02{margin:23px 0 1px 16px;font-size:18px;font-weight:bold}
 .MdTxtWrap01{margin-bottom:35px}

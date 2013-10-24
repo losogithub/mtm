@@ -8,10 +8,6 @@ input{height: 27px;}
 textarea{font-family: arial,sans-serif;min-height: 85px;padding-bottom: 0;resize: vertical;}
 input[name='url'], input.Url{color: #999999;}
 input.Bold{font-size: 14px;font-weight: bold;height: 30px;}
-/*a*/
-a{cursor: pointer;}
-a, a:link, a:visited{color: #000;text-decoration: none;}
-a:hover, a:active, a:focus{color: #000;text-decoration: underline;}
 
 ol, ul{list-style: none;}
 i{font-size: 14px;}
@@ -33,7 +29,9 @@ body{font: 12px/1.5 "微软雅黑",arial,sans-serif;word-wrap: break-word;}
     color: #cccccc !important;text-decoration: none !important;
     background: url("/images/logo_20x20.png") no-repeat; padding-left: 22px;}
 .INDEX .Logo {height: 32px;line-height: 32px;font-size: 20px;
-    background: url("/images/logo_32x32.png") no-repeat; padding-left: 34px;}
+    background: url("/images/logo_32x32.png") no-repeat; padding-left: 35px;}
+.Logo-64{height: 64px;line-height: 64px;font-size: 40px;
+    background: url("/images/logo_64x64.png") no-repeat; padding-left: 70px;}
 /*分割线*/
 .VLine{display: inline-block;width: 0;height: 11px;border-left: 1px solid #eee;vertical-align: middle;}
 .VLine-Header{margin: 0 9px 0 11px;}

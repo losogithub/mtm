@@ -1540,11 +1540,9 @@ if (typeof nj.account == "undefined") nj.account = {};
 		setClickEvent : function(){
 		    $("input#rules:checkbox").click(function(){
 		        if($(this).attr('checked') == true){
-		            $("input.MdBtnRegist01").attr("disabled", "");
-		            $("input.MdBtnRegist01").removeClass("mdBtnRegist01Disabled");
+		            $("button[name='signup']").attr("disabled", "");
 		        }else{
-		            $("input.MdBtnRegist01").attr("disabled", "disabled");
-		            $("input.MdBtnRegist01").addClass("mdBtnRegist01Disabled");
+		            $("button[name='signup']").attr("disabled", "disabled");
 		        }
 		    });
 		},
@@ -1574,7 +1572,7 @@ if (typeof nj.account == "undefined") nj.account = {};
 				if(!$("#_registForm").valid()){
 					//$("#_captcha").val("");
 					$("input#rules:checkbox:checked").attr("checked", "");
-					$("input.MdBtnRegist01").attr("disabled", "disabled").addClass("mdBtnRegist01Disabled");
+					$("button[name='signup']").attr("disabled", "disabled");
 				}
 				// パスワードがエラーの場合、クリアする
                 // where is _change_passwd attribute in signup.html ? 9.25
@@ -1584,8 +1582,7 @@ if (typeof nj.account == "undefined") nj.account = {};
 				}
 				// ダブルクリック防止
 				$("input#rules:checkbox").attr("checked", false); // if it is false, then you can not click again.
-	            $("input.MdBtnRegist01").attr("disabled", "disabled");
-	            $("input.MdBtnRegist01").addClass("mdBtnRegist01Disabled");
+	            $("button[name='signup']").attr("disabled", "disabled");
 			});
 		},
 		setPasswdCheckConfirm : function(errClass){
@@ -2022,9 +2019,9 @@ if (typeof nj.account == "undefined") nj.account = {};
 		    // focusが外れた場合、非activeにする
 		    $("input#rules:checkbox").click(function(){
 		        if($(this).attr('checked') == true){
-		            $("input.MdBtnRegist01").attr("disabled", "").removeClass("mdBtnRegist01Disabled");
+		            $("button[name='signup']").attr("disabled", "");
 		        }else{
-		            $("input.MdBtnRegist01").attr("disabled", "disabled").addClass("mdBtnRegist01Disabled");
+		            $("button[name='signup']").attr("disabled", "disabled");
 		        }
 		    });
 		},
