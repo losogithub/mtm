@@ -8,8 +8,17 @@
 (function () {
 
   var REGEXP_URL = /^(https?|ftp):\/\/(([\w\-]+\.)+[\w\-]+)(\/|\?|$)/i;
+  var REGEXP_URL_NO_PROTOCOL = /^(([\w\-]+\.)+[\w\-]+)(\/|\?|$)/i;
 
   var utils = {};
+
+  utils.REGEXP_URL = REGEXP_URL;
+  utils.REGEXP_URL_NO_PROTOCOL = REGEXP_URL_NO_PROTOCOL;
+
+  utils.getImageQuoteDomain = function (quote) {
+    var temp;
+    return !quote ? null : !(temp = quote.match(utils.REGEXP_URL)) ? null : temp[2];
+  }
 
   utils.getVideoQuoteAndVid = function (url) {
     var urlParts = !url ? null : url.match(REGEXP_URL);

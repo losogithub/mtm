@@ -24,6 +24,7 @@
               <h1 class="HeadTtl"><a href="<%= !locals.url ? '' : url %>"><%=
                 locals.topic ? topic.title : '' %></a></h1>
 
+              <% if (locals.isAuthor) { %>
               <div class='HeadUtil'>
                 <a href="<%= locals.url + '/edit?showOption=true' %>"><i class="icon-pencil"></i> 修改</a>
                 <% if (!locals.items || !items.length) { %>
@@ -31,6 +32,7 @@
                 <a><i class="icon-trash"></i> 删除</a>
                 <% } %>
               </div>
+              <% } %>
             </div>
 
             <p><span class="HeadDesc"
@@ -78,15 +80,21 @@
   </div>
 
   <!--内容-->
-  <div class="TopicWrapper">
+  <div class="TopicWrapper TOPIC_INDEX">
     <div class="Main">
       <% if (!locals.items || !items.length) { %>
       <div class="NoItem">
         <i class="icon-file-alt" style="font-size: 50px;color: #ccc"></i>
-        <p>这个总结还没有内容。<br>要添加吗？</p>
+        <p>这个总结还没有内容。
+          <% if (locals.isAuthor) { %>
+          <br>要添加吗？
+          <% } %>
+        </p>
       <% } %>
+        <% if (locals.isAuthor) { %>
         <a name="add" class="btn" href="<%= locals.url + '/edit' %>" type="button"><i class="icon-plus-sign"></i>
           添加条目</a>
+        <% } %>
       <% if (!locals.items || !items.length) { %>
       </div>
       <% } %>

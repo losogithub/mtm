@@ -9,7 +9,6 @@
 (function ($) {
 
   var console = window.console || {log: $.noop, error: $.noop};
-  var REGEXP_URL_NO_PROTOCOL = /^(([\w\-]+\.)+[\w\-]+)(\/|\?|$)/i;
 
   function fillVideo($li, url) {
     var quoteAndVid = mtm.utils.getVideoQuoteAndVid(url);
@@ -124,6 +123,7 @@
       var self = this;
 
       this.widget()
+        .addClass(this.type)
         .data('type', this.type)
         .data('id', this.options.id)
         .scroll(function () {
@@ -242,7 +242,11 @@
             itemId: id,
             type: self.type
           }, data)
-        }).done(doneCallback);
+        }).done(doneCallback)
+          .fail(function (jqXHR) {
+            alert(jqXHR.responseText);
+            self.widget().find('button[name="save"]').button('reset');
+          });
       } else {
         var prevItemType = this.widget().prev().data('type');
         var prevItemId = this.widget().prev().data('id');
@@ -252,7 +256,11 @@
             prevItemId: prevItemId,
             type: self.type
           }, data))
-          .done(doneCallback);
+          .done(doneCallback)
+          .fail(function (jqXHR) {
+            alert(jqXHR.responseText);
+            self.widget().find('button[name="save"]').button('reset');
+          });
       }
     },
 
@@ -286,7 +294,7 @@
     __create: function () {
       var self = this;
       this.widget()
-        .on('click', 'li>a', function (event) {
+        .on('click', 'li>button', function (event) {
           createWidget($(event.target).data('type'), {
             from: 'DYNAMIC',
             $prevItem: self.widget().prev()
@@ -352,10 +360,7 @@
         .submit(function () {
           var $quote = self.widget().find('input[name="quote"]');
           var quote = $quote.val();
-          console.log('quote=' + quote);
-          var urlParts = quote.match(REGEXP_URL_NO_PROTOCOL);
-          if (urlParts) {
-            console.log(urlParts[0]);
+          if (mtm.utils.REGEXP_URL_NO_PROTOCOL.test(quote)) {
             $quote.val('http://' + quote);
           }
         })
@@ -671,7 +676,17 @@
         }
         self.createPreviewWidget(data);
       }
-      $.getJSON('/topic/video_title', { url: url }, callback);
+      $.getJSON('/topic/video_title', { url: url }, callback)
+        .done(function (data) {
+          if (self.options.disabled) {
+            return;
+          }
+          self.createPreviewWidget(data);
+        })
+        .fail(function (jqXHR) {
+          alert(jqXHR.responseText);
+          self.widget().find('button[name="preview"]').button('reset');
+        });
     },
 
     /**
@@ -746,8 +761,7 @@
         .submit(function () {
           var $url = self.widget().find('input[name="url"]');
           var url = $url.val();
-          var urlParts = url.match(REGEXP_URL_NO_PROTOCOL);
-          if (urlParts) {
+          if (mtm.utils.REGEXP_URL_NO_PROTOCOL.test(url)) {
             $url.val('http://' + url);
           }
         })
@@ -1094,6 +1108,7 @@
 
     //填充新内容，然后删除旧内容，顺序很重要！！！防止抖动
     $item
+      .addClass(type)
       .data('type', type)
       .data('id', id)
       .find('>div')
@@ -1109,8 +1124,8 @@
         var url = data.url;
         var title = data.title;
         var quote = data.quote;
+        var quoteDomain = mtm.utils.getImageQuoteDomain(quote);
         var description = data.description;
-        var urlParts = !quote ? null : quote.match(REGEXP_URL);
         $item
           .find('.IMAGE_LINK')
           .attr('href', url)
@@ -1123,7 +1138,7 @@
           .end()
           .find('.Quote a')
           .attr('href', quote)
-          .text(urlParts ? urlParts[2] : '')
+          .text(quoteDomain ? quoteDomain : '')
           .end()
           .find('.Description')
           .html($('<div/>').text(description).html().replace(/\n/g, '<br>'))
@@ -1344,7 +1359,7 @@
       var coverUrl = topicData.coverUrl;
       var description = topicData.description;
       $form.find('input[name="title"]').val(title ? title : '');
-      $form.find('.Edit_Top_Thumb img').attr('src', coverUrl ? coverUrl : '');
+      $form.find('button[name="cover"] img').attr('src', coverUrl ? coverUrl : '');
       $form.find('textarea[name="description"]').val(description ? description : '');
     }
 
@@ -1380,11 +1395,11 @@
       }
     });
 
-    var $Button = $form.find('.Edit_Top_OptionBtn');
+    var $button = $form.find('button[name="options"]');
     var $options = $form.find('fieldset:last');
 
     //开关可选项目的动画
-    $Button.click(function () {
+    $button.click(function () {
       if ($(this).find('i').is('.icon-caret-down')) {
         $options.fadeSlideDown();
       } else {
@@ -1402,17 +1417,17 @@
       .hide();
 
     if (/showOption=true/.test(location.search)) {
-      $Button
+      $button
         .find('i')
         .toggleClass('icon-caret-down icon-caret-up')
         .end()
         .show();
       $options.toggle();
     } else {
-      $Button.fadeIn('slow');
+      $button.fadeIn('slow');
     }
 
-    var $thumb = $('.Edit_Top_Thumb');
+    var $thumb = $('button[name="cover"]');
     var $extra = $('.Edit_Top_Thumb_Extra');
     var $input = $extra.find('input');
     var $save = $extra.find('button[name="save"]');
@@ -1434,14 +1449,15 @@
 
   var ___commit = function () {
     var submitType = $form.data('submitType');
-    $band.find('button[name="' + submitType + '"]').button('loading');
+    var $button = $band.find('button[name="' + submitType + '"]');
+    $button.button('loading');
 
     $.ajax('/topic/save', {
       type: 'PUT',
       data: {
         topicId: topicId,
         title: $form.find('input[name="title"]').val(),
-        coverUrl: $form.find('.Edit_Top_Thumb img').attr('src'),
+        coverUrl: $form.find('button[name="cover"] img').attr('src'),
         description: $form.find('textarea[name="description"]').val(),
         publish: submitType == 'publish' ? 1 : undefined
       }
@@ -1452,6 +1468,10 @@
         } else {
           window.location = '/topic/' + topicId;
         }
+      })
+      .fail(function (jqXHR) {
+        alert(jqXHR.responseText);
+        $button.button('reset');
       });
   }
 
@@ -1541,7 +1561,7 @@
    * @private
    */
   var __initMenu = function () {
-    $('.StaticMenu').on('click', 'li>a', function (event) {
+    $('.StaticMenu').on('click', 'li>button', function (event) {
       createWidget($(event.target).data('type'), {
         from: 'STATIC'
       });
@@ -1635,6 +1655,7 @@
         jqXHR
           .done(_doIfGetIdDone)
           .fail(function (jqXHR) {
+            alert(jqXHR.responseText);
             if (jqXHR.status == 500
               && confirm('初始化总结失败：\n重试请按“确定”，忽略请按“取消”。')) {
               createTopic();

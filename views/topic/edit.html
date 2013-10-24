@@ -31,15 +31,15 @@
           <div class="Required Required-4px"></div>
           <input name='title' class="" value="<%= locals.topic ? topic.title : '' %>"
                  placeholder="输入总结标题（50字以内）" type="text"/>
-          <a class='Edit_Top_OptionBtn' style='display: none'>可选项目
-            <i style="" class="icon-caret-down"></i>
-          </a>
+          <button class="btn btn-link" name="options" style='display: none' type="button">可选项目
+            <i class="icon-caret-down"></i>
+          </button>
         </fieldset>
         <fieldset style='display: none;overflow: hidden;'>
-          <a class="Edit_Top_Thumb" title="设置总结封面">
+          <button name="cover" class="btn btn-link" title="设置总结封面" type="button">
             <img style="display: block;" width="95" height="95" onerror="mtm.errorImage(this, 'image_95x95')"
                  src="<%= !locals.topic ? '' : !topic.coverUrl ? '' : topic.coverUrl %>">
-          </a>
+          </button>
 
           <div class="Edit_Top_Thumb_Extra">
             <input name="url" value="<%= !locals.topic ? '' : !topic.coverUrl ? '' : topic.coverUrl %>"

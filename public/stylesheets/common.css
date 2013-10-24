@@ -19,6 +19,8 @@ table{height: 100%;}
 html{overflow-y: scroll;}
 body{font: 12px/1.5 "微软雅黑",arial,sans-serif;word-wrap: break-word;}
 
+.btn-link{color: #000 !important;text-decoration: none !important;padding: 0;font-size: 12px;font-weight: normal;line-height: 1;}
+
 .Required{position: relative;}
 .Required:before{content: '*';position: absolute;left: 3px;top: 4px;color: #f00;font-size: 14px;}
 .Required-4px:before{left: 4px;}
@@ -51,9 +53,9 @@ body{font: 12px/1.5 "微软雅黑",arial,sans-serif;word-wrap: break-word;}
 .Nav-Right {right: 0;position: absolute;top: 0;height: 100%;}
 .Nav-Right_Inner{margin: 10px 0;}
 .Nav-Right_Inner img{margin-right: 5px;}
-.Nav-Right_Inner *{vertical-align: middle;}
 .Nav-Right_Inner>li{display: inline;}
-.Nav-Right_Inner>li:last-of-type>i{margin-left: -6px;padding: 6px;cursor: pointer;font-size: 8px;vertical-align: middle;}
+.Nav-Right_Inner>li:last-of-type>button{margin-left: -6px;padding: 0 6px;vertical-align: middle;}
+.Nav-Right_Inner>li:last-of-type>button>i{font-size: 8px;vertical-align: middle;}
 .Nav-Drop{z-index: 1002;position: absolute;right: 0;width: 98px;
     background-color: rgb(255, 255, 255);border: 1px solid rgb(207, 207, 207);box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);}
 .Nav-Drop a{display: block;height: 30px;line-height: 30px;padding: 0 8px;}
@@ -72,9 +74,12 @@ body{font: 12px/1.5 "微软雅黑",arial,sans-serif;word-wrap: break-word;}
 .TopicWrapper .Pagination {line-height: 19px;margin: 30px 0 40px 0;font-family: Arial,Helvetica,sans-serif;font-size: 16px;text-align: center;}
 .TopicWrapper .Sub {position: relative;float: right;width: 300px;padding-bottom: 40px;}
 /*条目*/
-.WidgetItemList>li>div{background-color: rgb(255, 255, 255);margin-bottom: 15px;}
+.WidgetItemList>li>div{background-color: rgb(255, 255, 255);margin-bottom: 20px;}
+.WidgetItemList>li.TITLE>div{margin-bottom: 10px;}
 .WidgetItemList>li>div:hover{background-color: #f8f8f8;box-shadow: 0 0 0 3px #f8f8f8;}
 .WidgetItemList>li>div>:first-child{overflow: hidden;}
+.TOPIC_INDEX .WidgetItemList>li>div{margin-bottom: 35px;}
+.TOPIC_INDEX .WidgetItemList>li.TITLE>div{margin-bottom: 25px;}
 .WidgetItemList .Content{overflow: hidden;}
 .WidgetItemList .Quote{overflow: hidden;line-height: 14px;margin-top: 3px;min-width: 100px;}
 .WidgetItemList .Quote *{color: rgb(170, 170, 170);}
@@ -87,6 +92,7 @@ body{font: 12px/1.5 "微软雅黑",arial,sans-serif;word-wrap: break-word;}
 .SortUtil i{display: block;line-height: 21px;width: 21px;height: 21px;text-align: center;cursor: pointer;}
 .SortUtil i:hover{outline: dotted 1px;}
 .MoveUtil{cursor: move !important;}
+.TOPIC_INDEX .BottomUtil{display: none;}
 .BottomUtil{visibility: hidden;line-height: 1;}
 .BottomUtil a, .HeadUtil a{color: rgb(124, 148, 170);display: inline-block;}
 .ItemUtil1 {float: left;}

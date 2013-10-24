@@ -651,7 +651,6 @@ select:focus:required:invalid:focus {
 
   border-color: #669966;
   outline-style: none;
-  background-color: #f3f3f3;
 }
 .btn-large {
   padding: 9px 14px;

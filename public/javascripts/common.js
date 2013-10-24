@@ -25,15 +25,15 @@
   });
 
   $(function ($) {
-    $(".Nav-Right_Inner>li:last>i")
+    $(".Nav-Right_Inner>li:last>button")
       .click(function () {
-        var that = this;
-        $(this).toggleClass('icon-caret-down icon-caret-up');
+        var $i = $(this).find('>i');
+        $i.toggleClass('icon-caret-down icon-caret-up');
         var $menu = $('.Nav-Drop').toggle();
 
         $(document).one('click', function () {
-          $(that).addClass('icon-caret-down');
-          $(that).removeClass('icon-caret-up');
+          $i.addClass('icon-caret-down');
+          $i.removeClass('icon-caret-up');
           $menu.hide();
         });
 

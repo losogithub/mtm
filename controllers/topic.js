@@ -8,6 +8,7 @@
 var async = require('async');
 var EventProxy = require('eventproxy');
 var sanitize = require('validator').sanitize;
+var check = require('validator').check;
 var escape = require('escape-html');
 var http = require('http');
 var iconv = require('iconv-lite');
@@ -21,7 +22,7 @@ var User = require('../proxy').User;
 
 var utils = require('../public/javascripts/utils');
 
-function create(req, res, next) {
+function showCreate(req, res, next) {
   res.set('Cache-Control', 'private, no-cache, no-store, must-revalidate, post-check=0, pre-check=0');
   res.set('Connection', 'close');
   res.set('Expire', '-1');
@@ -49,8 +50,8 @@ function createTopic(req, res, next) {
 
   Topic.createTopic(userId, function (err, topic) {
     if (err || !topic) {
-      console.error(err);
-      res.send(500, '新建总结失败');
+      console.error(err.stack);
+      res.send(500, err);
       return;
     }
 
@@ -82,8 +83,8 @@ function getContents(req, res, next) {
     });
   })
     .fail(function (err) {
-      console.error(err);
-      res.send(500, '查找总结失败');
+      console.error(err.stack);
+      res.send(500, err);
     });
 
   Topic.getTopicById(topicId, ep.done(function (topic) {
@@ -105,6 +106,7 @@ function getContents(req, res, next) {
     Topic.getContents(topic, ep.done(function (items) {
       if (!items) {
         ep.unbind();
+        console.error('查找总结失败');
         res.send(500, '查找总结失败');
         return;
       }
@@ -114,8 +116,8 @@ function getContents(req, res, next) {
   }));
 }
 
-function editTopic(req, res, next) {
-  console.log('editTopic=====');
+function showEdit(req, res, next) {
+  console.log('showEdit=====');
   var userId = req.session.userId;
   var topicId = req.params.topicId;
 
@@ -150,7 +152,7 @@ function editTopic(req, res, next) {
           res.send(404, '总结不存在');
           break;
         default :
-          res.send(500, '打开总结编辑页面失败');
+          res.send(500, err);
           break;
       }
       return;
@@ -190,12 +192,13 @@ function editTopic(req, res, next) {
       topic: topicData,
       items: itemsData
     });
-    console.log('editTopic done');
+    console.log('showEdit done');
   });
 }
 
-function index(req, res, next) {
-  console.log('index=====');
+function showIndex(req, res, next) {
+  console.log('showIndex=====');
+  var userId = req.session.userId;
   var topicId = req.params.topicId;
   var currentPage = req.query.page || 1;
 
@@ -252,6 +255,7 @@ function index(req, res, next) {
       ],
       escape: escape,
       url: req.url,
+      isAuthor: topic.author_id == userId,
       topic: topicData,
       items: itemsData,
       authorInfo: authorData,
@@ -259,11 +263,11 @@ function index(req, res, next) {
       currentPage: currentPage,
       totalPage: 4
     });
-    console.log('index done');
+    console.log('showIndex done');
   })
     .fail(function (err) {
-      console.error(err);
-      res.send(500, '查找总结失败');
+      console.error(err.stack);
+      res.send(500, err);
     });
 
   Topic.getTopicById(topicId, ep.done(function (topic) {
@@ -297,23 +301,22 @@ function index(req, res, next) {
   }));
 }
 
-function _getData(req, _id) {
+function _getData(req) {
   var type = req.body.type;
   var data;
 
   switch (type) {
     case 'IMAGE_CREATE':
-      var url = sanitize(req.body.url).trim();
-
-      data = {
-        url: url
-      }
-      break;
     case 'IMAGE':
       var url = sanitize(req.body.url).trim();
       var title = sanitize(req.body.title).trim();
       var quote = sanitize(req.body.quote).trim();
       var description = sanitize(req.body.description).trim();
+
+      check(url).notNull().isUrl();
+      check(title).len(0, 100);
+      if (quote.length) check(quote).isUrl();
+      check(description).len(0, 300);
 
       data = {
         url: url,
@@ -323,16 +326,14 @@ function _getData(req, _id) {
       }
       break;
     case 'VIDEO_CREATE':
-      var url = sanitize(req.body.url).trim();
-
-      data = {
-        url: url
-      }
-      break;
     case 'VIDEO':
       var url = sanitize(req.body.url).trim();
       var title = sanitize(req.body.title).trim();
       var description = sanitize(req.body.description).trim();
+
+      check(url).notNull().isUrl();
+      check(title).len(0, 100);
+      check(description).len(0, 300);
 
       data = {
         url: url,
@@ -346,6 +347,11 @@ function _getData(req, _id) {
       var title = sanitize(req.body.title).trim();
       var description = sanitize(req.body.description).trim();
 
+      check(cite).len(1, 500);
+      if (url.length) check(url).isUrl();
+      check(title).len(0, 100);
+      check(description).len(0, 300);
+
       data = {
         cite: cite,
         url: url,
@@ -356,12 +362,16 @@ function _getData(req, _id) {
     case 'TEXT':
       var text = sanitize(req.body.text).trim();
 
+      check(text).len(1, 2000);
+
       data = {
         text: text
       }
       break;
     case 'TITLE':
       var title = sanitize(req.body.title).trim();
+
+      check(title).len(0, 100);
 
       data = {
         title: title
@@ -372,9 +382,6 @@ function _getData(req, _id) {
       break;
   }
   data.type = type;
-  if (_id) {
-    data._id = _id;
-  }
   return data;
 }
 
@@ -390,7 +397,7 @@ function _getItemData(item) {
         url: item.url,
         title: item.title,
         quote: item.quote,
-        quoteDomain: !item.quote ? null : !(temp = item.quote.match(REGEXP_URL)) ? null : temp[2],
+        quoteDomain: utils.getImageQuoteDomain(item.quote),
         description: item.description
       }
       break;
@@ -507,8 +514,16 @@ function createItem(req, res, next) {
   var prevItemType = req.body.prevItemType;
   var prevItemId = req.body.prevItemId;
 
-  var data = _getData(req);
+  try {
+    var data = _getData(req);
+  } catch (err) {
+    console.error(err.stack);
+    res.send(500, err);
+    return;
+  }
   if (!data) {
+    console.error('创建条目失败');
+    res.send(500, '创建条目失败');
     return;
   }
 
@@ -565,7 +580,7 @@ function createItem(req, res, next) {
           res.send(404, '总结不存在');
           break;
         default :
-          res.send(500, '创建条目失败');
+          res.send(500, err);
           break;
       }
       return;
@@ -638,7 +653,7 @@ function sortItem(req, res, next) {
           res.send(404, '总结不存在');
           break;
         default :
-          res.send(500, '排序失败');
+          res.send(500, err);
           break;
       }
       return;
@@ -665,7 +680,13 @@ function editItem(req, res, next) {
     },
     update: ['topic', 'item', function (callback, results) {
       var item = results.item;
-      var data = _getData(req);
+      try {
+        var data = _getData(req);
+      } catch (err) {
+        console.error(err.stack);
+        callback(err);
+        return;
+      }
       item.update(data, function (err) {
         if (err) {
           callback(err);
@@ -696,7 +717,7 @@ function editItem(req, res, next) {
           res.send(404, '总结不存在');
           break;
         default :
-          res.send(500, '编辑条目失败');
+          res.send(500, err);
           break;
       }
       return;
@@ -746,7 +767,7 @@ function deleteItem(req, res, next) {
           res.send(404, '总结不存在');
           break;
         default :
-          res.send(500, '删除条目失败');
+          res.send(500, err);
           break;
       }
       return;
@@ -758,17 +779,26 @@ function deleteItem(req, res, next) {
 }
 
 function saveTopic(req, res, next) {
-  console.log('save=====');
+  console.log('saveTopic=====');
   var authorId = req.session.userId;
   var topicId = req.body.topicId;
-  var title = req.body.title;
-  var coverUrl = req.body.coverUrl;
-  var description = req.body.description;
+  var title = sanitize(req.body.title).trim();
+  var coverUrl = sanitize(req.body.coverUrl).trim();
+  var description = sanitize(req.body.description).trim();
   var publish = req.body.publish;
+
+  try {
+    check(title).len(5, 50);
+    check(description).len(0, 150);
+  } catch (err) {
+    console.error(err.stack);
+    callback(err);
+    return;
+  }
 
   Topic.saveTopic(authorId, topicId, title, coverUrl, description, publish, function () {
     res.send(200);
-    console.log('save done');
+    console.log('saveTopic done');
   });
 }
 
@@ -785,7 +815,7 @@ function _getVideoTitle(url, callback) {
           !temp[1] ? '' : temp[1];
       console.log(charset);
       var html = iconv.decode(bufferHelper.toBuffer(), charset);
-      var urlParts = url.match(REGEXP_URL);
+      var urlParts = url.match(utils.REGEXP_URL);
       var domain = !urlParts ? null : urlParts[2];
       var title;
       console.log(domain);
@@ -938,11 +968,11 @@ function AddorRemoveLikes(req, res) {
 
 }
 
-exports.create = create;
+exports.showCreate = showCreate;
 exports.createTopic = createTopic;
 exports.getContents = getContents;
-exports.editTopic = editTopic;
-exports.index = index;
+exports.showEdit = showEdit;
+exports.showIndex = showIndex;
 exports.createItem = createItem;
 exports.editItem = editItem;
 exports.sortItem = sortItem;

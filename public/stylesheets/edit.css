@@ -24,12 +24,13 @@ button[name='preview']{float: right;width: 62px;padding-left: 0;padding-right: 0
 .Edit_Top form{padding-top: 25px;padding-bottom: 11px;border-bottom: 3px solid #000;}
 .Edit_Top fieldset:first-child {height: 40px;}
 .Edit_Top input[name="title"] {display: inline-block;width: 779px;padding: 0 10px;height: 40px;line-height: 38px;font-size: 23px;font-weight: bold;
-    background-color: rgb(255, 254, 238);background-position: 5px 10px;}
-.Edit_Top_OptionBtn {margin-left: 15px;line-height: 1;color: #666666 !important;position: absolute;bottom: 0;}
+    background-color: rgb(255, 254, 238);}
+.Edit_Top button[name="options"] {margin-left: 15px;color: #666666 !important;position: absolute;bottom: 0;}
 .Edit_Top fieldset:last-child {margin-top: 25px;width: 779px;}
-.Edit_Top_Thumb {float: left;margin-right: 15px;background: url("/images/photo_95x95.png");}
+.Edit_Top button[name="cover"] {float: left;margin-right: 15px;background: url("/images/photo_95x95.png");}
+.Edit_Top button[name="cover"] img {background: url("/images/photo_95x95.png");}
 .Edit_Top_Thumb_Extra {float: left;width: 252px;margin-right: 15px;display: none;}
-.Edit_Top form textarea[name='description']{min-height: 95px;}
+.Edit_Top form textarea[name='description']{min-height: 97px;}
 /*静态菜单*/
 .StaticMenu {width: 100%;height: 43px;margin-bottom: 10px;
     background-image: -moz-linear-gradient(top, #ffffff, #fafafa);
@@ -39,16 +40,14 @@ button[name='preview']{float: right;width: 62px;padding-left: 0;padding-right: 0
     background-image: linear-gradient(to bottom, #ffffff, #fafafa);
     border-bottom: 1px solid #f0f0f0;}
 .StaticMenu td{padding: 0 5px;}
-.StaticMenu span{cursor: default;font-weight: bold;}
+.StaticMenu span{cursor: default;font-weight: bold;vertical-align: middle;}
 .StaticMenu ul{display:inline;}
 .StaticMenu li{margin-left: 25px;display:inline;}
-.StaticMenu a{color: rgb(0, 0, 0);text-decoration: none;}
 /*微件*/
 .MENU table{width: 100%;height: 35px;line-height: 14px;border: 1px solid rgb(219, 219, 219);background-color: rgb(239, 239, 239);}
-.MENU span{margin-left: 13px;color: rgb(131, 131, 131);font-weight: bold;}
+.MENU span{margin-left: 13px;color: rgb(131, 131, 131);font-weight: bold;vertical-align: middle;}
 .MENU ul{display: inline;}
 .MENU li{display: inline;margin-left: 11px;}
-.MENU a{padding: 0 5px;color: rgb(0, 0, 0);}
 .MENU_Close{text-align: right;line-height: 9px;}
 .MENU_Close i{cursor: pointer;line-height: 33px;padding: 0 12px;display: inline-block;}
 
@@ -62,3 +61,4 @@ button[name='preview']{float: right;width: 62px;padding-left: 0;padding-right: 0
 .CITE input[name='url']{margin-bottom: 7px;}
 .CITE input[name='title'] {height: 25px;margin-bottom: 10px;}
 .CITE textarea[name='description'] {min-height: 45px;}
+.TEXT textarea{font-size: 14px;}

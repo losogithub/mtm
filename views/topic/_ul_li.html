@@ -1,4 +1,5 @@
-<li data-type="<%= !item ? '' : !item.type ? '' : item.type %>" data-id="<%= !item ? '' : !item.itemId ? '' : item.itemId %>">
+<li class="<%- !item ? '' : !item.type ? '' : item.type %>" data-type="<%- !item ? '' : !item.type ? '' : item.type %>"
+    data-id="<%- !item ? '' : !item.itemId ? '' : item.itemId %>">
   <div style="position: relative;">
 
     <% if (item) { %>
@@ -7,6 +8,7 @@
 
     <div class="SortUtil">
       <i class="MoveUtil icon-move"></i>
+
       <div>
         <i class="icon-double-angle-up"></i>
         <i class="icon-angle-up"></i>
