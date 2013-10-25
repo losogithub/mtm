@@ -25,27 +25,9 @@
 <% } %>
 <% if (item.type == 'VIDEO' || item.type == 'ALL') { %>
 <div class='Content VIDEO'>
-  <% var showThis = item.quote == 'youku.com' && item.vid != '#vid#'; %>
-  <% var showOne = showOne || showThis; %>
-  <embed style="display: <%= !showThis ? 'none' : 'block' %>;"
-         class="YOUKU"
-         src="http://static.youku.com/v/swf/qplayer.swf?winType=adshow&amp;VideoIDS=<%= item.vid ? item.vid : '#vid#' %>"
-         wmode="transparent"
-         width="480"
-         height="400"
-         align="center"
-         border="0">
-  <% var showThis = item.quote == 'tudou.com' && item.vid != '#vid#'; %>
-  <% var showOne = showOne || showThis; %>
-  <embed style="display: <%= !showThis ? 'none' : 'block' %>;"
-         class="TUDOU"
-         src="http://www.tudou.com/v/<%= item.vid ? item.vid : '#vid#' %>/v.swf"
-         type="application/x-shockwave-flash"
-         allowfullscreen="true"
-         wmode="opaque"
-         width="480"
-         height="400">
-  <div class="Thumb" style="display: <%= showOne ? 'none' : 'block' %>;"></div>
+
+  <% include _videoPlayers.html %>
+
   <div class="Quote">
     <span>来源</span>
     <div>

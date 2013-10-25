@@ -1,0 +1,37 @@
+<% var showThis; %>
+<% var showOne; %>
+<% showThis = item.quote == 'youku.com' && item.vid; %>
+<% showOne = showOne || showThis; %>
+<embed style="display: <%= !showThis ? 'none' : 'block' %>;"
+       class="YOUKU"
+       src="http://static.youku.com/v/swf/qplayer.swf?winType=adshow&amp;VideoIDS=<%= item.vid ? item.vid : '#vid#' %>"
+       wmode="opaque"
+       width="480"
+       height="400"
+       align="center"
+       border="0">
+<% showThis = item.quote == 'tudou.com' && item.vid; %>
+<% showOne = showOne || showThis; %>
+<embed style="display: <%= !showThis ? 'none' : 'block' %>;"
+       class="TUDOU"
+       src="http://www.tudou.com/v/<%= item.vid ? item.vid : '#vid#' %>/v.swf"
+       type="application/x-shockwave-flash"
+       allowfullscreen="true"
+       wmode="opaque"
+       width="480"
+       height="400">
+<% showThis = item.quote == 'qq.com' && item.vid; %>
+<% showOne = showOne || showThis; %>
+<embed style="display: <%= !showThis ? 'none' : 'block' %>;" class="QQ"
+       wmode="opaque"
+       src="http://static.video.qq.com/TPout.swf?vid=<%= item.vid ? item.vid : '#vid#' %>" allowFullScreen="true"
+       quality="high" width="480" height="400" align="middle" allowScriptAccess="always"
+       type="application/x-shockwave-flash"></embed>
+<% showThis = item.quote == 'sina.com.cn' && item.vid; %>
+<% showOne = showOne || showThis; %>
+<embed style="display: <%= !showThis ? 'none' : 'block' %>;" class="SINA" pluginspage="http://www.macromedia.com/go/getflashplayer"
+       src="http://you.video.sina.com.cn/api/sinawebApi/outplayrefer.php/vid=<%= item.vid ? item.vid : '#vid#' %>/s.swf"
+       wmode="opaque"
+       type="application/x-shockwave-flash" name="ssss" allowFullScreen="true" allowScriptAccess="always"
+       width="480" height="370"></embed>
+<div class="Thumb" style="display: <%= showOne ? 'none' : 'block' %>;"></div>

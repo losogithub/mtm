@@ -819,7 +819,7 @@ function _getVideoTitle(url, callback) {
       var domain = !urlParts ? null : urlParts[2];
       var title;
       console.log(domain);
-      if (/tudou\.com$/.test(domain)) {
+      if (/tudou\.com$/i.test(domain)) {
         console.log('tudou.com');
         //plan A
         //,kw: '爆笑恶搞淮秀帮-超强阵容配音坑爹的谣言时代（淮秀帮 出品）-2bzhan.cc'
@@ -838,7 +838,23 @@ function _getVideoTitle(url, callback) {
           //plan C
           || (!(temp = html.match(/<title>([^_]+)(.*)<\/title>/)) ? null : !temp[1] ? null : temp[1]);
         console.log(title);
+      } else if (/youku\.com$/i.test(domain)) {
+        console.log('youku.com');
+        //plan A
+        //&tt=第二十一回&nbsp;惊见摘头鬼 坑亲王谢幕&pu=
+        title = !(temp = html.match(/&tt=(((?!&pu).)*)/i)) ? null : !temp[1] ? null : temp[1];
+      } else if (/qq\.com$/i.test(domain)) {
+        console.log('qq.com');
+        //plan A
+        //var VIDEO_INFO={vid:"c00139loswm",title:" Ballerina",typeid:22,duration:"177",specialTemp:false}
+        title = !(temp = html.match(/VIDEO_INFO=\{[\s\S]*title\s*:\s*("|')([^"']*)[\s\S]*(?=\})/i)) ? null : !temp[2] ? null : temp[2];
+      } else if (/sina\.com\.cn/i.test(domain)) {
+        //plan A
+        //$SCOPE['video'] = {......title:'【拍客】险 学生穿梭烂尾无护栏天桥上学',......}
+        title = !(temp = html.match(/\$SCOPE\['video'\]\s*=\s*\{[\s\S]*title\s*:\s*("|')([^"']*)[\s\S]*(?=\})/i)) ? null : !temp[2] ? null : temp[2];
       }
+      title = sanitize(title).entityDecode();
+      title = sanitize(title).trim();
       if (typeof callback == 'function') {
         callback(null, title);
       }

@@ -134,15 +134,10 @@
           </div>
 
           <div class='Content VIDEO'>
-            <embed style="display: none;" class="YOUKU" src="http://static.youku.com/v/swf/qplayer.swf?winType=adshow&amp;VideoIDS=#vid#" wmode="transparent" width="480" align="center" border="0" height="400">
-            <embed style="display: none;" class="TUDOU"
-                   src="http://www.tudou.com/v/#vid#/v.swf"
-                   type="application/x-shockwave-flash"
-                   allowfullscreen="true"
-                   wmode="opaque"
-                   width="480"
-                   height="400">
-            <div class="Thumb"></div>
+
+            <% var item = {}; %>
+            <% include _videoPlayers.html %>
+
             <div class="Quote">
               <span>来源</span>
               <div>

@@ -124,7 +124,6 @@ a.MdTxtLink01:link,a.MdTxtLink01:visited{color:#2ea800;text-decoration:underline
 a.MdTxtLink01:hover,a.MdTxtLink01:active,a.MdTxtLink01:focus{color:#2ea800;text-decoration:underline}
 a.MdTxtLink02:link,a.MdTxtLink02:visited{color:#111;text-decoration:underline}
 a.MdTxtLink02:hover,a.MdTxtLink02:active,a.MdTxtLink02:focus{color:#111;text-decoration:underline}
-.MdTxtList01{line-height:}
 .MdTxtList01 li{padding-left:10px;background:url(/images/login/ico_MdTxtList01.png) no-repeat 1px 8px}
 .MdTxtList01.MdColor01 li{background-image:url(/images/login/ico_MdTxtList01_MdColor01.png)}
 .MdTxtList01.MdColor03 li{background-image:url(/images/login/ico_MdTxtList01_MdColor03.png)}
