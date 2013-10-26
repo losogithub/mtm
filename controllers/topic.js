@@ -10,7 +10,7 @@ var EventProxy = require('eventproxy');
 var sanitize = require('validator').sanitize;
 var check = require('validator').check;
 var escape = require('escape-html');
-var http = require('http');
+var http = require('follow-redirects').http;
 var iconv = require('iconv-lite');
 var BufferHelper = require('bufferhelper');
 
@@ -306,6 +306,25 @@ function _getData(req) {
   var data;
 
   switch (type) {
+    case 'LINK_CREATE':
+    case 'LINK':
+      var url = sanitize(req.body.url).trim();
+      var title = sanitize(req.body.title).trim();
+      var snippet = sanitize(req.body.snippet).trim();
+      var description = sanitize(req.body.description).trim();
+
+      check(url).notNull().isUrl();
+      check(title).len(0, 100);
+      check(snippet).len(0, 200);
+      check(description).len(0, 300);
+
+      data = {
+        url: url,
+        title: title,
+        snippet: snippet,
+        description: description
+      }
+      break;
     case 'IMAGE_CREATE':
     case 'IMAGE':
       var url = sanitize(req.body.url).trim();
@@ -387,9 +406,18 @@ function _getData(req) {
 
 function _getItemData(item) {
   var itemData;
-  var temp;
 
   switch (item.type) {
+    case 'LINK':
+      itemData = {
+        itemId: item._id,
+        type: item.type,
+        url: item.url,
+        title: item.title,
+        snippet: item.snippet,
+        description: item.description
+      }
+      break;
     case 'IMAGE':
       itemData = {
         itemId: item._id,
@@ -528,16 +556,21 @@ function createItem(req, res, next) {
   }
 
   async.auto({
-    videoTitle: function (callback) {
-      if (data.type != 'VIDEO_CREATE') {
+    parse: function (callback) {
+      if (data.type == 'LINK_CREATE') {
+        _getLinkTitleAndSnippet(data.url, function (err, results) {
+          data.title = results.title;
+          data.snippet = results.snippet;
+          callback();
+        });
+      } else if (data.type == 'VIDEO_CREATE') {
+        _getVideoTitle(data.url, function (err, title) {
+          data.title = title;
+          callback();
+        });
+      } else {
         callback();
-        return;
       }
-
-      _getVideoTitle(data.url, function (err, title) {
-        data.title = title;
-        callback();
-      });
     },
     topic: function (callback) {
       _getTopicWithAuth(callback, topicId, userId);
@@ -545,7 +578,7 @@ function createItem(req, res, next) {
     prevItem: function (callback) {
       _getPrevItemWithAuth(callback, prevItemType, prevItemId, topicId);
     },
-    item: ['videoTitle', 'topic', 'prevItem', function (callback, results) {
+    item: ['parse', 'topic', 'prevItem', function (callback, results) {
       var topic = results.topic;
       var prevItem = results.prevItem;
       if (!prevItem) {
@@ -802,6 +835,47 @@ function saveTopic(req, res, next) {
   });
 }
 
+function _getLinkTitleAndSnippet(url, callback) {
+  http.get(url, function (response) {
+    var bufferHelper = new BufferHelper();
+    response.on('data', function (chunk) {
+      bufferHelper.concat(chunk);
+    });
+    response.on('end', function () {
+      var temp;
+      var charset = !(temp = response.headers['content-type']) ? '' :
+        !(temp = temp.match(/charset=([^;]+)/i)) ? '' :
+          !temp[1] ? '' : temp[1];
+      try {
+        var html = iconv.decode(bufferHelper.toBuffer(), charset);
+      } catch (err) {
+        console.error(err.stack);
+        callback(err);
+        return;
+      }
+      var title = !(temp = html.match(/<title[^>]*>([\s\S]*)<\/title[^>]*>/i)) ? null : temp[1];
+      title = sanitize(title).entityDecode();
+      title = sanitize(title).trim();
+      temp = !(temp = html.match(/<meta([^>]*)name\s*=\s*("|')description("|')([^>]*)>/i)) ? null : temp[1] + temp[4];
+      var snippet = !temp ? null : !(temp = temp.match(/content\s*=\s*("|')([^"']*)("|')/i)) ? null : temp[2];
+      snippet = sanitize(snippet).entityDecode();
+      snippet = sanitize(snippet).trim();
+      if (typeof callback == 'function') {
+        callback(null, {
+          title: title,
+          snippet: snippet
+        });
+      }
+    })
+  })
+    //必须处理error，否则抛出异常
+    .on('error', function (err) {
+      if (typeof callback == 'function') {
+        callback(err);
+      }
+    });
+}
+
 function _getVideoTitle(url, callback) {
   http.get(url, function (response) {
     var bufferHelper = new BufferHelper();
@@ -866,6 +940,19 @@ function _getVideoTitle(url, callback) {
         callback(err);
       }
     });
+}
+
+function getLinkTitleAndSnippet(req, res, next) {
+  console.log('getLinkTitleAndSnippet');
+  var url = req.query.url;
+
+  _getLinkTitleAndSnippet(url, function (err, results) {
+    res.json({
+      url: url,
+      title: results ? results.title : '',
+      snippet: results ? results.snippet : ''
+    });
+  });
 }
 
 function getVideoTitle(req, res, next) {
@@ -994,5 +1081,6 @@ exports.editItem = editItem;
 exports.sortItem = sortItem;
 exports.deleteItem = deleteItem;
 exports.saveTopic = saveTopic;
+exports.getLinkTitleAndSnippet = getLinkTitleAndSnippet;
 exports.getVideoTitle = getVideoTitle;
 exports.AddorRemoveLikes = AddorRemoveLikes;

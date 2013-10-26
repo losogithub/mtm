@@ -94,6 +94,30 @@
             </table>
           </div>
 
+          <div class='Content LINK_CREATE'>
+            <div class="Required"></div>
+            <input name="url" class="AUTO_FOCUS" placeholder="输入链接URL" type="text">
+            <button name="preview" class="btn btn-small" type="button" disabled='disabled'
+                    data-loading-text="预览 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;">预览</button>
+
+            <% include _widget_BtnSet.html %>
+
+          </div>
+
+          <div class='Content LINK'>
+            <input name="title" class="Bold" placeholder="输入链接标题" type="text">
+
+            <div class="Quote">
+              <a class="LINK_URL">text.com</a>
+            </div>
+
+            <textarea name="snippet" placeholder="输入链接摘要"></textarea>
+            <textarea name="description" class="AUTO_FOCUS" placeholder="输入链接评论"></textarea>
+
+            <% include _widget_BtnSet.html %>
+
+          </div>
+
           <div class='Content IMAGE_CREATE'>
             <div class="Image"></div>
             <div class="Required" style="float: left;"></div>

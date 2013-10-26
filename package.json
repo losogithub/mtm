@@ -12,12 +12,14 @@
     "ejs": "*",
     "escape-html": "*",
     "express-partials": "*",
+    "follow-redirects": "*",
     "iconv-lite": "*",
     "mongoose": "*",
     "validator": "*",
     "nodemailer": "*",
     "xss": "*" ,
     "redis": "*",
+    "request": "*",
     "connect-redis": "*"
   }
 }

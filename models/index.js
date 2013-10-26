@@ -22,6 +22,7 @@ require('./loginToken');
 exports.TopicModel = require('./topic');
 exports.ItemModels = {
   'VOID': require('./void_item'),
+  'LINK': require('./link_item'),
   'IMAGE': require('./image_item'),
   'VIDEO': require('./video_item'),
   'CITE': require('./cite_item'),

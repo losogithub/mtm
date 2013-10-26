@@ -1,3 +1,19 @@
+<% if (item.type == 'LINK' || item.type == 'ALL') { %>
+<div class='Content LINK'>
+  <p class="Title" style="display: <%= (item.type != 'ALL') && !item.title ? 'none' : 'block' %>;">
+    <a class="LINK_URL" href='<%= item.url ? item.url : "" %>'><%= item.title ? item.title : '' %></a>
+  </p>
+  <div class="Quote">
+    <a class="LINK_URL" href="<%= item.url ? item.url : '' %>">
+      <%= item.url ? item.url : '' %>
+    </a>
+  </div>
+  <p class="Snippet" style="display: <%= (item.type != 'ALL') && !item.snippet ? 'none' : 'block' %>;"><%- item.snippet ?
+    escape(item.snippet).replace(/\n/g, "<br>") : '' %></p>
+  <p class="Description" style="display: <%= (item.type != 'ALL') && !item.description ? 'none' : 'block' %>;"><%- item.description ?
+    escape(item.description).replace(/\n/g, "<br>") : '' %></p>
+</div>
+<% } %>
 <% if (item.type == 'IMAGE' || item.type == 'ALL') { %>
 <div class='Content IMAGE'>
   <div class="Image">
@@ -7,7 +23,6 @@
 
     <div class="Quote" style=<%- (item.type != 'ALL') && !item.quote ? 'display:none' : 'display:block' %>>
       <span>来源</span>
-
       <div>
         <a href="<%= item.quote ? item.quote : '' %>">
           <%= item.quoteDomain ? item.quoteDomain : '' %>

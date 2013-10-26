@@ -141,6 +141,15 @@
         .autosize({
           append: '\n'
         })
+        .end()
+        .find('form')
+        .submit(function () {
+          var $url = self.widget().find('input[name="url"], input.Url');
+          var url = $url.val();
+          if (mtm.utils.REGEXP_URL_NO_PROTOCOL.test(url)) {
+            $url.val('http://' + url);
+          }
+        })
         .end();
 
       this.__create();
@@ -282,7 +291,7 @@
       setState('edit');
     }
 
-  })
+  });
 
   /*
    * 定义微件：动态菜单
@@ -300,6 +309,220 @@
             $prevItem: self.widget().prev()
           });
         });
+    }
+
+  });
+
+  /*
+   * 定义微件：链接微件
+   */
+  $.widget('mtm.linkWidget', $.mtm.editWidget, {
+
+    type: 'LINK',
+
+    options: {
+      url: '',
+      title: '',
+      snippet: '',
+      description: ''
+    },
+
+    /**
+     * 子类的构造函数
+     * @private
+     */
+    __create: function () {
+      var self = this;
+
+      //填充文本
+      this.widget()
+        .find('.LINK_URL')
+        .attr('href', this.options.url)
+        .end()
+        .find('.Quote a')
+        .text(this.options.url)
+        .end()
+        .find('input[name="title"]')
+        .val(this.options.title)
+        .on('input blur mousedown mouseup keydown keypress keyup', this.options.from != 'EDIT' ? $.noop : function (event) {
+          self.stateHandler(self.options.title, event);
+        })
+        .end()
+        .find('textarea[name="snippet"]')
+        .val(this.options.snippet)
+        .on('input blur mousedown mouseup keydown keypress keyup', this.options.from != 'EDIT' ? $.noop : function (event) {
+          self.stateHandler(self.options.snippet, event);
+        })
+        .end()
+        .find('textarea[name="description"]')
+        .val(this.options.description)
+        .on('input blur mousedown mouseup keydown keypress keyup', this.options.from != 'EDIT' ? $.noop : function (event) {
+          self.stateHandler(self.options.description, event);
+        })
+        .end();
+    },
+
+    /**
+     * 子类的表单验证
+     * @private
+     */
+    __initFormValidation: function () {
+      var self = this;
+      this.widget().find('form')
+        .validate({
+          submitHandler: function () {
+            self.commit();
+          },
+          showErrors: function (errorMap, errorList) {
+            if (errorList.length) {
+              alert(errorMap.title || errorMap.summary || errorMap.description);
+            }
+          },
+          rules: {
+            title: {
+              maxlength: 100,
+              required: false
+            },
+            snippet: {
+              maxlength: 300,
+              required: false
+            },
+            description: {
+              maxlength: 300,
+              required: false
+            }
+          },
+          messages: {
+            title: {
+              maxlength: '标题太长，请缩写到100字以内。'
+            },
+            snippet: {
+              maxlength: '摘要太长，请缩写到300字以内。'
+            },
+            description: {
+              maxlength: '评论太长，请缩写到300字以内。'
+            }
+          }
+        });
+    },
+
+    /**
+     * 子类提交给服务器的数据
+     * @private
+     */
+    _getCommitData: function () {
+      return {
+        url: this.options.url,
+        title: this.widget().find('input[name="title"]').val(),
+        snippet: this.widget().find('textarea[name="snippet"]').val(),
+        description: this.widget().find('textarea[name="description"]').val()
+      }
+    },
+
+    /**
+     * 子类的原始数据
+     * @private
+     */
+    _getOriginalData: function () {
+      return {
+        url: this.options.url,
+        title: this.options.title,
+        snippet: this.options.snippet,
+        description: this.options.description
+      }
+    }
+
+  });
+
+  /*
+   * 定义微件：链接创建微件
+   */
+  $.widget('mtm.link_createWidget', $.mtm.edit_createWidget, {
+
+    type: 'LINK_CREATE',
+
+    /**
+     * 子类的构造函数
+     * @private
+     */
+    __create: function () {
+      var self = this;
+
+      //监听文本改变事件
+      this.widget()
+        .find('input')
+        .on('input blur mousedown mouseup keydown keypress keyup', function () {
+          var $preview = self.widget().find('button[name="preview"]');
+          if (this.value) {
+            $preview.removeAttr('disabled');
+          } else {
+            $preview.attr('disabled', 'disabled');
+          }
+        })
+        .end();
+    },
+
+    /**
+     * 子类的表单验证
+     * @private
+     */
+    __initFormValidation: function () {
+      var self = this;
+      this.widget().find('form').validate({
+        submitHandler: function () {
+          self.commit();
+        },
+        showErrors: function (errorMap, errorList) {
+          if (errorList.length) {
+            alert(errorMap.url);
+          }
+        },
+        rules: {
+          url: {
+            required: true,
+            url: true
+          }
+        },
+        messages: {
+          url: {
+            required: "尚未输入URL。",
+            url: "URL格式错误。"
+          }
+        }
+      });
+    },
+
+    preview: function () {
+      var self = this;
+      var url = this.widget().find('input').val();
+
+      var callback = function (data) {
+        if (self.options.disabled) {
+          return;
+        }
+        self.createPreviewWidget(data);
+      }
+      $.getJSON('/topic/link_title_and_snippet', { url: url }, callback)
+        .done(function (data) {
+          if (self.options.disabled) {
+            return;
+          }
+          self.createPreviewWidget(data);
+        })
+        .fail(function (jqXHR) {
+          alert(jqXHR.responseText);
+          self.widget().find('button[name="preview"]').button('reset');
+        });
+    },
+
+    /**
+     * 子类提交给服务器的数据
+     * @private
+     */
+    _getCommitData: function () {
+      return {
+        url: this.widget().find('input').val()
+      }
     }
 
   });
@@ -357,13 +580,6 @@
     __initFormValidation: function () {
       var self = this;
       this.widget().find('form')
-        .submit(function () {
-          var $quote = self.widget().find('input[name="quote"]');
-          var quote = $quote.val();
-          if (mtm.utils.REGEXP_URL_NO_PROTOCOL.test(quote)) {
-            $quote.val('http://' + quote);
-          }
-        })
         .validate({
           submitHandler: function (form) {
             self.commit();
@@ -758,13 +974,6 @@
     __initFormValidation: function () {
       var self = this;
       this.widget().find('form')
-        .submit(function () {
-          var $url = self.widget().find('input[name="url"]');
-          var url = $url.val();
-          if (mtm.utils.REGEXP_URL_NO_PROTOCOL.test(url)) {
-            $url.val('http://' + url);
-          }
-        })
         .validate({
           submitHandler: function (form) {
             self.commit();
@@ -1031,35 +1240,28 @@
     var $prevItem = options.$prevItem;
     var $li = options.$li;
 
-    //编辑页面不在默认状态
-    if (state != 'default') {
-      console.log('state != default');
+    //编辑中的微件处在已修改状态
+    if (state == 'edit'
+      && !confirm('您有正在编辑的内容，确定要放弃然后添加其他类型的条目吗？')) {
+      return;
+    }
 
-      //编辑中的微件和目标微件:类型相同、来源相同，只需给输入框焦点
-      console.log($editingWidget.data('type'));
-      if ($editingWidget.data('type') == type
-        && from == newFrom
-        && (newFrom == 'STATIC'
-        || newFrom == 'INSERT' && $editingPrevItem.is($prevItem))) {
-        console.log('重置焦点');
+    var oldState = state;
 
-        if (editingWidgetName) {
-          $editingWidget[editingWidgetName]('autoFocus');
-        }
-        //todo 优化：是否要移动光标？
-        return;
-      }
+    //删除编辑中的微件
+    if (state != 'default'
+      && editingWidgetName) {
+      $editingWidget[editingWidgetName]('remove');
+    }
 
-      //编辑中的微件处在已修改状态
-      if (state == 'edit'
-        && !confirm('您有正在编辑的内容，确定要放弃然后添加其他类型的条目吗？')) {
-        return;
-      }
+    //编辑中的微件和目标微件:类型相同、来源相同，只需给输入框焦点
+    if (oldState == 'create'
+      && $editingWidget.data('type') == type
+      && from == newFrom
+      && (newFrom == 'STATIC'
+      || newFrom == 'INSERT' && $editingPrevItem.is($prevItem))) {
 
-      //删除编辑中的微件
-      if (editingWidgetName) {
-        $editingWidget[editingWidgetName]('remove');
-      }
+      return;
     }
 
     if ($li) {
@@ -1119,6 +1321,36 @@
       .end();
 
     switch (type) {
+      case 'LINK':
+        //填充链接信息
+        var url = data.url;
+        var title = data.title;
+        var snippet = data.snippet;
+        var description = data.description;
+
+        $item
+          .find('.LINK_URL')
+          .attr('href', url)
+          .end()
+          .find('.Title a')
+          .text(title)
+          .end()
+          .find('.Quote a')
+          .text(url)
+          .end()
+          .find('.Snippet')
+          .html($('<div/>').text(snippet).html().replace(/\n/g, '<br>'))
+          .end()
+          .find('.Description')
+          .html($('<div/>').text(description).html().replace(/\n/g, '<br>'))
+          .end();
+        if (!snippet) {
+          $item.find('.Snippet').hide();
+        }
+        if (!description) {
+          $item.find('.Description').hide();
+        }
+        break;
       case 'IMAGE':
         //填充图片信息
         var url = data.url;
@@ -1304,6 +1536,14 @@
         var type = $li.data('type');
         var data;
         switch (type) {
+          case 'LINK':
+            data = {
+              url: $li.find('.Quote a').attr('href'),
+              title: $li.find('.Title a').text(),
+              snippet: $('<div/>').html($li.find('.Snippet').html().replace(/<br>/g, '\n')).text(),
+              description: $('<div/>').html($li.find('.Description').html().replace(/<br>/g, '\n')).text()
+            }
+            break;
           case 'IMAGE':
             data = {
               url: $li.find('img').attr('src'),

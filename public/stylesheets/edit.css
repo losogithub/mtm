@@ -51,10 +51,13 @@ button[name='preview']{float: right;width: 62px;padding-left: 0;padding-right: 0
 .MENU_Close{text-align: right;line-height: 9px;}
 .MENU_Close i{cursor: pointer;line-height: 33px;padding: 0 12px;display: inline-block;}
 
-.IMAGE_CREATE input {float: left;width: 258px;padding-right: 4px;}
+.LINK_CREATE input{float: left;width: 570px;}
+.LINK textarea[name='snippet'] {margin-top: 3px;}
+.LINK textarea[name='description'] {margin-top: 10px;}
+.IMAGE_CREATE input {float: left;width: 258px;}
 .IMAGE input[name='title']{margin-bottom: 7px;}
 .IMAGE input[name='quote'] {margin-bottom: 10px;}
-.VIDEO_CREATE input{float: left;width: 570px;padding-right: 4px;}
+.VIDEO_CREATE input{float: left;width: 570px;}
 .VIDEO input[name='title']{margin-top: 8px;}
 .VIDEO textarea[name='description'] {margin-top: 10px;}
 .CITE textarea[name='cite']{min-height: 95px;font-size: 14px;margin-bottom: 10px;}
