@@ -108,10 +108,39 @@
             <input name="title" class="Bold" placeholder="输入链接标题" type="text">
 
             <div class="Quote">
-              <a class="LINK_URL">text.com</a>
+              <a class="LINK_URL"></a>
             </div>
 
             <textarea name="snippet" placeholder="输入链接摘要"></textarea>
+            <div class="Thumb">
+              <div class="Image">
+                <div style="position: relative;display: inline-block;">
+                  <img style="max-width: 150px;max-height: 150px;" onerror="mtm.errorImage(this, 'photo_150x150');">
+                  <div class="Loading" style="position: absolute;top: 0;left: 0;bottom: 0;right: 0;background-color: rgba(0,0,0,0.2);">
+                    <table style="margin: 0 auto;">
+                      <td>
+                        <i class="icon-spinner icon-spin" style="color: #fff"></i>
+                      </td>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class="Thumb_Editor" style="overflow: hidden;">
+                <div class="btn-group">
+                  <button class="btn btn-mini" type="button"><i class="icon-angle-left"></i></button>
+                  <button class="btn btn-mini" type="button"><i class="icon-angle-right"></i></button>
+                </div>
+                <span name="pagination"></span>
+                <p style="margin-top: 7px;">
+                  <input type="checkbox" id="noImg" style="vertical-align: middle;">
+                  <label for="noImg" style="vertical-align: middle;line-height: 1;">无图片</label>
+                </p>
+                <p style="margin-top: 7px;">
+                  <input style="width: 240px;float: left" class="Url" placeholder="输入自定义图片URL（可选）" type="text">
+                  <button style="float: left;margin-left: 5px;" name="customize" class="btn btn-small" type="button">确定</button>
+                </p>
+              </div>
+            </div>
             <textarea name="description" class="AUTO_FOCUS" placeholder="输入链接评论"></textarea>
 
             <% include _widget_BtnSet.html %>

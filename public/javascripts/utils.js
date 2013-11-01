@@ -8,12 +8,12 @@
 (function () {
 
   var REGEXP_URL = /^(https?|ftp):\/\/(([\w\-]+\.)+[\w\-]+)(:|\/|\?|$)/i;
-  var REGEXP_URL_NO_PROTOCOL = /^(([\w\-]+\.)+[\w\-]+)(:|\/|\?|$)/i;
+  var REGEXP_PROTOCOL = /^(https?|ftp):\/\//i;
 
   var utils = {};
 
   utils.REGEXP_URL = REGEXP_URL;
-  utils.REGEXP_URL_NO_PROTOCOL = REGEXP_URL_NO_PROTOCOL;
+  utils.REGEXP_PROTOCOL = REGEXP_PROTOCOL;
 
   utils.getImageQuoteDomain = function (quote) {
     var temp;

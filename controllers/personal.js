@@ -19,6 +19,7 @@ var Topic = require('../proxy').Topic;
 var config = require('../config');
 var LoginToken = require('../proxy').LoginToken;
 
+var utils = require('../public/javascripts/utils');
 
 var showWorks = function (req, res, next) {
 
@@ -237,9 +238,7 @@ var updateSettings = function(req, res){
       if(imageUrl){user.url = imageUrl;}
       if(description) {user.description = description;}
       if(connectUrl){
-        var REGEXP_URL_NO_PROTOCOL = /^(([\w\-]+\.)+[\w\-]+)(\/|\?|$)/i;
-        var urlParts = connectUrl.match(REGEXP_URL_NO_PROTOCOL);
-        if(urlParts){
+        if(!utils.REGEXP_PROTOCOL.test(connectUrl)){
           connectUrl = 'http://' + connectUrl;
         }
         user.personalSite = connectUrl;

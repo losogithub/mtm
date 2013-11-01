@@ -1,4 +1,4 @@
-button[name='preview']{float: right;width: 62px;padding-left: 0;padding-right: 0;}
+button[name='preview']{float: left;width: 62px;padding-left: 0;padding-right: 0;margin-left: 5px;}
 /*li*/
 .WidgetItemList>li:hover .SortUtil {visibility: visible;}
 .WidgetItemList>li:hover .BottomUtil {visibility: visible;}
@@ -51,13 +51,19 @@ button[name='preview']{float: right;width: 62px;padding-left: 0;padding-right: 0
 .MENU_Close{text-align: right;line-height: 9px;}
 .MENU_Close i{cursor: pointer;line-height: 33px;padding: 0 12px;display: inline-block;}
 
-.LINK_CREATE input{float: left;width: 570px;}
+.LINK_CREATE input{float: left;width: 568px;}
 .LINK textarea[name='snippet'] {margin-top: 3px;}
+.LINK .Thumb {margin-top: 7px;overflow: hidden;}
+.LINK .Thumb .Image {width: 150px;float: left;margin-right: 20px;min-height: 1px;}
+.LINK .Thumb .Thumb_Editor {padding-top: 5px;}
+.LINK .Thumb .btn-group {margin-right: 5px;}
+.LINK .Thumb .btn-group .btn {padding: 0;width: 21px;height: 21px;}
+.LINK .Thumb span[name="pagination"] {color: #aaa;font-weight: bold;vertical-align: middle;}
 .LINK textarea[name='description'] {margin-top: 10px;}
 .IMAGE_CREATE input {float: left;width: 258px;}
 .IMAGE input[name='title']{margin-bottom: 7px;}
 .IMAGE input[name='quote'] {margin-bottom: 10px;}
-.VIDEO_CREATE input{float: left;width: 570px;}
+.VIDEO_CREATE input{float: left;width: 568px;}
 .VIDEO input[name='title']{margin-top: 8px;}
 .VIDEO textarea[name='description'] {margin-top: 10px;}
 .CITE textarea[name='cite']{min-height: 95px;font-size: 14px;margin-bottom: 10px;}

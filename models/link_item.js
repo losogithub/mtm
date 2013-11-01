@@ -19,5 +19,6 @@ module.exports = mongoose.model('LinkItem', {
   url: String,
   title: String,
   snippet: String,
+  src: String,
   description: String
 });

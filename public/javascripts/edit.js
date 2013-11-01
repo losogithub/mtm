@@ -59,7 +59,7 @@
     }
   });
 
-  var updateList = function ($li) {
+  function updateList($li) {
     //拖动的item是editWidget，不用重排
     var itemId = $li.data('id');
     if (!itemId) {
@@ -90,7 +90,7 @@
    * 移动光标到末尾
    * @param textArea
    */
-  var moveSelection2End = function (textArea) {
+  function moveSelection2End(textArea) {
     if (!textArea) {
       return;
     }
@@ -145,10 +145,15 @@
         .find('form')
         .submit(function () {
           var $url = self.widget().find('input[name="url"], input.Url');
-          var url = $url.val();
-          if (mtm.utils.REGEXP_URL_NO_PROTOCOL.test(url)) {
-            $url.val('http://' + url);
+          if (!$url.length) {
+            return;
           }
+          var url = $url.val();
+          url = url.trim();
+          if (!mtm.utils.REGEXP_PROTOCOL.test(url)) {
+            url = 'http://' + url;
+          }
+          $url.val(url);
         })
         .end();
 
@@ -238,7 +243,7 @@
         });
         createItem(self.widget().prev(), self.type.replace('_CREATE', ''), data.itemId, data);
         setState('default');
-      }
+      };
 
       //如果是修改则传itemId，否则是新建则传prevId
       var data = this._getCommitData();
@@ -319,11 +324,14 @@
   $.widget('mtm.linkWidget', $.mtm.editWidget, {
 
     type: 'LINK',
+    index: -1,
 
     options: {
       url: '',
       title: '',
       snippet: '',
+      srcs: null,
+      src: null,
       description: ''
     },
 
@@ -333,6 +341,75 @@
      */
     __create: function () {
       var self = this;
+
+      var _increaseIndex = function (increment) {
+        var $noImg = self.widget()
+          .find('.Thumb input[type="checkbox"]');
+        $noImg.removeAttr('checked');
+
+        if (self.options.srcs && self.options.srcs.length > 1) {
+          if (self.index + increment >= self.options.srcs.length) {
+            self.index = 0;
+          } else if (self.index + increment < 0) {
+            self.index = self.options.srcs.length - 1;
+          } else {
+            self.index += increment;
+          }
+          self.widget()
+            .find('.Thumb .btn-group .btn:first')
+            .removeAttr('disabled')
+            .end()
+            .find('.Thumb .btn-group .btn:last')
+            .removeAttr('disabled')
+            .end();
+        } else {
+          self.widget()
+            .find('.Thumb .btn-group .btn:first')
+            .attr('disabled', 'disabled')
+            .end()
+            .find('.Thumb .btn-group .btn:last')
+            .attr('disabled', 'disabled')
+            .end();
+        }
+
+        self.widget()
+          .find('.Image img')
+          .attr('src', !(self.options.srcs && self.options.srcs.length) ? '/images/no_img/photo_150x150.png' : self.options.srcs[self.index])
+          .end()
+          .find('.Image .Loading')
+          .show()
+          .end()
+          .find('span[name="pagination"]')
+          .text((self.index + 1) + '/' + (!self.options.srcs ? '0' : self.options.srcs.length))
+          .end();
+      }
+
+      var _prependSrc = function (src) {
+        if (!src) {
+          return;
+        }
+        self.index = -1;
+        if (self.options.srcs) {
+          for (var i = 0; i < self.options.srcs.length; i++) {
+            if (src == self.options.srcs[i]) {
+              self.index = i;
+              break;
+            }
+          }
+        }
+        if (self.index == -1) {
+          self.options.srcs = [src].concat(!self.options.srcs ? [] : self.options.srcs);
+          self.index = 0;
+        }
+        _increaseIndex(0);
+      }
+
+      if (this.options.src) {
+        _prependSrc(this.options.src);
+      } else if (this.options.srcs) {
+        this.options.src = this.options.srcs[0];
+      }
+      _increaseIndex(0);
 
       //填充文本
       this.widget()
@@ -352,6 +429,41 @@
         .val(this.options.snippet)
         .on('input blur mousedown mouseup keydown keypress keyup', this.options.from != 'EDIT' ? $.noop : function (event) {
           self.stateHandler(self.options.snippet, event);
+        })
+        .end()
+        .find('.Image img')
+        .on('abort error load', function () {
+          self.widget()
+            .find('.Image .Loading')
+            .hide()
+            .end();
+        })
+        .end()
+        .find('.Thumb .btn-group .btn:first')
+        .click(function () {
+          _increaseIndex(-1);
+        })
+        .end()
+        .find('.Thumb .btn-group .btn:last')
+        .click(function () {
+          _increaseIndex(1);
+        })
+        .end()
+        .find('.Thumb input[type="checkbox"]')
+        .click(function () {
+          if ($(this).is(':checked')) {
+            self.widget()
+              .find('.Image img')
+              .attr('src', '/images/no_img/photo_150x150.png')
+              .end();
+          } else {
+            _increaseIndex(0);
+          }
+        })
+        .end()
+        .find('.Thumb button[name="customize"]')
+        .click(function () {
+          _prependSrc(self.widget().find('.Thumb input[type="text"]').val());
         })
         .end()
         .find('textarea[name="description"]')
@@ -381,7 +493,7 @@
           rules: {
             title: {
               maxlength: 100,
-              required: false
+              required: true
             },
             snippet: {
               maxlength: 300,
@@ -394,6 +506,7 @@
           },
           messages: {
             title: {
+              required: '尚未填写标题。',
               maxlength: '标题太长，请缩写到100字以内。'
             },
             snippet: {
@@ -415,6 +528,7 @@
         url: this.options.url,
         title: this.widget().find('input[name="title"]').val(),
         snippet: this.widget().find('textarea[name="snippet"]').val(),
+        src: this.widget().find('.Thumb input[type="checkbox"]').is(':checked') ? undefined : this.widget().find('.Image img').attr('src'),
         description: this.widget().find('textarea[name="description"]').val()
       }
     },
@@ -428,6 +542,7 @@
         url: this.options.url,
         title: this.options.title,
         snippet: this.options.snippet,
+        src: this.options.src,
         description: this.options.description
       }
     }
@@ -501,8 +616,8 @@
           return;
         }
         self.createPreviewWidget(data);
-      }
-      $.getJSON('/topic/link_title_and_snippet', { url: url }, callback)
+      };
+      $.getJSON('/topic/link_detail', { url: url }, callback)
         .done(function (data) {
           if (self.options.disabled) {
             return;
@@ -581,7 +696,7 @@
       var self = this;
       this.widget().find('form')
         .validate({
-          submitHandler: function (form) {
+          submitHandler: function () {
             self.commit();
           },
           showErrors: function (errorMap, errorList) {
@@ -768,7 +883,7 @@
       var self = this;
       this.widget().find('form')
         .validate({
-          submitHandler: function (form) {
+          submitHandler: function () {
             self.commit();
           },
           showErrors: function (errorMap, errorList) {
@@ -891,7 +1006,8 @@
           return;
         }
         self.createPreviewWidget(data);
-      }
+      };
+
       $.getJSON('/topic/video_title', { url: url }, callback)
         .done(function (data) {
           if (self.options.disabled) {
@@ -975,7 +1091,7 @@
       var self = this;
       this.widget().find('form')
         .validate({
-          submitHandler: function (form) {
+          submitHandler: function () {
             self.commit();
           },
           showErrors: function (errorMap, errorList) {
@@ -1083,7 +1199,7 @@
     __initFormValidation: function () {
       var self = this;
       this.widget().find('form').validate({
-        submitHandler: function (form) {
+        submitHandler: function () {
           self.commit();
         },
         showErrors: function (errorMap, errorList) {
@@ -1162,7 +1278,7 @@
     __initFormValidation: function () {
       var self = this;
       this.widget().find('form').validate({
-        submitHandler: function (form) {
+        submitHandler: function () {
           self.commit();
         },
         showErrors: function (errorMap, errorList) {
@@ -1218,7 +1334,7 @@
   var $ul;
   var $templates;
 
-  var setState = function (newState) {
+  function setState(newState) {
     console.log(newState);
     state = newState;
   }
@@ -1293,11 +1409,8 @@
 
   /**
    * 创建条目
-   * @param type
-   * @param data
-   * @private
    */
-  var createItem = function ($prevItem, type, id, data) {
+  function createItem($prevItem, type, id, data) {
     console.log('createItem');
 
     var $item = $templates.find('>ul>li').clone();
@@ -1326,6 +1439,7 @@
         var url = data.url;
         var title = data.title;
         var snippet = data.snippet;
+        var src = data.src;
         var description = data.description;
 
         $item
@@ -1341,11 +1455,17 @@
           .find('.Snippet')
           .html($('<div/>').text(snippet).html().replace(/\n/g, '<br>'))
           .end()
+          .find('.Thumb img')
+          .attr('src', src)
+          .end()
           .find('.Description')
           .html($('<div/>').text(description).html().replace(/\n/g, '<br>'))
           .end();
         if (!snippet) {
           $item.find('.Snippet').hide();
+        }
+        if (!src) {
+          $item.find('.Thumb').hide();
         }
         if (!description) {
           $item.find('.Description').hide();
@@ -1456,12 +1576,12 @@
     return $item;
   }
 
-  var __init = function () {
+  function __init() {
     $ul = $('.WidgetItemList');
     $templates = $('.TEMPLATES');
   }
 
-  var __initListListener = function () {
+  function __initListListener() {
     console.log('__initListListener');
     $ul
       .on('click', '.SortUtil i', function () {
@@ -1541,8 +1661,9 @@
               url: $li.find('.Quote a').attr('href'),
               title: $li.find('.Title a').text(),
               snippet: $('<div/>').html($li.find('.Snippet').html().replace(/<br>/g, '\n')).text(),
+              src: $li.find('.Thumb img').attr('src'),
               description: $('<div/>').html($li.find('.Description').html().replace(/<br>/g, '\n')).text()
-            }
+            };
             break;
           case 'IMAGE':
             data = {
@@ -1550,14 +1671,14 @@
               title: $li.find('.Title a').text(),
               quote: $li.find('.Quote a').attr('href'),
               description: $('<div/>').html($li.find('.Description').html().replace(/<br>/g, '\n')).text()
-            }
+            };
             break;
           case 'VIDEO':
             data = {
               url: $li.find('.Quote a').attr('href'),
               title: $li.find('.Title a').text(),
               description: $('<div/>').html($li.find('.Description').html().replace(/<br>/g, '\n')).text()
-            }
+            };
             break;
           case 'CITE':
             data = {
@@ -1565,17 +1686,17 @@
               url: $li.find('.Quote a').attr('href'),
               title: $li.find('.Quote a').text() || $li.find('.Quote span:last').text(),
               description: $('<div/>').html($li.find('.Description').html().replace(/<br>/g, '\n')).text()
-            }
+            };
             break;
           case 'TEXT':
             data = {
               text: $('<div/>').html($li.find('p').html().replace(/<br>/g, '\n')).text()
-            }
+            };
             break;
           case 'TITLE':
             data = {
               title: $li.find('p').text()
-            }
+            };
             break;
         }
         createWidget(type, $.extend({
@@ -1687,7 +1808,7 @@
     });
   }
 
-  var ___commit = function () {
+  function ___commit() {
     var submitType = $form.data('submitType');
     var $button = $band.find('button[name="' + submitType + '"]');
     $button.button('loading');
@@ -1719,7 +1840,7 @@
    * 总结菜单栏固定窗口顶部、监听按钮点击事件
    * @private
    */
-  var __initBand = function () {
+  function __initBand() {
     $band = $('.Band');
 
     var headPosition = $band.offset().top;
@@ -1743,7 +1864,7 @@
   /**
    * 启用列表排序微件
    */
-  var __initSort = function () {
+  function __initSort() {
     $ul
       //防止拖动开始时高度减小导致的抖动
       .mousedown(function (e) {
@@ -1800,7 +1921,7 @@
    * 初始化条目创建菜单的点击响应
    * @private
    */
-  var __initMenu = function () {
+  function __initMenu() {
     $('.StaticMenu').on('click', 'li>button', function (event) {
       createWidget($(event.target).data('type'), {
         from: 'STATIC'
@@ -1812,7 +1933,7 @@
    * 对于已经存在的总结，往条目列表填充服务器返回的数据
    * @private
    */
-  var __initItems = function (itemsData) {
+  function __initItems(itemsData) {
     if (!itemsData) {
       return;
     }
@@ -1826,7 +1947,7 @@
    * main function
    * @param data
    */
-  var _doIfGetIdDone = function (data) {
+  function _doIfGetIdDone(data) {
     console.log('doIfGetIdDone');
     data = data || {};
 
@@ -1861,7 +1982,7 @@
       __initSort();
       __initItems(data.itemsData);
     });
-  };
+  }
 
   /**
    * 入口函数，必须要从服务器验证或获取topicId才能编辑总结

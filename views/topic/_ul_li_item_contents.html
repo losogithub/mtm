@@ -10,6 +10,9 @@
   </div>
   <p class="Snippet" style="display: <%= (item.type != 'ALL') && !item.snippet ? 'none' : 'block' %>;"><%- item.snippet ?
     escape(item.snippet).replace(/\n/g, "<br>") : '' %></p>
+  <div class="Thumb" style="display: <%= (item.type != 'ALL') && !item.src ? 'none' : 'block' %>;">
+    <img style="max-width: 150px;max-height: 150px;" src="<%= item.src ? item.src : '' %>">
+  </div>
   <p class="Description" style="display: <%= (item.type != 'ALL') && !item.description ? 'none' : 'block' %>;"><%- item.description ?
     escape(item.description).replace(/\n/g, "<br>") : '' %></p>
 </div>

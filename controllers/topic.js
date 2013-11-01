@@ -10,6 +10,7 @@ var EventProxy = require('eventproxy');
 var sanitize = require('validator').sanitize;
 var check = require('validator').check;
 var escape = require('escape-html');
+var Url = require('url');
 var http = require('follow-redirects').http;
 var iconv = require('iconv-lite');
 var BufferHelper = require('bufferhelper');
@@ -311,17 +312,20 @@ function _getData(req) {
       var url = sanitize(req.body.url).trim();
       var title = sanitize(req.body.title).trim();
       var snippet = sanitize(req.body.snippet).trim();
+      var src = sanitize(req.body.src).trim();
       var description = sanitize(req.body.description).trim();
 
       check(url).notNull().isUrl();
-      check(title).len(0, 100);
+      check(title).len(1, 100);
       check(snippet).len(0, 200);
+      if (src.length) check(src).isUrl();
       check(description).len(0, 300);
 
       data = {
         url: url,
         title: title,
         snippet: snippet,
+        src: src,
         description: description
       }
       break;
@@ -415,6 +419,7 @@ function _getItemData(item) {
         url: item.url,
         title: item.title,
         snippet: item.snippet,
+        src: item.src,
         description: item.description
       }
       break;
@@ -835,7 +840,8 @@ function saveTopic(req, res, next) {
   });
 }
 
-function _getLinkTitleAndSnippet(url, callback) {
+function _getLinkDetail(url, callback) {
+  console.log(url);
   http.get(url, function (response) {
     var bufferHelper = new BufferHelper();
     response.on('data', function (chunk) {
@@ -843,27 +849,89 @@ function _getLinkTitleAndSnippet(url, callback) {
     });
     response.on('end', function () {
       var temp;
-      var charset = !(temp = response.headers['content-type']) ? '' :
-        !(temp = temp.match(/charset=([^;]+)/i)) ? '' :
-          !temp[1] ? '' : temp[1];
+      var charset = !(temp = response.headers['content-type']) ? null :
+        !(temp = temp.match(/charset=([^;]+)/i)) ? null :
+          !temp[1] ? null : temp[1];
+      var buffer = bufferHelper.toBuffer();
+      console.log(charset);
       try {
-        var html = iconv.decode(bufferHelper.toBuffer(), charset);
+        var html = iconv.decode(buffer, charset);
       } catch (err) {
         console.error(err.stack);
         callback(err);
         return;
       }
-      var title = !(temp = html.match(/<title[^>]*>([\s\S]*)<\/title[^>]*>/i)) ? null : temp[1];
+      var charset2 = !(temp = html.match(/<meta\s+http-equiv\s*=\s*("|')?Content-Type("|')?\s+content\s*=\s*("|')[^"']*charset\s*=\s*([^"']*)\s*("|')>/i)) ? null : temp[4];
+      if (charset2 &&
+        (!charset
+          || charset2.toLowerCase() != charset.toLowerCase())) {
+        try {
+          var html = iconv.decode(buffer, charset2);
+        } catch (err) {
+          console.error(err.stack);
+          callback(err);
+          return;
+        }
+      }
+      console.log(charset2);
+
+      var title = !(temp = html.match(/<title[^>]*>([^<]*)<\/title[^>]*>/i)) ? null : temp[1];
       title = sanitize(title).entityDecode();
       title = sanitize(title).trim();
+
       temp = !(temp = html.match(/<meta([^>]*)name\s*=\s*("|')description("|')([^>]*)>/i)) ? null : temp[1] + temp[4];
-      var snippet = !temp ? null : !(temp = temp.match(/content\s*=\s*("|')([^"']*)("|')/i)) ? null : temp[2];
+      var snippet = (!temp ? null : !(temp = temp.match(/content\s*=\s*("|')([^"']*)("|')/i)) ? null : temp[2].trim())
+        || html.substr(html.lastIndexOf('</head>') + '</head>'.length).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+      if (snippet.length > 200) {
+        snippet = snippet.substr(0, 199) + '…';
+      }
       snippet = sanitize(snippet).entityDecode();
       snippet = sanitize(snippet).trim();
+
+      var imgs = !html ? null : html.match(/<img[^>]*>/gi);
+      console.log(imgs ? imgs.length : 0);
+      var thumb;
+      var img;
+      var width;
+      var height;
+      var srcs = [];
+      var obj = {};
+      var addToSrcs = function (img) {
+        var src = !img ? null : !(temp = img.match(/\ssrc\s*=\s*("|')([^"']+)("|')/i)) ? null : temp[2];
+        src = Url.resolve(url, src);
+        if (!src || obj[src]) {
+          return;
+        }
+        console.log('++' + src);
+        srcs.push(src);
+        obj[src] = true;
+      };
+      for (var i in imgs) {
+        img = imgs[i];
+        width = !img ? null : !(temp = img.match(/\swidth\s*=\s*("|')([\d]+)("|')/i)) ? null : temp[2];
+        height = !img ? null : !(temp = img.match(/\sheight\s*=\s*("|')([\d]+)("|')/i)) ? null : temp[2];
+        if (width || height) {
+          if (width >= 150 && height >= 70) {
+            console.log('++' + img);
+            addToSrcs(img);
+          } else {
+            console.log('--' + img);
+          }
+          continue;
+        }
+        thumb = !img ? null : !(temp = img.match(/\ssrc\s*=\s*("|')[^"']+\.jpg("|')/i)) ? null : temp[0];
+        if (thumb) {
+          console.log('++' + img);
+          addToSrcs(img);
+          continue;
+        }
+      }
+      console.log(srcs.length);
       if (typeof callback == 'function') {
         callback(null, {
           title: title,
-          snippet: snippet
+          snippet: snippet,
+          srcs: srcs
         });
       }
     })
@@ -942,15 +1010,16 @@ function _getVideoTitle(url, callback) {
     });
 }
 
-function getLinkTitleAndSnippet(req, res, next) {
+function getLinkDetail(req, res, next) {
   console.log('getLinkTitleAndSnippet');
   var url = req.query.url;
 
-  _getLinkTitleAndSnippet(url, function (err, results) {
+  _getLinkDetail(url, function (err, results) {
     res.json({
       url: url,
       title: results ? results.title : '',
-      snippet: results ? results.snippet : ''
+      snippet: results ? results.snippet : '',
+      srcs: results ? results.srcs : ''
     });
   });
 }
@@ -1081,6 +1150,6 @@ exports.editItem = editItem;
 exports.sortItem = sortItem;
 exports.deleteItem = deleteItem;
 exports.saveTopic = saveTopic;
-exports.getLinkTitleAndSnippet = getLinkTitleAndSnippet;
+exports.getLinkDetail = getLinkDetail;
 exports.getVideoTitle = getVideoTitle;
 exports.AddorRemoveLikes = AddorRemoveLikes;
