@@ -324,6 +324,7 @@
   $.widget('mtm.linkWidget', $.mtm.editWidget, {
 
     type: 'LINK',
+    noImgSrc: '/images/no_img/photo_150x150.png',
     index: -1,
 
     options: {
@@ -374,7 +375,7 @@
 
         self.widget()
           .find('.Image img')
-          .attr('src', !(self.options.srcs && self.options.srcs.length) ? '/images/no_img/photo_150x150.png' : self.options.srcs[self.index])
+          .attr('src', !(self.options.srcs && self.options.srcs.length) ? self.noImgSrc : self.options.srcs[self.index])
           .end()
           .find('.Image .Loading')
           .show()
@@ -438,6 +439,9 @@
             .hide()
             .end();
         })
+        .error(function () {
+          mtm.errorImage(this, 'photo_150x150');
+        })
         .end()
         .find('.Thumb .btn-group .btn:first')
         .click(function () {
@@ -454,7 +458,7 @@
           if ($(this).is(':checked')) {
             self.widget()
               .find('.Image img')
-              .attr('src', '/images/no_img/photo_150x150.png')
+              .attr('src', self.noImgSrc)
               .end();
           } else {
             _increaseIndex(0);
@@ -528,7 +532,7 @@
         url: this.options.url,
         title: this.widget().find('input[name="title"]').val(),
         snippet: this.widget().find('textarea[name="snippet"]').val(),
-        src: this.widget().find('.Thumb input[type="checkbox"]').is(':checked') ? undefined : this.widget().find('.Image img').attr('src'),
+        src: this.widget().find('.Image img').attr('src') == this.noImgSrc ? undefined : this.widget().find('.Image img').attr('src'),
         description: this.widget().find('textarea[name="description"]').val()
       }
     },
