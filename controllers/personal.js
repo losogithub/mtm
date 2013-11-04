@@ -378,7 +378,7 @@ var showAccountModify = function(req, res){
        else if(genderTypeCd == 'U'){uChecked = 'checked';}
        else {fChecked = 'checked';}
 
-       return res.render('personal/privateInfoSetting', {
+       return res.render('personal/privateInfoNotify', {
          title: config.name,
          metaHead: '',
          css: '',
@@ -565,7 +565,7 @@ if( newPassword || newPasswordConfirm)
 
       if( (!uPFlag) && (!uYFlag) && (!uGFlag)){
         //nothing is updated
-        return res.render('personal/privateInfoSetting', {
+        return res.render('personal/privateInfoNotify', {
           title: config.name,
           metaHead: '',
           css: '',
@@ -757,7 +757,6 @@ var showPersonal = function(req, res){
                 '/stylesheets/showPerson/profile.css'
               ],
               js: '',
-              layout: 'showPersonLayout',
               authorName: authorName,
               authorImage: user.url,
               authorDescription: description,
@@ -795,7 +794,6 @@ var showPersonal = function(req, res){
             '/stylesheets/showPerson/profile.css'
           ],
           js: '',
-          layout: 'showPersonLayout',
           authorName: authorName,
           authorImage: user.url,
           authorDescription: description,

@@ -11,26 +11,32 @@
       <col>
     </colgroup>
     <thead>
-    <tr>
-      <th>
-        标题
-        <div class="MainTblSortSub">
-          <a class='<%= isSelectC %>' href='?mt=c&amp;mo=<%= createV %>'>创建日期<span
-            class="MainTblSortIco"></span></a>
-          <a class='<%= isSelectU %>' href='?mt=u&amp;mo=<%= updateV%>'>更新日期<span
-            class="MainTblSortIco"></span></a>
-        </div>
-      </th>
-      <th>
-        <a class="MainTblSort <%= isSelectP %>" href='?mt=p&amp;mo=<%= pageViewV%>'>访问量<span
-          class="MainTblSortIco"></span></a>
-      </th>
-      <th>
-        <a class="MainTblSort <%= isSelectR %>" href='?mt=r&amp;mo=<%= rateV %>'>上升率<span
-          class="MainTblSortIco"></span></a>
-      </th>
-      <th><span class="Hide">页面详细链接</span></th>
-    </tr>
+      <tr>
+        <th>
+          <div>
+            标题
+            <div class="MainTblSortSub">
+              <a class='<%= isSelectC %>' href='?mt=c&amp;mo=<%= createV %>'>创建日期</a> <i class="icon-caret-down"></i>
+              <a class='<%= isSelectU %>' href='?mt=u&amp;mo=<%= updateV%>'>更新日期</a> <i class="icon-caret-down"></i>
+            </div>
+          </div>
+        </th>
+        <th>
+          <div>
+            <a class="MainTblSort <%= isSelectP %>" href='?mt=p&amp;mo=<%= pageViewV%>'>访问量</a> <i class="icon-caret-down"></i>
+          </div>
+        </th>
+        <th>
+          <div>
+            <a class="MainTblSort <%= isSelectR %>" href='?mt=r&amp;mo=<%= rateV %>'>上升率</a> <i class="icon-caret-down"></i>
+          </div>
+        </th>
+        <th>
+          <div>
+            <span>&nbsp;</span><span style="display: none;">页面详细链接</span>
+          </div>
+        </th>
+      </tr>
     </thead>
     <tbody>
     <% for (i in locals.topics) { %>

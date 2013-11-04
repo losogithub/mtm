@@ -2,16 +2,19 @@
 <header><div class="LyHead02">
   <div class="lyHead02Inner MdCF">
 
-    <hgroup role="banner">
-      <h1 class="MdGnbTtl01"><a href="/">MTM</a></h1>
-      <h2 class="MdGnbTtl02"><span>China Account</span></h2>
-    </hgroup>
+    <table style="float: left;">
+      <td>
+        <h1 class="" style="display: inline-block;vertical-align: middle;"><a class="Logo" href="/"><img src="/images/logo_full_invert_50x20.png"></a></h1>
+        <h2 class="" style="display: inline-block;vertical-align: middle;">帐号</h2>
+      </td>
+    </table>
 
     <nav role="navigation"><ul class="MdGnbUtil02">
 
       <li class="mdGnbUtil02Li"><a href='/works'>我的主页</a></li>
       <li class='mdGnbUtil02Li'><span class='MdGnbSeparator02'>|</span><a href='/logout'>登出</a></li>
-      <li class='mdGnbUtil02Li'><span class='MdGnbSeparator02'>|</span><a href="/">MTM China</a></li>
+
+      <li class="mdGnbUtil02Li"><span class='MdGnbSeparator02'>|</span><a href="/">shizier</a></li>
       <!--/MdGnbUtil02--></ul></nav>
 
     <!--/lyHead02Inner--></div>
@@ -24,7 +27,11 @@
 <div class="LyContents02">
   <div class="MdTab01">
     <ul>
-      <li class="mdTab01Active"><a href="" class="mdTab01Link01">text</a></li>
+      <li class="mdTab01Active" style="width: 160px;height:42px;background-color: #777;">
+        <table style="margin: 0 auto;"><td>
+        <a href="" class="mdTab01Link01">帐号信息</a>
+        </td></table>
+      </li>
     </ul>
     <!--/MdTabLink01-->
   </div>
@@ -33,10 +40,6 @@
     <form method="post" action="/accountModify" id="_registForm" name="_registForm">
       <div class="MdMsg01">
         <p><%= infoMsg %></p>
-        <span class="mdMsg01Corner01"></span>
-        <span class="mdMsg01Corner02"></span>
-        <span class="mdMsg01Corner03"></span>
-        <span class="mdMsg01Corner04"></span>
       </div>
       <div class="MdSting01">
         <table>
@@ -63,8 +66,8 @@
             <th>出生年月</th>
             <td>
 						<span class="MdSelect01">
-							<select name="birthYear" cssStyle="width:164px;">
-                <option value="">选择</option>
+							<select name="birthYear" style="width:164px;">
+                <option value="" >选择</option>
                 <option value="1920" >1920年</option>
                 <option value="1921" >1921年</option>
                 <option value="1922" >1922年</option>
@@ -133,7 +136,6 @@
                 <option value="1985" >1985年</option>
                 <option value="1986" >1986年</option>
                 <option value="1987" >1987年</option>
-                <option value="" >Select</option>
                 <option value="1988" >1988年</option>
                 <option value="1989" >1989年</option>
                 <option value="1990" >1990年</option>
@@ -165,13 +167,13 @@
           </tr>
           <tr>
             <th class="mdSting01Th02">新密码</th>
-            <td class="mdSting01Td02"><span class="MdInput01"><input class="mdInput01Input" type="password" value="" id="_passwd" name="newPassword" maxlength="20"><span class="mdInput01Corner01"></span><span class="mdInput01Corner02"></span><span class="mdInput01Corner03"></span><span class="mdInput01Corner04"></span></span>
+            <td class="mdSting01Td02"><span class="MdInput01"><input style="height: 34px;" class="mdInput01Input" type="password" value="" id="_passwd" name="newPassword" maxlength="20"><span class="mdInput01Corner01"></span><span class="mdInput01Corner02"></span><span class="mdInput01Corner03"></span><span class="mdInput01Corner04"></span></span>
               <span class="mdSting01Err02"></span>
             </td>
           </tr>
           <tr>
             <th class="mdSting01Th03">请再次输入密码</th>
-            <td class="mdSting01Td03"><span class="MdInput01"><input class="mdInput01Input" type="password" value="" id="_passwd_confirm" name="newPasswordConfirm" maxlength="20"><span class="mdInput01Corner01"></span><span class="mdInput01Corner02"></span><span class="mdInput01Corner03"></span><span class="mdInput01Corner04"></span></span>
+            <td class="mdSting01Td03"><span class="MdInput01"><input style="height: 34px;" class="mdInput01Input" type="password" value="" id="_passwd_confirm" name="newPasswordConfirm" maxlength="20"><span class="mdInput01Corner01"></span><span class="mdInput01Corner02"></span><span class="mdInput01Corner03"></span><span class="mdInput01Corner04"></span></span>
               <span class="mdSting01Err02"></span>
             </td>
           </tr>
@@ -180,7 +182,10 @@
             <td>
               <ul>
 
-                <li><label for="ipt_newsletter01"><input type="checkbox" value="Y" class="ipt_cb" name="newsletterflg" id="ipt_newsletter01"> 通过注册邮箱接收</label></li>
+                <li>
+                  <input style="vertical-align: middle;" type="checkbox" value="Y" class="ipt_cb" name="newsletterflg" id="ipt_newsletter01">
+                  <label style="vertical-align: middle;" for="ipt_newsletter01"> 通过注册邮箱接收</label>
+                </li>
               </ul>
             </td>
           </tr>
@@ -188,8 +193,8 @@
         </table>
         <!--/MdSting01--></div>
       <p class="MdSubmit01">
-        <input class="mdSubmit01Input01" type="submit" value="Update">
-        <input class="mdSubmit01Input02" type="button" value="Back" onclick="goFromUrl()"></p>
+        <button class="btn btn-large btn-success" type="submit" value="Update">保存</button>
+        <button class="btn btn-large" type="button" value="Back" onclick="goFromUrl()">返回</button></p>
     </form>
 
     <span class="arMain01Corner01"></span>

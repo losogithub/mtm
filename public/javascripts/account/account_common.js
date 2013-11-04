@@ -1894,14 +1894,12 @@ if (typeof nj.account == "undefined") nj.account = {};
 			// 設定前のパスワードを保持する
 			var email  = $("#_email");
 			var passwd = $("input:password");
-			var phclass = "hasPlaceholder";
 
 			// passwd入力前の値を保持
 			this.beforePasswd = passwd.val();
 			
 			// inputの値により、placeholderクラスの設定を行う
 			var inputCheck = function(target){
-				target.toggleClass(phclass, !target.val());
 			};
 			// サーバ側で出力した値がある場合、placeholderを外す
 			$("input:text, input:password").each(function(i, elm){
@@ -1916,13 +1914,8 @@ if (typeof nj.account == "undefined") nj.account = {};
             	passwd.bind("propertychange", function(event){
 					if($(this).val() && self.beforePasswd != $(this).val()){
 						self.beforePasswd = $(this).val();
-						$(this).removeClass(phclass);
 					}else if(!$(this).val()){
 						self.beforePasswd = $(this).val();
-					}
-					// メールアドレスの値がある場合
-					if(email.val()){
-						email.removeClass(phclass);
 					}
 				});
 			}else{

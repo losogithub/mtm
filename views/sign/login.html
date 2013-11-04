@@ -5,9 +5,13 @@
             <li class="mdGnbUtil01Li"><a href="http://www.mtm.com">MTM</a></li>
             <!--/MdGnbUtil01--></ul></nav>
 
-        <div class="MdLoginHead01 MdCF">
-            <h1 class="mdLoginHead01Ttl" role="banner">MTM</h1>
-            <!--/MdRegistHead03--></div>
+      <div class="MdRegistHead01 MdCF">
+        <table style="margin:0 auto 20px;">
+          <td>
+            <a class="Logo Logo-64" href="/"><img src="/images/logo_full_160x64.png"></a>
+          </td>
+        </table>
+        <!--/MdRegistHead01--></div>
 
         <!--/LyHead01--></div></header>
     <!--[[/HEADER-AREA]]-->
@@ -34,17 +38,17 @@
                                 <div class="mdFormLogin01Unit01">
                                     <div class="mdFormLogin01Unit01Body">
                                         <div class="MdInputTxt03">
-                                            <div class="mdInputTxt03Inner mdInputTxt03UserName"><input type="text" class="mdInputTxt03Input hasPlaceholder" value="<%- email %>" id="_email" name="email" tabindex="1"></div>
+                                            <div class="mdInputTxt03Inner mdInputTxt03UserName"><input style="height: 40px;" type="text" class="" value="<%- email %>" id="_email" name="email" tabindex="1" placeholder="用户名或邮箱"></div>
                                             <!--/MdInputTxt03--></div>
                                         <div class="MdInputTxt03">
-                                            <div class="mdInputTxt03Inner mdInputTxt03Password"><input type="password" class="mdInputTxt03Input hasPlaceholder" value="<%- password %>" id="_passwd" name="password" maxlength="20" tabindex="2"></div>
+                                            <div class="mdInputTxt03Inner mdInputTxt03Password"><input style="height: 40px;" type="password" class="" value="<%- password %>" id="_passwd" name="password" maxlength="20" tabindex="2" placeholder="密码"></div>
                                             <!--/MdInputTxt03--></div>
 
                                         <!--/mdFormLogin01Unit01Body--></div>
                                     <div class="mdFormLogin01Unit01Foot">
                                         <p class="mdFormLogin01Autocomplete"><input type="checkbox"  name="autoLogin" value="Y" class="ipt_cb" id="autocomplete" tabindex="3" /><label for="autocomplete">记住密码</label></p>
                                         <p class="mdFormLogin01ForgetPassword"><a href="/forgetPassword">忘记密码?</a></p>
-                                        <p class="mdFormLogin01Unit01Btn"><input type="submit" class="MdBtnLogin01" value="Log in" tabindex="4"></p>
+                                        <p class="mdFormLogin01Unit01Btn"><button type="submit" class="btn btn-large" value="Log in" tabindex="4">登录</button></p>
                                         <!--/mdFormLogin01Unit01Foot--></div>
                                     <!--/mdFormLogin01Unit01--></div>
 
@@ -61,8 +65,8 @@
         <div class="MdFormLogin02">
             <div class="mdFormLogin02Inner MdCF">
                 <dl class="MdRegistLink01">
-                    <dt class="mdRegistLink01Btn"><a href="/signup" class="MdBtnRegist02">singup</a></dt>
-                    <dd class="mdRegistLink01Txt">Start using a wide range of services <br>by registering a MTM account!</dd>
+                    <dt class="mdRegistLink01Btn"><a href="/signup" class="btn btn-success btn-large">注册</a></dt>
+                    <dd class="mdRegistLink01Txt">与世界分享你的总结</dd>
                     <!--/MdRegistLink01--></dl>
                 <!--/mdFormLogin02Inner--></div>
             <!--/MdFormLogin02--></div>

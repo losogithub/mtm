@@ -1,0 +1,135 @@
+body, h1, h2, h3, h4, h5, h6, p, dl, dt, dd, ul, ol, li, th, td, div, blockquote, pre, form, fieldset, input { margin: 0; padding: 0; }
+
+h1, h2, h3, h4, h5, h6, p, dl, dt, dd, ul, ol, li, table, th, td, div, blockquote, pre, form, fieldset, legend, header { *zoom: 1; }
+
+h1, h2, h3, h4, h5, h6 { font-size: 100%; font-weight: normal; }
+
+button, img, fieldset, table, th, td { border: 0 none; }
+
+input[type="text"], input[type="password"], textarea {
+  font-size: 1em; width: 100%;
+  &:focus { outline: 0 none; }
+}
+
+input[type="text"] { height: 27px; }
+
+textarea { font-family: arial, sans-serif; min-height: 85px; padding-bottom: 0; resize: vertical; }
+
+input[name='url'], input.Url { color: #999; }
+
+input.Bold { font-size: 14px; font-weight: bold; height: 30px; }
+
+a, a:hover, a:focus { color: black; }
+
+ol, ul { list-style: none; }
+
+i { font-size: 14px; }
+
+table { height: 100%; }
+
+html { overflow-y: scroll; }
+
+body {
+  font: 12px/1.5 "微软雅黑", arial, sans-serif; word-wrap: break-word; min-width: 960px;
+  &.INDEX { min-width: 1010px; }
+}
+
+.Inner {
+  width: 960px; margin: 0 auto; min-height: 100%; height: 100%;
+  .INDEX & { width: 1010px; }
+}
+
+.Required {
+  position: relative;
+  &:before { content: '*'; position: absolute; left: 3px; top: 4px; color: red; font-size: 14px; }
+  &.Required-4px:before { left: 4px; }
+}
+
+/*按钮*/
+.BtnSet {
+  padding-top: 14px;
+  .Widget & { float: left; }
+}
+
+/*徽标*/
+.Logo {
+  &, img {
+    display: block; width: 50px; height: 20px;
+    .INDEX & { width: 80px; height: 32px; }
+    &.Logo-64 { width: 160px; height: 64px; }
+  }
+}
+
+/*分割线*/
+.VLine {
+  display: inline-block; width: 0; height: 11px; border-left: 1px solid #eee; vertical-align: middle;
+  &.VLine-Header { margin: 0 9px 0 11px; }
+  &.VLine-Footer { margin: 0 11px 0 15px; }
+  &.VLine-Util { margin: 0 5px; }
+}
+
+/*页眉*/
+.Header {
+  z-index: 501; height: 48px; border-top: 3px solid #333; border-bottom: 1px solid rgb(231, 231, 231);
+  .INDEX & { height: 112px; }
+  .PERSONAL & { height: 64px; }
+}
+
+/*导航*/
+.Nav {
+  a { color: rgb(84, 84, 84); }
+  &.Nav-Left {
+    left: 0; position: absolute; top: 0; height: 100%;
+    li { display: inline; margin-right: 30px; }
+    .SELECTED>a { font-weight: bold; color: rgb(0, 0, 0); }
+  }
+  &.Nav-Right {
+    position: absolute; right: 0; top: 0; height: 100%;
+    .Nav-Right_Inner {
+      margin: 10px 0;
+      * { vertical-align: middle; }
+      img { margin-right: 5px; }
+      >li {
+        display: inline;
+        &:last-of-type>button {
+          margin-left: -6px; padding: 0 6px; vertical-align: middle;
+          >i { font-size: 8px; vertical-align: middle; }
+        }
+      }
+    }
+  }
+  &.Nav-Drop {
+    z-index: 1002; position: absolute; right: 0; width: 98px;
+    background-color: white; border: 1px solid rgb(207, 207, 207); box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    a {
+      display: block; height: 30px; line-height: 30px; padding: 0 8px;
+      &:hover, &:active, &:focus { background-color: #f0f0f0; text-decoration: none; }
+    }
+  }
+}
+
+/*页脚*/
+.Footer {
+  border-top: 1px solid rgb(231, 231, 231); height: 64px; font-size: 11px; margin-top: 20px;
+  a { color: #333; vertical-align: middle; }
+  li { display: inline; }
+  .Copyright { float: right; color: #333333; font-family: Tahoma, Arial, sans-serif; }
+  .INDEX & a { color: black; }
+  .PERSONAL & {
+    height: 44px;
+    a { color: rgb(170, 170, 170); }
+  }
+}
+
+/* 页码显示 */
+.Pagination { margin-top: 15px; padding-top: 25px; border-top: 1px solid #f2f2f2; line-height: 1.2; margin: 20px 0 0; font-family: Arial, Helvetica, sans-serif; font-size: 12px; text-align: center }
+
+.PaginationBreak { padding-right: 0; padding-left: 0; }
+
+.Pagination a, .PaginationBreak { display: inline-block; *display: inline; *zoom: 1; margin: 0 2px; padding: 6px 8px; font-weight: bold; vertical-align: top }
+
+.Pagination strong { padding: 7px 8px; color: #000; display: inline-block; margin: 0 2px; font-weight: bold; vertical-align: top; }
+
+.Pagination a:link, .Pagination a:visited { border: 1px solid #ebebeb; color: #999 !important; text-decoration: none }
+
+.Pagination a:hover, .Pagination a:active, .Pagination a:focus { cursor: pointer; background-color: #f0f0f0; color: #000 !important; text-decoration: none !important }

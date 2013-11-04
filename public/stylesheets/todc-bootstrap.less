@@ -6,6 +6,8 @@
  *
  * Constructed by Tim O'Donnell (http://github.com/todc)
  */
+@import "theme";
+
 .clearfix {
   *zoom: 1;
 }
@@ -149,7 +151,7 @@ input[type="tel"]:focus,
 input[type="color"]:focus,
 .uneditable-input:focus {
   outline: 0 \9;
-  border-color: #669966;
+  border-color: @theme-color;
   -webkit-box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.2);
   box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.2);
@@ -247,6 +249,7 @@ select:focus:required:invalid:focus {
   display: inline-block;
   *display: inline;
   /* IE7 inline-block hack */
+
   *zoom: 1;
   margin-bottom: 0;
 }
@@ -464,9 +467,9 @@ select:focus:required:invalid:focus {
   background-color: rgba(0, 0, 0, 0.2);
   border: solid transparent;
   border-width: 0;
-  -webkit-box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.1), inset 0 -1px 0 rgba(0, 0, 0, 0.07);
-  -moz-box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.1), inset 0 -1px 0 rgba(0, 0, 0, 0.07);
-  box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.1), inset 0 -1px 0 rgba(0, 0, 0, 0.07);
+  -webkit-box-shadow: inset 1px 1px 0 rgba(0,0,0,0.10),inset 0 -1px 0 rgba(0,0,0,0.07);
+  -moz-box-shadow: inset 1px 1px 0 rgba(0,0,0,0.10),inset 0 -1px 0 rgba(0,0,0,0.07);
+  box-shadow: inset 1px 1px 0 rgba(0,0,0,0.10),inset 0 -1px 0 rgba(0,0,0,0.07);
   background-clip: padding-box;
 }
 .scrollable::-webkit-scrollbar-thumb:hover {
@@ -495,11 +498,11 @@ select:focus:required:invalid:focus {
   background-clip: padding;
   cursor: pointer;
   background-color: white;
-  background-image: -moz-linear-gradient(top, #ffffff, #ffffff);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#ffffff));
-  background-image: -webkit-linear-gradient(top, #ffffff, #ffffff);
-  background-image: -o-linear-gradient(top, #ffffff, #ffffff);
-  background-image: linear-gradient(to bottom, #ffffff, #ffffff);
+  background-image: -moz-linear-gradient(top, white, white);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(white), to(white));
+  background-image: -webkit-linear-gradient(top, white, white);
+  background-image: -o-linear-gradient(top, white, white);
+  background-image: linear-gradient(to bottom, white, white);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#ffffffff', GradientType=0);
   border: 1px solid #dcdcdc;
@@ -516,14 +519,16 @@ select:focus:required:invalid:focus {
   -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
   -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
-  background-color: #fcfcfc;
-  background-image: -moz-linear-gradient(top, #ffffff, #f8f8f8);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#f8f8f8));
-  background-image: -webkit-linear-gradient(top, #ffffff, #f8f8f8);
-  background-image: -o-linear-gradient(top, #ffffff, #f8f8f8);
-  background-image: linear-gradient(to bottom, #ffffff, #f8f8f8);
+  @top-color: white;
+  @bottom-color: (@top-color - #070707);
+  background-color: (@top-color - #030303);
+  background-image: -moz-linear-gradient(top, @top-color, @bottom-color);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(@top-color), to(@bottom-color));
+  background-image: -webkit-linear-gradient(top, @top-color, @bottom-color);
+  background-image: -o-linear-gradient(top, @top-color, @bottom-color);
+  background-image: linear-gradient(to bottom, @top-color, @bottom-color);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffffffff", endColorstr="#fff8f8f8", GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=%('%a', argb(@top-color)), endColorstr=%('%a', argb(@bottom-color)), GradientType=0);
   background-position: 0 0;
   -webkit-transition: none;
   -moz-transition: none;
@@ -573,7 +578,8 @@ select:focus:required:invalid:focus {
 }
 .btn:focus {
   /* Blue border on button focus. */
-  border-color: #669966;
+
+  border-color: @theme-color;
   outline-style: none;
 }
 .btn-large {
@@ -669,7 +675,7 @@ select:focus:required:invalid:focus {
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff4d90fe', endColorstr='#ff4787ed', GradientType=0);
   *background-color: #4d90fe;
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
 }
 .btn-primary:hover,
 .btn-primary:active,
@@ -685,7 +691,7 @@ select:focus:required:invalid:focus {
   background-image: linear-gradient(to bottom, #4d90fe, #3078eb);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff4d90fe', endColorstr='#ff3078eb', GradientType=0);
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
   background-color: #3078eb;
   background-color: #3078eb \9;
 }
@@ -700,7 +706,7 @@ select:focus:required:invalid:focus {
   background-image: linear-gradient(to bottom, #4d90fe, #1969e8);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff4d90fe', endColorstr='#ff1969e8', GradientType=0);
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
 }
 .btn-primary:focus {
   border: 1px solid #3079ed;
@@ -725,7 +731,7 @@ select:focus:required:invalid:focus {
   background-image: linear-gradient(to bottom, #4d90fe, #4787ed);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff4d90fe', endColorstr='#ff4787ed', GradientType=0);
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
   background-color: #4d90fe;
   background-color: #4d90fe \9;
 }
@@ -741,7 +747,7 @@ select:focus:required:invalid:focus {
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffdd4b39', endColorstr='#ffd14836', GradientType=0);
   *background-color: #dd4b39;
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
 }
 .btn-danger:hover,
 .btn-danger:active,
@@ -757,7 +763,7 @@ select:focus:required:invalid:focus {
   background-image: linear-gradient(to bottom, #dd4b39, #c13e2c);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffdd4b39', endColorstr='#ffc13e2c', GradientType=0);
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
   background-color: #c13e2c;
   background-color: #c13e2c \9;
 }
@@ -772,7 +778,7 @@ select:focus:required:invalid:focus {
   background-image: linear-gradient(to bottom, #dd4b39, #ad3727);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffdd4b39', endColorstr='#ffad3727', GradientType=0);
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
 }
 .btn-danger:focus {
   border: 1px solid #c6322a;
@@ -797,7 +803,7 @@ select:focus:required:invalid:focus {
   background-image: linear-gradient(to bottom, #dd4b39, #d14836);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffdd4b39', endColorstr='#ffd14836', GradientType=0);
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
   background-color: #dd4b39;
   background-color: #dd4b39 \9;
 }
@@ -813,7 +819,7 @@ select:focus:required:invalid:focus {
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fffbb450', endColorstr='#fffaa937', GradientType=0);
   *background-color: #fbb450;
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
 }
 .btn-warning:hover,
 .btn-warning:active,
@@ -829,7 +835,7 @@ select:focus:required:invalid:focus {
   background-image: linear-gradient(to bottom, #fbb450, #fa9f1e);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fffbb450', endColorstr='#fffa9f1e', GradientType=0);
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
   background-color: #fa9f1e;
   background-color: #fa9f1e \9;
 }
@@ -844,7 +850,7 @@ select:focus:required:invalid:focus {
   background-image: linear-gradient(to bottom, #fbb450, #f89406);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fffbb450', endColorstr='#fff89406', GradientType=0);
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
 }
 .btn-warning:focus {
   border: 1px solid #faa328;
@@ -869,51 +875,36 @@ select:focus:required:invalid:focus {
   background-image: linear-gradient(to bottom, #fbb450, #faa937);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fffbb450', endColorstr='#fffaa937', GradientType=0);
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
   background-color: #fbb450;
   background-color: #fbb450 \9;
 }
+.background(@bottom-color) {
+  border: 1px solid (@bottom-color - #001100);
+  background-color: ((@theme-color + @bottom-color) * 0.5);
+  background-image: -moz-linear-gradient(top, @theme-color, @bottom-color);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(@theme-color), to(@bottom-color));
+  background-image: -webkit-linear-gradient(top, @theme-color, @bottom-color);
+  background-image: -o-linear-gradient(top, @theme-color, @bottom-color);
+  background-image: linear-gradient(to bottom, @theme-color, @bottom-color);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=%('%a', argb(@theme-color)), endColorstr=%('%a', argb(@bottom-color)), GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
 .btn-success {
   color: #ffffff;
-  border: 1px solid #668866;
-  background-color: #669966;
-  background-image: -moz-linear-gradient(top, #669966, #669966);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#669966), to(#669966));
-  background-image: -webkit-linear-gradient(top, #669966, #669966);
-  background-image: -o-linear-gradient(top, #669966, #669966);
-  background-image: linear-gradient(to bottom, #669966, #669966);
-  background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff669966", endColorstr="#ff669966", GradientType=0);
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  .background(@theme-color);
 }
 .btn-success:hover,
 .btn-success:active,
 .btn-success.active,
 .btn-success:focus {
   color: #ffffff;
-  border: 1px solid #5c795c;
-  background-color: #619161;
-  background-image: -moz-linear-gradient(top, #669966, #5c8a5c);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#669966), to(#5c8a5c));
-  background-image: -webkit-linear-gradient(top, #669966, #5c8a5c);
-  background-image: -o-linear-gradient(top, #669966, #5c8a5c);
-  background-image: linear-gradient(to bottom, #669966, #5c8a5c);
-  background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff669966", endColorstr="#ff5c8a5c", GradientType=0);
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  .background(darken(@theme-color, 5%));
 }
 .btn-success:active,
 .btn-success.active {
-  border: 1px solid #526952;
-  background-color: #5c8a5c;
-  background-image: -moz-linear-gradient(top, #669966, #527a52);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#669966), to(#527a52));
-  background-image: -webkit-linear-gradient(top, #669966, #527a52);
-  background-image: -o-linear-gradient(top, #669966, #527a52);
-  background-image: linear-gradient(to bottom, #669966, #527a52);
-  background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff669966", endColorstr="#ff527a52", GradientType=0);
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  .background(darken(@theme-color, 10%));
 }
 .btn-success:focus {
   -webkit-box-shadow: inset 0 0 0 1px #ffffff;
@@ -928,16 +919,7 @@ select:focus:required:invalid:focus {
 .btn-success[disabled]:active,
 .btn-success.disabled:focus,
 .btn-success[disabled]:focus {
-  border: 1px solid #668866;
-  background-color: #669966;
-  background-image: -moz-linear-gradient(top, #669966, #669966);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#669966), to(#669966));
-  background-image: -webkit-linear-gradient(top, #669966, #669966);
-  background-image: -o-linear-gradient(top, #669966, #669966);
-  background-image: linear-gradient(to bottom, #669966, #669966);
-  background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff669966", endColorstr="#ff669966", GradientType=0);
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  .background(@theme-color);
 }
 .btn-info {
   border: 1px solid #46b8da;
@@ -951,7 +933,7 @@ select:focus:required:invalid:focus {
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff5bc0de', endColorstr='#ff5bc0de', GradientType=0);
   *background-color: #5bc0de;
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
 }
 .btn-info:hover,
 .btn-info:active,
@@ -967,7 +949,7 @@ select:focus:required:invalid:focus {
   background-image: linear-gradient(to bottom, #5bc0de, #46b8da);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff5bc0de', endColorstr='#ff46b8da', GradientType=0);
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
   background-color: #46b8da;
   background-color: #46b8da \9;
 }
@@ -982,7 +964,7 @@ select:focus:required:invalid:focus {
   background-image: linear-gradient(to bottom, #5bc0de, #31b0d5);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff5bc0de', endColorstr='#ff31b0d5', GradientType=0);
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
 }
 .btn-info:focus {
   border: 1px solid #46b8da;
@@ -1006,7 +988,7 @@ select:focus:required:invalid:focus {
   background-image: linear-gradient(to bottom, #5bc0de, #5bc0de);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff5bc0de', endColorstr='#ff5bc0de', GradientType=0);
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
   background-color: #5bc0de;
   background-color: #5bc0de \9;
 }
@@ -1022,7 +1004,7 @@ select:focus:required:invalid:focus {
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff515151', endColorstr='#ff515151', GradientType=0);
   *background-color: #515151;
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
 }
 .btn-inverse:hover,
 .btn-inverse:active,
@@ -1038,7 +1020,7 @@ select:focus:required:invalid:focus {
   background-image: linear-gradient(to bottom, #515151, #444444);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff515151', endColorstr='#ff444444', GradientType=0);
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
   background-color: #444444;
   background-color: #444444 \9;
 }
@@ -1053,7 +1035,7 @@ select:focus:required:invalid:focus {
   background-image: linear-gradient(to bottom, #515151, #373737);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff515151', endColorstr='#ff373737', GradientType=0);
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
 }
 .btn-inverse:focus {
   border: 1px solid #464646;
@@ -1077,7 +1059,7 @@ select:focus:required:invalid:focus {
   background-image: linear-gradient(to bottom, #515151, #515151);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff515151', endColorstr='#ff515151', GradientType=0);
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
   background-color: #515151;
   background-color: #515151 \9;
 }
@@ -1117,7 +1099,7 @@ select:focus:required:invalid:focus {
   border-color: transparent;
 }
 .btn-link:focus {
-  border-color: #669966;
+  border-color: @theme-color;
 }
 .btn-link[disabled]:hover {
   color: #333333;
@@ -1531,7 +1513,8 @@ select:focus:required:invalid:focus {
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
   *background-color: #040404;
   /* Darken IE7 buttons by default so they stand out more given they won't have borders */
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
 }
 .navbar-inverse .btn-navbar:hover,
 .navbar-inverse .btn-navbar:focus,
@@ -1722,9 +1705,9 @@ select:focus:required:invalid:focus {
   border-bottom-color: #ffffff;
 }
 .navbar-masthead.navbar-inverse .navbar-search .search-query {
-  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 0 rgba(255, 255, 255, 0.15);
-  -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 0 rgba(255, 255, 255, 0.15);
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 0 rgba(255, 255, 255, 0.15);
+  -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,.1), 0 1px 0 rgba(255,255,255,.15);
+  -moz-box-shadow: inset 0 1px 2px rgba(0,0,0,.1), 0 1px 0 rgba(255,255,255,.15);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.1), 0 1px 0 rgba(255,255,255,.15);
   -webkit-transition: none;
   -moz-transition: none;
   -o-transition: none;
@@ -1769,7 +1752,8 @@ select:focus:required:invalid:focus {
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
   *background-color: #373737;
   /* Darken IE7 buttons by default so they stand out more given they won't have borders */
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
 }
 .navbar-masthead.navbar-inverse .btn-navbar:hover,
 .navbar-masthead.navbar-inverse .btn-navbar:focus,
@@ -1894,6 +1878,7 @@ select:focus:required:invalid:focus {
   display: inline-block;
   margin-left: -8px;
   /* value should match border-width below */
+
   border-right: 8px solid transparent;
   border-bottom: 8px solid #d7d7d7;
   border-left: 8px solid transparent;
@@ -1906,6 +1891,7 @@ select:focus:required:invalid:focus {
   display: inline-block;
   margin-left: -7px;
   /* value should match border-width below */
+
   border-right: 7px solid transparent;
   border-bottom: 7px solid #ffffff;
   border-left: 7px solid transparent;
@@ -2036,9 +2022,9 @@ select:focus:required:invalid:focus {
   border-bottom-color: #ffffff;
 }
 .navbar-toolbar.navbar-inverse .navbar-search .search-query {
-  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 0 rgba(255, 255, 255, 0.15);
-  -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 0 rgba(255, 255, 255, 0.15);
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 0 rgba(255, 255, 255, 0.15);
+  -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,.1), 0 1px 0 rgba(255,255,255,.15);
+  -moz-box-shadow: inset 0 1px 2px rgba(0,0,0,.1), 0 1px 0 rgba(255,255,255,.15);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.1), 0 1px 0 rgba(255,255,255,.15);
   -webkit-transition: none;
   -moz-transition: none;
   -o-transition: none;
@@ -2083,7 +2069,8 @@ select:focus:required:invalid:focus {
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
   *background-color: #373737;
   /* Darken IE7 buttons by default so they stand out more given they won't have borders */
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
 }
 .navbar-toolbar.navbar-inverse .btn-navbar:hover,
 .navbar-toolbar.navbar-inverse .btn-navbar:focus,
@@ -2148,7 +2135,7 @@ select:focus:required:invalid:focus {
   background-image: linear-gradient(to bottom, #f6f6f6, #f1f1f1);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff6f6f6', endColorstr='#fff1f1f1', GradientType=0);
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
   background-color: #f4f4f4;
   -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
   -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
@@ -2173,7 +2160,7 @@ select:focus:required:invalid:focus {
   background-image: linear-gradient(to bottom, #f5f5f5, #f1f1f1);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff5f5f5', endColorstr='#fff1f1f1', GradientType=0);
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
   background-color: #f3f3f3;
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
@@ -2208,7 +2195,7 @@ select:focus:required:invalid:focus {
   background-image: linear-gradient(to bottom, #f5f5f5, #f1f1f1);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff5f5f5', endColorstr='#fff1f1f1', GradientType=0);
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
   background-color: #f5f5f5;
   color: #333;
   text-shadow: 0 1px 0 #fff;
@@ -2229,7 +2216,7 @@ select:focus:required:invalid:focus {
   background-image: linear-gradient(to bottom, #f8f8f8, #f1f1f1);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff8f8f8', endColorstr='#fff1f1f1', GradientType=0);
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
   background-color: #f1f1f1;
   -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
   -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
@@ -2244,7 +2231,7 @@ select:focus:required:invalid:focus {
   background-image: linear-gradient(to bottom, #f6f6f6, #f1f1f1);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff6f6f6', endColorstr='#fff1f1f1', GradientType=0);
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
   background-color: #f1f1f1;
   -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
   -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
@@ -2261,7 +2248,7 @@ select:focus:required:invalid:focus {
   background-image: linear-gradient(to bottom, #f5f5f5, #f1f1f1);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff5f5f5', endColorstr='#fff1f1f1', GradientType=0);
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
   background-color: #f3f3f3;
   -webkit-box-shadow: none;
   -moz-box-shadow: none;

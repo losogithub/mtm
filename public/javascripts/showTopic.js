@@ -32,7 +32,7 @@ $(
               console.log(typeof  data.toLike);
               console.log(data.toLike);
               if(data.toLike == "true"){
-                $('a[class="HeadFVBtn"]').addClass('ExSelected');
+                $('.HeadFVBtn').addClass('ExSelected');
               } else {
                 $('.HeadFVBtn').removeClass('ExSelected');
               }
@@ -140,7 +140,7 @@ var loginCheck = function(){
         $('#simplemodal-container').remove();
 
         if(data.toLike == "true"){
-          $('a[class="HeadFVBtn"]').addClass('ExSelected');
+          $('.HeadFVBtn').addClass('ExSelected');
         } else {
           $('.HeadFVBtn').removeClass('ExSelected');
         }

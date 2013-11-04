@@ -31,7 +31,7 @@ function showCreate(req, res, next) {
   res.render('topic/edit', {
     title: '创建总结-mtm',
     css: [
-      '/stylesheets/jquery-ui-1.10.3.custom.css',
+      '/stylesheets/topic.css',
       '/stylesheets/edit.css'
     ],
     js: [
@@ -178,8 +178,8 @@ function showEdit(req, res, next) {
     res.render('topic/edit', {
       title: '修改总结-mtm',
       css: [
-        '/stylesheets/edit.css',
-        '/stylesheets/jquery-ui-1.10.3.custom.css'
+        '/stylesheets/topic.css',
+        '/stylesheets/edit.css'
       ],
       js: [
         '/javascripts/jquery.autosize.min.js',

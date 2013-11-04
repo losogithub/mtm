@@ -150,7 +150,7 @@
           }
           var url = $url.val();
           url = url.trim();
-          if (!mtm.utils.REGEXP_PROTOCOL.test(url)) {
+          if (url && !mtm.utils.REGEXP_PROTOCOL.test(url)) {
             url = 'http://' + url;
           }
           $url.val(url);
@@ -408,7 +408,7 @@
       if (this.options.src) {
         _prependSrc(this.options.src);
       } else if (this.options.srcs) {
-        this.options.src = this.options.srcs[0];
+        this.index = 0;
       }
       _increaseIndex(0);
 
@@ -1713,6 +1713,58 @@
   }
 
   /**
+   * 总结菜单栏固定窗口顶部、监听按钮点击事件
+   * @private
+   */
+  function __initBand() {
+    $band = $('.Band');
+
+    $(window).scroll(function () {
+      if ($(this).scrollTop() >= 48) {
+        $band.addClass('Band-Fixed').removeAttr('style');
+      } else {
+        $band.removeClass('Band-Fixed').css('top', 48 - $(this).scrollTop());
+      }
+    });
+
+    $band.on('click', 'button', function (event) {
+      var $target = $(event.target);
+      var name = $target.attr('name');
+      $form
+        .data('submitType', name)
+        .submit();
+    });
+  }
+
+  function ___commit() {
+    var submitType = $form.data('submitType');
+    var $button = $band.find('button[name="' + submitType + '"]');
+    $button.button('loading');
+
+    $.ajax('/topic/save', {
+      type: 'PUT',
+      data: {
+        topicId: topicId,
+        title: $form.find('input[name="title"]').val(),
+        coverUrl: $form.find('button[name="cover"] img').attr('src'),
+        description: $form.find('textarea[name="description"]').val(),
+        publish: submitType == 'publish' ? 1 : undefined
+      }
+    })
+      .done(function () {
+        if (submitType == 'saveDraft') {
+          window.location = '/works';
+        } else {
+          window.location = '/topic/' + topicId;
+        }
+      })
+      .fail(function (jqXHR) {
+        alert(jqXHR.responseText);
+        $button.button('reset');
+      });
+  }
+
+  /**
    * 初始化总结标题，总结描述
    * @private
    */
@@ -1809,59 +1861,6 @@
     $save.click(function () {
       $thumb.find('img').attr('src', $input.val());
       $cancel.click();
-    });
-  }
-
-  function ___commit() {
-    var submitType = $form.data('submitType');
-    var $button = $band.find('button[name="' + submitType + '"]');
-    $button.button('loading');
-
-    $.ajax('/topic/save', {
-      type: 'PUT',
-      data: {
-        topicId: topicId,
-        title: $form.find('input[name="title"]').val(),
-        coverUrl: $form.find('button[name="cover"] img').attr('src'),
-        description: $form.find('textarea[name="description"]').val(),
-        publish: submitType == 'publish' ? 1 : undefined
-      }
-    })
-      .done(function () {
-        if (submitType == 'saveDraft') {
-          window.location = '/works';
-        } else {
-          window.location = '/topic/' + topicId;
-        }
-      })
-      .fail(function (jqXHR) {
-        alert(jqXHR.responseText);
-        $button.button('reset');
-      });
-  }
-
-  /**
-   * 总结菜单栏固定窗口顶部、监听按钮点击事件
-   * @private
-   */
-  function __initBand() {
-    $band = $('.Band');
-
-    var headPosition = $band.offset().top;
-    $(window).scroll(function () {
-      if ($(this).scrollTop() >= headPosition) {
-        $band.addClass('Band-Fixed');
-      } else {
-        $band.removeClass('Band-Fixed');
-      }
-    });
-
-    $band.on('click', 'button', function (event) {
-      var $target = $(event.target);
-      var name = $target.attr('name');
-      $form
-        .data('submitType', name)
-        .submit();
     });
   }
 
@@ -1980,8 +1979,8 @@
       });
       __init();
       __initListListener();
-      __initTop(data.topicData);
       __initBand();
+      __initTop(data.topicData);
       __initMenu();
       __initSort();
       __initItems(data.itemsData);

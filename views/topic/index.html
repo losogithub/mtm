@@ -1,86 +1,82 @@
-<div class="Contents">
+<div class="Contents" xmlns="http://www.w3.org/1999/html">
   <div class="Top">
-    <div class="Head01">
-      <div class="Inner">
-        <table>
-          <td>
-            <ol>
-              <li><a href="/">mtm首页</a><i class="icon-angle-right"></i></li>
-            </ol>
-          </td>
-        </table>
-      </div>
+    <div class="Inner">
+      <table>
+        <td>
+          <ol>
+            <li><a href="/">mtm首页</a><i class="icon-angle-right"></i></li>
+          </ol>
+        </td>
+      </table>
     </div>
-    <div class="Head02">
-      <div class="Inner">
-        <div class="HeadMain">
-          <div class="HeadThumb" style="display: <%= !locals.topic ? 'none' : !topic.coverUrl ? 'none' : 'block' %>;">
-          <img width="95" height="95" onerror="mtm.errorImage(this,'image_95x95');"
-               src="<%= !locals.topic ? '' : !topic.coverUrl ? '' : topic.coverUrl %>">
-          </div>
+  </div>
+  <div class="Head">
+    <div class="Inner">
+      <div class="HeadMain">
+        <div class="HeadThumb" style="display: <%= !locals.topic ? 'none' : !topic.coverUrl ? 'none' : 'block' %>;">
+        <img width="95" height="95" onerror="mtm.errorImage(this,'image_95x95');"
+             src="<%= !locals.topic ? '' : !topic.coverUrl ? '' : topic.coverUrl %>">
+        </div>
 
-          <div class="HeadTxt">
-            <div class="HeadTtlWrapper">
-              <h1 class="HeadTtl"><a href="<%= !locals.url ? '' : url %>"><%=
-                locals.topic ? topic.title : '' %></a></h1>
+        <div class="HeadTxt">
+          <div class="HeadTtlWrapper">
+            <h1 class="HeadTtl"><a href="<%= !locals.url ? '' : url %>"><%=
+              locals.topic ? topic.title : '' %></a></h1>
 
-              <% if (locals.isAuthor) { %>
-              <div class='HeadUtil'>
-                <a href="<%= locals.url + '/edit?showOption=true' %>"><i class="icon-pencil"></i> 修改</a>
-                <% if (!locals.items || !items.length) { %>
-                <span class='VLine VLine-Util'></span>
-                <a><i class="icon-trash"></i> 删除</a>
-                <% } %>
-              </div>
+            <% if (locals.isAuthor) { %>
+            <div class='HeadUtil'>
+              <a href="<%= locals.url + '/edit?showOption=true' %>"><i class="icon-pencil"></i> 修改</a>
+              <% if (!locals.items || !items.length) { %>
+              <span class='VLine VLine-Util'></span>
+              <a><i class="icon-trash"></i> 删除</a>
               <% } %>
             </div>
+            <% } %>
+          </div>
 
-            <p><span class="HeadDesc"
-                     style="<%= !topic.description ? 'display: none;' : '' %>"><%= topic.description %></span><span
-              class="HeadDate">更新日期: <%= locals.topic ? topic.updateAt : '' %></span>
-            </p>
+          <p><span class="HeadDesc"
+                   style="<%= !topic.description ? 'display: none;' : '' %>"><%= topic.description %></span><span
+            class="HeadDate">更新日期: <%= locals.topic ? topic.updateAt : '' %></span>
+          </p>
 
-            <div class="HeadOption">
-              <div class="HeadUser">
-                <table style="height: 30px;">
-                  <td>
-                    <a class="HeadUserThumb" href="/u/<%= topic.author %>"><img src="<%= authorInfo.imgUrl ? authorInfo.imgUrl : '/images/no_img/user_40x40.png' %>"
-                      onerror="mtm.errorImage(this,'user_40x40');"
-                      title="<%= topic.author %>"></a>
-                  </td>
-                  <td>
-                    <a class="HeadUserName" href="/u/<%= topic.author %>"><%= topic.author %></a>
-                  </td>
-                </table>
-              </div>
+          <div class="HeadOption">
+            <div class="HeadUser">
+              <table style="height: 30px;">
+                <td>
+                  <a class="HeadUserThumb" href="/u/<%= topic.author %>"><img width="30" height="30" src="<%= authorInfo.imgUrl ? authorInfo.imgUrl : '/images/no_img/user_80x80.png' %>"
+                    onerror="mtm.errorImage(this,'user_80x80');"
+                    title="<%= topic.author %>"></a>
+                </td>
+                <td>
+                  <a class="HeadUserName" href="/u/<%= topic.author %>"><%= topic.author %></a>
+                </td>
+              </table>
             </div>
           </div>
         </div>
-        <div class="HeadSub">
-          <div class="HeadCount">
-            <span class="HeadFVCount">
-              <span class="HeadFVCountNum"><span class="HeadFVIco"></span> <span><%= topic.FVCount %></span></span>
-              <span class="HeadFVCountLabel">favourite</span>
-            </span>
-            <span class="HeadPVCount">
-              <span class="HeadPVCountNum"><%= topic.PVCount %></span>
-              <span class="HeadPVCountLabel">view</span>
-            </span>
-            </div>
-
-          <a <% if(locals.liked) {%> class="HeadFVBtn ExSelected" <% } else { %> class="HeadFVBtn" <% } %>data-favorite="{&quot;topicId&quot;:&quot;<%= topic.topicId %>&quot;}">
-              <span class="HeadFVBtnWrap">
-                <span class="HeadFVBtnIco"></span>
-                <span class="HeadFVBtnTxt">添加到收藏</span>
-              </span>
-            </a>
+      </div>
+      <div class="HeadSub">
+        <div class="HeadCount">
+          <span class="HeadFVCount">
+            <span class="HeadFVCountNum"><i class="HeadFVIco icon-star"></i> <span><%= topic.FVCount %></span></span>
+            <span class="HeadFVCountLabel">收藏</span>
+          </span>
+          <span class="HeadPVCount">
+            <span class="HeadPVCountNum"><%= topic.PVCount %></span>
+            <span class="HeadPVCountLabel">view</span>
+          </span>
         </div>
+
+        <button <% if(locals.liked) {%> class="ExSelected btn btn-large" <% } else { %> class="btn btn-large" <% } %>data-favorite="{&quot;topicId&quot;:&quot;<%= topic.topicId %>&quot;}">
+          <i class="HeadFVBtnIco icon-star"></i>
+          <span class="HeadFVBtnTxt">收藏</span>
+        </button>
       </div>
     </div>
   </div>
 
   <!--内容-->
-  <div class="TopicWrapper TOPIC_INDEX">
+  <div class="TopicWrapper">
     <div class="Main">
       <% if (!locals.items || !items.length) { %>
       <div class="NoItem">
@@ -120,21 +116,20 @@
                   <img title="" width="80" height="80" src="<%= authorInfo.imgUrl ? authorInfo.imgUrl : '/images/no_img/user_80x80.png' %>" onerror="errorImage(this,'user80x80');"
                        class="SubAuthorProfileUnitTitleUserNameThumb"> <%= topic.author %>
                 </a>
-                san
               </h2>
               <p class="SubAuthorProfileUnitLink">
                 <% if (authorInfo.personalSite) { %>
                  <span class="SubAuthorProfileUnitLinkSite">
-                   <a href="<%= authorInfo.personalSite %>" class="SubAuthorProfileUnitLinkSiteBtn" target="_blank">个人网站</a>
+                   <a href="<%= authorInfo.personalSite %>" class="btn btn-small" target="_blank">个人网站</a>
                  </span>
                 <% } else { %>
                  <span class="SubAuthorProfileUnitLinkSite ExDisabled">
-                   <span class="SubAuthorProfileUnitLinkSiteBtn">个人网站</span>
+                   <button disabled class="btn btn-small" type="button">个人网站</button>
                  </span>
                 <% } %>
               </p>
             </div>
-            <p class="SubAuthorProfileTxt"><%- authorInfo.description %></p>
+            <p class="SubAuthorProfileTxt"><%- !authorInfo.description ? '' : authorInfo.description %></p>
           </div>
 
         </div>

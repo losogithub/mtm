@@ -373,7 +373,7 @@ var login = function (req, res, next) {
 
   // check loginname is a user id or an email address
   var emailIDFlag = true;
-  if (! helper.validateEmail(loginname)) {
+  if (!helper.validateEmail(loginname)) {
     emailIDFlag = false;
     User.getUserByLoginName(loginname, function (err, user) {
       if (err) {
@@ -422,12 +422,12 @@ var login = function (req, res, next) {
 
 
 //suppose the username id, or email address exists, now check the password:
-function checkOnlyPassword(emailIDFlag , pass, autoLogin, user, req, res) {
+function checkOnlyPassword(emailIDFlag, pass, autoLogin, user, req, res) {
   console.log("function: checkonly password");
   pass = encryp.md5(pass);
   var email = user.email;
-  if(!emailIDFlag){
-      email = user.username;
+  if (!emailIDFlag) {
+    email = user.username;
   }
   if (pass !== user.password) {
     res.render('sign/login', {
@@ -515,7 +515,7 @@ var signout = function (req, res, next) {
     css: '',
     js: '',
     layout: 'signLayout',
-    refer : refer
+    refer: refer
   })
 };
 
