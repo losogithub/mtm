@@ -169,10 +169,8 @@ body.INDEX {
   width: 160px;
   height: 64px;
 }
-.Logo.Logo-64,
-.Logo.Logo-64 img {
-  width: 160px;
-  height: 64px;
+.SIGNUP .Logo {
+  margin-top: 30px;
 }
 /*分割线*/
 .VLine {
