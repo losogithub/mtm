@@ -162,8 +162,15 @@ body.INDEX {
   width: 80px;
   height: 32px;
 }
+.LOGIN .Logo,
+.LOGIN .Logo img,
+.SIGNUP .Logo,
+.SIGNUP .Logo img {
+  width: 160px;
+  height: 64px;
+}
 .Logo.Logo-64,
-.Logo img.Logo-64 {
+.Logo.Logo-64 img {
   width: 160px;
   height: 64px;
 }
@@ -196,6 +203,10 @@ body.INDEX {
 }
 .PERSONAL .Header {
   height: 64px;
+}
+.LOGIN .Header,
+.SIGNUP .Header {
+  height: 178px;
 }
 /*导航*/
 .Nav a {

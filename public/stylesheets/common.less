@@ -56,7 +56,10 @@ body {
   &, img {
     display: block; width: 50px; height: 20px;
     .INDEX & { width: 80px; height: 32px; }
-    &.Logo-64 { width: 160px; height: 64px; }
+    .LOGIN &, .SIGNUP & { width: 160px; height: 64px; }
+  }
+  &.Logo-64 {
+    &, img { width: 160px; height: 64px; }
   }
 }
 
@@ -73,6 +76,7 @@ body {
   z-index: 501; height: 48px; border-top: 3px solid #333; border-bottom: 1px solid rgb(231, 231, 231);
   .INDEX & { height: 112px; }
   .PERSONAL & { height: 64px; }
+  .LOGIN &, .SIGNUP & { height: 178px; }
 }
 
 /*导航*/
