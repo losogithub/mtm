@@ -1,98 +1,84 @@
-<!--SIGNUP!这是layout要用的参数，不能删！-->
-    <div class="LyContents01">
+<!--SIGNUP##这是layout要用的参数，不能删！-->
+<div class="LyContents01">
+  <form method="post" id="_registForm" action="/signup">
+    <input type="hidden" name="fromUrl" value="http://mtm.com/"/>
+    <input type="hidden" id="certKey" name="certKey" value=""/>
+    <!--
+    <input type="hidden" name="captchaKey" id="captchaKey" value="1^HJLzy0Lqp23QEf64" class="_inputCaptchaKey" />
+     -->
+
+    <div class="MdFormRegist01">
+      <div class="mdFormRegist01Inner MdCF">
+        <fieldset>
+          <legend class="MdHide">Input of Registration Information</legend>
+          <div class="mdFormRegist01Body">
+            <div class="mdFormRegist01BodyInner MdCF">
+
+              <dl class="mdFormRegist01Unit01">
+                <dt class="mdFormRegist01Unit01Ttl"><span>用户名</span></dt>
+                <dd class="mdFormRegist01Unit01Body">
+                  <div class="MdInputTxt01">
+                    <input style="height: 40px;" type="text" class="_userNameInput" value="" maxlength="20"
+                           id="_userName" name="username"/></div>
+
+                  <div class="mdFormRegist01MsgBox">
+                    <%- locals.nameMsg ? nameMsg : '' %>
+                  </div>
+                </dd>
+                <!--/mdFormRegist01Unit01--></dl>
+
+              <dl class="mdFormRegist01Unit01">
+                <dt class="mdFormRegist01Unit01Ttl"><span>邮箱</span></dt>
+                <dd class="mdFormRegist01Unit01Body">
+                  <div class="MdInputTxt01">
+                    <input style="height: 40px;" type="text" id="_email" name="email" value=""/></div>
+
+                  <div class="mdFormRegist01MsgBox">
+                    <%- locals.emailMsg ? emailMsg : '' %>
+                  </div>
+                </dd>
+                <!--/mdFormRegist01Unit01--></dl>
+
+              <dl class="mdFormRegist01Unit01">
+                <dt class="mdFormRegist01Unit01Ttl"><span>密码</span></dt>
+                <dd class="mdFormRegist01Unit01Body">
+                  <div class="MdInputTxt01">
+                    <input style="height: 40px;" type="password" maxlength="20" id="_passwd" name="password"/></div>
+
+                  <div class="mdFormRegist01MsgBox">
+                    <%- locals.passwordMsg ? passwordMsg : '' %>
+                  </div>
+                </dd>
+                <!--/mdFormRegist01Unit01--></dl>
+
+              <!--/mdFormRegist01BodyInner--></div>
+            <!--/mdFormRegist01Body--></div>
+        </fieldset>
+        <!--/mdFormRegist01Inner--></div>
+      <!--/MdFormRegist01--></div>
 
 
-        <script type="text/javascript">
-            //<![CDATA[
-            function formSubmit(){
-            }
+    <div class="MdAgree01">
+      <fieldset>
+        <legend class="MdHide">Agreement</legend>
+        <ul class="mdAgree01List">
+          <li class="mdAgree01Li"><input type="checkbox" id="rules"><strong>同意<a href="http://www.MTM.com/rules/"
+                                                                                 target="_blank">MTM&#39;s Terms of
+            service</a>和<a href="http://www.MTM.com/privacy/policy/" target="_blank">Privacy Policy</a></strong></input>
+          </li>
+          <input type="hidden" name="newsletterflg" value="N"></input>
+        </ul>
+      </fieldset>
+      <!--/MdAgree01--></div>
 
-            function init(){
-                $("ipt_name").value = $("ipta_nickname").value;
-            }
-            //]]>
-        </script>
-        <form method="post" id="_registForm" action="/signup">
-            <input type="hidden" name="fromUrl" value="http://mtm.com/" />
-            <input type="hidden" id="certKey" name="certKey" value="" />
-            <!--
-            <input type="hidden" name="captchaKey" id="captchaKey" value="1^HJLzy0Lqp23QEf64" class="_inputCaptchaKey" />
-             -->
+    <button name="signup" style="margin: 30px auto;width: 230px;height: 50px;"
+            class="btn btn-success btn-block btn-large" disabled="disabled">注册
+    </button>
+  </form>
 
-            <div class="MdFormRegist01">
-                <div class="mdFormRegist01Inner MdCF">
-                    <fieldset>
-                        <legend class="MdHide">Input of Registration Information</legend>
-                        <div class="mdFormRegist01Body">
-                            <div class="mdFormRegist01BodyInner MdCF">
-
-                                <dl class="mdFormRegist01Unit01">
-                                    <dt class="mdFormRegist01Unit01Ttl"><span>用户名</span></dt>
-                                    <dd class="mdFormRegist01Unit01Body">
-                                        <div class="MdInputTxt01">
-                                            <input style="height: 40px;" type="text" class="_userNameInput" value="" maxlength="20" id="_userName" name="username" /></div>
-
-                                        <div class="mdFormRegist01MsgBox">
-                                          <%- locals.nameMsg ? nameMsg : '' %>
-                                        </div>
-                                    </dd>
-                                    <!--/mdFormRegist01Unit01--></dl>
-
-                                <dl class="mdFormRegist01Unit01">
-                                    <dt class="mdFormRegist01Unit01Ttl"><span>邮箱</span></dt>
-                                    <dd class="mdFormRegist01Unit01Body">
-                                        <div class="MdInputTxt01">
-                                            <input style="height: 40px;" type="text" id="_email"  name="email" value="" /></div>
-
-                                        <div class="mdFormRegist01MsgBox">
-                                          <%- locals.emailMsg ? emailMsg : '' %>
-                                        </div>
-                                    </dd>
-                                    <!--/mdFormRegist01Unit01--></dl>
-
-                                <dl class="mdFormRegist01Unit01">
-                                    <dt class="mdFormRegist01Unit01Ttl"><span>密码</span></dt>
-                                    <dd class="mdFormRegist01Unit01Body">
-                                        <div class="MdInputTxt01">
-                                            <input style="height: 40px;" type="password" maxlength="20" id="_passwd" name="password" /></div>
-
-                                        <div class="mdFormRegist01MsgBox">
-                                          <%- locals.passwordMsg ? passwordMsg : '' %>
-                                        </div>
-                                    </dd>
-                                    <!--/mdFormRegist01Unit01--></dl>
-
-                                <!--/mdFormRegist01BodyInner--></div>
-                            <!--/mdFormRegist01Body--></div>
-                    </fieldset>
-                    <!--/mdFormRegist01Inner--></div>
-                <!--/MdFormRegist01--></div>
-
-
-            <div class="MdAgree01">
-                <fieldset>
-                    <legend class="MdHide">Agreement</legend>
-                    <ul class="mdAgree01List">
-                        <li class="mdAgree01Li"><input type="checkbox" id="rules"><strong>同意<a href="http://www.MTM.com/rules/" target="_blank">MTM&#39;s Terms of service</a>和<a href="http://www.MTM.com/privacy/policy/" target="_blank">Privacy Policy</a></strong></input></li>
-                        <input type="hidden" name="newsletterflg" value="N"></input>
-                    </ul>
-                </fieldset>
-                <!--/MdAgree01--></div>
-
-            <button name="signup" style="margin: 30px auto;width: 230px;height: 50px;" class="btn btn-success btn-block btn-large" disabled= "disabled">注册</button>
-        </form>
-
-
-
-        <!--[[SCRIPT]]-->
-        <script>
-            $().ready(function() {
-                new nj.account.initRegistForm();
-                //lcs_do();  9.24
-            });
-        </script>
-        <!--[[/SCRIPT]]-->
-
-        <!--/LyContents01--></div>
-    <!--[[/CONTENTS-AREA]]-->
-
+  <script>
+    $(function () {
+      new nj.account.initRegistForm();
+    });
+  </script>
+</div>

@@ -15,11 +15,12 @@
   <script type="text/javascript" src="http://libs.baidu.com/jquery/1.10.2/jquery.min.js"></script>
   <script type="text/javascript" src="/javascripts/bootstrap.min.js"></script>
   <script type="text/javascript" src="/javascripts/common.js"></script>
+  <script src="/javascripts/account/account_common.js"></script>
   <% for (i in locals.js) { %>
   <script type="text/javascript" src="<%= js[i] %>"></script>
   <% } %>
 </head>
-<% var temp = !locals.body ? null : locals.body.match(/^.{4}([^!]*)/); %>
+<% var temp = !locals.body ? null : locals.body.match(/^.{4}([^#]*)##/); %>
 <% temp = !temp ? null : !temp[1] ? null : temp[1] %>
 <% if (!locals.pageType) locals.pageType = temp; %>
 <body class="<%= !locals.pageType ? '' : pageType %>">
