@@ -9,7 +9,7 @@
 //click on add FV
 $(
   function($){
-    $('.HeadFVBtn')
+    $('button[name="favorite"]')
       .click(function(){
         console.log("click on add fav");
         var topicId = $(this).data('favorite').topicId;
@@ -32,9 +32,9 @@ $(
               console.log(typeof  data.toLike);
               console.log(data.toLike);
               if(data.toLike == "true"){
-                $('.HeadFVBtn').addClass('ExSelected');
+                $('button[name="favorite"]').addClass('ExSelected');
               } else {
-                $('.HeadFVBtn').removeClass('ExSelected');
+                $('button[name="favorite"]').removeClass('ExSelected');
               }
               //$('.HeadFVCountNum').text(data.FVCount);
               $('.HeadFVIco').next().text(data.FVCount);
@@ -103,11 +103,11 @@ var loginCheck = function(){
 
 
   //: post topicId and toLike again
-  var topicId = $('.HeadFVBtn').data('favorite').topicId;
+  var topicId = $('button[name="favorite"]').data('favorite').topicId;
   console.log(topicId);
 
 
-  var className = $('.HeadFVBtn').attr('class');
+  var className = $('button[name="favorite"]').attr('class');
 
   var toLike = true;
   if ( className.split(' ').indexOf('ExSelected') > -1){ toLike = false;} //usually shallbe true.
@@ -140,9 +140,9 @@ var loginCheck = function(){
         $('#simplemodal-container').remove();
 
         if(data.toLike == "true"){
-          $('.HeadFVBtn').addClass('ExSelected');
+          $('button[name="favorite"]').addClass('ExSelected');
         } else {
-          $('.HeadFVBtn').removeClass('ExSelected');
+          $('button[name="favorite"]').removeClass('ExSelected');
         }
         //$('.HeadFVCountNum').text( '<span class="HeadFVIco"></span>' + data.FVCount);
         $('.HeadFVIco').next().text(data.FVCount);

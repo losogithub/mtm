@@ -1,5 +1,4 @@
 .Top{margin-bottom: 20px;border-bottom: 1px solid rgb(231, 231, 231);position: relative;height: 41px;}
-.Contents{overflow: hidden;}
 .Main{float: left;width: 710px;padding: 0 25px 5px 0;}
 
 .MdCF{*zoom:1}
@@ -19,7 +18,7 @@ em{font-style:normal}
 .Col01 .SELECTED a{color: #000;font-weight: bold;}
 
 .Col02{float: left;width: 335px;margin-right: 25px;}
-.Col02 h2{color: rgb(0, 0, 0);font-weight: bold;margin-bottom: 10px;}
+.Col02 h6{color: black;font-weight: bold;margin: 0 0 10px;}
 .HotTopicList {}
 .HotTopicList li{margin-top: 15px;padding-top: 15px;border-top: 1px solid rgb(242, 242, 242);}
 .HotTopicList li:first-child{margin-top: 0;padding-top: 0;border-top: 0 none;}
@@ -49,8 +48,7 @@ em{font-style:normal}
 .SubSeparator{background: #fff; height: 15px}
 .SubContent{background-color: #fff}
 .SubContentTopicListBox{margin-bottom: -8px}
-.SubContentTopicListTtl{margin-bottom: 13px;}
-.SubContentTopicListTtl h2 {color: #000; font-weight: bold}
+.SubContentTopicListTtl{margin: 0 0 13px;color: black; font-weight: bold;}
 .SubContentTopicListList{overflow: hidden}
 .SubContentTopicListListItem{display: table; table-layout: fixed; width: 300px; padding: 0 0 8px 0; word-wrap: break-word; word-break: break-all}
 .SubContentTopicListListItemThumb{width: 45px; vertical-align: top; display: table-cell}

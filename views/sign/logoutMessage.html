@@ -1,13 +1,11 @@
-<div class="LyContents02">
-
-  <div class="ArMain01">
-    <div class="MdMsgInfo01">
-      <h1 class="mdMsgInfo01Ttl">您已经登出了现在的账户。</h1>
-      <!--<ul class="MdActionBtn01">-->
-        <!--<li class="mdActionBtn01Li"><a href="<%= refer %>" class="MdBtnReturn01">回到服务</a></li>-->
-        <!--&lt;!&ndash;/MdActionBtn01&ndash;&gt;</ul>-->
-      <a href="<%= refer %>" class="btn btn-success btn-large" style="margin-top: 25px;width: 230px;">返回</a>
-      <!--/MdMsgInfo01--></div>
-    <!--/ArMain01--></div>
-
-  <!--/LyContents02--></div>
+<!--ACCOUNT##这是layout要用的参数，不能删！-->
+<div class="Contents">
+  <div class="Inner">
+    <div class="Message">
+      <h4>您已经登出了现在的账户。</h4>
+      <ul class="BtnSet">
+        <li><a href="<%= !locals.refer ? '/' : refer %>" class="btn btn-success btn-large btn-block">返回</a></li>
+      </ul>
+    </div>
+  </div>
+</div>

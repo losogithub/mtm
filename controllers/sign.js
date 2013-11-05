@@ -21,11 +21,7 @@ var mail = require('../services/mail');
 var showSignUp = function (req, res) {
   console.log("render singup page");
   console.log(req.session._loginReferer);
-  res.render('sign/signup', {
-    title: config.name,
-    css: '',
-    js: ''
-  });
+  res.render('sign/signup');
 };
 
 
@@ -121,9 +117,6 @@ var signup = function (req, res, next) {
             if (eMsg || nMsg || pMsg) {
               console.log("%s", eMsg);
               res.render('sign/signup', {
-                title: config.name,
-                css: '',
-                js: '',
                 emailMsg: eMsg,
                 nameMsg: nMsg,
                 passwordMsg: pMsg,
@@ -147,10 +140,7 @@ var signup = function (req, res, next) {
               res.set('Expire', '-1');
               res.set('Pragma', 'no-cache');
               res.render('sign/success_signup', {
-                title: config.name,
-                emailAddress: email,
-                css: '',
-                js: ''
+                emailAddress: email
               });
             });
           })
@@ -158,9 +148,6 @@ var signup = function (req, res, next) {
         // not registered user, wrong email.
         else {
           res.render('sign/signup', {
-            title: config.name,
-            css: '',
-            js: '',
             emailMsg: eMsg,
             nameMsg: nMsg,
             passwordMsg: pMsg,
@@ -188,9 +175,6 @@ var signup = function (req, res, next) {
             if (eMsg || pMsg) {
               console.log("%s", eMsg);
               res.render('sign/signup', {
-                title: config.name,
-                css: '',
-                js: '',
                 emailMsg: eMsg,
                 nameMsg: nMsg,
                 passwordMsg: pMsg,
@@ -213,10 +197,7 @@ var signup = function (req, res, next) {
               res.set('Expire', '-1');
               res.set('Pragma', 'no-cache');
               res.render('sign/success_signup', {
-                title: config.name,
-                emailAddress: email,
-                css: '',
-                js: ''
+                emailAddress: email
               });
             });
           })
@@ -224,9 +205,6 @@ var signup = function (req, res, next) {
         // correct user, wrong email.
         else {
           res.render('sign/signup', {
-            title: config.name,
-            css: '',
-            js: '',
             emailMsg: eMsg,
             nameMsg: nMsg,
             passwordMsg: pMsg,
@@ -249,9 +227,6 @@ var signup = function (req, res, next) {
 
       // wrong name, maybe correct email address.
       res.render('sign/signup', {
-        title: config.name,
-        css: '',
-        js: '',
         emailMsg: eMsg, nameMsg: nMsg, passwordMsg: pMsg, name: name, email: email});
       return;
 
@@ -259,9 +234,6 @@ var signup = function (req, res, next) {
   }
   else {
     res.render('sign/signup', {
-      title: config.name,
-      css: '',
-      js: '',
       emailMsg: eMsg, nameMsg: nMsg, passwordMsg: pMsg, name: name, email: email});
     return;
   }
@@ -407,9 +379,6 @@ function checkOnlyPassword(emailIDFlag, pass, autoLogin, user, req, res) {
     // 从新发送激活邮件
     mail.sendActiveMail(user.email, encryp.md5(user.email + config.session_secret), user.name, user.email);
     return res.render('sign/activeAccount', {
-      title: config.name,
-      css: '',
-      js: '',
       email: email
     });
   }
@@ -468,9 +437,6 @@ var signout = function (req, res, next) {
     }
   }
   return res.render('sign/logoutMessage', {
-    title: config.name,
-    css: '',
-    js: '',
     refer: refer
   })
 };
@@ -478,9 +444,6 @@ var signout = function (req, res, next) {
 
 var showForgetPassword = function (req, res) {
   res.render('sign/forgetPassword', {
-    title: config.name,
-    css: '',
-    js: '',
     errMsg: ''
   });
 };
@@ -506,9 +469,6 @@ var forgetPassword = function (req, res, next) {
 
   if (errMsg) {
     res.render('sign/forgetPassword', {
-      title: config.name,
-      css: '',
-      js: '',
       errMsg: errMsg
     });
   }
@@ -521,9 +481,6 @@ var forgetPassword = function (req, res, next) {
     //console.log(user);
     if (!user) {
       res.render('sign/forgetPassword', {
-        title: config.name,
-        css: '',
-        js: '',
         errMsg: 'the email address does not exist.'
       });
     }
@@ -540,11 +497,7 @@ var forgetPassword = function (req, res, next) {
         // 发送重置密码邮件
         // But if the user hasn't been activated ? how to do ?
         mail.sendResetPassMail(email, retrieveKey, user.email);
-        res.render('sign/forgetPassSuccessSend', {
-          title: config.name,
-          css: '',
-          js: ''
-        })
+        res.render('sign/forgetPassSuccessSend')
       });
     }
   });
@@ -555,28 +508,15 @@ var showResetPassword = function (req, res, next) {
   var email = req.query.email;
   User.getUserByEmail(email, key, function (err, user) {
     if (!user) {
-      return res.render('sign/errLink',
-        {
-          title: config.name,
-          css: '',
-          js: ''
-        });
+      return res.render('sign/errLink');
     }
     var now = new Date().getTime();
     var oneDay = 1000 * 60 * 60 * 24;
     if (!user.retrieve_time || now - user.retrieve_time > oneDay) {
-      return res.render('sign/errLink',
-        {
-          title: config.name,
-          css: '',
-          js: ''
-        });
+      return res.render('sign/errLink');
     }
     //finally correct
     return res.render('sign/resetPassword', {
-      title: config.name,
-      css: '',
-      js: '',
       key: key,
       email: email,
       errMsg: ''
@@ -594,9 +534,6 @@ var resetPassword = function (req, res, next) {
   console.log("repass: %s", repsw);
   if (psw !== repsw) { // already include empty situation. !! no !!!
     return res.render('sign/resetPassword', {
-      title: config.name,
-      css: '',
-      js: '',
       key: key,
       email: email,
       errMsg: '两次密码输入不一致'
@@ -604,9 +541,6 @@ var resetPassword = function (req, res, next) {
   }
   if (psw === '' && repsw === '') {
     return res.render('sign/resetPassword', {
-      title: config.name,
-      css: '',
-      js: '',
       key: key,
       email: email,
       errMsg: '密码不能为空'
@@ -614,9 +548,6 @@ var resetPassword = function (req, res, next) {
   }
   if (psw.length < 6) {
     return res.render('sign/resetPassword', {
-      title: config.name,
-      css: '',
-      js: '',
       key: key,
       email: email,
       errMsg: '密码不能少于6位'
@@ -632,12 +563,7 @@ var resetPassword = function (req, res, next) {
       return next(err);
     }
     if (!user) {
-      return res.render('sign/errLink',
-        {
-          title: config.name,
-          css: '',
-          js: ''
-        });
+      return res.render('sign/errLink');
     }
     console.log(encryp.md5(psw));
     //bug fixed: 10.11.2013. user.pass
@@ -650,11 +576,7 @@ var resetPassword = function (req, res, next) {
         return next(err);
       }
 
-      return res.render('sign/resetPasswordSuccess', {
-        title: config.name,
-        css: '',
-        js: ''
-      });
+      return res.render('sign/resetPasswordSuccess');
     });
   });
 }
@@ -669,11 +591,7 @@ var activeAccount = function (req, res, next) {
       return next(err);
     }
     if (!user || encryp.md5(user.email + config.session_secret) !== key || user.active) {
-      return res.render('sign/resetPasswordSuccess', {
-        title: config.name,
-        css: '',
-        js: ''
-      });
+      return res.render('sign/errLink');
     }
 
     user.active = true;
@@ -681,11 +599,7 @@ var activeAccount = function (req, res, next) {
       if (err) {
         return next(err);
       }
-      res.render('sign/activeAccountSuccess', {
-        title: config.name,
-        css: '',
-        js: ''
-      })
+      res.render('sign/activeAccountSuccess')
     });
   });
 };

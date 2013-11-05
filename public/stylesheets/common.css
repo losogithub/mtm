@@ -1,10 +1,4 @@
 body,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
 p,
 dl,
 dt,
@@ -47,15 +41,6 @@ fieldset,
 legend,
 header {
   *zoom: 1;
-}
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-size: 100%;
-  font-weight: normal;
 }
 button,
 img,
@@ -145,7 +130,7 @@ body.INDEX {
 }
 /*按钮*/
 .BtnSet {
-  padding-top: 14px;
+  margin-top: 14px;
 }
 .Widget .BtnSet {
   float: left;
@@ -188,6 +173,12 @@ body.INDEX {
 }
 .VLine.VLine-Util {
   margin: 0 5px;
+}
+.HLine {
+  border-top: 1px solid #dddddd;
+}
+.HLine.HLine-Personal {
+  margin: 25px 0;
 }
 /*页眉*/
 .Header {
@@ -277,7 +268,6 @@ body.INDEX {
   border-top: 1px solid #e7e7e7;
   height: 64px;
   font-size: 11px;
-  margin-top: 20px;
 }
 .Footer a {
   color: #333;
