@@ -46,6 +46,7 @@ function updateHotTopics(callback){
       topics.forEach(function(topic){
         // create hotTopic document
         var hotTopic = new HotTopicModel();
+        hotTopic._id = topic._id;
         hotTopic.title = topic.title;
         hotTopic.cover_url = topic.cover_url;
         hotTopic.description = topic.description;

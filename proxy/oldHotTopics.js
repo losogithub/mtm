@@ -27,6 +27,7 @@ function copyFromHotTopics(callback){
       if(err){console.log(err); next(err);}
       newTopics.forEach(function(topic){
         var oldTopic = new OldHotTopicModel();
+        oldTopic._id = topic._id; //copy the id is necessary
         oldTopic.title = topic.title;
         oldTopic.cover_url = topic.cover_url;
         oldTopic.description = topic.description;
