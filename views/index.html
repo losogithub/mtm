@@ -32,7 +32,7 @@
                 </td>
                 <td style="width: 100%;">
                   <div class="">
-                    <h3 class="TopicTtl"><a href="/topic/<%= hot[i].id %>"><%= hot[i].title %></a></h3>
+                    <p class="TopicTtl"><a href="/topic/<%= hot[i].id %>"><%= hot[i].title %></a></p>
                     <a class="TopicAuthor" href="/u/<%= hot[i].author %>"><%= hot[i].author %></a>
                     <span class="PVCount"><b><%= hot[i].PVCount %></b>访问量</span>
                   </div>
@@ -47,7 +47,7 @@
             <% for (i in hot) { %>
              <li class="col03HotContentListItem">
                <a href="/topic/<%= hot[i].id %>">
-                 <h3 class="Col03HotContentListItemTtl" title="<%= hot[i].title %>"><%= hot[i].title %></h3>
+                 <p class="Col03HotContentListItemTtl" title="<%= hot[i].title %>"><%= hot[i].title %></p>
                  <p class="Col03HotContentListItemDes"><%= hot[i].des %></p>
                </a>
                <div class="Col03HotContentListItemOption">
@@ -88,25 +88,23 @@
       <!--the newest summarise-->
       <div class="SubContent">
         <div class="SubContentTopicListBox">
-          <div class="SubContentTopicListTtl">
-            <h2>最新的总结</h2>
-          </div>
+          <h6 class="SubContentTopicListTtl">最新的总结</h6>
           <ul class="SubContentTopicListList">
-            <% for (i in hot) { %>
+            <% for (i in newTopics) { %>
             <li class="SubContentTopicListListItem">
               <div class="SubContentTopicListListItemThumb">
-                <a href="/topic/<%= hot[i].id %>">
+                <a href="/topic/<%= newTopics[i].id %>">
                   <img width="45" height="45"
                        onerror="mtm.errorImage(this,'image_95x95');"
-                       src="<%= !hot[i].coverUrl ? '/images/no_img/image_95x95.png' : hot[i].coverUrl %>">
+                       src="<%= !newTopics[i].coverUrl ? '/images/no_img/image_95x95.png' : newTopics[i].coverUrl %>">
                 </a>
               </div>
               <div class="SubContentTopicListListItemTxt">
-                <h3 class="SubContentTopicListListItemTxtLink">
-                  <a href="/topic/<%= hot[i].id %>"><%= hot[i].title %></a>
-                </h3>
+                <p class="SubContentTopicListListItemTxtLink">
+                  <a href="/topic/<%= newTopics[i].id %>"><%= newTopics[i].title %></a>
+                </p>
                 <p class="SubContentTopicListListItemUserName">
-                  <a href=""><%= hot[i].author%></a>
+                  <a href=""><%= newTopics[i].author%></a>
                 </p>
               </div>
             </li>
