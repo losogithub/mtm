@@ -836,14 +836,14 @@ function saveTopic(req, res, next) {
     return;
   }
 
-  Topic.saveTopic(authorId, topicId, title, coverUrl, description, publish, function () {
+  Topic.saveTopic(authorId, topicId, title, coverUrl, description, publish, function (err, topic) {
+    if(err){console.log(err); return;}
     res.send(200);
     console.log('saveTopic done');
-
     //add: 11.07 2013 add the published topic to new topics db.
     //But this maybe not new topics here !!!
     // in matome, it calls update list.
-    if(publish){
+    if(publish || topic.publishDate){
       NewTopic.saveNewTopic(authorId, topicId, title, coverUrl, description, function(){
         console.log('save to new topics');
       })
