@@ -20,6 +20,7 @@
     "xss": "*" ,
     "redis": "*",
     "request": "*",
-    "connect-redis": "*"
+    "connect-redis": "*",
+    "mathjs": "*"
   }
 }

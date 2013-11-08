@@ -5,38 +5,38 @@
  * Time: 11:42 PM
  * To change this template use File | Settings | File Templates.
  */
-var Topic = require('../proxy').Topic;
+
+/*
+
+* */
+var math = require('mathjs')();
+
+var topicsPerPage = 20;
 
 function index(req, res, next) {
+
+
+  //console.log(hotTopics);
 
   //set default to the first page.
   var currentPage = req.query.page || '1';
 
-  Topic.getHotTopics(function (err, topics) {
-    var topicsData = [];
-    topics = topics || [];
-    topics.forEach(function (topic) {
-      topicsData.push({
-        id: topic._id,
-        coverUrl: topic.cover_url,
-        title: topic.title,
-        author: topic.author_name,
-        PVCount: topic.PV_count,
-        des: topic.description
-      });
-    });
-    var DateObj = _showDate();
-    res.render('index', {
-      title: 'mtm[我设计的信息。策展平台]',
-      css: ['/stylesheets/index.css'],
-      pageType: 'INDEX',
-      dayInChn: DateObj.dayInChn,
-      today: DateObj.today,
-      today1: DateObj.today1,
-      hot: topicsData,
-      totalPage: 50,
-      currentPage: currentPage
-    });
+  var hotTopicsDataPage = hotTopicsData.slice( (currentPage-1)* topicsPerPage, currentPage*topicsPerPage) ;
+
+
+  var totalPages = math.ceil(hotTopicsData.length / topicsPerPage)
+  var DateObj = _showDate();
+  res.render('index', {
+    title: 'mtm[我设计的信息。策展平台]',
+    css: ['/stylesheets/index.css'],
+    pageType: 'INDEX',
+    dayInChn: DateObj.dayInChn,
+    today: DateObj.today,
+    today1: DateObj.today1,
+    hot: hotTopicsDataPage,
+    newTopics: updatedTopicsData,
+    totalPage: totalPages,
+    currentPage: currentPage
   });
 }
 

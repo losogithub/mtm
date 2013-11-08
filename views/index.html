@@ -13,12 +13,14 @@
   <div class="Inner MdCF">
     <div class="Main">
       <div class="ColWrapper MdCF">
+
         <div class="Col01">
-          <ul>
-            <li class="SELECTED"><a href="/">综合</a></li>
-            <li><a href="/">女性</a></li>
-          </ul>
-        </div>
+              <ul>
+              <li class="SELECTED"><a href="/">综合</a></li>
+
+            </ul>
+          </div>
+
         <div class="Col02">
           <h2>人气总结</h2>
           <ul class="HotTopicList">
@@ -92,21 +94,21 @@
             <h2>最新的总结</h2>
           </div>
           <ul class="SubContentTopicListList">
-            <% for (i in hot) { %>
+            <% for (i in newTopics) { %>
             <li class="SubContentTopicListListItem">
               <div class="SubContentTopicListListItemThumb">
-                <a href="/topic/<%= hot[i].id %>">
+                <a href="/topic/<%= newTopics[i].id %>">
                   <img width="45" height="45"
                        onerror="mtm.errorImage(this,'image_95x95');"
-                       src="<%= !hot[i].coverUrl ? '/images/no_img/image_95x95.png' : hot[i].coverUrl %>">
+                       src="<%= !newTopics[i].coverUrl ? '/images/no_img/image_95x95.png' : newTopics[i].coverUrl %>">
                 </a>
               </div>
               <div class="SubContentTopicListListItemTxt">
                 <h3 class="SubContentTopicListListItemTxtLink">
-                  <a href="/topic/<%= hot[i].id %>"><%= hot[i].title %></a>
+                  <a href="/topic/<%= newTopics[i].id %>"><%= newTopics[i].title %></a>
                 </h3>
                 <p class="SubContentTopicListListItemUserName">
-                  <a href=""><%= hot[i].author%></a>
+                  <a href=""><%= newTopics[i].author%></a>
                 </p>
               </div>
             </li>

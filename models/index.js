@@ -19,7 +19,14 @@ mongoose.connect(config.db, function (err) {
 require('./user');
 require('./loginToken');
 
-exports.TopicModel = require('./topic');
+
+exports.OldHotTopicModel = require('./hotTopics').OldHotTopicModel;
+exports.HotTopicModel = require('./hotTopics').HotTopicModel;
+
+
+exports.NewTopicModel = require('./topic').NewTopicModel;
+
+exports.TopicModel = require('./topic').TopicModel;
 exports.ItemModels = {
   'VOID': require('./void_item'),
   'LINK': require('./link_item'),

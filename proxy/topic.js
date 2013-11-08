@@ -62,9 +62,9 @@ function increasePVCountBy(topic, increment, callback) {
 /**
  * 获取人气总结
  */
-function getHotTopics(callback) {
+function getAllTopics(callback) {
   TopicModel.find({ publishDate: { $ne: null } })
-    .sort('-_id')
+    //.sort('-_id')
     .exec(callback);
 }
 
@@ -123,7 +123,7 @@ exports.createTopic = createTopic;//增
 exports.getContents = getContents;//查
 exports.increaseItemCountBy = increaseItemCountBy;
 exports.increasePVCountBy = increasePVCountBy;
-exports.getHotTopics = getHotTopics;
+exports.getAllTopics = getAllTopics;
 exports.saveTopic = saveTopic;//改
 exports.getTopicById = getTopicById;//查
 exports.getTopicsByIdsSorted = getTopicsByIdsSorted;

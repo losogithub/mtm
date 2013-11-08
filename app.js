@@ -21,6 +21,11 @@ var path = require('path');
 var urlinfo = require('url').parse(config.host);
 config.hostname = urlinfo.hostname || config.host;
 
+//global variables instaitate.
+//e.g. hotopicsData, updateTopicsData
+require('./offlineProcess/retriveUpdatedTopicList.js')
+require('./offlineProcess/calculateHotTopics.js')
+
 
 var app = express();
 

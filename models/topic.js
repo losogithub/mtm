@@ -7,20 +7,25 @@
  */
 var mongoose = require('mongoose');
 var ObjectId = mongoose.Schema.ObjectId;
+var Schema = mongoose.Schema;
 
-module.exports = mongoose.model('Topic', {
-  title: String,
-  cover_url: String,
+var TopicSchema = new Schema({
+    title: String,
+    cover_url: String,
   description: String,
   author_id: ObjectId,
-  author_name: String,
-  item_count: { type: Number, default: 0 },
+    author_name: String,
+    item_count: { type: Number, default: 0 },
   PV_count: { type: Number, default: 0 },
-  void_item_id: ObjectId,
-  create_at: { type: Date, default: Date.now },
-  update_at: { type: Date, default: Date.now },
-  draft: Boolean,
-  publishDate: Date,
-  FVCount : {type: Number, default:0},
-  FVList:[ObjectId ]
-});
+    void_item_id: ObjectId,
+    create_at: { type: Date, default: Date.now },
+    update_at: { type: Date, default: Date.now },
+    draft: Boolean,
+    publishDate: Date,
+    FVCount : {type: Number, default:0},
+    FVList:[ObjectId ]
+  });
+
+
+exports.TopicModel= mongoose.model('Topic', TopicSchema);
+exports.NewTopicModel= mongoose.model('Topic', TopicSchema, 'newTopics');
