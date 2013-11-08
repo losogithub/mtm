@@ -1,7 +1,26 @@
 @import "../theme";
 
-body{_position:relative;font:13px/16px arial,sans-serif;}
-body.ExLangEn{font-family:Tahoma,sans-serif}
+.Inner{width: 750px;}
+.Message{
+  text-align:center;padding:60px;border:1px solid #eee;margin: 20px 0;
+  p{margin:0 0 8px 0;font-size:14px}
+  p.Note{margin:-5px 0 0 0;padding:0 0 8px 0;font-size:12px;color:#aaa}
+  .BtnSet{
+    margin-top:35px;
+    li + li {margin-top: 10px;}
+  }
+
+  &.Message-Error {
+    text-align:left;
+    .BtnSet{
+      text-align:center;
+    }
+  }
+}
+.TextList li{padding-left:10px;}
+.TextList li:before{content: '· ';}
+
+
 a img{vertical-align:top}
 .MdCF:after{content:"";display:block;visibility:hidden;height:0;clear:both}
 .MdCF{*zoom:1}
@@ -188,9 +207,6 @@ a.MdTxtLink02:hover,a.MdTxtLink02:active,a.MdTxtLink02:focus{color:#111;text-dec
 .MdMsgInfo02 .mdMsgInfo02Ttl{margin:0 0 16px -1px;font-size:18px;font-weight:bold}
 .MdMsgInfo02 .mdMsgInfo02Body{font-size:12px}
 .MdMsgInfo02 .mdMsgInfo02Confirm{text-align:center}
-.MdMsgInfo02 .mdMsgInfo02Agree{margin-bottom:-4px;text-align:center}
-.MdMsgInfo02 .mdMsgInfo02Agree input,.MdMsgInfo02 .mdMsgInfo02Agree label{vertical-align:middle}
-.MdMsgInfo02 .mdMsgInfo02Agree label{padding-left:5px}
 .MdMsgInfo02 .MdActionBtn01{margin:36px auto 0}
 .MdMsgInfo02 .MdMainSeparator01{position:relative;margin:25px -17px 26px}
 .MdMsgInfo02 .mdMsgInfo02Txt01{margin:-2px 0 17px 0;font-size:14px}
@@ -381,8 +397,6 @@ a.MdTxtLink02:hover,a.MdTxtLink02:active,a.MdTxtLink02:focus{color:#111;text-dec
 .MdExService01{text-align:center}
 .MdExService01 .mdExService01Ttl{padding:8px 0;color:#5e5e5e;font-size:12px}
 .MdExService01 .mdExService01Btn li{position:relative;display:inline;margin:0 -1px;*margin:0 1px}
-body,h1,h2,h3,h4,h5,h6,p,dl,dt,dd,ul,ol,li,th,td,div,blockquote,pre,form,fieldset,input,textarea{margin:0;padding:0}
-h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal}
 ol,ul{list-style:none}
 table{border-collapse:collapse;border-spacing:0}
 img,fieldset,table,th,td{border:0}

@@ -270,12 +270,10 @@ var updateSettings = function(req, res){
 var showConfirmPassword = function(req, res){
   res.render('personal/accountVerify', {
     title: config.name,
-    metaHead: '',
     css: '',
     js: [
       'javascripts/account/account_common.js'
-    ],
-    layout: 'signLayout'
+    ]
   })
 }
 
@@ -302,13 +300,11 @@ var showConfirmPassword = function(req, res){
        //how to do ?
        res.render('personal/accountVerify', {
          title: config.name,
-         metaHead: '',
          css: '',
          js: [
            'javascripts/account/account_common.js'
          ],
-         errMsg: '找不到该用户',
-         layout: 'signLayout'
+         errMsg: '找不到该用户'
        })
 
      }
@@ -323,13 +319,11 @@ var showConfirmPassword = function(req, res){
          //res.locals.errMsg =  '密码不正确';
          return res.render('personal/accountVerify', {
            title: config.name,
-           metaHead: '',
            css: '',
            js: [
              'javascripts/account/account_common.js'
            ],
-           errMsg: '密码不正确',
-           layout: 'signLayout'
+           errMsg: '密码不正确'
          })
        }
        else {
@@ -380,12 +374,10 @@ var showAccountModify = function(req, res){
 
        return res.render('personal/privateInfoNotify', {
          title: config.name,
-         metaHead: '',
          css: '',
          js: [
            'javascripts/account/account_common.js'
          ],
-         layout: 'signLayout',
          fChecked: fChecked,
          mChecked: mChecked,
          uChecked: uChecked,
@@ -474,12 +466,10 @@ if( newPassword || newPasswordConfirm)
 
     return res.render('personal/privateInfoNotify', {
       title: config.name,
-      metaHead: '',
       css: '',
       js: [
         'javascripts/account/account_common.js'
       ],
-      layout: 'signLayout',
       infoMsg: infoMsg,
       fChecked: fChecked,
       mChecked: mChecked,
@@ -494,12 +484,10 @@ if( newPassword || newPasswordConfirm)
 
     return res.render('personal/privateInfoNotify', {
       title: config.name,
-      metaHead: '',
       css: '',
       js: [
         'javascripts/account/account_common.js'
       ],
-      layout: 'signLayout',
       infoMsg: infoMsg,
       fChecked: fChecked,
       mChecked: mChecked,
@@ -514,12 +502,10 @@ if( newPassword || newPasswordConfirm)
 
     return res.render('personal/privateInfoNotify', {
       title: config.name,
-      metaHead: '',
       css: '',
       js: [
         'javascripts/account/account_common.js'
       ],
-      layout: 'signLayout',
       infoMsg: infoMsg,
       fChecked: fChecked,
       mChecked: mChecked,
@@ -567,12 +553,10 @@ if( newPassword || newPasswordConfirm)
         //nothing is updated
         return res.render('personal/privateInfoNotify', {
           title: config.name,
-          metaHead: '',
           css: '',
           js: [
             'javascripts/account/account_common.js'
           ],
-          layout: 'signLayout',
           fChecked: fChecked,
           mChecked: mChecked,
           uChecked: uChecked,
@@ -598,12 +582,10 @@ if( newPassword || newPasswordConfirm)
 
           return res.render('personal/privateInfoNotify', {
              title: config.name,
-             metaHead: '',
              css: '',
              js: [
                'javascripts/account/account_common.js'
              ],
-             layout: 'signLayout',
              infoMsg: infoMsg,
              fChecked: fChecked,
              mChecked: mChecked,

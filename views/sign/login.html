@@ -1,22 +1,4 @@
-    <!--[[HEADER-AREA]]-->
-    <header><div class="LyHead03">
-
-        <nav role="navigation"><ul class="MdGnbUtil01">
-            <li class="mdGnbUtil01Li"><a href="http://www.mtm.com">MTM</a></li>
-            <!--/MdGnbUtil01--></ul></nav>
-
-      <div class="MdRegistHead01 MdCF">
-        <table style="margin:0 auto 20px;">
-          <td>
-            <a class="Logo Logo-64" href="/"><img src="/images/logo_full_160x64.png"></a>
-          </td>
-        </table>
-        <!--/MdRegistHead01--></div>
-
-        <!--/LyHead01--></div></header>
-    <!--[[/HEADER-AREA]]-->
-
-    <!--[[CONTENTS-AREA]]-->
+<!--LOGIN##这是layout要用的参数，不能删！-->
     <div class="LyContents03">
 
         <form action="/login" method="post" id="_naver_login_form" >     <!-- onsubmit="return formSubmit(event);" this function will encryp the user information. use it later.-->
@@ -28,20 +10,19 @@
             <div class="MdFormLogin01">
                 <div class="mdFormLogin01Inner MdCF">
                     <fieldset>
-                        <legend class="MdHide">登录</legend>
                         <div class="mdFormLogin01Body">
 
-                            <div class="mdFormLogin01MsgBox"><p class="MdMsgError01"><%- errMsg %></div>
+                            <div class="mdFormLogin01MsgBox"><p class="MdMsgError01"><%= !locals.errMsg ? '' : errMsg %></p></div>
 
                             <div class="mdFormLogin01BodyInner MdCF">
 
                                 <div class="mdFormLogin01Unit01">
                                     <div class="mdFormLogin01Unit01Body">
                                         <div class="MdInputTxt03">
-                                            <div class="mdInputTxt03Inner mdInputTxt03UserName"><input style="height: 40px;" type="text" class="" value="<%- email %>" id="_email" name="email" tabindex="1" placeholder="用户名或邮箱"></div>
+                                            <div class="mdInputTxt03Inner mdInputTxt03UserName"><input style="height: 40px;" type="text" class="" value="<%= !locals.email ? '' : email %>" id="_email" name="email" tabindex="1" placeholder="用户名或邮箱"></div>
                                             <!--/MdInputTxt03--></div>
                                         <div class="MdInputTxt03">
-                                            <div class="mdInputTxt03Inner mdInputTxt03Password"><input style="height: 40px;" type="password" class="" value="<%- password %>" id="_passwd" name="password" maxlength="20" tabindex="2" placeholder="密码"></div>
+                                            <div class="mdInputTxt03Inner mdInputTxt03Password"><input style="height: 40px;" type="password" class="" id="_passwd" name="password" maxlength="20" tabindex="2" placeholder="密码"></div>
                                             <!--/MdInputTxt03--></div>
 
                                         <!--/mdFormLogin01Unit01Body--></div>

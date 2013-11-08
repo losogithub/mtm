@@ -1,9 +1,39 @@
-body {
-  _position: relative;
-  font: 13px/16px arial, sans-serif;
+.Inner {
+  width: 750px;
 }
-body.ExLangEn {
-  font-family: Tahoma, sans-serif;
+.Message {
+  text-align: center;
+  padding: 60px;
+  border: 1px solid #eee;
+  margin: 20px 0;
+}
+.Message p {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+}
+.Message p.Note {
+  margin: -5px 0 0 0;
+  padding: 0 0 8px 0;
+  font-size: 12px;
+  color: #aaaaaa;
+}
+.Message .BtnSet {
+  margin-top: 35px;
+}
+.Message .BtnSet li + li {
+  margin-top: 10px;
+}
+.Message.Message-Error {
+  text-align: left;
+}
+.Message.Message-Error .BtnSet {
+  text-align: center;
+}
+.TextList li {
+  padding-left: 10px;
+}
+.TextList li:before {
+  content: '· ';
 }
 a img {
   vertical-align: top;
@@ -729,17 +759,6 @@ a.MdTxtLink02:focus {
 }
 .MdMsgInfo02 .mdMsgInfo02Confirm {
   text-align: center;
-}
-.MdMsgInfo02 .mdMsgInfo02Agree {
-  margin-bottom: -4px;
-  text-align: center;
-}
-.MdMsgInfo02 .mdMsgInfo02Agree input,
-.MdMsgInfo02 .mdMsgInfo02Agree label {
-  vertical-align: middle;
-}
-.MdMsgInfo02 .mdMsgInfo02Agree label {
-  padding-left: 5px;
 }
 .MdMsgInfo02 .MdActionBtn01 {
   margin: 36px auto 0;
@@ -1655,41 +1674,6 @@ a.MdTxtLink02:focus {
   display: inline;
   margin: 0 -1px;
   *margin: 0 1px;
-}
-body,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-dl,
-dt,
-dd,
-ul,
-ol,
-li,
-th,
-td,
-div,
-blockquote,
-pre,
-form,
-fieldset,
-input,
-textarea {
-  margin: 0;
-  padding: 0;
-}
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-size: 100%;
-  font-weight: normal;
 }
 ol,
 ul {

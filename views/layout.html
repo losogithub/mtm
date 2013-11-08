@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+<% var temp = !locals.body ? null : locals.body.match(/^.{4}([^#]*)##/); %>
+<% temp = !temp ? null : !temp[1] ? null : temp[1] %>
+<% if (!locals.pageType) locals.pageType = temp; %>
 <html>
 <head>
   <title><%= locals.title ? title : 'mtm' %></title>
@@ -8,12 +11,18 @@
   <link type='text/css' rel='stylesheet' href='/stylesheets/todc-bootstrap.css'/>
   <link type='text/css' rel="stylesheet" href="/stylesheets/font-awesome.min.css">
   <link type='text/css' rel='stylesheet' href='/stylesheets/common.css'/>
+  <% if (locals.pageType == 'ACCOUNT' || locals.pageType == 'LOGIN' || locals.pageType == 'SIGNUP') { %>
+  <link rel="stylesheet" href="/stylesheets/account/account_common.css"/>
+  <% } %>
   <% for (i in locals.css) { %>
   <link type='text/css' rel='stylesheet' href='<%= css[i] %>'/>
   <% } %>
-  <script type="text/javascript" src="http://libs.baidu.com/jquery/1.10.2/jquery.min.js"></script>
+  <script type="text/javascript" src="http://cdn.bootcss.com/jquery/1.10.2/jquery.min.js"></script>
   <script type="text/javascript" src="/javascripts/bootstrap.min.js"></script>
   <script type="text/javascript" src="/javascripts/common.js"></script>
+  <% if (locals.pageType == 'ACCOUNT' || locals.pageType == 'LOGIN' || locals.pageType == 'SIGNUP') { %>
+  <script src="/javascripts/account/account_common.js"></script>
+  <% } %>
   <% for (i in locals.js) { %>
   <script type="text/javascript" src="<%= js[i] %>"></script>
   <% } %>
@@ -38,14 +47,20 @@
         <td>
           <!--<a class="Logo" href="/" title='mtm'>mtm</a>-->
           <a class="Logo" href="/"><img src="/images/logo_full_160x64.png"></a>
+          <% if (locals.pageType == 'SIGNUP') { %>
+          <p style="text-align: center;margin-top: 20px;">与世界分享你的总结</p>
+          <% } %>
         </td>
       </table>
       <nav class="Nav Nav-Right">
-        <% if (locals.pageType != 'INDEX') { %>
+        <% if (locals.pageType != 'INDEX' && locals.pageType != 'SIGNUP') { %>
         <table>
         <td>
         <% } %>
         <ul class="Nav-Right_Inner">
+          <% if (locals.pageType == 'SIGNUP') { %>
+          <li><a href="/login">登录</a></li>
+          <% } else if (locals.pageType != 'LOGIN') { %>
           <% if (!locals.username) { %>
           <li><a href="/topic/create">创建总结</a><span class="VLine VLine-Header"></span></li>
           <li><a href="/signup">注册</a><span class="VLine VLine-Header"></span></li>
@@ -70,6 +85,7 @@
             </ul>
           </nav>
           <% } %>
+          <% } %>
         </ul>
         <% if (locals.pageType != 'INDEX') { %>
         </td>
@@ -91,7 +107,7 @@
           </ul>
         </td>
         <td>
-          <span class='Copyright'>© mtm</span>
+          <span class='Copyright'>© shizier</span>
         </td>
       </table>
     </div>

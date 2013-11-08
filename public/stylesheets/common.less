@@ -1,8 +1,6 @@
-body, h1, h2, h3, h4, h5, h6, p, dl, dt, dd, ul, ol, li, th, td, div, blockquote, pre, form, fieldset, input { margin: 0; padding: 0; }
+body, p, dl, dt, dd, ul, ol, li, th, td, div, blockquote, pre, form, fieldset, input { margin: 0; padding: 0; }
 
 h1, h2, h3, h4, h5, h6, p, dl, dt, dd, ul, ol, li, table, th, td, div, blockquote, pre, form, fieldset, legend, header { *zoom: 1; }
-
-h1, h2, h3, h4, h5, h6 { font-size: 100%; font-weight: normal; }
 
 button, img, fieldset, table, th, td { border: 0 none; }
 
@@ -47,7 +45,7 @@ body {
 
 /*按钮*/
 .BtnSet {
-  padding-top: 14px;
+  margin-top: 14px;
   .Widget & { float: left; }
 }
 
@@ -56,8 +54,9 @@ body {
   &, img {
     display: block; width: 50px; height: 20px;
     .INDEX & { width: 80px; height: 32px; }
-    &.Logo-64 { width: 160px; height: 64px; }
+    .LOGIN &, .SIGNUP & { width: 160px; height: 64px; }
   }
+  .SIGNUP & { margin-top: 30px; }
 }
 
 /*分割线*/
@@ -67,12 +66,17 @@ body {
   &.VLine-Footer { margin: 0 11px 0 15px; }
   &.VLine-Util { margin: 0 5px; }
 }
+.HLine {
+  border-top: 1px solid rgb(221, 221, 221);
+  &.HLine-Personal{margin: 25px 0;}
+}
 
 /*页眉*/
 .Header {
   z-index: 501; height: 48px; border-top: 3px solid #333; border-bottom: 1px solid rgb(231, 231, 231);
   .INDEX & { height: 112px; }
   .PERSONAL & { height: 64px; }
+  .LOGIN &, .SIGNUP & { height: 178px; }
 }
 
 /*导航*/
@@ -110,7 +114,7 @@ body {
 
 /*页脚*/
 .Footer {
-  border-top: 1px solid rgb(231, 231, 231); height: 64px; font-size: 11px; margin-top: 20px;
+  border-top: 1px solid rgb(231, 231, 231); height: 64px; font-size: 11px;
   a { color: #333; vertical-align: middle; }
   li { display: inline; }
   .Copyright { float: right; color: #333333; font-family: Tahoma, Arial, sans-serif; }

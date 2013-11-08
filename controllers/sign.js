@@ -21,13 +21,7 @@ var mail = require('../services/mail');
 var showSignUp = function (req, res) {
   console.log("render singup page");
   console.log(req.session._loginReferer);
-  res.render('sign/signup', {
-    title: config.name,
-    metaHead: '',
-    css: '',
-    js: '',
-    layout: 'signLayout'
-  });
+  res.render('sign/signup');
 };
 
 
@@ -123,11 +117,6 @@ var signup = function (req, res, next) {
             if (eMsg || nMsg || pMsg) {
               console.log("%s", eMsg);
               res.render('sign/signup', {
-                title: config.name,
-                metaHead: '',
-                css: '',
-                js: '',
-                layout: 'signLayout',
                 emailMsg: eMsg,
                 nameMsg: nMsg,
                 passwordMsg: pMsg,
@@ -146,13 +135,12 @@ var signup = function (req, res, next) {
               }
               // 发送激活邮件
               mail.sendActiveMail(email, encryp.md5(email + config.session_secret), name, email);
+              res.set('Cache-Control', 'private, no-cache, no-store, must-revalidate, post-check=0, pre-check=0');
+              res.set('Connection', 'close');
+              res.set('Expire', '-1');
+              res.set('Pragma', 'no-cache');
               res.render('sign/success_signup', {
-                title: config.name,
-                emailAddress: email,
-                metaHead: '<meta http-equiv="pragma" content="no-cache" /><meta http-equiv="cache-control" content="no-cache" /><meta http-equiv="expires" content="-1" />',
-                css: '',
-                js: '',
-                layout: 'signLayout'
+                emailAddress: email
               });
             });
           })
@@ -160,11 +148,6 @@ var signup = function (req, res, next) {
         // not registered user, wrong email.
         else {
           res.render('sign/signup', {
-            title: config.name,
-            metaHead: '',
-            css: '',
-            js: '',
-            layout: 'signLayout',
             emailMsg: eMsg,
             nameMsg: nMsg,
             passwordMsg: pMsg,
@@ -192,11 +175,6 @@ var signup = function (req, res, next) {
             if (eMsg || pMsg) {
               console.log("%s", eMsg);
               res.render('sign/signup', {
-                title: config.name,
-                metaHead: '',
-                css: '',
-                js: '',
-                layout: 'signLayout',
                 emailMsg: eMsg,
                 nameMsg: nMsg,
                 passwordMsg: pMsg,
@@ -214,13 +192,12 @@ var signup = function (req, res, next) {
               }
               // 发送激活邮件
               mail.sendActiveMail(email, encryp.md5(email + config.session_secret), name, email);
+              res.set('Cache-Control', 'private, no-cache, no-store, must-revalidate, post-check=0, pre-check=0');
+              res.set('Connection', 'close');
+              res.set('Expire', '-1');
+              res.set('Pragma', 'no-cache');
               res.render('sign/success_signup', {
-                title: config.name,
-                emailAddress: email,
-                metaHead: '<meta http-equiv="pragma" content="no-cache" /><meta http-equiv="cache-control" content="no-cache" /><meta http-equiv="expires" content="-1" />',
-                css: '',
-                js: '',
-                layout: 'signLayout'
+                emailAddress: email
               });
             });
           })
@@ -228,11 +205,6 @@ var signup = function (req, res, next) {
         // correct user, wrong email.
         else {
           res.render('sign/signup', {
-            title: config.name,
-            metaHead: '',
-            css: '',
-            js: '',
-            layout: 'signLayout',
             emailMsg: eMsg,
             nameMsg: nMsg,
             passwordMsg: pMsg,
@@ -255,11 +227,6 @@ var signup = function (req, res, next) {
 
       // wrong name, maybe correct email address.
       res.render('sign/signup', {
-        title: config.name,
-        metaHead: '',
-        css: '',
-        js: '',
-        layout: 'signLayout',
         emailMsg: eMsg, nameMsg: nMsg, passwordMsg: pMsg, name: name, email: email});
       return;
 
@@ -267,11 +234,6 @@ var signup = function (req, res, next) {
   }
   else {
     res.render('sign/signup', {
-      title: config.name,
-      metaHead: '',
-      css: '',
-      js: '',
-      layout: 'signLayout',
       emailMsg: eMsg, nameMsg: nMsg, passwordMsg: pMsg, name: name, email: email});
     return;
   }
@@ -324,14 +286,7 @@ var showLogin = function (req, res) {
     return res.redirect(refer);
   }
   else {
-    return res.render('sign/login', {
-      title: config.name,
-      metaHead: '',
-      css: '',
-      js: '',
-      errMsg: '', email: '', password: '',
-      layout: 'signLayout'
-    });
+    return res.render('sign/login');
   }
 };
 
@@ -354,20 +309,15 @@ var login = function (req, res, next) {
 
   var errMsg = '';
   if (!loginname) {
-    if (!pass) errMsg = '<p class="MdMsgError01">Enter your email and password.</p>';
-    else errMsg = '<p class="MdMsgError01">Enter your email address or username(ID).</p>';
+    if (!pass) errMsg = 'Enter your email and password.';
+    else errMsg = 'Enter your email address or username(ID).';
   } else {
-    if (!pass) errMsg = '<p class="MdMsgError01">Enter your password.</p>';
+    if (!pass) errMsg = 'Enter your password.';
   }
 
   if (errMsg) {
     return res.render('sign/login', {
-      title: config.name,
-      metaHead: '',
-      css: '',
-      js: '',
-      errMsg: errMsg, email: loginname, password: pass,
-      layout: 'signLayout'
+      errMsg: errMsg, email: loginname
     });
   }
 
@@ -381,13 +331,8 @@ var login = function (req, res, next) {
       }
       if (!user) {
         res.render('sign/login', {
-          title: config.name,
-          metaHead: '',
-          css: '',
-          js: '',
-          errMsg: '<p class="MdMsgError01">The username does not exist.</p>',
-          email: loginname, password: pass,
-          layout: 'signLayout'
+          errMsg: 'The username does not exist.',
+          email: loginname
         });
         return;
       }
@@ -403,14 +348,8 @@ var login = function (req, res, next) {
       }
       if (!user) {
         res.render('sign/login', {
-          title: config.name,
-          metaHead: '',
-          css: '',
-          js: '',
-          errMsg: '<p class="MdMsgError01">The email address does not exist.</p>',
-          email: user.loginName,
-          password: pass,
-          layout: 'signLayout'
+          errMsg: 'The email address does not exist.',
+          email: user.loginName
         });
         return;
       } // user if
@@ -431,14 +370,8 @@ function checkOnlyPassword(emailIDFlag, pass, autoLogin, user, req, res) {
   }
   if (pass !== user.password) {
     res.render('sign/login', {
-      title: config.name,
-      metaHead: '',
-      css: '',
-      js: '',
-      errMsg: '<p class="MdMsgError01">wrong password.</p>',
-      email: email,
-      password: '',       // let password be empty
-      layout: 'signLayout'
+      errMsg: 'wrong password.',
+      email: email
     });
     return;
   }
@@ -446,13 +379,7 @@ function checkOnlyPassword(emailIDFlag, pass, autoLogin, user, req, res) {
     // 从新发送激活邮件
     mail.sendActiveMail(user.email, encryp.md5(user.email + config.session_secret), user.name, user.email);
     return res.render('sign/activeAccount', {
-      title: config.name,
-      metaHead: '',
-      css: '',
-      js: '',
-      email: email,
-      //password: '',       // let password be empty
-      layout: 'signLayout'
+      email: email
     });
   }
 
@@ -510,11 +437,6 @@ var signout = function (req, res, next) {
     }
   }
   return res.render('sign/logoutMessage', {
-    title: config.name,
-    metaHead: '',
-    css: '',
-    js: '',
-    layout: 'signLayout',
     refer: refer
   })
 };
@@ -522,12 +444,7 @@ var signout = function (req, res, next) {
 
 var showForgetPassword = function (req, res) {
   res.render('sign/forgetPassword', {
-    title: config.name,
-    metaHead: '',
-    css: '',
-    js: '',
-    errMsg: '',
-    layout: 'signLayout'
+    errMsg: ''
   });
 };
 
@@ -552,12 +469,7 @@ var forgetPassword = function (req, res, next) {
 
   if (errMsg) {
     res.render('sign/forgetPassword', {
-      title: config.name,
-      metaHead: '',
-      css: '',
-      js: '',
-      errMsg: errMsg,
-      layout: 'signLayout'
+      errMsg: errMsg
     });
   }
 
@@ -569,12 +481,7 @@ var forgetPassword = function (req, res, next) {
     //console.log(user);
     if (!user) {
       res.render('sign/forgetPassword', {
-        title: config.name,
-        metaHead: '',
-        css: '',
-        js: '',
-        errMsg: 'the email address does not exist.',
-        layout: 'signLayout'
+        errMsg: 'the email address does not exist.'
       });
     }
     else {
@@ -590,13 +497,7 @@ var forgetPassword = function (req, res, next) {
         // 发送重置密码邮件
         // But if the user hasn't been activated ? how to do ?
         mail.sendResetPassMail(email, retrieveKey, user.email);
-        res.render('sign/forgetPassSuccessSend', {
-          title: config.name,
-          metaHead: '',
-          css: '',
-          js: '',
-          layout: 'signLayout'
-        })
+        res.render('sign/forgetPassSuccessSend')
       });
     }
   });
@@ -607,34 +508,15 @@ var showResetPassword = function (req, res, next) {
   var email = req.query.email;
   User.getUserByEmail(email, key, function (err, user) {
     if (!user) {
-      return res.render('sign/errLink',
-        {
-          title: config.name,
-          metaHead: '',
-          css: '',
-          js: '',
-          layout: 'signLayout'
-        });
+      return res.render('sign/errLink');
     }
     var now = new Date().getTime();
     var oneDay = 1000 * 60 * 60 * 24;
     if (!user.retrieve_time || now - user.retrieve_time > oneDay) {
-      return res.render('sign/errLink',
-        {
-          title: config.name,
-          metaHead: '',
-          css: '',
-          js: '',
-          layout: 'signLayout'
-        });
+      return res.render('sign/errLink');
     }
     //finally correct
     return res.render('sign/resetPassword', {
-      title: config.name,
-      metaHead: '',
-      css: '',
-      js: '',
-      layout: 'signLayout',
       key: key,
       email: email,
       errMsg: ''
@@ -652,11 +534,6 @@ var resetPassword = function (req, res, next) {
   console.log("repass: %s", repsw);
   if (psw !== repsw) { // already include empty situation. !! no !!!
     return res.render('sign/resetPassword', {
-      title: config.name,
-      metaHead: '',
-      css: '',
-      js: '',
-      layout: 'signLayout',
       key: key,
       email: email,
       errMsg: '两次密码输入不一致'
@@ -664,11 +541,6 @@ var resetPassword = function (req, res, next) {
   }
   if (psw === '' && repsw === '') {
     return res.render('sign/resetPassword', {
-      title: config.name,
-      metaHead: '',
-      css: '',
-      js: '',
-      layout: 'signLayout',
       key: key,
       email: email,
       errMsg: '密码不能为空'
@@ -676,11 +548,6 @@ var resetPassword = function (req, res, next) {
   }
   if (psw.length < 6) {
     return res.render('sign/resetPassword', {
-      title: config.name,
-      metaHead: '',
-      css: '',
-      js: '',
-      layout: 'signLayout',
       key: key,
       email: email,
       errMsg: '密码不能少于6位'
@@ -696,14 +563,7 @@ var resetPassword = function (req, res, next) {
       return next(err);
     }
     if (!user) {
-      return res.render('sign/errLink',
-        {
-          title: config.name,
-          metaHead: '',
-          css: '',
-          js: '',
-          layout: 'signLayout'
-        });
+      return res.render('sign/errLink');
     }
     console.log(encryp.md5(psw));
     //bug fixed: 10.11.2013. user.pass
@@ -716,13 +576,7 @@ var resetPassword = function (req, res, next) {
         return next(err);
       }
 
-      return res.render('sign/resetPasswordSuccess', {
-        title: config.name,
-        metaHead: '',
-        css: '',
-        js: '',
-        layout: 'signLayout'
-      });
+      return res.render('sign/resetPasswordSuccess');
     });
   });
 }
@@ -737,13 +591,7 @@ var activeAccount = function (req, res, next) {
       return next(err);
     }
     if (!user || encryp.md5(user.email + config.session_secret) !== key || user.active) {
-      return res.render('sign/resetPasswordSuccess', {
-        title: config.name,
-        metaHead: '',
-        css: '',
-        js: '',
-        layout: 'signLayout'
-      });
+      return res.render('sign/errLink');
     }
 
     user.active = true;
@@ -751,13 +599,7 @@ var activeAccount = function (req, res, next) {
       if (err) {
         return next(err);
       }
-      res.render('sign/activeAccountSuccess', {
-        title: config.name,
-        metaHead: '',
-        css: '',
-        js: '',
-        layout: 'signLayout'
-      })
+      res.render('sign/activeAccountSuccess')
     });
   });
 };

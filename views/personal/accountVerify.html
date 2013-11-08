@@ -1,26 +1,3 @@
-<!--[[HEADER-AREA]]-->
-<header xmlns="http://www.w3.org/1999/html"><div class="LyHead02">
-  <div class="lyHead02Inner MdCF">
-
-    <table style="float: left;">
-      <td>
-        <h1 class="" style="display: inline-block;vertical-align: middle;"><a class="Logo" href="/"><img src="/images/logo_full_invert_50x20.png"></a></h1>
-        <h2 class="" style="display: inline-block;vertical-align: middle;">帐号</h2>
-      </td>
-    </table>
-
-    <nav role="navigation"><ul class="MdGnbUtil02">
-
-      <li class="mdGnbUtil02Li"><a href="/">shizier</a></li>
-      <!--/MdGnbUtil02--></ul></nav>
-
-    <!--/lyHead02Inner--></div>
-  <!--/LyHead02--></div></header>
-<!--[[/HEADER-AREA]]-->
-
-<!--contents-->
-
-<!--[[CONTENTS-AREA]]-->
 <div class="LyContents02">
   <div class="ArMain01">
     <form method="post" action="/account" id="_registForm" onsubmit="return validatePass()">
@@ -32,7 +9,7 @@
       <h2 class="MdTtl01">密码确认</h2>
       <div class="MdTxtWrap01">
         <p class="MdTxt01">为了您的账户安全，请再次登录。</p>
-        <!--/MdTxtWrap01--></div>
+      </div>
       <div class="MdSting02">
         <table>
           <tbody>
@@ -42,21 +19,17 @@
           </tr>
           <tr class="lastChild">
             <th class="mdSting02Th04">密码</th>
-            <td class="mdSting02Td04"><span class="MdInput01"><input style="height: 34px;" class="mdInput01Input mdInput01Active" type="password" id="_passwd" name="password" maxlength="20"><span class="mdInput01Corner01"></span><span class="mdInput01Corner02"></span><span class="mdInput01Corner03"></span><span class="mdInput01Corner04"></span></span>
+            <td class="mdSting02Td04"><span class="MdInput01"><input style="height: 34px;" class="mdInput01Input" type="password" id="_passwd" name="password" maxlength="20"><span class="mdInput01Corner01"></span><span class="mdInput01Corner02"></span><span class="mdInput01Corner03"></span><span class="mdInput01Corner04"></span></span>
               <span class="MdErr01"><%= locals.errMsg ? locals.errMsg : ''%></span>
             </td>
           </tr>
           </tbody>
         </table>
-        <!--/MdSting02--></div>
+        </div>
       <p class="MdSubmit01"><button class="btn btn-large btn-success" type="submit">登录</button></p>
     </form>
-    <span class="arMain01Corner01"></span>
-    <span class="arMain01Corner02"></span>
-    <span class="arMain01Corner03"></span>
-    <span class="arMain01Corner04"></span>
-    <!--/ArMain01--></div>
-  <!--//contents-->
+    </div>
+
   <script>
     $().ready(function(){
       init();
