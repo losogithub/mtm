@@ -81,6 +81,10 @@ input[type="color"],
   -moz-border-radius: 1px;
   border-radius: 1px;
 }
+input,
+textarea {
+  width: 210px;
+}
 textarea {
   padding-right: 4px;
 }
@@ -157,6 +161,22 @@ input[type="color"]:focus,
   -moz-transition: height 0.2s ease 0s;
   -o-transition: height 0.2s ease 0s;
   transition: height 0.2s ease 0s;
+}
+input[type="checkbox"],
+input[type="radio"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 13px;
+  height: 13px;
+  background: white;
+  border: 1px solid #dcdcdc;
+  -webkit-border-radius: 1px;
+  -moz-border-radius: 1px;
+  border-radius: 1px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  position: relative;
 }
 input[disabled],
 select[disabled],

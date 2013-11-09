@@ -1,3 +1,7 @@
+input[type="text"],
+textarea {
+  width: 100%;
+}
 .Contents {
   padding: 25px 0;
   overflow: hidden;
@@ -73,7 +77,8 @@
 .MainHead {
   margin-bottom: 10px;
 }
-.MainHead > h1 {
+.MainHead > h5 {
+  margin: 0;
   line-height: 20px;
   color: #000000;
   font-weight: bold;
@@ -83,7 +88,7 @@
   position: absolute;
   right: 0;
   bottom: 0;
-  color: #999999;
+  color: #999;
 }
 .MainTbl {
   width: 100%;
@@ -126,7 +131,7 @@
 .MainTbl td {
   padding: 9px 10px;
   border-bottom: 1px solid #f2f2f2;
-  color: #000000;
+  color: black;
   text-align: center;
   vertical-align: middle;
   word-wrap: break-word;
@@ -141,10 +146,7 @@
   font-size: 16px;
 }
 .MainTblTtl a {
-  color: #000000;
-}
-.MainTblDate {
-  color: #999999;
+  color: black;
 }
 .MainTblPV {
   font-size: 18px;
@@ -152,18 +154,24 @@
 .MainTblRate {
   font-size: 10px;
 }
-.MainTblDraft {
-  color: #999999;
-}
 .SettingsForm {
   padding-top: 20px;
-  color: #999999;
+  color: #999;
 }
 .SettingsForm li {
   padding-bottom: 20px;
-  overflow: hidden;
+  *zoom: 1;
 }
-.SettingsForm li > h3 {
+.SettingsForm li:before,
+.SettingsForm li:after {
+  display: table;
+  content: " ";
+}
+.SettingsForm li:after {
+  clear: both;
+}
+.SettingsForm li > h6 {
+  margin-top: 0;
   display: block;
   float: left;
   width: 130px;
@@ -190,7 +198,7 @@
 .WorksPagination {
   margin-bottom: 15px;
   line-height: 1.2;
-  margin: 20px 0 0 ;
+  margin: 20px 0 0;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 12px;
   text-align: center;
@@ -226,7 +234,7 @@
 .WorksPagination a:link,
 .WorksPagination a:visited {
   border: 1px solid #ebebeb;
-  color: #999!important;
+  color: #999 !important;
   text-decoration: none;
 }
 .WorksPagination a:hover,
@@ -234,6 +242,6 @@
 .WorksPagination a:focus {
   cursor: pointer;
   background-color: #f0f0f0;
-  color: #000!important;
+  color: #000 !important;
   text-decoration: none !important;
 }

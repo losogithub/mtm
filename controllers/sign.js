@@ -48,19 +48,19 @@ var signup = function (req, res, next) {
   var nMsg = '';
   var pMsg = '';
   if (name === '') {
-    nMsg = '<p htmlfor="_email" generated="true" class="MdMsgError01">Enter your username(ID).</p>';
+    nMsg = 'Enter your username(ID).';
     nFlag = false;
   }
   else if (name.length < 5) {
     console.log('name length less than 5');
     nFlag = false;
-    nMsg = '<p htmlfor="_email" generated="true" class="MdMsgError01">cannot less than 5.</p>';
+    nMsg = 'cannot less than 5.';
   }
   else {
     try {
       check(name, '用户名只能使用0-9，a-z，A-Z。').isAlphanumeric();
     } catch (e) {
-      nMsg = '<p htmlfor="_email" generated="true" class="MdMsgError01">' + e.message + '</p>';
+      nMsg = e.message;
       nFlag = false;
     }
   }
@@ -68,14 +68,14 @@ var signup = function (req, res, next) {
 
   // 2. check email
   if (email === '') {
-    eMsg = '<p htmlfor="_email" generated="true" class="MdMsgError01">Enter your email address.</p>';
+    eMsg = 'Enter your email address.';
     eFlag = false;
   }
   else {
     try {
       check(email, '不正确的电子邮箱。').isEmail();
     } catch (e) {
-      eMsg = '<p htmlfor="_email" generated="true" class="MdMsgError01">' + e.message + '</p>';
+      eMsg = e.message;
       eFlag = false;
     }
 
@@ -83,12 +83,10 @@ var signup = function (req, res, next) {
 
   //3. password
   if (pass === '') {
-    pMsg = '<p htmlfor="_email" generated="true" class="MdMsgError01">Enter your password.</p>';
-    pFlag = false;
+    pMsg = 'Enter your password.';
   }
   else if (pass.length < 4) {
-    pMsg = '<p htmlfor="_email" generated="true" class="MdMsgError01">Password length shall more than 3.</p>';
-    pFlag = false;
+    pMsg = 'Password length shall more than 3.';
   }
 
   if (nFlag) {
@@ -98,7 +96,7 @@ var signup = function (req, res, next) {
       }
       if (user) {
         console.log('user name has been registered!');
-        nMsg = '<p htmlfor="_email" generated="true" class="MdMsgError01">This username(ID) has already been registered.</p>';
+        nMsg = 'This username(ID) has already been registered.';
         // because of the callback function asynchronized.
         if (eFlag) {
           User.getUserByMail(email, function (err, user) {
@@ -107,7 +105,7 @@ var signup = function (req, res, next) {
             }
             if (user) {
               console.log('user email has been registered');
-              eMsg = '<p htmlfor="_email" generated="true" class="MdMsgError01">The email address you have entered has already been registered.</p>';
+              eMsg = 'The email address you have entered has already been registered.';
             }
 
             console.log("nMsg: %s", nMsg);
@@ -139,7 +137,7 @@ var signup = function (req, res, next) {
               res.set('Connection', 'close');
               res.set('Expire', '-1');
               res.set('Pragma', 'no-cache');
-              res.render('sign/success_signup', {
+              res.render('sign/signupSuccess', {
                 emailAddress: email
               });
             });
@@ -165,7 +163,7 @@ var signup = function (req, res, next) {
             }
             if (user) {
               console.log('user email has been registered');
-              eMsg = '<p htmlfor="_email" generated="true" class="MdMsgError01">The email address you have entered has already been registered.</p>';
+              eMsg = 'The email address you have entered has already been registered.';
             }
 
             console.log("nMsg: %s", nMsg);
@@ -196,7 +194,7 @@ var signup = function (req, res, next) {
               res.set('Connection', 'close');
               res.set('Expire', '-1');
               res.set('Pragma', 'no-cache');
-              res.render('sign/success_signup', {
+              res.render('sign/signupSuccess', {
                 emailAddress: email
               });
             });
@@ -222,7 +220,7 @@ var signup = function (req, res, next) {
       }
       if (user) {
         console.log('user email has been registered');
-        eMsg = '<p htmlfor="_email" generated="true" class="MdMsgError01">The email address you have entered has already been registered.</p>';
+        eMsg = 'The email address you have entered has already been registered.';
       }
 
       // wrong name, maybe correct email address.
@@ -436,7 +434,7 @@ var signout = function (req, res, next) {
       break;
     }
   }
-  return res.render('sign/logoutMessage', {
+  return res.render('sign/logout', {
     refer: refer
   })
 };
@@ -497,7 +495,7 @@ var forgetPassword = function (req, res, next) {
         // 发送重置密码邮件
         // But if the user hasn't been activated ? how to do ?
         mail.sendResetPassMail(email, retrieveKey, user.email);
-        res.render('sign/forgetPassSuccessSend')
+        res.render('sign/forgetPasswordSend')
       });
     }
   });

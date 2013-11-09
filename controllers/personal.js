@@ -156,11 +156,9 @@ var renderWorks = function(user, topicsInfos, isSelectC, isSelectU, isSelectP, i
                            createV, updateV, pageViewV, rateV, currentPage, totalPage,
                            res, next){
   res.render('personal/index', {
-    title: config.name,
     css: [
       '/stylesheets/personal.css'
     ],
-    js: '',
     pageType: 'PERSONAL',
     personalType: 'WORKS',
     username: user.loginName,
@@ -196,12 +194,11 @@ var showSettings = function (req, res) {
       description = '';
     }
     res.render('personal/index', {
-      title: config.name,
       css: [
         '/stylesheets/personal.css'
       ],
       js: [
-        '/javascripts/personalAccountManage/setting.js'
+        '/javascripts/setting.js'
       ],
       pageType: 'PERSONAL',
       personalType: 'SETTINGS',
@@ -268,13 +265,7 @@ var updateSettings = function(req, res){
 
 
 var showConfirmPassword = function(req, res){
-  res.render('personal/accountVerify', {
-    title: config.name,
-    css: '',
-    js: [
-      'javascripts/account/account_common.js'
-    ]
-  })
+  res.render('personal/accountVerify')
 }
 
 
@@ -299,11 +290,6 @@ var showConfirmPassword = function(req, res){
        //but this shall not happen.
        //how to do ?
        res.render('personal/accountVerify', {
-         title: config.name,
-         css: '',
-         js: [
-           'javascripts/account/account_common.js'
-         ],
          errMsg: '找不到该用户'
        })
 
@@ -318,11 +304,6 @@ var showConfirmPassword = function(req, res){
          console.log("wrong password");
          //res.locals.errMsg =  '密码不正确';
          return res.render('personal/accountVerify', {
-           title: config.name,
-           css: '',
-           js: [
-             'javascripts/account/account_common.js'
-           ],
            errMsg: '密码不正确'
          })
        }
@@ -372,12 +353,7 @@ var showAccountModify = function(req, res){
        else if(genderTypeCd == 'U'){uChecked = 'checked';}
        else {fChecked = 'checked';}
 
-       return res.render('personal/privateInfoNotify', {
-         title: config.name,
-         css: '',
-         js: [
-           'javascripts/account/account_common.js'
-         ],
+       return res.render('personal/account', {
          fChecked: fChecked,
          mChecked: mChecked,
          uChecked: uChecked,
@@ -464,12 +440,7 @@ if( newPassword || newPasswordConfirm)
   if((!newPassword) && newPasswordConfirm){
     var infoMsg = "请输入密码";
 
-    return res.render('personal/privateInfoNotify', {
-      title: config.name,
-      css: '',
-      js: [
-        'javascripts/account/account_common.js'
-      ],
+    return res.render('personal/account', {
       infoMsg: infoMsg,
       fChecked: fChecked,
       mChecked: mChecked,
@@ -482,12 +453,7 @@ if( newPassword || newPasswordConfirm)
  else if( newPassword.length < 6 || newPassword > 20){
     var infoMsg = "密码长度介于6-20位数之间";
 
-    return res.render('personal/privateInfoNotify', {
-      title: config.name,
-      css: '',
-      js: [
-        'javascripts/account/account_common.js'
-      ],
+    return res.render('personal/account', {
       infoMsg: infoMsg,
       fChecked: fChecked,
       mChecked: mChecked,
@@ -500,12 +466,7 @@ if( newPassword || newPasswordConfirm)
   else if(newPassword !== newPasswordConfirm){
     var infoMsg = "两次密码不一样";
 
-    return res.render('personal/privateInfoNotify', {
-      title: config.name,
-      css: '',
-      js: [
-        'javascripts/account/account_common.js'
-      ],
+    return res.render('personal/account', {
       infoMsg: infoMsg,
       fChecked: fChecked,
       mChecked: mChecked,
@@ -551,12 +512,7 @@ if( newPassword || newPasswordConfirm)
 
       if( (!uPFlag) && (!uYFlag) && (!uGFlag)){
         //nothing is updated
-        return res.render('personal/privateInfoNotify', {
-          title: config.name,
-          css: '',
-          js: [
-            'javascripts/account/account_common.js'
-          ],
+        return res.render('personal/account', {
           fChecked: fChecked,
           mChecked: mChecked,
           uChecked: uChecked,
@@ -580,12 +536,7 @@ if( newPassword || newPasswordConfirm)
             infoMsg ='密码更新成功';
           }
 
-          return res.render('personal/privateInfoNotify', {
-             title: config.name,
-             css: '',
-             js: [
-               'javascripts/account/account_common.js'
-             ],
+          return res.render('personal/account', {
              infoMsg: infoMsg,
              fChecked: fChecked,
              mChecked: mChecked,
@@ -733,12 +684,10 @@ var showPersonal = function(req, res){
 
 
             res.render('personal/showPersonal', {
-              title: config.name,
               css: [
                 '/stylesheets/showPerson/personal-common.css',
                 '/stylesheets/showPerson/profile.css'
               ],
-              js: '',
               authorName: authorName,
               authorImage: user.url,
               authorDescription: description,
@@ -770,12 +719,10 @@ var showPersonal = function(req, res){
         //todo: current no join topics stored in DB.
         var topicsInfo = [];
         res.render('personal/showPersonal', {
-          title: config.name,
           css: [
             '/stylesheets/showPerson/personal-common.css',
             '/stylesheets/showPerson/profile.css'
           ],
-          js: '',
           authorName: authorName,
           authorImage: user.url,
           authorDescription: description,
@@ -948,11 +895,9 @@ var showFavourite = function (req, res) {
   if(req.session && req.session.userId && req.session.userId !== 'undefined'){
     console.log('render show favourite page');
     res.render('personal/favourite', {
-      title: config.name,
       css: [
         '/stylesheets/personal.css'
       ],
-      js: '',
       pageType: 'PERSONAL'
     });
   } else {

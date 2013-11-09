@@ -37,9 +37,9 @@ function showCreate(req, res, next) {
       '/stylesheets/edit.css'
     ],
     js: [
-      '/javascripts/jquery.autosize.min.js',
+      'http://cdn.bootcss.com/autosize.js/1.17.1/autosize-min.js',
       '/javascripts/jquery-ui-1.10.3.custom.min.js',
-      '/javascripts/jquery.validate.min.js',
+      'http://cdn.bootcss.com/jquery-validate/1.11.1/jquery.validate.min.js',
       '/javascripts/utils.js',
       '/javascripts/edit.js'
     ],
@@ -184,9 +184,9 @@ function showEdit(req, res, next) {
         '/stylesheets/edit.css'
       ],
       js: [
-        '/javascripts/jquery.autosize.min.js',
+        'http://cdn.bootcss.com/autosize.js/1.17.1/autosize-min.js',
         '/javascripts/jquery-ui-1.10.3.custom.min.js',
-        '/javascripts/jquery.validate.min.js',
+        'http://cdn.bootcss.com/jquery-validate/1.11.1/jquery.validate.min.js',
         '/javascripts/utils.js',
         '/javascripts/edit.js'
       ],
@@ -837,7 +837,21 @@ function saveTopic(req, res, next) {
   }
 
   Topic.saveTopic(authorId, topicId, title, coverUrl, description, publish, function (err, topic) {
-    if(err){console.log(err); return;}
+    if (err) {
+      console.error(err.stack);
+      switch (err.message) {
+        case 403:
+          res.send(403, '您无权修改他人的总结');
+          break;
+        case 404:
+          res.send(404, '总结不存在');
+          break;
+        default :
+          res.send(500, err);
+          break;
+      }
+      return;
+    }
     res.send(200);
     console.log('saveTopic done');
     //add: 11.07 2013 add the published topic to new topics db.

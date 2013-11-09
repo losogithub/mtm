@@ -1,50 +1,45 @@
-<div class="LyContents02">
-  <div class="ArMain01">
-    <form method="post" action="/account" id="_registForm" onsubmit="return validatePass()">
-      <input type="hidden" name="fromUrl" id="fromUrl" value="/accountVerify">
-      <input type="hidden" name="username" value="<%= !locals.username ? '' : username %>" id="_username">
+<!--ACCOUNT##这是layout要用的参数，不能删！-->
+<div class="Contents">
+  <div class="Inner">
+    <div class="Message Message-AL">
+      <form method="post" action="/account" id="_registForm" onsubmit="return validatePass()">
+        <input type="hidden" name="fromUrl" id="fromUrl" value="/accountVerify">
+        <input type="hidden" name="username" value="<%= locals.username || '' %>" id="_username">
+        <h4>密码确认</h4>
 
-
-
-      <h2 class="MdTtl01">密码确认</h2>
-      <div class="MdTxtWrap01">
-        <p class="MdTxt01">为了您的账户安全，请再次登录。</p>
-      </div>
-      <div class="MdSting02">
-        <table>
+        <p>为了您的账户安全，请再次登录。</p>
+        <table class="Settings MarginTop MarginBottom">
           <tbody>
-          <tr class="firstChild">
-            <th class="mdSting02Th04">用户名</th>
-            <td class="mdSting02Td04"><span class="MdTxt02"><%= !locals.username ? '' : username %></span></td>
+          <tr class="BorderTop">
+            <th><strong>用户名</strong></th>
+            <td><strong><%= locals.username || '' %></strong></td>
           </tr>
-          <tr class="lastChild">
-            <th class="mdSting02Th04">密码</th>
-            <td class="mdSting02Td04"><span class="MdInput01"><input style="height: 34px;" class="mdInput01Input" type="password" id="_passwd" name="password" maxlength="20"><span class="mdInput01Corner01"></span><span class="mdInput01Corner02"></span><span class="mdInput01Corner03"></span><span class="mdInput01Corner04"></span></span>
-              <span class="MdErr01"><%= locals.errMsg ? locals.errMsg : ''%></span>
+          <tr class="BorderBottom">
+            <th><strong>密码</strong></th>
+            <td><input type="password" id="_passwd" name="password" maxlength="20">
+              <span class="ErrorHint"><%= locals.errMsg || '' %></span>
             </td>
           </tr>
           </tbody>
         </table>
+        <div style="text-align: center;">
+          <button class="btn btn-large btn-success" type="submit">登录</button>
         </div>
-      <p class="MdSubmit01"><button class="btn btn-large btn-success" type="submit">登录</button></p>
-    </form>
+      </form>
     </div>
+  </div>
 
   <script>
-    $().ready(function(){
-      init();
-      new nj.account.initMailChangeForm();
+    $().ready(function () {
+      new shizier.account.initMailChangeForm();
     });
-    function validatePass(){
+    function validatePass() {
       var password = $("#_passwd").val();
-      if(!password){
-        $('span[class="MdErr01"]').text('请输入密码');
+      if (!password) {
+        $('span[class="ErrorHint"]').text('请输入密码');
         return false;
       }
     }
-      function init(){
-      $("#_passwd").attr('disabled', '');
-    }
-    </script>
+  </script>
 
 </div>
