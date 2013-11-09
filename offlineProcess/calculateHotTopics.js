@@ -63,9 +63,9 @@ function updateTwoTopicDB(){
       topics[i].score = ComputeTopic.newHotScore(topics[i].score, topics[i].update_at);
     }
 
-    topics.sort(scoreCompare);
+    var newTopics = topics.sort(scoreCompare);
 
-    var documents = topics.slice(0, limitedNumber);
+    var documents = newTopics.slice(0, limitedNumber);
 
     RecentHotTopic.updateRecentHotTopics(documents,function(err, ok){
       if(err){console.log(err); return;}
