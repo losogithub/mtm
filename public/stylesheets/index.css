@@ -17,7 +17,7 @@ em{font-style:normal}
 .Col01 .SELECTED{background-color: rgb(240, 240, 240);}
 .Col01 .SELECTED a{color: #000;font-weight: bold;}
 
-.Col02{float: left;width: 335px;margin-right: 25px;}
+.Col02{float: left;width: 335px;margin-right: 25px;} /* 335px */
 .Col02 h6{color: black;font-weight: bold;margin: 0 0 10px;}
 .HotTopicList {}
 .HotTopicList li{margin-top: 15px;padding-top: 15px;border-top: 1px solid rgb(242, 242, 242);}
@@ -28,8 +28,10 @@ em{font-style:normal}
 .TopicAuthor {float: left;color: rgb(155, 155, 155);font-size: 11px;line-height: 1;}
 .PVCount{float: right;color: rgb(155, 155, 155);font-family: Arial,sans-serif;font-size: 11px;line-height: 1;}
 .PVCount b{margin-right: 2px;font-size: 12px;}
+.Col02HotContentListItemDes{margin-top: 4px; color: #aeaeae; font-size: 11px}
 
-.Col03{float: left;width: 185px;}
+
+.Col03{float: left;width: 185px;}   /* 185px*/
 .Col03HotContentList{ overflow: hidden}
 .Col03HotContentList .col03HotContentListItem{overflow: hidden; margin:13px 0 0;padding:14px 0 0;border-top:1px solid #f2f2f2;vertical-align:top;word-wrap:break-word;word-break:break-all}
 .Col03HotContentList li:first-child {border-top: 0; margin-top: 0; padding-top: 0}
@@ -44,7 +46,7 @@ em{font-style:normal}
 
 
 
-.Sub{float: right;width: 300px;position: relative;padding-bottom: 40px;}
+.Sub{float: right;width: 300px;position: relative;padding-bottom: 40px;} /* 300px */
 .SubSeparator{background: #fff; height: 15px}
 .SubContent{background-color: #fff}
 .SubContentTopicListBox{margin-bottom: -8px}

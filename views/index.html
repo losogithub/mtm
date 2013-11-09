@@ -16,7 +16,7 @@
         <div class="Col01">
           <ul>
             <li class="SELECTED"><a href="/">综合</a></li>
-            <li><a href="/">女性</a></li>
+            <li><a href="/">精选</a></li>
           </ul>
         </div>
         <div class="Col02">
@@ -42,18 +42,19 @@
             <% } %>
           </ul>
         </div>
+
         <div class="Col03">
           <ul class="Col03HotContentList">
-            <% for (i in hot) { %>
+            <% for (i in realGood) { %>
              <li class="col03HotContentListItem">
-               <a href="/topic/<%= hot[i].id %>">
-                 <p class="Col03HotContentListItemTtl" title="<%= hot[i].title %>"><%= hot[i].title %></p>
-                 <p class="Col03HotContentListItemDes"><%= hot[i].des %></p>
+               <a href="/topic/<%= realGood[i].id %>">
+                 <p class="Col03HotContentListItemTtl" title="<%= realGood[i].title %>"><%= realGood[i].title %></p>
+                 <p class="Col03HotContentListItemDes"><%= realGood[i].des %></p>
                </a>
                <div class="Col03HotContentListItemOption">
-                 <p class="Col03HotContentListItemUserName" title="<%= hot[i].author %>"><%= hot[i].author%></p>
+                 <p class="Col03HotContentListItemUserName" title="<%= realGood[i].author %>"><%= realGood[i].author%></p>
                  <p class="Col03HotContentListItemPVCount">
-                   <span class="Col03HotContentListItemPVCountNum"><%= hot[i].PVCount %></span>
+                   <span class="Col03HotContentListItemPVCountNum"><%= realGood[i].PVCount %></span>
                    <span class="Col03HotContentListItemPVCountUnit">访问量</span>
                  </p>
                </div>
@@ -61,6 +62,7 @@
             <% } %>
           </ul>
         </div>
+
       </div>
 
       <div class="IndexPagination">

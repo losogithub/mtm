@@ -20,8 +20,10 @@ require('./user');
 require('./loginToken');
 
 
-exports.OldHotTopicModel = require('./hotTopics').OldHotTopicModel;
-exports.HotTopicModel = require('./hotTopics').HotTopicModel;
+exports.RecentHotTopicModel = require('./scoredTopics').RecentHotTopicModel;
+exports.RealGoodTopicModel = require('./scoredTopics').RealGoodTopicModel;
+
+exports.ScoredTopicModel = require('./scoredTopics').ScoredTopicModel;
 
 
 exports.NewTopicModel = require('./topic').NewTopicModel;

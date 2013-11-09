@@ -7,32 +7,34 @@
  */
 var async = require('async');
 var NewTopic = require('../proxy').NewTopic
-var OldHotTopic = require('../proxy').OldHotTopic;
-var HotTopic = require('../proxy').HotTopic;
+var RecentHotTopic = require('../proxy').RecentHotTopic;
+var RealGoodTopic = require('../proxy').RealGoodTopic;
 
 
 //two global variables
-global.hotTopicsData = [];
-global.updatedTopicsData = [];
+global.recentHotTopicsData = [];
+global.realGoodTopicsData = [];
+global.recentUpdatedTopicsData = [];
 
 
 var funArray = [
-  {fun: extractOldHotTopics, delay: 60*1000}, //an hour
-  {fun: extractRecentTopics, delay: 60*1000} // 1 minute
+  {fun: extractRecentHotTopics, delay: 60*1000}, //an hour
+  {fun: extractRealGoodTopics, delay: 3*60*1000}, //3 hours
+  {fun: extractUpdatedRecentTopics, delay: 60*1000} // 1 minute
 ];
 
-function extractRecentTopics(){
+function extractUpdatedRecentTopics(){
 
   //ensure it is empty.
-  updatedTopicsData = [];
+  global.recentUpdatedTopicsData = [];
 
   NewTopic.getNewTopics(function(err, topics){
     if(err){next(err);}
-    console.log("Update recently updated topics list");
-    //console.log(topics);
+    console.log("更新最新总结列表");
+    console.log(topics.length);
     var newTopics = topics || [];
     newTopics.forEach(function (topic) {
-      updatedTopicsData.push({
+      recentUpdatedTopicsData.push({
         id: topic._id,
         coverUrl: topic.cover_url,
         title: topic.title,
@@ -44,18 +46,41 @@ function extractRecentTopics(){
   });
 }
 
-function  extractOldHotTopics(){
+function  extractRecentHotTopics(){
 
   //first set it to empty. this is important.
-  hotTopicsData = [];
-  OldHotTopic.getHotTopics(function(err, topics){
+  global.recentHotTopicsData = [];
+  RecentHotTopic.getRecentHotTopics(function(err, topics){
     if(err){console.log("cannot find old hot topics "); return;}
-    console.log("Update hot topics list");
+    console.log("更新左边人气总结");
     console.log(topics.length);
     var hotTopics = topics || [] ;
     for (var i = 0; i < hotTopics.length; i++){
       //console.log("hot topics");
-      hotTopicsData.push({
+      recentHotTopicsData.push({
+        id: hotTopics[i]._id,
+        coverUrl: hotTopics[i].cover_url,
+        title: hotTopics[i].title,
+        author: hotTopics[i].author_name,
+        PVCount: hotTopics[i].PV_count,
+        des: hotTopics[i].description
+      });
+    };
+  });
+}
+
+
+function extractRealGoodTopics(){
+  //first set it to empty. this is important.
+  global.realGoodTopicsData = [];
+  RealGoodTopic.getRealGoodTopics(function(err, topics){
+    if(err){console.log("cannot find old hot topics "); return;}
+    console.log("更新经典总结");
+    console.log(topics.length);
+    var hotTopics = topics || [] ;
+    for (var i = 0; i < hotTopics.length; i++){
+      //console.log("hot topics");
+      realGoodTopicsData.push({
         id: hotTopics[i]._id,
         coverUrl: hotTopics[i].cover_url,
         title: hotTopics[i].title,

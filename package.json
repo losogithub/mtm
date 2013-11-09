@@ -21,6 +21,7 @@
     "redis": "*",
     "request": "*",
     "connect-redis": "*",
-    "mathjs": "*"
+    "mathjs": "*" ,
+    "fibers": "*"
   }
 }

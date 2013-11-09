@@ -7,7 +7,7 @@
  */
 var math = require('mathjs')();
 var Topic = require('../proxy').Topic;
-var HotTopic = require('../proxy').HotTopic;
+var HotTopic = require('../proxy').ScoredTopic;
 
 
 var epoch = new Date(1970,1,1);
@@ -20,13 +20,34 @@ var epochSeconds = function(date){
 /*
   compute score for each topic document
 * */
-var hotScore = function(pv, likes, createDate, updateDate){
+/*
+ var hotScore = function(pv, likes, createDate, updateDate){
   pvOrder = math.log(pv, 10);
   likeOrder = math.log(likes, 10);
   createSeconds = epochSeconds(createDate) - 1134028003;
   updateSeconds = epochSeconds(updateDate) - 1134028003;
   return math.round(pvOrder + likeOrder  + (0.7 * createSeconds + 0.3 * updateSeconds)/45000, 7);
 }
+  */
 
+/*
+* Our own score compute algorithm
+* */
 
-exports.hotScore = hotScore;
+var traditionalScore = function(pv, likes){
+  return math.round(pv/100,7) + likes;
+}
+
+/*
+* This is for the left one, plus the time yinzi
+* */
+var newHotScore = function(score, updateDate){
+  var diff = (Date.now() - updateDate)/(1000*60*60);
+  //console.log(diff);
+  if (diff < 1) { return score + 10;}
+  else return score + 10/diff;
+}
+
+//exports.hotScore = hotScore;
+exports.traditionalScore = traditionalScore;
+exports.newHotScore = newHotScore;

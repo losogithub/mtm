@@ -11,7 +11,8 @@
 * */
 var math = require('mathjs')();
 
-var topicsPerPage = 20;
+var topicsPerPage = 15;
+var goodTopicsPerPage = 10;
 
 function index(req, res, next) {
 
@@ -21,10 +22,17 @@ function index(req, res, next) {
   //set default to the first page.
   var currentPage = req.query.page || '1';
 
-  var hotTopicsDataPage = hotTopicsData.slice( (currentPage-1)* topicsPerPage, currentPage*topicsPerPage) ;
+  var recentHotTopicsDataPage = global.recentHotTopicsData.slice( (currentPage-1)* topicsPerPage, currentPage*topicsPerPage) ;
+
+  //since I have already restricted recent hot topics to 700. so will never cross 50page.
+  var totalPages = math.max(math.ceil(global.recentHotTopicsData.length / topicsPerPage), math.ceil(global.realGoodTopicsData.length/goodTopicsPerPage));
 
 
-  var totalPages = math.ceil(hotTopicsData.length / topicsPerPage)
+
+  var goodTopicsDataPage = global.realGoodTopicsData.slice( (currentPage-1)* goodTopicsPerPage, currentPage*goodTopicsPerPage) ;
+
+
+
   var DateObj = _showDate();
   res.render('index', {
     title: 'mtm[我设计的信息。策展平台]',
@@ -33,8 +41,9 @@ function index(req, res, next) {
     dayInChn: DateObj.dayInChn,
     today: DateObj.today,
     today1: DateObj.today1,
-    hot: hotTopicsDataPage,
-    newTopics: updatedTopicsData,
+    hot: recentHotTopicsDataPage,
+    realGood: goodTopicsDataPage,
+    newTopics: global.recentUpdatedTopicsData,
     totalPage: totalPages,
     currentPage: currentPage
   });

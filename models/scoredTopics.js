@@ -31,5 +31,9 @@ var TopicSchema = new Schema({
 });
 
 
-exports.HotTopicModel= mongoose.model('HotTopic', TopicSchema, 'hotTopics');
-exports.OldHotTopicModel= mongoose.model('HotTopic', TopicSchema, 'oldHotTopics');
+exports.ScoredTopicModel= mongoose.model('ScoredTopic', TopicSchema, 'scoredTopics');
+
+/* the left one*/
+exports.RecentHotTopicModel= mongoose.model('ScoredTopic', TopicSchema, 'recentHotTopics');
+/* the right side one */
+exports.RealGoodTopicModel= mongoose.model('ScoredTopic', TopicSchema, 'realGoodTopics');
