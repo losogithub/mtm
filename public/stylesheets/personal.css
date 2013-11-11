@@ -1,3 +1,12 @@
+.StarIcon {
+  color: #dddddd;
+  text-shadow: 0 0 1px #777777;
+}
+.ExSelected .StarIcon,
+.StarIconFull {
+  color: #ffdd11;
+  text-shadow: 0 0 1px #443a00;
+}
 input[type="text"],
 textarea {
   width: 100%;
@@ -39,7 +48,7 @@ textarea {
   line-height: 1;
 }
 .SubTtl {
-  margin-top: 12px;
+  margin-top: 14px;
   color: #333333;
   font-size: 14px;
   font-weight: bold;
@@ -244,4 +253,19 @@ textarea {
   background-color: #f0f0f0;
   color: #000 !important;
   text-decoration: none !important;
+}
+.TopicTable,
+.TopicTable td {
+  width: 100%;
+}
+.TopicTable tr {
+  border-top: 1px solid #e7e7e7;
+}
+.TopicTable tr th,
+.TopicTable tr td {
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+.TopicTable tr img {
+  margin-right: 13px;
 }

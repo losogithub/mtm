@@ -3,7 +3,7 @@
     <div class="Inner">
       <table class='Band_Ttl'>
         <td>
-          <h1><%= locals.topic ? '修改' : '创建' %>总结</h1>
+          <h5><%= locals.topic ? '修改' : '创建' %>总结</h5>
         </td>
       </table>
       <table class="Band_Btn">
@@ -67,7 +67,7 @@
   </div>
 
   <!--内容-->
-  <div class="TopicWrapper">
+  <div class="TopicWrapper clearfix">
     <div class="Main">
 
       <% include _ul.html %>
@@ -252,9 +252,7 @@
         </div>
 
       </div>
-      <div class="Pagination"></div>
     </div>
     <div class="Sub"></div>
-    <div style="clear: both;"></div>
   </div>
 </div>

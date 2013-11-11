@@ -22,7 +22,6 @@ module.exports = function (app) {
 
   //console.log("router start");
   app.post('/topic/favorite', auth.loadUser, auth.loginDialog, topic.AddorRemoveLikes);
-  app.post('/topic/loginDialogCheck', auth.loadUser, auth.loginDialogCheck, topic.AddorRemoveLikes);
 
   app.get('/topic/create', auth.loadUser, auth.loginRequired, topic.showCreate);
   app.get('/topic/contents', auth.loadUser, auth.userRequired, topic.getContents);
@@ -73,8 +72,6 @@ module.exports = function (app) {
   //show personal page
   app.get('/u/:authorName', auth.loadUser, personal.showPersonal);
   app.post('/u/favorite', auth.loadUser, auth.loginDialog, personal.AddorRemoveLikes);
-
-  app.post('/loginDialogCheck', auth.loadUser, auth.loginDialogCheck, personal.AddorRemoveLikes);
 
   /*
    app.get('/active_account', sign.active_account);

@@ -253,9 +253,6 @@ function showIndex(req, res, next) {
       css: [
         '/stylesheets/topic.css'
       ],
-      js: [
-        '/javascripts/showTopic.js'
-      ],
       escape: escape,
       url: req.url,
       isAuthor: topic.author_id == userId,
@@ -1155,7 +1152,7 @@ function AddorRemoveLikes(req, res) {
             //res.writeHead(200);
             //if need login, then in auth.js, loginDialog : true,
             //correct attribute is used for login Dialog success situation.
-            res.send({loginDialog: false, FVCount: topic.FVCount, correct: true, userName: user.loginName, toLike: toLike });
+            res.send({FVCount: topic.FVCount, correct: true, userName: user.loginName, toLike: toLike });
 
           }
         })

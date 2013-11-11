@@ -1,0 +1,43 @@
+<!-- Modal -->
+<div class="LoginDialog modal fade" id="myModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <span class="Logo">
+          <img src="/images/logo_full_160x64.png">
+          <strong>登录</strong>
+        </span>
+        <span class="VLine VLine-Header"></span>
+        <span class="modal-title">此项功能需要您登录。</span>
+      </div>
+      <form class="modal-body">
+        <p class="ErrorHint">&nbsp;</p>
+
+        <div class="clearfix">
+          <div style="float: left;width: 238px;" class="clearfix">
+          <input style="width: 100%;" type="text" value="<%= locals.email || '' %>"
+                 id="uName" name="email"
+                 placeholder="用户名或邮箱">
+          <input style="width: 100%;margin-top: 3px;" type="password" id="uPas" name="password"
+                 maxlength="20"
+                 placeholder="密码">
+          </div>
+          <button style="float: right;height: 57px;width: 95px;" type="button" class="btn btn-large" onclick="mtm.loginCheck();">登录</button>
+        </div>
+        <p style="margin-top: 3px;">
+          <span class="AutoComplete">
+            <input type="checkbox" name="autoLogin" value="Y" id="idSaveCheck"/>
+            <label for="idSaveCheck">记住密码</label>
+          </span>
+          <span class="VLine VLine-Header"></span>
+          <a class="ForgetPassword" href="/forgetPassword">忘记密码?</a>
+        </p>
+      </form>
+      <div class="modal-footer text-center">
+        <a class="btn btn-large btn-success" target="_blank" href="/signup">免费注册</a>
+        <span>与世界分享你的总结</span>
+      </div>
+    </div>
+  </div>
+</div>

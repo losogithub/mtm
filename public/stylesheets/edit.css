@@ -1,3 +1,12 @@
+.StarIcon {
+  color: #dddddd;
+  text-shadow: 0 0 1px #777777;
+}
+.ExSelected .StarIcon,
+.StarIconFull {
+  color: #ffdd11;
+  text-shadow: 0 0 1px #443a00;
+}
 button[name='preview'] {
   float: left;
   width: 62px;
@@ -40,13 +49,13 @@ textarea {
   visibility: hidden;
 }
 .WidgetItemList > li > div {
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 .WidgetItemList > li.TITLE > div {
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 .WidgetItemList > li.WidgetDragPlaceholder {
-  margin-bottom: 15px;
+  margin-bottom: 18px;
   height: 20px;
   background: url(/images/bg_WidgetDragPlaceholder.png) repeat;
   box-shadow: 0 0 0 0 !important;
@@ -89,8 +98,8 @@ textarea {
 .Band .Band_Ttl {
   float: left;
 }
-.Band .Band_Ttl h1 {
-  font-size: 14px;
+.Band .Band_Ttl h5 {
+  margin: 0;
   font-weight: bold;
 }
 .Band .Band_Btn {

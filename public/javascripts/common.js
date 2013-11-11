@@ -18,9 +18,13 @@
   }
 
   $(document).ajaxError(function (event, jqXHR) {
-    if (jqXHR.status == 401
-      && confirm('您的身份信息已过期：\n重新登录请按“确定”，忽略请按“取消”。')) {
-      location = '/login';
+    if (jqXHR.status == 401) {
+      var $model = $('#myModal');
+      if ($model.is(':visible')) {
+        $('.LoginDialog .ErrorHint').text('用户名或密码不正确。');
+      } else {
+        $model.modal('show');
+      }
     }
   });
 
@@ -38,7 +42,61 @@
         });
 
         return false;
-      })
-  });
+      });
 
+
+    $('button[name="favorite"]').click(function () {
+      var $this = $(this);
+      var topicId = $this.data('favorite').topicId;
+      var url = $this.data('favorite').url;
+      var toLike = !$this.is('.ExSelected');
+      $.ajax({
+        type: 'POST',
+        url: topicId ? '/topic/favorite' : url ? '/u/favorite' : '',
+        xhrFields: { withCredentials: true },
+        data: {topicId: topicId, url: url, toLike: toLike}
+      })
+        .done(function (data) {
+          console.log('done');
+          if (toLike) {
+            $this.addClass('ExSelected');
+          } else {
+            $this.removeClass('ExSelected');
+          }
+          $('.HeadFVIco').next().text(data.FVCount);
+          $('.mdFVCount01Num').text(data.favourite);
+        });
+    });
+
+    mtm.loginCheck = function () {
+      var username = document.getElementById('uName').value;
+      var password = document.getElementById('uPas').value;
+      var rememberMe = $('#idSaveCheck').is(":checked");
+      //primary check: i.e. non empty.
+      //either empty
+      if (!username || !password) {
+        $('.LoginDialog .ErrorHint').text('用户名和密码不能为空。');
+        return false;
+      }
+      //: post topicId and toLike again
+      var $button = $('button[name="favorite"]');
+      var topicId = $button.data('favorite').topicId;
+      var url = $button.data('favorite').url;
+      var toLike = !$button.is('.ExSelected');
+      //using an ajax send to server to check for login.
+      //what is wrong ? why not send ???????????? 10.18 23:39 2013
+      $.ajax({
+        type: 'POST',
+        url: topicId ? '/topic/favorite' : url ? '/u/favorite' : '/loginDialogCheck',
+        xhrFields: { withCredentials: true },
+        data: {userName: username, password: password, rememberMe: rememberMe, topicId: topicId, url: url, toLike: toLike}
+      })
+        .done(function (data) {
+          location.reload();
+          return false;
+        });
+
+      return false;
+    }
+  });
 })(jQuery);

@@ -45,7 +45,7 @@
 
 .BottomUtil { display: none; visibility: hidden; line-height: 1; }
 
-.BottomUtil a, .HeadUtil a { color: rgb(124, 148, 170); display: inline-block; }
+.BottomUtil button, .HeadUtil a { color: rgb(124, 148, 170) !important; display: inline-block; }
 
 .LINK {
   .Title a {
@@ -160,6 +160,16 @@
   }
 }
 
+.Main { padding-bottom: 0; }
+
+.Main a[name="add"] { margin-bottom: 15px; }
+
+.Main a[name="add"]>i { color: #669966; vertical-align: middle; font-size: 15px; }
+
+.NoItem { position: relative; padding: 140px 0px 160px; text-align: center; }
+
+.NoItem>p { color: rgb(102, 102, 102); margin-bottom: 11px; }
+
 .SubInner { }
 
 .SubSeparator { height: 15px; background: #fff }
@@ -187,135 +197,3 @@
 .SubAuthorProfileUnitLinkSite.ExDisabled .SubAuthorProfileUnitLinkSiteBtn { background-position: -70px -120px; cursor: default; }
 
 .SubAuthorProfileTxt { line-height: 1.5; margin: 7px 0 -4px; word-wrap: break-word; color: #666 }
-
-#LoginPanel { margin: 0 !important; padding: 0 !important; background-color: #fff !important; color: #000 !important; font-family: "Hiragino Kaku Gothic Pro", "MS PGothic", sans-serif !important; font-size: 12px !important; text-align: left }
-
-#LoginPanel h1, #LoginPanel h2, #LoginPanel h3 { margin: 0 !important; font-size: 1em !important }
-
-#LoginPanel ul { list-style-type: none !important; margin: 0 !important; padding: 0 !important }
-
-#LoginPanel em { font-style: normal !important }
-
-#LoginPanel a img { border: none !important; vertical-align: top !important }
-
-#LoginPanel input { font-family: 'Hiragino Kaku Gothic Pro', 'MS PGothic', sans-serif; font-size: 1em !important; vertical-align: top !important }
-
-#LoginPanel label { cursor: pointer !important }
-
-#LoginPanel fieldset { margin: 0 !important; padding: 0 !important; border: none !important }
-
-#LoginPanel button { border: none !important; cursor: pointer !important; vertical-align: top !important }
-
-#LoginPanel button * { display: none !important }
-
-#LoginPanel a { color: #093e8c !important; text-decoration: underline !important }
-
-#LoginPanel a:hover, #LoginPanel a:active, #LoginPanel a:focus { text-decoration: underline !important }
-
-#LoginPanel { float: left !important; position: absolute !important; width: 399px !important; background: url("/images/loginDialog/bg_contents.png") repeat-x 0 bottom !important; *background: none !important; font-size: 12px !important; line-height: 15px !important; padding-bottom: 2px !important; *padding-bottom: 0 !important }
-
-#LoginPanel .LoginPanelArea { position: relative !important; width: 395px !important; border: 2px solid #4b4b4b !important; background-color: #fff }
-
-#LoginPanel h1 { height: 11px !important; line-height: 11px !important; padding: 14px 25px 13px !important; background-color: #fcfcfc !important; border-bottom: 1px solid #ebebeb !important; text-align: left !important }
-
-#LoginPanel h1 img.h1title { margin-top: -1px; margin-left: 3px }
-
-#LoginPanel .info { position: absolute !important; left: 135px !important; top: 14px !important; height: 1em; line-height: 1em !important; padding-left: 7px !important; border-left: 1px solid #ebebeb !important; color: #969696 !important; vertical-align: bottom !important }
-
-#LoginPanel .registerArea { margin: 20px 0 !important; padding: 0 0 0 15px !important; zoom: 1 !important }
-
-#LoginPanel .registerArea:after { display: block; content: "" !important; clear: both !important }
-
-#LoginPanel .registerArea h2 { width: 137px !important; float: left !important }
-
-#LoginPanel .registerArea p { float: right !important; width: 235px !important; margin-top: 0 !important; padding-top: 21px !important; color: #5e5e5e !important }
-
-#LoginPanel .registerArea .picktxt { font-size: 13px !important; font-family: Verdana !important; letter-spacing: -1px !important }
-
-#LoginPanel .registerArea em { font-weight: bold !important }
-
-#LoginPanel .loginArea { background: #f3f3f3 !important }
-
-#LoginPanel .loginArea ul.formList { float: left !important; clear: both !important; width: auto !important; padding: 0 !important; margin: 0 !important }
-
-#LoginPanelForm .loginArea { *zoom: 1; width: 345px !important; padding: 25px !important }
-
-#LoginPanelForm .loginArea:after { content: ""; display: block; clear: both }
-
-#LoginPanelForm .loginArea ul.formList { float: left !important; clear: both !important; width: auto !important; margin: 0 !important; padding: 0 !important }
-
-#LoginPanelForm .loginArea li.nvrId { margin: 0; padding: 0 }
-
-#LoginPanelForm .loginArea li.pass { margin-top: 3px !important; padding: 0 !important }
-
-#LoginPanelForm .loginArea p.loginBtn { width: 77px !important; float: right !important; margin-right: -1px !important; vertical-align: top !important; height: 65px }
-
-li.nvrId input.message, li.nvrId input.message2 { background: transparent url("/images/loginDialog/bg_input_mail.png") no-repeat 0 0 !important; display: inline !important }
-
-li.pass input.message { background: transparent url("/images/loginDialog/bg_input_pass.gif") no-repeat 0 0 !important; display: inline !important }
-
-#LoginPanelForm .loginArea ul.formList li { background: url("/images/loginDialog/bg_input_top.gif") repeat-x 0 1px }
-
-#LoginPanelForm .loginArea ul.formList .input { display: inline !important; width: 249px !important; height: 15px !important; padding: 6px 7px 7px !important; vertical-align: top !important; border-top: 1px solid #aaa !important; border-right: 1px solid #cecece !important; border-bottom: 1px solid #cecece !important; border-left: 1px solid #aaa !important; background: transparent url("/images/loginDialog/bg_input.gif") no-repeat 0 0; color: #000 !important; font: 12px/15px Arial, Helvetica, sans-serif !important }
-
-#LoginPanelForm .loginArea ul.formList .focus { color: #000 }
-
-#LoginPanelForm ul.supportNavi { clear: both !important; *zoom: 1; overflow: hidden !important; padding-top: 5px !important }
-
-#LoginPanelForm ul.supportNavi:after { content: ""; display: block; clear: both }
-
-#LoginPanelForm ul.supportNavi li { display: inline !important; float: left !important; color: #5e5e5e !important }
-
-#LoginPanelForm ul.supportNavi li a { text-decoration: none !important; color: #5e5e5e !important }
-
-#LoginPanelForm ul.supportNavi li a:hover { text-decoration: underline !important }
-
-#LoginPanelForm ul.supportNavi li.lost { margin-left: 7px !important; padding-left: 7px !important; background: url("/images/loginDialog/line_txt.gif") bottom left no-repeat !important }
-
-#LoginPanelForm .supportNavi input { font-size: 0 !important; line-height: 0 !important; padding: 0 !important; margin: 0 !important }
-
-#LoginPanelForm .supportNavi .lost { padding-top: 0 !important; line-height: 1 !important; padding-top: 2px !important }
-
-*:first-child+html #LoginPanelForm .supportNavi input { line-height: 0 !important; padding: 0 !important; margin: 0 !important; vertical-align: middle !important; margin-left: -3px !important; margin-right: -2px !important }
-
-*:first-child+html #LoginPanelForm .supportNavi .lost { padding-top: 4px !important }
-
-#LoginPanel .closeBtn { position: absolute !important; right: 16px !important; top: 14px !important; cursor: pointer !important }
-
-#LoginPanel .loginArea p.attention { width: 313px !important; margin: -5px 0 14px !important; color: #ff2400 !important; font-weight: bold !important }
-
-.linkedAccount { margin: 21px 0 -1px -1px; color: #969696; white-space: nowrap }
-
-.linkedAccount .linkedAccountTxt { margin-bottom: 8px !important; padding-left: 1px }
-
-.linkedAccount a { margin-right: 10px }
-
-.linkedAccount img { vertical-align: top }
-
-body #LoginPanel .registerArea p { margin-top: 0 !important }
-
-body #LoginPanel h1 { height: 11px !important; line-height: 11px !important }
-
-.Main { padding-bottom: 0; }
-
-.Main a[name="add"] { margin-bottom: 15px; }
-
-.Main a[name="add"]>i { color: #669966; vertical-align: middle; font-size: 15px; }
-
-.NoItem { position: relative; padding: 140px 0px 160px; text-align: center; }
-
-.NoItem>p { color: rgb(102, 102, 102); margin-bottom: 11px; }
-
-.TopicPagination { margin-bottom: 40px; line-height: 1.2; margin: 30px 0; font-family: Arial, Helvetica, sans-serif; font-size: 16px; text-align: center }
-
-.TPagination { margin-bottom: 40px; line-height: 1.2; margin: 30px 0; font-family: Arial, Helvetica, sans-serif; font-size: 16px; text-align: center }
-
-.TPaginationBreak { display: inline-block; margin: 0 2px; padding: 8px 11px; font-weight: bold; vertical-align: top }
-
-.TPagination strong { padding: 9px 11px; color: #000; display: inline-block; margin: 0 2px; font-weight: bold; vertical-align: top; }
-
-.TPagination a { display: inline-block; margin: 0 2px; padding: 8px 11px; font-weight: bold; vertical-align: top }
-
-.TPagination a:link, .Pagination a:visited { border: 1px solid #ebebeb; color: #999; text-decoration: none }
-
-.TPagination a:hover, .TPagination a:active, .TPagination a:focus { cursor: pointer; background-color: #f0f0f0; color: #000; text-decoration: none }

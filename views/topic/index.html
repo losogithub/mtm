@@ -67,8 +67,9 @@
           </span>
         </div>
 
-        <button name="favorite" <% if(locals.liked) {%> class="ExSelected btn btn-large" <% } else { %> class="btn btn-large" <% } %>data-favorite="{&quot;topicId&quot;:&quot;<%= topic.topicId %>&quot;}">
-          <i class="HeadFVBtnIco icon-star"></i>
+        <button name="favorite" class="<%- locals.liked ? 'ExSelected' : '' %> btn btn-large"
+                data-favorite='{"topicId":"<%= topic.topicId %>"}'>
+          <i class="HeadFVBtnIco icon-star StarIcon"></i>
           <span class="HeadFVBtnTxt">收藏</span>
         </button>
       </div>
@@ -97,12 +98,6 @@
 
       <% include _ul.html %>
 
-    <!--  <div class="Pagination">
-
-      </div> -->
-      <div class="TopicPagination">
-        <% include _pagination.html %>
-      </div>
     </div>
     <div class="Sub"><!--right side--->
       <div class="SubInner">
