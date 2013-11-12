@@ -1,0 +1,24 @@
+#! /bin/sh
+
+NODE_ENV=development
+DAEMON="node app.js"
+NAME=shiziweiji
+DESC=shiziweiji
+PIDFILE="shiziweiji.pid"
+
+case "$1" in
+  start)
+	echo "Starting $DESC: "
+	nohup $DAEMON > /dev/null &
+	echo $! > $PIDFILE
+	echo "$NAME."
+	     ;;
+  stop)
+	echo "Stopping $DESC: "
+	kill $(cat $PIDFILE)
+	     rm $PIDFILE
+	echo "$NAME."
+	     ;;
+  esac
+
+  exit 0
