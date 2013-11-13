@@ -11,7 +11,7 @@ module.exports = {
     name: "shizier",
     hostname: 'localhost',
     host:"localhost", //revise later
-    port: 80,
+    port: '80',
     db: 'mongodb://127.0.0.1:27017/mtm',
 
   dbOptions : {
