@@ -21,12 +21,12 @@ module.exports = {
     session_secret: 'mtm',
     auth_cookie_name: 'mtmCookie',
     mail_opts : {
-        /* host: '' ,
-         port: 25, */
-        service: "Gmail",
+         host: 'weiji.com' ,
+         port: 25,
+        service: "shiziweiji",
         auth: {
-            user: 'splatform2013@gmail.com',
-            pass: 'zongjie0924'
+            user: 'shizier@weiji.com',
+            pass: 'shizi0725'
         }
 
     }
