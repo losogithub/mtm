@@ -15,7 +15,7 @@
     "follow-redirects": "*",
     "iconv-lite": "*",
     "mongoose": "*",
-    "validator": "1.9.0",
+    "validator": "1.5.1",
     "nodemailer": "*",
     "xss": "*" ,
     "redis": "*",
