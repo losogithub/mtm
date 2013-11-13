@@ -57,6 +57,7 @@ app.use(app.router);
 app.use(express.static(path.join(__dirname, '/public')));
 
 //error log middle ware
+
 app.use(function (err, req, res, next) {
   var meta = '[' + new Date() + '] ' + req.url + '\n';
   errorLogFile.write(meta + err.stack + '\n');
