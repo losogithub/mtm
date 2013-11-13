@@ -1,5 +1,5 @@
 /**
-/**
+ /**
  * Created with JetBrains WebStorm.
  * User: stefanzan
  * Date: 10/1/13
@@ -35,7 +35,7 @@ var showWorks = function (req, res, next) {
     if (err) {
       return next(err)
     }
-    if(!user){
+    if (!user) {
       //if cannot find user by userId. the userId must be wrong.
       //usually this shall not happen. If user have already login.
       console.err("cannot find user by userId");
@@ -54,30 +54,30 @@ var showWorks = function (req, res, next) {
 
     //empty topics
     //todo: empty topics shall show you have no topics
-    if(!topics){
+    if (!topics) {
       return renderWorks(user, [], '', '', '', res);
     }
     //use this function to get all the details of topics.
-    getAndSortTopics(mt, mo, topics, function(err, topicDetails){
-      if(err){
+    getAndSortTopics(mt, mo, topics, function (err, topicDetails) {
+      if (err) {
         console.log("err");
         return;
-      }else{
+      } else {
         //use a for to add some attributes
-        if(!topicDetails){
+        if (!topicDetails) {
           console.log("err, cannot get topic details, but have topic ids");
           //???? shall return or not
           return;
         }
 
         //count the totalPage for show
-        var totalPage = Math.ceil(topicDetails.length / 10) ;
+        var totalPage = Math.ceil(topicDetails.length / 10);
 
 
         var topicsForShow = [];
-        for (var i = (currentPage -1)*10; i < topicDetails.length && i < currentPage*10; i++){
+        for (var i = (currentPage - 1) * 10; i < topicDetails.length && i < currentPage * 10; i++) {
           var temp = topicDetails[i];
-          temp.topicUrl= "/topic/" + topicDetails[i]._id;
+          temp.topicUrl = "/topic/" + topicDetails[i]._id;
           temp.create_date = topicDetails[i].create_at.getFullYear() + '年'
             + (topicDetails[i].create_at.getMonth() + 1) + '月'
             + topicDetails[i].create_at.getDate() + '日';
@@ -85,34 +85,33 @@ var showWorks = function (req, res, next) {
         }
 
 
-
         //render according to different attributes.
-        if(mt == 'c'){
-         if(mo == 'd'){
-           return renderWorks(user, topicsForShow, 'SELECTED', '', '', '', 'a', 'd', 'd', 'd' , currentPage, totalPage , res);
-         } else {
-           return renderWorks(user, topicsForShow, 'SELECTED', '', '', '', 'd', 'd', 'd', 'd' , currentPage, totalPage , res);
-         }
-        }
-        if(mt == 'u'){
-          if(mo == 'd'){
-            return renderWorks(user, topicsForShow, '', 'SELECTED', '', '', 'd', 'a', 'd', 'd', currentPage, totalPage ,res);
-          }else {
-            return renderWorks(user, topicsForShow, '', 'SELECTED', '', '', 'd', 'd', 'd', 'd' ,currentPage, totalPage ,res);
-          }
-        }
-        if(mt =='p'){
-          if(mo == 'd'){
-            return renderWorks(user, topicsForShow, '', '', 'SELECTED', '', 'd', 'd', 'a', 'd' ,currentPage, totalPage ,res);
+        if (mt == 'c') {
+          if (mo == 'd') {
+            return renderWorks(user, topicsForShow, 'SELECTED', '', '', '', 'a', 'd', 'd', 'd', currentPage, totalPage, res);
           } else {
-            return renderWorks(user, topicsForShow, '', '', 'SELECTED', '', 'd', 'd', 'd', 'd' ,currentPage, totalPage ,res);
+            return renderWorks(user, topicsForShow, 'SELECTED', '', '', '', 'd', 'd', 'd', 'd', currentPage, totalPage, res);
           }
         }
-        if(mt == 'r'){
-          if(mo == 'd'){
-            return renderWorks(user, topicsForShow, '', '', '', 'SELECTED', 'd', 'd', 'd', 'a' ,currentPage, totalPage ,res);
-          }else {
-            return renderWorks(user, topicsForShow, '', '', '', 'SELECTED', 'd', 'd', 'd', 'd' ,currentPage, totalPage ,res);
+        if (mt == 'u') {
+          if (mo == 'd') {
+            return renderWorks(user, topicsForShow, '', 'SELECTED', '', '', 'd', 'a', 'd', 'd', currentPage, totalPage, res);
+          } else {
+            return renderWorks(user, topicsForShow, '', 'SELECTED', '', '', 'd', 'd', 'd', 'd', currentPage, totalPage, res);
+          }
+        }
+        if (mt == 'p') {
+          if (mo == 'd') {
+            return renderWorks(user, topicsForShow, '', '', 'SELECTED', '', 'd', 'd', 'a', 'd', currentPage, totalPage, res);
+          } else {
+            return renderWorks(user, topicsForShow, '', '', 'SELECTED', '', 'd', 'd', 'd', 'd', currentPage, totalPage, res);
+          }
+        }
+        if (mt == 'r') {
+          if (mo == 'd') {
+            return renderWorks(user, topicsForShow, '', '', '', 'SELECTED', 'd', 'd', 'd', 'a', currentPage, totalPage, res);
+          } else {
+            return renderWorks(user, topicsForShow, '', '', '', 'SELECTED', 'd', 'd', 'd', 'd', currentPage, totalPage, res);
           }
         }
       }
@@ -125,36 +124,42 @@ var showWorks = function (req, res, next) {
  Find topics inside TopicModel and sort them in a certain order.
  * works page
  */
-var getAndSortTopics = function(mt, mo, topics, callback){
-  if(mt == 'c'){
-    var order ='create_at';
-    if (mo == 'd'){order = '-' + order;}
+var getAndSortTopics = function (mt, mo, topics, callback) {
+  if (mt == 'c') {
+    var order = 'create_at';
+    if (mo == 'd') {
+      order = '-' + order;
+    }
     return Topic.getTopicsByIdsSorted(topics, order, callback);
   }
-  if(mt == 'u'){
-    var order ='update_at';
-    if (mo == 'd'){order = '-' + order;}
+  if (mt == 'u') {
+    var order = 'update_at';
+    if (mo == 'd') {
+      order = '-' + order;
+    }
     return Topic.getTopicsByIdsSorted(topics, order, callback);
 
   }
-  if(mt == 'p'){
-    var order ='PV_count';
-    if (mo == 'd'){order = '-' + order;}
+  if (mt == 'p') {
+    var order = 'PV_count';
+    if (mo == 'd') {
+      order = '-' + order;
+    }
     console.log("sort by pv");
     return Topic.getTopicsByIdsSorted(topics, order, callback);
   }
-  if(mt == 'r'){
+  if (mt == 'r') {
     //todo  how to count the rate.
-    var order ='create_at';
-    if (mo == 'd'){order = '-' + order;}
+    var order = 'create_at';
+    if (mo == 'd') {
+      order = '-' + order;
+    }
     return Topic.getTopicsByIdsSorted(topics, order, callback);
   }
 }
 
 
-var renderWorks = function(user, topicsInfos, isSelectC, isSelectU, isSelectP, isSelectR,
-                           createV, updateV, pageViewV, rateV, currentPage, totalPage,
-                           res, next){
+var renderWorks = function (user, topicsInfos, isSelectC, isSelectU, isSelectP, isSelectR, createV, updateV, pageViewV, rateV, currentPage, totalPage, res, next) {
   res.render('personal/index', {
     css: [
       '/stylesheets/personal.css'
@@ -181,8 +186,6 @@ var renderWorks = function(user, topicsInfos, isSelectC, isSelectU, isSelectP, i
 }
 
 
-
-
 var showSettings = function (req, res) {
   console.log('render settings  page');
 
@@ -190,7 +193,7 @@ var showSettings = function (req, res) {
   User.getUserById(userId, function (err, user) {
     console.log(user);
     var description = user.description;
-    if(!description || description == 'undefined'){
+    if (!description || description == 'undefined') {
       description = '';
     }
     res.render('personal/index', {
@@ -214,7 +217,7 @@ var showSettings = function (req, res) {
   });
 }
 
-var updateSettings = function(req, res){
+var updateSettings = function (req, res) {
   console.log("update Settings");
   var imageUrl = req.body.imageUrl;
   var description = req.body.description;
@@ -225,17 +228,21 @@ var updateSettings = function(req, res){
   //console.log(req.session.userId);
   var userId = req.session.userId;
 
-  User.getUserById(userId, function(err, user){
-     if(err){
-       console.log("cannot find userid: %s", userId);
-     }
-    if(!user){
+  User.getUserById(userId, function (err, user) {
+    if (err) {
+      console.log("cannot find userid: %s", userId);
+    }
+    if (!user) {
       console.log("err cannot find user");
     } else {
-      if(imageUrl){user.url = imageUrl;}
-      if(description) {user.description = description;}
-      if(connectUrl){
-        if(!utils.REGEXP_PROTOCOL.test(connectUrl)){
+      if (imageUrl) {
+        user.url = imageUrl;
+      }
+      if (description) {
+        user.description = description;
+      }
+      if (connectUrl) {
+        if (!utils.REGEXP_PROTOCOL.test(connectUrl)) {
           connectUrl = 'http://' + connectUrl;
         }
         user.personalSite = connectUrl;
@@ -243,90 +250,87 @@ var updateSettings = function(req, res){
 
       //console.log(user);
 
-      user.save(function(err){
-        if(err){
-        console.log("save user info err in updateUser Info.");
-        console.log(err);
-        return;
+      user.save(function (err) {
+        if (err) {
+          console.log("save user info err in updateUser Info.");
+          console.log(err);
+          return;
         }
       });
       res.header('Access-Control-Allow-Credentials', 'true')
       res.contentType('json');
       //res.writeHead(200);
-      res.send({success:  JSON.stringify("success") });
+      res.send({success: JSON.stringify("success") });
     }
   })
 
-  return ;
+  return;
 }
 
 
-
-
-
-var showConfirmPassword = function(req, res){
+var showConfirmPassword = function (req, res) {
   res.render('personal/accountVerify')
 }
 
 
 /*
-  When user want to change his/her personal information.
-  login first.
+ When user want to change his/her personal information.
+ login first.
  */
- var passwordVerify = function(req, res){
-   //user name alos unique
-   var username = sanitize(req.body.username).trim().toLowerCase();
-   var pass = sanitize(req.body.password).trim();
-   //console.log(req.body);
-   console.log("name: %s", username);
-   console.log("pass: %s", pass);
-   res.locals.username = username;
-   User.getUserByLoginName(username, function(err, user){
-     if(err){
-       console.log("cannot find user by name: %s", username);
-     }
-     else if(!user){
-       console.log("null user");
-       //but this shall not happen.
-       //how to do ?
-       res.render('personal/accountVerify', {
-         errMsg: '找不到该用户'
-       })
+var passwordVerify = function (req, res) {
+  //user name alos unique
+  var username = sanitize(req.body.username).trim().toLowerCase();
+  var pass = sanitize(req.body.password).trim();
+  //console.log(req.body);
+  console.log("name: %s", username);
+  console.log("pass: %s", pass);
+  res.locals.username = username;
+  User.getUserByLoginName(username, function (err, user) {
+    if (err) {
+      console.log("cannot find user by name: %s", username);
+    }
+    else if (!user) {
+      console.log("null user");
+      //but this shall not happen.
+      //how to do ?
+      res.render('personal/accountVerify', {
+        errMsg: '找不到该用户'
+      })
 
-     }
-     else{
-       //check the password
-       //need md5 function
-       console.log("check password");
+    }
+    else {
+      //check the password
+      //need md5 function
+      console.log("check password");
 
-       if (encryp.md5(pass) !== user.password){
-         //wrong password
-         console.log("wrong password");
-         //res.locals.errMsg =  '密码不正确';
-         return res.render('personal/accountVerify', {
-           errMsg: '密码不正确'
-         })
-       }
-       else {
-         //correct password
-         //redirect to other page: account private information setting.
-         //here why redirect to login page ???
-         var date = new Date(Date.now()).getTime().toString();
-         console.log("current time: ");
-         console.log(date);
-         var auth = encryp.encrypt(date, 'mtm');
-         return res.redirect('/accountModify?auth=' + auth);
-       }
+      if (encryp.md5(pass) !== user.password) {
+        //wrong password
+        console.log("wrong password");
+        //res.locals.errMsg =  '密码不正确';
+        return res.render('personal/accountVerify', {
+          errMsg: '密码不正确'
+        })
+      }
+      else {
+        //correct password
+        //redirect to other page: account private information setting.
+        //here why redirect to login page ???
+        var date = new Date(Date.now()).getTime().toString();
+        console.log("current time: ");
+        console.log(date);
+        var auth = encryp.encrypt(date, 'mtm');
+        return res.redirect('/accountModify?auth=' + auth);
+      }
 
-     }
-   })
+    }
+  })
 
- }
+}
 
 /*
-* show the account private info page.
-* */
-var showAccountModify = function(req, res){
+ * show the account private info page.
+ * */
+var showAccountModify = function (req, res) {
 
   console.log("show AccountModify page");
   console.log(req.query);
@@ -336,40 +340,48 @@ var showAccountModify = function(req, res){
   timeSpanCheck(auth, req, res);
 
   console.log(req.session.userId);
-  User.getUserById(req.session.userId, function(err, user){
-     if(err){
-       console.log("err in showAccountModify");
-     } else if (!user){
-       console.log("cannot find user By Id: %s", req.session.userId);
-     } else {
+  User.getUserById(req.session.userId, function (err, user) {
+    if (err) {
+      console.log("err in showAccountModify");
+    } else if (!user) {
+      console.log("cannot find user By Id: %s", req.session.userId);
+    } else {
 
-       //get user gender;
-       var genderTypeCd = user.gender;
-       var fChecked = '';
-       var mChecked = '';
-       var uChecked = '';
-       if(genderTypeCd == 'F'){ fChecked = 'checked';}
-       else if(genderTypeCd == 'M'){ mChecked = 'checked';}
-       else if(genderTypeCd == 'U'){uChecked = 'checked';}
-       else {fChecked = 'checked';}
+      //get user gender;
+      var genderTypeCd = user.gender;
+      var fChecked = '';
+      var mChecked = '';
+      var uChecked = '';
+      if (genderTypeCd == 'F') {
+        fChecked = 'checked';
+      }
+      else if (genderTypeCd == 'M') {
+        mChecked = 'checked';
+      }
+      else if (genderTypeCd == 'U') {
+        uChecked = 'checked';
+      }
+      else {
+        fChecked = 'checked';
+      }
 
-       return res.render('personal/account', {
-         fChecked: fChecked,
-         mChecked: mChecked,
-         uChecked: uChecked,
-         auth: auth
-       })
+      return res.render('personal/account', {
+        fChecked: fChecked,
+        mChecked: mChecked,
+        uChecked: uChecked,
+        auth: auth
+      })
 
-     }
+    }
   });
 }
 
 
-var timeSpanCheck = function(auth, req, res){
+var timeSpanCheck = function (auth, req, res) {
   var loginTime = encryp.decrypt(auth, 'mtm');
   console.log("time stamp: %s", loginTime);
   var timeNow = new Date().getTime();
-  if(timeNow - loginTime > 1*60*1000) //15 minutes
+  if (timeNow - loginTime > 1 * 60 * 1000) //15 minutes
   {
     console.log("timeNow: %s", timeNow);
     console.log("need re-login");
@@ -378,11 +390,11 @@ var timeSpanCheck = function(auth, req, res){
 
     if (req.session) {
 
-      User.getUserById(req.session.userId, function(err, user){
-        if(err){
+      User.getUserById(req.session.userId, function (err, user) {
+        if (err) {
           console.log("err");
         }
-        else if(!user){
+        else if (!user) {
           console.log("cannot find user by ID: %s", req.session.userId);
         }
         else {
@@ -392,7 +404,8 @@ var timeSpanCheck = function(auth, req, res){
         }
       })
       console.log("logout: session userId: %s", req.session.userId);
-      req.session.destroy(function () { });
+      req.session.destroy(function () {
+      });
     }
 
     res.clearCookie('logintoken');
@@ -407,7 +420,7 @@ var timeSpanCheck = function(auth, req, res){
  * update account private information page.
  *
  */
-var accountModify = function(req, res){
+var accountModify = function (req, res) {
 
   console.log(req.body);
   var auth = req.body.auth.toString();
@@ -417,7 +430,7 @@ var accountModify = function(req, res){
   //console.log(req.body);
   //do password check then store in the db.
   //show update notification.
-  var newPassword =req.body.newPassword;
+  var newPassword = req.body.newPassword;
   var newPasswordConfirm = req.body.newPasswordConfirm;
   var genderTypeCd = req.body.genderTypeCd;
   var birthYear = req.body.birthYear;
@@ -426,91 +439,94 @@ var accountModify = function(req, res){
   var fChecked = '';
   var mChecked = '';
   var uChecked = '';
-  if(genderTypeCd == 'F'){ fChecked = 'checked';}
-  else if(genderTypeCd == 'M'){ mChecked = 'checked';}
-  else if(genderTypeCd == 'U'){uChecked = 'checked';}
+  if (genderTypeCd == 'F') {
+    fChecked = 'checked';
+  }
+  else if (genderTypeCd == 'M') {
+    mChecked = 'checked';
+  }
+  else if (genderTypeCd == 'U') {
+    uChecked = 'checked';
+  }
 
 //at least one is not empty
 // e ne
 // ne e
 // ne ne
-if( newPassword || newPasswordConfirm)
-{
-  //empty and not empty
-  if((!newPassword) && newPasswordConfirm){
-    var infoMsg = "请输入密码";
+  if (newPassword || newPasswordConfirm) {
+    //empty and not empty
+    if ((!newPassword) && newPasswordConfirm) {
+      var infoMsg = "请输入密码";
 
-    return res.render('personal/account', {
-      infoMsg: infoMsg,
-      fChecked: fChecked,
-      mChecked: mChecked,
-      uChecked: uChecked,
-      auth : auth
-    })
+      return res.render('personal/account', {
+        infoMsg: infoMsg,
+        fChecked: fChecked,
+        mChecked: mChecked,
+        uChecked: uChecked,
+        auth: auth
+      })
+    }
+
+    // first not empty. check length.
+    else if (newPassword.length < 6 || newPassword > 20) {
+      var infoMsg = "密码长度介于6-20位数之间";
+
+      return res.render('personal/account', {
+        infoMsg: infoMsg,
+        fChecked: fChecked,
+        mChecked: mChecked,
+        uChecked: uChecked,
+        auth: auth
+      })
+    }
+
+    // check equal
+    else if (newPassword !== newPasswordConfirm) {
+      var infoMsg = "两次密码不一样";
+
+      return res.render('personal/account', {
+        infoMsg: infoMsg,
+        fChecked: fChecked,
+        mChecked: mChecked,
+        uChecked: uChecked,
+        auth: auth
+      })
+    }
   }
-
-  // first not empty. check length.
- else if( newPassword.length < 6 || newPassword > 20){
-    var infoMsg = "密码长度介于6-20位数之间";
-
-    return res.render('personal/account', {
-      infoMsg: infoMsg,
-      fChecked: fChecked,
-      mChecked: mChecked,
-      uChecked: uChecked,
-      auth: auth
-    })
-  }
-
-  // check equal
-  else if(newPassword !== newPasswordConfirm){
-    var infoMsg = "两次密码不一样";
-
-    return res.render('personal/account', {
-      infoMsg: infoMsg,
-      fChecked: fChecked,
-      mChecked: mChecked,
-      uChecked: uChecked,
-      auth: auth
-    })
-  }
-}
 
 
   //Finally, update user info in DB.
   //console.log(req.session.userId);
-  User.getUserById(req.session.userId, function(err, user){
-    if(err){
+  User.getUserById(req.session.userId, function (err, user) {
+    if (err) {
       console.log("err happened");
-    }else
-    if(!user){
+    } else if (!user) {
       console.log("cannot find user by Id: %s", req.session.userId);
-    }else
-    {
+    } else {
       var uPFlag = false;
       var uGFlag = false;
       var uYFlag = false;
 
       //password updated
-      if(newPassword){
+      if (newPassword) {
         console.log("newpass: %s", newPassword);
         uPFlag = true;
         user.password = encryp.md5(newPassword);
       }
       //gender updated
-     if(user.gender !== genderTypeCd){
-       uGFlag = true;
-       user.gender = genderTypeCd;
-     }
+      if (user.gender !== genderTypeCd) {
+        uGFlag = true;
+        user.gender = genderTypeCd;
+      }
       //birthday updated
-     if(user.birthday !== birthYear){
-       uYFlag = true;
-       user.birthday = birthYear;
-     }
+      if (user.birthday !== birthYear) {
+        uYFlag = true;
+        user.birthday = birthYear;
+      }
 
       console.log(user);
 
-      if( (!uPFlag) && (!uYFlag) && (!uGFlag)){
+      if ((!uPFlag) && (!uYFlag) && (!uGFlag)) {
         //nothing is updated
         return res.render('personal/account', {
           fChecked: fChecked,
@@ -520,26 +536,26 @@ if( newPassword || newPasswordConfirm)
         })
       }
 
-        //save
-      user.save(function(err){
-        if(err){
+      //save
+      user.save(function (err) {
+        if (err) {
           console.log("save user infor err. userId: %s", req.session.userId);
-        } else{
+        } else {
           console.log("update user info success");
           var infoMsg = '';
 
           //this contain 3 true case
-          if((uPFlag && uGFlag) || (uPFlag && uYFlag) || (uGFlag && uYFlag) || uGFlag || uYFlag){
-            infoMsg ='个人信息更新成功';
+          if ((uPFlag && uGFlag) || (uPFlag && uYFlag) || (uGFlag && uYFlag) || uGFlag || uYFlag) {
+            infoMsg = '个人信息更新成功';
           }
-          else if(uPFlag){
-            infoMsg ='密码更新成功';
+          else if (uPFlag) {
+            infoMsg = '密码更新成功';
           }
 
           return res.render('personal/account', {
-             infoMsg: infoMsg,
-             fChecked: fChecked,
-             mChecked: mChecked,
+            infoMsg: infoMsg,
+            fChecked: fChecked,
+            mChecked: mChecked,
             uChecked: uChecked,
             auth: auth
           })
@@ -552,9 +568,7 @@ if( newPassword || newPasswordConfirm)
 }
 
 
-
-
-var showPersonal = function(req, res){
+var showPersonal = function (req, res) {
 
   //before render: check whether visitor is itself or not.
   //if so, jump to works page.
@@ -564,11 +578,11 @@ var showPersonal = function(req, res){
   //visitor is not login ok
   //visitor has login then check whether the same.
   var authorName = req.params.authorName;
-  console.log( "authorName: %s", req.params.authorName);
+  console.log("authorName: %s", req.params.authorName);
   //login user and the same with the author of this one
   // jump to works page
-  if(req.session.userId && req.currentUser){
-    if(req.currentUser.loginName == authorName){
+  if (req.session.userId && req.currentUser) {
+    if (req.currentUser.loginName == authorName) {
       //jump to works page
       console.log("the same person, jump to works");
       return res.redirect('/works');
@@ -588,9 +602,15 @@ var showPersonal = function(req, res){
   var uSelect = false;
   var fSelect = false;
   var nSelect = false;
-  if( sortOrder == 'U') { uSelect = true; }
-  else if (sortOrder == 'F') { fSelect = true;}
-  else {nSelect = true;}
+  if (sortOrder == 'U') {
+    uSelect = true;
+  }
+  else if (sortOrder == 'F') {
+    fSelect = true;
+  }
+  else {
+    nSelect = true;
+  }
 
   var currentPage = req.query.page || '1';
   //default currentPage is the first page.
@@ -601,11 +621,11 @@ var showPersonal = function(req, res){
   console.log("req.url: %s", req.url);
 
 
-  User.getUserByLoginName(authorName, function(err, user){
-    if(err){
+  User.getUserByLoginName(authorName, function (err, user) {
+    if (err) {
       console.log("err: ");
       console.log(err);
-    } else if(!user){
+    } else if (!user) {
       //not such user
       console.log("not such user in DB. username: %s", authorName);
       //todo: then do what
@@ -620,7 +640,7 @@ var showPersonal = function(req, res){
       var description = user.description;
       //here must check whether it is empty or not.
       //bug fixed.
-      if(description){
+      if (description) {
         description = escape(user.description);
         //description = balinkify.linkify(description, {target: " "})  ;
         description = helper.linkify(description);
@@ -630,12 +650,11 @@ var showPersonal = function(req, res){
       //check the like, whether the viewer liked author before
       var likedBefore = false;
 
-      if(req.session.userId && (req.session.userId != 'undefined')){
+      if (req.session.userId && (req.session.userId != 'undefined')) {
         var fList = user.favouriteList;
         var viewerId = req.session.userId;
-        for(var i = 0; i < fList.length; i++){
-          if( viewerId == fList[i])
-          {
+        for (var i = 0; i < fList.length; i++) {
+          if (viewerId == fList[i]) {
             likedBefore = true;
             break;
           }
@@ -647,138 +666,92 @@ var showPersonal = function(req, res){
       //Inner: U F N
 
       //1. Personal work
-      if( workType == 'P'){
-        getandSortTopicsforShow(sortOrder, user.topics, function(err, topicsInfo){
-          if(err){
-            console.log("err");
-          }
-          /*
-          //null topics has no problem
-          else if(!topicsInfo){
-            console.log("err: null topics");
-          }*/
-          else {
-            //sorted topics
-            console.log("topics length: " , topicsInfo.length);
+      getandSortTopicsforShow(sortOrder, user.topics, function (err, topicsInfo) {
+        if (err) {
+          console.log("err");
+        }
+        /*
+         //null topics has no problem
+         else if(!topicsInfo){
+         console.log("err: null topics");
+         }*/
+        else {
+          //sorted topics
+          console.log("topics length: ", topicsInfo.length);
 
-            //here according to TotalTopic decide totalPage and currentPage topics
-            var totalPage = Math.ceil(topicsInfo.length / 9) ;
-
+          //here according to TotalTopic decide totalPage and currentPage topics
+          var totalPage = Math.ceil(topicsInfo.length / 9);
 
 
-            //console.log(topicsInfo);
-            //create a template arrary,
-            //then push all the topics into this arrary for show.
-            var topicsForShow = [];
-            for (var i = (currentPage -1)*9; i < topicsInfo.length && i < currentPage*9; i++){
-              var temp = topicsInfo[i];
-              temp.topicUrl= "/topic/" + topicsInfo[i]._id;
-              temp.create_date = topicsInfo[i].create_at.getFullYear() + '年'
-                + (topicsInfo[i].create_at.getMonth() + 1) + '月'
-                + topicsInfo[i].create_at.getDate() + '日';
-              topicsForShow.push(temp);
-            }
-
-
-            //before render: deal with more than one page.
-
-
-            res.render('personal/showPersonal', {
-              css: [
-                '/stylesheets/showPerson/personal-common.css',
-                '/stylesheets/showPerson/profile.css'
-              ],
-              authorName: authorName,
-              authorImage: user.url,
-              authorDescription: description,
-              authorPersonalUrl: user.personalSite,
-              authorWorkCount: user.topicCount,
-              authorMonthPV: user.pageviewCount,
-              authorFavourite: user.favourite,
-              topics: topicsForShow,
-              thisUrl: thisUrl,
-              thisUrlJoin: baseUrl + '?type=J',
-              singleMade: true,
-              uSelect: uSelect,
-              fSelect: fSelect,
-              nSelect: nSelect,
-              totalPage: totalPage,
-              currentPage: currentPage,
-              likedBefore: likedBefore
-            });
-            return;
-
+          //console.log(topicsInfo);
+          //create a template arrary,
+          //then push all the topics into this arrary for show.
+          var topicsForShow = [];
+          for (var i = (currentPage - 1) * 9; i < topicsInfo.length && i < currentPage * 9; i++) {
+            var temp = topicsInfo[i];
+            temp.topicUrl = "/topic/" + topicsInfo[i]._id;
+            temp.create_date = topicsInfo[i].create_at.getFullYear() + '年'
+              + (topicsInfo[i].create_at.getMonth() + 1) + '月'
+              + topicsInfo[i].create_at.getDate() + '日';
+            topicsForShow.push(temp);
           }
 
-        });
-      }
 
-      //2. Join work
-      else
-      {
-        //todo: current no join topics stored in DB.
-        var topicsInfo = [];
-        res.render('personal/showPersonal', {
-          css: [
-            '/stylesheets/showPerson/personal-common.css',
-            '/stylesheets/showPerson/profile.css'
-          ],
-          authorName: authorName,
-          authorImage: user.url,
-          authorDescription: description,
-          authorPersonalUrl: user.personalSite,
-          authorWorkCount: user.topicCount,
-          authorMonthPV: user.pageviewCount,
-          authorFavourite: user.favourite,
-          topics: topicsInfo,
-          thisUrl: thisUrl,
-          baseUrl: baseUrl,
-          thisUrlJoin: baseUrl + '?type=J',
-          singleMade: false,
-          uSelect: 'true',
-          fSelect: '',
-          nSelect: '',
-          totalPage: '10',
-          currentPage: '1',
-          likedBefore: likedBefore
-        });
-        return;
-
-      }
+          //before render: deal with more than one page.
 
 
+          res.render('personal/index', {
+            personalType: 'PERSONAL',
+            css: ['/stylesheets/personal.css'],
+            authorName: authorName,
+            authorImage: user.url,
+            authorDescription: description,
+            authorPersonalUrl: user.personalSite,
+            topicCount: user.topicCount,
+            topicsPageView: user.pageviewCount,
+            favourite: user.favourite,
+            topics: topicsForShow,
+            thisUrl: thisUrl,
+            thisUrlJoin: baseUrl + '?type=J',
+            uSelect: uSelect,
+            fSelect: fSelect,
+            nSelect: nSelect,
+            totalPage: totalPage,
+            currentPage: currentPage,
+            likedBefore: likedBefore
+          });
+          return;
 
+        }
 
-
+      });
     }
 
   })
 }
 
 
-var getandSortTopicsforShow = function(sortName, topics, callback){
+var getandSortTopicsforShow = function (sortName, topics, callback) {
 
-  if(sortName == 'U'){
+  if (sortName == 'U') {
     //according to update time
     //this is default
     return Topic.getTopicsByIdsSorted(topics, '-update_at', callback);
   }
-  else if(sortName == 'F'){
+  else if (sortName == 'F') {
     //accordiing to liked count
     //todo: changed to favourite count.
     return Topic.getTopicsByIdsSorted(topics, '-PV_count', callback);
-  } else if(sortName == 'N'){
-  //according to Name
+  } else if (sortName == 'N') {
+    //according to Name
     return Topic.getTopicsByIdsSorted(topics, '-title', callback);
   }
 }
 
 
-
-
-var AddorRemoveLikes = function(req, res){
+var AddorRemoveLikes = function (req, res) {
   console.log("add or remove likes");
-  console.log("req Body: %s" , req.body);
+  console.log("req Body: %s", req.body);
 
   var authorName = req.body.url.split('/').pop();
 
@@ -793,11 +766,11 @@ var AddorRemoveLikes = function(req, res){
 
 
   //extract the author model and update the  favourite and favouriteList.
-  User.getUserByLoginName(authorName, function(err, author){
-    if(err){
+  User.getUserByLoginName(authorName, function (err, author) {
+    if (err) {
       console.log("find user err");
     }
-    else if(!author){
+    else if (!author) {
       console.log("cannot find user by name: %s", authorName);
     }
     else {
@@ -812,35 +785,35 @@ var AddorRemoveLikes = function(req, res){
         //console.log("add likes");
         //For safety check:
         // if Exists do nothing
-        if (author.favouriteList.indexOf(viewerId) == -1){
+        if (author.favouriteList.indexOf(viewerId) == -1) {
           author.favouriteList.push(viewerId);
           author.favourite += 1;
           //console.log(author.favouriteList);
         }
-      } else{
+      } else {
         //remove from the like list
         //console.log("remove likes");
         //if exist in DB
         var index = author.favouriteList.indexOf(viewerId);
-        if( index > -1) {
+        if (index > -1) {
           author.favourite -= 1;
           author.favouriteList.splice(index, 1);
         }
         //console.log(author.favouriteList);
       }
-      author.save(function(err){
-        if(err){
+      author.save(function (err) {
+        if (err) {
           console.log("save err in getUserByLoginName func");
         }
       });
 
       //extract the user and update the likelist
-      User.getUserById(viewerId, function(err, viewer){
-        if(err){
+      User.getUserById(viewerId, function (err, viewer) {
+        if (err) {
           console.log('find user err');
           return;
         }
-        else if (!viewer){
+        else if (!viewer) {
           console.log("cannot find the user by id: %s", viewerId);
           return;
         }
@@ -848,23 +821,23 @@ var AddorRemoveLikes = function(req, res){
           //dekida
           //console.log("view like list: %s", viewer.likeList);
 
-          if(toLike == 'true'){
+          if (toLike == 'true') {
             //console.log("add likes");
-            if(viewer.likeList.indexOf(author._id) == -1 ){
+            if (viewer.likeList.indexOf(author._id) == -1) {
               viewer.likeList.push(author._id);
             }
             //console.log(viewer.likeList);
           } else {
             //console.log("remove likes");
             var index = viewer.likeList.indexOf(author._id);
-            if(index > -1 ){
+            if (index > -1) {
               viewer.likeList.splice(index, 1);
             }
             //console.log(viewer.likeList);
           }
 
-          viewer.save(function(err){
-            if(err){
+          viewer.save(function (err) {
+            if (err) {
               console.log("save err");
             }
           })
@@ -876,7 +849,7 @@ var AddorRemoveLikes = function(req, res){
           //res.writeHead(200);
           //if need login, then in auth.js, loginDialog : true,
           //correct attribute is used for login Dialog success situation.
-          res.send({loginDialog: false, favourite:  author.favourite, correct: true, userName: viewer.loginName });
+          res.send({favourite: author.favourite, correct: true, userName: viewer.loginName });
 
         }
       })
@@ -885,14 +858,12 @@ var AddorRemoveLikes = function(req, res){
   })
 
 
-
-
 }
 
 
 var showFavourite = function (req, res) {
   res.locals.path = req.path.replace(/\/$/, '');
-  if(req.session && req.session.userId && req.session.userId !== 'undefined'){
+  if (req.session && req.session.userId && req.session.userId !== 'undefined') {
     console.log('render show favourite page');
     res.render('personal/favourite', {
       css: [

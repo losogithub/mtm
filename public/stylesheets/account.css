@@ -1,3 +1,12 @@
+.StarIcon {
+  color: #dddddd;
+  text-shadow: 0 0 1px #777777;
+}
+.ExSelected .StarIcon,
+.StarIconFull {
+  color: #ffdd11;
+  text-shadow: 0 0 1px #443a00;
+}
 input[type="text"],
 input[type="password"] {
   height: 34px;

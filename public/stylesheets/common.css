@@ -290,6 +290,32 @@ body.INDEX {
 .PERSONAL .Footer a {
   color: #aaaaaa;
 }
+.LoginDialog .modal-dialog {
+  width: 400px;
+}
+.LoginDialog .modal-dialog .AutoComplete input[type="checkbox"] {
+  vertical-align: middle;
+}
+.LoginDialog .modal-dialog .AutoComplete * {
+  cursor: pointer;
+}
+.LoginDialog .modal-dialog .modal-header {
+  background-color: #fcfcfc;
+}
+.LoginDialog .modal-dialog .modal-header .Logo {
+  width: auto;
+}
+.LoginDialog .modal-dialog .modal-header .Logo,
+.LoginDialog .modal-dialog .modal-header .Logo img {
+  display: inline-block;
+}
+.LoginDialog .modal-dialog .modal-header .Logo strong {
+  font-size: 14px;
+  vertical-align: bottom;
+}
+.LoginDialog .modal-dialog .modal-footer {
+  background-color: #f3f3f3;
+}
 /* 页码显示 */
 .Pagination {
   margin-top: 15px;

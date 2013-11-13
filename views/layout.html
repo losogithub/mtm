@@ -18,7 +18,7 @@
   <link type='text/css' rel='stylesheet' href='<%= css[i] %>'/>
   <% } %>
   <script type="text/javascript" src="http://cdn.bootcss.com/jquery/1.10.2/jquery.min.js"></script>
-  <script type="text/javascript" src="/javascripts/bootstrap.min.js"></script>
+  <script type="text/javascript" src="/javascripts/bootstrap.js"></script>
   <script type="text/javascript" src="/javascripts/common.js"></script>
   <% if (locals.pageType == 'ACCOUNT' || locals.pageType == 'LOGIN' || locals.pageType == 'SIGNUP') { %>
   <script type="text/javascript" src="/javascripts/account.js"></script>
@@ -112,5 +112,9 @@
       </table>
     </div>
   </div>
+
+  <% if (locals.pageType != 'LOGIN' && locals.pageType != 'SIGNUP' && locals.pageType != 'ACCOUNT') { %>
+  <% include _loginDialog.html %>
+  <% } %>
 </body>
 </html>

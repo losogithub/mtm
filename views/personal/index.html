@@ -3,7 +3,7 @@
     <div class="Sub">
       <ul class="SubPV">
         <li>
-          <p><%= topicsCount %></p>
+          <p><%= locals.topicsCount || '0' %></p>
 
           <p>总结数</p>
         </li>
@@ -11,29 +11,43 @@
         <div class="HLine"></div>
 
         <li>
-          <p><%= topicsPageView %></p>
+          <p><%= locals.topicsPageView || '0' %></p>
 
           <p>月访问量</p>
         </li>
       </ul>
       <div class="Thumb">
         <img width="120" height="120"
-             src="<%= locals.imageUrl ? locals.imageUrl : '/images/no_img/user_120x120.png' %>">
+             src="<%= (locals.personalType == 'PERSONAL' ? locals.authorImage : locals.imageUrl) || '/images/no_img/user_120x120.png' %>">
       </div>
 
-      <h5 class="SubTtl"><%= username %></h5>
+      <h5 class="SubTtl"><%= (locals.personalType == 'PERSONAL' ? locals.authorName : locals.username) || '' %></h5>
 
+      <% if (locals.personalType != 'PERSONAL') { %>
       <div class="BtnSet">
-        <a href="/settings">
-          <button class="btn btn-small" type="button">设置</button>
-        </a>
+        <a href="/settings" class="btn btn-small">设置</a>
       </div>
+      <% } else { %>
+      <% if (locals.authorPersonalUrl) { %>
+      <div class="BtnSet">
+        <i class="icon-home" style="vertical-align: middle; color: grey;"></i>
+        <a href="<%= locals.authorPersonalUrl || '' %>">个人网站</a>
+      </div>
+      <% } %>
+      <div class="BtnSet">
+        <button name="favorite" class="<%- locals.likedBefore ? 'ExSelected' : '' %> btn btn-small" data-favorite='{"url":"<%= thisUrl %>"}'>
+          <i class="icon-star StarIcon" style="vertical-align: middle;"></i>
+          <span class="">收藏</span>
+        </button>
+      </div>
+      <% } %>
 
       <div style="position: relative;">
-        <span class="SubFV"><i class="FVIco icon-star"></i><span
-          class="mdFVCount01Num"> <%= favourite %></span></span>
+        <span class="SubFV"><i class="FVIco icon-star"></i>
+          <span class="mdFVCount01Num"><%= locals.favourite || '0' %></span></span>
       </div>
 
+      <% if (locals.personalType != 'PERSONAL') { %>
       <hr>
 
       <nav class="Nav Nav-Personal">
@@ -42,6 +56,7 @@
           <li><a href="/bookmarklet">bookmarklet</a></li>
         </ul>
       </nav>
+      <% } %>
 
     </div>
 
@@ -50,6 +65,8 @@
       <% include _works.html %>
       <% } else if (locals.personalType == 'SETTINGS') { %>
       <% include _settings.html %>
+      <% } else if (locals.personalType == 'PERSONAL') { %>
+      <% include _personal.html %>
       <% } %>
     </div>
 
