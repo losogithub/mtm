@@ -2,6 +2,21 @@ body, p, dl, dt, dd, ul, ol, li, th, td, div, blockquote, pre, form, fieldset, i
 
 h1, h2, h3, h4, h5, h6, p, dl, dt, dd, ul, ol, li, table, th, td, div, blockquote, pre, form, fieldset, legend, header { *zoom: 1; }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+  font-family: "ff-tisa-web-pro-1", "ff-tisa-web-pro-2", "Lucida Grande", "Helvetica Neue", Helvetica, Arial, "Hiragino Sans GB", "Hiragino Sans GB W3", "Microsoft YaHei UI", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+}
+
 button, img, fieldset, table, th, td { border: 0 none; }
 
 input[type="text"], input[type="password"], textarea {
@@ -66,9 +81,10 @@ body {
   &.VLine-Footer { margin: 0 11px 0 15px; }
   &.VLine-Util { margin: 0 5px; }
 }
+
 .HLine {
   border-top: 1px solid rgb(221, 221, 221);
-  &.HLine-Personal{margin: 25px 0;}
+  &.HLine-Personal { margin: 25px 0; }
 }
 
 /*页眉*/
@@ -130,18 +146,18 @@ body {
   .modal-dialog {
     width: 400px;
     .AutoComplete {
-      input[type="checkbox"] {vertical-align: middle;}
-      * {cursor: pointer;}
+      input[type="checkbox"] { vertical-align: middle; }
+      * { cursor: pointer; }
     }
     .modal-header {
       background-color: #fcfcfc;
       .Logo {
         width: auto;
-        &, img {display: inline-block;}
-        strong {font-size: 14px;vertical-align: bottom;}
+        &, img { display: inline-block; }
+        strong { font-size: 14px; vertical-align: bottom; }
       }
     }
-    .modal-footer {background-color: #f3f3f3;}
+    .modal-footer { background-color: #f3f3f3; }
   }
 }
 

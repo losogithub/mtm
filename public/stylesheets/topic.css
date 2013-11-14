@@ -342,7 +342,6 @@
   *margin-top: 0;
   color: #000;
   font-size: 22px;
-  font-family: Arial, Helvetica, sans-serif;
 }
 .Head .Inner .HeadSub .HeadCount .HeadFVCount .HeadFVIco {
   color: #ffdd11;
@@ -362,7 +361,6 @@
   border-left: 1px solid #eeeeee;
   padding-left: 13px;
   text-align: center;
-  font-family: Tahoma, Arial, Helvetica, sans-serif;
 }
 .Head .Inner .HeadSub .HeadCount .HeadPVCount .HeadPVCountNum {
   display: block;
@@ -370,7 +368,6 @@
   margin-top: -3px;
   color: black;
   font-size: 22px;
-  font-family: Arial, Helvetica, sans-serif;
 }
 .Head .Inner .HeadSub .HeadCount .HeadPVCount .HeadPVCountLabel {
   display: block;

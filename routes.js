@@ -15,7 +15,7 @@ var auth = require('./middlewares/auth');
 module.exports = function (app) {
   app.get('/test', function (req, res) {
     res.render('sign/resetPassword');
-  })
+  });
   // home page
   app.get('/', auth.loadUser, site.index);
   app.get('/home', auth.loadUser, site.index);
