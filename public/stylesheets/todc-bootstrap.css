@@ -173,8 +173,6 @@ input[type="color"]:focus,
 }
 input[type="checkbox"],
 input[type="radio"] {
-  -webkit-appearance: none;
-  appearance: none;
   width: 13px;
   height: 13px;
   background: white;
