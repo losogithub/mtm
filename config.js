@@ -9,8 +9,8 @@
 module.exports = {
     debug: true,
     name: "shizier",
-    hostname: 'shizier',
-    host:"localhost.com", //revise later
+    hostname: 'shizier.com',
+    host:"shizier.com", //revise later
     port: '80',
     db: 'mongodb://127.0.0.1:27017/mtm',
 
