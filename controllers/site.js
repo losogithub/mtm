@@ -35,7 +35,6 @@ function index(req, res, next) {
 
   var DateObj = _showDate();
   res.render('index', {
-    title: 'mtm[我设计的信息。策展平台]',
     css: ['/stylesheets/index.css'],
     pageType: 'INDEX',
     dayInChn: DateObj.dayInChn,
