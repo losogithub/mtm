@@ -149,7 +149,9 @@
             return;
           }
           var url = $url.val();
-          url = url.trim();
+          if (url) {
+            url = url.trim().replace('。', '.');
+          }
           if (url && !mtm.utils.REGEXP_PROTOCOL.test(url)) {
             url = 'http://' + url;
           }
