@@ -920,6 +920,9 @@ function _getLinkDetail(url, callback) {
       var obj = {};
       var addToSrcs = function (img) {
         var src = !img ? null : !(temp = img.match(/\ssrc\s*=\s*("|')([^"']+)("|')/i)) ? null : temp[2];
+        if (!src) {
+          return;
+        }
         src = Url.resolve(url, src);
         if (!src || obj[src]) {
           return;
