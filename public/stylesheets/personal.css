@@ -119,6 +119,7 @@ textarea {
 .MainTbl th + th > div {
   border-left: 1px solid #ddd;
   padding-left: 7px;
+  text-align: center;
 }
 .MainTbl th .SELECTED {
   color: #000000;
