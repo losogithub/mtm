@@ -407,7 +407,7 @@
 
       if (this.options.src) {
         _prependSrc(this.options.src);
-      } else if (this.options.srcs) {
+      } else if (this.options.srcs && this.options.srcs.length) {
         this.index = 0;
       }
       _increaseIndex(0);
