@@ -48,15 +48,15 @@
 .WidgetItemList > li.TITLE > div {
   margin-bottom: 25px;
 }
-.WidgetItemList .Contents {
+.WidgetItemList .Content {
   *zoom: 1;
 }
-.WidgetItemList .Contents:before,
-.WidgetItemList .Contents:after {
+.WidgetItemList .Content:before,
+.WidgetItemList .Content:after {
   display: table;
   content: " ";
 }
-.WidgetItemList .Contents:after {
+.WidgetItemList .Content:after {
   clear: both;
 }
 .WidgetItemList .Quote {
