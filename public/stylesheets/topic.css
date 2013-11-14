@@ -45,6 +45,9 @@
 .WidgetItemList > li > div > :first-child {
   overflow: hidden;
 }
+.WidgetItemList > li:last-child > div {
+  margin-bottom: 0;
+}
 .WidgetItemList > li.TITLE > div {
   margin-bottom: 25px;
 }
