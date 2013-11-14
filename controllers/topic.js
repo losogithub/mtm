@@ -883,7 +883,8 @@ function _getLinkDetail(url, callback) {
         callback(err);
         return;
       }
-      var charset2 = !(temp = html.match(/<meta\s+http-equiv\s*=\s*("|')?Content-Type("|')?\s+content\s*=\s*("|')[^"']*charset\s*=\s*([^"']*)\s*("|')>/i)) ? null : temp[4];
+      var charset2 = (!(temp = html.match(/<meta\s+http-equiv\s*=\s*("|')?Content-Type("|')?\s+content\s*=\s*("|')[^"']*charset\s*=\s*([^"']+)\s*("|')[^>]*>/i)) ? null : temp[4])
+        || (!(temp = html.match(/<meta\s+charset\s*=\s*("|')([^"']+)("|')[^>]*>/i)) ? null : temp[2]);
       if (charset2 &&
         (!charset
           || charset2.toLowerCase() != charset.toLowerCase())) {
