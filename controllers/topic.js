@@ -854,8 +854,8 @@ function saveTopic(req, res, next) {
     //add: 11.07 2013 add the published topic to new topics db.
     //But this maybe not new topics here !!!
     // in matome, it calls update list.
-    if(publish || topic.publishDate){
-      NewTopic.saveNewTopic(authorId, topicId, title, coverUrl, description, function(){
+    if (publish || topic.publishDate) {
+      NewTopic.saveNewTopic(authorId, topicId, title, coverUrl, description, function () {
         console.log('save to new topics');
       })
     }
@@ -904,7 +904,12 @@ function _getLinkDetail(url, callback) {
 
       temp = !(temp = html.match(/<meta([^>]*)name\s*=\s*("|')description("|')([^>]*)>/i)) ? null : temp[1] + temp[4];
       var snippet = (!temp ? null : !(temp = temp.match(/content\s*=\s*("|')([^"']*)("|')/i)) ? null : temp[2].trim())
-        || html.substr(html.lastIndexOf('</head>') + '</head>'.length).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+        || html.substr((temp = html.indexOf('<body')) < 0 ? 0 : temp)
+        .replace(/<script((?!<\/script>)[\s\S])*<\/script>/g, ' ')
+        .replace(/<style((?!<\/style>)[\s\S])*<\/style>/g, ' ')
+        .replace(/<[^>]*>/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
       if (snippet.length > 200) {
         snippet = snippet.substr(0, 199) + '…';
       }
@@ -1041,6 +1046,10 @@ function getLinkDetail(req, res, next) {
   var url = req.query.url;
 
   _getLinkDetail(url, function (err, results) {
+    if (err) {
+      res.send(500, err);
+      return;
+    }
     res.json({
       url: url,
       title: results ? results.title : '',
