@@ -502,7 +502,7 @@
               required: true
             },
             snippet: {
-              maxlength: 300,
+              maxlength: 200,
               required: false
             },
             description: {
