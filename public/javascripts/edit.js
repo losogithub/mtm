@@ -223,13 +223,13 @@
      * 保存修改验证表格通过后的发送新文本到服务器
      */
     commit: function () {
-      if (this.widget().find('form').data('submitType') == 'save') {
+      if (this.widget().find('form').data('submitType') == 'preview') {
+        this.widget().find('button[name="preview"]').button('loading');
+        this.preview();
+      } else {
         this.widget().find('button[name="save"]').button('loading');
         this.widget().find('button[name="preview"]').attr('disabled', 'disabled');
         this.save();
-      } else {
-        this.widget().find('button[name="preview"]').button('loading');
-        this.preview();
       }
     },
 
@@ -499,7 +499,7 @@
           rules: {
             title: {
               maxlength: 100,
-              required: true
+              required: false
             },
             snippet: {
               maxlength: 200,
@@ -516,7 +516,7 @@
               maxlength: '标题太长，请缩写到100字以内。'
             },
             snippet: {
-              maxlength: '摘要太长，请缩写到300字以内。'
+              maxlength: '摘要太长，请缩写到200字以内。'
             },
             description: {
               maxlength: '评论太长，请缩写到300字以内。'
@@ -1612,13 +1612,6 @@
         var $li = $(this).closest('li');
         $li.find('form')
           .data('submitType', 'preview')
-          .submit();
-      })
-      //监听保存按钮点击事件
-      .on('click', 'button[name="save"]', function () {
-        var $li = $(this).closest('li');
-        $li.find('form')
-          .data('submitType', 'save')
           .submit();
       })
       //监听放弃按钮点击事件
