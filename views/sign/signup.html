@@ -53,16 +53,21 @@
 <script>
   $(function () {
     new shizier.account.initRegistForm();
-    if (!$("#_userName").val()) {
-      $("#_userName").focus();
-    }
-    $("input#_userName").on('focus keyup', function () {
-      $(this)
+    $("input#_userName").on('focus keyup', function (event) {
+      var $this = $(this);
+      var errorHintVal = $this.next().next().text();
+      if (event.type == 'focus' && errorHintVal && errorHintVal.length) {
+        return;
+      }
+      $this
         .next()
         .text('个人页面: http://shizier.com/u/' + ($(this).val() || '用户名'))
         .next()
         .text('用户名不能更改。');
     });
+    if (!$("#_userName").val()) {
+      $("#_userName").focus();
+    }
     $("input#rules:checkbox").click(function () {
       if ($(this).is(':checked')) {
         $("button[name='signup']").removeAttr("disabled");

@@ -315,7 +315,7 @@ function _getData(req) {
       var description = sanitize(req.body.description).trim();
 
       check(url).notNull().isUrl();
-      check(title).len(1, 100);
+      check(title).len(0, 100);
       check(snippet).len(0, 200);
       if (src.length) check(src).isUrl();
       check(description).len(0, 300);
@@ -562,7 +562,7 @@ function createItem(req, res, next) {
   async.auto({
     parse: function (callback) {
       if (data.type == 'LINK_CREATE') {
-        _getLinkTitleAndSnippet(data.url, function (err, results) {
+        _getLinkDetail(data.url, function (err, results) {
           data.title = results.title;
           data.snippet = results.snippet;
           callback();
