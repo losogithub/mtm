@@ -135,6 +135,10 @@
         .find('.Widget')
         .prepend($templates.find('.Widget .' + this.type).clone())
         .end()
+        //更改保存按钮类型以实现回车提交表单的功能
+        .find('button[name="save"]')
+        .attr('type', 'submit')
+        .end()
         //textarea自适应高度
         .find('textarea')
         .css('resize', 'none')
@@ -177,6 +181,9 @@
     __initFormValidation: $.noop,
 
     stateHandler: function (defaultValue, event) {
+      if (this.options.disabled) {
+        return;
+      }
       if (event.target.value == defaultValue) {
         setState('create');
       } else {
@@ -240,6 +247,7 @@
         if (self.options.disabled) {
           return;
         }
+        self.disable();
         self.widget().hiddenSlideUp(function () {
           $(this).remove();
         });
@@ -512,7 +520,6 @@
           },
           messages: {
             title: {
-              required: '尚未填写标题。',
               maxlength: '标题太长，请缩写到100字以内。'
             },
             snippet: {
@@ -1372,7 +1379,8 @@
 
     //删除编辑中的微件
     if (state != 'default'
-      && editingWidgetName) {
+      && editingWidgetName
+      && $editingWidget.is(':data("mtm-' + editingWidgetName + '")')) {
       $editingWidget[editingWidgetName]('remove');
     }
 
