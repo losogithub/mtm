@@ -211,7 +211,7 @@ function showIndex(req, res, next) {
       + topic.update_at.getDate() + '日';
 
     var topicData = {
-      topicId: topic._id,
+      _id: topic._id,
       title: topic.title,
       coverUrl: topic.cover_url,
       description: topic.description,
@@ -254,7 +254,6 @@ function showIndex(req, res, next) {
         '/stylesheets/topic.css'
       ],
       escape: escape,
-      url: req.url,
       isAuthor: topic.author_id == userId,
       topic: topicData,
       items: itemsData,

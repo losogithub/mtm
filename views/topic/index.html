@@ -20,12 +20,12 @@
 
         <div class="HeadTxt">
           <div class="HeadTtlWrapper">
-            <h1 class="HeadTtl"><a href="<%= !locals.url ? '' : url %>"><%=
+            <h1 class="HeadTtl"><a href="<%= !locals.topic ? '' : topic._id %>"><%=
               locals.topic ? topic.title : '' %></a></h1>
 
             <% if (locals.isAuthor) { %>
             <div class='HeadUtil'>
-              <a href="<%= locals.url + '/edit?showOption=true' %>"><i class="icon-pencil"></i> 修改</a>
+              <a href="<%= !locals.topic ? '' : topic._id + '/edit?showOption=true' %>"><i class="icon-pencil"></i> 修改</a>
               <% if (!locals.items || !items.length) { %>
               <span class='VLine VLine-Util'></span>
               <a><i class="icon-trash"></i> 删除</a>
@@ -68,7 +68,7 @@
         </div>
 
         <button name="favorite" class="<%- locals.liked ? 'ExSelected' : '' %> btn btn-large"
-                data-favorite='{"topicId":"<%= topic.topicId %>"}'>
+                data-favorite='{"topicId":"<%= topic._id %>"}'>
           <i class="HeadFVBtnIco icon-star StarIcon"></i>
           <span class="HeadFVBtnTxt">收藏</span>
         </button>
@@ -89,7 +89,7 @@
         </p>
       <% } %>
         <% if (locals.isAuthor) { %>
-        <a name="add" class="btn" href="<%= locals.url + '/edit' %>" type="button"><i class="icon-plus-sign"></i>
+        <a name="add" class="btn" href="<%= !locals.topic ? '' : topic._id + '/edit' %>" type="button"><i class="icon-plus-sign"></i>
           添加条目</a>
         <% } %>
       <% if (!locals.items || !items.length) { %>
@@ -107,7 +107,7 @@
           <div class="SubAuthorProfile">
             <div class="SubAuthorProfileUnit">
               <h6 class="SubAuthorProfileUnitTitle">
-                <a href="" class="SubAuthorProfileUnitTitleUserName">
+                <a href="/u/<%= topic.author %>" class="SubAuthorProfileUnitTitleUserName">
                   <img title="" width="80" height="80" src="<%= authorInfo.imgUrl ? authorInfo.imgUrl : '/images/no_img/user_80x80.png' %>" onerror="errorImage(this,'user80x80');"
                        class="SubAuthorProfileUnitTitleUserNameThumb"> <%= topic.author %>
                 </a>
