@@ -905,8 +905,8 @@ function _getLinkDetail(url, callback) {
       temp = !(temp = html.match(/<meta([^>]*)name\s*=\s*("|')description("|')([^>]*)>/i)) ? null : temp[1] + temp[4];
       var snippet = (!temp ? null : !(temp = temp.match(/content\s*=\s*("|')([^"']*)("|')/i)) ? null : temp[2].trim())
         || html.substr((temp = html.indexOf('<body')) < 0 ? 0 : temp)
-        .replace(/<script((?!<\/script>)[\s\S])*<\/script>/g, ' ')
-        .replace(/<style((?!<\/style>)[\s\S])*<\/style>/g, ' ')
+        .replace(/<script((?!<\/script>)[\s\S])*<\/script>/gi, ' ')
+        .replace(/<style((?!<\/style>)[\s\S])*<\/style>/gi, ' ')
         .replace(/<[^>]*>/g, ' ')
         .replace(/\s+/g, ' ')
         .trim();
