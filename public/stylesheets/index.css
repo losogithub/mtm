@@ -1,8 +1,6 @@
+.Contents{padding-bottom: 20px;}
 .Top{margin-bottom: 20px;border-bottom: 1px solid rgb(231, 231, 231);position: relative;height: 41px;}
 .Main{float: left;width: 710px;padding: 0 25px 5px 0;}
-
-.MdCF{*zoom:1}
-.MdCF:after{content:"";display:block;clear:both}
 
 .TopInner{position: relative; height: 40px; line-height: 40px;padding-bottom: 0}
 .TopInnerDate{color: #999; font-family: Arial,Helvetica,sans-serif; text-align: center}
