@@ -196,6 +196,9 @@ textarea {
   margin-left: 25px;
   display: inline;
 }
+.StaticMenu td ul li i {
+  vertical-align: middle;
+}
 /*微件*/
 .MENU table {
   width: 100%;
@@ -215,6 +218,9 @@ textarea {
 .MENU table ul li {
   display: inline;
   margin-left: 11px;
+}
+.MENU table ul li i {
+  vertical-align: middle;
 }
 .MENU table .MENU_Close {
   text-align: right;
