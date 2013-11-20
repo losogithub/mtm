@@ -537,11 +537,12 @@
      * @private
      */
     _getCommitData: function () {
+      var src = this.widget().find('.Image img').attr('src');
       return {
         url: this.options.url,
         title: this.widget().find('input[name="title"]').val(),
         snippet: this.widget().find('textarea[name="snippet"]').val(),
-        src: this.widget().find('.Image img').attr('src') == this.noImgSrc ? undefined : this.widget().find('.Image img').attr('src'),
+        src: src == this.noImgSrc ? undefined : src,
         description: this.widget().find('textarea[name="description"]').val()
       }
     },
@@ -1744,12 +1745,13 @@
     var $button = $band.find('button[name="' + submitType + '"]');
     $button.button('loading');
 
+    var coverUrl = $form.find('button[name="cover"] img').attr('src')
     $.ajax('/topic/save', {
       type: 'PUT',
       data: {
         topicId: topicId,
         title: $form.find('input[name="title"]').val(),
-        coverUrl: $form.find('button[name="cover"] img').attr('src'),
+        coverUrl: coverUrl == '/images/no_img/image_95x95.png' ? undefined : coverUrl,
         description: $form.find('textarea[name="description"]').val(),
         publish: submitType == 'publish' ? 1 : undefined
       }
