@@ -11,9 +11,11 @@
  * When given a plain text, translate into a certain html tagged str.
  *
  */
-var linkify = function (inputText) {
+function linkify(inputText) {
   //empty case
-  if(!inputText){return inputText;}
+  if (!inputText) {
+    return inputText;
+  }
   var replacedText, replacePattern1, replacePattern2, replacePattern3;
 
   //URLs starting with http://, https://, or ftp://
@@ -31,8 +33,7 @@ var linkify = function (inputText) {
   return replacedText.replace(/(\n)+/g, '<br>');
 }
 
-
-var validateEmail = function(email) {
+function validateEmail(email) {
   // First check if any value was actually set
   if (email.length == 0) return false;
   // Now validate the email format using Regex
@@ -40,5 +41,18 @@ var validateEmail = function(email) {
   return re.test(email);
 }
 
+function escape(html) {
+  if (!html) {
+    return html;
+  }
+  return String(html)
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
 exports.linkify = linkify;
 exports.validateEmail = validateEmail;
+exports.escape = escape;

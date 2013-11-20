@@ -9,13 +9,13 @@ var async = require('async');
 var EventProxy = require('eventproxy');
 var sanitize = require('validator').sanitize;
 var check = require('validator').check;
-var escape = require('escape-html');
 var Url = require('url');
 var http = require('follow-redirects').http;
 var iconv = require('iconv-lite');
 var BufferHelper = require('bufferhelper');
 
 var helper = require('../helper/helper');
+var escape = helper.escape;
 
 var Topic = require('../proxy').Topic;
 var Item = require('../proxy').Item;

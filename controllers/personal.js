@@ -6,12 +6,12 @@
  * Time: 11:16 PM
  * To change this template use File | Settings | File Templates.
  */
-var check = require('validator').check,
-  sanitize = require('validator').sanitize;
-var escape = require('escape-html');
+var check = require('validator').check;
+var sanitize = require('validator').sanitize;
 
 var encryp = require('../helper/encryp');
 var helper = require('../helper/helper');
+var escape = helper.escape;
 
 
 var User = require('../proxy').User;

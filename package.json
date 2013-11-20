@@ -10,7 +10,6 @@
     "eventproxy": "*",
     "express": "*",
     "ejs": "*",
-    "escape-html": "*",
     "express-partials": "*",
     "follow-redirects": "*",
     "iconv-lite": "*",
