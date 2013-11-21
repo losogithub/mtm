@@ -137,7 +137,7 @@ var signup = function (req, res, next) {
               res.set('Connection', 'close');
               res.set('Expire', '-1');
               res.set('Pragma', 'no-cache');
-              res.render('sign/signupSuccess', {
+              res.render('sign/activeAccount', {
                 emailAddress: email
               });
             });
@@ -194,7 +194,7 @@ var signup = function (req, res, next) {
               res.set('Connection', 'close');
               res.set('Expire', '-1');
               res.set('Pragma', 'no-cache');
-              res.render('sign/signupSuccess', {
+              res.render('sign/activeAccount', {
                 emailAddress: email
               });
             });
@@ -364,7 +364,7 @@ function checkOnlyPassword(emailIDFlag, pass, autoLogin, user, req, res) {
   pass = encryp.md5(pass);
   var email = user.email;
   if (!emailIDFlag) {
-    email = user.username;
+    email = user.loginName;
   }
   if (pass !== user.password) {
     res.render('sign/login', {
@@ -375,9 +375,9 @@ function checkOnlyPassword(emailIDFlag, pass, autoLogin, user, req, res) {
   }
   if (!user.active) {
     // 从新发送激活邮件
-    mail.sendActiveMail(user.email, encryp.md5(user.email + config.session_secret), user.name, user.email);
+    mail.sendActiveMail(user.email, encryp.md5(user.email + config.session_secret), user.loginName, user.email);
     return res.render('sign/activeAccount', {
-      email: email
+      emailAddress: user.email
     });
   }
 
