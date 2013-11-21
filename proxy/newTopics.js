@@ -5,12 +5,10 @@
  * Time: 2:56 PM
  * To change this template use File | Settings | File Templates.
  */
+var extend = require('extend');
+
 var models = require('../models');
 var NewTopicModel = models.NewTopicModel;
-
-var User = require('../proxy').User;
-
-//var fifo = require('fifo');
 
 //must be loaded from db.
 // otherwise you can not restart server.
@@ -24,53 +22,72 @@ function getNewTopics(callback) {
     .exec(callback);
 }
 
+function updateNewTopics(topics) {
+  console.log("更新最新总结列表");
+  console.log(topics.length);
+  global.recentUpdatedTopicsData = [];
+  topics = topics || [];
+  topics.forEach(function (topic) {
+    global.recentUpdatedTopicsData.push({
+      id: topic._id,
+      coverUrl: topic.cover_url,
+      title: topic.title,
+      author: topic.author_name,
+      PVCount: topic.PV_count,
+      des: topic.description
+    });
+  });
+}
 
-function saveNewTopic(authorId, topicId, title, coverUrl, description, callback) {
+function saveNewTopic(topic, callback) {
   var newTopic = new NewTopicModel();
+  newTopic._id = undefined;
+  newTopic = extend(true, topic, newTopic);
 
-    getNewTopics(function(err, topics){
-      if(err){next(err);}
-
-
-      //the new topics can only be 5. if more than 5, delete the old one
-      var topicIdtoDelete;
-      var deleteTag = false;
-      if(topics.length == 5 ) {
-        topicIdtoDelete = topics[4]._id;
-        deleteTag = true;
+  NewTopicModel.findByIdAndRemove(newTopic._id, function (err, doc) {
+    if (err) {
+      if (typeof callback === 'function') {
+        callback(err);
       }
-
-    User.getUserById(authorId, function(err, author){
-
-      if(err){return;}
-
-      newTopic.title = title;
-      newTopic.cover_url = coverUrl;
-      newTopic.description = description;
-      newTopic.author_id = authorId;
-      newTopic._id = topicId;
-      newTopic.author_name = author.loginName;
-      newTopic.update_at = Date.now();
-      newTopic.save();
+      return;
+    }
+    newTopic.save(function (err, doc) {
+      if (err) {
+        if (typeof callback === 'function') {
+          callback(err);
+        }
+        return;
+      }
       console.log("new topics save to updated topics list");
 
+      getNewTopics(function (err, topics) {
+        if (err) {
+          callback(err);
+        }
 
-      //remove one from the head
-      if (deleteTag){
+        //the new topics can only be 5. if more than 5, delete the old one
+        if (topics.length <= 5) {
+          updateNewTopics(topics);
+          return;
+        }
+
         //always delete the first one
-        NewTopicModel.findOneAndRemove({"_id": topicIdtoDelete}, function(err, doc){
-          if(err){
-            next(err);
+        NewTopicModel.findByIdAndRemove(topics[5]._id, function (err, doc) {
+          if (err) {
+            if (typeof callback === 'function') {
+              callback(err);
+            }
+            return;
           }
           console.log("delete old topics success");
+          updateNewTopics(topics.slice(0, 5));
         });
-      } //if
-
-    }) //User.getUserById
-
-    })//getNewTopics
+      });
+    });
+  });
 
 }
 
 exports.getNewTopics = getNewTopics;
+exports.updateNewTopics = updateNewTopics;
 exports.saveNewTopic = saveNewTopic;

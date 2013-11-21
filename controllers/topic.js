@@ -21,8 +21,6 @@ var Topic = require('../proxy').Topic;
 var Item = require('../proxy').Item;
 var User = require('../proxy').User;
 
-var NewTopic = require('../proxy').NewTopic;
-
 var utils = require('../public/javascripts/utils');
 
 function showCreate(req, res, next) {
@@ -850,14 +848,6 @@ function saveTopic(req, res, next) {
     }
     res.send(200);
     console.log('saveTopic done');
-    //add: 11.07 2013 add the published topic to new topics db.
-    //But this maybe not new topics here !!!
-    // in matome, it calls update list.
-    if (publish || topic.publishDate) {
-      NewTopic.saveNewTopic(authorId, topicId, title, coverUrl, description, function () {
-        console.log('save to new topics');
-      })
-    }
   });
 }
 

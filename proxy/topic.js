@@ -12,6 +12,8 @@ var TopicModel = models.TopicModel;
 var Item = require('./item');
 var User = require('./user');
 
+var NewTopic = require('./newTopics');
+
 /**
  * 新建总结
  * @param userId
@@ -96,6 +98,12 @@ function saveTopic(authorId, topicId, title, coverUrl, description, publish, cal
         topic.draft = true;
       }
       topic.save(ep.done(function () {
+        //add: 11.07 2013 add the published topic to new topics db.
+        //But this maybe not new topics here !!!
+        // in matome, it calls update list.
+        if (publish || topic.publishDate) {
+          NewTopic.saveNewTopic(topic);
+        }
         if (typeof callback === 'function') {
           callback(null, topic);
         }

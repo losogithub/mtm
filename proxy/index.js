@@ -9,7 +9,4 @@ exports.Topic = require('./topic');
 exports.Item = require('./item');
 exports.User = require('./user');
 exports.LoginToken = require('./loginToken');
-exports.ScoredTopic = require('./scoredTopics');
-exports.RecentHotTopic = require('./recentHotTopics');
-exports.RealGoodTopic = require('./realGoodTopic');
 exports.NewTopic = require('./newTopics');

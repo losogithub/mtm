@@ -24,9 +24,7 @@ config.hostname = urlinfo.hostname || config.host;
 
 //global variables instaitate.
 //e.g. hotopicsData, updateTopicsData
-require('./offlineProcess/retriveUpdatedTopicList.js')
-require('./offlineProcess/calculateHotTopics.js')
-
+require('./offlineProcess/retriveUpdatedTopicList')();
 
 //access log file and error log file
 var accessLogFile = fs.createWriteStream('access.log', {flags: 'a'});

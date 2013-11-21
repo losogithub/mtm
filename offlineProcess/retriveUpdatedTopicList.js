@@ -5,110 +5,95 @@
  * Time: 11:03 AM
  * To change this template use File | Settings | File Templates.
  */
-var async = require('async');
-var NewTopic = require('../proxy').NewTopic
-var RecentHotTopic = require('../proxy').RecentHotTopic;
-var RealGoodTopic = require('../proxy').RealGoodTopic;
+var math = require('mathjs')();
+var NewTopic = require('../proxy').NewTopic;
+var Topic = require('../proxy').Topic;
 
-
-//two global variables
-global.recentHotTopicsData = [];
-global.realGoodTopicsData = [];
-global.recentUpdatedTopicsData = [];
-
-
-var funArray = [
-  {fun: extractRecentHotTopics, delay: 60*1000}, //an hour
-  {fun: extractRealGoodTopics, delay: 3*60*1000}, //3 hours
-  {fun: extractUpdatedRecentTopics, delay: 60*1000} // 1 minute
-];
-
-function extractUpdatedRecentTopics(){
-
-  //ensure it is empty.
-  global.recentUpdatedTopicsData = [];
-
-  NewTopic.getNewTopics(function(err, topics){
-    if(err){next(err);}
-    console.log("更新最新总结列表");
-    console.log(topics.length);
-    var newTopics = topics || [];
-    newTopics.forEach(function (topic) {
-      recentUpdatedTopicsData.push({
-        id: topic._id,
-        coverUrl: topic.cover_url,
-        title: topic.title,
-        author: topic.author_name,
-        PVCount: topic.PV_count,
-        des: topic.description
-      });
-    });
-  });
+function traditionalScore(pv, likes) {
+  return math.round(pv / 100, 7) + likes;
 }
 
-function  extractRecentHotTopics(){
-
-  //first set it to empty. this is important.
-  global.recentHotTopicsData = [];
-  RecentHotTopic.getRecentHotTopics(function(err, topics){
-    if(err){console.log("cannot find old hot topics "); return;}
-    console.log("更新左边人气总结");
-    console.log(topics.length);
-    var hotTopics = topics || [] ;
-    for (var i = 0; i < hotTopics.length; i++){
-      //console.log("hot topics");
-      recentHotTopicsData.push({
-        id: hotTopics[i]._id,
-        coverUrl: hotTopics[i].cover_url,
-        title: hotTopics[i].title,
-        author: hotTopics[i].author_name,
-        PVCount: hotTopics[i].PV_count,
-        des: hotTopics[i].description
-      });
-    };
-  });
-}
-
-
-function extractRealGoodTopics(){
-  //first set it to empty. this is important.
-  global.realGoodTopicsData = [];
-  RealGoodTopic.getRealGoodTopics(function(err, topics){
-    if(err){console.log("cannot find old hot topics "); return;}
-    console.log("更新经典总结");
-    console.log(topics.length);
-    var hotTopics = topics || [] ;
-    for (var i = 0; i < hotTopics.length; i++){
-      //console.log("hot topics");
-      realGoodTopicsData.push({
-        id: hotTopics[i]._id,
-        coverUrl: hotTopics[i].cover_url,
-        title: hotTopics[i].title,
-        author: hotTopics[i].author_name,
-        PVCount: hotTopics[i].PV_count,
-        des: hotTopics[i].description
-      });
-    };
-  });
-}
-
-function alwaysTrue(){
-  return true;
-}
-
-
-async.each(funArray, function(item, callback){
-    async.whilst(alwaysTrue, function(cb){
-        item.fun();
-        setTimeout(cb, item.delay);
-      },
-      function(err){
-        console.log("shall not happen");
-      }
-    );
-  },
-  function(err){
-    console.log(err);
+/*
+ * This is for the left one, plus the time yinzi
+ * */
+function newHotScore(score, updateDate) {
+  var diff = (1000 * 60 * 60) / ((Date.now() - updateDate) || 1);
+  //console.log(diff);
+  if (diff > 1) {
+    diff = 1;
   }
-)
+  return score + 10 * diff;
+}
 
+function scoreCompare(top1, top2) {
+  return (top2.score - top1.score);
+}
+
+function extractRecentHotTopics() {
+  Topic.getAllTopics(function (err, topics) {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    //console.log("get all topics from topics collection");
+    //console.log(topics);
+
+    for (var i = 0; i < topics.length; i++) {
+      topics[i].score = traditionalScore(topics[i].PV_count, topics[i].FVCount);
+    }
+
+    //first set it to empty. this is important.
+    global.realGoodTopicsData = [];
+    console.log(topics.length);
+    console.log("更新经典总结");
+    var hotTopics = topics || [];
+    hotTopics.sort(scoreCompare).slice(0, 500);
+    for (var i = 0; i < hotTopics.length; i++) {
+      //console.log("hot topics");
+      global.realGoodTopicsData.push({
+        id: hotTopics[i]._id,
+        coverUrl: hotTopics[i].cover_url,
+        title: hotTopics[i].title,
+        author: hotTopics[i].author_name,
+        PVCount: hotTopics[i].PV_count,
+        des: hotTopics[i].description
+      });
+    }
+
+    //first set it to empty. this is important.
+    global.recentHotTopicsData = [];
+    console.log("更新左边人气总结");
+    hotTopics = topics || [];
+    for (var i = 0; i < topics.length; i++) {
+      topics[i].score = newHotScore(topics[i].score, topics[i].update_at);
+    }
+    hotTopics.sort(scoreCompare).slice(0, 1000);
+    for (var i = 0; i < hotTopics.length; i++) {
+      //console.log("hot topics");
+      global.recentHotTopicsData.push({
+        id: hotTopics[i]._id,
+        coverUrl: hotTopics[i].cover_url,
+        title: hotTopics[i].title,
+        author: hotTopics[i].author_name,
+        PVCount: hotTopics[i].PV_count,
+        des: hotTopics[i].description
+      });
+    }
+    if (typeof callback === 'function') {
+      callback(false, topics.length);
+    }
+  })
+}
+
+module.exports = function () {
+  NewTopic.getNewTopics(function (err, topics) {
+    if (err) {
+      console.error(err.stack);
+      return;
+    }
+    NewTopic.updateNewTopics(topics);
+  })
+
+  extractRecentHotTopics();
+  setInterval(extractRecentHotTopics, 60 * 1000);
+};

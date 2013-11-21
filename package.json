@@ -11,6 +11,7 @@
     "express": "*",
     "ejs": "*",
     "express-partials": "*",
+    "extend": "*",
     "follow-redirects": "*",
     "iconv-lite": "*",
     "mongoose": "*",

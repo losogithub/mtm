@@ -4,7 +4,6 @@ var ObjectId = mongoose.Schema.ObjectId;
 
 //todo: image
 var UserSchema = new Schema({
-  name: {type: String, index: true},
   loginName: {type: String, unique: true},
   birthday: {type: String},
   gender: {type: String},

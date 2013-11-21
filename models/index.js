@@ -19,13 +19,6 @@ mongoose.connect(config.db, function (err) {
 require('./user');
 require('./loginToken');
 
-
-exports.RecentHotTopicModel = require('./scoredTopics').RecentHotTopicModel;
-exports.RealGoodTopicModel = require('./scoredTopics').RealGoodTopicModel;
-
-exports.ScoredTopicModel = require('./scoredTopics').ScoredTopicModel;
-
-
 exports.NewTopicModel = require('./topic').NewTopicModel;
 
 exports.TopicModel = require('./topic').TopicModel;
