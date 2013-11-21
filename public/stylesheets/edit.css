@@ -119,6 +119,9 @@ textarea {
 .Edit_Top form fieldset:first-child {
   height: 40px;
 }
+.Edit_Top form fieldset:first-child td {
+  vertical-align: bottom;
+}
 .Edit_Top form fieldset:first-child input[name="title"] {
   display: inline-block;
   width: 779px;
@@ -132,8 +135,6 @@ textarea {
 .Edit_Top form fieldset:first-child button[name="options"] {
   margin-left: 15px;
   color: #666 !important;
-  position: absolute;
-  bottom: 0;
 }
 .Edit_Top form fieldset:last-child {
   margin-top: 25px;

@@ -1,258 +1,274 @@
 <div class="Contents">
-  <div class="Band">
-    <div class="Inner">
-      <table class='Band_Ttl'>
-        <td>
-          <h5><%= locals.topic ? '修改' : '创建' %>总结</h5>
-        </td>
-      </table>
-      <table class="Band_Btn">
-        <td>
-          <% if (locals.topic && topic.publishDate) { %>
-          <button name="save" class='btn btn-small btn-inverse'
-                  data-loading-text="保存 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;" type="button">保存
-          </button>
-          <% } else { %>
-          <button name="saveDraft" class='btn btn-small btn-inverse'
-                  data-loading-text="保存草稿 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;" type="button">保存草稿</button>
-          <button name="publish" class='btn btn-small btn-success'
-                  data-loading-text="发布 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;" type="button">发布
-          </button>
-          <% } %>
-          <a class='btn btn-small' href="<%= locals.backUrl ? backUrl : '/' %>">返回</a>
-        </td>
-      </table>
-    </div>
+<div class="Band">
+  <div class="Inner">
+    <table class='Band_Ttl'>
+      <td>
+        <h5><%= locals.topic ? '修改' : '创建' %>总结</h5>
+      </td>
+    </table>
+    <table class="Band_Btn">
+      <td>
+        <% if (locals.topic && topic.publishDate) { %>
+        <button name="save" class='btn btn-small btn-inverse'
+                data-loading-text="保存 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;" type="button">保存
+        </button>
+        <% } else { %>
+        <button name="saveDraft" class='btn btn-small btn-inverse'
+                data-loading-text="保存草稿 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;" type="button">保存草稿
+        </button>
+        <button name="publish" class='btn btn-small btn-success'
+                data-loading-text="发布 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;" type="button">发布
+        </button>
+        <% } %>
+        <a class='btn btn-small' href="<%= locals.backUrl ? backUrl : '/' %>">返回</a>
+      </td>
+    </table>
   </div>
-  <div class="Edit_Top">
-    <div class="Inner">
-      <form>
-        <fieldset style="position: relative;">
-          <div class="Required Required-4px"></div>
-          <input name='title' class="" value="<%= locals.topic ? topic.title : '' %>"
-                 placeholder="输入总结标题（50字以内）" type="text"/>
-          <button class="btn btn-link" name="options" style='display: none' type="button">可选项目
-            <i class="icon-caret-down"></i>
-          </button>
-        </fieldset>
-        <fieldset style='display: none;overflow: hidden;'>
-          <button name="cover" class="btn btn-link" title="设置总结封面" type="button">
-            <div class="Image">
-              <i class="icon-camera"></i>
-            </div>
-            <img style="display: block;" width="95" height="95" onerror="mtm.errorImage(this, 'image_95x95')"
-                 src="<%= !locals.topic ? '' : !topic.coverUrl ? '' : topic.coverUrl %>">
-          </button>
-
-          <div class="Edit_Top_Thumb_Extra">
-            <input name="url" value="<%= !locals.topic ? '' : !topic.coverUrl ? '' : topic.coverUrl %>"
-                   placeholder="图片URL" type="text">
-
-            <% include _widget_BtnSet.html %>
-
+</div>
+<div class="Edit_Top">
+  <div class="Inner">
+    <form>
+      <fieldset>
+        <table>
+          <td>
+            <div class="Required Required-4px"></div>
+            <input name='title' class="" value="<%= locals.topic ? topic.title : '' %>"
+                   placeholder="输入总结标题（50字以内）" type="text"/></td>
+          <td>
+            <button class="btn btn-link" name="options" style='display: none' type="button">可选项目
+              <i class="icon-caret-down"></i>
+            </button>
+          </td>
+        </table>
+      </fieldset>
+      <fieldset style='display: none;overflow: hidden;'>
+        <button name="cover" class="btn btn-link" title="设置总结封面" type="button">
+          <div class="Image">
+            <i class="icon-camera"></i>
           </div>
-          <div style='overflow: hidden;'>
-            <textarea name='description' class="HeightAnimation" placeholder="总结描述（150字以内，换行符无效）"><%= !locals.topic
-              ? '' : !topic.description
-              ? '' : topic.description %></textarea>
-          </div>
-        </fieldset>
+          <img style="display: block;" width="95" height="95" onerror="mtm.errorImage(this, 'image_95x95')"
+               src="<%= !locals.topic ? '' : !topic.coverUrl ? '' : topic.coverUrl %>">
+        </button>
+
+        <div class="Edit_Top_Thumb_Extra">
+          <input name="url" value="<%= !locals.topic ? '' : !topic.coverUrl ? '' : topic.coverUrl %>"
+                 placeholder="图片URL" type="text">
+
+          <% include _widget_BtnSet.html %>
+
+        </div>
+        <div style='overflow: hidden;'>
+          <textarea name='description' class="HeightAnimation" placeholder="总结描述（150字以内，换行符无效）"><%= !locals.topic
+            ? '' : !topic.description
+            ? '' : topic.description %></textarea>
+        </div>
+      </fieldset>
+    </form>
+    <table class="StaticMenu">
+
+      <% include _menu.html %>
+
+    </table>
+  </div>
+</div>
+
+<!--内容-->
+<div class="TopicWrapper clearfix">
+  <div class="Main">
+
+    <% include _ul.html %>
+
+    <!--模板-->
+    <div class="TEMPLATES" style="display:none;">
+
+      <ul>
+        <% var item = null; %>
+        <% include _ul_li.html %>
+      </ul>
+
+      <form class="Widget">
+        <!--插入内容-->
       </form>
-      <table class="StaticMenu">
 
-        <% include _menu.html %>
+      <div class="Widget">
 
-      </table>
-    </div>
-  </div>
+        <div class="Content MENU">
+          <table>
 
-  <!--内容-->
-  <div class="TopicWrapper clearfix">
-    <div class="Main">
+            <% include _menu.html %>
 
-      <% include _ul.html %>
+            <td class="MENU_Close">
+              <i name="cancel" class="icon-remove" title="关闭"></i>
+            </td>
+          </table>
+        </div>
 
-      <!--模板-->
-      <div class="TEMPLATES" style="display:none;">
+        <div class='Content LINK_CREATE'>
+          <div class="Required"></div>
+          <input name="url" class="AUTO_FOCUS" placeholder="链接URL" type="text">
+          <button name="preview" class="btn btn-small" type="button" disabled='disabled'
+                  data-loading-text="预览 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;">预览
+          </button>
 
-        <ul>
-          <% var item = null; %>
-          <% include _ul_li.html %>
-        </ul>
-
-        <form class="Widget">
-          <!--插入内容-->
-        </form>
-
-        <div class="Widget">
-
-          <div class="Content MENU">
-            <table>
-
-              <% include _menu.html %>
-
-              <td class="MENU_Close">
-                <i name="cancel" class="icon-remove" title="关闭"></i>
-              </td>
-            </table>
-          </div>
-
-          <div class='Content LINK_CREATE'>
-            <div class="Required"></div>
-            <input name="url" class="AUTO_FOCUS" placeholder="链接URL" type="text">
-            <button name="preview" class="btn btn-small" type="button" disabled='disabled'
-                    data-loading-text="预览 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;">预览</button>
-
-            <% include _widget_BtnSet.html %>
-
-          </div>
-
-          <div class='Content LINK'>
-            <input name="title" class="Bold" placeholder="链接标题" type="text">
-
-            <div class="Quote">
-              <a class="LINK_URL"></a>
-            </div>
-
-            <textarea name="snippet" placeholder="链接摘要"></textarea>
-            <div class="Thumb clearfix">
-              <div class="Image">
-                <div style="position: relative;display: inline-block;">
-                  <img>
-                  <div class="Loading" style="position: absolute;top: 0;left: 0;bottom: 0;right: 0;background-color: rgba(0,0,0,0.2);">
-                    <table style="margin: 0 auto;">
-                      <td>
-                        <i class="icon-spinner icon-spin" style="color: white"></i>
-                      </td>
-                    </table>
-                  </div>
-                </div>
-              </div>
-              <div class="Thumb_Editor" style="overflow: hidden;">
-                <div class="btn-group">
-                  <button class="btn btn-mini" type="button"><i class="icon-angle-left"></i></button>
-                  <button class="btn btn-mini" type="button"><i class="icon-angle-right"></i></button>
-                </div>
-                <span name="pagination"></span>
-                <p style="margin-top: 7px;">
-                  <input type="checkbox" id="noImg" style="vertical-align: middle;">
-                  <label for="noImg" style="vertical-align: middle;line-height: 1;">无图片</label>
-                </p>
-                <p style="margin-top: 7px;">
-                  <input style="width: 240px;float: left" class="Url" placeholder="自定义图片URL（可选）" type="text">
-                  <button style="float: left;margin-left: 5px;" name="customize" class="btn btn-small" type="button">确定</button>
-                </p>
-              </div>
-            </div>
-            <textarea name="description" class="AUTO_FOCUS" placeholder="链接评论"></textarea>
-
-            <% include _widget_BtnSet.html %>
-
-          </div>
-
-          <div class='Content IMAGE_CREATE'>
-            <div class="Image">
-              <i class="icon-camera"></i>
-            </div>
-            <div class="Required" style="float: left;"></div>
-            <input name="url" class="AUTO_FOCUS" placeholder="图片URL" type="text">
-            <button name="preview" class="btn btn-small" type="button" disabled='disabled'
-                    data-loading-text="预览 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;">预览</button>
-
-            <% include _widget_BtnSet.html %>
-
-          </div>
-
-          <div class='Content IMAGE'>
-            <div class="Image">
-              <img onerror="mtm.errorImage(this,'default_120x120');">
-            </div>
-
-            <div style="overflow: hidden;">
-              <input name="title" class="Bold AUTO_FOCUS" placeholder="图片标题" type="text">
-              <input name="quote" class="Url" placeholder="图片来源网页URL" type="text">
-              <textarea name="description" placeholder="图片介绍、评论"></textarea>
-            </div>
-
-            <% include _widget_BtnSet.html %>
-
-          </div>
-
-          <div class='Content VIDEO_CREATE'>
-            <div class="Thumb">
-              <i class="icon-film"></i>
-            </div>
-            <div style="margin-top: 7px;">
-              <div class="Required"></div>
-              <input name="url" class="AUTO_FOCUS" placeholder="视频URL" type="text">
-              <button name="preview" class="btn btn-small" type="button" disabled='disabled'
-                      data-loading-text="预览 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;">预览</button>
-            </div>
-
-            <% include _widget_BtnSet.html %>
-
-          </div>
-
-          <div class='Content VIDEO'>
-
-            <% var item = {}; %>
-            <% include _videoPlayers.html %>
-
-            <div class="Quote">
-              <span>来源</span>
-              <div>
-                <a class="VIDEO_URL"></a>
-              </div>
-            </div>
-
-            <input name="title" class="Bold" placeholder="视频标题" type="text">
-            <textarea class="AUTO_FOCUS" name="description" placeholder="视频介绍、评论"></textarea>
-
-            <% include _widget_BtnSet.html %>
-
-          </div>
-
-          <div class='Content CITE'>
-            <div class="Required"></div>
-            <textarea class="AUTO_FOCUS" name="cite" placeholder="引文"></textarea>
-            <input name="url" placeholder="引文来源网页URL" type="text">
-            <input name="title" placeholder="引文来源网页标题" type="text">
-            <textarea name="description" placeholder="引文介绍、评论"></textarea>
-
-            <% include _widget_BtnSet.html %>
-
-          </div>
-
-          <div class='Content TEXT'>
-            <div class="Required"></div>
-            <textarea name="text" class="AUTO_FOCUS" placeholder="文本"></textarea>
-
-            <% include _widget_BtnSet.html %>
-
-          </div>
-
-          <div class='Content TITLE'>
-            <div class="Required"></div>
-            <input name="title" class="Bold AUTO_FOCUS" placeholder="标题" type="text">
-
-            <% include _widget_BtnSet.html %>
-
-          </div>
+          <% include _widget_BtnSet.html %>
 
         </div>
 
-        <% var item = null; %>
-        <% include _ul_li_item.html %>
+        <div class='Content LINK'>
+          <input name="title" class="Bold" placeholder="链接标题" type="text">
 
-        <div class="Item">
+          <div class="Quote">
+            <a class="LINK_URL"></a>
+          </div>
 
-          <% var item = { type: 'ALL' }; %>
-          <% include _ul_li_item_contents.html %>
+          <textarea name="snippet" placeholder="链接摘要"></textarea>
+
+          <div class="Thumb clearfix">
+            <div class="Image">
+              <div style="position: relative;display: inline-block;">
+                <img>
+
+                <div class="Loading"
+                     style="position: absolute;top: 0;left: 0;bottom: 0;right: 0;background-color: rgba(0,0,0,0.2);">
+                  <table style="margin: 0 auto;">
+                    <td>
+                      <i class="icon-spinner icon-spin" style="color: white"></i>
+                    </td>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="Thumb_Editor" style="overflow: hidden;">
+              <div class="btn-group">
+                <button class="btn btn-mini" type="button"><i class="icon-angle-left"></i></button>
+                <button class="btn btn-mini" type="button"><i class="icon-angle-right"></i></button>
+              </div>
+              <span name="pagination"></span>
+
+              <p style="margin-top: 7px;">
+                <input type="checkbox" id="noImg" style="vertical-align: middle;">
+                <label for="noImg" style="vertical-align: middle;line-height: 1;">无图片</label>
+              </p>
+
+              <p style="margin-top: 7px;">
+                <input style="width: 240px;float: left" class="Url" placeholder="自定义图片URL（可选）" type="text">
+                <button style="float: left;margin-left: 5px;" name="customize" class="btn btn-small" type="button">确定
+                </button>
+              </p>
+            </div>
+          </div>
+          <textarea name="description" class="AUTO_FOCUS" placeholder="链接评论"></textarea>
+
+          <% include _widget_BtnSet.html %>
+
+        </div>
+
+        <div class='Content IMAGE_CREATE'>
+          <div class="Image">
+            <i class="icon-camera"></i>
+          </div>
+          <div class="Required" style="float: left;"></div>
+          <input name="url" class="AUTO_FOCUS" placeholder="图片URL" type="text">
+          <button name="preview" class="btn btn-small" type="button" disabled='disabled'
+                  data-loading-text="预览 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;">预览
+          </button>
+
+          <% include _widget_BtnSet.html %>
+
+        </div>
+
+        <div class='Content IMAGE'>
+          <div class="Image">
+            <img onerror="mtm.errorImage(this,'default_120x120');">
+          </div>
+
+          <div style="overflow: hidden;">
+            <input name="title" class="Bold AUTO_FOCUS" placeholder="图片标题" type="text">
+            <input name="quote" class="Url" placeholder="图片来源网页URL" type="text">
+            <textarea name="description" placeholder="图片介绍、评论"></textarea>
+          </div>
+
+          <% include _widget_BtnSet.html %>
+
+        </div>
+
+        <div class='Content VIDEO_CREATE'>
+          <div class="Thumb">
+            <i class="icon-film"></i>
+          </div>
+          <div style="margin-top: 7px;">
+            <div class="Required"></div>
+            <input name="url" class="AUTO_FOCUS" placeholder="视频URL" type="text">
+            <button name="preview" class="btn btn-small" type="button" disabled='disabled'
+                    data-loading-text="预览 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;">预览
+            </button>
+          </div>
+
+          <% include _widget_BtnSet.html %>
+
+        </div>
+
+        <div class='Content VIDEO'>
+
+          <% var item = {}; %>
+          <% include _videoPlayers.html %>
+
+          <div class="Quote">
+            <span>来源</span>
+
+            <div>
+              <a class="VIDEO_URL"></a>
+            </div>
+          </div>
+
+          <input name="title" class="Bold" placeholder="视频标题" type="text">
+          <textarea class="AUTO_FOCUS" name="description" placeholder="视频介绍、评论"></textarea>
+
+          <% include _widget_BtnSet.html %>
+
+        </div>
+
+        <div class='Content CITE'>
+          <div class="Required"></div>
+          <textarea class="AUTO_FOCUS" name="cite" placeholder="引文"></textarea>
+          <input name="url" placeholder="引文来源网页URL" type="text">
+          <input name="title" placeholder="引文来源网页标题" type="text">
+          <textarea name="description" placeholder="引文介绍、评论"></textarea>
+
+          <% include _widget_BtnSet.html %>
+
+        </div>
+
+        <div class='Content TEXT'>
+          <div class="Required"></div>
+          <textarea name="text" class="AUTO_FOCUS" placeholder="文本"></textarea>
+
+          <% include _widget_BtnSet.html %>
+
+        </div>
+
+        <div class='Content TITLE'>
+          <div class="Required"></div>
+          <input name="title" class="Bold AUTO_FOCUS" placeholder="标题" type="text">
+
+          <% include _widget_BtnSet.html %>
 
         </div>
 
       </div>
+
+      <% var item = null; %>
+      <% include _ul_li_item.html %>
+
+      <div class="Item">
+
+        <% var item = { type: 'ALL' }; %>
+        <% include _ul_li_item_contents.html %>
+
+      </div>
+
     </div>
-    <div class="Sub"></div>
   </div>
+  <div class="Sub"></div>
+</div>
 </div>
