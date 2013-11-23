@@ -82,4 +82,7 @@ module.exports = function (app) {
    app.get('/reset_pass', sign.reset_pass);
    app.post('/reset_pass', sign.update_pass);
    */
+  app.get('*', function (req, res, next) {
+    next(new Error(404));
+  })
 }

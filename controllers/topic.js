@@ -13,6 +13,7 @@ var Url = require('url');
 var http = require('follow-redirects').http;
 var iconv = require('iconv-lite');
 var BufferHelper = require('bufferhelper');
+var domain = require('domain');
 
 var helper = require('../helper/helper');
 var escape = helper.escape;
@@ -144,19 +145,7 @@ function showEdit(req, res, next) {
     }]
   }, function (err, results) {
     if (err) {
-      console.error(err.stack);
-      switch (err.message) {
-        case 403:
-          res.send(403, '您无权修改他人的总结');
-          break;
-        case 404:
-          res.send(404, '总结不存在');
-          break;
-        default :
-          res.send(500, err);
-          break;
-      }
-      return;
+      return next(err);
     }
 
     var topic = results.topic;
@@ -248,6 +237,7 @@ function showIndex(req, res, next) {
     res.set('Expire', '-1');
     res.set('Pragma', 'no-cache');
     res.render('topic/index', {
+      description: topicData.description,
       css: [
         '/stylesheets/topic.css'
       ],
@@ -560,12 +550,14 @@ function createItem(req, res, next) {
     parse: function (callback) {
       if (data.type == 'LINK_CREATE') {
         _getLinkDetail(data.url, function (err, results) {
+          if (err) return callback(err);
           data.title = results.title;
           data.snippet = results.snippet;
           callback();
         });
       } else if (data.type == 'VIDEO_CREATE') {
         _getVideoTitle(data.url, function (err, title) {
+          if (err) return callback(err);
           data.title = title;
           callback();
         });
@@ -605,19 +597,7 @@ function createItem(req, res, next) {
     }]
   }, function (err, results) {
     if (err) {
-      console.error(err.stack);
-      switch (err.message) {
-        case 403:
-          res.send(403, '您无权修改他人的总结');
-          break;
-        case 404:
-          res.send(404, '总结不存在');
-          break;
-        default :
-          res.send(500, err);
-          break;
-      }
-      return;
+      return next(err);
     }
 
     var item = results.item;
@@ -678,19 +658,7 @@ function sortItem(req, res, next) {
     }]
   }, function (err, results) {
     if (err) {
-      console.error(err.stack);
-      switch (err.message) {
-        case 403:
-          res.send(403, '您无权修改他人的总结');
-          break;
-        case 404:
-          res.send(404, '总结不存在');
-          break;
-        default :
-          res.send(500, err);
-          break;
-      }
-      return;
+      return next(err);
     }
 
     res.send(200);
@@ -742,19 +710,7 @@ function editItem(req, res, next) {
     }]
   }, function (err, results) {
     if (err) {
-      console.error(err.stack);
-      switch (err.message) {
-        case 403:
-          res.send(403, '您无权修改他人的总结');
-          break;
-        case 404:
-          res.send(404, '总结不存在');
-          break;
-        default :
-          res.send(500, err);
-          break;
-      }
-      return;
+      return next(err);
     }
 
     var newItem = results.newItem;
@@ -792,19 +748,7 @@ function deleteItem(req, res, next) {
     }]
   }, function (err, results) {
     if (err) {
-      console.error(err.stack);
-      switch (err.message) {
-        case 403:
-          res.send(403, '您无权修改他人的总结');
-          break;
-        case 404:
-          res.send(404, '总结不存在');
-          break;
-        default :
-          res.send(500, err);
-          break;
-      }
-      return;
+      return next(err);
     }
 
     res.send(200);
@@ -832,19 +776,7 @@ function saveTopic(req, res, next) {
 
   Topic.saveTopic(authorId, topicId, title, coverUrl, description, publish, function (err, topic) {
     if (err) {
-      console.error(err.stack);
-      switch (err.message) {
-        case 403:
-          res.send(403, '您无权修改他人的总结');
-          break;
-        case 404:
-          res.send(404, '总结不存在');
-          break;
-        default :
-          res.send(500, err);
-          break;
-      }
-      return;
+      return next(err);
     }
     res.send(200);
     console.log('saveTopic done');
@@ -853,115 +785,117 @@ function saveTopic(req, res, next) {
 
 function _getLinkDetail(url, callback) {
   console.log(url);
-  http.get(url, function (response) {
-    var bufferHelper = new BufferHelper();
-    response.on('data', function (chunk) {
-      bufferHelper.concat(chunk);
-    });
-    response.on('end', function () {
-      var temp;
-      var charset = !(temp = response.headers['content-type']) ? null :
-        !(temp = temp.match(/charset=([^;]+)/i)) ? null :
-          !temp[1] ? null : temp[1];
-      var buffer = bufferHelper.toBuffer();
-      console.log(charset);
-      try {
-        var html = iconv.decode(buffer, charset);
-      } catch (err) {
-        console.error(err.stack);
+  var d = domain.create();
+  d.on('error', function (err) {
+      if (typeof callback == 'function') {
         callback(err);
-        return;
       }
-      var charset2 = (!(temp = html.match(/<meta\s+http-equiv\s*=\s*("|')?Content-Type("|')?\s+content\s*=\s*("|')[^"']*charset\s*=\s*([^"']+)\s*("|')[^>]*>/i)) ? null : temp[4])
-        || (!(temp = html.match(/<meta\s+charset\s*=\s*("|')([^"']+)("|')[^>]*>/i)) ? null : temp[2]);
-      if (charset2 &&
-        (!charset
-          || charset2.toLowerCase() != charset.toLowerCase())) {
+    });
+  d.run(function () {
+    http.get(url, function (response) {
+      var bufferHelper = new BufferHelper();
+      response.on('data', function (chunk) {
+        bufferHelper.concat(chunk);
+      });
+      response.on('end', function () {
+        var temp;
+        var charset = !(temp = response.headers['content-type']) ? null :
+          !(temp = temp.match(/charset=([^;]+)/i)) ? null :
+            !temp[1] ? null : temp[1];
+        var buffer = bufferHelper.toBuffer();
+        console.log(charset);
         try {
-          var html = iconv.decode(buffer, charset2);
+          var html = iconv.decode(buffer, charset);
         } catch (err) {
           console.error(err.stack);
           callback(err);
           return;
         }
-      }
-      console.log(charset2);
-
-      var title = !(temp = html.match(/<title[^>]*>([^<]*)<\/title[^>]*>/i)) ? null : temp[1];
-      title = sanitize(title).entityDecode();
-      title = sanitize(title).trim();
-
-      temp = !(temp = html.match(/<meta([^>]*)name\s*=\s*("|')description("|')([^>]*)>/i)) ? null : temp[1] + temp[4];
-      var snippet = (!temp ? null : !(temp = temp.match(/content\s*=\s*("|')([^"']*)("|')/i)) ? null : temp[2].trim())
-        || html.substr((temp = html.indexOf('<body')) < 0 ? 0 : temp)
-        .replace(/<script((?!<\/script>)[\s\S])*<\/script>/gi, ' ')
-        .replace(/<style((?!<\/style>)[\s\S])*<\/style>/gi, ' ')
-        .replace(/<[^>]*>/g, ' ')
-        .replace(/\s+/g, ' ')
-        .trim();
-      if (snippet.length > 200) {
-        snippet = snippet.substr(0, 199) + '…';
-      }
-      snippet = sanitize(snippet).entityDecode();
-      snippet = sanitize(snippet).trim();
-
-      var imgs = !html ? null : html.match(/<img[^>]*>/gi);
-      console.log(imgs ? imgs.length : 0);
-      var thumb;
-      var img;
-      var width;
-      var height;
-      var srcs = [];
-      var obj = {};
-      var addToSrcs = function (img) {
-        var src = !img ? null : !(temp = img.match(/\ssrc\s*=\s*("|')([^"']+)("|')/i)) ? null : temp[2];
-        if (!src) {
-          return;
+        var charset2 = (!(temp = html.match(/<meta\s+http-equiv\s*=\s*("|')?Content-Type("|')?\s+content\s*=\s*("|')[^"']*charset\s*=\s*([^"']+)\s*("|')[^>]*>/i)) ? null : temp[4])
+          || (!(temp = html.match(/<meta\s+charset\s*=\s*("|')([^"']+)("|')[^>]*>/i)) ? null : temp[2]);
+        if (charset2 &&
+          (!charset
+            || charset2.toLowerCase() != charset.toLowerCase())) {
+          try {
+            var html = iconv.decode(buffer, charset2);
+          } catch (err) {
+            console.error(err.stack);
+            callback(err);
+            return;
+          }
         }
-        src = Url.resolve(url, src);
-        if (!src || obj[src]) {
-          return;
+        console.log(charset2);
+
+        var title = !(temp = html.match(/<title[^>]*>([^<]*)<\/title[^>]*>/i)) ? null : temp[1];
+        title = sanitize(title).entityDecode();
+        title = sanitize(title).trim();
+
+        temp = !(temp = html.match(/<meta([^>]*)name\s*=\s*("|')description("|')([^>]*)>/i)) ? null : temp[1] + temp[4];
+        var snippet = (!temp ? null : !(temp = temp.match(/content\s*=\s*("|')([^"']*)("|')/i)) ? null : temp[2].trim())
+          || html.substr((temp = html.indexOf('<body')) < 0 ? 0 : temp)
+          .replace(/<script((?!<\/script>)[\s\S])*<\/script>/gi, ' ')
+          .replace(/<style((?!<\/style>)[\s\S])*<\/style>/gi, ' ')
+          .replace(/<[^>]*>/g, ' ')
+          .replace(/\s+/g, ' ')
+          .trim();
+        if (snippet.length > 200) {
+          snippet = snippet.substr(0, 199) + '…';
         }
-        console.log('++' + src);
-        srcs.push(src);
-        obj[src] = true;
-      };
-      for (var i in imgs) {
-        img = imgs[i];
-        width = !img ? null : !(temp = img.match(/\swidth\s*=\s*("|')([\d]+)("|')/i)) ? null : temp[2];
-        height = !img ? null : !(temp = img.match(/\sheight\s*=\s*("|')([\d]+)("|')/i)) ? null : temp[2];
-        if (width || height) {
-          if (width >= 150 && height >= 70) {
+        snippet = sanitize(snippet).entityDecode();
+        snippet = sanitize(snippet).trim();
+
+        var imgs = !html ? null : html.match(/<img[^>]*>/gi);
+        console.log(imgs ? imgs.length : 0);
+        var thumb;
+        var img;
+        var width;
+        var height;
+        var srcs = [];
+        var obj = {};
+        var addToSrcs = function (img) {
+          var src = !img ? null : !(temp = img.match(/\ssrc\s*=\s*("|')([^"']+)("|')/i)) ? null : temp[2];
+          if (!src) {
+            return;
+          }
+          src = Url.resolve(url, src);
+          if (!src || obj[src]) {
+            return;
+          }
+          console.log('++' + src);
+          srcs.push(src);
+          obj[src] = true;
+        };
+        for (var i in imgs) {
+          img = imgs[i];
+          width = !img ? null : !(temp = img.match(/\swidth\s*=\s*("|')([\d]+)("|')/i)) ? null : temp[2];
+          height = !img ? null : !(temp = img.match(/\sheight\s*=\s*("|')([\d]+)("|')/i)) ? null : temp[2];
+          if (width || height) {
+            if (width >= 150 && height >= 70) {
+              console.log('++' + img);
+              addToSrcs(img);
+            } else {
+              console.log('--' + img);
+            }
+            continue;
+          }
+          thumb = !img ? null : !(temp = img.match(/\ssrc\s*=\s*("|')[^"']+\.jpg("|')/i)) ? null : temp[0];
+          if (thumb) {
             console.log('++' + img);
             addToSrcs(img);
-          } else {
-            console.log('--' + img);
+            continue;
           }
-          continue;
         }
-        thumb = !img ? null : !(temp = img.match(/\ssrc\s*=\s*("|')[^"']+\.jpg("|')/i)) ? null : temp[0];
-        if (thumb) {
-          console.log('++' + img);
-          addToSrcs(img);
-          continue;
+        console.log(srcs.length);
+        if (typeof callback == 'function') {
+          callback(null, {
+            title: title,
+            snippet: snippet,
+            srcs: srcs
+          });
         }
-      }
-      console.log(srcs.length);
-      if (typeof callback == 'function') {
-        callback(null, {
-          title: title,
-          snippet: snippet,
-          srcs: srcs
-        });
-      }
-    })
-  })
-    //必须处理error，否则抛出异常
-    .on('error', function (err) {
-      if (typeof callback == 'function') {
-        callback(err);
-      }
+      })
     });
+  });
 }
 
 function _getVideoTitle(url, callback) {
@@ -1031,7 +965,7 @@ function _getVideoTitle(url, callback) {
 }
 
 function getLinkDetail(req, res, next) {
-  console.log('getLinkTitleAndSnippet');
+  console.log('getLinkDetail');
   var url = req.query.url;
 
   _getLinkDetail(url, function (err, results) {

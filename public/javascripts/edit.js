@@ -230,12 +230,19 @@
      * 保存修改验证表格通过后的发送新文本到服务器
      */
     commit: function () {
+      var self = this;
       if (this.widget().find('form').data('submitType') == 'preview') {
         this.widget().find('button[name="preview"]').button('loading');
         this.preview();
       } else {
         this.widget().find('button[name="save"]').button('loading');
-        this.widget().find('button[name="preview"]').attr('disabled', 'disabled');
+        this.widget().find('button[name="preview"]')
+          .button('reset');
+        setTimeout(function () {
+          self.widget().find('button[name="preview"]')
+            .addClass('disabled')
+            .attr('disabled', 'disabled');
+        }, 0);
         this.save();
       }
     },
@@ -270,6 +277,7 @@
           .fail(function (jqXHR) {
             alert(jqXHR.responseText);
             self.widget().find('button[name="save"]').button('reset');
+            self.widget().find('button[name="preview"]').button('reset');
           });
       } else {
         var prevItemType = this.widget().prev().data('type');
@@ -284,6 +292,7 @@
           .fail(function (jqXHR) {
             alert(jqXHR.responseText);
             self.widget().find('button[name="save"]').button('reset');
+            self.widget().find('button[name="preview"]').button('reset');
           });
       }
     },
@@ -1621,7 +1630,8 @@
         var $li = $(this).closest('li');
         $li.find('form')
           .data('submitType', 'preview')
-          .submit();
+          .submit()
+          .data('submitType', null);
       })
       //监听放弃按钮点击事件
       .on('click', '[name="cancel"]', function () {
