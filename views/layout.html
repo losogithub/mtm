@@ -7,7 +7,8 @@
   <title><%= locals.title ? title : '石子儿 - 与世界分享你的总结' %></title>
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="description" content="<%= locals.description || '' %>">
+  <meta name="description" content="<%= locals.description
+    || '把各种各样的信息，自由地搭配组合，总结成一个页面保存起来，展示给感兴趣的人。我们的致力于让任何人都可以设计信息，让其他人和信息相遇、相会。' %>">
   <link type='text/css' rel='stylesheet' href='/stylesheets/bootstrap.css'/>
   <link type='text/css' rel='stylesheet' href='/stylesheets/todc-bootstrap.css'/>
   <link type='text/css' rel="stylesheet" href="/stylesheets/font-awesome.min.css">
@@ -29,93 +30,93 @@
   <% } %>
 </head>
 <body class="<%= !locals.pageType ? '' : pageType %>">
-  <div class='Header'>
-    <div class="Inner" style="position: relative;">
-      <% if (locals.pageType == 'PERSONAL') { %>
-      <nav class="Nav Nav-Left">
-        <table>
-          <td>
-            <ul>
-              <!--<li class="<%= locals.path != '/favourites' ? '' : 'SELECTED' %>"><a href="/favourites">收藏</a></li>-->
-              <li class="<%= locals.path != '/works' ? '' : 'SELECTED' %>"><a href="/works">管理</a></li>
-              <li class="<%= locals.path != '/connections' ? '' : 'SELECTED' %>"><a href="/connections">外部链接</a></li>
-            </ul>
-          </td>
-        </table>
-      </nav>
-      <% } %>
-      <table style="margin: 0 auto;">
+<div class='Header'>
+  <div class="Inner" style="position: relative;">
+    <% if (locals.pageType == 'PERSONAL') { %>
+    <nav class="Nav Nav-Left">
+      <table>
         <td>
-          <!--<a class="Logo" href="/" title='mtm'>mtm</a>-->
-          <a class="Logo" href="/"><img src="/images/logo_full_160x64.png"></a>
-          <% if (locals.pageType == 'SIGNUP') { %>
-          <p style="text-align: center;margin-top: 20px;">与世界分享你的总结</p>
-          <% } %>
-        </td>
-      </table>
-      <nav class="Nav Nav-Right">
-        <% if (locals.pageType != 'INDEX' && locals.pageType != 'SIGNUP') { %>
-        <table>
-        <td>
-        <% } %>
-        <ul class="Nav-Right_Inner">
-          <% if (locals.pageType == 'SIGNUP') { %>
-          <li><a href="/login">登录</a></li>
-          <% } else if (locals.pageType != 'LOGIN') { %>
-          <% if (!locals.username) { %>
-          <li><a href="/topic/create">创建总结</a><span class="VLine VLine-Header"></span></li>
-          <li><a href="/signup">注册</a><span class="VLine VLine-Header"></span></li>
-          <li><a href="/login">登录</a></li>
-          <% } else { %>
-          <li><a href="/works"><img width="20" height="20"
-                                    src="<%= locals.imageUrl ? locals.imageUrl : '/images/no_img/user_80x80.png' %>"
-                                    onerror="mtm.errorImage(this,'user_80x80');"><%= username %></a><span
-            class="VLine VLine-Header"></span></li>
-          <li><a href="/notifications">通知</a><span class="mdHeadUtil01Count"
-                                                   style="display: none;"><span
-            class="mdHeadUtil01CountInner">0</span></span><span class="VLine VLine-Header"></span></li>
-          <li><a href="/topic/create">创建总结</a><span class="VLine VLine-Header"></span></li>
-          <li>
-            <button class="btn btn-link" type="button"><i class="icon-caret-down" title="展开"></i></button>
-          </li>
-          <nav class="Nav Nav-Drop" style="display: none;">
-            <ul>
-              <li><a href="/settings">设置</a></li>
-              <li><a href="/faq?serviceNo=4">帮助</a></li>
-              <li><a href="/logout">登出</a></li>
-            </ul>
-          </nav>
-          <% } %>
-          <% } %>
-        </ul>
-        <% if (locals.pageType != 'INDEX') { %>
-        </td>
-        </table>
-        <% } %>
-      </nav>
-    </div>
-  </div>
-
-  <%- body %>
-
-  <div class='Footer'>
-    <div class='Inner'>
-      <table style="width: 100%;">
-        <td>
-          <ul style="float: left;">
-            <li><a>关于我们</a><span class='VLine VLine-Footer'></span></li>
-            <li><a>使用条规</a><span class='VLine VLine-Footer'></span></li>
+          <ul>
+            <!--<li class="<%= locals.path != '/favourites' ? '' : 'SELECTED' %>"><a href="/favourites">收藏</a></li>-->
+            <li class="<%= locals.path != '/works' ? '' : 'SELECTED' %>"><a href="/works">管理</a></li>
+            <li class="<%= locals.path != '/connections' ? '' : 'SELECTED' %>"><a href="/connections">外部链接</a></li>
           </ul>
         </td>
+      </table>
+    </nav>
+    <% } %>
+    <table style="margin: 0 auto;">
+      <td>
+        <!--<a class="Logo" href="/" title='mtm'>mtm</a>-->
+        <a class="Logo" href="/"><img src="/images/logo_full_160x64.png"></a>
+        <% if (locals.pageType == 'SIGNUP') { %>
+        <p style="text-align: center;margin-top: 20px;">与世界分享你的总结</p>
+        <% } %>
+      </td>
+    </table>
+    <nav class="Nav Nav-Right">
+      <% if (locals.pageType != 'INDEX' && locals.pageType != 'SIGNUP') { %>
+      <table>
         <td>
-          <span class='Copyright'>© shizier</span>
+          <% } %>
+          <ul class="Nav-Right_Inner">
+            <% if (locals.pageType == 'SIGNUP') { %>
+            <li><a href="/login">登录</a></li>
+            <% } else if (locals.pageType != 'LOGIN') { %>
+            <% if (!locals.username) { %>
+            <li><a href="/topic/create">创建总结</a><span class="VLine VLine-Header"></span></li>
+            <li><a href="/signup">注册</a><span class="VLine VLine-Header"></span></li>
+            <li><a href="/login">登录</a></li>
+            <% } else { %>
+            <li><a href="/works"><img width="20" height="20"
+                                      src="<%= locals.imageUrl ? locals.imageUrl : '/images/no_img/user_80x80.png' %>"
+                                      onerror="mtm.errorImage(this,'user_80x80');"><%= username %></a><span
+              class="VLine VLine-Header"></span></li>
+            <li><a href="/notifications">通知</a><span class="mdHeadUtil01Count"
+                                                     style="display: none;"><span
+              class="mdHeadUtil01CountInner">0</span></span><span class="VLine VLine-Header"></span></li>
+            <li><a href="/topic/create">创建总结</a><span class="VLine VLine-Header"></span></li>
+            <li>
+              <button class="btn btn-link" type="button"><i class="icon-caret-down" title="展开"></i></button>
+            </li>
+            <nav class="Nav Nav-Drop" style="display: none;">
+              <ul>
+                <li><a href="/settings">设置</a></li>
+                <li><a href="/faq?serviceNo=4">帮助</a></li>
+                <li><a href="/logout">登出</a></li>
+              </ul>
+            </nav>
+            <% } %>
+            <% } %>
+          </ul>
+          <% if (locals.pageType != 'INDEX') { %>
         </td>
       </table>
-    </div>
+      <% } %>
+    </nav>
   </div>
+</div>
 
-  <% if (locals.pageType != 'LOGIN' && locals.pageType != 'SIGNUP' && locals.pageType != 'ACCOUNT') { %>
-  <% include _loginDialog.html %>
-  <% } %>
+<%- body %>
+
+<div class='Footer'>
+  <div class='Inner'>
+    <table style="width: 100%;">
+      <td>
+        <ul style="float: left;">
+          <li><a>关于我们</a><span class='VLine VLine-Footer'></span></li>
+          <li><a>使用条规</a><span class='VLine VLine-Footer'></span></li>
+        </ul>
+      </td>
+      <td>
+        <span class='Copyright'>© shizier</span>
+      </td>
+    </table>
+  </div>
+</div>
+
+<% if (locals.pageType != 'LOGIN' && locals.pageType != 'SIGNUP' && locals.pageType != 'ACCOUNT') { %>
+<% include _loginDialog.html %>
+<% } %>
 </body>
 </html>
