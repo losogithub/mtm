@@ -237,6 +237,7 @@ function showIndex(req, res, next) {
     res.set('Expire', '-1');
     res.set('Pragma', 'no-cache');
     res.render('topic/index', {
+      title: topicData.title,
       description: topicData.description,
       css: [
         '/stylesheets/topic.css'
