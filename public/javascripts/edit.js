@@ -1752,10 +1752,15 @@
 
   function ___commit() {
     var submitType = $form.data('submitType');
+    if (submitType == 'publish'
+      && !confirm('发布后将无法退回草稿状态，您确定要发布吗？')) {
+      return;
+    }
+
+    var coverUrl = $form.find('button[name="cover"] img').attr('src');
     var $button = $band.find('button[name="' + submitType + '"]');
     $button.button('loading');
 
-    var coverUrl = $form.find('button[name="cover"] img').attr('src')
     $.ajax('/topic/save', {
       type: 'PUT',
       data: {
