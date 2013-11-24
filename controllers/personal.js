@@ -349,6 +349,15 @@ var showAccountModify = function (req, res) {
 
       //get user gender;
       var genderTypeCd = user.gender;
+      //add 2012.11.24 add user year;
+      var birthday = user.birthday;
+      console.log("((((((((((((((((((Birthday)))))))))");
+      console.log(birthday);
+      /*
+      if(user.birthday){
+
+      }*/
+
       var fChecked = '';
       var mChecked = '';
       var uChecked = '';
@@ -369,7 +378,8 @@ var showAccountModify = function (req, res) {
         fChecked: fChecked,
         mChecked: mChecked,
         uChecked: uChecked,
-        auth: auth
+        auth: auth,
+        birthday: birthday
       })
 
     }
@@ -463,7 +473,8 @@ var accountModify = function (req, res) {
         fChecked: fChecked,
         mChecked: mChecked,
         uChecked: uChecked,
-        auth: auth
+        auth: auth,
+        birthday: birthYear
       })
     }
 
@@ -476,7 +487,8 @@ var accountModify = function (req, res) {
         fChecked: fChecked,
         mChecked: mChecked,
         uChecked: uChecked,
-        auth: auth
+        auth: auth,
+        birthday: birthYear
       })
     }
 
@@ -489,7 +501,8 @@ var accountModify = function (req, res) {
         fChecked: fChecked,
         mChecked: mChecked,
         uChecked: uChecked,
-        auth: auth
+        auth: auth,
+        birthday: birthYear
       })
     }
   }
@@ -532,7 +545,8 @@ var accountModify = function (req, res) {
           fChecked: fChecked,
           mChecked: mChecked,
           uChecked: uChecked,
-          auth: auth
+          auth: auth,
+          birthday: birthYear
         })
       }
 
@@ -557,7 +571,8 @@ var accountModify = function (req, res) {
             fChecked: fChecked,
             mChecked: mChecked,
             uChecked: uChecked,
-            auth: auth
+            auth: auth,
+            birthday: birthYear
           })
 
         }
