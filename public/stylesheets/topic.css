@@ -417,6 +417,9 @@
   height: 15px;
   background: #ffffff;
 }
+.SubSeparator hr {
+  display: none;
+}
 .SubAuthor {
   border: 5px solid #e2e5e8;
 }
