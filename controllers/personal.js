@@ -238,15 +238,19 @@ var updateSettings = function (req, res) {
       if (imageUrl) {
         user.url = imageUrl;
       }
-      if (description) {
-        user.description = description;
-      }
+      //here a problem: if user clear his/her description, you also need to update too.
+      user.description = description;
+
+
+      //If the url is not empty, then check it and add http.
       if (connectUrl) {
         if (!utils.REGEXP_PROTOCOL.test(connectUrl)) {
           connectUrl = 'http://' + connectUrl;
         }
-        user.personalSite = connectUrl;
       }
+      user.personalSite = connectUrl;
+
+
 
       //console.log(user);
 
