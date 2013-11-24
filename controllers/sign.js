@@ -432,11 +432,12 @@ var signout = function (req, res, next) {
   res.clearCookie('logintoken');
   //add: 2013.11.24
   //delete user information in res, otherwise, will be displayed.
-  res.username = "";
-  res.imageUrl = "";
-  console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-  console.log(res.username);
-  console.log(res.imageUrl);
+  //note: they are stored in locals under res. not res directly.
+  res.locals.username = "";
+  res.locals.imageUrl = "";
+  //console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+  //console.log(res.username);
+  //console.log(res.imageUrl);
 
   //res.redirect('/home');
   console.log(req.headers.referer);
@@ -448,6 +449,8 @@ var signout = function (req, res, next) {
       break;
     }
   }
+  //console.log("render logout");
+  //console.log(res);
   return res.render('sign/logout', {
     refer: refer
   })
