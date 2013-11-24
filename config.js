@@ -8,7 +8,7 @@
 
 module.exports = {
     debug: true,
-    name: "shizier",
+    name: "石子儿",
     hostname: 'shizier.com',
     host:"shizier.com", //revise later
     port: '3000',
