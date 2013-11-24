@@ -34,7 +34,7 @@
                   <div class="">
                     <p class="TopicTtl"><a href="/topic/<%= hot[i].id %>"><%= hot[i].title %></a></p>
                     <a class="TopicAuthor" href="/u/<%= hot[i].author %>"><%= hot[i].author %></a>
-                    <span class="PVCount"><b><%= hot[i].PVCount %></b>访问量</span>
+                    <span class="PVCount text-muted"><b><%= hot[i].PVCount %></b>访问量</span>
                   </div>
                 </td>
               </table>
@@ -52,8 +52,8 @@
                  <p class="Col03HotContentListItemDes"><%= realGood[i].des %></p>
                </a>
                <div class="Col03HotContentListItemOption">
-                 <p class="Col03HotContentListItemUserName" title="<%= realGood[i].author %>"><%= realGood[i].author%></p>
-                 <p class="Col03HotContentListItemPVCount">
+                 <a class="Col03HotContentListItemUserName" href="/u/<%= realGood[i].author %>"><%= realGood[i].author%></a>
+                 <p class="Col03HotContentListItemPVCount text-muted">
                    <span class="Col03HotContentListItemPVCountNum"><%= realGood[i].PVCount %></span>
                    <span class="Col03HotContentListItemPVCountUnit">访问量</span>
                  </p>
@@ -105,8 +105,8 @@
                 <p class="SubContentTopicListListItemTxtLink">
                   <a href="/topic/<%= newTopics[i].id %>"><%= newTopics[i].title %></a>
                 </p>
-                <p class="SubContentTopicListListItemUserName">
-                  <a href=""><%= newTopics[i].author%></a>
+                <p>
+                  <a class="SubContentTopicListListItemUserName" href="/u/<%= newTopics[i].author %>"><%= newTopics[i].author%></a>
                 </p>
               </div>
             </li>

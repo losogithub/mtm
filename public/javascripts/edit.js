@@ -1870,7 +1870,12 @@
     var $save = $extra.find('button[name="save"]');
     var $cancel = $extra.find('button[name="cancel"]');
     $thumb.click(function () {
-      $extra.toggle('fast');
+      if ($extra.is(':visible')) {
+        $cancel.click();
+      } else {
+        $extra.show('fast');
+        $input.focus();
+      }
     });
     $cancel.click(function () {
       $extra.css('visibility', 'hidden')

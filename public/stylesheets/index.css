@@ -23,8 +23,8 @@ em{font-style:normal}
 .TopicThumb {margin-right: 14px}
 .TopicTtl {display: block;margin-bottom: 5px;word-break: break-all;}
 .TopicTtl a{line-height: 20px;font-size: 16px;color: rgb(0, 0, 0);}
-.TopicAuthor {float: left;color: rgb(155, 155, 155);font-size: 11px;line-height: 1;}
-.PVCount{float: right;color: rgb(155, 155, 155);font-family: Arial,sans-serif;font-size: 11px;line-height: 1;}
+.TopicAuthor {float: left;color: #999 !important;font-size: 11px;line-height: 1;}
+.PVCount{float: right;font-family: Arial,sans-serif;font-size: 11px;line-height: 1;}
 .PVCount b{margin-right: 2px;font-size: 12px;}
 .Col02HotContentListItemDes{margin-top: 4px; color: #aeaeae; font-size: 11px}
 
@@ -34,12 +34,12 @@ em{font-style:normal}
 .Col03HotContentList .col03HotContentListItem{overflow: hidden; margin:13px 0 0;padding:14px 0 0;border-top:1px solid #f2f2f2;vertical-align:top;word-wrap:break-word;word-break:break-all}
 .Col03HotContentList li:first-child {border-top: 0; margin-top: 0; padding-top: 0}
 .Col03HotContentListItemTtl{line-height: 1.35; font-size: 12px}
-.Col03HotContentListItemDes{margin-top: 4px; color: #aeaeae; font-size: 11px}
+.Col03HotContentListItemDes{margin-top: 4px; color: #aaa !important; font-size: 11px}
 .Col03HotContentList .Col03HotContentListItemOption{line-height: 1; margin-top: 6px}
-.Col03HotContentListItemUserName{float: left; color: #9b9b9b; font-size: 11px}
-.Col03HotContentListItemPVCount{float: right; color: #9b9b9b}
+.Col03HotContentListItemUserName{float: left; color: #999 !important; font-size: 11px}
+.Col03HotContentListItemPVCount{float: right;}
 .Col03HotContentListItemPVCountNum{font-family: Arial,sans-serif; font-weight: bold; font-size: 11px; color: #9b9b9b}
-.Col03HotContentListItemPVCountUnit{margin: 0 2px 0 4px; white-space: nowrap; font-family: Arial,sans-serif; font-size: 10px; color: #9b9b9b}
+.Col03HotContentListItemPVCountUnit{white-space: nowrap; font-family: Arial,sans-serif; font-size: 10px; color: #9b9b9b}
 
 
 
@@ -53,8 +53,7 @@ em{font-style:normal}
 .SubContentTopicListListItem{display: table; table-layout: fixed; width: 300px; padding: 0 0 8px 0; word-wrap: break-word; word-break: break-all}
 .SubContentTopicListListItemThumb{width: 45px; vertical-align: top; display: table-cell}
 .SubContentTopicListListItemTxt{line-height: 1.3; padding-left: 7px; font-size: 12px; vertical-align: middle; display: table-cell}
-.SubContentTopicListListItemTxtLink{}
-.SubContentTopicListListItemTxtUserName{margin-top: 2px; color: #9b9b9b; font-size: 10px}
+.SubContentTopicListListItemUserName{margin-top: 2px; color: #999 !important; font-size: 10px}
 
 .GuideBanner{margin-bottom: 5px!important;}
 
