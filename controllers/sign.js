@@ -48,13 +48,14 @@ var signup = function (req, res, next) {
   var nMsg = '';
   var pMsg = '';
   if (name === '') {
-    nMsg = 'Enter your username(ID).';
+    nMsg = '请输入您的注册用户名。';
     nFlag = false;
   }
-  else if (name.length < 5) {
+  //todo: chinese name support.
+  else if (name.length < 2) {
     console.log('name length less than 5');
     nFlag = false;
-    nMsg = 'cannot less than 5.';
+    nMsg = '长度不能少于2.';
   }
   else {
     try {
@@ -68,7 +69,7 @@ var signup = function (req, res, next) {
 
   // 2. check email
   if (email === '') {
-    eMsg = 'Enter your email address.';
+    eMsg = '请输入您的注册邮箱。';
     eFlag = false;
   }
   else {
@@ -83,10 +84,10 @@ var signup = function (req, res, next) {
 
   //3. password
   if (pass === '') {
-    pMsg = 'Enter your password.';
+    pMsg = '请输入您的密码。';
   }
   else if (pass.length < 4) {
-    pMsg = 'Password length shall more than 3.';
+    pMsg = '密码最少不能短于4位。';
   }
 
   if (nFlag) {
@@ -96,7 +97,7 @@ var signup = function (req, res, next) {
       }
       if (user) {
         console.log('user name has been registered!');
-        nMsg = 'This username(ID) has already been registered.';
+        nMsg = '对不起，该用户名已被注册。';
         // because of the callback function asynchronized.
         if (eFlag) {
           User.getUserByMail(email, function (err, user) {
@@ -105,7 +106,7 @@ var signup = function (req, res, next) {
             }
             if (user) {
               console.log('user email has been registered');
-              eMsg = 'The email address you have entered has already been registered.';
+              eMsg = '对不起，该邮箱已被注册。';
             }
 
             console.log("nMsg: %s", nMsg);
@@ -163,7 +164,7 @@ var signup = function (req, res, next) {
             }
             if (user) {
               console.log('user email has been registered');
-              eMsg = 'The email address you have entered has already been registered.';
+              eMsg = '对不起，该邮箱已被注册。';
             }
 
             console.log("nMsg: %s", nMsg);
@@ -219,8 +220,8 @@ var signup = function (req, res, next) {
         return next(err);
       }
       if (user) {
-        console.log('user email has been registered');
-        eMsg = 'The email address you have entered has already been registered.';
+        //console.log('has');
+        eMsg = '对不起，该邮箱已被注册。';
       }
 
       // wrong name, maybe correct email address.
@@ -238,19 +239,7 @@ var signup = function (req, res, next) {
 };
 
 
-/**
- * define some page when login just jump to the home page
- * @type {Array}
- */
-//notJump means not jump back
-//todo: need check
-var notJump = [
-  '/activeAccount', //active page
-  '/resetPassword',     //reset password page, avoid to reset twice
-  '/signup',         //register page
-  '/forgetPassword',    //forgetpassword
-  '/login'
-];
+
 
 /**
  * Show user login page.
@@ -270,10 +259,13 @@ var showLogin = function (req, res) {
   }
   console.log(req.session._loginReferer);
 
-  var refer = req.session._loginReferer;
+  var refer = req.session._loginReferer || 'home';
+
+  /*
   if (req.session && req.session.userId && req.session.userId !== 'undefined') {
     //if logged in, jump to refer page.
     //note: not all page jump to loginReferer.
+    //add: 2013.11.23: it seems impossible for this situation. So I commented it.
     for (var i = 0, len = notJump.length; i !== len; ++i) {
       if (refer.indexOf(notJump[i]) >= 0) {
         refer = 'home';
@@ -283,9 +275,10 @@ var showLogin = function (req, res) {
 
     return res.redirect(refer);
   }
-  else {
+
+  else { */
     return res.render('sign/login');
-  }
+
 };
 
 
@@ -307,10 +300,10 @@ var login = function (req, res, next) {
 
   var errMsg = '';
   if (!loginname) {
-    if (!pass) errMsg = 'Enter your email and password.';
-    else errMsg = 'Enter your email address or username(ID).';
+    if (!pass) errMsg = '请输入您的用户名，密码。';
+    else errMsg = '请输入您的用户名或则邮箱。';
   } else {
-    if (!pass) errMsg = 'Enter your password.';
+    if (!pass) errMsg = '请输入您的密码。';
   }
 
   if (errMsg) {
@@ -329,7 +322,7 @@ var login = function (req, res, next) {
       }
       if (!user) {
         res.render('sign/login', {
-          errMsg: 'The username does not exist.',
+          errMsg: '对不起，该用户名尚未注册。',
           email: loginname
         });
         return;
@@ -346,7 +339,7 @@ var login = function (req, res, next) {
       }
       if (!user) {
         res.render('sign/login', {
-          errMsg: 'The email address does not exist.',
+          errMsg: '对不起，该邮箱尚未注册。',
           email: user.loginName
         });
         return;
@@ -368,7 +361,7 @@ function checkOnlyPassword(emailIDFlag, pass, autoLogin, user, req, res) {
   }
   if (pass !== user.password) {
     res.render('sign/login', {
-      errMsg: 'wrong password.',
+      errMsg: '您输入的密码不正确。',
       email: email
     });
     return;
@@ -403,6 +396,19 @@ function checkOnlyPassword(emailIDFlag, pass, autoLogin, user, req, res) {
 }
 
 
+
+/**
+ * define some page when login just jump to the home page
+ * @type {Array}
+ */
+//notJump means not jump back
+var notJump = [
+  '/works',
+  '/settings',
+  '/account',
+  '/accountModify'
+];
+
 // sign out
 // need test how this function is worked. especially clearCookie, destroy, redirect
 // taozan 9.22.2013
@@ -424,6 +430,14 @@ var signout = function (req, res, next) {
     LoginToken.remove(req.currentUser.email, req.currentUser.series);
   }
   res.clearCookie('logintoken');
+  //add: 2013.11.24
+  //delete user information in res, otherwise, will be displayed.
+  res.username = "";
+  res.imageUrl = "";
+  console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+  console.log(res.username);
+  console.log(res.imageUrl);
+
   //res.redirect('/home');
   console.log(req.headers.referer);
   //need a black list
