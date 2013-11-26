@@ -31,7 +31,7 @@
       if (src.indexOf('?') < 0) {
         return src + '?';
       } else {
-        return src + '#';
+        return src + '&';
       }
     }
   };

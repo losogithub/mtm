@@ -166,17 +166,20 @@
           <div class="Image">
             <i class="icon-camera"></i>
           </div>
-          <div class="Required" style="float: left;"></div>
-          <input name="url" class="AUTO_FOCUS" placeholder="图片URL" type="text">
-          <button name="preview" class="btn btn-small" type="button" disabled='disabled'
-                  data-loading-text="预览 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;">预览
-          </button>
-          <div style="margin-top: 3px;float: left;" class="text-muted">
-            图片如果来自防外链的网站，将无法引用
+          <div style="overflow: hidden;">
+            <div class="Required" style="float: left;"></div>
+            <input name="url" class="AUTO_FOCUS" placeholder="图片URL" type="text">
+            <button name="preview" class="btn btn-small" type="button" disabled='disabled'
+                    data-loading-text="预览 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;">预览
+            </button>
+            <div class="clearfix"></div>
+            <div style="margin-top: 3px;font-size: 10px;" class="text-muted">
+              图片如果来自防外链的网站，将无法引用
+            </div>
+
+            <% include _widget_BtnSet.html %>
+
           </div>
-
-          <% include _widget_BtnSet.html %>
-
         </div>
 
         <div class='Content IMAGE'>
@@ -205,7 +208,7 @@
                     data-loading-text="预览 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;">预览
             </button>
           </div>
-          <div style="margin-top: 3px;" class="text-muted">
+          <div style="margin-top: 3px;font-size: 10px;" class="text-muted">
             目前已支持<a
             target="_blank" class="text-primary" href="http://www.youku.com">优酷</a>、<a
             target="_blank" class="text-primary" href="http://www.tudou.com">土豆</a>、<a
