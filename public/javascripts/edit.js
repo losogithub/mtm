@@ -22,6 +22,7 @@
       $li
         .find('.' + videoType)
         .attr('src', !(temp = $li.find('.' + videoType).attr('src')) ? '' : temp.replace('#vid#', vid))
+        .attr('flashvars', !(temp = $li.find('.' + videoType).attr('flashvars')) ? '' : temp.replace('#vid#', vid))
         .css('display', 'block')
         .end()
         .find('.Thumb')
@@ -1873,14 +1874,22 @@
       if ($extra.is(':visible')) {
         $cancel.click();
       } else {
-        $extra.show('fast');
+        $extra
+          .css({ 'opacity': 0 })
+          .animate({
+            opacity: 0.5,
+            width: 'toggle'
+          }, 100)
+          .fadeTo(100, 1, function () {
+            $extra.css('opacity', 'inherit');
+          });
         $input.focus();
       }
     });
     $cancel.click(function () {
       $extra.css('visibility', 'hidden')
         .hide('fast', function () {
-          $extra.css('visibility', 'visible');
+          $extra.removeAttr('style');
         })
     });
     $save.click(function () {

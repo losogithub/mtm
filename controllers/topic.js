@@ -30,7 +30,7 @@ function showCreate(req, res, next) {
   res.set('Expire', '-1');
   res.set('Pragma', 'no-cache');
   res.render('topic/edit', {
-    title: '创建总结-mtm',
+    title: '创建总结',
     css: [
       '/stylesheets/topic.css',
       '/stylesheets/edit.css'
@@ -165,7 +165,7 @@ function showEdit(req, res, next) {
     res.set('Expire', '-1');
     res.set('Pragma', 'no-cache');
     res.render('topic/edit', {
-      title: '修改总结-mtm',
+      title: '修改总结',
       css: [
         '/stylesheets/topic.css',
         '/stylesheets/edit.css'
@@ -808,7 +808,6 @@ function _getLinkDetail(url, callback) {
         try {
           var html = iconv.decode(buffer, charset);
         } catch (err) {
-          console.error(err.stack);
           callback(err);
           return;
         }
@@ -820,7 +819,6 @@ function _getLinkDetail(url, callback) {
           try {
             var html = iconv.decode(buffer, charset2);
           } catch (err) {
-            console.error(err.stack);
             callback(err);
             return;
           }
@@ -910,8 +908,28 @@ function _getVideoTitle(url, callback) {
       var charset = !(temp = response.headers['content-type']) ? '' :
         !(temp = temp.match(/charset=([^;]+)/i)) ? '' :
           !temp[1] ? '' : temp[1];
+      var buffer = bufferHelper.toBuffer();
       console.log(charset);
-      var html = iconv.decode(bufferHelper.toBuffer(), charset);
+      try {
+        var html = iconv.decode(buffer, charset);
+      } catch (err) {
+        callback(err);
+        return;
+      }
+      var charset2 = (!(temp = html.match(/<meta\s+http-equiv\s*=\s*("|')?Content-Type("|')?\s+content\s*=\s*("|')[^"']*charset\s*=\s*([^"']+)\s*("|')[^>]*>/i)) ? null : temp[4])
+        || (!(temp = html.match(/<meta\s+charset\s*=\s*("|')([^"']+)("|')[^>]*>/i)) ? null : temp[2]);
+      if (charset2 &&
+        (!charset
+          || charset2.toLowerCase() != charset.toLowerCase())) {
+        try {
+          var html = iconv.decode(buffer, charset2);
+        } catch (err) {
+          callback(err);
+          return;
+        }
+      }
+      console.log(charset2);
+
       var urlParts = url.match(utils.REGEXP_URL);
       var domain = !urlParts ? null : urlParts[2];
       var title;
@@ -934,7 +952,6 @@ function _getVideoTitle(url, callback) {
           || (!(temp = html.match(/<span id="vcate_title" class="vcate_title">(.*)<\/span>/)) ? null : !temp[1] ? null : temp[1])
           //plan C
           || (!(temp = html.match(/<title>([^_]+)(.*)<\/title>/)) ? null : !temp[1] ? null : temp[1]);
-        console.log(title);
       } else if (/youku\.com$/i.test(domain)) {
         console.log('youku.com');
         //plan A
@@ -944,12 +961,51 @@ function _getVideoTitle(url, callback) {
         console.log('qq.com');
         //plan A
         //var VIDEO_INFO={vid:"c00139loswm",title:" Ballerina",typeid:22,duration:"177",specialTemp:false}
-        title = !(temp = html.match(/VIDEO_INFO=\{[\s\S]*title\s*:\s*("|')([^"']*)[\s\S]*(?=\})/i)) ? null : !temp[2] ? null : temp[2];
+        title = !(temp = html.match(/VIDEO_INFO=\{[\s\S]*title\s*:\s*("|')([^"'}]*)/i)) ? null : !temp[2] ? null : temp[2];
       } else if (/sina\.com\.cn/i.test(domain)) {
         //plan A
         //$SCOPE['video'] = {......title:'【拍客】险 学生穿梭烂尾无护栏天桥上学',......}
-        title = !(temp = html.match(/\$SCOPE\['video'\]\s*=\s*\{[\s\S]*title\s*:\s*("|')([^"']*)[\s\S]*(?=\})/i)) ? null : !temp[2] ? null : temp[2];
+        title = !(temp = html.match(/\$SCOPE\['video'\]\s*=\s*\{[\s\S]*title\s*:\s*("|')([^"'}]*)/i)) ? null : !temp[2] ? null : temp[2];
+      } else if (/pps\.tv/i.test(domain)) {
+        //plan A
+        //<h1 class="p-title"><a title="最肥小龙女！陈妍希被喊滚出娱乐圈"
+        title = !(temp = html.match(/<h1 class="p-title"><a title="([^"'>]*)/i)) ? null : !temp[1] ? null : temp[1];
+      } else if (/ku6\.com/i.test(domain)) {
+        //plan A
+        //<h1 title="《全民奥斯卡之幕后》第六期：道哥幽默访谈笑点多">
+        title = !(temp = html.match(/<h1 title="([^"'>]*)/i)) ? null : !temp[1] ? null : temp[1];
+      } else if (/56\.com/i.test(domain)) {
+        //plan A
+        //<h1 id="vh_title">爸爸去哪儿20131122海岛特辑 暖男天天荣升好帮手 </h1>
+        //<h1 id="vh_title"><span id="albumTitle">最强cos美少女战士 这样上街不怕被砍吗[搞笑视频 笑死人]</span>
+        title = !(temp = html.match(/<h1 id="vh_title">(<span id="albumTitle">)?([^<>]*)(<\/h1>|<\/span>)/i)) ? null : !temp[2] ? null : temp[2];
+      } else if (/baomihua\.com/i.test(domain)) {
+        //plan A
+        //var temptitle = '权志龙独揽四项大奖演出惊艳全场';
+        title = !(temp = html.match(/var temptitle = '([^']*)';/i)) ? null : !temp[1] ? null : temp[1];
+      } else if (/baomihua\.com/i.test(domain)) {
+        //plan A
+        //var temptitle = '权志龙独揽四项大奖演出惊艳全场';
+        title = !(temp = html.match(/var temptitle = '([^']*)';/i)) ? null : !temp[1] ? null : temp[1];
+      } else if (/ifeng\.com/i.test(domain)) {
+        //plan A
+        //var videoinfo = {......"name": "中方就划设东海防空识别区驳斥美日有关言论",......}
+        title = !(temp = html.match(/var videoinfo = \{[\s\S]*"name": "([^"}]*)/i)) ? null : !temp[1] ? null : temp[1];
+      } else if (/letv\.com/i.test(domain)) {
+        //plan A
+        //var __INFO__={......video : {......title:"唐罗利猜中获双人普吉岛浪漫游—非常了得",//视频名称......}......}
+        title = !(temp = html.match(/var __INFO__=\{[\s\S]*video : \{[\s\S]*\stitle:"([^"}]*)/i)) ? null : !temp[1] ? null : temp[1];
+      } else if (/yinyuetai\.com/i.test(domain)) {
+        //plan A
+        //<meta property="og:title"......content="意外 官方版 - 薛之谦"/>
+        title = !(temp = html.match(/<meta property="og:title"[^<>]*content="([^">]*)/i)) ? null : !temp[1] ? null : temp[1];
+      } else if (/pptv\.com/i.test(domain)) {
+        //plan A
+        //<title>英超-1314赛季-联赛-第12轮-曼城6：0热刺-精华_PPTV网络电视</title>
+        title = !(temp = html.match(/<title>([^<>]*)<\/title>/i)) ? null : !temp[1] ? null : temp[1].substr(0, temp[1].lastIndexOf('_PPTV网络电视'));
       }
+      console.log(html);
+      console.log(title);
       title = sanitize(title).entityDecode();
       title = sanitize(title).trim();
       if (typeof callback == 'function') {
