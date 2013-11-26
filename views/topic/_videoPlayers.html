@@ -103,6 +103,19 @@
        pluginspage="http://get.adobe.com/cn/flashplayer/"
        allowscriptaccess="never">
 </embed>
+<% showThis = item.quote == 'acfun.tv' && item.vid; %>
+<% showOne = showOne || showThis; %>
+<embed style="display: <%= !showThis ? 'none' : 'block' %>;" class="ACFUN" width="480" height="400" wmode="opaque"
+       allowscriptaccess="never" pluginspage="http://get.adobe.com/cn/flashplayer/" allowfullscreen="true"
+       quality="high"
+       src="http://static.acfun.tv/player/ACFlashPlayerX.out.20130927.swf?type=page&amp;url=ac<%= item.vid ? item.vid : '#vid#' %>"
+       type="application/x-shockwave-flash"></embed>
+<% showThis = item.quote == 'bilibili.tv' && item.vid; %>
+<% showOne = showOne || showThis; %>
+<embed style="display: <%= !showThis ? 'none' : 'block' %>;" class="BILIBILI" width="480" height="400" wmode="opaque"
+       allowscriptaccess="never" pluginspage="http://get.adobe.com/cn/flashplayer/" allowfullscreen="true"
+       quality="high" src="http://static.hdslb.com/miniloader.swf?aid=<%= item.vid ? item.vid : '#vid#' %>"
+       type="application/x-shockwave-flash"></embed>
 <div class="Thumb" style="display: <%= showOne ? 'none' : 'block' %>;">
   <i class="icon-film"></i>
 </div>

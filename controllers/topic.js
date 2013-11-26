@@ -1054,6 +1054,21 @@ function _getVideoDetail(url, callback) {
         //http://v.yinyuetai.com/video/818636
         vid = !(temp = url) ? null : !(temp = temp.match(/(\d{6})\/?([?&#]|$)/i)) ? null : !temp[1] ? null : temp[1];
         break;
+      case 'acfun.tv':
+        //plan A
+        //<h1 id="title-article" class="title" title="视频标题">日产GT-R Nismo</h1>
+        title = !(temp = html.match(/<h1 id="title-article" class="title" title="视频标题">([^<>]*)<\/h1>/i)) ? null : !temp[1] ? null : temp[1];
+        //http://www.acfun.tv/a/ac926643(这是文章，要排除)
+        //http://www.acfun.tv/v/ac926028
+        vid = !(temp = url) ? null : !(temp = temp.match(/\/v\/ac(\w+)\/?([?&#]|$)/i)) ? null : !temp[1] ? null : temp[1];
+        break;
+      case 'bilibili.tv':
+        //plan A
+        //<h2 title="想恶搞女友却发现惊人秘密">
+        title = !(temp = html.match(/<h2 title="([^">]*)>/i)) ? null : !temp[1] ? null : temp[1];
+        //http://www.bilibili.tv/video/av805830/index_2.html
+        vid = !(temp = url) ? null : !(temp = temp.match(/\/av(\d+)\/(index_(\d+)\.html)?([?&#]|$)/i)) ? null : temp[1] + '&page=' + (temp[3] || '1');
+        break;
     }
     console.log(title);
     title = sanitize(title).entityDecode();
