@@ -51,8 +51,7 @@
         </button>
 
         <div class="Edit_Top_Thumb_Extra">
-          <input name="url" value="<%= !locals.topic ? '' : !topic.coverUrl ? '' : topic.coverUrl %>"
-                 placeholder="图片URL" type="text">
+          <input name="url" placeholder="图片URL" type="text">
 
           <% include _widget_BtnSet.html %>
 
@@ -172,6 +171,9 @@
           <button name="preview" class="btn btn-small" type="button" disabled='disabled'
                   data-loading-text="预览 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;">预览
           </button>
+          <div style="margin-top: 3px;float: left;" class="text-muted">
+            图片如果来自防外链的网站，将无法引用
+          </div>
 
           <% include _widget_BtnSet.html %>
 

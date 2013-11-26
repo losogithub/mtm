@@ -6,27 +6,34 @@
  * To change this template use File | Settings | File Templates.
  */
 (function () {
+  var utils = {
+    REGEXP_URL: /^(https?|ftp):\/\/(([\w\-]+\.)+[\w\-]+)(:|\/|\?|$)/i,
+    REGEXP_PROTOCOL: /^(https?|ftp):\/\//i,
 
-  var REGEXP_URL = /^(https?|ftp):\/\/(([\w\-]+\.)+[\w\-]+)(:|\/|\?|$)/i;
-  var REGEXP_PROTOCOL = /^(https?|ftp):\/\//i;
+    getImageQuoteDomain: function (quote) {
+      var temp;
+      return !quote ? null : !(temp = quote.match(this.REGEXP_URL)) ? null : temp[2];
+    },
 
-  var utils = {};
+    getVideoQuote: function (url) {
+      var urlParts = !url ? null : url.match(this.REGEXP_URL);
+      var temp;
+      var quote = !urlParts ? null : !urlParts[2] ? null : !(temp = urlParts[2].match(
+        /youku\.com|tudou\.com|iqiyi\.com|pps\.tv|sohu\.com|qq\.com|sina\.com\.cn|ifeng\.com|letv\.com|pptv\.com|ku6\.com|56\.com|baomihua\.com|yinyuetai\.com|acfun\.tv|bilibili\.tv$/i)) ? null : !temp[0] ? null : temp[0].toLowerCase();
 
-  utils.REGEXP_URL = REGEXP_URL;
-  utils.REGEXP_PROTOCOL = REGEXP_PROTOCOL;
+      return quote;
+    },
 
-  utils.getImageQuoteDomain = function (quote) {
-    var temp;
-    return !quote ? null : !(temp = quote.match(utils.REGEXP_URL)) ? null : temp[2];
-  }
-
-  utils.getVideoQuote = function (url) {
-    var urlParts = !url ? null : url.match(REGEXP_URL);
-    var temp;
-    var quote = !urlParts ? null : !urlParts[2] ? null : !(temp = urlParts[2].match(
-      /youku\.com|tudou\.com|iqiyi\.com|pps\.tv|sohu\.com|qq\.com|sina\.com\.cn|ifeng\.com|letv\.com|pptv\.com|ku6\.com|56\.com|baomihua\.com|yinyuetai\.com|acfun\.tv|bilibili\.tv$/i)) ? null : !temp[0] ? null : temp[0].toLowerCase();
-
-    return quote;
+    suffixImage: function (src) {
+      if (!src) {
+        return src;
+      }
+      if (src.indexOf('?') < 0) {
+        return src + '?';
+      } else {
+        return src + '#';
+      }
+    }
   };
 
   if (typeof module !== 'undefined' && module.exports) {

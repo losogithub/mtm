@@ -874,7 +874,7 @@ function _getLinkDetail(url, callback) {
       if (!src) {
         return;
       }
-      src = Url.resolve(url, src);
+      src = utils.suffixImage(Url.resolve(url, src));
       if (!src || obj[src]) {
         return;
       }

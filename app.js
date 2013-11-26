@@ -74,10 +74,10 @@ app.use(function (err, req, res, next) {
   var meta = '[' + new Date() + '] ' + req.url + '\n';
   errorLogFile.write(meta + err.stack + '\n');
   switch (err.message) {
-    case 403:
+    case '403':
       res.send(403, '您无权修改他人的总结');
       break;
-    case 404:
+    case '404':
       res.send(404, '总结不存在');
       break;
     default :

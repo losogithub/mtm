@@ -485,7 +485,7 @@
         .end()
         .find('.Thumb button[name="customize"]')
         .click(function () {
-          _prependSrc(self.widget().find('.Thumb input[type="text"]').val());
+          _prependSrc(mtm.utils.suffixImage(self.widget().find('.Thumb input[type="text"]').val()));
         })
         .end()
         .find('textarea[name="description"]')
@@ -850,7 +850,7 @@
      */
     _getCommitData: function () {
       return {
-        url: this.widget().find('input').val()
+        url: mtm.utils.suffixImage(this.widget().find('input').val())
       }
     }
 
@@ -1893,7 +1893,15 @@
         })
     });
     $save.click(function () {
-      $thumb.find('img').attr('src', $input.val());
+      var $img = $thumb.find('img');
+      var src = $img.attr('src');
+      if (src
+        && src.length
+        && src != '/images/no_img/image_95x95.png'
+        && !confirm('您确定要修改封面吗？')) {
+        return;
+      }
+      $img.attr('src', mtm.utils.suffixImage($input.val()));
       $cancel.click();
     });
   }
