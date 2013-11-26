@@ -17,6 +17,7 @@ module.exports = mongoose.model('VideoItem', {
   update_at: { type: Date, default: Date.now },
 
   url: String,
+  vid: String,
   title: String,
   description: String
 });

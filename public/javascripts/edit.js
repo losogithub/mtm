@@ -10,12 +10,10 @@
 
   var console = window.console || {log: $.noop, error: $.noop};
 
-  function fillVideo($li, url) {
-    var quoteAndVid = mtm.utils.getVideoQuoteAndVid(url);
-    var quote = quoteAndVid.quote;
+  function fillVideo($li, url, vid) {
+    var quote = mtm.utils.getVideoQuote(url);
     var temp;
     var videoType = !quote ? null : !(temp = quote.match(/([^\.]+)\./)) ? null : !temp[1] ? null : temp[1].toUpperCase();
-    var vid = quoteAndVid.vid;
 
     //填充视频
     if (vid) {
@@ -867,6 +865,7 @@
 
     options: {
       url: '',
+      vid: '',
       title: '',
       description: ''
     },
@@ -878,7 +877,7 @@
     __create: function () {
       var self = this;
 
-      fillVideo(this.widget(), this.options.url);
+      fillVideo(this.widget(), this.options.url, this.options.vid);
 
       //填充文本
       this.widget()
@@ -1032,7 +1031,7 @@
         self.createPreviewWidget(data);
       };
 
-      $.getJSON('/topic/video_title', { url: url }, callback)
+      $.getJSON('/topic/video_detail', { url: url }, callback)
         .done(function (data) {
           if (self.options.disabled) {
             return;
@@ -1527,10 +1526,11 @@
       case 'VIDEO':
         //填充视频信息
         var url = data.url;
+        var vid = data.vid;
         var title = data.title;
         var description = data.description;
 
-        fillVideo($item, url);
+        fillVideo($item, url, vid);
 
         $item
           .find('.VIDEO_URL')

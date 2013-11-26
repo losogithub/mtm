@@ -26,7 +26,7 @@ module.exports = function (app) {
   app.get('/topic/create', auth.loadUser, auth.loginRequired, topic.showCreate);
   app.get('/topic/contents', auth.loadUser, auth.userRequired, topic.getContents);
   app.get('/topic/link_detail', topic.getLinkDetail);
-  app.get('/topic/video_title', topic.getVideoTitle);
+  app.get('/topic/video_detail', topic.getVideoDetail);
   app.get('/topic/:topicId', auth.loadUser, topic.showIndex);
   app.get('/topic/:topicId/edit', auth.loadUser, auth.loginRequired, topic.showEdit);
   app.post('/topic/create', auth.loadUser, auth.userRequired, topic.createTopic);
