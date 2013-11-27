@@ -43,7 +43,15 @@
   box-shadow: 0 0 0 3px #f8f8f8;
 }
 .WidgetItemList > li > div > :first-child {
-  overflow: hidden;
+  *zoom: 1;
+}
+.WidgetItemList > li > div > :first-child:before,
+.WidgetItemList > li > div > :first-child:after {
+  display: table;
+  content: " ";
+}
+.WidgetItemList > li > div > :first-child:after {
+  clear: both;
 }
 .WidgetItemList > li:last-child > div {
   margin-bottom: 0;

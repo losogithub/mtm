@@ -9,7 +9,7 @@
        width="480"
        height="400"
        align="center"
-       border="0">
+       border="0"></embed>
 <% showThis = item.quote == 'tudou.com' && item.vid; %>
 <% showOne = showOne || showThis; %>
 <embed style="display: <%= !showThis ? 'none' : 'block' %>;"
@@ -19,7 +19,27 @@
        allowfullscreen="true"
        wmode="opaque"
        width="480"
-       height="400">
+       height="400"></embed>
+<% showThis = item.quote == 'iqiyi.com' && item.vid; %>
+<% showOne = showOne || showThis; %>
+<embed style="display: <%= !showThis ? 'none' : 'block' %>;" class="IQIYI" height="400" allowscriptaccess="never"
+       pluginspage="http://get.adobe.com/cn/flashplayer/" width="480" allowfullscreen="true" quality="high"
+       src="http://www.iqiyi.com/player/20131119102234/Player.swf?vid=<%= item.vid ? item.vid : '#vid#' %>"
+       type="application/x-shockwave-flash" wmode="opaque"></embed>
+<% showThis = item.quote == 'pps.tv' && item.vid; %>
+<% showOne = showOne || showThis; %>
+<embed style="display: <%= !showThis ? 'none' : 'block' %>;" class="PPS" height="400" width="480"
+       id="video_player_other" allowscriptaccess="always" pluginspage="http://get.adobe.com/cn/flashplayer/"
+       allowfullscreen="true" quality="hight"
+       src="http://player.pps.tv/player/sid/<%= item.vid ? item.vid : '#vid#' %>/v.swf"
+       type="application/x-shockwave-flash" wmode="Opaque"></embed>
+<% showThis = item.quote == 'sohu.com' && item.vid; %>
+<% showOne = showOne || showThis; %>
+<embed style="display: <%= !showThis ? 'none' : 'block' %>;" class="SOHU" width="480" height="400" wmode="opaque"
+       allowfullscreen="true" allowscriptaccess="always" quality="high"
+       src="http://share.vrs.sohu.com/<%= item.vid ? item.vid : '#vid#' %>/v.swf&amp;topBar=1&amp;autoplay=false"
+       type="application/x-shockwave-flash">
+</embed>
 <% showThis = item.quote == 'qq.com' && item.vid; %>
 <% showOne = showOne || showThis; %>
 <embed style="display: <%= !showThis ? 'none' : 'block' %>;" class="QQ"
@@ -29,11 +49,73 @@
        type="application/x-shockwave-flash"></embed>
 <% showThis = item.quote == 'sina.com.cn' && item.vid; %>
 <% showOne = showOne || showThis; %>
-<embed style="display: <%= !showThis ? 'none' : 'block' %>;" class="SINA" pluginspage="http://www.macromedia.com/go/getflashplayer"
+<embed style="display: <%= !showThis ? 'none' : 'block' %>;" class="SINA"
+       pluginspage="http://www.macromedia.com/go/getflashplayer"
        src="http://you.video.sina.com.cn/api/sinawebApi/outplayrefer.php/vid=<%= item.vid ? item.vid : '#vid#' %>/s.swf"
+       flashvars="autoPlay=0"
        wmode="opaque"
        type="application/x-shockwave-flash" name="ssss" allowFullScreen="true" allowScriptAccess="always"
        width="480" height="370"></embed>
+<% showThis = item.quote == 'ifeng.com' && item.vid; %>
+<% showOne = showOne || showThis; %>
+<embed style="display: <%= !showThis ? 'none' : 'block' %>;" class="IFENG"
+       src="http://v.ifeng.com/include/exterior.swf?guid=<%= item.vid ? item.vid : '#vid#' %>&pageurl=http://www.ifeng.com&fromweb=other&AutoPlay=false"
+       quality="high" allowScriptAccess="always" pluginspage="http://www.macromedia.com/go/getflashplayer"
+       type="application/x-shockwave-flash" width="480" height="400" wmode="opaque"></embed>
+<% showThis = item.quote == 'letv.com' && item.vid; %>
+<% showOne = showOne || showThis; %>
+<embed style="display: <%= !showThis ? 'none' : 'block' %>;" class="LETV"
+       src="http://i7.imgs.letv.com/player/swfPlayer.swf?autoplay=0" flashvars="id=<%= item.vid ? item.vid : '#vid#' %>"
+       width="480" height="400"
+       allowFullScreen="true" type="application/x-shockwave-flash" wmode="opaque"></embed>
+<% showThis = item.quote == 'pptv.com' && item.vid; %>
+<% showOne = showOne || showThis; %>
+<embed style="display: <%= !showThis ? 'none' : 'block' %>;" class="PPTV" width="480" height="400" wmode="opaque"
+       type="application/x-shockwave-flash" flashvars="playMovie=true&autostart=false"
+       src="http://player.pptv.com/v/<%= item.vid ? item.vid : '#vid#' %>.swf" quality="high" allowfullscreen="true"
+       pluginspage="http://get.adobe.com/cn/flashplayer/" allowscriptaccess="never">
+</embed>
+<% showThis = item.quote == 'ku6.com' && item.vid; %>
+<% showOne = showOne || showThis; %>
+<embed style="display: <%= !showThis ? 'none' : 'block' %>;" class="KU6"
+       src="http://player.ku6.com/refer/<%= item.vid ? item.vid : '#vid#' %>/v.swf" width="480" height="400"
+       allowscriptaccess="always" allowfullscreen="true" type="application/x-shockwave-flash" flashvars="from=ku6"
+       wmode="Opaque"></embed>
+<% showThis = item.quote == '56.com' && item.vid; %>
+<% showOne = showOne || showThis; %>
+<embed style="display: <%= !showThis ? 'none' : 'block' %>;" class="56"
+       src="http://player.56.com/v_<%= item.vid ? item.vid : '#vid#' %>.swf"
+       type="application/x-shockwave-flash" width="480" height="405" allowfullscreen="true" allownetworking="all"
+       allowscriptaccess="always" wmode="Opaque"></embed>
+<% showThis = item.quote == 'baomihua.com' && item.vid; %>
+<% showOne = showOne || showThis; %>
+<embed style="display: <%= !showThis ? 'none' : 'block' %>;" class="BAOMIHUA" width="480" height="400"
+       flashvars="flvid=<%= item.vid ? item.vid : '#vid#' %>" wmode="opaque" allowscriptaccess="always"
+       allowfullscreen="true" quality="high" bgcolor="#000000" name="playerId" id="playerId"
+       src="http://resources.baomihua.com/swf/pomoho_player_640.swf" type="application/x-shockwave-flash">
+</embed>
+<% showThis = item.quote == 'yinyuetai.com' && item.vid; %>
+<% showOne = showOne || showThis; %>
+<embed style="display: <%= !showThis ? 'none' : 'block' %>;" class="YINYUETAI" width="480" height="400" wmode="opaque"
+       type="application/x-shockwave-flash"
+       src="http://player.yinyuetai.com/video/swf/<%= item.vid ? item.vid : '#vid#' %>/1/a.swf" quality="high"
+       allowfullscreen="true" flashvars="playMovie=true&autostart=false"
+       pluginspage="http://get.adobe.com/cn/flashplayer/"
+       allowscriptaccess="never">
+</embed>
+<% showThis = item.quote == 'acfun.tv' && item.vid; %>
+<% showOne = showOne || showThis; %>
+<embed style="display: <%= !showThis ? 'none' : 'block' %>;" class="ACFUN" width="480" height="400" wmode="opaque"
+       allowscriptaccess="never" pluginspage="http://get.adobe.com/cn/flashplayer/" allowfullscreen="true"
+       quality="high"
+       src="http://static.acfun.tv/player/ACFlashPlayerX.out.20130927.swf?type=page&amp;url=ac<%= item.vid ? item.vid : '#vid#' %>"
+       type="application/x-shockwave-flash"></embed>
+<% showThis = item.quote == 'bilibili.tv' && item.vid; %>
+<% showOne = showOne || showThis; %>
+<embed style="display: <%= !showThis ? 'none' : 'block' %>;" class="BILIBILI" width="480" height="400" wmode="opaque"
+       allowscriptaccess="never" pluginspage="http://get.adobe.com/cn/flashplayer/" allowfullscreen="true"
+       quality="high" src="http://static.hdslb.com/miniloader.swf?aid=<%= item.vid ? item.vid : '#vid#' %>"
+       type="application/x-shockwave-flash"></embed>
 <div class="Thumb" style="display: <%= showOne ? 'none' : 'block' %>;">
   <i class="icon-film"></i>
 </div>

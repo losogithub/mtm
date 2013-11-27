@@ -51,8 +51,7 @@
         </button>
 
         <div class="Edit_Top_Thumb_Extra">
-          <input name="url" value="<%= !locals.topic ? '' : !topic.coverUrl ? '' : topic.coverUrl %>"
-                 placeholder="图片URL" type="text">
+          <input name="url" placeholder="图片URL" type="text">
 
           <% include _widget_BtnSet.html %>
 
@@ -167,14 +166,20 @@
           <div class="Image">
             <i class="icon-camera"></i>
           </div>
-          <div class="Required" style="float: left;"></div>
-          <input name="url" class="AUTO_FOCUS" placeholder="图片URL" type="text">
-          <button name="preview" class="btn btn-small" type="button" disabled='disabled'
-                  data-loading-text="预览 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;">预览
-          </button>
+          <div style="overflow: hidden;">
+            <div class="Required" style="float: left;"></div>
+            <input name="url" class="AUTO_FOCUS" placeholder="图片URL" type="text">
+            <button name="preview" class="btn btn-small" type="button" disabled='disabled'
+                    data-loading-text="预览 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;">预览
+            </button>
+            <div class="clearfix"></div>
+            <div style="margin-top: 3px;font-size: 10px;" class="text-muted">
+              图片如果来自防外链的网站，将无法引用
+            </div>
 
-          <% include _widget_BtnSet.html %>
+            <% include _widget_BtnSet.html %>
 
+          </div>
         </div>
 
         <div class='Content IMAGE'>
@@ -196,12 +201,31 @@
           <div class="Thumb">
             <i class="icon-film"></i>
           </div>
-          <div style="margin-top: 7px;">
+          <div style="margin-top: 7px;" class="clearfix">
             <div class="Required"></div>
             <input name="url" class="AUTO_FOCUS" placeholder="视频URL" type="text">
             <button name="preview" class="btn btn-small" type="button" disabled='disabled'
                     data-loading-text="预览 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;">预览
             </button>
+          </div>
+          <div style="margin-top: 3px;font-size: 10px;" class="text-muted">
+            目前已支持<a
+            target="_blank" class="text-primary" href="http://www.youku.com">优酷</a>、<a
+            target="_blank" class="text-primary" href="http://www.tudou.com">土豆</a>、<a
+            target="_blank" class="text-primary" href="http://www.iqiyi.com/">爱奇艺</a>、<a
+            target="_blank" class="text-primary" href="http://www.pps.tv/">PPS</a>、<a
+            target="_blank" class="text-primary" href="http://tv.sohu.com/">搜狐视频</a>、<a
+            target="_blank" class="text-primary" href="http://v.qq.com/">腾讯视频</a>、<a
+            target="_blank" class="text-primary" href="http://video.sina.com.cn">新浪视频</a>、<a
+            target="_blank" class="text-primary" href="http://v.ifeng.com/">凤凰视频</a>、<a
+            target="_blank" class="text-primary" href="http://www.letv.com/">乐视</a>、<a
+            target="_blank" class="text-primary" href="http://www.pptv.com/">PPTV</a>、<a
+            target="_blank" class="text-primary" href="http://www.ku6.com/">酷6</a>、<a
+            target="_blank" class="text-primary" href="http://www.56.com/">56</a>、<a
+            target="_blank" class="text-primary" href="http://www.baomihua.com/">爆米花</a>、<a
+            target="_blank" class="text-primary" href="http://www.yinyuetai.com/">音悦台</a>、<a
+            target="_blank" class="text-primary" href="http://www.acfun.tv/">AcFun</a>、<a
+            target="_blank" class="text-primary" href="http://www.bilibili.tv/">bilibili</a>等视频网站的视频播放页链接。
           </div>
 
           <% include _widget_BtnSet.html %>

@@ -10,18 +10,17 @@
 
   var console = window.console || {log: $.noop, error: $.noop};
 
-  function fillVideo($li, url) {
-    var quoteAndVid = mtm.utils.getVideoQuoteAndVid(url);
-    var quote = quoteAndVid.quote;
+  function fillVideo($li, url, vid) {
+    var quote = mtm.utils.getVideoQuote(url);
     var temp;
     var videoType = !quote ? null : !(temp = quote.match(/([^\.]+)\./)) ? null : !temp[1] ? null : temp[1].toUpperCase();
-    var vid = quoteAndVid.vid;
 
     //填充视频
     if (vid) {
       $li
         .find('.' + videoType)
         .attr('src', !(temp = $li.find('.' + videoType).attr('src')) ? '' : temp.replace('#vid#', vid))
+        .attr('flashvars', !(temp = $li.find('.' + videoType).attr('flashvars')) ? '' : temp.replace('#vid#', vid))
         .css('display', 'block')
         .end()
         .find('.Thumb')
@@ -486,7 +485,7 @@
         .end()
         .find('.Thumb button[name="customize"]')
         .click(function () {
-          _prependSrc(self.widget().find('.Thumb input[type="text"]').val());
+          _prependSrc(mtm.utils.suffixImage(self.widget().find('.Thumb input[type="text"]').val()));
         })
         .end()
         .find('textarea[name="description"]')
@@ -851,7 +850,7 @@
      */
     _getCommitData: function () {
       return {
-        url: this.widget().find('input').val()
+        url: mtm.utils.suffixImage(this.widget().find('input').val())
       }
     }
 
@@ -866,6 +865,7 @@
 
     options: {
       url: '',
+      vid: '',
       title: '',
       description: ''
     },
@@ -877,7 +877,7 @@
     __create: function () {
       var self = this;
 
-      fillVideo(this.widget(), this.options.url);
+      fillVideo(this.widget(), this.options.url, this.options.vid);
 
       //填充文本
       this.widget()
@@ -1031,7 +1031,7 @@
         self.createPreviewWidget(data);
       };
 
-      $.getJSON('/topic/video_title', { url: url }, callback)
+      $.getJSON('/topic/video_detail', { url: url }, callback)
         .done(function (data) {
           if (self.options.disabled) {
             return;
@@ -1526,10 +1526,11 @@
       case 'VIDEO':
         //填充视频信息
         var url = data.url;
+        var vid = data.vid;
         var title = data.title;
         var description = data.description;
 
-        fillVideo($item, url);
+        fillVideo($item, url, vid);
 
         $item
           .find('.VIDEO_URL')
@@ -1873,18 +1874,34 @@
       if ($extra.is(':visible')) {
         $cancel.click();
       } else {
-        $extra.show('fast');
+        $extra
+          .css({ 'opacity': 0 })
+          .animate({
+            opacity: 0.5,
+            width: 'toggle'
+          }, 100)
+          .fadeTo(100, 1, function () {
+            $extra.css('opacity', 'inherit');
+          });
         $input.focus();
       }
     });
     $cancel.click(function () {
       $extra.css('visibility', 'hidden')
         .hide('fast', function () {
-          $extra.css('visibility', 'visible');
+          $extra.removeAttr('style');
         })
     });
     $save.click(function () {
-      $thumb.find('img').attr('src', $input.val());
+      var $img = $thumb.find('img');
+      var src = $img.attr('src');
+      if (src
+        && src.length
+        && src != '/images/no_img/image_95x95.png'
+        && !confirm('您确定要修改封面吗？')) {
+        return;
+      }
+      $img.attr('src', mtm.utils.suffixImage($input.val()));
       $cancel.click();
     });
   }

@@ -30,7 +30,7 @@ function showCreate(req, res, next) {
   res.set('Expire', '-1');
   res.set('Pragma', 'no-cache');
   res.render('topic/edit', {
-    title: '创建总结-mtm',
+    title: '创建总结',
     css: [
       '/stylesheets/topic.css',
       '/stylesheets/edit.css'
@@ -165,7 +165,7 @@ function showEdit(req, res, next) {
     res.set('Expire', '-1');
     res.set('Pragma', 'no-cache');
     res.render('topic/edit', {
-      title: '修改总结-mtm',
+      title: '修改总结',
       css: [
         '/stylesheets/topic.css',
         '/stylesheets/edit.css'
@@ -422,13 +422,13 @@ function _getItemData(item) {
       }
       break;
     case 'VIDEO':
-      var quoteAndVid = utils.getVideoQuoteAndVid(item.url);
+      var quote = utils.getVideoQuote(item.url);
       itemData = {
         itemId: item._id,
         type: item.type,
         url: item.url,
-        quote: quoteAndVid.quote,
-        vid: quoteAndVid.vid,
+        quote: quote,
+        vid: item.vid,
         title: item.title,
         description: item.description
       }
@@ -557,9 +557,10 @@ function createItem(req, res, next) {
           callback();
         });
       } else if (data.type == 'VIDEO_CREATE') {
-        _getVideoTitle(data.url, function (err, title) {
+        _getVideoDetail(data.url, function (err, results) {
           if (err) return callback(err);
-          data.title = title;
+          data.vid = results.vid;
+          data.title = results.title;
           callback();
         });
       } else {
@@ -784,14 +785,14 @@ function saveTopic(req, res, next) {
   });
 }
 
-function _getLinkDetail(url, callback) {
+function _getHtml(url, callback) {
   console.log(url);
   var d = domain.create();
   d.on('error', function (err) {
-      if (typeof callback == 'function') {
-        callback(err);
-      }
-    });
+    if (typeof callback == 'function') {
+      callback(err);
+    }
+  });
   d.run(function () {
     http.get(url, function (response) {
       var bufferHelper = new BufferHelper();
@@ -808,7 +809,6 @@ function _getLinkDetail(url, callback) {
         try {
           var html = iconv.decode(buffer, charset);
         } catch (err) {
-          console.error(err.stack);
           callback(err);
           return;
         }
@@ -820,104 +820,121 @@ function _getLinkDetail(url, callback) {
           try {
             var html = iconv.decode(buffer, charset2);
           } catch (err) {
-            console.error(err.stack);
             callback(err);
             return;
           }
         }
         console.log(charset2);
 
-        var title = !(temp = html.match(/<title[^>]*>([^<]*)<\/title[^>]*>/i)) ? null : temp[1];
-        title = sanitize(title).entityDecode();
-        title = sanitize(title).trim();
-
-        temp = !(temp = html.match(/<meta([^>]*)name\s*=\s*("|')description("|')([^>]*)>/i)) ? null : temp[1] + temp[4];
-        var snippet = (!temp ? null : !(temp = temp.match(/content\s*=\s*("|')([^"']*)("|')/i)) ? null : temp[2].trim())
-          || html.substr((temp = html.indexOf('<body')) < 0 ? 0 : temp)
-          .replace(/<script((?!<\/script>)[\s\S])*<\/script>/gi, ' ')
-          .replace(/<style((?!<\/style>)[\s\S])*<\/style>/gi, ' ')
-          .replace(/<[^>]*>/g, ' ')
-          .replace(/\s+/g, ' ')
-          .trim();
-        if (snippet.length > 200) {
-          snippet = snippet.substr(0, 199) + '…';
-        }
-        snippet = sanitize(snippet).entityDecode();
-        snippet = sanitize(snippet).trim();
-
-        var imgs = !html ? null : html.match(/<img[^>]*>/gi);
-        console.log(imgs ? imgs.length : 0);
-        var thumb;
-        var img;
-        var width;
-        var height;
-        var srcs = [];
-        var obj = {};
-        var addToSrcs = function (img) {
-          var src = !img ? null : !(temp = img.match(/\ssrc\s*=\s*("|')([^"']+)("|')/i)) ? null : temp[2];
-          if (!src) {
-            return;
-          }
-          src = Url.resolve(url, src);
-          if (!src || obj[src]) {
-            return;
-          }
-          console.log('++' + src);
-          srcs.push(src);
-          obj[src] = true;
-        };
-        for (var i in imgs) {
-          img = imgs[i];
-          width = !img ? null : !(temp = img.match(/\swidth\s*=\s*("|')([\d]+)("|')/i)) ? null : temp[2];
-          height = !img ? null : !(temp = img.match(/\sheight\s*=\s*("|')([\d]+)("|')/i)) ? null : temp[2];
-          if (width || height) {
-            if (width >= 150 && height >= 70) {
-              console.log('++' + img);
-              addToSrcs(img);
-            } else {
-              console.log('--' + img);
-            }
-            continue;
-          }
-          thumb = !img ? null : !(temp = img.match(/\ssrc\s*=\s*("|')[^"']+\.jpg("|')/i)) ? null : temp[0];
-          if (thumb) {
-            console.log('++' + img);
-            addToSrcs(img);
-            continue;
-          }
-        }
-        console.log(srcs.length);
-        if (typeof callback == 'function') {
-          callback(null, {
-            title: title,
-            snippet: snippet,
-            srcs: srcs
-          });
+        if (typeof callback === 'function') {
+          callback(null, html);
         }
       })
     });
   });
 }
 
-function _getVideoTitle(url, callback) {
-  http.get(url, function (response) {
-    var bufferHelper = new BufferHelper();
-    response.on('data', function (chunk) {
-      bufferHelper.concat(chunk);
-    });
-    response.on('end', function () {
-      var temp;
-      var charset = !(temp = response.headers['content-type']) ? '' :
-        !(temp = temp.match(/charset=([^;]+)/i)) ? '' :
-          !temp[1] ? '' : temp[1];
-      console.log(charset);
-      var html = iconv.decode(bufferHelper.toBuffer(), charset);
-      var urlParts = url.match(utils.REGEXP_URL);
-      var domain = !urlParts ? null : urlParts[2];
-      var title;
-      console.log(domain);
-      if (/tudou\.com$/i.test(domain)) {
-        console.log('tudou.com');
+function _getLinkDetail(url, callback) {
+  _getHtml(url, function (err, html) {
+    if (err) {
+      if (typeof callback === 'function') {
+        callback(err);
+      }
+      return;
+    }
+    var temp;
+    var title = !(temp = html.match(/<title[^>]*>([^<]*)<\/title[^>]*>/i)) ? null : temp[1];
+    title = sanitize(title).entityDecode();
+    title = sanitize(title).trim();
+
+    temp = !(temp = html.match(/<meta([^>]*)name\s*=\s*("|')description("|')([^>]*)>/i)) ? null : temp[1] + temp[4];
+    var snippet = (!temp ? null : !(temp = temp.match(/content\s*=\s*("|')([^"']*)("|')/i)) ? null : temp[2].trim())
+      || html.substr((temp = html.indexOf('<body')) < 0 ? 0 : temp)
+      .replace(/<script((?!<\/script>)[\s\S])*<\/script>/gi, ' ')
+      .replace(/<style((?!<\/style>)[\s\S])*<\/style>/gi, ' ')
+      .replace(/<[^>]*>/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+    if (snippet.length > 200) {
+      snippet = snippet.substr(0, 199) + '…';
+    }
+    snippet = sanitize(snippet).entityDecode();
+    snippet = sanitize(snippet).trim();
+
+    var imgs = !html ? null : html.match(/<img[^>]*>/gi);
+    console.log(imgs ? imgs.length : 0);
+    var thumb;
+    var img;
+    var width;
+    var height;
+    var srcs = [];
+    var obj = {};
+    var addToSrcs = function (img) {
+      var src = !img ? null : !(temp = img.match(/\ssrc\s*=\s*("|')([^"']+)("|')/i)) ? null : temp[2];
+      if (!src) {
+        return;
+      }
+      src = utils.suffixImage(Url.resolve(url, src));
+      if (!src || obj[src]) {
+        return;
+      }
+      console.log('++' + src);
+      srcs.push(src);
+      obj[src] = true;
+    };
+    for (var i in imgs) {
+      img = imgs[i];
+      width = !img ? null : !(temp = img.match(/\swidth\s*=\s*("|')([\d]+)("|')/i)) ? null : temp[2];
+      height = !img ? null : !(temp = img.match(/\sheight\s*=\s*("|')([\d]+)("|')/i)) ? null : temp[2];
+      if (width || height) {
+        if (width >= 150 && height >= 70) {
+          console.log('++' + img);
+          addToSrcs(img);
+        } else {
+          console.log('--' + img);
+        }
+        continue;
+      }
+      thumb = !img ? null : !(temp = img.match(/\ssrc\s*=\s*("|')[^"']+\.jpg("|')/i)) ? null : temp[0];
+      if (thumb) {
+        console.log('++' + img);
+        addToSrcs(img);
+        continue;
+      }
+    }
+    console.log(srcs.length);
+    if (typeof callback == 'function') {
+      callback(null, {
+        title: title,
+        snippet: snippet,
+        srcs: srcs
+      });
+    }
+  });
+}
+
+function _getVideoDetail(url, callback) {
+  _getHtml(url, function (err, html) {
+    if (err) {
+      if (typeof callback === 'function') {
+        callback(err);
+      }
+      return;
+    }
+    var temp;
+    var title;
+    var quote = utils.getVideoQuote(url);
+    var vid;
+    console.log(quote);
+    switch (quote) {
+      case 'youku.com':
+        //plan A
+        //&tt=第二十一回&nbsp;惊见摘头鬼 坑亲王谢幕&pu=
+        title = !(temp = html.match(/&tt=(((?!&pu).)*)/i)) ? null : !temp[1] ? null : temp[1];
+        //http://v.youku.com/v_show/id_XNjEyOTU3NjE2.html?f=20383529&ev=1
+        vid = !(temp = url) ? null : !(temp = temp.match(/id_([\w\-]{13})\.html\/?([?&#]|$)/i)) ? null : !temp[1] ? null : temp[1];
+        break;
+      case 'tudou.com':
         //plan A
         //,kw: '爆笑恶搞淮秀帮-超强阵容配音坑爹的谣言时代（淮秀帮 出品）-2bzhan.cc'
         //,kw:"校长 开房找我啊"
@@ -934,35 +951,135 @@ function _getVideoTitle(url, callback) {
           || (!(temp = html.match(/<span id="vcate_title" class="vcate_title">(.*)<\/span>/)) ? null : !temp[1] ? null : temp[1])
           //plan C
           || (!(temp = html.match(/<title>([^_]+)(.*)<\/title>/)) ? null : !temp[1] ? null : temp[1]);
-        console.log(title);
-      } else if (/youku\.com$/i.test(domain)) {
-        console.log('youku.com');
+        //http://www.tudou.com/listplay/pKzzr-WLvwk/snBiS0Y74PQ.html
+        //http://www.tudou.com/programs/view/TtwcrB0saxg
+        vid = !(temp = url) ? null : !(temp = temp.match(/([\w\-]{11})(\.html)?\/?([?&#]|$)/i)) ? null : !temp[1] ? null : temp[1];
+        break;
+      case 'iqiyi.com':
+        //专题性质的，即a_的暂不支持，同weibo，无技术障碍
         //plan A
-        //&tt=第二十一回&nbsp;惊见摘头鬼 坑亲王谢幕&pu=
-        title = !(temp = html.match(/&tt=(((?!&pu).)*)/i)) ? null : !temp[1] ? null : temp[1];
-      } else if (/qq\.com$/i.test(domain)) {
-        console.log('qq.com');
+        //<em data-widget-crumbs-elem="name" data-widget-crumbs-name-max="56">恐怖杀手：诡异人体寄生虫-热纪录</em>
+        title = !(temp = html.match(/<em data-widget-crumbs-elem="name" data-widget-crumbs-name-max="56">([^<>]*)<\/em>/i)) ? null : !temp[1] ? null : temp[1];
+        //http://www.iqiyi.com/v_19rrhfcr84.html
+        //<div id="flashbox"......data-player-videoid="a97be8194627fef129d23cd05b834f79"......>
+        vid = !(temp = html.match(/<div[^<>]*\sid="flashbox"[^<>]*\sdata-player-videoid="([^">]*)/i)) ? null : !temp[1] ? null : temp[1];
+        break;
+      case 'pps.tv':
+        //plan A
+        //<h1 class="p-title"><a title="最肥小龙女！陈妍希被喊滚出娱乐圈"
+        title = !(temp = html.match(/<h1 class="p-title"><a title="([^"'>]*)/i)) ? null : !temp[1] ? null : temp[1];
+        //http://v.pps.tv/play_38J3NV.html
+        vid = !(temp = url) ? null : !(temp = temp.match(/(\w{6})\.html\/?([?&#]|$)/i)) ? null : !temp[1] ? null : temp[1];
+        break;
+      case 'sohu.com':
+        //plan A
+        //<h2>\s20130712 第一期 姚贝娜《也许明天》\s</h2>
+        title = !(temp = html.match(/<h2>\s*([^<>]*)\s*<\/h2>/i)) ? null : !temp[1] ? null : temp[1];
+        //http://tv.sohu.com/20130712/n381487508.shtml
+        //<script type="text/javascript">......var vid="1237900";......</script>
+        vid = !(temp = html.match(/<script type="text\/javascript">[^<>]*\svar vid="([^"<>;]+)";[^<>]*<\/script>/i)) ? null : !temp[1] ? null : temp[1];
+        break;
+      case 'qq.com':
         //plan A
         //var VIDEO_INFO={vid:"c00139loswm",title:" Ballerina",typeid:22,duration:"177",specialTemp:false}
-        title = !(temp = html.match(/VIDEO_INFO=\{[\s\S]*title\s*:\s*("|')([^"']*)[\s\S]*(?=\})/i)) ? null : !temp[2] ? null : temp[2];
-      } else if (/sina\.com\.cn/i.test(domain)) {
+        title = !(temp = html.match(/VIDEO_INFO=\{[\s\S]*title\s*:\s*("|')([^"'}]*)/i)) ? null : !temp[2] ? null : temp[2];
+        //http://v.qq.com/page/c/w/m/c00139loswm.html
+        //http://v.qq.com/cover/r/r0yx3vkrlz4rj85.html?vid=i00135hjy5k
+        vid = (!(temp = url) ? null : !(temp = temp.match(/vid=([\w\-]{11})/i)) ? null : !temp[1] ? null : temp[1])
+          || (!(temp = url) ? null : !(temp = temp.match(/([\w\-]{11})\.html\/?([?&#]|$)/i)) ? null : !temp[1] ? null : temp[1]);
+        break;
+      case 'sina.com.cn':
+        //http://video.sina.com.cn/haokan/play.html?url=http%3A%2F%2Fmy.tv.sohu.com%2Fus%2F53375285%2F62269772.shtml
+        //http://video.sina.com.cn/m/sztvyw_63172701.html
+        //上面两种url暂不支持，同weibo，未尝试
         //plan A
         //$SCOPE['video'] = {......title:'【拍客】险 学生穿梭烂尾无护栏天桥上学',......}
-        title = !(temp = html.match(/\$SCOPE\['video'\]\s*=\s*\{[\s\S]*title\s*:\s*("|')([^"']*)[\s\S]*(?=\})/i)) ? null : !temp[2] ? null : temp[2];
-      }
-      title = sanitize(title).entityDecode();
-      title = sanitize(title).trim();
-      if (typeof callback == 'function') {
-        callback(null, title);
-      }
-    })
-  })
-    //必须处理error，否则抛出异常
-    .on('error', function (err) {
-      if (typeof callback == 'function') {
-        callback(err);
-      }
-    });
+        title = !(temp = html.match(/\$SCOPE\['video'\]\s*=\s*\{[\s\S]*title\s*:\s*'([^'}]*)/i)) ? null : !temp[1] ? null : temp[1];
+        //http://video.sina.com.cn/bl/6646436-1624364062-117652070.html
+        //http://video.sina.com.cn/v/b/50691086-1854900491.html
+        //http://video.sina.com.cn/p/news/s/v/2013-11-26/110663190307.html
+        //$SCOPE['video'] = {......vid:'120263847',......}
+        vid = !(temp = html.match(/\$SCOPE\['video'\] = \{[^{}]*\svid:'([^'{}]*)',/i)) ? null : !temp[1] ? null : temp[1];
+        break;
+      case 'ifeng.com':
+        //plan A
+        //var videoinfo = {......"name": "中方就划设东海防空识别区驳斥美日有关言论",......}
+        title = !(temp = html.match(/var videoinfo = \{[\s\S]*"name": "([^"}]*)/i)) ? null : !temp[1] ? null : temp[1];
+        //http://v.ifeng.com/mil/mainland/201311/01bf1722-6d9d-419f-bf04-0c3afd6f2cf8.shtml
+        //http://v.ifeng.com/ent/yllbt/special/20131125/index.shtml#b2755624-d591-4f08-ae54-349f473fe490(不能获取title，暂不支持，同weibo)
+        //http://v.ifeng.com/live/#4AC51C17-9FBE-47F2-8EE0-8285A66EAFF5(直播用的channelId，暂不支持，同weibo)
+        vid = !(temp = url) ? null : !(temp = temp.match(/(\w{8}-\w{4}-\w{4}-\w{4}-\w{12})\.shtml([?&#]|$)/i)) ? null : !temp[1] ? null : temp[1];
+        break;
+      case 'letv.com':
+        //plan A
+        //var __INFO__={......video : {......title:"唐罗利猜中获双人普吉岛浪漫游—非常了得",//视频名称......}......}
+        title = !(temp = html.match(/var __INFO__=\{[\s\S]*video : \{[\s\S]*\stitle:"([^"}]*)/i)) ? null : !temp[1] ? null : temp[1];
+        //http://www.letv.com/ptv/vplay/2050605.html
+        vid = !(temp = url) ? null : !(temp = temp.match(/(\d{7})\.html\/?([?&#]|$)/i)) ? null : !temp[1] ? null : temp[1];
+        break;
+      case 'pptv.com':
+        //plan A
+        //<title>英超-1314赛季-联赛-第12轮-曼城6：0热刺-精华_PPTV网络电视</title>
+        title = !(temp = html.match(/<title>([^<>]*)<\/title>/i)) ? null : !temp[1] ? null : temp[1].substr(0, temp[1].lastIndexOf('_PPTV网络电视'));
+        //http://v.pptv.com/show/icwtr6HibzIFicCQKg.html#
+        vid = !(temp = url) ? null : !(temp = temp.match(/(\w{18})\.html\/?([?&#]|$)/i)) ? null : !temp[1] ? null : temp[1];
+        break;
+      case 'ku6.com':
+        //plan A
+        //<h1 title="《全民奥斯卡之幕后》第六期：道哥幽默访谈笑点多">
+        title = !(temp = html.match(/<h1 title="([^"'>]*)/i)) ? null : !temp[1] ? null : temp[1];
+        //http://v.ku6.com/show/Dq-TEVeOSRPxpr-MKaAhHg...html?hpsrc=1_12_1_1_0
+        vid = !(temp = url) ? null : !(temp = temp.match(/([\w\-]{22}\.\.)\.html\/?([?&#]|$)/i)) ? null : !temp[1] ? null : temp[1];
+        break;
+      case '56.com':
+        //plan A
+        //<h1 id="vh_title">爸爸去哪儿20131122海岛特辑 暖男天天荣升好帮手 </h1>
+        //<h1 id="vh_title"><span id="albumTitle">最强cos美少女战士 这样上街不怕被砍吗[搞笑视频 笑死人]</span>
+        title = !(temp = html.match(/<h1 id="vh_title">(<span id="albumTitle">)?([^<>]*)(<\/h1>|<\/span>)/i)) ? null : !temp[2] ? null : temp[2];
+        //http://www.56.com/u48/v_MTAxMTQ3MDYx.html
+        //http://www.56.com/w92/play_album-aid-12053351_vid-MTAwOTU1MDI0.html
+        vid = !(temp = url) ? null : !(temp = temp.match(/(\w{12})\.html\/?([?&#]|$)/i)) ? null : !temp[1] ? null : temp[1];
+        break;
+      case 'baomihua.com':
+        //plan A
+        //var temptitle = '权志龙独揽四项大奖演出惊艳全场';
+        title = !(temp = html.match(/var temptitle = '([^']*)';/i)) ? null : !temp[1] ? null : temp[1];
+        //http://video.baomihua.com/11258722/28470044
+        vid = !(temp = url) ? null : !(temp = temp.match(/(\d{8})\/?([?&#]|$)/i)) ? null : !temp[1] ? null : temp[1];
+        break;
+      case 'yinyuetai.com':
+        //plan A
+        //<meta property="og:title"......content="意外 官方版 - 薛之谦"/>
+        title = !(temp = html.match(/<meta property="og:title"[^<>]*content="([^">]*)/i)) ? null : !temp[1] ? null : temp[1];
+        //http://v.yinyuetai.com/video/818636
+        vid = !(temp = url) ? null : !(temp = temp.match(/(\d{6})\/?([?&#]|$)/i)) ? null : !temp[1] ? null : temp[1];
+        break;
+      case 'acfun.tv':
+        //plan A
+        //<h1 id="title-article" class="title" title="视频标题">日产GT-R Nismo</h1>
+        title = !(temp = html.match(/<h1 id="title-article" class="title" title="视频标题">([^<>]*)<\/h1>/i)) ? null : !temp[1] ? null : temp[1];
+        //http://www.acfun.tv/a/ac926643(这是文章，要排除)
+        //http://www.acfun.tv/v/ac926028
+        vid = !(temp = url) ? null : !(temp = temp.match(/\/v\/ac(\w+)\/?([?&#]|$)/i)) ? null : !temp[1] ? null : temp[1];
+        break;
+      case 'bilibili.tv':
+        //plan A
+        //<h2 title="想恶搞女友却发现惊人秘密">
+        title = !(temp = html.match(/<h2 title="([^">]*)>/i)) ? null : !temp[1] ? null : temp[1];
+        //http://www.bilibili.tv/video/av805830/index_2.html
+        vid = !(temp = url) ? null : !(temp = temp.match(/\/av(\d+)\/(index_(\d+)\.html)?([?&#]|$)/i)) ? null : temp[1] + '&page=' + (temp[3] || '1');
+        break;
+    }
+    console.log(title);
+    title = sanitize(title).entityDecode();
+    title = sanitize(title).trim();
+    if (typeof callback == 'function') {
+      callback(null, {
+        vid: vid,
+        title: title
+      });
+    }
+  });
 }
 
 function getLinkDetail(req, res, next) {
@@ -976,21 +1093,30 @@ function getLinkDetail(req, res, next) {
     }
     res.json({
       url: url,
-      title: results ? results.title : '',
-      snippet: results ? results.snippet : '',
-      srcs: results ? results.srcs : ''
+      title: results ? results.title : undefined,
+      snippet: results ? results.snippet : undefined,
+      srcs: results ? results.srcs : undefined
     });
   });
 }
 
-function getVideoTitle(req, res, next) {
-  console.log('getVideoTitle');
+function getVideoDetail(req, res, next) {
+  console.log('getVideoDetail');
   var url = req.query.url;
 
-  _getVideoTitle(url, function (err, title) {
+  _getVideoDetail(url, function (err, results) {
+    if (err) {
+      next(err);
+      return;
+    }
+    if (!results.vid) {
+      res.send(400, '对不起，无法识别您输入的视频链接');
+      return;
+    }
     res.json({
       url: url,
-      title: title
+      vid: results ? results.vid : undefined,
+      title: results ? results.title : undefined
     });
   });
 }
@@ -1110,5 +1236,5 @@ exports.sortItem = sortItem;
 exports.deleteItem = deleteItem;
 exports.saveTopic = saveTopic;
 exports.getLinkDetail = getLinkDetail;
-exports.getVideoTitle = getVideoTitle;
+exports.getVideoDetail = getVideoDetail;
 exports.AddorRemoveLikes = AddorRemoveLikes;
