@@ -18,8 +18,8 @@ module.exports = {
 
   } ,
 
-    session_secret: 'mtm',
-    auth_cookie_name: 'mtmCookie',
+    session_secret: 'shizier',
+    auth_cookie_name: 'shizierCookie',
     mail_opts : {
          host: 'weiji.com' ,
          port: 25,

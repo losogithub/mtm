@@ -16,7 +16,7 @@ var save = function(email, callback) {
   // Automatically create the tokens
   var loginToken = new LoginToken();
   loginToken.email = email;
-  loginToken.token = this.randomToken(); //shall I use this here ?
+  loginToken.token = this.randomToken();
   loginToken.series = this.randomToken();
   loginToken.save(callback(loginToken));
 }
@@ -33,6 +33,7 @@ var remove = function(email, series){
   LoginToken.remove({email: email, series: series}, function(err){
     if (err){
       console.log("cannot find user email from LoginToken.");
+      next(err);
     }
   });
 }
@@ -41,6 +42,7 @@ var removeAll = function(email){
   LoginToken.remove({email: email}, function(err){
     if (err){
       console.log("cannot find user email from LoginToken.");
+      next(err);
     }
   });
 }

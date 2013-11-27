@@ -19,15 +19,15 @@ var mail = require('../services/mail');
 
 
 var showSignUp = function (req, res) {
-  console.log("render singup page");
-  console.log(req.session._loginReferer);
+  console.log("render register page");
+  console.log("login Referer: ", req.session._loginReferer);
   res.render('sign/signup');
 };
 
 
 var signup = function (req, res, next) {
-  console.log("now sign up !");
-  console.log(req.session._loginReferer);
+  console.log("Register");
+  console.log("login Referer: ", req.session._loginReferer);
   var name = sanitize(req.body.username).trim();
   name = sanitize(name).xss();
   var loginname = name.toLowerCase();
@@ -36,11 +36,11 @@ var signup = function (req, res, next) {
   var email = sanitize(req.body.email).trim();
   email = email.toLowerCase();
   email = sanitize(email).xss();
-  //var re_pass = sanitize(req.body.re_pass).trim();
-  //re_pass = sanitize(re_pass).xss();
-
 
   // 1. check name
+  // nFlag: name flag
+  // eFlag: email flag
+  // pFlag: password flag
   var nFlag = true;
   var eFlag = true;
   var pFlag = true;
@@ -53,7 +53,7 @@ var signup = function (req, res, next) {
   }
   //todo: chinese name support.
   else if (name.length < 2) {
-    console.log('name length less than 5');
+    console.log('name length less than 2');
     nFlag = false;
     nMsg = '长度不能少于2.';
   }
@@ -86,8 +86,8 @@ var signup = function (req, res, next) {
   if (pass === '') {
     pMsg = '请输入您的密码。';
   }
-  else if (pass.length < 4) {
-    pMsg = '密码最少不能短于4位。';
+  else if (pass.length < 6) {
+    pMsg = '密码最少不能短于6位。';
   }
 
   if (nFlag) {
@@ -114,7 +114,7 @@ var signup = function (req, res, next) {
             console.log("pMsg: %s", pMsg);
             // finally error render error info page.
             if (eMsg || nMsg || pMsg) {
-              console.log("%s", eMsg);
+              //console.log("%s", eMsg);
               res.render('sign/signup', {
                 emailMsg: eMsg,
                 nameMsg: nMsg,
@@ -134,6 +134,7 @@ var signup = function (req, res, next) {
               }
               // 发送激活邮件
               mail.sendActiveMail(email, encryp.md5(email + config.session_secret), name, email);
+              //todo: what does these set means ? 2013.11.26
               res.set('Cache-Control', 'private, no-cache, no-store, must-revalidate, post-check=0, pre-check=0');
               res.set('Connection', 'close');
               res.set('Expire', '-1');
@@ -144,7 +145,7 @@ var signup = function (req, res, next) {
             });
           })
         }
-        // not registered user, wrong email.
+        // not registered user, wrong email. i.e. eFlag=false
         else {
           res.render('sign/signup', {
             emailMsg: eMsg,
@@ -156,7 +157,8 @@ var signup = function (req, res, next) {
         }
       }
       else {
-        // not registerd username, then check email
+        // cannot find the user by loginname
+        // not register username, then check email
         if (eFlag) {
           User.getUserByMail(email, function (err, user) {
             if (err) {
@@ -172,7 +174,7 @@ var signup = function (req, res, next) {
             console.log("pMsg: %s", pMsg);
             // finally either registerd email address, or wrong password
             if (eMsg || pMsg) {
-              console.log("%s", eMsg);
+              //console.log("%s", eMsg);
               res.render('sign/signup', {
                 emailMsg: eMsg,
                 nameMsg: nMsg,
@@ -201,7 +203,7 @@ var signup = function (req, res, next) {
             });
           })
         }
-        // correct user, wrong email.
+        // correct username, wrong email.
         else {
           res.render('sign/signup', {
             emailMsg: eMsg,
@@ -248,24 +250,32 @@ var signup = function (req, res, next) {
  * @param  {HttpResponse} res
  */
 var showLogin = function (req, res) {
-  console.log("show login session: ");
-  console.log(req.session);
-  console.log(req.headers.referer);
+  console.log("render login page ");
+  console.log("session: ", req.session);
+  console.log("referer: ", req.headers.referer);
 
   //if it is null, then assign to this.
   //otherwise it was assigned by some middleware.
   if (!req.session._loginReferer) {
     req.session._loginReferer = req.headers.referer || 'home';
   }
-  console.log(req.session._loginReferer);
+  //console.log(req.session._loginReferer);
 
   var refer = req.session._loginReferer || 'home';
 
-  /*
+
+  //todo: 2013.11.26 it seems needed for jump
+  //e.g. before login: suppose you go to forgetPassword page, then  you click login.
+  // after you successfully logged in, it shall not jump to forgetpassword page.
+  // 2 example: suppose you are at register page, then click loggin, after succesfully loggin,
+  //  shall not jump to register page.
+
+/*
   if (req.session && req.session.userId && req.session.userId !== 'undefined') {
     //if logged in, jump to refer page.
     //note: not all page jump to loginReferer.
     //add: 2013.11.23: it seems impossible for this situation. So I commented it.
+    // 2013.11.26. No, maybe not.
     for (var i = 0, len = notJump.length; i !== len; ++i) {
       if (refer.indexOf(notJump[i]) >= 0) {
         refer = 'home';
@@ -278,8 +288,13 @@ var showLogin = function (req, res) {
 
   else { */
     return res.render('sign/login');
+}
 
-};
+var notJumpForLogin = [
+  '/signup',
+  '/forgetPassword',
+  '/login'
+];
 
 
 /**
@@ -353,7 +368,7 @@ var login = function (req, res, next) {
 
 //suppose the username id, or email address exists, now check the password:
 function checkOnlyPassword(emailIDFlag, pass, autoLogin, user, req, res) {
-  console.log("function: checkonly password");
+  console.log("login: check user password.");
   pass = encryp.md5(pass);
   var email = user.email;
   if (!emailIDFlag) {
@@ -376,24 +391,32 @@ function checkOnlyPassword(emailIDFlag, pass, autoLogin, user, req, res) {
 
   req.session.userId = user._id;
   req.currentUser = user;
-  console.log("currentUser: %s", req.currentUser);
+  //console.log("currentUser: %s", req.currentUser);
   if (autoLogin == 'Y') {
     // Remember me
     //var loginToken = new LoginToken({ email: user.email });
     LoginToken.save(user.email, function (loginToken) {
-      console.log("logintoken: %s", loginToken.cookieValue);
+      //console.log("logintoken: %s", loginToken.cookieValue);
       res.cookie('logintoken', loginToken.cookieValue, { expires: new Date(Date.now() + 2 * 604800000), path: '/' });
     });
   }
 
   var refer = req.session._loginReferer || 'home';
-  console.log("loginReferer");
-  console.log(req.session._loginReferer);
+  //console.log("loginReferer");
+  //console.log(req.session._loginReferer);
 
   /* e.g; you want to go to create page, then first jump to login page. after you login, then jump back to previous page.
    */
+  // 2013.11.26 need check the refer not equal to signup, loginin, forgetpassword
+  for (var i = 0, len = notJumpForLogin.length; i !== len; ++i) {
+    if (refer.indexOf(notJumpForLogin[i]) >= 0) {
+      refer = 'home';
+      break;
+    }
+  }
+  console.log("after login refer to: " , refer);
   res.redirect(refer);
-}
+};
 
 
 
@@ -415,7 +438,8 @@ var notJump = [
 var signout = function (req, res, next) {
   if (req.session) {
     //console.log("signout: currentUser: %s" , req.currentUser);
-    console.log("logout: session userId: %s", req.session.userId);
+    console.log("logout");
+    console.log("session userId: %s", req.session.userId);
     req.session.destroy(function () {
     });
   }
@@ -440,7 +464,7 @@ var signout = function (req, res, next) {
   //console.log(res.imageUrl);
 
   //res.redirect('/home');
-  console.log(req.headers.referer);
+  //console.log(req.headers.referer);
   //need a black list
   var refer = req.headers.referer || 'home';
   for (var i = 0, len = notJump.length; i !== len; ++i) {
@@ -458,6 +482,7 @@ var signout = function (req, res, next) {
 
 
 var showForgetPassword = function (req, res) {
+  console.log("render forget password page");
   res.render('sign/forgetPassword', {
     errMsg: ''
   });
@@ -472,11 +497,11 @@ var forgetPassword = function (req, res, next) {
   //1. check email format
   var errMsg = '';
   if (email === '') {
-    errMsg = 'Enter your email address.';
+    errMsg = '请输入您的注册邮箱。';
   }
   else {
     try {
-      check(email, '不正确的电子邮箱。').isEmail();
+      check(email, '不正确的电子邮箱格式。').isEmail();
     } catch (e) {
       errMsg = e.message;
     }
@@ -496,7 +521,7 @@ var forgetPassword = function (req, res, next) {
     //console.log(user);
     if (!user) {
       res.render('sign/forgetPassword', {
-        errMsg: 'the email address does not exist.'
+        errMsg: '对不起，该邮箱不存在。'
       });
     }
     else {
@@ -508,9 +533,10 @@ var forgetPassword = function (req, res, next) {
         if (err) {
           return next(err);
         }
-        console.log(user);
+        //console.log(user);
         // 发送重置密码邮件
         // But if the user hasn't been activated ? how to do ?
+        // 2013.11.26 ? I don't think there is any problem.
         mail.sendResetPassMail(email, retrieveKey, user.email);
         res.render('sign/forgetPasswordSend')
       });
@@ -526,8 +552,8 @@ var showResetPassword = function (req, res, next) {
       return res.render('sign/errLink');
     }
     var now = new Date().getTime();
-    var oneDay = 1000 * 60 * 60 * 24;
-    if (!user.retrieve_time || now - user.retrieve_time > oneDay) {
+    var oneHour = 1000 * 60 * 60 ;
+    if (!user.retrieve_time || now - user.retrieve_time > oneHour) {
       return res.render('sign/errLink');
     }
     //finally correct
@@ -545,8 +571,8 @@ var resetPassword = function (req, res, next) {
   var key = req.body.key || '';
   var email = req.body.email || '';
 
-  console.log("pass: %s", psw);
-  console.log("repass: %s", repsw);
+  //console.log("pass: %s", psw);
+  //console.log("repass: %s", repsw);
   if (psw !== repsw) { // already include empty situation. !! no !!!
     return res.render('sign/resetPassword', {
       key: key,
@@ -554,7 +580,10 @@ var resetPassword = function (req, res, next) {
       errMsg: '两次密码输入不一致'
     });
   }
-  if (psw === '' && repsw === '') {
+  //if (psw === '' && repsw === '') {
+  //changed to the following line. 2013.11.26 22:49
+  //comment: in fact, the same.
+  if (psw === '' || repsw === '') {
     return res.render('sign/resetPassword', {
       key: key,
       email: email,
@@ -580,12 +609,14 @@ var resetPassword = function (req, res, next) {
     if (!user) {
       return res.render('sign/errLink');
     }
-    console.log(encryp.md5(psw));
+    //console.log(encryp.md5(psw));
     //bug fixed: 10.11.2013. user.pass
+    //qian wan remember: first encry using md5.
     user.password = encryp.md5(psw);
     user.retrieve_key = null;
     user.retrieve_time = null;
     user.active = true; // 用户激活   //But if previously is false. now active. right ! correct.
+                        //2013.11.26  even previous is false, it is ok.
     user.save(function (err) {
       if (err) {
         return next(err);
@@ -615,17 +646,20 @@ var activeAccount = function (req, res, next) {
         return next(err);
       }
       res.render('sign/activeAccountSuccess')
+      return;
     });
   });
 };
 
 // private
 function gen_session(user, res) {
-  console.log("gen_session");
+  //console.log("gen_session");
+  // so cookie is encryped here. 2013.11.26
   var auth_token = encryp.encrypt(user._id + '\t' + user.name + '\t' + user.pass + '\t' + user.email, config.session_secret);
   //console.log(auth_token);
   res.cookie(config.auth_cookie_name, auth_token, {path: '/', maxAge: 1000 * 60 * 60}); //cookie 有效期1 hour
   //todo: this one not work
+  // I don't think so. 2013.11.26  22:56
   console.log(res.cookie);
 }
 
