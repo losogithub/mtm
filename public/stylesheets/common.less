@@ -98,7 +98,9 @@ body {
 
 /*导航*/
 .Nav {
-  a, button { color: rgb(84, 84, 84) !important; text-align: left !important; }
+  a, button { text-align: left !important;
+    &, &:hover, &:focus { color: rgb(84, 84, 84); }
+  }
   &.Nav-Left {
     left: 0; position: absolute; top: 0; height: 100%;
     li { display: inline; margin-right: 30px; }
@@ -124,7 +126,7 @@ body {
     background-color: white; border: 1px solid rgb(207, 207, 207); box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
     a, button {
       display: block; height: 30px; line-height: 30px; padding: 0 8px;
-      &:hover, &:active, &:focus { background-color: #f0f0f0; text-decoration: none; }
+      &:hover, &:focus { background-color: #f0f0f0; text-decoration: none; }
     }
   }
 }

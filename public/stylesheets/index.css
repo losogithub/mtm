@@ -22,7 +22,7 @@ em{font-style:normal}
 .HotTopicList li:first-child{margin-top: 0;padding-top: 0;border-top: 0 none;}
 .TopicThumb {margin-right: 14px}
 .TopicTtl {display: block;margin-bottom: 5px;word-break: break-all;}
-.TopicTtl a{line-height: 20px;font-size: 16px;color: rgb(0, 0, 0);}
+.TopicTtl a{line-height: 20px;font-size: 16px;}
 .TopicAuthor {float: left;color: #999 !important;font-size: 11px;line-height: 1;}
 .PVCount{float: right;font-family: Arial,sans-serif;font-size: 11px;line-height: 1;}
 .PVCount b{margin-right: 2px;font-size: 12px;}
@@ -36,7 +36,7 @@ em{font-style:normal}
 .Col03HotContentListItemTtl{line-height: 1.35; font-size: 12px}
 .Col03HotContentListItemDes{margin-top: 4px; color: #aaa !important; font-size: 11px}
 .Col03HotContentList .Col03HotContentListItemOption{line-height: 1; margin-top: 6px}
-.Col03HotContentListItemUserName{float: left; color: #999 !important; font-size: 11px}
+.Col03HotContentListItemUserName{float: left; font-size: 11px}
 .Col03HotContentListItemPVCount{float: right;}
 .Col03HotContentListItemPVCountNum{font-family: Arial,sans-serif; font-weight: bold; font-size: 11px; color: #9b9b9b}
 .Col03HotContentListItemPVCountUnit{white-space: nowrap; font-family: Arial,sans-serif; font-size: 10px; color: #9b9b9b}

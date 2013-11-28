@@ -217,8 +217,15 @@ body.INDEX {
 /*导航*/
 .Nav a,
 .Nav button {
-  color: #545454 !important;
   text-align: left !important;
+}
+.Nav a,
+.Nav button,
+.Nav a:hover,
+.Nav button:hover,
+.Nav a:focus,
+.Nav button:focus {
+  color: #545454;
 }
 .Nav.Nav-Left {
   left: 0;
@@ -279,8 +286,6 @@ body.INDEX {
 }
 .Nav.Nav-Drop a:hover,
 .Nav.Nav-Drop button:hover,
-.Nav.Nav-Drop a:active,
-.Nav.Nav-Drop button:active,
 .Nav.Nav-Drop a:focus,
 .Nav.Nav-Drop button:focus {
   background-color: #f0f0f0;
