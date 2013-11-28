@@ -80,11 +80,11 @@
       }
       //: post topicId and toLike again
       var $button = $('button[name="favorite"]');
-      var topicId = $button.data('favorite').topicId;
-      var url = $button.data('favorite').url;
+      var favorite = $button.data('favorite');
+      var topicId = !favorite ? null : favorite.topicId;
+      var url = !favorite ? null : favorite.url;
       var toLike = !$button.is('.ExSelected');
       //using an ajax send to server to check for login.
-      //what is wrong ? why not send ???????????? 10.18 23:39 2013
       $.ajax({
         type: 'POST',
         url: topicId ? '/topic/favorite' : url ? '/u/favorite' : '/loginDialogCheck',

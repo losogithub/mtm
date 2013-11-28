@@ -215,8 +215,10 @@ body.INDEX {
   height: 178px;
 }
 /*导航*/
-.Nav a {
-  color: #545454;
+.Nav a,
+.Nav button {
+  color: #545454 !important;
+  text-align: left !important;
 }
 .Nav.Nav-Left {
   left: 0;
@@ -268,15 +270,19 @@ body.INDEX {
   border: 1px solid #cfcfcf;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
 }
-.Nav.Nav-Drop a {
+.Nav.Nav-Drop a,
+.Nav.Nav-Drop button {
   display: block;
   height: 30px;
   line-height: 30px;
   padding: 0 8px;
 }
 .Nav.Nav-Drop a:hover,
+.Nav.Nav-Drop button:hover,
 .Nav.Nav-Drop a:active,
-.Nav.Nav-Drop a:focus {
+.Nav.Nav-Drop button:active,
+.Nav.Nav-Drop a:focus,
+.Nav.Nav-Drop button:focus {
   background-color: #f0f0f0;
   text-decoration: none;
 }

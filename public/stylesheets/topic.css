@@ -404,8 +404,6 @@
 }
 .Main a[name="add"] > i {
   color: #669966;
-  vertical-align: middle;
-  font-size: 18px;
 }
 .NoItem {
   position: relative;

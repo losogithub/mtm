@@ -66,6 +66,7 @@ app.use(function (req, res, next) {
   d.run(next);
 })
 app.use(express.static(path.join(__dirname, '/public')));
+app.use(require('./middlewares/auth').loadUser);
 app.use(app.router);
 
 //error log middle ware
@@ -78,7 +79,7 @@ app.use(function (err, req, res, next) {
       res.send(403, '您无权修改他人的总结');
       break;
     case '404':
-      res.send(404, '总结不存在');
+      res.status(404).render('sign/errLink');
       break;
     default :
       res.send(500, '服务器出错：\n' + err.message + '\n' + err.stack);
