@@ -1604,6 +1604,7 @@
   function __init() {
     $ul = $('.WidgetItemList');
     $templates = $('.TEMPLATES');
+    $(".fancybox").fancybox();
   }
 
   function __initListListener() {
@@ -1792,13 +1793,17 @@
   var __initTop = function (topicData) {
     $form = $('.Edit_Top form');
 
+    var coverUrl;
+
     if (topicData) {
       var title = topicData.title;
-      var coverUrl = topicData.coverUrl;
+      coverUrl = topicData.coverUrl;
       var description = topicData.description;
       $form.find('input[name="title"]').val(title ? title : '');
       $form.find('button[name="cover"] img').attr('src', coverUrl ? coverUrl : '');
       $form.find('textarea[name="description"]').val(description ? description : '');
+    } else {
+      coverUrl = $form.find('button[name="cover"] img').attr('src');
     }
 
     $form.validate({
@@ -1866,13 +1871,22 @@
     }
 
     var $thumb = $('button[name="cover"]');
+    var $img = $thumb.find('img');
     var $extra = $('.Edit_Top_Thumb_Extra');
     var $input = $extra.find('input');
-    var $save = $extra.find('button[name="save"]');
-    var $cancel = $extra.find('button[name="cancel"]');
+    var $preview = $extra.find('button[name="preview"]');
+    var $reset = $extra.find('button[name="reset"]');
+    var autoHide = false;
+    var hide = function () {
+      $extra.css('visibility', 'hidden')
+        .hide('fast', function () {
+          $extra.removeAttr('style');
+        })
+    };
     $thumb.click(function () {
+      autoHide = false;
       if ($extra.is(':visible')) {
-        $cancel.click();
+        hide();
       } else {
         $extra
           .css({ 'opacity': 0 })
@@ -1886,23 +1900,19 @@
         $input.focus();
       }
     });
-    $cancel.click(function () {
-      $extra.css('visibility', 'hidden')
-        .hide('fast', function () {
-          $extra.removeAttr('style');
-        })
-    });
-    $save.click(function () {
-      var $img = $thumb.find('img');
-      var src = $img.attr('src');
-      if (src
-        && src.length
-        && src != '/images/no_img/image_95x95.png'
-        && !confirm('您确定要修改封面吗？')) {
-        return;
+    $img.on('load', function() {
+      console.log($img.attr('src'));
+      if ($img.attr('src') != '/images/no_img/image_95x95.png') {
+        hide();
       }
+    });
+    $reset.click(function() {
+      autoHide = true;
+      $img.attr('src', coverUrl);
+    })
+    $preview.click(function () {
+      autoHide = true;
       $img.attr('src', mtm.utils.suffixImage($input.val()));
-      $cancel.click();
     });
   }
 

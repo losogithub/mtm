@@ -32,17 +32,18 @@ function showCreate(req, res, next) {
   res.render('topic/edit', {
     title: '创建总结',
     css: [
+      'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.css',
       '/stylesheets/topic.css',
       '/stylesheets/edit.css'
     ],
     js: [
+      'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.js',
       'http://cdn.bootcss.com/autosize.js/1.17.1/autosize-min.js',
       '/javascripts/jquery-ui-1.10.3.custom.min.js',
       'http://cdn.bootcss.com/jquery-validate/1.11.1/jquery.validate.min.js',
       '/javascripts/utils.js',
       '/javascripts/edit.js'
-    ],
-    backUrl: req.headers.referer ? req.headers.referer : '/works'
+    ]
   });
 }
 
@@ -167,10 +168,12 @@ function showEdit(req, res, next) {
     res.render('topic/edit', {
       title: '修改总结',
       css: [
+        'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.css',
         '/stylesheets/topic.css',
         '/stylesheets/edit.css'
       ],
       js: [
+        'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.js',
         'http://cdn.bootcss.com/autosize.js/1.17.1/autosize-min.js',
         '/javascripts/jquery-ui-1.10.3.custom.min.js',
         'http://cdn.bootcss.com/jquery-validate/1.11.1/jquery.validate.min.js',
@@ -178,7 +181,6 @@ function showEdit(req, res, next) {
         '/javascripts/edit.js'
       ],
       escape: escape,
-      backUrl: req.headers.referer ? req.headers.referer : './',
       topic: topicData,
       items: itemsData
     });

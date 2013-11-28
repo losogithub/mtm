@@ -54,7 +54,7 @@
   clear: both;
 }
 .WidgetItemList > li:last-child > div {
-  margin-bottom: 0;
+  margin-bottom: 0 !important;
 }
 .WidgetItemList > li.TITLE > div {
   margin-bottom: 25px;
@@ -127,11 +127,6 @@
   display: none;
   visibility: hidden;
   line-height: 1;
-}
-.BottomUtil button,
-.HeadUtil a {
-  color: #7c94aa !important;
-  display: inline-block;
 }
 .LINK .Title a {
   font-size: 20px;
@@ -410,7 +405,7 @@
 .Main a[name="add"] > i {
   color: #669966;
   vertical-align: middle;
-  font-size: 15px;
+  font-size: 18px;
 }
 .NoItem {
   position: relative;

@@ -93,11 +93,6 @@ input.Bold {
   font-weight: bold;
   height: 30px;
 }
-a,
-a:hover,
-a:focus {
-  color: black;
-}
 ol,
 ul {
   list-style: none;
@@ -143,12 +138,19 @@ body.INDEX {
   left: 4px;
 }
 /*按钮*/
+.InfoHint {
+  margin-top: 3px;
+  font-size: 10px;
+}
 .BtnSet {
   margin-top: 14px;
   max-height: 27px;
 }
 .Widget .BtnSet {
   float: left;
+}
+.InfoHint + .BtnSet {
+  margin-top: 3px;
 }
 /*徽标*/
 .Logo,

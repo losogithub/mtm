@@ -17,7 +17,7 @@
       &:hover { background-color: #f8f8f8; box-shadow: 0 0 0 3px #f8f8f8; }
       >:first-child { .clearfix(); }
     }
-    &:last-child>div {margin-bottom: 0;}
+    &:last-child>div {margin-bottom: 0 !important;}
     &.TITLE>div { margin-bottom: 25px; }
   }
   .Content { .clearfix(); }
@@ -45,8 +45,6 @@
 }
 
 .BottomUtil { display: none; visibility: hidden; line-height: 1; }
-
-.BottomUtil button, .HeadUtil a { color: rgb(124, 148, 170) !important; display: inline-block; }
 
 .LINK {
   .Title a {
@@ -165,7 +163,7 @@
 
 .Main a[name="add"] { margin-bottom: 15px; }
 
-.Main a[name="add"]>i { color: #669966; vertical-align: middle; font-size: 15px; }
+.Main a[name="add"]>i { color: @theme-color; vertical-align: middle; font-size: 18px; }
 
 .NoItem { position: relative; padding: 140px 0px 160px; text-align: center; }
 

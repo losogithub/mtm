@@ -201,6 +201,7 @@ var showSettings = function (req, res) {
         '/stylesheets/personal.css'
       ],
       js: [
+        '/javascripts/utils.js',
         '/javascripts/setting.js'
       ],
       pageType: 'PERSONAL',

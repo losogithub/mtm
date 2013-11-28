@@ -32,8 +32,6 @@ input[name='url'], input.Url { color: #999; }
 
 input.Bold { font-size: 14px; font-weight: bold; height: 30px; }
 
-a, a:hover, a:focus { color: black; }
-
 ol, ul { list-style: none; }
 
 i { font-size: 14px; }
@@ -59,9 +57,12 @@ body {
 }
 
 /*按钮*/
+.InfoHint { margin-top: 3px;font-size: 10px; }
+
 .BtnSet {
   margin-top: 14px;max-height: 27px;
   .Widget & { float: left; }
+  .InfoHint + & { margin-top: 3px; }
 }
 
 /*徽标*/

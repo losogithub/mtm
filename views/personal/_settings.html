@@ -12,20 +12,26 @@
   <input type="hidden" name="fromUrl" value="/settings"/>
   <fieldset>
     <ul>
-      <li>
+      <li id="_thumbEdit">
         <h6>头像</h6>
 
-        <div class="Thumb" style="float: left;">
-          <img width="120" height="120" id="setImage"
-               src="<%= locals.imageUrl ? locals.imageUrl : '/images/no_img/user_120x120.png' %>">
+        <div class="Thumb" style="float: left;position: relative;">
+          <img width="120" height="120" src="/images/no_img/user_120x120.png">
+          <img width="120" height="120" id="_thumb"
+               onerror="mtm.errorImage(this, 'image_95x95')"
+               src="<%= locals.imageUrl || '' %>"
+               style="position: absolute;left: 0;top: 0;">
         </div>
 
         <div style="overflow: hidden;">
           <input type="text" name="url" placeholder="输入图片URL">
-          <!-- value="<%- locals.imageUrl ? locals.imageUrl : '' %>" > -->
-          <div class="BtnSet">
-            <button name="preview" class="btn btn-small" type="button">预览</button>
-          </div>
+        </div>
+        <div class="InfoHint text-muted" style="height: 15px;">
+          由于受版权保护，有些图片可能无法引用
+        </div>
+        <div class="BtnSet">
+          <button name="preview" class="btn btn-small btn-inverse" type="button">预览</button>
+          <button name="reset" class="btn btn-small" type="button">重置</button>
         </div>
       </li>
       <li>
@@ -47,7 +53,7 @@
         </div>
       </li>
       <li>
-        <h6></h6>
+        <h6>&nbsp;</h6>
         <button name="save" style="width: 160px;" class="btn btn-large" type="button">保存</button>
       </li>
     </ul>

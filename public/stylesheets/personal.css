@@ -25,7 +25,7 @@ textarea {
   height: 122px;
   border-radius: 3px 3px 3px 3px;
   border: 1px solid #dddddd;
-  margin-right: 10px;
+  margin-right: 15px;
 }
 .SubPV {
   float: right;
@@ -185,8 +185,7 @@ textarea {
   display: block;
   float: left;
   width: 130px;
-  min-height: 1px;
-  color: #333333;
+  color: #333;
   font-weight: bold;
 }
 .InputBox_Introduce {

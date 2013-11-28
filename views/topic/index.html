@@ -4,7 +4,7 @@
       <table>
         <td>
           <ol>
-            <li><a href="/">shizier首页</a><i class="icon-angle-right"></i></li>
+            <li><a href="/">石子儿首页</a><i class="icon-angle-right"></i></li>
           </ol>
         </td>
       </table>
@@ -25,10 +25,10 @@
 
             <% if (locals.isAuthor) { %>
             <div class='HeadUtil'>
-              <a href="<%= !locals.topic ? '' : topic._id + '/edit?showOption=true' %>"><i class="icon-pencil"></i> 修改</a>
+              <a href="<%= !locals.topic ? '' : '/topic/' + topic._id + '/edit?showOption=true' %>"><i class="icon-pencil"></i> 修改</a>
               <% if (!locals.items || !items.length) { %>
               <span class='VLine VLine-Util'></span>
-              <a><i class="icon-trash"></i> 删除</a>
+              <button class="btn btn-link text-danger" style="vertical-align: baseline;"><i class="icon-trash"></i> 删除</button>
               <% } %>
             </div>
             <% } %>
@@ -59,7 +59,7 @@
         <div class="HeadCount">
           <span class="HeadFVCount">
             <span class="HeadFVCountNum"><i class="HeadFVIco icon-star"></i> <span><%= topic.FVCount %></span></span>
-            <span class="HeadFVCountLabel">收藏</span>
+            <span class="HeadFVCountLabel">喜欢</span>
           </span>
           <span class="HeadPVCount">
             <span class="HeadPVCountNum"><%= topic.PVCount %></span>
@@ -70,7 +70,7 @@
         <button name="favorite" class="<%- locals.liked ? 'ExSelected' : '' %> btn btn-large"
                 data-favorite='{"topicId":"<%= topic._id %>"}'>
           <i class="HeadFVBtnIco icon-star StarIcon"></i>
-          <span class="HeadFVBtnTxt">收藏</span>
+          <span class="HeadFVBtnTxt">喜欢</span>
         </button>
       </div>
     </div>
@@ -89,7 +89,7 @@
         </p>
       <% } %>
         <% if (locals.isAuthor) { %>
-        <a name="add" class="btn" href="<%= !locals.topic ? '' : topic._id + '/edit' %>" type="button"><i class="icon-plus-sign"></i>
+        <a name="add" class="btn btn-default" href="<%= !locals.topic ? '' : topic._id + '/edit' %>" type="button"><i class="icon-plus-sign"></i>
           添加条目</a>
         <% } %>
       <% if (!locals.items || !items.length) { %>
@@ -115,7 +115,7 @@
               <p class="SubAuthorProfileUnitLink">
                 <% if (authorInfo.personalSite) { %>
                  <span class="SubAuthorProfileUnitLinkSite">
-                   <a href="<%= authorInfo.personalSite %>" class="btn btn-small" target="_blank">个人网站</a>
+                   <a href="<%= authorInfo.personalSite %>" class="btn btn-small btn-default" target="_blank">个人网站</a>
                  </span>
                 <% } else { %>
                  <span class="SubAuthorProfileUnitLinkSite ExDisabled">

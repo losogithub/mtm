@@ -12,24 +12,21 @@
  */
 
 $(function ($) {
-  $('button[name="preview"]')
-    .click(function () {
-      console.log("click on url button");
-      var $url = $('input[name="url" ]').val();
-      console.log($url);
-      if ($url) {
-        //first check the url.
-        if (/^(http|https|ftp):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/i.test($url)) {
-          $('#setImage').attr("src", $url).error(function () {
-            alert('该图片无法正常显示,');
-            $('#setImage').attr("src", "/images/no_img/user_120x120.png");
-          });
-        } else {
-          alert('invalid url');
-        }
-      }
-      return false;
-    })
+  var $thumbEdit = $('#_thumbEdit');
+  var $img = $thumbEdit.find('#_thumb');
+  var coverUrl = $img.attr('src');
+  var $input = $thumbEdit.find('input');
+  var $preview = $thumbEdit.find('button[name="preview"]');
+  var $reset = $thumbEdit.find('button[name="reset"]');
+  var autoHide = false;
+  $reset.click(function() {
+    autoHide = true;
+    $img.attr('src', coverUrl);
+  });
+  $preview.click(function () {
+    autoHide = true;
+    $img.attr('src', mtm.utils.suffixImage($input.val()));
+  });
 })
 
 $(function ($) {
