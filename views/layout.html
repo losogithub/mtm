@@ -81,9 +81,26 @@
             </li>
             <nav class="Nav Nav-Drop" style="display: none;">
               <ul>
-                <li><a href="/settings">设置</a></li>
-                <li><a href="/faq?serviceNo=4">帮助</a></li>
-                <li><form action="/logout" method="post"><button class="btn btn-link btn-block" type="submit">登出</button></form></li>
+                <li>
+                  <a href="/settings">
+                    <i class="icon-cog"></i>
+                    设置
+                  </a>
+                </li>
+                <li>
+                  <a href="/faq?serviceNo=4">
+                    <i class="icon-question-sign"></i>
+                    帮助
+                  </a>
+                </li>
+                <li>
+                  <form action="/logout" method="post">
+                    <button class="btn btn-link btn-block" type="submit">
+                      <i class="icon-signout"></i>
+                      登出
+                    </button>
+                  </form>
+                </li>
               </ul>
             </nav>
             <% } %>

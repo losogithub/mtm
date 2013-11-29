@@ -25,16 +25,26 @@
             <% for (i in hot) { %>
             <li>
               <table style="width: 100%;">
-                <td>
-                  <a href="/topic/<%= hot[i].id %>"><img class="TopicThumb" style="float: left;" width="60" height="60"
-                                                         onerror="mtm.errorImage(this,'image_95x95');"
-                                                         src="<%= !hot[i].coverUrl ? '/images/no_img/image_95x95.png' : hot[i].coverUrl %>"></a>
+                <td class="TopicThumb">
+                  <a href="/topic/<%= hot[i].id %>" title="<%= hot[i].title %>">
+                    <img width="60" height="60"
+                         onerror="mtm.errorImage(this,'image_95x95');"
+                         src="<%= !hot[i].coverUrl ? '/images/no_img/image_95x95.png' : hot[i].coverUrl %>">
+                  </a>
                 </td>
                 <td style="width: 100%;">
                   <div class="">
-                    <p class="TopicTtl"><a href="/topic/<%= hot[i].id %>" class="text-default"><%= hot[i].title %></a></p>
-                    <a class="TopicAuthor" href="/u/<%= hot[i].author %>"><%= hot[i].author %></a>
-                    <span class="PVCount text-muted"><b><%= hot[i].PVCount %></b>访问量</span>
+                    <p class="TopicTtl">
+                      <a href="/topic/<%= hot[i].id %>" title="<%= hot[i].title %>" class="text-default">
+                        <%= hot[i].title %>
+                      </a>
+                    </p>
+                    <a class="TopicAuthor" href="/u/<%= hot[i].author %>" title="<%= hot[i].author %>">
+                      <%= hot[i].author %>
+                    </a>
+                    <span class="PVCount text-muted">
+                      <b><%= hot[i].PVCount %></b> 浏览
+                    </span>
                   </div>
                 </td>
               </table>
@@ -46,19 +56,30 @@
         <div class="Col03">
           <ul class="Col03HotContentList">
             <% for (i in realGood) { %>
-             <li class="col03HotContentListItem">
-               <a href="/topic/<%= realGood[i].id %>" class="text-default">
-                 <p class="Col03HotContentListItemTtl" title="<%= realGood[i].title %>"><%= realGood[i].title %></p>
-                 <p class="Col03HotContentListItemDes"><%= realGood[i].des %></p>
-               </a>
-               <div class="Col03HotContentListItemOption">
-                 <a class="Col03HotContentListItemUserName text-muted" href="/u/<%= realGood[i].author %>"><%= realGood[i].author%></a>
-                 <p class="Col03HotContentListItemPVCount text-muted">
-                   <span class="Col03HotContentListItemPVCountNum"><%= realGood[i].PVCount %></span>
-                   <span class="Col03HotContentListItemPVCountUnit">访问量</span>
-                 </p>
-               </div>
-             </li>
+            <li class="col03HotContentListItem">
+              <a href="/topic/<%= realGood[i].id %>" title="<%= realGood[i].title %>" class="text-muted">
+                <p class="Col03HotContentListItemTtl text-default">
+                  <%= realGood[i].title %>
+                </p>
+
+                <p class="Col03HotContentListItemDes">
+                  <%= realGood[i].des %>
+                </p>
+              </a>
+
+              <div class="Col03HotContentListItemOption">
+                <a class="Col03HotContentListItemUserName text-muted"
+                   href="/u/<%= realGood[i].author %>"
+                   title="<%= realGood[i].author %>">
+                  <%= realGood[i].author %>
+                </a>
+
+                <p class="Col03HotContentListItemPVCount text-muted">
+                  <span class="Col03HotContentListItemPVCountNum"><%= realGood[i].PVCount %></span>
+                  <span class="Col03HotContentListItemPVCountUnit">浏览</span>
+                </p>
+              </div>
+            </li>
             <% } %>
           </ul>
         </div>
@@ -71,7 +92,9 @@
 
     </div>
     <div class="Sub">
-      <div class="SubSeparator"><hr></div>
+      <div class="SubSeparator">
+        <hr>
+      </div>
 
 
       <!---the guide of making --->
@@ -84,7 +107,9 @@
           </li>
         </ul>
       </div>
-      <div class="SubSeparator"><hr></div>
+      <div class="SubSeparator">
+        <hr>
+      </div>
 
 
       <!--the newest summarise-->
@@ -95,7 +120,7 @@
             <% for (i in newTopics) { %>
             <li class="SubContentTopicListListItem">
               <div class="SubContentTopicListListItemThumb">
-                <a href="/topic/<%= newTopics[i].id %>">
+                <a href="/topic/<%= newTopics[i].id %>" title="<%= newTopics[i].title %>">
                   <img width="45" height="45"
                        onerror="mtm.errorImage(this,'image_95x95');"
                        src="<%= !newTopics[i].coverUrl ? '/images/no_img/image_95x95.png' : newTopics[i].coverUrl %>">
@@ -103,10 +128,18 @@
               </div>
               <div class="SubContentTopicListListItemTxt">
                 <p class="SubContentTopicListListItemTxtLink">
-                  <a href="/topic/<%= newTopics[i].id %>" class="text-default"><%= newTopics[i].title %></a>
+                  <a href="/topic/<%= newTopics[i].id %>"
+                     title="<%= newTopics[i].title %>" class="text-default">
+                    <%= newTopics[i].title %>
+                  </a>
                 </p>
+
                 <p>
-                  <a class="SubContentTopicListListItemUserName" href="/u/<%= newTopics[i].author %>"><%= newTopics[i].author%></a>
+                  <a class="SubContentTopicListListItemUserName"
+                     href="/u/<%= newTopics[i].author %>"
+                     title="<%= newTopics[i].author %>">
+                    <%= newTopics[i].author %>
+                  </a>
                 </p>
               </div>
             </li>
@@ -114,8 +147,6 @@
           </ul>
         </div>
       </div>
-
-
     </div>
   </div>
 </div>

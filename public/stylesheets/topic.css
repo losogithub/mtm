@@ -297,12 +297,6 @@
 }
 .Head .Inner .HeadMain .HeadTxt .HeadDesc {
   margin-right: 8px;
-  color: #666666;
-}
-.Head .Inner .HeadMain .HeadTxt .HeadDate {
-  display: inline-block;
-  color: #aaaaaa;
-  font-family: Tahoma, Arial, Helvetica, sans-serif;
 }
 .Head .Inner .HeadMain .HeadTxt .HeadOption {
   margin-top: 13px;

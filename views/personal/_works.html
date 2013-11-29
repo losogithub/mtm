@@ -65,7 +65,31 @@
     <tbody>
     <% for (i in locals.topics) { %>
     <% var topic = topics[i] %>
-    <% include _topicShort.html %>
+    <tr>
+      <td>
+        <p class="MainTblTtl">
+          <a
+          <% if (topic.draft) { %>
+          href="<%= topic.topicUrl %>/edit"
+          <% } else { %>
+          href="<%= topic.topicUrl %>"
+          <% } %>
+          ><%= topic.title %></a>
+          <% if (topic.draft) { %>
+          <span class="text-muted">（草稿）</span>
+          <% } %>
+        </p>
+
+        <p class="text-muted">创建： <%= topic.create_date %></p>
+      </td>
+      <td class="MainTblPV">
+        <%= !topic.PV_count ? '-' : topic.PV_count %>
+      </td>
+      <td class="MainTblRate">-
+      </td>
+      <td>
+      </td>
+    </tr>
     <% } %>
     </tbody>
   </table>

@@ -20,12 +20,31 @@
   </div>
 </div>
 
-
 <%if (topics.length ) { %>
 <table class="TopicTable">
   <% for (i in locals.topics) { %>
   <% var topic = topics[i] %>
-  <% include _eachTopic.html %>
+  <tr>
+    <th>
+      <a href="<%= topic.topicUrl || '' %>" title="<%= topic.title || '' %>">
+        <img src="<%= topic.cover_url || '/images/no_img/image_95x95.png' %>" width="60"
+             height="60" onerror="mtm.errorImage(this,'image_95x95');">
+      </a>
+    </th>
+    <td>
+      <p style="font-size: 14px;">
+        <a href="<%= topic.topicUrl || '' %>" title="<%= topic.title || '' %>" class="text-default">
+          <%= topic.title || '' %>
+        </a>
+      </p>
+
+      <p class="text-muted">更新日期: <%= topic.create_date || '' %></p>
+      <i class="icon-star StarIconFull"></i>
+      <span style="width: 40px;display: inline-block;"> <%= topic.FVCount || '0' %></span>
+      <span class="text-muted">浏览</span>
+      <span><%= topic.PV_count || '0' %></span>
+    </td>
+  </tr>
   <% } %>
 </table>
 

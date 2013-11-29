@@ -1344,6 +1344,15 @@ cite {
   /*added*/
   color: #000;
 }
+.text-secondary {
+  /*added*/
+  color: #666;
+}
+.text-secondary:hover,
+.text-secondary:focus {
+  /*added*/
+  color: #666;
+}
 .text-muted {
   color: #999999;
 }

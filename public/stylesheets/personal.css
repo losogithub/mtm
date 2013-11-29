@@ -266,6 +266,6 @@ textarea {
   padding-top: 16px;
   padding-bottom: 16px;
 }
-.TopicTable tr img {
-  margin-right: 13px;
+.TopicTable tr th {
+  padding-right: 13px;
 }

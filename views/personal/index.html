@@ -3,7 +3,7 @@
     <div class="Sub">
       <ul class="SubPV">
         <li>
-          <p><%= locals.topicsCount || '0' %></p>
+          <p><%= locals.topicCount || '0' %></p>
 
           <p>总结数</p>
         </li>
@@ -13,7 +13,7 @@
         <li>
           <p><%= locals.topicsPageView || '0' %></p>
 
-          <p>月访问量</p>
+          <p>月浏览量</p>
         </li>
       </ul>
       <div class="Thumb">
@@ -30,8 +30,10 @@
       <% } else { %>
       <% if (locals.authorPersonalUrl) { %>
       <div class="BtnSet">
-        <i class="icon-home" style="vertical-align: middle; color: grey;"></i>
-        <a href="<%= locals.authorPersonalUrl || '' %>">个人网站</a>
+        <a href="<%= locals.authorPersonalUrl || '' %>" title="<%= locals.authorPersonalUrl || '' %>" class="text-default">
+          <i class="icon-home text-success" style="text-decoration: none !important;"></i>
+          个人网站
+        </a>
       </div>
       <% } %>
       <div class="BtnSet">
