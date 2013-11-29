@@ -36,6 +36,7 @@ module.exports = function (app) {
   app.put('/topic/sort', auth.userRequired, topic.sortItem);
   app.put('/topic/save', auth.userRequired, topic.saveTopic);
   app.delete('/topic/item', auth.userRequired, topic.deleteItem);
+  app.delete('/topic/:topicId', auth.userRequired, topic.deleteTopic);
 
 
   // sign up, login, logout

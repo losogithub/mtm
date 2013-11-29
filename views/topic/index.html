@@ -14,8 +14,8 @@
     <div class="Inner">
       <div class="HeadMain">
         <div class="HeadThumb" style="display: <%= !locals.topic ? 'none' : !topic.coverUrl ? 'none' : 'block' %>;">
-        <img width="95" height="95" onerror="mtm.errorImage(this,'image_95x95');"
-             src="<%= !locals.topic ? '' : !topic.coverUrl ? '' : topic.coverUrl %>">
+          <img width="95" height="95" onerror="mtm.errorImage(this,'image_95x95');"
+               src="<%= !locals.topic ? '' : !topic.coverUrl ? '' : topic.coverUrl %>">
         </div>
 
         <div class="HeadTxt">
@@ -25,32 +25,28 @@
 
             <% if (locals.isAuthor) { %>
             <div class='HeadUtil'>
-              <a href="<%= !locals.topic ? '' : '/topic/' + topic._id + '/edit?showOption=true' %>"><i class="icon-pencil"></i> 修改</a>
-              <% if (!locals.items || !items.length) { %>
+              <a href="<%= !locals.topic ? '' : '/topic/' + topic._id + '/edit?showOption=true' %>"><i
+                class="icon-pencil"></i> 修改</a>
               <span class='VLine VLine-Util'></span>
-              <button class="btn btn-link text-danger" style="vertical-align: baseline;"><i class="icon-trash"></i> 删除</button>
-              <% } %>
+
+              <% include _deleteBtn.html %>
+
             </div>
             <% } %>
           </div>
 
-          <p><span class="HeadDesc"
-                   style="<%= !topic.description ? 'display: none;' : '' %>"><%= topic.description %></span><span
+          <p><span class="HeadDesc"><%= !locals.topic ? '' : topic.description %></span><span
             class="HeadDate">更新日期: <%= locals.topic ? topic.updateAt : '' %></span>
           </p>
 
           <div class="HeadOption">
             <div class="HeadUser">
-              <table style="height: 30px;">
-                <td>
-                  <a class="HeadUserThumb" href="/u/<%= topic.author %>"><img width="30" height="30" src="<%= authorInfo.imgUrl ? authorInfo.imgUrl : '/images/no_img/user_80x80.png' %>"
-                    onerror="mtm.errorImage(this,'user_80x80');"
-                    title="<%= topic.author %>"></a>
-                </td>
-                <td>
-                  <a class="HeadUserName" href="/u/<%= topic.author %>"><%= topic.author %></a>
-                </td>
-              </table>
+              <a href="/u/<%= topic.author %>" title="<%= topic.author %>">
+                <span class="HeadUserThumb"><img width="30" height="30"
+                                                 src="<%= authorInfo.imgUrl ? authorInfo.imgUrl : '/images/no_img/user_80x80.png' %>"
+                                                 onerror="mtm.errorImage(this,'user_80x80');"></span><span
+                class="HeadUserName text-default"><%= topic.author %></span>
+              </a>
             </div>
           </div>
         </div>
@@ -82,17 +78,19 @@
       <% if (!locals.items || !items.length) { %>
       <div class="NoItem">
         <i class="icon-file-alt" style="font-size: 50px;color: #ccc"></i>
+
         <p>这个总结还没有内容。
           <% if (locals.isAuthor) { %>
           <br>要添加吗？
           <% } %>
         </p>
-      <% } %>
+        <% } %>
         <% if (locals.isAuthor) { %>
-        <a name="add" class="btn btn-default" href="<%= !locals.topic ? '' : topic._id + '/edit' %>" type="button"><i class="icon-plus-sign"></i>
+        <a name="add" class="btn btn-default" href="<%= !locals.topic ? '' : topic._id + '/edit' %>" type="button"><i
+          class="icon-plus-sign"></i>
           添加条目</a>
         <% } %>
-      <% if (!locals.items || !items.length) { %>
+        <% if (!locals.items || !items.length) { %>
       </div>
       <% } %>
 
@@ -102,20 +100,25 @@
     <div class="Sub"><!--right side--->
       <div class="SubInner">
 
-        <div class="SubSeparator" style="height: 20px;"><hr></div>
+        <div class="SubSeparator" style="height: 20px;">
+          <hr>
+        </div>
         <div class="SubAuthor">
           <div class="SubAuthorProfile">
             <div class="SubAuthorProfileUnit">
               <h6 class="SubAuthorProfileUnitTitle">
-                <a href="/u/<%= topic.author %>" class="SubAuthorProfileUnitTitleUserName">
-                  <img title="" width="80" height="80" src="<%= authorInfo.imgUrl ? authorInfo.imgUrl : '/images/no_img/user_80x80.png' %>" onerror="errorImage(this,'user80x80');"
+                <a href="/u/<%= topic.author %>" class="SubAuthorProfileUnitTitleUserName" title="<%= topic.author %>">
+                  <img width="80" height="80"
+                       src="<%= authorInfo.imgUrl ? authorInfo.imgUrl : '/images/no_img/user_80x80.png' %>"
+                       onerror="errorImage(this,'user80x80');"
                        class="SubAuthorProfileUnitTitleUserNameThumb"> <%= topic.author %>
                 </a>
               </h6>
+
               <p class="SubAuthorProfileUnitLink">
                 <% if (authorInfo.personalSite) { %>
                  <span class="SubAuthorProfileUnitLinkSite">
-                   <a href="<%= authorInfo.personalSite %>" class="btn btn-small btn-default" target="_blank">个人网站</a>
+                   <a href="<%= authorInfo.personalSite || '' %>" title="<%= authorInfo.personalSite || '' %>" class="btn btn-small btn-default" target="_blank">个人网站</a>
                  </span>
                 <% } else { %>
                  <span class="SubAuthorProfileUnitLinkSite ExDisabled">

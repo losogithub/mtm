@@ -74,25 +74,40 @@ app.use(function (err, req, res, next) {
   console.error(err.stack);
   var meta = '[' + new Date() + '] ' + req.url + '\n';
   errorLogFile.write(meta + err.stack + '\n');
-  switch (err.message) {
-    case '403':
-      res.send(403, '您无权修改他人的总结');
-      break;
-    case '404':
-      res.status(404).render('sign/errLink');
-      break;
-    default :
-      res.send(500, '服务器出错：\n' + err.message + '\n' + err.stack);
-      break;
+  var accept = req.headers.accept || '';
+  if (~accept.indexOf('html')) {
+    switch (err.message) {
+      case '403':
+        res.send(403, '您无权修改他人的总结');
+        break;
+      case '404':
+        res.status(404).render('sign/errLink');
+        break;
+      default :
+        res.send(500, '服务器出错：\n' + err.message + '\n' + err.stack);
+        break;
+    }
+  } else {
+    switch (err.message) {
+      case '403':
+        res.send(403, '您无权修改他人的总结');
+        break;
+      case '404':
+        res.send(404, '您请求的资源不存在');
+        break;
+      default :
+        res.send(500, '服务器出错：\n' + err.message + '\n' + err.stack);
+        break;
+    }
   }
 });
 
 routes(app);
 
 //if(!module.parent){
-  http.createServer(app).listen(config.port, function () {
-    console.log('Listening on port ' + config.port);
-  });
+http.createServer(app).listen(config.port, function () {
+  console.log('Listening on port ' + config.port);
+});
 //}
 
 //app.listen(config.port);

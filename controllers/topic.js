@@ -760,6 +760,21 @@ function deleteItem(req, res, next) {
   });
 }
 
+function deleteTopic(req, res, next) {
+  console.log('deleteTopic=====');
+  var authorId = req.session.userId;
+  var topicId = req.params.topicId;
+
+  Topic.deleteTopic(authorId, topicId, function (err) {
+    if (err) {
+      return next(err);
+    }
+    res.send(200);
+    console.log('deleteTopic done');
+  });
+  User.deleteTopic(authorId, topicId);
+}
+
 function saveTopic(req, res, next) {
   console.log('saveTopic=====');
   var authorId = req.session.userId;
@@ -774,11 +789,11 @@ function saveTopic(req, res, next) {
     check(description).len(0, 150);
   } catch (err) {
     console.error(err.stack);
-    callback(err);
+    next(err);
     return;
   }
 
-  Topic.saveTopic(authorId, topicId, title, coverUrl, description, publish, function (err, topic) {
+  Topic.saveTopic(authorId, topicId, title, coverUrl, description, publish, function (err) {
     if (err) {
       return next(err);
     }
@@ -1236,6 +1251,7 @@ exports.createItem = createItem;
 exports.editItem = editItem;
 exports.sortItem = sortItem;
 exports.deleteItem = deleteItem;
+exports.deleteTopic = deleteTopic;
 exports.saveTopic = saveTopic;
 exports.getLinkDetail = getLinkDetail;
 exports.getVideoDetail = getVideoDetail;

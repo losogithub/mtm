@@ -35,9 +35,14 @@
             <input name='title' class="" value="<%= locals.topic ? topic.title : '' %>"
                    placeholder="输入总结标题（50字以内）" type="text"/></td>
           <td>
-            <button class="btn btn-link" name="options" style='display: none' type="button">可选项目
+            <button class="btn btn-link" name="options" style='display: none;vertical-align: baseline;' type="button">可选项目
               <i class="icon-caret-down"></i>
             </button>
+          </td>
+          <td style="width: 100%;text-align: right;padding-right: 6px;">
+
+            <% include _deleteBtn.html %>
+
           </td>
         </table>
       </fieldset>

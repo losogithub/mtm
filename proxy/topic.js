@@ -70,6 +70,16 @@ function getAllTopics(callback) {
     .exec(callback);
 }
 
+/**
+ * 保存总结
+ * @param authorId
+ * @param topicId
+ * @param title
+ * @param coverUrl
+ * @param description
+ * @param publish
+ * @param callback
+ */
 function saveTopic(authorId, topicId, title, coverUrl, description, publish, callback) {
   var ep = new EventProxy().fail(callback);
 
@@ -113,6 +123,42 @@ function saveTopic(authorId, topicId, title, coverUrl, description, publish, cal
 }
 
 /**
+ * 删除总结
+ * @param authorId
+ * @param topicId
+ * @param callback
+ */
+function deleteTopic(authorId, topicId, callback) {
+  callback = callback || function () {
+  };
+  TopicModel.findById(topicId, function (err, topic) {
+    if (err) {
+      callback(err);
+      return;
+    }
+    if (!topic) {
+      callback(new Error(404));
+      return;
+    }
+    if (topic.author_id != authorId) {
+      callback(new Error(403));
+      return;
+    }
+
+    topic.remove(function (err) {
+      if (err) {
+        callback(err);
+        return;
+      }
+      callback(null, topic);
+      return;
+    });
+
+    Item.deleteItemList(topic.void_item_id, callback);
+  });
+}
+
+/**
  * 查找总结
  * @param topicId
  * @param callback
@@ -133,5 +179,6 @@ exports.increaseItemCountBy = increaseItemCountBy;
 exports.increasePVCountBy = increasePVCountBy;
 exports.getAllTopics = getAllTopics;
 exports.saveTopic = saveTopic;//改
+exports.deleteTopic = deleteTopic;//删
 exports.getTopicById = getTopicById;//查
 exports.getTopicsByIdsSorted = getTopicsByIdsSorted;

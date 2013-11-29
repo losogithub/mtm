@@ -311,13 +311,12 @@
   margin-right: 6px;
 }
 .Head .Inner .HeadMain .HeadTxt .HeadOption .HeadUser .HeadUserThumb {
-  display: block;
+  display: inline-block;
   width: 30px;
   height: 30px;
   margin-right: 10px;
 }
 .Head .Inner .HeadMain .HeadTxt .HeadOption .HeadUser .HeadUserName {
-  color: #000000 !important;
   font-weight: bold;
 }
 .Head .Inner .HeadSub {
@@ -392,7 +391,6 @@
   text-shadow: 0 0 1px #443a00;
 }
 .Head .Inner .HeadSub .HeadFVBtnTxt {
-  color: black;
   font-weight: bold;
   font-size: 14px;
 }

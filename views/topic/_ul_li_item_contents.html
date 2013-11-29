@@ -1,7 +1,7 @@
 <% if (item.type == 'LINK' || item.type == 'ALL') { %>
 <div class='Content LINK'>
   <p class="Title" style="display: <%= (item.type != 'ALL') && !item.title ? 'none' : 'block' %>;">
-    <a class="LINK_URL" href='<%= item.url ? item.url : "" %>'><%= item.title ? item.title : '' %></a>
+    <a class="LINK_URL text-default" href='<%= item.url ? item.url : "" %>'><%= item.title ? item.title : '' %></a>
   </p>
   <div class="Quote">
     <a class="LINK_URL" href="<%= item.url ? item.url : '' %>">
@@ -35,7 +35,7 @@
   </div>
   <div style="overflow: hidden;">
     <div class="Title">
-      <a class="IMAGE_LINK" href='<%= item.url ? item.url : "" %>'><%= item.title ? item.title : '' %></a>
+      <a class="IMAGE_LINK text-default" href='<%= item.url ? item.url : "" %>'><%= item.title ? item.title : '' %></a>
     </div>
     <p class="Description"><%- item.description ? escape(item.description).replace(/\n/g, "<br>") : '' %></p>
   </div>
@@ -55,7 +55,7 @@
     </div>
   </div>
   <p class="Title" style="display: <%= (item.type != 'ALL') && !item.title ? 'none' : 'block' %>;">
-    <a class="VIDEO_URL" href='<%= item.url ? item.url : "" %>'><%= item.title ? item.title : '' %></a>
+    <a class="VIDEO_URL text-default" href='<%= item.url ? item.url : "" %>'><%= item.title ? item.title : '' %></a>
   </p>
   <p class="Description" style="display: <%= (item.type != 'ALL') && !item.description ? 'none' : 'block' %>;"><%- item.description ?
     escape(item.description).replace(/\n/g, "<br>") : '' %></p>
