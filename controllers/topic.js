@@ -772,7 +772,6 @@ function deleteTopic(req, res, next) {
     res.send(200);
     console.log('deleteTopic done');
   });
-  User.deleteTopic(authorId, topicId);
 }
 
 function saveTopic(req, res, next) {

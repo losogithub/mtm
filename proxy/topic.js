@@ -151,10 +151,11 @@ function deleteTopic(authorId, topicId, callback) {
         return;
       }
       callback(null, topic);
+      Item.deleteItemList(topic.void_item_id, callback);
+      User.deleteTopic(authorId, topicId);
+      NewTopic.deleteNewTopic(topicId);
       return;
     });
-
-    Item.deleteItemList(topic.void_item_id, callback);
   });
 }
 
