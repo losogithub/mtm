@@ -1,55 +1,54 @@
 <!--SIGNUP##这是layout要用的参数，不能删！-->
-<div class="Contents">
-  <form method="post" action="/signup">
-    <div class="RegisterForm">
-      <div class="Inner">
-        <fieldset class="clearfix">
-          <dl>
-            <dt>用户名</dt>
-            <dd>
-              <input type="text" value="" maxlength="20"
-                     id="_userName" name="username"/>
+<form method="post" action="/signup">
+  <div class="RegisterForm">
+    <div class="Inner">
+      <fieldset class="clearfix">
+        <dl>
+          <dt>用户名</dt>
+          <dd>
+            <input type="text" value="" maxlength="20"
+                   id="_userName" name="username"/>
 
-              <span></span>
-              <p class="ErrorHint"><%- locals.nameMsg || '' %></p>
-            </dd>
-          </dl>
-          <dl>
-            <dt>邮箱</dt>
-            <dd>
-              <input type="text" id="_email" name="email" value=""/>
+            <span></span>
+            <p class="ErrorHint"><%- locals.nameMsg || '' %></p>
+          </dd>
+        </dl>
+        <dl>
+          <dt>邮箱</dt>
+          <dd>
+            <input type="text" id="_email" name="email" value=""/>
 
-              <p class="ErrorHint">
-                <%= locals.emailMsg ? emailMsg : '' %>
-              </p>
-            </dd>
-          </dl>
-          <dl>
-            <dt>密码</dt>
-            <dd>
-              <input type="password" maxlength="20" id="_passwd" name="password"/>
+            <p class="ErrorHint">
+              <%= locals.emailMsg ? emailMsg : '' %>
+            </p>
+          </dd>
+        </dl>
+        <dl>
+          <dt>密码</dt>
+          <dd>
+            <input type="password" maxlength="20" id="_passwd" name="password"/>
 
-              <p class="ErrorHint">
-                <%= locals.passwordMsg ? passwordMsg : '' %>
-              </p>
-            </dd>
-          </dl>
-        </fieldset>
-      </div>
+            <p class="ErrorHint">
+              <%= locals.passwordMsg ? passwordMsg : '' %>
+            </p>
+          </dd>
+        </dl>
+      </fieldset>
     </div>
+  </div>
 
-    <fieldset class="Agreement">
-      <input type="checkbox" id="rules"/>
-      <strong>同意<a href="/rules" target="_blank">MTM&#39;s Terms of
-        service</a>和<a href="/privacy/policy" target="_blank">Privacy
-        Policy</a></strong>
-    </fieldset>
+  <fieldset class="Agreement">
+    <input type="checkbox" id="rules"/>
+    <strong>同意<a href="/rules" target="_blank">MTM&#39;s Terms of
+      service</a>和<a href="/privacy/policy" target="_blank">Privacy
+      Policy</a></strong>
+  </fieldset>
 
-    <button name="signup" style="margin: 30px auto;width: 230px;height: 50px;"
-            class="btn btn-success btn-block btn-large" disabled="disabled">注册
-    </button>
-  </form>
-</div>
+  <button name="signup" style="margin: 30px auto;width: 230px;height: 50px;"
+          class="btn btn-success btn-block btn-large" disabled="disabled">注册
+  </button>
+</form>
+
 <script>
   $(function () {
     new shizier.account.initRegistForm();

@@ -1751,7 +1751,7 @@
       }
     });
 
-    $band.on('click', 'button', function (event) {
+    $band.on('click', 'button[name="save"], button[name="saveDraft"], button[name="publish"]', function (event) {
       var $target = $(event.target);
       var name = $target.attr('name');
       $form
