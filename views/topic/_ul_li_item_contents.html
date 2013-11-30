@@ -1,10 +1,10 @@
 <% if (item.type == 'LINK' || item.type == 'ALL') { %>
 <div class='Content LINK'>
   <p class="Title" style="display: <%= (item.type != 'ALL') && !item.title ? 'none' : 'block' %>;">
-    <a class="LINK_URL text-default" href='<%= item.url ? item.url : "" %>'><%= item.title || '' %></a>
+    <a target="_blank" class="LINK_URL text-default" href='<%= item.url ? item.url : "" %>'><%= item.title || '' %></a>
   </p>
   <div class="Quote">
-    <a class="LINK_URL" href="<%= item.url || '' %>">
+    <a target="_blank" class="LINK_URL" href="<%= item.url || '' %>">
       <%= item.url || '' %>
     </a>
   </div>
@@ -30,7 +30,7 @@
     <div class="Quote" style=<%- (item.type != 'ALL') && !item.quote ? 'display:none' : '' %>>
       <span>来源</span>
       <div>
-        <a href="<%= item.quote || '' %>">
+        <a target="_blank" href="<%= item.quote || '' %>">
           <%= item.quoteDomain ? item.quoteDomain : '' %>
         </a>
       </div>
@@ -50,13 +50,13 @@
   <div class="Quote">
     <span>来源</span>
     <div>
-      <a class="VIDEO_URL" href="<%= item.url ? item.url : '' %>">
+      <a target="_blank" class="VIDEO_URL" href="<%= item.url ? item.url : '' %>">
         <%= item.quote ? item.quote : item.url ? item.url : '' %>
       </a>
     </div>
   </div>
   <p class="Title" style="display: <%= (item.type != 'ALL') && !item.title ? 'none' : 'block' %>;">
-    <a class="VIDEO_URL text-default" href='<%= item.url ? item.url : "" %>'><%= item.title ? item.title : '' %></a>
+    <a target="_blank" class="VIDEO_URL text-default" href='<%= item.url ? item.url : "" %>'><%= item.title ? item.title : '' %></a>
   </p>
   <p class="Description" style="display: <%= (item.type != 'ALL') && !item.description ? 'none' : 'block' %>;"><%- item.description ?
     escape(item.description).replace(/\n/g, "<br>") : '' %></p>
@@ -72,7 +72,7 @@
   <div class="Quote" style=<%- (item.type != 'ALL') && !item.url && !item.title ? 'display:none' : '' %>>
     <span>来源</span>
     <div>
-      <a href="<%= !item.url ? '' : item.url %>"><%= !item.url ? '' : !item.title ? item.url : item.title %></a>
+      <a target="_blank" href="<%= !item.url ? '' : item.url %>"><%= !item.url ? '' : !item.title ? item.url : item.title %></a>
       <span ><%= item.url ? '' : !item.title ? '' : item.title %></span>
     </div>
   </div>

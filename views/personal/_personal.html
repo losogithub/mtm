@@ -26,14 +26,14 @@
   <% var topic = topics[i] %>
   <tr>
     <th>
-      <a href="<%= topic.topicUrl || '' %>" title="<%= topic.title || '' %>">
+      <a target="_blank" href="<%= topic.topicUrl || '' %>" title="<%= topic.title || '' %>">
         <img src="<%= topic.cover_url || '/images/no_img/image_95x95.png' %>" width="60"
              height="60" onerror="shizier.errorImage(this,'image_95x95');">
       </a>
     </th>
     <td>
       <p style="font-size: 14px;">
-        <a href="<%= topic.topicUrl || '' %>" title="<%= topic.title || '' %>" class="text-default">
+        <a target="_blank" href="<%= topic.topicUrl || '' %>" title="<%= topic.title || '' %>" class="text-default">
           <%= topic.title || '' %>
         </a>
       </p>

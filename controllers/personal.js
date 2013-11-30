@@ -81,6 +81,9 @@ var showWorks = function (req, res, next) {
           temp.create_date = topicDetails[i].create_at.getFullYear() + '年'
             + (topicDetails[i].create_at.getMonth() + 1) + '月'
             + topicDetails[i].create_at.getDate() + '日';
+          temp.update_date = topicDetails[i].update_at.getFullYear() + '年'
+            + (topicDetails[i].update_at.getMonth() + 1) + '月'
+            + topicDetails[i].update_at.getDate() + '日';
           topicsForShow.push(temp);
         }
 
