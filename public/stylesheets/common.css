@@ -93,11 +93,6 @@ input.Bold {
   font-weight: bold;
   height: 30px;
 }
-a,
-a:hover,
-a:focus {
-  color: black;
-}
 ol,
 ul {
   list-style: none;
@@ -143,12 +138,19 @@ body.INDEX {
   left: 4px;
 }
 /*按钮*/
+.InfoHint {
+  margin-top: 3px;
+  font-size: 10px;
+}
 .BtnSet {
   margin-top: 14px;
   max-height: 27px;
 }
 .Widget .BtnSet {
   float: left;
+}
+.InfoHint + .BtnSet {
+  margin-top: 3px;
 }
 /*徽标*/
 .Logo,
@@ -213,7 +215,16 @@ body.INDEX {
   height: 178px;
 }
 /*导航*/
-.Nav a {
+.Nav a,
+.Nav button {
+  text-align: left !important;
+}
+.Nav a,
+.Nav button,
+.Nav a:hover,
+.Nav button:hover,
+.Nav a:focus,
+.Nav button:focus {
   color: #545454;
 }
 .Nav.Nav-Left {
@@ -266,17 +277,24 @@ body.INDEX {
   border: 1px solid #cfcfcf;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
 }
-.Nav.Nav-Drop a {
+.Nav.Nav-Drop a,
+.Nav.Nav-Drop button {
   display: block;
   height: 30px;
   line-height: 30px;
   padding: 0 8px;
 }
 .Nav.Nav-Drop a:hover,
-.Nav.Nav-Drop a:active,
-.Nav.Nav-Drop a:focus {
+.Nav.Nav-Drop button:hover,
+.Nav.Nav-Drop a:focus,
+.Nav.Nav-Drop button:focus {
   background-color: #f0f0f0;
   text-decoration: none;
+}
+.Nav.Nav-Drop a i,
+.Nav.Nav-Drop button i {
+  display: inline-block;
+  width: 18px;
 }
 /*页脚*/
 .Footer {

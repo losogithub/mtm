@@ -178,6 +178,34 @@ function deleteItem(item, callback) {
   }));
 }
 
+function deleteItemList(itemId, callback) {
+  callback = callback || function () {
+  };
+  _deleteItemList('VOID', itemId, function (err, item) {
+    if (err) {
+      return callback(err);
+    }
+    return callback(null, item);
+  })
+}
+
+function _deleteItemList(itemType, itemId, callback) {
+  callback = callback || function () {
+  };
+  ItemModels[itemType].findByIdAndRemove(itemId, function (err, item) {
+    if (err) {
+      return callback(err);
+    }
+    if (!item || !item.next_item || !item.next_item.type || !item.next_item.id) {
+      return callback(new Error(404));
+    }
+    if (item.next_item.type == 'VOID') {
+      return callback(null, item);
+    }
+    _deleteItemList(item.next_item.type, item.next_item.id, callback);
+  })
+}
+
 /**
  * 获取一个总结的所有条目
  * @param voidItemId
@@ -256,5 +284,6 @@ exports.createItem = createItem;//增
 exports.insertItem = insertItem;
 exports.detachItem = detachItem;
 exports.deleteItem = deleteItem;//删
+exports.deleteItemList = deleteItemList;//删
 exports.getItems = getItems;//查
 exports.getItemById = getItemById;

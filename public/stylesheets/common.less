@@ -32,8 +32,6 @@ input[name='url'], input.Url { color: #999; }
 
 input.Bold { font-size: 14px; font-weight: bold; height: 30px; }
 
-a, a:hover, a:focus { color: black; }
-
 ol, ul { list-style: none; }
 
 i { font-size: 14px; }
@@ -59,9 +57,12 @@ body {
 }
 
 /*按钮*/
+.InfoHint { margin-top: 3px;font-size: 10px; }
+
 .BtnSet {
   margin-top: 14px;max-height: 27px;
   .Widget & { float: left; }
+  .InfoHint + & { margin-top: 3px; }
 }
 
 /*徽标*/
@@ -97,7 +98,9 @@ body {
 
 /*导航*/
 .Nav {
-  a { color: rgb(84, 84, 84); }
+  a, button { text-align: left !important;
+    &, &:hover, &:focus { color: rgb(84, 84, 84); }
+  }
   &.Nav-Left {
     left: 0; position: absolute; top: 0; height: 100%;
     li { display: inline; margin-right: 30px; }
@@ -121,9 +124,10 @@ body {
   &.Nav-Drop {
     z-index: 1002; position: absolute; right: 0; width: 98px;
     background-color: white; border: 1px solid rgb(207, 207, 207); box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
-    a {
+    a, button {
       display: block; height: 30px; line-height: 30px; padding: 0 8px;
-      &:hover, &:active, &:focus { background-color: #f0f0f0; text-decoration: none; }
+      &:hover, &:focus { background-color: #f0f0f0; text-decoration: none; }
+      i { display: inline-block; width: 18px;}
     }
   }
 }

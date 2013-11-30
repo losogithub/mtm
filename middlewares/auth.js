@@ -265,7 +265,12 @@ function loginDialog(req, res, next) {
   }
 }
 
+function loginDialogCheck(req, res, next) {
+  res.send(200);
+}
+
 exports.loginRequired = loginRequired;
 exports.userRequired = userRequired;
 exports.loadUser = loadUser;
 exports.loginDialog = loginDialog;
+exports.loginDialogCheck = loginDialogCheck;

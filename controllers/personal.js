@@ -81,6 +81,9 @@ var showWorks = function (req, res, next) {
           temp.create_date = topicDetails[i].create_at.getFullYear() + '年'
             + (topicDetails[i].create_at.getMonth() + 1) + '月'
             + topicDetails[i].create_at.getDate() + '日';
+          temp.update_date = topicDetails[i].update_at.getFullYear() + '年'
+            + (topicDetails[i].update_at.getMonth() + 1) + '月'
+            + topicDetails[i].update_at.getDate() + '日';
           topicsForShow.push(temp);
         }
 
@@ -168,7 +171,7 @@ var renderWorks = function (user, topicsInfos, isSelectC, isSelectU, isSelectP, 
     personalType: 'WORKS',
     username: user.loginName,
     favourite: user.favourite,
-    topicsCount: user.topicCount,
+    topicCount: user.topicCount,
     topicsPageView: user.pageviewCount,
     topics: topicsInfos,
     isSelectC: isSelectC,
@@ -201,13 +204,14 @@ var showSettings = function (req, res) {
         '/stylesheets/personal.css'
       ],
       js: [
+        '/javascripts/utils.js',
         '/javascripts/setting.js'
       ],
       pageType: 'PERSONAL',
       personalType: 'SETTINGS',
       username: user.loginName,
       favourite: user.favourite,
-      topicsCount: user.topicCount,
+      topicCount: user.topicCount,
       topicsPageView: user.pageviewCount,
       imageUrl: user.url,
       description: description,
@@ -249,7 +253,6 @@ var updateSettings = function (req, res) {
         }
       }
       user.personalSite = connectUrl;
-
 
 
       //console.log(user);
@@ -358,9 +361,9 @@ var showAccountModify = function (req, res) {
       console.log("((((((((((((((((((Birthday)))))))))");
       console.log(birthday);
       /*
-      if(user.birthday){
+       if(user.birthday){
 
-      }*/
+       }*/
 
       var fChecked = '';
       var mChecked = '';

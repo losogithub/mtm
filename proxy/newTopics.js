@@ -85,9 +85,23 @@ function saveNewTopic(topic, callback) {
       });
     });
   });
+}
 
+function deleteNewTopic(topicId) {
+  NewTopicModel.findByIdAndRemove(topicId, function (err) {
+    if (err) {
+      return;
+    }
+    getNewTopics(function (err, topics) {
+      if (err) {
+        return;
+      }
+      updateNewTopics(topics);
+    })
+  });
 }
 
 exports.getNewTopics = getNewTopics;
 exports.updateNewTopics = updateNewTopics;
 exports.saveNewTopic = saveNewTopic;
+exports.deleteNewTopic = deleteNewTopic;

@@ -11,7 +11,7 @@
   var console = window.console || {log: $.noop, error: $.noop};
 
   function fillVideo($li, url, vid) {
-    var quote = mtm.utils.getVideoQuote(url);
+    var quote = shizier.utils.getVideoQuote(url);
     var temp;
     var videoType = !quote ? null : !(temp = quote.match(/([^\.]+)\./)) ? null : !temp[1] ? null : temp[1].toUpperCase();
 
@@ -108,7 +108,7 @@
   /*
    * 定义微件：编辑widget的base对象
    */
-  $.widget('mtm.editWidget', {
+  $.widget('shizier.editWidget', {
 
     type: undefined,
 
@@ -155,7 +155,7 @@
           if (url) {
             url = url.trim().replace('。', '.');
           }
-          if (url && !mtm.utils.REGEXP_PROTOCOL.test(url)) {
+          if (url && !shizier.utils.REGEXP_PROTOCOL.test(url)) {
             url = 'http://' + url;
           }
           $url.val(url);
@@ -301,7 +301,7 @@
 
   });
 
-  $.widget('mtm.edit_createWidget', $.mtm.editWidget, {
+  $.widget('shizier.edit_createWidget', $.shizier.editWidget, {
 
     createPreviewWidget: function (data) {
       var type = this.type.replace('_CREATE', '');
@@ -319,7 +319,7 @@
   /*
    * 定义微件：动态菜单
    */
-  $.widget('mtm.menuWidget', $.mtm.editWidget, {
+  $.widget('shizier.menuWidget', $.shizier.editWidget, {
 
     type: 'MENU',
 
@@ -339,7 +339,7 @@
   /*
    * 定义微件：链接微件
    */
-  $.widget('mtm.linkWidget', $.mtm.editWidget, {
+  $.widget('shizier.linkWidget', $.shizier.editWidget, {
 
     type: 'LINK',
     noImgSrc: '/images/no_img/photo_150x150.png',
@@ -457,9 +457,6 @@
             .hide()
             .end();
         })
-        .error(function () {
-          mtm.errorImage(this, 'photo_150x150');
-        })
         .end()
         .find('.Thumb .btn-group .btn:first')
         .click(function () {
@@ -485,7 +482,7 @@
         .end()
         .find('.Thumb button[name="customize"]')
         .click(function () {
-          _prependSrc(mtm.utils.suffixImage(self.widget().find('.Thumb input[type="text"]').val()));
+          _prependSrc(shizier.utils.suffixImage(self.widget().find('.Thumb input[type="text"]').val()));
         })
         .end()
         .find('textarea[name="description"]')
@@ -574,7 +571,7 @@
   /*
    * 定义微件：链接创建微件
    */
-  $.widget('mtm.link_createWidget', $.mtm.edit_createWidget, {
+  $.widget('shizier.link_createWidget', $.shizier.edit_createWidget, {
 
     type: 'LINK_CREATE',
 
@@ -667,7 +664,7 @@
   /*
    * 定义微件：图片编辑微件
    */
-  $.widget('mtm.imageWidget', $.mtm.editWidget, {
+  $.widget('shizier.imageWidget', $.shizier.editWidget, {
 
     type: 'IMAGE',
 
@@ -785,7 +782,7 @@
   /*
    * 定义微件：图片创建微件
    */
-  $.widget('mtm.image_createWidget', $.mtm.edit_createWidget, {
+  $.widget('shizier.image_createWidget', $.shizier.edit_createWidget, {
 
     type: 'IMAGE_CREATE',
 
@@ -850,7 +847,7 @@
      */
     _getCommitData: function () {
       return {
-        url: mtm.utils.suffixImage(this.widget().find('input').val())
+        url: shizier.utils.suffixImage(this.widget().find('input').val())
       }
     }
 
@@ -859,7 +856,7 @@
   /*
    * 定义微件：视频微件
    */
-  $.widget('mtm.videoWidget', $.mtm.editWidget, {
+  $.widget('shizier.videoWidget', $.shizier.editWidget, {
 
     type: 'VIDEO',
 
@@ -964,7 +961,7 @@
   /*
    * 定义微件：视频创建微件
    */
-  $.widget('mtm.video_createWidget', $.mtm.edit_createWidget, {
+  $.widget('shizier.video_createWidget', $.shizier.edit_createWidget, {
 
     type: 'VIDEO_CREATE',
 
@@ -1059,7 +1056,7 @@
   /*
    * 定义微件：引用微件
    */
-  $.widget('mtm.citeWidget', $.mtm.editWidget, {
+  $.widget('shizier.citeWidget', $.shizier.editWidget, {
 
     type: 'CITE',
 
@@ -1189,7 +1186,7 @@
   /*
    * 定义微件：文本编辑微件
    */
-  $.widget('mtm.textWidget', $.mtm.editWidget, {
+  $.widget('shizier.textWidget', $.shizier.editWidget, {
 
     type: 'TEXT',
 
@@ -1268,7 +1265,7 @@
   /*
    * 定义微件：TITLE编辑widget
    */
-  $.widget('mtm.titleWidget', $.mtm.editWidget, {
+  $.widget('shizier.titleWidget', $.shizier.editWidget, {
 
     type: 'TITLE',
 
@@ -1390,7 +1387,7 @@
     //删除编辑中的微件
     if (state != 'default'
       && editingWidgetName
-      && $editingWidget.is(':data("mtm-' + editingWidgetName + '")')) {
+      && $editingWidget.is(':data("shizier-' + editingWidgetName + '")')) {
       $editingWidget[editingWidgetName]('remove');
     }
 
@@ -1479,8 +1476,14 @@
           .find('.Snippet')
           .html($('<div/>').text(snippet).html().replace(/\n/g, '<br>'))
           .end()
-          .find('.Thumb img')
+          .find('.Thumb')
+          .find('a')
+          .attr('title', title)
+          .attr('href', src)
+          .find('img')
           .attr('src', src)
+          .end()
+          .end()
           .end()
           .find('.Description')
           .html($('<div/>').text(description).html().replace(/\n/g, '<br>'))
@@ -1500,21 +1503,26 @@
         var url = data.url;
         var title = data.title;
         var quote = data.quote;
-        var quoteDomain = mtm.utils.getImageQuoteDomain(quote);
+        var quoteDomain = shizier.utils.getImageQuoteDomain(quote);
         var description = data.description;
         $item
           .find('.IMAGE_LINK')
           .attr('href', url)
           .end()
+          .find('.Image')
+          .find('a')
+          .attr('title', (title || '') + (title && description ? ' -- ' : '') + (description || ''))
           .find('img')
           .attr('src', url)
           .end()
-          .find('.Title a')
+          .end()
+          .end()
+          .find('.Title')
           .text(title)
           .end()
           .find('.Quote a')
           .attr('href', quote)
-          .text(quoteDomain ? quoteDomain : '')
+          .text(quoteDomain || '')
           .end()
           .find('.Description')
           .html($('<div/>').text(description).html().replace(/\n/g, '<br>'))
@@ -1604,6 +1612,7 @@
   function __init() {
     $ul = $('.WidgetItemList');
     $templates = $('.TEMPLATES');
+    $('.fancybox:visible').fancybox(shizier.fancyboxOptions);
   }
 
   function __initListListener() {
@@ -1687,7 +1696,7 @@
           case 'IMAGE':
             data = {
               url: $li.find('img').attr('src'),
-              title: $li.find('.Title a').text(),
+              title: $li.find('.Title').text(),
               quote: $li.find('.Quote a').attr('href'),
               description: $('<div/>').html($li.find('.Description').html().replace(/<br>/g, '\n')).text()
             };
@@ -1792,13 +1801,17 @@
   var __initTop = function (topicData) {
     $form = $('.Edit_Top form');
 
+    var coverUrl;
+
     if (topicData) {
       var title = topicData.title;
-      var coverUrl = topicData.coverUrl;
+      coverUrl = topicData.coverUrl;
       var description = topicData.description;
       $form.find('input[name="title"]').val(title ? title : '');
       $form.find('button[name="cover"] img').attr('src', coverUrl ? coverUrl : '');
       $form.find('textarea[name="description"]').val(description ? description : '');
+    } else {
+      coverUrl = $form.find('button[name="cover"] img').attr('src');
     }
 
     $form.validate({
@@ -1866,13 +1879,22 @@
     }
 
     var $thumb = $('button[name="cover"]');
+    var $img = $thumb.find('img');
     var $extra = $('.Edit_Top_Thumb_Extra');
     var $input = $extra.find('input');
-    var $save = $extra.find('button[name="save"]');
-    var $cancel = $extra.find('button[name="cancel"]');
+    var $preview = $extra.find('button[name="preview"]');
+    var $reset = $extra.find('button[name="reset"]');
+    var autoHide = false;
+    var hide = function () {
+      $extra.css('visibility', 'hidden')
+        .hide('fast', function () {
+          $extra.removeAttr('style');
+        })
+    };
     $thumb.click(function () {
+      autoHide = false;
       if ($extra.is(':visible')) {
-        $cancel.click();
+        hide();
       } else {
         $extra
           .css({ 'opacity': 0 })
@@ -1886,23 +1908,19 @@
         $input.focus();
       }
     });
-    $cancel.click(function () {
-      $extra.css('visibility', 'hidden')
-        .hide('fast', function () {
-          $extra.removeAttr('style');
-        })
-    });
-    $save.click(function () {
-      var $img = $thumb.find('img');
-      var src = $img.attr('src');
-      if (src
-        && src.length
-        && src != '/images/no_img/image_95x95.png'
-        && !confirm('您确定要修改封面吗？')) {
-        return;
+    $img.on('load', function () {
+      console.log($img.attr('src'));
+      if ($img.attr('src') != '/images/no_img/image_95x95.png') {
+        hide();
       }
-      $img.attr('src', mtm.utils.suffixImage($input.val()));
-      $cancel.click();
+    });
+    $reset.click(function () {
+      autoHide = true;
+      $img.attr('src', coverUrl);
+    })
+    $preview.click(function () {
+      autoHide = true;
+      $img.attr('src', shizier.utils.suffixImage($input.val()));
     });
   }
 

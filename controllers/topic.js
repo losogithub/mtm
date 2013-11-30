@@ -32,17 +32,18 @@ function showCreate(req, res, next) {
   res.render('topic/edit', {
     title: '创建总结',
     css: [
+      'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.css',
       '/stylesheets/topic.css',
       '/stylesheets/edit.css'
     ],
     js: [
+      'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.js',
       'http://cdn.bootcss.com/autosize.js/1.17.1/autosize-min.js',
       '/javascripts/jquery-ui-1.10.3.custom.min.js',
       'http://cdn.bootcss.com/jquery-validate/1.11.1/jquery.validate.min.js',
       '/javascripts/utils.js',
       '/javascripts/edit.js'
-    ],
-    backUrl: req.headers.referer ? req.headers.referer : '/works'
+    ]
   });
 }
 
@@ -167,10 +168,12 @@ function showEdit(req, res, next) {
     res.render('topic/edit', {
       title: '修改总结',
       css: [
+        'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.css',
         '/stylesheets/topic.css',
         '/stylesheets/edit.css'
       ],
       js: [
+        'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.js',
         'http://cdn.bootcss.com/autosize.js/1.17.1/autosize-min.js',
         '/javascripts/jquery-ui-1.10.3.custom.min.js',
         'http://cdn.bootcss.com/jquery-validate/1.11.1/jquery.validate.min.js',
@@ -178,7 +181,6 @@ function showEdit(req, res, next) {
         '/javascripts/edit.js'
       ],
       escape: escape,
-      backUrl: req.headers.referer ? req.headers.referer : './',
       topic: topicData,
       items: itemsData
     });
@@ -240,7 +242,11 @@ function showIndex(req, res, next) {
       title: topicData.title,
       description: topicData.description,
       css: [
+        'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.css',
         '/stylesheets/topic.css'
+      ],
+      js: [
+        'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.js'
       ],
       escape: escape,
       isAuthor: topic.author_id == userId,
@@ -758,6 +764,20 @@ function deleteItem(req, res, next) {
   });
 }
 
+function deleteTopic(req, res, next) {
+  console.log('deleteTopic=====');
+  var authorId = req.session.userId;
+  var topicId = req.params.topicId;
+
+  Topic.deleteTopic(authorId, topicId, function (err) {
+    if (err) {
+      return next(err);
+    }
+    res.send(200);
+    console.log('deleteTopic done');
+  });
+}
+
 function saveTopic(req, res, next) {
   console.log('saveTopic=====');
   var authorId = req.session.userId;
@@ -772,11 +792,11 @@ function saveTopic(req, res, next) {
     check(description).len(0, 150);
   } catch (err) {
     console.error(err.stack);
-    callback(err);
+    next(err);
     return;
   }
 
-  Topic.saveTopic(authorId, topicId, title, coverUrl, description, publish, function (err, topic) {
+  Topic.saveTopic(authorId, topicId, title, coverUrl, description, publish, function (err) {
     if (err) {
       return next(err);
     }
@@ -1234,6 +1254,7 @@ exports.createItem = createItem;
 exports.editItem = editItem;
 exports.sortItem = sortItem;
 exports.deleteItem = deleteItem;
+exports.deleteTopic = deleteTopic;
 exports.saveTopic = saveTopic;
 exports.getLinkDetail = getLinkDetail;
 exports.getVideoDetail = getVideoDetail;

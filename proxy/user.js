@@ -8,7 +8,7 @@
 var EventProxy = require('eventproxy');
 
 var models = require('../models');
-var User = models.User;
+var UserModel = models.User;
 
 /**
  * 根据登录名查找用户
@@ -19,7 +19,7 @@ var User = models.User;
  * @param {Function} callback 回调函数
  */
 var getUserByLoginName = function (loginName, callback) {
-  User.findOne({'loginName': loginName}, callback);
+  UserModel.findOne({'loginName': loginName}, callback);
 };
 
 /**
@@ -34,7 +34,7 @@ var getUserByLoginName = function (loginName, callback) {
 //not use this one.
 //use LoginName
 var getUserByName = function (name, callback) {
-  User.findOne({name: name}, callback);
+  UserModel.findOne({name: name}, callback);
 };
 
 /**
@@ -46,7 +46,7 @@ var getUserByName = function (name, callback) {
  * @param {Function} callback 回调函数
  */
 var getUserByMail = function (email, callback) {
-  User.findOne({email: email}, callback);
+  UserModel.findOne({email: email}, callback);
 };
 
 /**
@@ -59,7 +59,7 @@ var getUserByMail = function (email, callback) {
  * @param {Function} callback 回调函数
  */
 var getUsersByQuery = function (query, opt, callback) {
-  User.find(query, {}, opt, callback);   // change the second arguments from [] to {}
+  UserModel.find(query, {}, opt, callback);   // change the second arguments from [] to {}
 };
 
 /**
@@ -72,24 +72,24 @@ var getUsersByQuery = function (query, opt, callback) {
  * @param {Function} callback 回调函数
  */
 var getUserByQuery = function (name, key, callback) {
-  User.findOne({name: name, retrieve_key: key}, callback);
+  UserModel.findOne({name: name, retrieve_key: key}, callback);
 };
 
 var getUserByNamePass = function (name, pass, callback) {
-  User.findOne({loginName: name, password: pass}, callback);
+  UserModel.findOne({loginName: name, password: pass}, callback);
 }
 
 var getUserByEmailPass = function (email, pass, callback) {
-  User.findOne({email: email, password: pass}, callback);
+  UserModel.findOne({email: email, password: pass}, callback);
 }
 
 // here is Email need a key
 var getUserByEmail = function (email, key, callback) {
-  User.findOne({email: email, retrieve_key: key}, callback);
+  UserModel.findOne({email: email, retrieve_key: key}, callback);
 }
 
 var newAndSave = function (name, loginName, password, email, active, callback) {
-  var user = new User();
+  var user = new UserModel();
   user.name = name;
   user.loginName = loginName;
   user.password = password;
@@ -107,15 +107,14 @@ var newAndSave = function (name, loginName, password, email, active, callback) {
  * @param {Function} callback 回调函数
  */
 var getUserById = function (id, callback) {
-  User.findById(id, callback);
+  UserModel.findById(id, callback);
 };
 
 var appendTopic = function (id, topicId, callback) {
   var ep = new EventProxy().fail(callback);
-  //User.update();
-  User.findById(id, ep.done(function (user) {
+  UserModel.findById(id, ep.done(function (user) {
     if (!user) {
-      ep.emit('error', new Error('用户不存在'))
+      ep.emit('error', new Error(404))
       return;
     }
 
@@ -139,6 +138,23 @@ var appendTopic = function (id, topicId, callback) {
   }));
 }
 
+function deleteTopic(authorId, topicId, callback) {
+  callback = callback || function () {
+  };
+  UserModel.findById(authorId, function (err, author) {
+    if (err) {
+      callback(err)
+      return;
+    }
+    if (!author) {
+      callback(new Error(404))
+      return;
+    }
+    author.topics.pull(topicId);
+    author.topicCount = author.topics.length;
+    author.save(callback);
+  });
+}
 
 exports.getUserById = getUserById;
 exports.getUserByLoginName = getUserByLoginName;
@@ -149,5 +165,6 @@ exports.getUserByQuery = getUserByQuery;
 exports.getUserByEmail = getUserByEmail;
 exports.newAndSave = newAndSave;
 exports.appendTopic = appendTopic;
+exports.deleteTopic = deleteTopic;
 exports.getUserByNamePass = getUserByNamePass;
 exports.getUserByEmailPass = getUserByEmailPass;

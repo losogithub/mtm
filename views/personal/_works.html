@@ -11,61 +11,81 @@
       <col>
     </colgroup>
     <thead>
-      <tr>
-        <th>
-          <div>
-            标题
-            <div class="MainTblSortSub">
-              <a class='<%= isSelectC %>' href='?mt=c&amp;mo=<%= createV %>'>创建日期</a>
-              <% if (createV == 'd') { %>
-              <i class="icon-caret-down">
-              <% } else { %>
-              <i class="icon-caret-up">
-              <% } %>
-              </i>
-              <a class='<%= isSelectU %>' href='?mt=u&amp;mo=<%= updateV%>'>更新日期</a>
-                <% if (updateV == 'd') { %>
-                      <i class="icon-caret-down">
-                <% } else { %>
-                      <i class="icon-caret-up">
-                    <% } %>
-                     </i>
-            </div>
+    <tr>
+      <th>
+        <div>
+          标题
+          <div class="MainTblSortSub">
+            <a class='<%= isSelectC %>' href='?mt=c&amp;mo=<%= createV %>'>创建日期</a>
+            <% if (createV == 'a' || !isSelectC) { %>
+            <i class="icon-caret-down"></i>
+            <% } else { %>
+            <i class="icon-caret-up"></i>
+            <% } %>
+            <a class='<%= isSelectU %>' href='?mt=u&amp;mo=<%= updateV%>'>更新日期</a>
+            <% if (updateV == 'a' || !isSelectU) { %>
+            <i class="icon-caret-down"></i>
+            <% } else { %>
+            <i class="icon-caret-up"></i>
+            <% } %>
           </div>
-        </th>
-        <th>
-          <div>
-            <a class="MainTblSort <%= isSelectP %>" href='?mt=p&amp;mo=<%= pageViewV%>'>访问量</a>
-            <% if (pageViewV == 'd') { %>
-            <i class="icon-caret-down">
-              <% } else { %>
-              <i class="icon-caret-up">
-                <% } %>
-              </i>
-          </div>
-        </th>
-        <th>
-          <div>
-            <a class="MainTblSort <%= isSelectR %>" href='?mt=r&amp;mo=<%= rateV %>'>上升率</a>
-            <% if (rateV == 'd') { %>
-            <i class="icon-caret-down">
-              <% } else { %>
-              <i class="icon-caret-up">
-                <% } %>
-              </i>
-          </div>
-        </th>
-        <th>
-          <div>
-            <span>&nbsp;</span><span style="display: none;">页面详细链接</span>
-          </div>
-        </th>
-      </tr>
+        </div>
+      </th>
+      <th>
+        <div>
+          <a class="MainTblSort <%= isSelectP %>" href='?mt=p&amp;mo=<%= pageViewV %>'>访问量</a>
+          <% if (pageViewV == 'a' || !isSelectP) { %>
+          <i class="icon-caret-down"></i>
+          <% } else { %>
+          <i class="icon-caret-up"></i>
+          <% } %>
+        </div>
+      </th>
+      <th>
+        <div>
+          <a class="MainTblSort <%= isSelectR %>" href='?mt=r&amp;mo=<%= rateV %>'>上升率</a>
+          <% if (rateV == 'a' || !isSelectR) { %>
+          <i class="icon-caret-down"></i>
+          <% } else { %>
+          <i class="icon-caret-up"></i>
+          <% } %>
+        </div>
+      </th>
+      <th>
+        <div>
+          <span>&nbsp;</span><span style="display: none;">页面详细链接</span>
+        </div>
+      </th>
+    </tr>
     </thead>
     <tbody>
     <% for (i in locals.topics) { %>
     <% var topic = topics[i] %>
-    <% include _topicShort.html %>
+    <tr>
+      <td>
+        <p class="MainTblTtl">
+          <a target="_blank" title="<%= topic.title || '' %>"
+          <% if (topic.draft) { %>
+          href="<%= topic.topicUrl %>/edit"
+          <% } else { %>
+          href="<%= topic.topicUrl %>"
+          <% } %>
+          ><%= topic.title %></a>
+          <% if (topic.draft) { %>
+          <span class="text-muted">（草稿）</span>
+          <% } %>
+        </p>
+
+        <p class="text-muted"><%= isSelectU ? ('更新：' + topic.update_date) : ('创建：' + topic.create_date)%></p>
+      </td>
+      <td class="MainTblPV">
+        <%= !topic.PV_count ? '-' : topic.PV_count %>
+      </td>
+      <td class="MainTblRate">-
+      </td>
+      <td>
+      </td>
+    </tr>
     <% } %>
     </tbody>
   </table>

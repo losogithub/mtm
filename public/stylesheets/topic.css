@@ -54,7 +54,7 @@
   clear: both;
 }
 .WidgetItemList > li:last-child > div {
-  margin-bottom: 0;
+  margin-bottom: 0 !important;
 }
 .WidgetItemList > li.TITLE > div {
   margin-bottom: 25px;
@@ -127,11 +127,6 @@
   display: none;
   visibility: hidden;
   line-height: 1;
-}
-.BottomUtil button,
-.HeadUtil a {
-  color: #7c94aa !important;
-  display: inline-block;
 }
 .LINK .Title a {
   font-size: 20px;
@@ -302,12 +297,6 @@
 }
 .Head .Inner .HeadMain .HeadTxt .HeadDesc {
   margin-right: 8px;
-  color: #666666;
-}
-.Head .Inner .HeadMain .HeadTxt .HeadDate {
-  display: inline-block;
-  color: #aaaaaa;
-  font-family: Tahoma, Arial, Helvetica, sans-serif;
 }
 .Head .Inner .HeadMain .HeadTxt .HeadOption {
   margin-top: 13px;
@@ -316,13 +305,12 @@
   margin-right: 6px;
 }
 .Head .Inner .HeadMain .HeadTxt .HeadOption .HeadUser .HeadUserThumb {
-  display: block;
+  display: inline-block;
   width: 30px;
   height: 30px;
   margin-right: 10px;
 }
 .Head .Inner .HeadMain .HeadTxt .HeadOption .HeadUser .HeadUserName {
-  color: #000000 !important;
   font-weight: bold;
 }
 .Head .Inner .HeadSub {
@@ -397,7 +385,6 @@
   text-shadow: 0 0 1px #443a00;
 }
 .Head .Inner .HeadSub .HeadFVBtnTxt {
-  color: black;
   font-weight: bold;
   font-size: 14px;
 }
@@ -409,8 +396,6 @@
 }
 .Main a[name="add"] > i {
   color: #669966;
-  vertical-align: middle;
-  font-size: 15px;
 }
 .NoItem {
   position: relative;

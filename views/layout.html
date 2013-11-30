@@ -47,7 +47,6 @@
     <% } %>
     <table style="margin: 0 auto;">
       <td>
-        <!--<a class="Logo" href="/" title='mtm'>mtm</a>-->
         <a class="Logo" href="/"><img src="/images/logo_full_160x64.png"></a>
         <% if (locals.pageType == 'SIGNUP') { %>
         <p style="text-align: center;margin-top: 20px;">与世界分享你的总结</p>
@@ -70,7 +69,7 @@
             <% } else { %>
             <li><a href="/works"><img width="20" height="20"
                                       src="<%= locals.imageUrl ? locals.imageUrl : '/images/no_img/user_80x80.png' %>"
-                                      onerror="mtm.errorImage(this,'user_80x80');"><%= username %></a><span
+                                      onerror="shizier.errorImage(this,'user_80x80');"><%= username %></a><span
               class="VLine VLine-Header"></span></li>
             <li><a href="/notifications">通知</a><span class="mdHeadUtil01Count"
                                                      style="display: none;"><span
@@ -81,9 +80,26 @@
             </li>
             <nav class="Nav Nav-Drop" style="display: none;">
               <ul>
-                <li><a href="/settings">设置</a></li>
-                <li><a href="/faq?serviceNo=4">帮助</a></li>
-                <li><a href="/logout">登出</a></li>
+                <li>
+                  <a href="/settings">
+                    <i class="icon-cog"></i>
+                    设置
+                  </a>
+                </li>
+                <li>
+                  <a href="/faq?serviceNo=4">
+                    <i class="icon-question-sign"></i>
+                    帮助
+                  </a>
+                </li>
+                <li>
+                  <form action="/logout" method="post">
+                    <button class="btn btn-link btn-block" type="submit">
+                      <i class="icon-signout"></i>
+                      登出
+                    </button>
+                  </form>
+                </li>
               </ul>
             </nav>
             <% } %>

@@ -17,7 +17,7 @@
       &:hover { background-color: #f8f8f8; box-shadow: 0 0 0 3px #f8f8f8; }
       >:first-child { .clearfix(); }
     }
-    &:last-child>div {margin-bottom: 0;}
+    &:last-child>div {margin-bottom: 0 !important;}
     &.TITLE>div { margin-bottom: 25px; }
   }
   .Content { .clearfix(); }
@@ -45,8 +45,6 @@
 }
 
 .BottomUtil { display: none; visibility: hidden; line-height: 1; }
-
-.BottomUtil button, .HeadUtil a { color: rgb(124, 148, 170) !important; display: inline-block; }
 
 .LINK {
   .Title a {
@@ -124,16 +122,15 @@
           }
           .HeadUtil { display: inline-block; }
         }
-        .HeadDesc { margin-right: 8px; color: rgb(102, 102, 102); }
-        .HeadDate { display: inline-block; color: rgb(170, 170, 170); font-family: Tahoma, Arial, Helvetica, sans-serif; }
+        .HeadDesc { margin-right: 8px; }
         .HeadOption {
           margin-top: 13px;
           .HeadUser {
             margin-right: 6px;
             .HeadUserThumb {
-              display: block; width: 30px; height: 30px; margin-right: 10px;
+              display: inline-block; width: 30px; height: 30px; margin-right: 10px;
             }
-            .HeadUserName { color: rgb(0, 0, 0) !important; font-weight: bold; }
+            .HeadUserName { font-weight: bold; }
           }
         }
       }
@@ -156,7 +153,7 @@
       }
       .HeadFVBtnIco { margin-right: 7px; color: @FV-empty-color; text-shadow: 0 0 1px @FV-empty-shadow-color; }
       .ExSelected .HeadFVBtnIco { color: @FV-color; text-shadow: 0 0 1px @FV-shadow-color; }
-      .HeadFVBtnTxt { color: black; font-weight: bold; font-size: 14px }
+      .HeadFVBtnTxt { font-weight: bold; font-size: 14px }
     }
   }
 }
@@ -165,7 +162,7 @@
 
 .Main a[name="add"] { margin-bottom: 15px; }
 
-.Main a[name="add"]>i { color: #669966; vertical-align: middle; font-size: 15px; }
+.Main a[name="add"]>i { color: @theme-color; }
 
 .NoItem { position: relative; padding: 140px 0px 160px; text-align: center; }
 

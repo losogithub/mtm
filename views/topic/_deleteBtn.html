@@ -1,0 +1,24 @@
+<script>
+  window.shizier = window.shizier || {};
+  shizier.deleteTopic = function (button) {
+    if (!confirm('删除后将不能恢复！您确定要删除该总结吗？')) {
+      return;
+    }
+    $(button).button('loading');
+    $.ajax(location.href.replace('/edit', ''), {
+      type: 'DELETE'
+    })
+      .done(function () {
+        alert('已成功删除该总结！');
+        location.href = '/works';
+      })
+      .fail(function (jqXHR) {
+        alert('未能删除该总结！\n' + jqXHR.responseText);
+        $(button).button('reset');
+      })
+  };
+</script>
+<button data-loading-text="&lt;i class='icon-trash'&gt;&lt;/i&gt; 删除 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;"
+        onclick="shizier.deleteTopic(this);" class="btn btn-link text-danger" style="vertical-align: baseline;"
+        type="button"><i class="icon-trash"></i> 删除
+</button>

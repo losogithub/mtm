@@ -39,7 +39,7 @@
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = utils;
   } else if (typeof window !== 'undefined') {
-    window.mtm = window.mtm || {};
-    mtm.utils = utils;
+    window.shizier = window.shizier || {};
+    shizier.utils = utils;
   }
 })();

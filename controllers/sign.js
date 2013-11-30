@@ -241,8 +241,6 @@ var signup = function (req, res, next) {
 };
 
 
-
-
 /**
  * Show user login page.
  *
@@ -270,24 +268,24 @@ var showLogin = function (req, res) {
   // 2 example: suppose you are at register page, then click loggin, after succesfully loggin,
   //  shall not jump to register page.
 
-/*
-  if (req.session && req.session.userId && req.session.userId !== 'undefined') {
-    //if logged in, jump to refer page.
-    //note: not all page jump to loginReferer.
-    //add: 2013.11.23: it seems impossible for this situation. So I commented it.
-    // 2013.11.26. No, maybe not.
-    for (var i = 0, len = notJump.length; i !== len; ++i) {
-      if (refer.indexOf(notJump[i]) >= 0) {
-        refer = 'home';
-        break;
-      }
-    }
+  /*
+   if (req.session && req.session.userId && req.session.userId !== 'undefined') {
+   //if logged in, jump to refer page.
+   //note: not all page jump to loginReferer.
+   //add: 2013.11.23: it seems impossible for this situation. So I commented it.
+   // 2013.11.26. No, maybe not.
+   for (var i = 0, len = notJump.length; i !== len; ++i) {
+   if (refer.indexOf(notJump[i]) >= 0) {
+   refer = 'home';
+   break;
+   }
+   }
 
-    return res.redirect(refer);
-  }
+   return res.redirect(refer);
+   }
 
-  else { */
-    return res.render('sign/login');
+   else { */
+  return res.render('sign/login');
 }
 
 var notJumpForLogin = [
@@ -414,10 +412,9 @@ function checkOnlyPassword(emailIDFlag, pass, autoLogin, user, req, res) {
       break;
     }
   }
-  console.log("after login refer to: " , refer);
+  console.log("after login refer to: ", refer);
   res.redirect(refer);
 };
-
 
 
 /**
@@ -552,7 +549,7 @@ var showResetPassword = function (req, res, next) {
       return res.render('sign/errLink');
     }
     var now = new Date().getTime();
-    var oneHour = 1000 * 60 * 60 ;
+    var oneHour = 1000 * 60 * 60;
     if (!user.retrieve_time || now - user.retrieve_time > oneHour) {
       return res.render('sign/errLink');
     }
@@ -616,7 +613,7 @@ var resetPassword = function (req, res, next) {
     user.retrieve_key = null;
     user.retrieve_time = null;
     user.active = true; // 用户激活   //But if previously is false. now active. right ! correct.
-                        //2013.11.26  even previous is false, it is ok.
+    //2013.11.26  even previous is false, it is ok.
     user.save(function (err) {
       if (err) {
         return next(err);
