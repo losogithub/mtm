@@ -167,7 +167,6 @@ var renderWorks = function (user, topicsInfos, isSelectC, isSelectU, isSelectP, 
     css: [
       '/stylesheets/personal.css'
     ],
-    pageType: 'PERSONAL',
     personalType: 'WORKS',
     username: user.loginName,
     favourite: user.favourite,
@@ -728,7 +727,6 @@ var showPersonal = function (req, res) {
 
 
           res.render('personal/index', {
-            personalType: 'PERSONAL',
             css: ['/stylesheets/personal.css'],
             authorName: authorName,
             authorImage: user.url,
@@ -895,8 +893,7 @@ var showFavourite = function (req, res) {
     res.render('personal/favourite', {
       css: [
         '/stylesheets/personal.css'
-      ],
-      pageType: 'PERSONAL'
+      ]
     });
   } else {
     return res.redirect('/home');
