@@ -1,101 +1,99 @@
 <!--ACCOUNT##这是layout要用的参数，不能删！-->
-<div class="Contents">
-  <div class="Inner">
-    <div class="Nav Nav-Block">
-      <ul>
-        <li>
-          <table style="margin: 0 auto;">
-            <td>
-              <a href="">帐号信息</a>
-            </td>
-          </table>
-        </li>
-      </ul>
-    </div>
-
-    <div class="Message">
-      <form method="post" action="/accountModify" id="_registForm" name="_registForm">
-        <div class="ErrorInfo" style="display: <%= locals.infoMsg ? 'block' : 'none' %>">
-          <span><%= locals.infoMsg || '' %></span>
-        </div>
-        <table class="Settings MarginBottom">
-          <tbody>
-          <input type="hidden" name="auth" value=<%= locals.auth || '' %> >
-          <input type="hidden" name="m" value="modifyAccountInfoAction">
-          <input type="hidden" name="fromUrl" value="/">
-          <tr class="BorderBottom">
-            <th>用户名</th>
-            <td><span><%= locals.username || '' %></span></td>
-          </tr>
-          <tr class="BorderBottom">
-            <th>性别</th>
-            <td>
-              <ul class="">
-                <li><input type="radio" id="radio01" name="genderTypeCd" value="F" <%= locals.fChecked || '' %>
-                  /><label for="radio01"> 女性</label></li>
-                <li><input type="radio" id="radio02" name="genderTypeCd" value="M" <%= locals.mChecked || '' %>
-                  /><label for="radio02"> 男性</label></li>
-                <li><input type="radio" id="radio03" name="genderTypeCd" value="U" <%= locals.uChecked || '' %>
-                  /><label for="radio03"> 保密</label></li>
-              </ul>
-            </td>
-          </tr>
-          <tr class="BorderBottom">
-            <th>出生年月</th>
-            <td>
-              <select name="birthYear" style="width:210px;">
-                <% if (!locals.birthday ) { %>
-                    <% for (var year = 1920; year <= 2013; year++) { %>
-                        <% if (year == 1989) { %>
-                              <option selected >选择</option>
-                              <option value="<%= year %>"><%= year%>年</option>
-                        <% } else { %>
-                              <option value="<%= year %>"><%= year %>年</option>
-                             <% } %>
-                    <% } %>
-                <% } else { %>
-                        <% for (var year = 1920; year <= 2013; year++) { %>
-                          <%  if (year == locals.birthday){ %>
-                               <option selected value="<%= locals.birthday %>"><%= locals.birthday %>年</option>
-                          <% } else { %>
-                               <option value="<%= year %>"><%= year %>年</option>
-                                  <% } %>
-                        <% } %>
-                       <% } %>
-
-              </select>
-            </td>
-          </tr>
-          <tr>
-            <th>新密码</th>
-            <td><input type="password" value="" id="_passwd"
-                       name="newPassword" maxlength="20">
-              <span class="ErrorHint"></span>
-            </td>
-          </tr>
-          <tr class="BorderBottom">
-            <th>请再次输入密码</th>
-            <td><input type="password" value="" id="_passwd_confirm"
-                       name="newPasswordConfirm" maxlength="20">
-              <span class="ErrorHint"></span>
-            </td>
-          </tr>
-          <tr>
-            <th>新闻订阅</th>
-            <td>
-              <input type="checkbox" value="Y" class="ipt_cb" name="newsletterflg"
-                     id="ipt_newsletter01">
-              <label for="ipt_newsletter01"> 通过注册邮箱接收</label>
-            </td>
-          </tr>
-          </tbody>
+<div class="Inner">
+  <div class="Nav Nav-Block">
+    <ul>
+      <li>
+        <table style="margin: 0 auto;">
+          <td>
+            <a href="">帐号信息</a>
+          </td>
         </table>
-        <div style="text-align: center;">
-          <button class="btn btn-large btn-success" type="submit" value="Update">保存</button>
-          <a class="btn btn-large btn-default" href="/">返回</a>
-        </div>
-      </form>
-    </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="Message">
+    <form method="post" action="/accountModify" id="_registForm" name="_registForm">
+      <div class="ErrorInfo" style="display: <%= locals.infoMsg ? 'block' : 'none' %>">
+        <span><%= locals.infoMsg || '' %></span>
+      </div>
+      <table class="Settings MarginBottom">
+        <tbody>
+        <input type="hidden" name="auth" value=<%= locals.auth || '' %> >
+        <input type="hidden" name="m" value="modifyAccountInfoAction">
+        <input type="hidden" name="fromUrl" value="/">
+        <tr class="BorderBottom">
+          <th>用户名</th>
+          <td><span><%= locals.username || '' %></span></td>
+        </tr>
+        <tr class="BorderBottom">
+          <th>性别</th>
+          <td>
+            <ul class="">
+              <li><input type="radio" id="radio01" name="genderTypeCd" value="F" <%= locals.fChecked || '' %>
+                /><label for="radio01"> 女性</label></li>
+              <li><input type="radio" id="radio02" name="genderTypeCd" value="M" <%= locals.mChecked || '' %>
+                /><label for="radio02"> 男性</label></li>
+              <li><input type="radio" id="radio03" name="genderTypeCd" value="U" <%= locals.uChecked || '' %>
+                /><label for="radio03"> 保密</label></li>
+            </ul>
+          </td>
+        </tr>
+        <tr class="BorderBottom">
+          <th>出生年月</th>
+          <td>
+            <select name="birthYear" style="width:210px;">
+              <% if (!locals.birthday ) { %>
+                  <% for (var year = 1920; year <= 2013; year++) { %>
+                      <% if (year == 1989) { %>
+                            <option selected >选择</option>
+                            <option value="<%= year %>"><%= year%>年</option>
+                      <% } else { %>
+                            <option value="<%= year %>"><%= year %>年</option>
+                           <% } %>
+                  <% } %>
+              <% } else { %>
+                      <% for (var year = 1920; year <= 2013; year++) { %>
+                        <%  if (year == locals.birthday){ %>
+                             <option selected value="<%= locals.birthday %>"><%= locals.birthday %>年</option>
+                        <% } else { %>
+                             <option value="<%= year %>"><%= year %>年</option>
+                                <% } %>
+                      <% } %>
+                     <% } %>
+
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <th>新密码</th>
+          <td><input type="password" value="" id="_passwd"
+                     name="newPassword" maxlength="20">
+            <span class="ErrorHint"></span>
+          </td>
+        </tr>
+        <tr class="BorderBottom">
+          <th>请再次输入密码</th>
+          <td><input type="password" value="" id="_passwd_confirm"
+                     name="newPasswordConfirm" maxlength="20">
+            <span class="ErrorHint"></span>
+          </td>
+        </tr>
+        <tr>
+          <th>新闻订阅</th>
+          <td>
+            <input type="checkbox" value="Y" class="ipt_cb" name="newsletterflg"
+                   id="ipt_newsletter01">
+            <label for="ipt_newsletter01"> 通过注册邮箱接收</label>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <div style="text-align: center;">
+        <button class="btn btn-large btn-success" type="submit" value="Update">保存</button>
+        <a class="btn btn-large btn-default" href="/">返回</a>
+      </div>
+    </form>
   </div>
 </div>
 

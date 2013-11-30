@@ -1,153 +1,150 @@
-<div class="Contents">
-  <div class="Top">
-    <div class="TopInner">
-      <p class="TopInnerDate">
-        <time datetime="<%= today1 %>">
-          <em class="TopInnerDateToday"><%= today %></em>
-          <span class="TopInnerDateWeek">(<%= dayInChn %>)</span>
-        </time>
-      </p>
-    </div>
+<div class="Top">
+  <div class="TopInner">
+    <p class="TopInnerDate">
+      <time datetime="<%= today1 %>">
+        <em class="TopInnerDateToday"><%= today %></em>
+        <span class="TopInnerDateWeek">(<%= dayInChn %>)</span>
+      </time>
+    </p>
   </div>
+</div>
 
-  <div class="Inner clearfix">
-    <div class="Main">
-      <div class="ColWrapper clearfix">
-        <div class="Col01">
-          <ul>
-            <li class="SELECTED"><a href="/">综合</a></li>
-            <li><a href="/">精选</a></li>
-          </ul>
-        </div>
-        <div class="Col02">
-          <h6>人气总结</h6>
-          <ul class="HotTopicList">
-            <% for (i in hot) { %>
-            <li>
-              <table style="width: 100%;">
-                <td class="TopicThumb">
-                  <a target="_blank" href="/topic/<%= hot[i].id %>" title="<%= hot[i].title %>">
-                    <img width="60" height="60"
-                         onerror="shizier.errorImage(this,'image_95x95');"
-                         src="<%= !hot[i].coverUrl ? '/images/no_img/image_95x95.png' : hot[i].coverUrl %>">
-                  </a>
-                </td>
-                <td style="width: 100%;">
-                  <div class="">
-                    <p class="TopicTtl">
-                      <a target="_blank" href="/topic/<%= hot[i].id %>" title="<%= hot[i].title %>" class="text-default">
-                        <%= hot[i].title %>
-                      </a>
-                    </p>
-                    <a target="_blank" class="TopicAuthor" href="/u/<%= hot[i].author %>" title="<%= hot[i].author %>">
-                      <%= hot[i].author %>
-                    </a>
-                    <span class="PVCount text-muted">
-                      <b><%= hot[i].PVCount %></b> 浏览
-                    </span>
-                  </div>
-                </td>
-              </table>
-            </li>
-            <% } %>
-          </ul>
-        </div>
-
-        <div class="Col03">
-          <ul class="Col03HotContentList">
-            <% for (i in realGood) { %>
-            <li class="col03HotContentListItem">
-              <a target="_blank" href="/topic/<%= realGood[i].id %>" title="<%= realGood[i].title %>" class="text-muted">
-                <p class="Col03HotContentListItemTtl text-default">
-                  <%= realGood[i].title %>
-                </p>
-
-                <p class="Col03HotContentListItemDes">
-                  <%= realGood[i].des %>
-                </p>
-              </a>
-
-              <div class="Col03HotContentListItemOption">
-                <a target="_blank" class="Col03HotContentListItemUserName text-muted"
-                   href="/u/<%= realGood[i].author %>"
-                   title="<%= realGood[i].author %>">
-                  <%= realGood[i].author %>
-                </a>
-
-                <p class="Col03HotContentListItemPVCount text-muted">
-                  <span class="Col03HotContentListItemPVCountNum"><%= realGood[i].PVCount %></span>
-                  <span class="Col03HotContentListItemPVCountUnit">浏览</span>
-                </p>
-              </div>
-            </li>
-            <% } %>
-          </ul>
-        </div>
-
-      </div>
-
-      <div class="IndexPagination">
-        <% include _pagination.html %>
-      </div>
-
-    </div>
-    <div class="Sub">
-      <div class="SubSeparator">
-        <hr>
-      </div>
-
-
-      <!---the guide of making --->
-      <div class="SubContent">
-        <ul class="GuideBanner">
-          <li>
-            <a href="">
-              <img src="/images/bnr_guide.png" alt="制作指导">
-            </a>
-          </li>
+<div class="Inner clearfix">
+  <div class="Main">
+    <div class="ColWrapper clearfix">
+      <div class="Col01">
+        <ul>
+          <li class="SELECTED"><a href="/">综合</a></li>
+          <li><a href="/">精选</a></li>
         </ul>
       </div>
-      <div class="SubSeparator">
-        <hr>
+      <div class="Col02">
+        <h6>人气总结</h6>
+        <ul class="HotTopicList">
+          <% for (i in hot) { %>
+          <li>
+            <table style="width: 100%;">
+              <td class="TopicThumb">
+                <a target="_blank" href="/topic/<%= hot[i].id %>" title="<%= hot[i].title %>">
+                  <img width="60" height="60"
+                       onerror="shizier.errorImage(this,'image_95x95');"
+                       src="<%= !hot[i].coverUrl ? '/images/no_img/image_95x95.png' : hot[i].coverUrl %>">
+                </a>
+              </td>
+              <td style="width: 100%;">
+                <div class="">
+                  <p class="TopicTtl">
+                    <a target="_blank" href="/topic/<%= hot[i].id %>" title="<%= hot[i].title %>" class="text-default">
+                      <%= hot[i].title %>
+                    </a>
+                  </p>
+                  <a target="_blank" class="TopicAuthor" href="/u/<%= hot[i].author %>" title="<%= hot[i].author %>">
+                    <%= hot[i].author %>
+                  </a>
+                  <span class="PVCount text-muted">
+                    <b><%= hot[i].PVCount %></b> 浏览
+                  </span>
+                </div>
+              </td>
+            </table>
+          </li>
+          <% } %>
+        </ul>
       </div>
 
+      <div class="Col03">
+        <ul class="Col03HotContentList">
+          <% for (i in realGood) { %>
+          <li class="col03HotContentListItem">
+            <a target="_blank" href="/topic/<%= realGood[i].id %>" title="<%= realGood[i].title %>" class="text-muted">
+              <p class="Col03HotContentListItemTtl text-default">
+                <%= realGood[i].title %>
+              </p>
 
-      <!--the newest summarise-->
-      <div class="SubContent">
-        <div class="SubContentTopicListBox">
-          <h6 class="SubContentTopicListTtl">最新的总结</h6>
-          <ul class="SubContentTopicListList">
-            <% for (i in newTopics) { %>
-            <li class="SubContentTopicListListItem">
-              <div class="SubContentTopicListListItemThumb">
-                <a target="_blank" href="/topic/<%= newTopics[i].id %>" title="<%= newTopics[i].title %>">
-                  <img width="45" height="45"
-                       onerror="shizier.errorImage(this,'image_95x95');"
-                       src="<%= !newTopics[i].coverUrl ? '/images/no_img/image_95x95.png' : newTopics[i].coverUrl %>">
+              <p class="Col03HotContentListItemDes">
+                <%= realGood[i].des %>
+              </p>
+            </a>
+
+            <div class="Col03HotContentListItemOption">
+              <a target="_blank" class="Col03HotContentListItemUserName text-muted"
+                 href="/u/<%= realGood[i].author %>"
+                 title="<%= realGood[i].author %>">
+                <%= realGood[i].author %>
+              </a>
+
+              <p class="Col03HotContentListItemPVCount text-muted">
+                <span class="Col03HotContentListItemPVCountNum"><%= realGood[i].PVCount %></span>
+                <span class="Col03HotContentListItemPVCountUnit">浏览</span>
+              </p>
+            </div>
+          </li>
+          <% } %>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="IndexPagination">
+      <% include _pagination.html %>
+    </div>
+
+  </div>
+  <div class="Sub">
+    <div class="SubSeparator">
+      <hr>
+    </div>
+
+
+    <!---the guide of making --->
+    <div class="SubContent">
+      <ul class="GuideBanner">
+        <li>
+          <a href="">
+            <img src="/images/bnr_guide.png" alt="制作指导">
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="SubSeparator">
+      <hr>
+    </div>
+
+
+    <!--the newest summarise-->
+    <div class="SubContent">
+      <div class="SubContentTopicListBox">
+        <h6 class="SubContentTopicListTtl">最新的总结</h6>
+        <ul class="SubContentTopicListList">
+          <% for (i in newTopics) { %>
+          <li class="SubContentTopicListListItem">
+            <div class="SubContentTopicListListItemThumb">
+              <a target="_blank" href="/topic/<%= newTopics[i].id %>" title="<%= newTopics[i].title %>">
+                <img width="45" height="45"
+                     onerror="shizier.errorImage(this,'image_95x95');"
+                     src="<%= !newTopics[i].coverUrl ? '/images/no_img/image_95x95.png' : newTopics[i].coverUrl %>">
+              </a>
+            </div>
+            <div class="SubContentTopicListListItemTxt">
+              <p class="SubContentTopicListListItemTxtLink">
+                <a target="_blank" href="/topic/<%= newTopics[i].id %>"
+                   title="<%= newTopics[i].title %>" class="text-default">
+                  <%= newTopics[i].title %>
                 </a>
-              </div>
-              <div class="SubContentTopicListListItemTxt">
-                <p class="SubContentTopicListListItemTxtLink">
-                  <a target="_blank" href="/topic/<%= newTopics[i].id %>"
-                     title="<%= newTopics[i].title %>" class="text-default">
-                    <%= newTopics[i].title %>
-                  </a>
-                </p>
+              </p>
 
-                <p>
-                  <a target="_blank" class="SubContentTopicListListItemUserName"
-                     href="/u/<%= newTopics[i].author %>"
-                     title="<%= newTopics[i].author %>">
-                    <%= newTopics[i].author %>
-                  </a>
-                </p>
-              </div>
-            </li>
-            <% } %>
-          </ul>
-        </div>
+              <p>
+                <a target="_blank" class="SubContentTopicListListItemUserName"
+                   href="/u/<%= newTopics[i].author %>"
+                   title="<%= newTopics[i].author %>">
+                  <%= newTopics[i].author %>
+                </a>
+              </p>
+            </div>
+          </li>
+          <% } %>
+        </ul>
       </div>
     </div>
   </div>
 </div>
-

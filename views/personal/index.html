@@ -1,76 +1,72 @@
-<div class="Contents">
-  <div class="Inner">
-    <div class="Sub">
-      <ul class="SubPV">
-        <li>
-          <p><%= locals.topicCount || '0' %></p>
+<div class="Inner">
+  <div class="Sub">
+    <ul class="SubPV">
+      <li>
+        <p><%= locals.topicCount || '0' %></p>
 
-          <p>总结数</p>
-        </li>
+        <p>总结数</p>
+      </li>
 
-        <div class="HLine"></div>
+      <div class="HLine"></div>
 
-        <li>
-          <p><%= locals.topicsPageView || '0' %></p>
+      <li>
+        <p><%= locals.topicsPageView || '0' %></p>
 
-          <p>月浏览量</p>
-        </li>
+        <p>月浏览量</p>
+      </li>
+    </ul>
+    <div class="Thumb">
+      <img width="120" height="120"
+           src="<%= (locals.personalType == 'PERSONAL' ? locals.authorImage : locals.imageUrl) || '/images/no_img/user_120x120.png' %>">
+    </div>
+
+    <h5 class="SubTtl"><%= (locals.personalType == 'PERSONAL' ? locals.authorName : locals.username) || '' %></h5>
+
+    <% if (locals.personalType != 'PERSONAL') { %>
+    <div class="BtnSet">
+      <a href="/settings" class="btn btn-small btn-default">设置</a>
+    </div>
+    <% } else { %>
+    <% if (locals.authorPersonalUrl) { %>
+    <div class="BtnSet">
+      <a target="_blank" href="<%= locals.authorPersonalUrl || '' %>" title="<%= locals.authorPersonalUrl || '' %>" class="text-default">
+        <i class="icon-home text-success" style="text-decoration: none !important;"></i>
+        个人网站
+      </a>
+    </div>
+    <% } %>
+    <div class="BtnSet">
+      <button name="favorite" class="<%- locals.likedBefore ? 'ExSelected' : '' %> btn btn-small" data-favorite='{"url":"<%= thisUrl %>"}'>
+        <i class="icon-star StarIcon" style="vertical-align: middle;"></i>
+        <span class="">喜欢</span>
+      </button>
+    </div>
+    <% } %>
+
+    <div style="position: relative;">
+      <span class="SubFV"><i class="FVIco icon-star"></i>
+        <span class="mdFVCount01Num"><%= locals.favourite || '0' %></span></span>
+    </div>
+
+    <% if (locals.personalType != 'PERSONAL') { %>
+    <hr>
+
+    <nav class="Nav Nav-Personal">
+      <ul>
+        <!--<li><a href="/faq?groupNo=147">用户激励指南</a></li>-->
+        <li><a href="/bookmarklet">bookmarklet</a></li>
       </ul>
-      <div class="Thumb">
-        <img width="120" height="120"
-             src="<%= (locals.personalType == 'PERSONAL' ? locals.authorImage : locals.imageUrl) || '/images/no_img/user_120x120.png' %>">
-      </div>
+    </nav>
+    <% } %>
+  </div>
 
-      <h5 class="SubTtl"><%= (locals.personalType == 'PERSONAL' ? locals.authorName : locals.username) || '' %></h5>
-
-      <% if (locals.personalType != 'PERSONAL') { %>
-      <div class="BtnSet">
-        <a href="/settings" class="btn btn-small btn-default">设置</a>
-      </div>
-      <% } else { %>
-      <% if (locals.authorPersonalUrl) { %>
-      <div class="BtnSet">
-        <a target="_blank" href="<%= locals.authorPersonalUrl || '' %>" title="<%= locals.authorPersonalUrl || '' %>" class="text-default">
-          <i class="icon-home text-success" style="text-decoration: none !important;"></i>
-          个人网站
-        </a>
-      </div>
-      <% } %>
-      <div class="BtnSet">
-        <button name="favorite" class="<%- locals.likedBefore ? 'ExSelected' : '' %> btn btn-small" data-favorite='{"url":"<%= thisUrl %>"}'>
-          <i class="icon-star StarIcon" style="vertical-align: middle;"></i>
-          <span class="">喜欢</span>
-        </button>
-      </div>
-      <% } %>
-
-      <div style="position: relative;">
-        <span class="SubFV"><i class="FVIco icon-star"></i>
-          <span class="mdFVCount01Num"><%= locals.favourite || '0' %></span></span>
-      </div>
-
-      <% if (locals.personalType != 'PERSONAL') { %>
-      <hr>
-
-      <nav class="Nav Nav-Personal">
-        <ul>
-          <!--<li><a href="/faq?groupNo=147">用户激励指南</a></li>-->
-          <li><a href="/bookmarklet">bookmarklet</a></li>
-        </ul>
-      </nav>
-      <% } %>
-
-    </div>
-
-    <div class="Main">
-      <% if (locals.personalType == 'WORKS') { %>
-      <% include _works.html %>
-      <% } else if (locals.personalType == 'SETTINGS') { %>
-      <% include _settings.html %>
-      <% } else if (locals.personalType == 'PERSONAL') { %>
-      <% include _personal.html %>
-      <% } %>
-    </div>
-
+  <div class="Main">
+    <% if (locals.personalType == 'WORKS') { %>
+    <% include _works.html %>
+    <% } else if (locals.personalType == 'SETTINGS') { %>
+    <% include _settings.html %>
+    <% } else if (locals.personalType == 'PERSONAL') { %>
+    <% include _personal.html %>
+    <% } %>
   </div>
 </div>
