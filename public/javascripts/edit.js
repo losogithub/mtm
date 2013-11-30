@@ -1612,7 +1612,7 @@
   function __init() {
     $ul = $('.WidgetItemList');
     $templates = $('.TEMPLATES');
-    $('.WidgetItemList .fancybox').fancybox(shizier.fancyboxOptions);
+    $('.fancybox:visible').fancybox(shizier.fancyboxOptions);
   }
 
   function __initListListener() {
