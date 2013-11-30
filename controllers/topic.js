@@ -33,11 +33,16 @@ function showCreate(req, res, next) {
     title: '创建总结',
     css: [
       'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.css',
+      'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-buttons.css',
+      'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-thumbs.css',
       '/stylesheets/topic.css',
       '/stylesheets/edit.css'
     ],
     js: [
+      'http://cdn.bootcss.com/jquery-mousewheel/3.1.6/jquery.mousewheel.min.js',
       'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.js',
+      'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-buttons.js',
+      'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-thumbs.js',
       'http://cdn.bootcss.com/autosize.js/1.17.1/autosize-min.js',
       '/javascripts/jquery-ui-1.10.3.custom.min.js',
       'http://cdn.bootcss.com/jquery-validate/1.11.1/jquery.validate.min.js',
@@ -169,11 +174,16 @@ function showEdit(req, res, next) {
       title: '修改总结',
       css: [
         'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.css',
+        'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-buttons.css',
+        'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-thumbs.css',
         '/stylesheets/topic.css',
         '/stylesheets/edit.css'
       ],
       js: [
+        'http://cdn.bootcss.com/jquery-mousewheel/3.1.6/jquery.mousewheel.min.js',
         'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.js',
+        'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-buttons.js',
+        'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-thumbs.js',
         'http://cdn.bootcss.com/autosize.js/1.17.1/autosize-min.js',
         '/javascripts/jquery-ui-1.10.3.custom.min.js',
         'http://cdn.bootcss.com/jquery-validate/1.11.1/jquery.validate.min.js',
@@ -243,10 +253,15 @@ function showIndex(req, res, next) {
       description: topicData.description,
       css: [
         'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.css',
+        'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-buttons.css',
+        'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-thumbs.css',
         '/stylesheets/topic.css'
       ],
       js: [
-        'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.js'
+        'http://cdn.bootcss.com/jquery-mousewheel/3.1.6/jquery.mousewheel.min.js',
+        'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.js',
+        'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-buttons.js',
+        'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-thumbs.js'
       ],
       escape: escape,
       isAuthor: topic.author_id == userId,

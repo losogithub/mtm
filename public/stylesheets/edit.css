@@ -82,7 +82,8 @@ textarea {
 .Band {
   position: fixed;
   top: 48px;
-  width: 100%;
+  left: 0;
+  right: 0;
   height: 42px;
   z-index: 1001;
   border-bottom: 1px solid #e7e7e7;
