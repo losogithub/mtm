@@ -114,6 +114,9 @@ body {
 body.INDEX {
   min-width: 1010px;
 }
+#fancybox-thumbs.bottom {
+  bottom: 15px !important;
+}
 .Inner {
   width: 960px;
   margin: 0 auto;

@@ -18,11 +18,13 @@
     nextSpeed: 100,
     prevSpeed: 100,
     nextClick: true,
+    closeBtn: false,
     helpers: {
       overlay: {
-        speedOut: 100,
-        locked: false
-      }
+        speedOut: 100
+      },
+      buttons: {},
+      thumbs: {}
     }
   };
 
