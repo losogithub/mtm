@@ -398,13 +398,15 @@ var timeSpanCheck = function (auth, req, res) {
   var loginTime = encryp.decrypt(auth, 'mtm');
   console.log("time stamp: %s", loginTime);
   var timeNow = new Date().getTime();
-  if (timeNow - loginTime > 1 * 60 * 1000) //15 minutes
+  if (timeNow - loginTime > 1 * 60 * 1000) //1 minutes
   {
     console.log("timeNow: %s", timeNow);
     console.log("need re-login");
     var auth = encryp.encrypt(timeNow.toString(), 'mtm');
     //clear everything ? yes in case you change your password
 
+    //commented 2013.11.30
+    /*
     if (req.session) {
 
       User.getUserById(req.session.userId, function (err, user) {
@@ -423,10 +425,13 @@ var timeSpanCheck = function (auth, req, res) {
       console.log("logout: session userId: %s", req.session.userId);
       req.session.destroy(function () {
       });
-    }
+    } */
 
-    res.clearCookie('logintoken');
-    var url = '/login?fromUrl=/accountModify?auth=' + auth;
+    //commented 2013.11.20
+    //res.clearCookie('logintoken');
+    //2013.11.30  change the url to /account
+    //var url = '/login?fromUrl=/accountModify?auth=' + auth;
+    var url = '/account';
     console.log(url);
     return res.redirect(url);
   }
