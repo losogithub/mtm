@@ -28,7 +28,7 @@
                 <td class="TopicThumb">
                   <a href="/topic/<%= hot[i].id %>" title="<%= hot[i].title %>">
                     <img width="60" height="60"
-                         onerror="mtm.errorImage(this,'image_95x95');"
+                         onerror="shizier.errorImage(this,'image_95x95');"
                          src="<%= !hot[i].coverUrl ? '/images/no_img/image_95x95.png' : hot[i].coverUrl %>">
                   </a>
                 </td>
@@ -122,7 +122,7 @@
               <div class="SubContentTopicListListItemThumb">
                 <a href="/topic/<%= newTopics[i].id %>" title="<%= newTopics[i].title %>">
                   <img width="45" height="45"
-                       onerror="mtm.errorImage(this,'image_95x95');"
+                       onerror="shizier.errorImage(this,'image_95x95');"
                        src="<%= !newTopics[i].coverUrl ? '/images/no_img/image_95x95.png' : newTopics[i].coverUrl %>">
                 </a>
               </div>

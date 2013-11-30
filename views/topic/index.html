@@ -14,7 +14,7 @@
     <div class="Inner">
       <div class="HeadMain">
         <div class="HeadThumb" style="display: <%= !locals.topic ? 'none' : !topic.coverUrl ? 'none' : 'block' %>;">
-          <img width="95" height="95" onerror="mtm.errorImage(this,'image_95x95');"
+          <img width="95" height="95" onerror="shizier.errorImage(this,'image_95x95');"
                src="<%= !locals.topic ? '' : !topic.coverUrl ? '' : topic.coverUrl %>">
         </div>
 
@@ -51,7 +51,7 @@
               <a href="/u/<%= topic.author %>" title="<%= topic.author %>">
                 <span class="HeadUserThumb"><img width="30" height="30"
                                                  src="<%= authorInfo.imgUrl ? authorInfo.imgUrl : '/images/no_img/user_80x80.png' %>"
-                                                 onerror="mtm.errorImage(this,'user_80x80');"></span><span
+                                                 onerror="shizier.errorImage(this,'user_80x80');"></span><span
                 class="HeadUserName text-default"><%= topic.author %></span>
               </a>
             </div>
@@ -146,5 +146,9 @@
       </div>
     </div>
   </div>
-
 </div>
+<script>
+  $(function () {
+    $('.fancybox').fancybox(shizier.fancyboxOptions);
+  })
+</script>

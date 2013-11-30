@@ -25,7 +25,7 @@ $(function ($) {
   });
   $preview.click(function () {
     autoHide = true;
-    $img.attr('src', mtm.utils.suffixImage($input.val()));
+    $img.attr('src', shizier.utils.suffixImage($input.val()));
   });
 })
 

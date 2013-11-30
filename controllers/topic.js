@@ -242,7 +242,11 @@ function showIndex(req, res, next) {
       title: topicData.title,
       description: topicData.description,
       css: [
+        'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.css',
         '/stylesheets/topic.css'
+      ],
+      js: [
+        'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.js'
       ],
       escape: escape,
       isAuthor: topic.author_id == userId,

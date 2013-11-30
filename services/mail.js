@@ -11,8 +11,6 @@ var config = require('../config');
 
 var transport = mailer.createTransport('SMTP', config.mail_opts);
 
-// here hostname is localhost.mtm.org
-// so site root url is: http://localhost.mtm.org:3000
 var SITE_ROOT_URL = 'http://' + config.hostname;
 
 /**

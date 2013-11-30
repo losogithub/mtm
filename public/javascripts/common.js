@@ -8,27 +8,43 @@
 //使用全局变量应避免污染命名空间
 (function ($) {
 
-  window.mtm = window.mtm || {};
+  window.shizier = window.shizier || {};
 
-  mtm.errorImage = mtm.errorImage || function (img, name) {
+  shizier.fancyboxOptions = {
+    openEffect: 'elastic',
+    closeEffect: 'elastic',
+    openSpeed: 100,
+    closeSpeed: 100,
+    nextSpeed: 100,
+    prevSpeed: 100,
+    nextClick: true,
+    helpers: {
+      overlay: {
+        speedOut: 100,
+        locked: false
+      }
+    }
+  };
+
+  shizier.errorImage = shizier.errorImage || function (img, name) {
     var url = '/images/no_img/' + name + '.png';
     if (url != $(img).attr('src')) {
       $(img).attr('src', url);
     }
   }
 
-  $(document).ajaxError(function (event, jqXHR) {
-    if (jqXHR.status == 401) {
-      var $model = $('#myModal');
-      if ($model.is(':visible')) {
-        $('.LoginDialog .ErrorHint').text('用户名或密码不正确。');
-      } else {
-        $model.modal('show');
-      }
-    }
-  });
-
   $(function ($) {
+    $(document).ajaxError(function (event, jqXHR) {
+      if (jqXHR.status == 401) {
+        var $model = $('#myModal');
+        if ($model.is(':visible')) {
+          $('.LoginDialog .ErrorHint').text('用户名或密码不正确。');
+        } else {
+          $model.modal('show');
+        }
+      }
+    });
+
     $(".Nav-Right_Inner>li:last>button")
       .click(function () {
         var $i = $(this).find('>i');
@@ -68,7 +84,7 @@
         });
     });
 
-    mtm.loginCheck = function () {
+    shizier.loginCheck = function () {
       var username = document.getElementById('uName').value;
       var password = document.getElementById('uPas').value;
       var rememberMe = $('#idSaveCheck').is(":checked");
@@ -95,8 +111,7 @@
           location.reload();
           return false;
         });
-
       return false;
-    }
+    };
   });
 })(jQuery);
