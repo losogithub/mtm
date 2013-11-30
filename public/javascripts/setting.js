@@ -46,7 +46,7 @@ $(function ($) {
         xhrFields: { withCredentials: true },
         data: {imageUrl: imageUrl, description: description, connectUrl: connectUrl},
         success: function () {
-          //alert('personal information updated !');
+          alert('您的个人设置已经成功更新！');
           return;
         },
         error: function () {

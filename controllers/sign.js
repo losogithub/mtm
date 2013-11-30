@@ -511,7 +511,7 @@ var forgetPassword = function (req, res, next) {
   }
   else {
     try {
-      check(email, '不正确的电子邮箱格式。').isEmail();
+      check(email, '您的电子邮箱格式不正确。').isEmail();
     } catch (e) {
       errMsg = e.message;
     }
