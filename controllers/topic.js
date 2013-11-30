@@ -202,6 +202,8 @@ function showIndex(req, res, next) {
   console.log('showIndex=====');
   var userId = req.session.userId;
   var topicId = req.params.topicId;
+  //2013.11.30
+  req.session._loginReferer = '/topic/' + topicId;
   var currentPage = req.query.page || 1;
 
   var ep = EventProxy.create('topic', 'items', 'author', function (topic, items, author) {

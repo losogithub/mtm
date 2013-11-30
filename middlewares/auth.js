@@ -33,7 +33,9 @@ function loadUser(req, res, next) {
   // the first priority is req.query.fromUrl, then referer, finally home
   //note: some req.headers.referer cannot be rendered !!!
   //e.g. if it is login, you shall not jump back to login page.
-  req.session._loginReferer = req.query.fromUrl || req.headers.referer || 'home';
+  //2013.11.30 But also not home page !!!!
+
+  req.session._loginReferer = req.query.fromUrl || req.session._loginReferer||'home';
   console.log("loginReferer: %s", req.session._loginReferer);
 
   if (req.session && req.session.userId) {

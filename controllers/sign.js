@@ -21,7 +21,15 @@ var mail = require('../services/mail');
 var showSignUp = function (req, res) {
   console.log("render register page");
   console.log("login Referer: ", req.session._loginReferer);
-  res.render('sign/signup');
+  //2013.11.30 check whether is a already logged in user
+  var refer = req.session._loginReferer || 'home';
+  if(req.session && req.session.userId){
+    return res.redirect(refer);
+  }
+  else{
+    res.render('sign/signup');
+  }
+
 };
 
 
@@ -249,15 +257,16 @@ var signup = function (req, res, next) {
  */
 var showLogin = function (req, res) {
   console.log("render login page ");
-  console.log("session: ", req.session);
+  //console.log("session: ", req.session);
   console.log("referer: ", req.headers.referer);
 
   //if it is null, then assign to this.
   //otherwise it was assigned by some middleware.
+  //No, 2013.11.30 if it is not null, it must be assigned before not equal to /login. So you  cannot revise it.
+  //even it equals to /singup. it is ok. later in login function will check this.
   if (!req.session._loginReferer) {
-    req.session._loginReferer = req.headers.referer || 'home';
+    req.session._loginReferer =  req.headers.referer || 'home';
   }
-  //console.log(req.session._loginReferer);
 
   var refer = req.session._loginReferer || 'home';
 
@@ -268,25 +277,28 @@ var showLogin = function (req, res) {
   // 2 example: suppose you are at register page, then click loggin, after succesfully loggin,
   //  shall not jump to register page.
 
-  /*
-   if (req.session && req.session.userId && req.session.userId !== 'undefined') {
+
+  // suppose an already logged in user, you shall jump to home.
+  if (req.session && req.session.userId && req.session.userId !== 'undefined') {
    //if logged in, jump to refer page.
    //note: not all page jump to loginReferer.
    //add: 2013.11.23: it seems impossible for this situation. So I commented it.
    // 2013.11.26. No, maybe not.
-   for (var i = 0, len = notJump.length; i !== len; ++i) {
+   /*for (var i = 0, len = notJump.length; i !== len; ++i) {
    if (refer.indexOf(notJump[i]) >= 0) {
    refer = 'home';
    break;
    }
-   }
+   } */
 
-   return res.redirect(refer);
-   }
+    return res.redirect(refer);
+  }
 
-   else { */
-  return res.render('sign/login');
+  else {
+    return res.render('sign/login');
+  }
 }
+
 
 var notJumpForLogin = [
   '/signup',
@@ -399,6 +411,7 @@ function checkOnlyPassword(emailIDFlag, pass, autoLogin, user, req, res) {
     });
   }
 
+  console.log("req.session._loginReferr: ", req.session._loginReferer);
   var refer = req.session._loginReferer || 'home';
   //console.log("loginReferer");
   //console.log(req.session._loginReferer);

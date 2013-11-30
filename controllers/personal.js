@@ -341,6 +341,15 @@ var showAccountModify = function (req, res) {
   console.log("show AccountModify page");
   console.log(req.query);
   //check how long after login
+
+  //2013.11.30 check the existence of arguments
+  if(Object.keys(req.query).length === 0){
+    return res.render('sign/errLink');
+  }
+
+  if(!req.query.auth){
+    return res.render('sign/errLink');
+  }
   var auth = req.query.auth.toString();
 
   timeSpanCheck(auth, req, res);
@@ -394,14 +403,24 @@ var showAccountModify = function (req, res) {
 
 
 var timeSpanCheck = function (auth, req, res) {
-  var loginTime = encryp.decrypt(auth, 'mtm');
-  console.log("time stamp: %s", loginTime);
+
+  //2013.11.30 sometimes if user change the auth data, decrypt may crash.
+  try {
+    var loginTime = encryp.decrypt(auth, 'mtm');
+  }catch (err){
+    return res.render('sign/errLink');
+  }
+
+//console.log("time stamp: %s", loginTime);
   var timeNow = new Date().getTime();
   if (timeNow - loginTime > 1 * 60 * 1000) //1 minutes
   {
-    console.log("timeNow: %s", timeNow);
-    console.log("need re-login");
+    //console.log("timeNow: %s", timeNow);
+    //console.log("need re-login");
+
     var auth = encryp.encrypt(timeNow.toString(), 'mtm');
+
+
     //clear everything ? yes in case you change your password
 
     //commented 2013.11.30
@@ -431,7 +450,7 @@ var timeSpanCheck = function (auth, req, res) {
     //2013.11.30  change the url to /account
     //var url = '/login?fromUrl=/accountModify?auth=' + auth;
     var url = '/account';
-    console.log(url);
+    //console.log(url);
     return res.redirect(url);
   }
 }
