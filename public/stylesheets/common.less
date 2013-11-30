@@ -62,7 +62,7 @@ body {
 .InfoHint { margin-top: 3px; font-size: 10px; }
 
 .BtnSet {
-  margin-top: 14px; max-height: 27px;
+  margin-top: 14px; white-space: nowrap;
   .Widget & { float: left; }
   .InfoHint + & { margin-top: 3px; }
 }
@@ -168,14 +168,9 @@ body {
 }
 
 /* 页码显示 */
-.Pagination { margin-top: 15px; padding-top: 25px; border-top: 1px solid #f2f2f2; line-height: 1.2; margin: 20px 0 0; font-family: Arial, Helvetica, sans-serif; font-size: 12px; text-align: center }
-
-.PaginationBreak { padding-right: 0; padding-left: 0; }
-
-.Pagination a, .PaginationBreak { display: inline-block; *display: inline; *zoom: 1; margin: 0 2px; padding: 6px 8px; font-weight: bold; vertical-align: top }
-
-.Pagination strong { padding: 7px 8px; color: #000; display: inline-block; margin: 0 2px; font-weight: bold; vertical-align: top; }
-
-.Pagination a:link, .Pagination a:visited { border: 1px solid #ebebeb; color: #999 !important; text-decoration: none }
-
-.Pagination a:hover, .Pagination a:active, .Pagination a:focus { cursor: pointer; background-color: #f0f0f0; color: #000 !important; text-decoration: none !important }
+.Pagination {
+  line-height: 1.2; text-align: center;
+  a, strong { display: inline-block; *display: inline; *zoom: 1; margin: 0 2px; padding: 6px 8px; font-weight: bold; }
+  a { border: 1px solid #ebebeb; text-decoration: none; }
+  a:hover, a:active, a:focus { background-color: #f0f0f0; color: black !important; }
+}

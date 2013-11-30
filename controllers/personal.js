@@ -28,19 +28,13 @@ var showWorks = function (req, res, next) {
   console.log(req.query.mt);
   console.log(req.query.mo);
 
-  res.locals.path = req.path.replace(/\/$/, '');
-
   console.log("render show works page");
   User.getUserById(req.session.userId, function (err, user) {
     if (err) {
-      return next(err)
+      return next(err);
     }
     if (!user) {
-      //if cannot find user by userId. the userId must be wrong.
-      //usually this shall not happen. If user have already login.
-      console.err("cannot find user by userId");
-      req.session.userId = null;
-      return res.render('/login');
+      return next(new Error(403));
     }
 
     var topics = user.topics;
@@ -51,76 +45,40 @@ var showWorks = function (req, res, next) {
     //the page to show. default 1
     var currentPage = req.query.page || 1;
 
-
     //empty topics
     //todo: empty topics shall show you have no topics
     if (!topics) {
-      return renderWorks(user, [], '', '', '', res);
+      return renderWorks(res, user);
     }
     //use this function to get all the details of topics.
     getAndSortTopics(mt, mo, topics, function (err, topicDetails) {
       if (err) {
-        console.log("err");
-        return;
-      } else {
-        //use a for to add some attributes
-        if (!topicDetails) {
-          console.log("err, cannot get topic details, but have topic ids");
-          //???? shall return or not
-          return;
-        }
-
-        //count the totalPage for show
-        var totalPage = Math.ceil(topicDetails.length / 10);
-
-
-        var topicsForShow = [];
-        for (var i = (currentPage - 1) * 10; i < topicDetails.length && i < currentPage * 10; i++) {
-          var temp = topicDetails[i];
-          temp.topicUrl = "/topic/" + topicDetails[i]._id;
-          temp.create_date = topicDetails[i].create_at.getFullYear() + '年'
-            + (topicDetails[i].create_at.getMonth() + 1) + '月'
-            + topicDetails[i].create_at.getDate() + '日';
-          temp.update_date = topicDetails[i].update_at.getFullYear() + '年'
-            + (topicDetails[i].update_at.getMonth() + 1) + '月'
-            + topicDetails[i].update_at.getDate() + '日';
-          topicsForShow.push(temp);
-        }
-
-
-        //render according to different attributes.
-        if (mt == 'c') {
-          if (mo == 'd') {
-            return renderWorks(user, topicsForShow, 'SELECTED', '', '', '', 'a', 'd', 'd', 'd', currentPage, totalPage, res);
-          } else {
-            return renderWorks(user, topicsForShow, 'SELECTED', '', '', '', 'd', 'd', 'd', 'd', currentPage, totalPage, res);
-          }
-        }
-        if (mt == 'u') {
-          if (mo == 'd') {
-            return renderWorks(user, topicsForShow, '', 'SELECTED', '', '', 'd', 'a', 'd', 'd', currentPage, totalPage, res);
-          } else {
-            return renderWorks(user, topicsForShow, '', 'SELECTED', '', '', 'd', 'd', 'd', 'd', currentPage, totalPage, res);
-          }
-        }
-        if (mt == 'p') {
-          if (mo == 'd') {
-            return renderWorks(user, topicsForShow, '', '', 'SELECTED', '', 'd', 'd', 'a', 'd', currentPage, totalPage, res);
-          } else {
-            return renderWorks(user, topicsForShow, '', '', 'SELECTED', '', 'd', 'd', 'd', 'd', currentPage, totalPage, res);
-          }
-        }
-        if (mt == 'r') {
-          if (mo == 'd') {
-            return renderWorks(user, topicsForShow, '', '', '', 'SELECTED', 'd', 'd', 'd', 'a', currentPage, totalPage, res);
-          } else {
-            return renderWorks(user, topicsForShow, '', '', '', 'SELECTED', 'd', 'd', 'd', 'd', currentPage, totalPage, res);
-          }
-        }
+        return next(err);
       }
+      //use a for to add some attributes
+      if (!topicDetails) {
+        console.log("err, cannot get topic details, but have topic ids");
+        return next(new Error(404));
+      }
+
+      //count the totalPage for show
+      var totalPage = Math.ceil(topicDetails.length / 10);
+
+      var topicsForShow = [];
+      for (var i = (currentPage - 1) * 10; i < topicDetails.length && i < currentPage * 10; i++) {
+        var temp = topicDetails[i];
+        temp.topicUrl = "/topic/" + topicDetails[i]._id;
+        temp.create_date = topicDetails[i].create_at.getFullYear() + '年'
+          + (topicDetails[i].create_at.getMonth() + 1) + '月'
+          + topicDetails[i].create_at.getDate() + '日';
+        temp.update_date = topicDetails[i].update_at.getFullYear() + '年'
+          + (topicDetails[i].update_at.getMonth() + 1) + '月'
+          + topicDetails[i].update_at.getDate() + '日';
+        topicsForShow.push(temp);
+      }
+      return renderWorks(res, user, topicsForShow, currentPage, totalPage, mt, mo);
     });
   });
-
 }
 
 /*
@@ -128,41 +86,19 @@ var showWorks = function (req, res, next) {
  * works page
  */
 var getAndSortTopics = function (mt, mo, topics, callback) {
-  if (mt == 'c') {
-    var order = 'create_at';
-    if (mo == 'd') {
-      order = '-' + order;
-    }
-    return Topic.getTopicsByIdsSorted(topics, order, callback);
+  var order = {
+    'c': 'create_at',
+    'u': 'update_at',
+    'p': 'PV_count',
+    'r': 'create_at'
+  }[mt];
+  if (mo == 'd') {
+    order = '-' + order;
   }
-  if (mt == 'u') {
-    var order = 'update_at';
-    if (mo == 'd') {
-      order = '-' + order;
-    }
-    return Topic.getTopicsByIdsSorted(topics, order, callback);
-
-  }
-  if (mt == 'p') {
-    var order = 'PV_count';
-    if (mo == 'd') {
-      order = '-' + order;
-    }
-    console.log("sort by pv");
-    return Topic.getTopicsByIdsSorted(topics, order, callback);
-  }
-  if (mt == 'r') {
-    //todo  how to count the rate.
-    var order = 'create_at';
-    if (mo == 'd') {
-      order = '-' + order;
-    }
-    return Topic.getTopicsByIdsSorted(topics, order, callback);
-  }
+  return Topic.getTopicsByIdsSorted(topics, order, callback);
 }
 
-
-var renderWorks = function (user, topicsInfos, isSelectC, isSelectU, isSelectP, isSelectR, createV, updateV, pageViewV, rateV, currentPage, totalPage, res, next) {
+var renderWorks = function (res, user, topicsInfos, currentPage, totalPage, mt, mo) {
   res.render('personal/index', {
     css: [
       '/stylesheets/personal.css'
@@ -173,20 +109,13 @@ var renderWorks = function (user, topicsInfos, isSelectC, isSelectU, isSelectP, 
     topicCount: user.topicCount,
     topicsPageView: user.pageviewCount,
     topics: topicsInfos,
-    isSelectC: isSelectC,
-    isSelectU: isSelectU,
-    isSelectP: isSelectP,
-    isSelectR: isSelectR,
-    createV: createV,
-    updateV: updateV,
-    pageViewV: pageViewV,
-    rateV: rateV,
     imageUrl: user.url,
     currentPage: currentPage,
-    totalPage: totalPage
+    totalPage: totalPage,
+    mt: mt,
+    mo: mo
   });
 }
-
 
 var showSettings = function (req, res) {
   console.log('render settings  page');
@@ -343,11 +272,11 @@ var showAccountModify = function (req, res) {
   //check how long after login
 
   //2013.11.30 check the existence of arguments
-  if(Object.keys(req.query).length === 0){
+  if (Object.keys(req.query).length === 0) {
     return res.render('sign/errLink');
   }
 
-  if(!req.query.auth){
+  if (!req.query.auth) {
     return res.render('sign/errLink');
   }
   var auth = req.query.auth.toString();
@@ -407,7 +336,7 @@ var timeSpanCheck = function (auth, req, res) {
   //2013.11.30 sometimes if user change the auth data, decrypt may crash.
   try {
     var loginTime = encryp.decrypt(auth, 'mtm');
-  }catch (err){
+  } catch (err) {
     return res.render('sign/errLink');
   }
 
@@ -425,25 +354,25 @@ var timeSpanCheck = function (auth, req, res) {
 
     //commented 2013.11.30
     /*
-    if (req.session) {
+     if (req.session) {
 
-      User.getUserById(req.session.userId, function (err, user) {
-        if (err) {
-          console.log("err");
-        }
-        else if (!user) {
-          console.log("cannot find user by ID: %s", req.session.userId);
-        }
-        else {
-          //combine email and series to make sure only only clear from on computer.
-          LoginToken.removeAll(user.email);
+     User.getUserById(req.session.userId, function (err, user) {
+     if (err) {
+     console.log("err");
+     }
+     else if (!user) {
+     console.log("cannot find user by ID: %s", req.session.userId);
+     }
+     else {
+     //combine email and series to make sure only only clear from on computer.
+     LoginToken.removeAll(user.email);
 
-        }
-      })
-      console.log("logout: session userId: %s", req.session.userId);
-      req.session.destroy(function () {
-      });
-    } */
+     }
+     })
+     console.log("logout: session userId: %s", req.session.userId);
+     req.session.destroy(function () {
+     });
+     } */
 
     //commented 2013.11.20
     //res.clearCookie('logintoken');
@@ -613,7 +542,7 @@ var accountModify = function (req, res) {
 }
 
 
-var showPersonal = function (req, res) {
+var showPersonal = function (req, res, next) {
 
   //before render: check whether visitor is itself or not.
   //if so, jump to works page.
@@ -644,18 +573,6 @@ var showPersonal = function (req, res) {
   var sortOrder = req.query.order || 'U';
   // default order is according to update date. 'F' means favourte, i.e. likes
   // 'N' means name
-  var uSelect = false;
-  var fSelect = false;
-  var nSelect = false;
-  if (sortOrder == 'U') {
-    uSelect = true;
-  }
-  else if (sortOrder == 'F') {
-    fSelect = true;
-  }
-  else {
-    nSelect = true;
-  }
 
   var currentPage = req.query.page || '1';
   //default currentPage is the first page.
@@ -673,7 +590,7 @@ var showPersonal = function (req, res) {
     } else if (!user) {
       //not such user
       console.log("not such user in DB. username: %s", authorName);
-      //todo: then do what
+      next(err);
     } else {
       //found the author information in DB
 
@@ -746,6 +663,7 @@ var showPersonal = function (req, res) {
 
 
           res.render('personal/index', {
+            personalType: 'PERSONAL',
             css: ['/stylesheets/personal.css'],
             authorName: authorName,
             authorImage: user.url,
@@ -757,9 +675,7 @@ var showPersonal = function (req, res) {
             topics: topicsForShow,
             thisUrl: thisUrl,
             thisUrlJoin: baseUrl + '?type=J',
-            uSelect: uSelect,
-            fSelect: fSelect,
-            nSelect: nSelect,
+            sortOrder: sortOrder,
             totalPage: totalPage,
             currentPage: currentPage,
             likedBefore: likedBefore
@@ -906,7 +822,6 @@ var AddorRemoveLikes = function (req, res) {
 
 
 var showFavourite = function (req, res) {
-  res.locals.path = req.path.replace(/\/$/, '');
   if (req.session && req.session.userId && req.session.userId !== 'undefined') {
     console.log('render show favourite page');
     res.render('personal/favourite', {

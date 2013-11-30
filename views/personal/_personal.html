@@ -3,11 +3,11 @@
 
   <div class="dropdown" style="float: right;">
     <button style="width: 160px;" class="btn dropdown-toggle" type="button" data-toggle="dropdown">
-      <% if (uSelect) { %>
+      <% if (sortOrder == 'U') { %>
       更新日期排序
-      <% } else if (fSelect) { %>
+      <% } else if (sortOrder == 'F') { %>
       人气排序
-      <% } else if (nSelect) { %>
+      <% } else if (sortOrder == 'N') { %>
       名字排序
       <% } %>
       <span class="caret"></span>
@@ -20,7 +20,7 @@
   </div>
 </div>
 
-<%if (topics.length ) { %>
+<% if (topics.length) { %>
 <table class="TopicTable">
   <% for (i in locals.topics) { %>
   <% var topic = topics[i] %>
@@ -48,75 +48,8 @@
   <% } %>
 </table>
 
-<% if (totalPage > 1 ) { %>
-<div class="MdPagination04" data-na="NA:pager">
-  <!--display pages  take time 10.13 2013-->
-  <% if (totalPage < 10) { %>
-  <% for (var i = 1 ; i <= totalPage; i++ ) { %>
-  <% if ( i == currentPage) { %>
-  <strong><%= currentPage %></strong>
-  <% } else { %>
-  <a href="#" onclick="goPage(<%= i %>);return false;" data-na="NC:page"><%= i %></a>
-  <% } %>
-  <% } %>
-  <% } else if ( currentPage < 7) { %>
-  <% for (var i = 1 ; i <= totalPage; i++ ) { %>
-  <% if ( i == currentPage) { %>
-  <strong><%= currentPage %></strong>
-  <% } else if ((i < 8) || (i == totalPage) || (i == totalPage -1)) { %>
-  <a href="#" onclick="goPage(<%= i %>);return false;" data-na="NC:page"><%= i %></a>
-  <% } else if (i == 8) { %>
-  <span class="mdPagination04Break">...</span>
-  <% } else { %>
-  <% continue; %>
-  <% } %>
-  <% } %>
-  <% } else if (totalPage - currentPage < 7) { %>
-  <% for (var i = 1 ; i <= totalPage; i++ ) { %>
-  <% if ( i == currentPage) { %>
-  <strong><%= currentPage %></strong>
-  <% } else if ((totalPage -i < 8) || (i ==1) || (i == 2) ) { %>
-  <a href="#" onclick="goPage(<%= i %>);return false;" data-na="NC:page"><%= i %></a>
-  <% } else if(totalPage - i == 8) { %>
-  <span class="mdPagination04Break">...</span>
-  <% } else { %>
-  <% continue; %>
-  <% } %>
-  <% } %>
-  <% } else { %>
-  <% for (var i = 1 ; i <= totalPage; i++ ) { %>
-  <% if ( i == currentPage) { %>
-  <strong><%= currentPage %></strong>
-  <% } else if ((i == 1) || (i == 2) || (i == totalPage) || (i == totalPage -1) || ((0 < currentPage -i)&& (
-  currentPage - i < 3)) || ( (0 < i - currentPage) && ( i - currentPage < 3) ) ) { %>
-  <a href="#" onclick="goPage(<%= i %>);return false;" data-na="NC:page"><%= i %></a>
-  <% } else if (( i -3 == currentPage) || (i + 3 == currentPage)) { %>
-  <span class="mdPagination04Break">...</span>
-  <% } else { %>
-  <% continue; %>
-  <% } %>
-  <% } %>
-  <% } %>
-
-  <!--/MdPagination04--></div>
-<form name="form" action="<%= thisUrl %>" method="get">
-  <input type="hidden" name="page" value="1"/>
-  <input type="hidden" name="order" <% if (uSelect) { %> value="U" <% } else if (fSelect) { %> value="F" <% } else
-  if (nSelect) { %> value="N" <% } %> />
-  <input type="hidden" name="type" value="P"/>
-</form>
-<script type="text/javascript">
-  function goPage(page) {
-    document.form.page.value = page;
-    document.form.submit()
-    return false;
-  }
-</script>
-<% } %>
-
-<div class="WorksPagination">
-  <% include _pagination.html %>
-</div>
+<% locals.query = 'order=' + sortOrder + '&'; %>
+<% include ../_pagination.html %>
 
 <% } else { %>
 <div class="mdMypageMTMList01NoItem mdNoItem01NoLink" data-na="NA:noitem">

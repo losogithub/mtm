@@ -3,7 +3,7 @@
 
 input[type="text"], textarea { width: 100%; }
 
-.Contents { padding: 25px 0; overflow: hidden; }
+.Contents { padding: 25px 0; }
 
 .Sub { float: left; width: 264px; padding-right: 25px; }
 
@@ -50,7 +50,7 @@ input[type="text"], textarea { width: 100%; }
   a { position: absolute; right: 0; bottom: 0; color: #999; }
 }
 
-.MainTbl { width: 100%; }
+.MainTbl { width: 100%; margin-bottom: 20px; }
 
 .MainTbl thead {
   border-top: 1px solid rgb(232, 233, 234);
@@ -60,7 +60,6 @@ input[type="text"], textarea { width: 100%; }
 
 .MainTbl th {
   padding: 9px 0;
-  color: rgb(153, 153, 153);
   font-weight: normal; }
 
 .MainTbl th:first-child { text-align: left; padding: 0 15px; }
@@ -80,7 +79,6 @@ input[type="text"], textarea { width: 100%; }
 .MainTbl td {
   padding: 9px 10px;
   border-bottom: 1px solid rgb(242, 242, 242);
-  color: black;
   text-align: center;
   vertical-align: middle;
   word-wrap: break-word; height: 80px; }
@@ -117,26 +115,13 @@ input[type="text"], textarea { width: 100%; }
 
 .IntroduceCount>span { font-weight: bold; }
 
-.WorksPagination { margin-bottom: 15px; line-height: 1.2; margin: 20px 0 0; font-family: Arial, Helvetica, sans-serif; font-size: 12px; text-align: center; }
-
-.WorksPagination strong { padding: 7px 8px; color: #000; display: inline-block; margin: 0 2px; font-weight: bold; vertical-align: top; }
-
-.WorkspaginationBreak { }
-
-.WorksPagination a { display: inline-block; *display: inline; *zoom: 1; margin: 0 2px; padding: 6px 8px; font-weight: bold; vertical-align: top }
-
-.WorksPagination .WorksPaginationBreak { padding-right: 0; padding-left: 0; display: inline-block; *display: inline; *zoom: 1; margin: 0 2px; padding: 6px 8px; font-weight: bold; vertical-align: top }
-
-.WorksPagination a:link, .WorksPagination a:visited { border: 1px solid #ebebeb; color: #999 !important; text-decoration: none }
-
-.WorksPagination a:hover, .WorksPagination a:active, .WorksPagination a:focus { cursor: pointer; background-color: #f0f0f0; color: #000 !important; text-decoration: none !important }
-
-
 .TopicTable {
+  margin-bottom: 20px;
   &, td {width: 100%;}
   tr {
     border-top: 1px solid rgb(231, 231, 231);
-    th, td { padding-top: 16px;padding-bottom: 16px;}
+    &:last-child { border-bottom: 1px solid rgb(231, 231, 231); }
+    th, td { padding: 16px 0;}
     th { padding-right: 13px;}
   }
 }

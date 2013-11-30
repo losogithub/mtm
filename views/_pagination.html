@@ -1,5 +1,7 @@
 <!--argument: totalPage, currentPage--->
-<% if (totalPage > 1 ) { %>
+<% locals.query = '?' + (locals.query || '') + 'page=' %>
+<% if (totalPage <= 1 ) { return; } %>
+  <% totalPage = 10; %>
 <div class="Pagination">
   <!--display pages  take time 10.13 2013-->
   <% if (totalPage < 10) { %>
@@ -7,7 +9,7 @@
   <% if ( i == currentPage) { %>
   <strong><%= currentPage %></strong>
   <% } else { %>
-  <a href="#" onclick="goPage(<%= i %>);return false;"  ><%= i %></a>
+  <a class="text-muted" href="<%= locals.query + i %>"><%= i %></a>
   <% } %>
   <% } %>
   <% } else if ( currentPage < 7) { %>
@@ -15,9 +17,9 @@
   <% if ( i == currentPage) { %>
   <strong><%= currentPage %></strong>
   <% } else if ((i < 8)  || (i == totalPage) || (i == totalPage -1)) { %>
-  <a href="#" onclick="goPage(<%= i %>);return false;"  ><%= i %></a>
+  <a class="text-muted" href="<%= locals.query + i %>"><%= i %></a>
   <% } else if (i  == 8) { %>
-  <span class="PaginationBreak">...</span>
+  <strong>...</strong>
   <% } else { %>
   <% continue; %>
   <% } %>
@@ -27,9 +29,9 @@
   <% if ( i == currentPage) { %>
   <strong><%= currentPage %></strong>
   <% } else if ((totalPage -i < 8) || (i ==1) || (i == 2) ) { %>
-  <a href="#" onclick="goPage(<%= i %>);return false;" ><%= i %></a>
+  <a class="text-muted" href="<%= locals.query + i %>"><%= i %></a>
   <% } else if(totalPage - i == 8) { %>
-  <span class="PaginationBreak">...</span>
+  <strong>...</strong>
   <% } else { %>
   <% continue; %>
   <% } %>
@@ -39,27 +41,12 @@
   <% if ( i == currentPage) { %>
   <strong><%= currentPage %></strong>
   <% } else if ((i == 1) || (i == 2) || (i == totalPage) || (i == totalPage -1) || ((0 < currentPage -i)&& ( currentPage - i  < 3)) || ( (0 < i - currentPage) && ( i - currentPage < 3) ) ) { %>
-  <a href="#" onclick="goPage(<%= i %>);return false;" ><%= i %></a>
+  <a class="text-muted" href="<%= locals.query + i %>"><%= i %></a>
   <% } else if (( i -3 == currentPage) || (i + 3 == currentPage)) { %>
-  <span class="PaginationBreak">...</span>
+  <strong>...</strong>
   <% } else { %>
   <% continue; %>
   <% } %>
   <% } %>
   <% } %>
-
-  <!--/MdPagination04--></div>
-<form name="form" action="" method="get">
-  <input type="hidden" name="page" value="1" />
-</form>
-<script type="text/javascript">
-  function goPage(page) {
-    document.form.page.value = page;
-    document.form.submit();
-    return false;
-  }
-</script>
-<% } %>
-
-
-
+</div>

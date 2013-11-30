@@ -1909,18 +1909,21 @@
       }
     });
     $img.on('load', function () {
-      console.log($img.attr('src'));
-      if ($img.attr('src') != '/images/no_img/image_95x95.png') {
+      if ($img.attr('src') != '/images/no_img/image_95x95.png'
+        && autoHide) {
         hide();
       }
     });
     $reset.click(function () {
-      autoHide = true;
+      hide();
       $img.attr('src', coverUrl);
-    })
+    });
     $preview.click(function () {
       autoHide = true;
       $img.attr('src', shizier.utils.suffixImage($input.val()));
+      if ($input.val() == '') {
+        hide();
+      }
     });
   }
 

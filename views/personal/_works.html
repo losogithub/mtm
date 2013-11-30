@@ -2,28 +2,29 @@
   <h5><%= username %> 的总结</h5>
 </div>
 
-<div class="MainDetail">
-  <table class="MainTbl">
+<table class="MainTbl">
     <colgroup>
       <col style="width:404px;*width:374px;">
       <col style="width:115px;*width:85px;">
       <col style="width:94px;*width:64px;">
       <col>
     </colgroup>
-    <thead>
+    <thead class="text-muted">
     <tr>
       <th>
         <div>
           标题
           <div class="MainTblSortSub">
-            <a class='<%= isSelectC %>' href='?mt=c&amp;mo=<%= createV %>'>创建日期</a>
-            <% if (createV == 'a' || !isSelectC) { %>
+            <a class="<%= (mt == 'c') ? 'SELECTED' : '' %>"
+               href="?mt=c&amp;mo=<%= mt != 'c' || mo == 'a' ? 'd' : 'a' %>">创建日期</a>
+            <% if (mt != 'c' || mo == 'd') { %>
             <i class="icon-caret-down"></i>
             <% } else { %>
             <i class="icon-caret-up"></i>
             <% } %>
-            <a class='<%= isSelectU %>' href='?mt=u&amp;mo=<%= updateV%>'>更新日期</a>
-            <% if (updateV == 'a' || !isSelectU) { %>
+            <a class="<%= (mt == 'u') ? 'SELECTED' : '' %>"
+               href="?mt=u&amp;mo=<%= mt != 'u' || mo == 'a' ? 'd' : 'a' %>">更新日期</a>
+            <% if (mt != 'u' || mo == 'd') { %>
             <i class="icon-caret-down"></i>
             <% } else { %>
             <i class="icon-caret-up"></i>
@@ -33,8 +34,9 @@
       </th>
       <th>
         <div>
-          <a class="MainTblSort <%= isSelectP %>" href='?mt=p&amp;mo=<%= pageViewV %>'>访问量</a>
-          <% if (pageViewV == 'a' || !isSelectP) { %>
+          <a class="MainTblSort <%= (mt == 'p') ? 'SELECTED' : '' %>"
+             href="?mt=p&amp;mo=<%= mt != 'p' || mo == 'a' ? 'd' : 'a' %>">访问量</a>
+          <% if (mt != 'p' || mo == 'd') { %>
           <i class="icon-caret-down"></i>
           <% } else { %>
           <i class="icon-caret-up"></i>
@@ -43,8 +45,9 @@
       </th>
       <th>
         <div>
-          <a class="MainTblSort <%= isSelectR %>" href='?mt=r&amp;mo=<%= rateV %>'>上升率</a>
-          <% if (rateV == 'a' || !isSelectR) { %>
+          <a class="MainTblSort <%= (mt == 'r') ? 'SELECTED' : '' %>"
+             href="?mt=r&amp;mo=<%= mt != 'r' || mo == 'a' ? 'd' : 'a' %>">上升率</a>
+          <% if (mt != 'r' || mo == 'd') { %>
           <i class="icon-caret-down"></i>
           <% } else { %>
           <i class="icon-caret-up"></i>
@@ -76,12 +79,13 @@
           <% } %>
         </p>
 
-        <p class="text-muted"><%= isSelectU ? ('更新：' + topic.update_date) : ('创建：' + topic.create_date)%></p>
+        <p class="text-muted"><%= mt == 'u' ? ('更新：' + topic.update_date) : ('创建：' + topic.create_date)%></p>
       </td>
       <td class="MainTblPV">
-        <%= !topic.PV_count ? '-' : topic.PV_count %>
+        <%= topic.PV_count || '-' %>
       </td>
-      <td class="MainTblRate">-
+      <td class="MainTblRate">
+        -
       </td>
       <td>
       </td>
@@ -89,8 +93,6 @@
     <% } %>
     </tbody>
   </table>
-</div>
 
-<div class="WorksPagination">
-  <% include _pagination.html %>
-</div>
+<% locals.query = 'mt=' + mt + '&mo=' + mo + '&'; %>
+<% include ../_pagination.html %>
