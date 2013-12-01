@@ -137,13 +137,10 @@ em {
   float: right;
 }
 .Col03HotContentListItemPVCountNum {
-  font-family: Arial, sans-serif;
   font-weight: bold;
   font-size: 11px;
 }
 .Col03HotContentListItemPVCountUnit {
-  white-space: nowrap;
-  font-family: Arial, sans-serif;
   font-size: 10px;
 }
 .Sub {
@@ -154,7 +151,7 @@ em {
 }
 /* 300px */
 .SubSeparator {
-  background: #fff;
+  background-color: white;
   height: 15px;
 }
 .SubContent {

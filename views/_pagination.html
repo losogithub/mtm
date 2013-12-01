@@ -1,7 +1,6 @@
 <!--argument: totalPage, currentPage--->
 <% locals.query = '?' + (locals.query || '') + 'page=' %>
 <% if (totalPage <= 1 ) { return; } %>
-  <% totalPage = 10; %>
 <div class="Pagination">
   <!--display pages  take time 10.13 2013-->
   <% if (totalPage < 10) { %>

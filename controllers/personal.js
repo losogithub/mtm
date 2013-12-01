@@ -701,10 +701,10 @@ var getandSortTopicsforShow = function (sortName, topics, callback) {
   else if (sortName == 'F') {
     //accordiing to liked count
     //todo: changed to favourite count.
-    return Topic.getTopicsByIdsSorted(topics, '-PV_count', callback);
+    return Topic.getTopicsByIdsSorted(topics, '-FVCount', callback);
   } else if (sortName == 'N') {
     //according to Name
-    return Topic.getTopicsByIdsSorted(topics, '-title', callback);
+    return Topic.getTopicsByIdsSorted(topics, 'title', callback);
   }
 }
 

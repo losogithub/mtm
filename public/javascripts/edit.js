@@ -1783,7 +1783,8 @@
     })
       .done(function () {
         if (submitType == 'saveDraft') {
-          window.location = '/works';
+          alert('保存草稿成功。');
+          $button.button('reset');
         } else {
           window.location = '/topic/' + topicId;
         }

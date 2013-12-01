@@ -39,7 +39,7 @@
                 class="HeadDesc text-secondary">
             <%= !locals.topic ? '' : topic.description %>
           </span>
-          <span class="text-muted">
+          <span class="text-muted" style="font-size: 10px;">
             <i class="icon-edit" style="vertical-align: middle;"></i>
             更新日期: <%= locals.topic ? topic.updateAt : '' %>
           </span>
@@ -106,9 +106,6 @@
   <div class="Sub"><!--right side--->
     <div class="SubInner">
 
-      <div class="SubSeparator" style="height: 20px;">
-        <hr>
-      </div>
       <div class="SubAuthor">
         <div class="SubAuthorProfile">
           <div class="SubAuthorProfileUnit">
@@ -140,6 +137,9 @@
           <p class="SubAuthorProfileTxt"><%- authorInfo.description || '' %></p>
         </div>
 
+      </div>
+      <div class="SubSeparator">
+        <hr>
       </div>
 
     </div>
