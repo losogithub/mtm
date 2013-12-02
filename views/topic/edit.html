@@ -1,26 +1,24 @@
 <div class="Band">
   <div class="Inner">
-    <table class='Band_Ttl'>
-      <td>
-        <h5><%= locals.topic ? '编辑' : '创建' %>总结</h5>
-      </td>
-    </table>
     <table class="Band_Btn">
       <td>
-        <% if (locals.topic && topic.publishDate) { %>
-        <button name="save" class='btn btn-small btn-success'
-                data-loading-text="保存 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;" type="button">保存
-        </button>
-        <% } else { %>
-        <button name="saveDraft" class='btn btn-small btn-inverse'
-                data-loading-text="保存草稿 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;" type="button">保存草稿
-        </button>
+        <% if (!topic.publishDate) { %>
         <button name="publish" class='btn btn-small btn-success'
                 data-loading-text="发布 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;" type="button">发布
         </button>
         <% } %>
-        <button name="cancel" class='btn btn-small' type="button"
-                onclick="if (history.length > 1) history.back(); else location.href = '/';">返回</button>
+        <a class='btn btn-small text-default' href="<%= topic.publishDate ? '/topic/' + topic._id : '/works' %>">返回</a>
+      </td>
+    </table>
+    <table class='Band_Ttl'>
+      <td>
+        <h5>
+          <b>编辑总结<%= topic.publishDate ? '' : '（草稿）' %></b>
+          <span id="_asterisk" style="display: none;">*</span>
+          <span id="_saved" style="display: none;" class="text-muted">- 所有修改都已保存，可以直接离开本页面</span>
+          <span id="_error" style="display: none;" class="text-danger">- 上次修改保存失败，请刷新页面撤销刚才的修改</span>
+          <span id="_loading" style="display: none;" class="text-muted">- 正在保存 <i class='icon-spinner icon-spin'></i></span>
+        </h5>
       </td>
     </table>
   </div>
@@ -35,7 +33,11 @@
             <input name='title' class="" value="<%= !locals.topic ? '' : topic.title || '' %>"
                    placeholder="输入总结标题（50字以内）" type="text"/></td>
           <td>
-            <button class="btn btn-link" name="options" style='display: none;vertical-align: baseline;' type="button">可选项目
+            <button class="btn btn-link text-success" name="saveTop" type="button">
+              <i class="icon-save"></i>
+              保存
+            </button>
+            <button class="btn btn-link text-muted" name="options" type="button">可选项目
               <i class="icon-caret-down"></i>
             </button>
           </td>

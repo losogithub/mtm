@@ -170,6 +170,12 @@ function getTopicsByIdsSorted(topicIds, opt, callback) {
     .exec(callback);
 }
 
+function getPublishedTopics(topicIds, opt, callback) {
+  TopicModel.find({'_id': {"$in": topicIds}, publishDate: {$ne: null}})
+    .sort(opt)
+    .exec(callback);
+}
+
 exports.createTopic = createTopic;//增
 exports.getContents = getContents;//查
 exports.increaseItemCountBy = increaseItemCountBy;
@@ -179,3 +185,4 @@ exports.saveTopic = saveTopic;//改
 exports.deleteTopic = deleteTopic;//删
 exports.getTopicById = getTopicById;//查
 exports.getTopicsByIdsSorted = getTopicsByIdsSorted;
+exports.getPublishedTopics = getPublishedTopics;

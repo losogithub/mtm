@@ -48,8 +48,7 @@ input[type="text"], input[type="password"], textarea {
   &.Band-Fixed { top: 0; }
   .Inner { max-width: 960px; width: auto; }
   .Band_Ttl {
-    float: left;
-    h5 { margin-left: 6px; font-weight: bold; }
+    h5 { white-space: nowrap; margin-left: 6px; }
   }
   .Band_Btn { margin-right: 6px; float: right; }
 }
@@ -58,13 +57,14 @@ input[type="text"], input[type="password"], textarea {
 .Edit_Top {
   padding-top: 42px; padding-bottom: 15px;
   form {
-    padding-top: 25px; padding-bottom: 11px; border-bottom: 3px solid black;
+    margin-top: 25px; padding-bottom: 11px; border-bottom: 3px solid black; position: relative;
     fieldset:first-child {
       height: 40px;
       td { vertical-align: bottom; }
       input[name="title"] { display: inline-block; width: 779px; padding: 0 10px; height: 40px; line-height: 38px; font-size: 23px; font-weight: bold;
         background-color: rgb(255, 254, 238); }
-      button[name="options"] { margin-left: 15px; color: #666 !important; }
+      button[name="saveTop"] { position: absolute; top: 0; }
+      button[name="saveTop"], button[name="options"] { margin-left: 15px; display: none;vertical-align: baseline; }
     }
     fieldset:last-child {
       margin-top: 25px; width: 779px;

@@ -97,12 +97,9 @@ textarea {
   max-width: 960px;
   width: auto;
 }
-.Band .Band_Ttl {
-  float: left;
-}
 .Band .Band_Ttl h5 {
+  white-space: nowrap;
   margin-left: 6px;
-  font-weight: bold;
 }
 .Band .Band_Btn {
   margin-right: 6px;
@@ -114,9 +111,10 @@ textarea {
   padding-bottom: 15px;
 }
 .Edit_Top form {
-  padding-top: 25px;
+  margin-top: 25px;
   padding-bottom: 11px;
   border-bottom: 3px solid black;
+  position: relative;
 }
 .Edit_Top form fieldset:first-child {
   height: 40px;
@@ -134,9 +132,15 @@ textarea {
   font-weight: bold;
   background-color: #fffeee;
 }
+.Edit_Top form fieldset:first-child button[name="saveTop"] {
+  position: absolute;
+  top: 0;
+}
+.Edit_Top form fieldset:first-child button[name="saveTop"],
 .Edit_Top form fieldset:first-child button[name="options"] {
   margin-left: 15px;
-  color: #666 !important;
+  display: none;
+  vertical-align: baseline;
 }
 .Edit_Top form fieldset:last-child {
   margin-top: 25px;

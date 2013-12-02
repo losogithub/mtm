@@ -10,6 +10,8 @@
 
   var console = window.console || {log: $.noop, error: $.noop};
 
+  var INPUT_EVENTS = 'input blur mousedown mouseup keydown keypress keyup';
+
   function fillVideo($li, url, vid) {
     var quote = shizier.utils.getVideoQuote(url);
     var temp;
@@ -260,6 +262,11 @@
         createItem(self.widget().prev(), self.type.replace('_CREATE', ''), data.itemId, data);
         setState('default');
       };
+      var fail = function (jqXHR) {
+        alert(jqXHR.responseText);
+        self.widget().find('button[name="save"]').button('reset');
+        self.widget().find('button[name="preview"]').button('reset');
+      };
 
       //如果是修改则传itemId，否则是新建则传prevId
       var data = this._getCommitData();
@@ -273,11 +280,7 @@
             type: self.type
           }, data)
         }).done(doneCallback)
-          .fail(function (jqXHR) {
-            alert(jqXHR.responseText);
-            self.widget().find('button[name="save"]').button('reset');
-            self.widget().find('button[name="preview"]').button('reset');
-          });
+          .fail(fail);
       } else {
         var prevItemType = this.widget().prev().data('type');
         var prevItemId = this.widget().prev().data('id');
@@ -288,11 +291,7 @@
             type: self.type
           }, data))
           .done(doneCallback)
-          .fail(function (jqXHR) {
-            alert(jqXHR.responseText);
-            self.widget().find('button[name="save"]').button('reset');
-            self.widget().find('button[name="preview"]').button('reset');
-          });
+          .fail(fail);
       }
     },
 
@@ -418,13 +417,13 @@
         .end()
         .find('input[name="title"]')
         .val(this.options.title)
-        .on('input blur mousedown mouseup keydown keypress keyup', !this.options.id ? $.noop : function (event) {
+        .on(INPUT_EVENTS, !this.options.id ? $.noop : function (event) {
           self.stateHandler(self.options.title, event);
         })
         .end()
         .find('textarea[name="snippet"]')
         .val(this.options.snippet)
-        .on('input blur mousedown mouseup keydown keypress keyup', !this.options.id ? $.noop : function (event) {
+        .on(INPUT_EVENTS, !this.options.id ? $.noop : function (event) {
           self.stateHandler(self.options.snippet, event);
         })
         .end()
@@ -465,7 +464,7 @@
         .end()
         .find('textarea[name="description"]')
         .val(this.options.description)
-        .on('input blur mousedown mouseup keydown keypress keyup', !this.options.id ? $.noop : function (event) {
+        .on(INPUT_EVENTS, !this.options.id ? $.noop : function (event) {
           self.stateHandler(self.options.description, event);
         })
         .end();
@@ -563,7 +562,7 @@
       //监听文本改变事件
       this.widget()
         .find('input')
-        .on('input blur mousedown mouseup keydown keypress keyup', function () {
+        .on(INPUT_EVENTS, function () {
           var $preview = self.widget().find('button[name="preview"]');
           if (this.value) {
             $preview.removeAttr('disabled');
@@ -606,7 +605,6 @@
 
     preview: function () {
       var self = this;
-      var url = this.widget().find('input').val();
 
       var callback = function (data) {
         if (self.options.disabled) {
@@ -614,7 +612,7 @@
         }
         self.createPreviewWidget(data);
       };
-      $.getJSON('/topic/link_detail', { url: url }, callback)
+      $.getJSON('/topic/link_detail', this._getCommitData(), callback)
         .done(function (data) {
           if (self.options.disabled) {
             return;
@@ -667,19 +665,19 @@
         .end()
         .find('input[name="title"]')
         .val(this.options.title)
-        .on('input blur mousedown mouseup keydown keypress keyup', !this.options.id ? $.noop : function (event) {
+        .on(INPUT_EVENTS, !this.options.id ? $.noop : function (event) {
           self.stateHandler(self.options.title, event);
         })
         .end()
         .find('input[name="quote"]')
         .val(this.options.quote)
-        .on('input blur mousedown mouseup keydown keypress keyup', !this.options.id ? $.noop : function (event) {
+        .on(INPUT_EVENTS, !this.options.id ? $.noop : function (event) {
           self.stateHandler(self.options.quote, event);
         })
         .end()
         .find('textarea[name="description"]')
         .val(this.options.description)
-        .on('input blur mousedown mouseup keydown keypress keyup', !this.options.id ? $.noop : function (event) {
+        .on(INPUT_EVENTS, !this.options.id ? $.noop : function (event) {
           self.stateHandler(self.options.description, event);
         })
         .end();
@@ -774,7 +772,7 @@
       //监听文本改变事件
       this.widget()
         .find('input')
-        .on('input blur mousedown mouseup keydown keypress keyup', function () {
+        .on(INPUT_EVENTS, function () {
           var $preview = self.widget().find('button[name="preview"]');
           if (this.value) {
             $preview.removeAttr('disabled');
@@ -861,13 +859,13 @@
         .end()
         .find('input[name="title"]')
         .val(this.options.title)
-        .on('input blur mousedown mouseup keydown keypress keyup', !this.options.id ? $.noop : function (event) {
+        .on(INPUT_EVENTS, !this.options.id ? $.noop : function (event) {
           self.stateHandler(self.options.title, event);
         })
         .end()
         .find('textarea[name="description"]')
         .val(this.options.description)
-        .on('input blur mousedown mouseup keydown keypress keyup', !this.options.id ? $.noop : function (event) {
+        .on(INPUT_EVENTS, !this.options.id ? $.noop : function (event) {
           self.stateHandler(self.options.description, event);
         })
         .end();
@@ -953,7 +951,7 @@
       //监听文本改变事件
       this.widget()
         .find('input')
-        .on('input blur mousedown mouseup keydown keypress keyup', function () {
+        .on(INPUT_EVENTS, function () {
           var $preview = self.widget().find('button[name="preview"]');
           if (this.value) {
             $preview.removeAttr('disabled');
@@ -997,7 +995,6 @@
 
     preview: function () {
       var self = this;
-      var url = this.widget().find('input').val();
 
       var callback = function (data) {
         if (self.options.disabled) {
@@ -1006,7 +1003,7 @@
         self.createPreviewWidget(data);
       };
 
-      $.getJSON('/topic/video_detail', { url: url }, callback)
+      $.getJSON('/topic/video_detail', this._getCommitData(), callback)
         .done(function (data) {
           if (self.options.disabled) {
             return;
@@ -1057,25 +1054,25 @@
       this.widget()
         .find('textarea[name="cite"]')
         .val(this.options.cite)
-        .on('input blur mousedown mouseup keydown keypress keyup', function (event) {
+        .on(INPUT_EVENTS, function (event) {
           self.stateHandler(self.options.cite, event);
         })
         .end()
         .find('input[name="url"]')
         .val(this.options.url)
-        .on('input blur mousedown mouseup keydown keypress keyup', function (event) {
+        .on(INPUT_EVENTS, function (event) {
           self.stateHandler(self.options.url, event);
         })
         .end()
         .find('input[name="title"]')
         .val(this.options.title)
-        .on('input blur mousedown mouseup keydown keypress keyup', function (event) {
+        .on(INPUT_EVENTS, function (event) {
           self.stateHandler(self.options.title, event);
         })
         .end()
         .find('textarea[name="description"]')
         .val(this.options.description)
-        .on('input blur mousedown mouseup keydown keypress keyup', function (event) {
+        .on(INPUT_EVENTS, function (event) {
           self.stateHandler(self.options.description, event);
         })
         .end();
@@ -1184,7 +1181,7 @@
       this.widget()
         .find('textarea')
         .val(this.options.text)
-        .on('input blur mousedown mouseup keydown keypress keyup', function (event) {
+        .on(INPUT_EVENTS, function (event) {
           self.stateHandler(self.options.text, event);
         })
         .end();
@@ -1263,7 +1260,7 @@
       this.widget()
         .find('input')
         .val(this.options.title)
-        .on('input blur mousedown mouseup keydown keypress keyup', function (event) {
+        .on(INPUT_EVENTS, function (event) {
           self.stateHandler(self.options.title, event);
         })
         .end();
@@ -1326,12 +1323,69 @@
 
   var $form;
   var $band;
+  var $band_asterisk;
+  var $band_saved;
+  var $band_error;
+  var $band_loading;
   var $ul;
   var $templates;
+  var $saveTop;
+  var $title;
+  var $cover;
+  var $description;
+
+  var titleModified;
+  var coverModified;
+  var descriptionModified;
+  var topModified;
+  var title;
+  var coverUrl;
+  var description;
+  var error;
+  var savedOnce;
+
+  function onStateChange() {
+    if (error) {
+      $band_asterisk.show();
+      $band_error.show();
+      $('body').attr('onbeforeunload', '');
+    } else {
+      if (state == 'edit' || topModified) {
+        $band_saved.hide();
+        $band_asterisk.show();
+        $('body').attr('onbeforeunload', 'return "您有尚未保存的内容";');
+      } else {
+        $band_asterisk.hide();
+        if (savedOnce) {
+          $band_saved.show();
+        }
+        $('body').attr('onbeforeunload', '');
+      }
+    }
+  }
+
+  function onTopStateChange() {
+    topModified = titleModified || coverModified || descriptionModified;
+    if (topModified) {
+      $saveTop.show();
+    } else {
+      $saveTop.hide();
+    }
+    onStateChange();
+  }
+
+  function onTopChange() {
+    title = $title.val();
+    coverUrl = $form.find('button[name="cover"] img').attr('src');
+    description = $description.val();
+    titleModified = coverModified = descriptionModified = false;
+    onTopStateChange();
+  }
 
   function setState(newState) {
     console.log(newState);
     state = newState;
+    onStateChange();
   }
 
   /**
@@ -1582,6 +1636,12 @@
     topicId = location.pathname.match(/^\/topic\/([0-9a-f]{24})\/edit$/)[1];
     $ul = $('.WidgetItemList');
     $templates = $('.TEMPLATES');
+    $band = $('.Band');
+    $band_asterisk = $band.find('#_asterisk');
+    $band_saved = $band.find('#_saved');
+    $band_error = $band.find('#_error');
+    $band_loading = $band.find('#_loading');
+    $form = $('.Edit_Top form');
     $('.fancybox:visible').fancybox(shizier.fancyboxOptions);
   }
 
@@ -1702,7 +1762,18 @@
    * @private
    */
   function __initBand() {
-    $band = $('.Band');
+    $(document)
+      .ajaxStart(function () {
+        $band_loading.show();
+      })
+      .ajaxError(function () {
+        error = true;
+      })
+      .ajaxStop(function () {
+        savedOnce = true;
+        onStateChange();
+        $band_loading.hide();
+      });
 
     $(window).scroll(function () {
       if ($(this).scrollTop() >= 48) {
@@ -1712,13 +1783,15 @@
       }
     });
 
-    $band.on('click', 'button[name="save"], button[name="saveDraft"], button[name="publish"]', function (event) {
-      var $target = $(event.target);
-      var name = $target.attr('name');
-      $form
-        .data('submitType', name)
-        .submit();
-    });
+    $band.add($form).on('click',
+      'button[name="saveDraft"], button[name="save"], button[name="publish"], button[name="saveTop"]',
+      function (event) {
+        var $target = $(event.target);
+        var name = $target.attr('name');
+        $form
+          .data('submitType', name)
+          .submit();
+      });
   }
 
   function ___commit() {
@@ -1743,11 +1816,10 @@
       }
     })
       .done(function () {
-        if (submitType == 'saveDraft') {
-          alert('保存草稿成功。');
-          $button.button('reset');
-        } else {
+        if (submitType == 'publish') {
           window.location = '/topic/' + topicId;
+        } else {
+          onTopChange();
         }
       })
       .fail(function (jqXHR) {
@@ -1761,9 +1833,9 @@
    * @private
    */
   function __initTop() {
-    $form = $('.Edit_Top form');
-
-    var coverUrl = $form.find('button[name="cover"] img').attr('src');
+    $title = $form.find('input[name="title"]');
+    $cover = $form.find('button[name="cover"] img');
+    $description = $form.find('textarea[name="description"]');
 
     $form.validate({
       submitHandler: function () {
@@ -1797,6 +1869,7 @@
       }
     });
 
+    $saveTop = $form.find('button[name="saveTop"]');
     var $button = $form.find('button[name="options"]');
     var $options = $form.find('fieldset:last');
 
@@ -1865,17 +1938,33 @@
         hide();
       }
     });
+
     $reset.click(function () {
       hide();
       $img.attr('src', coverUrl);
+      coverModified = $img.attr('src') != coverUrl;
+      onTopStateChange();
     });
     $preview.click(function () {
       autoHide = true;
       $img.attr('src', shizier.utils.suffixImage($input.val()));
-      if ($input.val() == '') {
+      coverModified = $img.attr('src') != coverUrl;
+      onTopStateChange();
+      if (!$input.val()) {
         hide();
       }
     });
+
+    $title.on(INPUT_EVENTS, function () {
+      titleModified = $(this).val() != title;
+      onTopStateChange();
+    });
+
+    $description.on(INPUT_EVENTS, function () {
+      descriptionModified = $(this).val() != description;
+      onTopStateChange();
+    });
+    onTopChange();
   }
 
   /**

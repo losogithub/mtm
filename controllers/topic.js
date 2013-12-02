@@ -28,14 +28,16 @@ function createTopic(req, res, next) {
   var userId = req.session.userId;
 
   Topic.createTopic(userId, function (err, topic) {
-    if (err || !topic) {
-      console.error(err.stack);
-      res.send(500, err);
+    if (err) {
+      next(err);
+      return;
+    }
+    if (!topic) {
+      next(new Error(404));
       return;
     }
 
     console.log('createTopic done');
-    console.log(topic);
     res.redirect('/topic/' + topic._id + '/edit');
   });
 }
@@ -56,7 +58,6 @@ function showEdit(req, res, next) {
           callback(err);
           return;
         }
-
         if (!items) {
           callback(new Error(404));
           return;
@@ -73,6 +74,7 @@ function showEdit(req, res, next) {
     var topic = results.topic;
     var items = results.items;
     var topicData = {
+      _id: topic._id,
       title: topic.title,
       coverUrl: topic.cover_url,
       description: topic.description,
@@ -87,7 +89,7 @@ function showEdit(req, res, next) {
     res.set('Expire', '-1');
     res.set('Pragma', 'no-cache');
     res.render('topic/edit', {
-      title: '修改总结',
+      title: '编辑总结',
       css: [
         'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.css',
         'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-buttons.css',
@@ -476,13 +478,11 @@ function createItem(req, res, next) {
   try {
     var data = _getData(req);
   } catch (err) {
-    console.error(err.stack);
-    res.send(500, err);
+    next(err);
     return;
   }
   if (!data) {
-    console.error('创建条目失败');
-    res.send(500, '创建条目失败');
+    next(new Error(500));
     return;
   }
 
@@ -535,6 +535,8 @@ function createItem(req, res, next) {
         Topic.increaseItemCountBy(topic, 1).exec();
         callback(null, item);
       });
+      topic.update_at = Date.now();
+      topic.save();
     }]
   }, function (err, results) {
     if (err) {
@@ -596,6 +598,8 @@ function sortItem(req, res, next) {
 
         callback();
       });
+      topic.update_at = Date.now();
+      topic.save();
     }]
   }, function (err, results) {
     if (err) {
@@ -622,6 +626,7 @@ function editItem(req, res, next) {
       _getItemWithAuth(callback, type, itemId, topicId);
     },
     update: ['topic', 'item', function (callback, results) {
+      var topic = results.topic;
       var item = results.item;
       try {
         var data = _getData(req);
@@ -638,6 +643,8 @@ function editItem(req, res, next) {
 
         callback();
       });
+      topic.update_at = Date.now();
+      topic.save();
     }],
     newItem: ['update', function (callback, results) {
       Item.getItemById(type, itemId, function (err, item) {
@@ -686,6 +693,8 @@ function deleteItem(req, res, next) {
         Topic.increaseItemCountBy(topic, -1).exec();
         callback();
       });
+      topic.update_at = Date.now();
+      topic.save();
     }]
   }, function (err, results) {
     if (err) {
@@ -724,7 +733,6 @@ function saveTopic(req, res, next) {
     check(title).len(5, 50);
     check(description).len(0, 150);
   } catch (err) {
-    console.error(err.stack);
     next(err);
     return;
   }
@@ -1041,7 +1049,7 @@ function getLinkDetail(req, res, next) {
 
   _getLinkDetail(url, function (err, results) {
     if (err) {
-      res.send(500, err);
+      next(err);
       return;
     }
     res.json({
@@ -1063,7 +1071,7 @@ function getVideoDetail(req, res, next) {
       return;
     }
     if (!results.vid) {
-      res.send(400, '对不起，无法识别您输入的视频链接');
+      next(new Error(400));
       return;
     }
     res.json({
