@@ -113,8 +113,7 @@
     type: undefined,
 
     options: {
-      id: undefined,
-      from: ''
+      id: undefined
     },
 
     _create: function () {
@@ -125,6 +124,7 @@
         .addClass(this.type)
         .data('type', this.type)
         .data('id', this.options.id)
+        //防止slideDown动画期间获取焦点时的滚动
         .scroll(function () {
           self.widget().scrollTop(0);
         })
@@ -306,32 +306,10 @@
     createPreviewWidget: function (data) {
       var type = this.type.replace('_CREATE', '');
       createWidget(type, $.extend({
-        from: this.options.from,
         type: type,
-        $prevItem: this.widget().prev(),
         $li: this.widget()
       }, data));
       setState('edit');
-    }
-
-  });
-
-  /*
-   * 定义微件：动态菜单
-   */
-  $.widget('shizier.menuWidget', $.shizier.editWidget, {
-
-    type: 'MENU',
-
-    __create: function () {
-      var self = this;
-      this.widget()
-        .on('click', 'li>button', function (event) {
-          createWidget($(event.target).data('type'), {
-            from: 'DYNAMIC',
-            $prevItem: self.widget().prev()
-          });
-        });
     }
 
   });
@@ -440,13 +418,13 @@
         .end()
         .find('input[name="title"]')
         .val(this.options.title)
-        .on('input blur mousedown mouseup keydown keypress keyup', this.options.from != 'EDIT' ? $.noop : function (event) {
+        .on('input blur mousedown mouseup keydown keypress keyup', !this.options.id ? $.noop : function (event) {
           self.stateHandler(self.options.title, event);
         })
         .end()
         .find('textarea[name="snippet"]')
         .val(this.options.snippet)
-        .on('input blur mousedown mouseup keydown keypress keyup', this.options.from != 'EDIT' ? $.noop : function (event) {
+        .on('input blur mousedown mouseup keydown keypress keyup', !this.options.id ? $.noop : function (event) {
           self.stateHandler(self.options.snippet, event);
         })
         .end()
@@ -487,7 +465,7 @@
         .end()
         .find('textarea[name="description"]')
         .val(this.options.description)
-        .on('input blur mousedown mouseup keydown keypress keyup', this.options.from != 'EDIT' ? $.noop : function (event) {
+        .on('input blur mousedown mouseup keydown keypress keyup', !this.options.id ? $.noop : function (event) {
           self.stateHandler(self.options.description, event);
         })
         .end();
@@ -689,19 +667,19 @@
         .end()
         .find('input[name="title"]')
         .val(this.options.title)
-        .on('input blur mousedown mouseup keydown keypress keyup', this.options.from != 'EDIT' ? $.noop : function (event) {
+        .on('input blur mousedown mouseup keydown keypress keyup', !this.options.id ? $.noop : function (event) {
           self.stateHandler(self.options.title, event);
         })
         .end()
         .find('input[name="quote"]')
         .val(this.options.quote)
-        .on('input blur mousedown mouseup keydown keypress keyup', this.options.from != 'EDIT' ? $.noop : function (event) {
+        .on('input blur mousedown mouseup keydown keypress keyup', !this.options.id ? $.noop : function (event) {
           self.stateHandler(self.options.quote, event);
         })
         .end()
         .find('textarea[name="description"]')
         .val(this.options.description)
-        .on('input blur mousedown mouseup keydown keypress keyup', this.options.from != 'EDIT' ? $.noop : function (event) {
+        .on('input blur mousedown mouseup keydown keypress keyup', !this.options.id ? $.noop : function (event) {
           self.stateHandler(self.options.description, event);
         })
         .end();
@@ -883,13 +861,13 @@
         .end()
         .find('input[name="title"]')
         .val(this.options.title)
-        .on('input blur mousedown mouseup keydown keypress keyup', this.options.from != 'EDIT' ? $.noop : function (event) {
+        .on('input blur mousedown mouseup keydown keypress keyup', !this.options.id ? $.noop : function (event) {
           self.stateHandler(self.options.title, event);
         })
         .end()
         .find('textarea[name="description"]')
         .val(this.options.description)
-        .on('input blur mousedown mouseup keydown keypress keyup', this.options.from != 'EDIT' ? $.noop : function (event) {
+        .on('input blur mousedown mouseup keydown keypress keyup', !this.options.id ? $.noop : function (event) {
           self.stateHandler(self.options.description, event);
         })
         .end();
@@ -1344,10 +1322,7 @@
   //数据库中该总结id
   var topicId;
   var state = 'default';
-  var from;
-  var editingWidgetName;
   var $editingWidget;
-  var $editingPrevItem;
 
   var $form;
   var $band;
@@ -1365,14 +1340,13 @@
    * @param options
    * @private
    */
-  var createWidget = function (type, options) {
+  function createWidget(type, options) {
     console.log('createWidget');
 
     if (!type) {
       return;
     }
 
-    var newFrom = options.from;
     var $prevItem = options.$prevItem;
     var $li = options.$li;
 
@@ -1385,18 +1359,17 @@
     var oldState = state;
 
     //删除编辑中的微件
-    if (state != 'default'
-      && editingWidgetName
-      && $editingWidget.is(':data("shizier-' + editingWidgetName + '")')) {
-      $editingWidget[editingWidgetName]('remove');
+    if (state != 'default') {
+      $editingWidget[$editingWidget.data('type').toLowerCase() + 'Widget']('remove');
     }
 
-    //编辑中的微件和目标微件:类型相同、来源相同，只需给输入框焦点
+    //编辑中的微件和目标微件:类型相同、来源相同，删了可以直接返回了
     if (oldState == 'create'
       && $editingWidget.data('type') == type
-      && from == newFrom
-      && (newFrom == 'STATIC'
-      || newFrom == 'INSERT' && $editingPrevItem.is($prevItem))) {
+      && $prevItem
+      && !$editingWidget.data('id')
+      && ($prevItem.is($editingWidget.prev())
+      || (!$prevItem.length && !$editingWidget.prev().length))) {
 
       return;
     }
@@ -1407,25 +1380,21 @@
       });
     }
 
-    //如果是修改就用原条目新建微件，否则是插入就复制新的li元素
-    var $editWidget = $templates.find('>ul>li').clone();
+    var $widget = $templates.find('>ul>li').clone();
     //如果是动态插入就插入前趋条目的后面，否则是静态插入就插入最前面
     if ($prevItem && $prevItem.length) {
-      $prevItem.after($editWidget);
+      $prevItem.after($widget);
+    } else if ($li && $li.length && $li.prev().length) {
+      $li.prev().after($widget);
     } else {
-      $ul.prepend($editWidget);
+      $ul.prepend($widget);
     }
 
     //根据类型选择微件，并保存调用微件方法的函数
-    console.log('_createEditWidget ' + type);
-    editingWidgetName = type.toLowerCase() + 'Widget';
-    $editWidget[editingWidgetName](options);
-
-    console.log('create');
-    state = 'create';
-    from = newFrom;
-    $editingWidget = $editWidget;
-    $editingPrevItem = $prevItem;
+    setState('create');
+    $editingWidget = $widget;
+    $widget[type.toLowerCase() + 'Widget'](options);
+    console.log('createWidget ' + type);
   }
 
   /**
@@ -1651,14 +1620,7 @@
         }
 
         var $li = $(this).closest('li');
-        $li[editingWidgetName]('remove');
-      })
-      //绑定插入点击响应
-      .on('click', '.INSERT', function () {
-        createWidget('MENU', {
-          from: 'INSERT',
-          $prevItem: $(this).closest('li')
-        });
+        $li[$editingWidget.data('type').toLowerCase() + 'Widget']('remove');
       })
       //绑定删除点击响应
       .on('click', '.DELETE', function () {
@@ -1729,8 +1691,6 @@
         }
         createWidget(type, $.extend({
           id: $li.data('id'),
-          from: 'EDIT',
-          $prevItem: $li.prev(),
           $li: $li
         }, data));
       })
@@ -1989,9 +1949,10 @@
    * @private
    */
   function __initMenu() {
-    $('.StaticMenu').on('click', 'li>button', function (event) {
-      createWidget($(event.target).data('type'), {
-        from: 'STATIC'
+    $('.Contents').on('click', '.Menu li>button', function () {
+      var $li = $(this).closest('.WidgetItemList>li');
+      createWidget($(this).data('type'), {
+        $prevItem: $li
       });
     });
   }

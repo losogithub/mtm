@@ -84,7 +84,7 @@ app.use(function (err, req, res, next) {
         res.status(404).render('sign/errLink');
         break;
       default :
-        res.send(500, '服务器出错：\n' + err.message + '\n' + err.stack);
+        res.send(500, '服务器出错：\n' + '\n' + err.stack);
         break;
     }
   } else {
@@ -96,7 +96,7 @@ app.use(function (err, req, res, next) {
         res.send(404, '您请求的资源不存在');
         break;
       default :
-        res.send(500, '服务器出错：\n' + err.message + '\n' + err.stack);
+        res.send(500, '服务器出错：\n' + '\n' + err.stack);
         break;
     }
   }
