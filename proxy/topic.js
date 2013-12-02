@@ -73,7 +73,7 @@ function increasePVCountBy(topic, increment, callback) {
  * 获取人气总结
  */
 function getAllTopics(callback) {
-  TopicModel.find({ publishDate: { $ne: null } })
+  TopicModel.find({ publishDate: { $exists: true } })
     //.sort('-_id')
     .exec(callback);
 }
@@ -171,7 +171,7 @@ function getTopicsByIdsSorted(topicIds, opt, callback) {
 }
 
 function getPublishedTopics(topicIds, opt, callback) {
-  TopicModel.find({'_id': {"$in": topicIds}, publishDate: {$ne: null}})
+  TopicModel.find({'_id': {"$in": topicIds}, publishDate: {$exists: true}})
     .sort(opt)
     .exec(callback);
 }

@@ -75,7 +75,7 @@ function showWorks(req, res, next) {
           + topicDetails[i].update_at.getDate() + '日';
         topicsForShow.push(temp);
       }
-      return renderWorks(res, user, topicsForShow, currentPage, totalPage, mt, mo);
+      return renderWorks(res, user, topicsForShow, currentPage, totalPage, mt, mo, topicDetails.length);
     });
   });
 }
@@ -97,7 +97,7 @@ var getAndSortTopics = function (mt, mo, topics, callback) {
   return Topic.getTopicsByIdsSorted(topics, order, callback);
 }
 
-var renderWorks = function (res, user, topicsInfos, currentPage, totalPage, mt, mo) {
+var renderWorks = function (res, user, topicsInfos, currentPage, totalPage, mt, mo, length) {
   res.render('personal/index', {
     css: [
       '/stylesheets/personal.css'
@@ -105,10 +105,10 @@ var renderWorks = function (res, user, topicsInfos, currentPage, totalPage, mt, 
     personalType: 'WORKS',
     username: user.loginName,
     favourite: user.favourite,
-    topicCount: user.topicCount,
-    topicsPageView: user.pageviewCount,
-    topics: topicsInfos,
     imageUrl: user.url,
+    topicsPageView: user.pageviewCount,
+    topicCount: length,
+    topics: topicsInfos,
     currentPage: currentPage,
     totalPage: totalPage,
     mt: mt,
