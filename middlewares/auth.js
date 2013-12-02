@@ -35,7 +35,7 @@ function loadUser(req, res, next) {
   //e.g. if it is login, you shall not jump back to login page.
   //2013.11.30 But also not home page !!!!
 
-  req.session._loginReferer = req.query.fromUrl || req.session._loginReferer||'home';
+  req.session._loginReferer = req.query.fromUrl || req.session._loginReferer||'/';
   console.log("loginReferer: %s", req.session._loginReferer);
 
   if (req.session && req.session.userId) {
@@ -212,9 +212,8 @@ function loginDialog(req, res, next) {
         }
         else if (!user) {
           console.log("cannot find user by email&pass: %s, %s", loginName, pass);
-          var data = { correct: false}
           res.header('Access-Control-Allow-Credentials', 'true')
-          return res.send(401, data);
+          return res.send(401);
         }
         else {
           //found user by email and password
@@ -243,9 +242,8 @@ function loginDialog(req, res, next) {
         }
         else if (!user) {
           console.log("cannot find user by name&pass: %s, %s", loginName, pass);
-          var data = { correct: false}
           res.header('Access-Control-Allow-Credentials', 'true')
-          return res.send(401, data);
+          return res.send(401);
         }
         else {
           //found user by name and password

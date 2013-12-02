@@ -21,7 +21,7 @@ var LoginToken = require('../proxy').LoginToken;
 
 var utils = require('../public/javascripts/utils');
 
-var showWorks = function (req, res, next) {
+function showWorks(req, res, next) {
 
   //console.log(req.session);
   console.log("sort strategy: ")
@@ -67,7 +67,6 @@ var showWorks = function (req, res, next) {
       var topicsForShow = [];
       for (var i = (currentPage - 1) * 10; i < topicDetails.length && i < currentPage * 10; i++) {
         var temp = topicDetails[i];
-        temp.topicUrl = "/topic/" + topicDetails[i]._id;
         temp.create_date = topicDetails[i].create_at.getFullYear() + '年'
           + (topicDetails[i].create_at.getMonth() + 1) + '月'
           + topicDetails[i].create_at.getDate() + '日';
@@ -542,7 +541,7 @@ var accountModify = function (req, res) {
 }
 
 
-var showPersonal = function (req, res, next) {
+function showPersonal(req, res, next) {
 
   //before render: check whether visitor is itself or not.
   //if so, jump to works page.
@@ -651,7 +650,6 @@ var showPersonal = function (req, res, next) {
           var topicsForShow = [];
           for (var i = (currentPage - 1) * 9; i < topicsInfo.length && i < currentPage * 9; i++) {
             var temp = topicsInfo[i];
-            temp.topicUrl = "/topic/" + topicsInfo[i]._id;
             temp.create_date = topicsInfo[i].create_at.getFullYear() + '年'
               + (topicsInfo[i].create_at.getMonth() + 1) + '月'
               + topicsInfo[i].create_at.getDate() + '日';
@@ -820,22 +818,7 @@ var AddorRemoveLikes = function (req, res) {
 
 }
 
-
-var showFavourite = function (req, res) {
-  if (req.session && req.session.userId && req.session.userId !== 'undefined') {
-    console.log('render show favourite page');
-    res.render('personal/favourite', {
-      css: [
-        '/stylesheets/personal.css'
-      ]
-    });
-  } else {
-    return res.redirect('/home');
-  }
-
-}
 exports.showWorks = showWorks;
-exports.showFavourite = showFavourite;
 exports.showSettings = showSettings;
 exports.updateSettings = updateSettings;
 exports.showConfirmPassword = showConfirmPassword;

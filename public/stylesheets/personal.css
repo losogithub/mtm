@@ -14,9 +14,12 @@ textarea {
 .Contents {
   padding: 25px 0;
 }
+.Contents .Inner {
+  background: url("/images/bg_ContentsWrapper.png") repeat-y scroll 265px 0px transparent;
+}
 .Sub {
   float: left;
-  width: 264px;
+  width: 265px;
   padding-right: 25px;
 }
 .Thumb {
@@ -120,8 +123,9 @@ textarea {
   padding-left: 7px;
   text-align: center;
 }
-.MainTbl th .SELECTED {
-  color: #000000;
+.MainTbl th .SELECTED,
+.MainTbl th .SELECTED + i {
+  color: black;
 }
 .MainTbl th a {
   color: #999;
@@ -152,9 +156,6 @@ textarea {
   line-height: 21px;
   margin-bottom: 3px;
   font-size: 16px;
-}
-.MainTblTtl a {
-  color: black;
 }
 .MainTblPV {
   font-size: 18px;

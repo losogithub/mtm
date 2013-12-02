@@ -18,19 +18,17 @@ module.exports = function (app) {
   });
   // home page
   app.get('/', site.index);
-  app.get('/home', site.index);
 
   //console.log("router start");
   app.post('/loginDialogCheck', auth.loginDialog, auth.loginDialogCheck);
   app.post('/topic/favorite', auth.loginDialog, topic.AddorRemoveLikes);
 
-  app.get('/topic/create', auth.loginRequired, topic.showCreate);
-  app.get('/topic/contents', auth.userRequired, topic.getContents);
+  //总结
+  app.get('/topic/create', auth.loginRequired, topic.createTopic);
   app.get('/topic/link_detail', topic.getLinkDetail);
   app.get('/topic/video_detail', topic.getVideoDetail);
   app.get('/topic/:topicId', topic.showIndex);
   app.get('/topic/:topicId/edit', auth.loginRequired, topic.showEdit);
-  app.post('/topic/create', auth.userRequired, topic.createTopic);
   app.post('/topic/item', auth.userRequired, topic.createItem);
   app.put('/topic/item', auth.userRequired, topic.editItem);
   app.put('/topic/sort', auth.userRequired, topic.sortItem);
@@ -55,11 +53,10 @@ module.exports = function (app) {
   //personal management
 
   app.get('/works', auth.loginRequired, personal.showWorks);
-  app.get('/favourites', personal.showFavourite);
   app.get('/settings', auth.loginRequired, personal.showSettings);
-  app.post('/settings', personal.updateSettings); //yes, otherwise update whose info
+  app.post('/settings', auth.userRequired, personal.updateSettings); //yes, otherwise update whose info
   app.get('/account', auth.loginRequired, personal.showConfirmPassword);
-  app.post('/account', personal.passwordVerify);
+  app.post('/account', auth.userRequired, personal.passwordVerify);
 
   //eventhough logged in, still check
   //at the same time, get username from db.

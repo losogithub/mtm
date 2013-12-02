@@ -19,19 +19,27 @@ var NewTopic = require('./newTopics');
  * @param userId
  * @param callback
  */
-function createTopic(userId, callback) {
+function createTopic(authorId, callback) {
+  callback = callback || function () {
+  };
   var ep = EventProxy.create('topic', 'voidItem', function (topic) {
-    if (typeof callback === 'function') {
-      callback(null, topic);
-    }
+    callback(null, topic);
   })
     .fail(callback);
 
   var topic = new TopicModel();
-  topic.author_id = userId;
-  topic.save(ep.done('topic'));
 
   Item.createVoidItem(topic, ep.done('voidItem'));
+
+  User.appendTopic(authorId, topic._id, ep.done(function (author) {
+    if (!author) {
+      ep.emit('error', new Error('作者不存在'))
+      return;
+    }
+    topic.author_id = authorId;
+    topic.author_name = author.loginName;
+    topic.save(ep.done('topic'));
+  }));
 }
 
 /**
@@ -89,35 +97,23 @@ function saveTopic(authorId, topicId, title, coverUrl, description, publish, cal
       return;
     }
 
-    User.appendTopic(authorId, topicId, ep.done(function (author) {
-      if (!author) {
-        ep.emit('error', new Error('作者不存在'))
-        return;
+    topic.title = title;
+    topic.cover_url = coverUrl;
+    topic.description = description;
+    topic.update_at = Date.now();
+    if (publish) {
+      topic.publishDate = new Date();
+    }
+    topic.save(ep.done(function () {
+      //add: 11.07 2013 add the published topic to new topics db.
+      //But this maybe not new topics here !!!
+      // in matome, it calls update list.
+      if (publish || topic.publishDate) {
+        NewTopic.saveNewTopic(topic);
       }
-
-      topic.author_id = authorId;
-      topic.author_name = author.loginName;
-      topic.title = title;
-      topic.cover_url = coverUrl;
-      topic.description = description;
-      topic.update_at = Date.now();
-      if (publish) {
-        topic.draft = false;
-        topic.publishDate = new Date();
-      } else if (!topic.publishDate) {
-        topic.draft = true;
+      if (typeof callback === 'function') {
+        callback(null, topic);
       }
-      topic.save(ep.done(function () {
-        //add: 11.07 2013 add the published topic to new topics db.
-        //But this maybe not new topics here !!!
-        // in matome, it calls update list.
-        if (publish || topic.publishDate) {
-          NewTopic.saveNewTopic(topic);
-        }
-        if (typeof callback === 'function') {
-          callback(null, topic);
-        }
-      }));
     }));
   }));
 }

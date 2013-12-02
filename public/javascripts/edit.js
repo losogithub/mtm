@@ -1579,6 +1579,7 @@
   }
 
   function __init() {
+    topicId = location.pathname.match(/^\/topic\/([0-9a-f]{24})\/edit$/)[1];
     $ul = $('.WidgetItemList');
     $templates = $('.TEMPLATES');
     $('.fancybox:visible').fancybox(shizier.fancyboxOptions);
@@ -1759,21 +1760,10 @@
    * 初始化总结标题，总结描述
    * @private
    */
-  var __initTop = function (topicData) {
+  function __initTop() {
     $form = $('.Edit_Top form');
 
-    var coverUrl;
-
-    if (topicData) {
-      var title = topicData.title;
-      coverUrl = topicData.coverUrl;
-      var description = topicData.description;
-      $form.find('input[name="title"]').val(title ? title : '');
-      $form.find('button[name="cover"] img').attr('src', coverUrl ? coverUrl : '');
-      $form.find('textarea[name="description"]').val(description ? description : '');
-    } else {
-      coverUrl = $form.find('button[name="cover"] img').attr('src');
-    }
+    var coverUrl = $form.find('button[name="cover"] img').attr('src');
 
     $form.validate({
       submitHandler: function () {
@@ -1958,42 +1948,10 @@
   }
 
   /**
-   * 对于已经存在的总结，往条目列表填充服务器返回的数据
-   * @private
+   * 入口函数，必须要从服务器验证或获取topicId才能编辑总结
    */
-  function __initItems(itemsData) {
-    if (!itemsData) {
-      return;
-    }
-    var prevItem;
-    itemsData.forEach(function (itemData) {
-      prevItem = createItem(prevItem, itemData.type, itemData.itemId, itemData);
-    });
-  }
-
-  /**
-   * main function
-   * @param data
-   */
-  function _doIfGetIdDone(data) {
-    console.log('doIfGetIdDone');
-    data = data || {};
-
-    if (data.redirect) {
-      window.location.replace(data.redirect);
-      if (typeof window.history.pushState == "function") {
-        window.history.replaceState({}, document.title, window.location.href);
-      }
-      return;
-    }
-
-    if (data.topicId) {
-      topicId = data.topicId;
-      window.location.replace(window.location.pathname + "#" + topicId);
-      if (typeof window.history.pushState == "function") {
-        window.history.replaceState({}, document.title, window.location.href);
-      }
-    }
+  (function getTopicId() {
+    console.log('getTopicId');
 
     $(function ($) {
       $.validator.setDefaults({
@@ -2005,53 +1963,10 @@
       __init();
       __initListListener();
       __initBand();
-      __initTop(data.topicData);
+      __initTop();
       __initMenu();
       __initSort();
-      __initItems(data.itemsData);
     });
-  }
-
-  /**
-   * 入口函数，必须要从服务器验证或获取topicId才能编辑总结
-   */
-  (function getTopicId() {
-    console.log('getTopicId');
-
-    if (location.pathname != '/topic/create') {
-      topicId = location.pathname.match(/^\/topic\/([0-9a-f]{24})\/edit$/)[1];
-      console.log('topicId=' + topicId);
-
-      _doIfGetIdDone();
-    } else {
-      console.log('/topic/create');
-
-      (function createTopic() {
-        //#后面有16进制数字就验证id并获取items，否则获取新id
-        var jqXHR;
-        if (location.hash
-          && !isNaN(parseInt(location.hash.substr(1), 16))) {
-          topicId = location.hash.substr(1);
-          jqXHR = $.getJSON('/topic/contents', {
-            topicId: topicId
-          });
-        } else {
-          jqXHR = $.ajax('/topic/create', {
-            type: 'POST',
-            dataType: 'json'
-          });
-        }
-        jqXHR
-          .done(_doIfGetIdDone)
-          .fail(function (jqXHR) {
-            alert(jqXHR.responseText);
-            if (jqXHR.status == 500
-              && confirm('初始化总结失败：\n重试请按“确定”，忽略请按“取消”。')) {
-              createTopic();
-            }
-          });
-      })();
-    }
   })();
 
 })(jQuery);

@@ -3,9 +3,12 @@
 
 input[type="text"], textarea { width: 100%; }
 
-.Contents { padding: 25px 0; }
+.Contents {
+  padding: 25px 0;
+  .Inner {background: url("/images/bg_ContentsWrapper.png") repeat-y scroll 265px 0px transparent;}
+}
 
-.Sub { float: left; width: 264px; padding-right: 25px; }
+.Sub { float: left; width: 265px; padding-right: 25px; }
 
 .Thumb { width: 122px; height: 122px; border-radius: 3px 3px 3px 3px; border: 1px solid rgb(221, 221, 221); margin-right: 15px; }
 
@@ -66,11 +69,15 @@ input[type="text"], textarea { width: 100%; }
 
 .MainTbl th + th>div { border-left: 1px solid #ddd; padding-left: 7px; text-align: center; }
 
-.MainTbl th .SELECTED { color: rgb(0, 0, 0); }
+.MainTbl th .SELECTED {
+  &, + i { color: black; }
+}
 
 .MainTbl th a { color: #999; }
 
-.MainTbl th i { font-size: 10px; vertical-align: middle; }
+.MainTbl th i {
+  font-size: 10px; vertical-align: middle;
+}
 
 .MainTblSortSub { float: right; font-size: 10px; }
 
@@ -90,8 +97,6 @@ input[type="text"], textarea { width: 100%; }
   margin-bottom: 3px;
   font-size: 16px;
 }
-
-.MainTblTtl a { color: black; }
 
 .MainTblPV { font-size: 18px; }
 

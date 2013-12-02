@@ -20,7 +20,6 @@ var TopicSchema = new Schema({
   void_item_id: ObjectId,
   create_at: { type: Date, default: Date.now },
   update_at: { type: Date, default: Date.now },
-  draft: Boolean,
   publishDate: Date,
   FVCount: {type: Number, default: 0},
   FVList: [ObjectId ]

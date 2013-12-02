@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <% var temp = !locals.body ? null : locals.body.match(/^.{4}([^#]*)##/); %>
 <% temp = !temp ? null : !temp[1] ? null : temp[1] %>
-<% if (!locals.pageType) locals.pageType = temp; %>
+<% locals.pageType = locals.pageType || temp; %>
 <html>
 <head>
   <title><%= locals.title ? title + ' - 石子儿' : '石子儿 - 与世界分享你的总结' %></title>
@@ -29,7 +29,7 @@
   <script type="text/javascript" src="<%= js[i] %>"></script>
   <% } %>
 </head>
-<body class="<%= !locals.pageType ? '' : pageType %>">
+<body class="<%= locals.pageType || '' %>">
 <div class='Header'>
   <div class="Inner" style="position: relative;">
     <% if (locals.pageType == 'PERSONAL') { %>
@@ -37,9 +37,7 @@
       <table>
         <td>
           <ul>
-            <!--<li class="<%= locals.path != '/favourites' ? '' : 'SELECTED' %>"><a href="/favourites">收藏</a></li>-->
             <li class="<%= locals.path != '/works' ? '' : 'SELECTED' %>"><a href="/works">管理</a></li>
-            <li class="<%= locals.path != '/connections' ? '' : 'SELECTED' %>"><a href="/connections">外部链接</a></li>
           </ul>
         </td>
       </table>

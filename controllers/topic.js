@@ -24,36 +24,7 @@ var User = require('../proxy').User;
 
 var utils = require('../public/javascripts/utils');
 
-function showCreate(req, res, next) {
-  res.set('Cache-Control', 'private, no-cache, no-store, must-revalidate, post-check=0, pre-check=0');
-  res.set('Connection', 'close');
-  res.set('Expire', '-1');
-  res.set('Pragma', 'no-cache');
-  res.render('topic/edit', {
-    title: '创建总结',
-    css: [
-      'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.css',
-      'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-buttons.css',
-      'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-thumbs.css',
-      '/stylesheets/topic.css',
-      '/stylesheets/edit.css'
-    ],
-    js: [
-      'http://cdn.bootcss.com/jquery-mousewheel/3.1.6/jquery.mousewheel.min.js',
-      'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.js',
-      'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-buttons.js',
-      'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-thumbs.js',
-      'http://cdn.bootcss.com/autosize.js/1.17.1/autosize-min.js',
-      '/javascripts/jquery-ui-1.10.3.custom.min.js',
-      'http://cdn.bootcss.com/jquery-validate/1.11.1/jquery.validate.min.js',
-      '/javascripts/utils.js',
-      '/javascripts/edit.js'
-    ]
-  });
-}
-
 function createTopic(req, res, next) {
-  console.log('createTopic=====');
   var userId = req.session.userId;
 
   Topic.createTopic(userId, function (err, topic) {
@@ -65,63 +36,8 @@ function createTopic(req, res, next) {
 
     console.log('createTopic done');
     console.log(topic);
-    res.json({ topicId: topic._id })
+    res.redirect('/topic/' + topic._id + '/edit');
   });
-}
-
-function getContents(req, res, next) {
-  console.log('getContents=====');
-  var userId = req.session.userId;
-  var topicId = req.query.topicId;
-
-  var ep = EventProxy.create('topic', 'items', function (topic, items) {
-    console.log('getContents done');
-    var topicData = {
-      title: topic.title,
-      coverUrl: topic.cover_url,
-      description: topic.description
-    }
-    var itemsData = [];
-    items.forEach(function (item) {
-      itemsData.push(_getItemData(item));
-    });
-    res.json({
-      topicData: topicData,
-      itemsData: itemsData
-    });
-  })
-    .fail(function (err) {
-      console.error(err.stack);
-      res.send(500, err);
-    });
-
-  Topic.getTopicById(topicId, ep.done(function (topic) {
-    if (!topic || topic.author_id != userId) {
-      ep.unbind();
-      createTopic(req, res, next);
-      return;
-    }
-
-    if (topic.publishDate) {
-      ep.unbind();
-      res.json({
-        redirect: '/topic/' + topicId + '/edit'
-      });
-      return;
-    }
-
-    ep.emit('topic', topic);
-    Topic.getContents(topic, ep.done(function (items) {
-      if (!items) {
-        ep.unbind();
-        console.error('查找总结失败');
-        res.send(500, '查找总结失败');
-        return;
-      }
-
-      ep.emit('items', items);
-    }));
-  }));
 }
 
 function showEdit(req, res, next) {
@@ -1262,9 +1178,7 @@ function AddorRemoveLikes(req, res) {
 
 }
 
-exports.showCreate = showCreate;
 exports.createTopic = createTopic;
-exports.getContents = getContents;
 exports.showEdit = showEdit;
 exports.showIndex = showIndex;
 exports.createItem = createItem;

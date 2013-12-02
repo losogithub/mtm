@@ -22,7 +22,7 @@ var showSignUp = function (req, res) {
   console.log("render register page");
   console.log("login Referer: ", req.session._loginReferer);
   //2013.11.30 check whether is a already logged in user
-  var refer = req.session._loginReferer || 'home';
+  var refer = req.session._loginReferer || '/';
   if(req.session && req.session.userId){
     return res.redirect(refer);
   }
@@ -265,10 +265,10 @@ var showLogin = function (req, res) {
   //No, 2013.11.30 if it is not null, it must be assigned before not equal to /login. So you  cannot revise it.
   //even it equals to /singup. it is ok. later in login function will check this.
   if (!req.session._loginReferer) {
-    req.session._loginReferer =  req.headers.referer || 'home';
+    req.session._loginReferer =  req.headers.referer || '/';
   }
 
-  var refer = req.session._loginReferer || 'home';
+  var refer = req.session._loginReferer || '/';
 
 
   //todo: 2013.11.26 it seems needed for jump
@@ -286,7 +286,7 @@ var showLogin = function (req, res) {
    // 2013.11.26. No, maybe not.
    /*for (var i = 0, len = notJump.length; i !== len; ++i) {
    if (refer.indexOf(notJump[i]) >= 0) {
-   refer = 'home';
+   refer = '/';
    break;
    }
    } */
@@ -412,7 +412,7 @@ function checkOnlyPassword(emailIDFlag, pass, autoLogin, user, req, res) {
   }
 
   console.log("req.session._loginReferr: ", req.session._loginReferer);
-  var refer = req.session._loginReferer || 'home';
+  var refer = req.session._loginReferer || '/';
   //console.log("loginReferer");
   //console.log(req.session._loginReferer);
 
@@ -421,7 +421,7 @@ function checkOnlyPassword(emailIDFlag, pass, autoLogin, user, req, res) {
   // 2013.11.26 need check the refer not equal to signup, loginin, forgetpassword
   for (var i = 0, len = notJumpForLogin.length; i !== len; ++i) {
     if (refer.indexOf(notJumpForLogin[i]) >= 0) {
-      refer = 'home';
+      refer = '/';
       break;
     }
   }
@@ -473,13 +473,13 @@ var signout = function (req, res, next) {
   //console.log(res.username);
   //console.log(res.imageUrl);
 
-  //res.redirect('/home');
+  //res.redirect('/');
   //console.log(req.headers.referer);
   //need a black list
-  var refer = req.headers.referer || 'home';
+  var refer = req.headers.referer || '/';
   for (var i = 0, len = notJump.length; i !== len; ++i) {
     if (refer.indexOf(notJump[i]) >= 0) {
-      refer = 'home';
+      refer = '/';
       break;
     }
   }
