@@ -7,7 +7,7 @@
                 data-loading-text="发布 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;" type="button">发布
         </button>
         <% } %>
-        <a class='btn btn-small text-default' href="<%= topic.publishDate ? '/topic/' + topic._id : '/works' %>">返回</a>
+        <a class='btn btn-small btn-default' href="<%= topic.publishDate ? '/topic/' + topic._id : '/works' %>">返回</a>
       </td>
     </table>
     <table class='Band_Ttl'>
@@ -16,8 +16,8 @@
           <b>编辑总结<%= topic.publishDate ? '' : '（草稿）' %></b>
           <span id="_asterisk" style="display: none;">*</span>
           <span id="_saved" style="display: none;" class="text-muted">- 所有修改都已保存，可以直接离开本页面</span>
-          <span id="_error" style="display: none;" class="text-danger">- 上次修改保存失败，请刷新页面撤销刚才的修改</span>
-          <span id="_loading" style="display: none;" class="text-muted">- 正在保存 <i class='icon-spinner icon-spin'></i></span>
+          <span id="_error" style="display: none;" class="text-danger">- 操作失败，请刷新页面撤销刚才的修改</span>
+          <span id="_loading" style="display: none;" class="text-muted">- 请稍候 <i class='icon-spinner icon-spin'></i></span>
         </h5>
       </td>
     </table>
@@ -33,10 +33,15 @@
             <input name='title' class="" value="<%= !locals.topic ? '' : topic.title || '' %>"
                    placeholder="输入总结标题（50字以内）" type="text"/></td>
           <td>
-            <button class="btn btn-link text-success" name="saveTop" type="button">
-              <i class="icon-save"></i>
-              保存
-            </button>
+            <div id="_saveSet" class="BtnSet">
+              <button class="btn btn-inverse btn-mini" name="save" type="button"
+                      data-loading-text="保存 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;">
+                保存
+              </button>
+              <button class="btn btn-mini" name="cancel" type="button">
+                放弃
+              </button>
+            </div>
             <button class="btn btn-link text-muted" name="options" type="button">可选项目
               <i class="icon-caret-down"></i>
             </button>

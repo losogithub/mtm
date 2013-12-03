@@ -132,11 +132,12 @@ textarea {
   font-weight: bold;
   background-color: #fffeee;
 }
-.Edit_Top form fieldset:first-child button[name="saveTop"] {
+.Edit_Top form fieldset:first-child #_saveSet {
   position: absolute;
   top: 0;
+  margin-top: 0;
 }
-.Edit_Top form fieldset:first-child button[name="saveTop"],
+.Edit_Top form fieldset:first-child #_saveSet,
 .Edit_Top form fieldset:first-child button[name="options"] {
   margin-left: 15px;
   display: none;

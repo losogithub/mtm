@@ -91,6 +91,7 @@ function showEdit(req, res, next) {
     res.render('topic/edit', {
       title: '编辑总结',
       css: [
+        'http://cdn.bootcss.com/messenger/1.3.3/css/messenger.css',
         'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.css',
         'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-buttons.css',
         'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-thumbs.css',
@@ -98,6 +99,7 @@ function showEdit(req, res, next) {
         '/stylesheets/edit.css'
       ],
       js: [
+        'http://cdn.bootcss.com/messenger/1.3.3/js/messenger.js',
         'http://cdn.bootcss.com/jquery-mousewheel/3.1.6/jquery.mousewheel.min.js',
         'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.js',
         'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-buttons.js',
@@ -748,11 +750,11 @@ function saveTopic(req, res, next) {
 
 function _getHtml(url, callback) {
   console.log(url);
+  callback = callback || function () {
+  };
   var d = domain.create();
   d.on('error', function (err) {
-    if (typeof callback == 'function') {
-      callback(err);
-    }
+    callback(err);
   });
   d.run(function () {
     http.get(url, function (response) {

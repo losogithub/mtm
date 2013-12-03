@@ -84,7 +84,8 @@
         prevItemType: prevItemType,
         prevItemId: prevItemId
       }
-    });
+    })
+      .fail(notifyFail);
   }
 
   /**
@@ -113,6 +114,7 @@
   $.widget('shizier.editWidget', {
 
     type: undefined,
+    xhr: undefined,
 
     options: {
       id: undefined
@@ -208,6 +210,10 @@
     remove: function () {
       console.log('remove');
 
+      if (this.xhr) {
+        console.log('abort');
+        this.xhr.abort();
+      }
       this.disable();
       //如果是新建的就删除dom元素，否则是修改就新建条目dom元素
       var id = this.widget().data('id');
@@ -234,7 +240,7 @@
       var self = this;
       if (this.widget().find('form').data('submitType') == 'preview') {
         this.widget().find('button[name="preview"]').button('loading');
-        this.preview();
+        this.xhr = this.preview();
       } else {
         this.widget().find('button[name="save"]').button('loading');
         this.widget().find('button[name="preview"]')
@@ -244,7 +250,7 @@
             .addClass('disabled')
             .attr('disabled', 'disabled');
         }, 0);
-        this.save();
+        this.xhr = this.save();
       }
     },
 
@@ -255,6 +261,7 @@
         if (self.options.disabled) {
           return;
         }
+        savedOnce = true;
         self.disable();
         self.widget().hiddenSlideUp(function () {
           $(this).remove();
@@ -262,8 +269,12 @@
         createItem(self.widget().prev(), self.type.replace('_CREATE', ''), data.itemId, data);
         setState('default');
       };
-      var fail = function (jqXHR) {
-        alert(jqXHR.responseText);
+      var fail = function (jqXHR, textStatus) {
+        console.error(jqXHR.responseText);
+        console.error(textStatus);
+        if (textStatus != 'abort') {
+          retryMessenger();
+        }
         self.widget().find('button[name="save"]').button('reset');
         self.widget().find('button[name="preview"]').button('reset');
       };
@@ -271,8 +282,9 @@
       //如果是修改则传itemId，否则是新建则传prevId
       var data = this._getCommitData();
       var id = this.widget().data('id');
+      var xhr;
       if (id) {
-        $.ajax('/topic/item', {
+        xhr = $.ajax('/topic/item', {
           type: 'PUT',
           data: $.extend({
             topicId: topicId,
@@ -284,7 +296,7 @@
       } else {
         var prevItemType = this.widget().prev().data('type');
         var prevItemId = this.widget().prev().data('id');
-        $.post('/topic/item', $.extend({
+        xhr = $.post('/topic/item', $.extend({
             topicId: topicId,
             prevItemType: prevItemType,
             prevItemId: prevItemId,
@@ -293,6 +305,7 @@
           .done(doneCallback)
           .fail(fail);
       }
+      return xhr;
     },
 
     preview: $.noop,
@@ -612,15 +625,19 @@
         }
         self.createPreviewWidget(data);
       };
-      $.getJSON('/topic/link_detail', this._getCommitData(), callback)
+      return $.getJSON('/topic/link_detail', this._getCommitData(), callback)
         .done(function (data) {
           if (self.options.disabled) {
             return;
           }
           self.createPreviewWidget(data);
         })
-        .fail(function (jqXHR) {
-          alert(jqXHR.responseText);
+        .fail(function (jqXHR, textStatus) {
+          console.error(jqXHR.responseText);
+          console.error(textStatus);
+          if (textStatus != 'abort') {
+            retryMessenger();
+          }
           self.widget().find('button[name="preview"]').button('reset');
         });
     },
@@ -1003,15 +1020,19 @@
         self.createPreviewWidget(data);
       };
 
-      $.getJSON('/topic/video_detail', this._getCommitData(), callback)
+      return $.getJSON('/topic/video_detail', this._getCommitData(), callback)
         .done(function (data) {
           if (self.options.disabled) {
             return;
           }
           self.createPreviewWidget(data);
         })
-        .fail(function (jqXHR) {
-          alert(jqXHR.responseText);
+        .fail(function (jqXHR, textStatus) {
+          console.error(jqXHR.responseText);
+          console.error(textStatus);
+          if (textStatus != 'abort') {
+            retryMessenger();
+          }
           self.widget().find('button[name="preview"]').button('reset');
         });
     },
@@ -1321,15 +1342,19 @@
   var state = 'default';
   var $editingWidget;
 
-  var $form;
   var $band;
   var $band_asterisk;
   var $band_saved;
   var $band_error;
   var $band_loading;
+  var $form;
+  var $saveSet;
+  var $save;
+  var $cancel;
+  var $switch;
+  var $options;
   var $ul;
   var $templates;
-  var $saveTop;
   var $title;
   var $cover;
   var $description;
@@ -1341,35 +1366,41 @@
   var title;
   var coverUrl;
   var description;
-  var error;
+  var fail;
   var savedOnce;
+  var xhr;
+
+  function retryMessenger() {
+    Messenger().post({
+      message: '操作失败，请重试',
+      type: 'error'
+    });
+  }
 
   function onStateChange() {
-    if (error) {
+    $band_asterisk.hide();
+    $band_saved.hide();
+    if (fail) {
       $band_asterisk.show();
       $band_error.show();
       $('body').attr('onbeforeunload', '');
+    } else if (state != 'default' || topModified) {
+      $band_asterisk.show();
+      $('body').attr('onbeforeunload', 'return "您有尚未保存的内容";');
     } else {
-      if (state == 'edit' || topModified) {
-        $band_saved.hide();
-        $band_asterisk.show();
-        $('body').attr('onbeforeunload', 'return "您有尚未保存的内容";');
-      } else {
-        $band_asterisk.hide();
-        if (savedOnce) {
-          $band_saved.show();
-        }
-        $('body').attr('onbeforeunload', '');
+      if (savedOnce) {
+        $band_saved.show();
       }
+      $('body').attr('onbeforeunload', '');
     }
   }
 
   function onTopStateChange() {
     topModified = titleModified || coverModified || descriptionModified;
     if (topModified) {
-      $saveTop.show();
+      $saveSet.show();
     } else {
-      $saveTop.hide();
+      $saveSet.hide();
     }
     onStateChange();
   }
@@ -1380,6 +1411,11 @@
     description = $description.val();
     titleModified = coverModified = descriptionModified = false;
     onTopStateChange();
+  }
+
+  function notifyFail() {
+    fail = true;
+    onStateChange();
   }
 
   function setState(newState) {
@@ -1633,15 +1669,26 @@
   }
 
   function __init() {
+    $._messengerDefaults = {
+      extraClasses: 'messenger-fixed messenger-on-top'
+    }
     topicId = location.pathname.match(/^\/topic\/([0-9a-f]{24})\/edit$/)[1];
-    $ul = $('.WidgetItemList');
-    $templates = $('.TEMPLATES');
     $band = $('.Band');
     $band_asterisk = $band.find('#_asterisk');
     $band_saved = $band.find('#_saved');
     $band_error = $band.find('#_error');
     $band_loading = $band.find('#_loading');
     $form = $('.Edit_Top form');
+    $title = $form.find('input[name="title"]');
+    $cover = $form.find('button[name="cover"] img');
+    $description = $form.find('textarea[name="description"]');
+    $saveSet = $form.find('#_saveSet');
+    $save = $saveSet.find('button[name="save"]');
+    $cancel = $saveSet.find('button[name="cancel"]');
+    $switch = $form.find('button[name="options"]');
+    $options = $form.find('fieldset:last');
+    $ul = $('.WidgetItemList');
+    $templates = $('.TEMPLATES');
     $('.fancybox:visible').fancybox(shizier.fancyboxOptions);
   }
 
@@ -1696,7 +1743,8 @@
             type: $li.data('type'),
             itemId: $li.data('id')
           }
-        });
+        })
+          .fail(notifyFail);
         $li.hiddenSlideUp(function () {
           $(this).remove();
         })
@@ -1764,13 +1812,10 @@
   function __initBand() {
     $(document)
       .ajaxStart(function () {
+        $band_saved.hide();
         $band_loading.show();
       })
-      .ajaxError(function () {
-        error = true;
-      })
       .ajaxStop(function () {
-        savedOnce = true;
         onStateChange();
         $band_loading.hide();
       });
@@ -1784,7 +1829,7 @@
     });
 
     $band.add($form).on('click',
-      'button[name="saveDraft"], button[name="save"], button[name="publish"], button[name="saveTop"]',
+      'button[name="publish"], button[name="save"]',
       function (event) {
         var $target = $(event.target);
         var name = $target.attr('name');
@@ -1802,10 +1847,10 @@
     }
 
     var coverUrl = $form.find('button[name="cover"] img').attr('src');
-    var $button = $band.find('button[name="' + submitType + '"]');
+    var $button = $band.add($form).find('button[name="' + submitType + '"]');
     $button.button('loading');
 
-    $.ajax('/topic/save', {
+    xhr = $.ajax('/topic/save', {
       type: 'PUT',
       data: {
         topicId: topicId,
@@ -1816,16 +1861,27 @@
       }
     })
       .done(function () {
+        savedOnce = true;
+        onTopChange();
         if (submitType == 'publish') {
           window.location = '/topic/' + topicId;
         } else {
-          onTopChange();
+          if ($options.is(':visible')) {
+            $switch.click();
+          }
         }
       })
-      .fail(function (jqXHR) {
-        alert(jqXHR.responseText);
+      .fail(function (jqXHR, textStatus) {
+        console.error(jqXHR.responseText);
+        console.error(textStatus);
+        if (textStatus != 'abort') {
+          retryMessenger();
+        }
         $button.button('reset');
       });
+    if (submitType == 'publish') {
+      xhr = null;
+    }
   }
 
   /**
@@ -1833,10 +1889,6 @@
    * @private
    */
   function __initTop() {
-    $title = $form.find('input[name="title"]');
-    $cover = $form.find('button[name="cover"] img');
-    $description = $form.find('textarea[name="description"]');
-
     $form.validate({
       submitHandler: function () {
         ___commit();
@@ -1869,12 +1921,8 @@
       }
     });
 
-    $saveTop = $form.find('button[name="saveTop"]');
-    var $button = $form.find('button[name="options"]');
-    var $options = $form.find('fieldset:last');
-
     //开关可选项目的动画
-    $button.click(function () {
+    $switch.click(function () {
       if ($(this).find('i').is('.icon-caret-down')) {
         $options.fadeSlideDown();
       } else {
@@ -1892,18 +1940,17 @@
       .hide();
 
     if (/showOption=true/.test(location.search)) {
-      $button
+      $switch
         .find('i')
         .toggleClass('icon-caret-down icon-caret-up')
         .end()
         .show();
       $options.toggle();
     } else {
-      $button.fadeIn('slow');
+      $switch.fadeIn('slow');
     }
 
     var $thumb = $('button[name="cover"]');
-    var $img = $thumb.find('img');
     var $extra = $('.Edit_Top_Thumb_Extra');
     var $input = $extra.find('input');
     var $preview = $extra.find('button[name="preview"]');
@@ -1932,8 +1979,8 @@
         $input.focus();
       }
     });
-    $img.on('load', function () {
-      if ($img.attr('src') != '/images/no_img/image_95x95.png'
+    $cover.on('load', function () {
+      if ($cover.attr('src') != '/images/no_img/image_95x95.png'
         && autoHide) {
         hide();
       }
@@ -1941,14 +1988,14 @@
 
     $reset.click(function () {
       hide();
-      $img.attr('src', coverUrl);
-      coverModified = $img.attr('src') != coverUrl;
+      $cover.attr('src', coverUrl);
+      coverModified = $cover.attr('src') != coverUrl;
       onTopStateChange();
     });
     $preview.click(function () {
       autoHide = true;
-      $img.attr('src', shizier.utils.suffixImage($input.val()));
-      coverModified = $img.attr('src') != coverUrl;
+      $cover.attr('src', shizier.utils.suffixImage($input.val()));
+      coverModified = $cover.attr('src') != coverUrl;
       onTopStateChange();
       if (!$input.val()) {
         hide();
@@ -1956,14 +2003,31 @@
     });
 
     $title.on(INPUT_EVENTS, function () {
-      titleModified = $(this).val() != title;
+      titleModified = $title.val() != title;
       onTopStateChange();
     });
 
     $description.on(INPUT_EVENTS, function () {
-      descriptionModified = $(this).val() != description;
+      descriptionModified = $description.val() != description;
       onTopStateChange();
     });
+
+    $cancel.click(function () {
+      $save.button('reset');
+      if (xhr) {
+        xhr.abort();
+      }
+      $title.val(title);
+      $cover.attr('src', coverUrl);
+      $description.val(description);
+      titleModified = $title.val() != title;
+      coverModified = $cover.attr('src') != coverUrl;
+      descriptionModified = $description.val() != description;
+      if ($options.is(':visible')) {
+        $switch.click();
+      }
+      onTopStateChange();
+    })
     onTopChange();
   }
 
@@ -2058,4 +2122,5 @@
     });
   })();
 
-})(jQuery);
+})
+  (jQuery);
