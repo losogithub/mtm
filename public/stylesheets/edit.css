@@ -140,7 +140,6 @@ textarea {
 .Edit_Top form fieldset:first-child #_saveSet,
 .Edit_Top form fieldset:first-child button[name="options"] {
   margin-left: 15px;
-  display: none;
   vertical-align: baseline;
 }
 .Edit_Top form fieldset:last-child {

@@ -85,6 +85,9 @@
         prevItemId: prevItemId
       }
     })
+      .done(function () {
+        savedOnce = true;
+      })
       .fail(notifyFail);
   }
 
@@ -1744,6 +1747,9 @@
             itemId: $li.data('id')
           }
         })
+          .done(function () {
+            savedOnce = true;
+          })
           .fail(notifyFail);
         $li.hiddenSlideUp(function () {
           $(this).remove();
@@ -1942,12 +1948,8 @@
     if (/showOption=true/.test(location.search)) {
       $switch
         .find('i')
-        .toggleClass('icon-caret-down icon-caret-up')
-        .end()
-        .show();
+        .toggleClass('icon-caret-down icon-caret-up');
       $options.toggle();
-    } else {
-      $switch.fadeIn('slow');
     }
 
     var $thumb = $('button[name="cover"]');
