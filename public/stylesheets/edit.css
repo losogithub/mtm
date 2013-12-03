@@ -136,6 +136,7 @@ textarea {
   position: absolute;
   top: 0;
   margin-top: 0;
+  display: none;
 }
 .Edit_Top form fieldset:first-child #_saveSet,
 .Edit_Top form fieldset:first-child button[name="options"] {

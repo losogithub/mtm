@@ -34,12 +34,10 @@
                 </td>
                 <td style="width: 100%;">
                   <div class="">
-                    <p class="TopicTtl">
-                      <a target="_blank" href="/topic/<%= hot[i].id %>" title="<%= hot[i].title %>" class="text-default">
-                        <%= hot[i].title %>
-                      </a>
-                    </p>
-                    <a target="_blank" class="TopicAuthor" href="/u/<%= hot[i].author %>" title="<%= hot[i].author %>">
+                    <a target="_blank" class="TopicTtl text-default" href="/topic/<%= hot[i].id %>" title="<%= hot[i].title %>">
+                      <%= hot[i].title %>
+                    </a>
+                    <a target="_blank" class="TopicAuthor text-muted" href="/u/<%= hot[i].author %>" title="<%= hot[i].author %>">
                       <%= hot[i].author %>
                     </a>
                     <span class="PVCount text-muted">
