@@ -19,8 +19,8 @@
 
       <div class="HeadTxt">
         <div class="HeadTtlWrapper">
-          <h1 class="HeadTtl"><a href="<%= !locals.topic ? '' : topic._id %>"><%=
-            locals.topic ? topic.title : '' %></a></h1>
+          <h1 class="HeadTtl"><a class="text-default"
+                                 href="/topic/<%= topic._id %>"><%= topic.title %></a></h1>
 
           <% if (locals.isAuthor) { %>
           <div class='HeadUtil'>
@@ -46,14 +46,30 @@
         </p>
 
         <div class="HeadOption">
-          <div class="HeadUser">
-            <a href="/u/<%= topic.author %>" title="<%= topic.author %>">
+          <div class="HeadUser" style="float: left;">
+            <a class="text-default" href="/u/<%= topic.author %>" title="<%= topic.author %>">
               <span class="HeadUserThumb"><img width="30" height="30"
                                                src="<%= authorInfo.imgUrl ? authorInfo.imgUrl : '/images/no_img/user_80x80.png' %>"
                                                onerror="shizier.errorImage(this,'user_80x80');"></span><span
-              class="HeadUserName text-default"><%= topic.author %></span>
+              class="HeadUserName"><%= topic.author %></span>
             </a>
           </div>
+          <!-- Baidu Button BEGIN -->
+          <div id="bdshare" class="bdshare_t bds_tools get-codes-bdshare">
+            <span class="bds_more">分享到：</span>
+            <a class="bds_qzone"></a>
+            <a class="bds_tsina"></a>
+            <a class="bds_tqq"></a>
+            <a class="bds_renren"></a>
+            <a class="bds_t163"></a>
+            <a class="shareCount"></a>
+          </div>
+          <script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=692449" ></script>
+          <script type="text/javascript" id="bdshell_js"></script>
+          <script type="text/javascript">
+            document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000)
+          </script>
+          <!-- Baidu Button END -->
         </div>
       </div>
     </div>
