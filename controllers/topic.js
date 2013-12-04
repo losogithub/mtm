@@ -281,6 +281,7 @@ function _getData(req) {
     case 'VIDEO_CREATE':
     case 'VIDEO':
       var url = sanitize(req.body.url).trim();
+      var vid = sanitize(req.body.vid).trim();
       var title = sanitize(req.body.title).trim();
       var description = sanitize(req.body.description).trim();
 
@@ -290,6 +291,7 @@ function _getData(req) {
 
       data = {
         url: url,
+        vid: vid,
         title: title,
         description: description
       }
@@ -886,11 +888,11 @@ function _getLinkDetail(url, callback) {
 }
 
 function _getVideoDetail(url, callback) {
+  callback = callback || function () {
+  };
   _getHtml(url, function (err, html) {
     if (err) {
-      if (typeof callback === 'function') {
-        callback(err);
-      }
+      callback(err);
       return;
     }
     var temp;
@@ -1045,12 +1047,10 @@ function _getVideoDetail(url, callback) {
     console.log(title);
     title = sanitize(title).entityDecode();
     title = sanitize(title).trim();
-    if (typeof callback == 'function') {
-      callback(null, {
-        vid: vid,
-        title: title
-      });
-    }
+    callback(null, {
+      vid: vid,
+      title: title
+    });
   });
 }
 

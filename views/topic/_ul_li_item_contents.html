@@ -43,7 +43,7 @@
 </div>
 <% } %>
 <% if (item.type == 'VIDEO' || item.type == 'ALL') { %>
-<div class='Content VIDEO'>
+<div class='Content VIDEO' data-vid="<%= item.vid %>">
 
   <% include _videoPlayers.html %>
 

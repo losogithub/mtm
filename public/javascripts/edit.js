@@ -335,7 +335,8 @@
   $.widget('shizier.linkWidget', $.shizier.editWidget, {
 
     type: 'LINK',
-    noImgSrc: '/images/no_img/photo_150x150.png',
+    defaultImgSrc: '/images/no_img/photo_150x150.png',
+    noImgSrc: '/images/no_img/default_120x120.png',
     index: -1,
 
     options: {
@@ -386,7 +387,7 @@
 
         self.widget()
           .find('.Image img')
-          .attr('src', !(self.options.srcs && self.options.srcs.length) ? self.noImgSrc : self.options.srcs[self.index])
+          .attr('src', (!self.options.srcs || !self.options.srcs.length) ? self.defaultImgSrc : self.options.srcs[self.index])
           .end()
           .find('.Image .Loading')
           .show()
@@ -466,7 +467,7 @@
           if ($(this).is(':checked')) {
             self.widget()
               .find('.Image img')
-              .attr('src', self.noImgSrc)
+              .attr('src', self.defaultImgSrc)
               .end();
           } else {
             _increaseIndex(0);
@@ -540,7 +541,7 @@
         url: this.options.url,
         title: this.widget().find('input[name="title"]').val(),
         snippet: this.widget().find('textarea[name="snippet"]').val(),
-        src: src == this.noImgSrc ? undefined : src,
+        src: (src == this.defaultImgSrc || src == this.noImgSrc) ? undefined : src,
         description: this.widget().find('textarea[name="description"]').val()
       }
     },
@@ -935,6 +936,7 @@
     _getCommitData: function () {
       return {
         url: this.options.url,
+        vid: this.options.vid,
         title: this.widget().find('input[name="title"]').val(),
         description: this.widget().find('textarea[name="description"]').val()
       }
@@ -947,6 +949,7 @@
     _getOriginalData: function () {
       return {
         url: this.options.url,
+        vid: this.options.vid,
         title: this.options.title,
         description: this.options.description
       }
@@ -1603,6 +1606,9 @@
         fillVideo($item, url, vid);
 
         $item
+          .find('.Content')
+          .data('vid', vid)
+          .end()
           .find('.VIDEO_URL')
           .attr('href', url)
           .end()
@@ -1781,6 +1787,7 @@
           case 'VIDEO':
             data = {
               url: $li.find('.Quote a').attr('href'),
+              vid: $li.find('.Content').data('vid'),
               title: $li.find('.Title a').text(),
               description: $('<div/>').html($li.find('.Description').html().replace(/<br>/g, '\n')).text()
             };
@@ -1883,6 +1890,8 @@
         if (textStatus != 'abort') {
           retryMessenger();
         }
+      })
+      .always(function () {
         $button.button('reset');
       });
     if (submitType == 'publish') {
@@ -1998,10 +2007,10 @@
       autoHide = true;
       $cover.attr('src', shizier.utils.suffixImage($input.val()));
       coverModified = $cover.attr('src') != coverUrl;
-      onTopStateChange();
       if (!$input.val()) {
         hide();
       }
+      onTopStateChange();
     });
 
     $title.on(INPUT_EVENTS, function () {
@@ -2015,7 +2024,6 @@
     });
 
     $cancel.click(function () {
-      $save.button('reset');
       if (xhr) {
         xhr.abort();
       }

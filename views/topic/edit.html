@@ -58,8 +58,9 @@
           <div class="Image">
             <i class="icon-camera"></i>
           </div>
-          <img style="display: block;" width="95" height="95" onerror="shizier.errorImage(this, 'image_95x95')"
-               src="<%= !locals.topic ? '' : topic.coverUrl || '' %>">
+          <img style="display: block;" width="95" height="95"
+               onerror="shizier.errorImage(this, 'default_120x120', true)"
+               src="<%= topic.coverUrl || '' %>">
         </button>
 
         <div class="Edit_Top_Thumb_Extra">
@@ -127,7 +128,7 @@
           <div class="Thumb clearfix">
             <div class="Image">
               <div style="position: relative;display: inline-block;">
-                <img onerror="shizier.errorImage(this, 'photo_150x150');">
+                <img onerror="shizier.errorImage(this, 'default_120x120', true);">
 
                 <div class="Loading"
                      style="position: absolute;top: 0;left: 0;bottom: 0;right: 0;background-color: rgba(0,0,0,0.2);">
@@ -166,7 +167,7 @@
 
         <div class='Content IMAGE_CREATE'>
           <div class="Image">
-            <i class="icon-camera"></i>
+            <i class="icon-picture"></i>
           </div>
           <div style="overflow: hidden;">
             <div class="Required" style="float: left;"></div>
@@ -186,7 +187,7 @@
 
         <div class='Content IMAGE'>
           <div class="Image">
-            <img onerror="shizier.errorImage(this,'default_120x120');">
+            <img onerror="shizier.errorImage(this, 'default_120x120', true);">
           </div>
 
           <div style="overflow: hidden;">

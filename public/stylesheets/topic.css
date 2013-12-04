@@ -250,12 +250,8 @@
 .Top li {
   display: inline;
 }
-.Top li a {
-  color: #4c4c4c;
-}
 .Top li i {
-  vertical-align: middle;
-  padding: 0 4px;
+  font-size: 12px;
 }
 .Head {
   margin-bottom: 20px;

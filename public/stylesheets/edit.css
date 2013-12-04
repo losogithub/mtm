@@ -208,9 +208,6 @@ textarea {
   background-image: linear-gradient(to bottom, #ffffff, #fafafa);
   border-bottom: 1px solid #f0f0f0;
 }
-.Edit_Top .Menu span {
-  padding-right: 5px;
-}
 .Edit_Top .Menu ul {
   display: inline;
 }
@@ -220,6 +217,9 @@ textarea {
 }
 .WidgetItemList .Menu {
   color: #999 !important;
+}
+.WidgetItemList .Menu span {
+  padding-right: 6px;
 }
 .WidgetItemList .Menu ul li {
   margin-left: 25px;

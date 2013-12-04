@@ -2,6 +2,7 @@
 <% var showOne; %>
 <% showThis = item.quote == 'youku.com' && item.vid; %>
 <% showOne = showOne || showThis; %>
+<% console.log(item.vid); %>
 <embed style="display: <%= !showThis ? 'none' : 'block' %>;"
        class="YOUKU"
        src="http://static.youku.com/v/swf/qplayer.swf?winType=adshow&amp;VideoIDS=<%= item.vid ? item.vid : '#vid#' %>"

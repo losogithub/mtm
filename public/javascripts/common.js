@@ -28,7 +28,10 @@
     }
   };
 
-  shizier.errorImage = shizier.errorImage || function (img, name) {
+  shizier.errorImage = shizier.errorImage || function (img, name, ignoreNull) {
+    if (ignoreNull && !$(img).attr('src')) {
+      return;
+    }
     var url = '/images/no_img/' + name + '.png';
     if (url != $(img).attr('src')) {
       $(img).attr('src', url);

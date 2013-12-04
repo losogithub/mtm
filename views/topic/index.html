@@ -3,7 +3,10 @@
     <table>
       <td>
         <ol>
-          <li><a href="/">石子儿首页</a><i class="icon-angle-right"></i></li>
+          <li>
+            <a class="text-secondary" href="/">石子儿首页</a>
+            <i class="icon-angle-right"></i>
+          </li>
         </ol>
       </td>
     </table>
@@ -14,7 +17,7 @@
     <div class="HeadMain">
       <div class="HeadThumb" style="display: <%= !locals.topic ? 'none' : !topic.coverUrl ? 'none' : 'block' %>;">
         <img width="95" height="95" onerror="shizier.errorImage(this,'image_95x95');"
-             src="<%= !locals.topic ? '' : !topic.coverUrl ? '' : topic.coverUrl %>">
+             src="<%= topic.coverUrl || '' %>">
       </div>
 
       <div class="HeadTxt">
@@ -49,7 +52,7 @@
           <div class="HeadUser" style="float: left;">
             <a class="text-default" href="/u/<%= topic.author %>" title="<%= topic.author %>">
               <span class="HeadUserThumb"><img width="30" height="30"
-                                               src="<%= authorInfo.imgUrl ? authorInfo.imgUrl : '/images/no_img/user_80x80.png' %>"
+                                               src="<%= authorInfo.imgUrl || '/images/no_img/user_80x80.png' %>"
                                                onerror="shizier.errorImage(this,'user_80x80');"></span><span
               class="HeadUserName"><%= topic.author %></span>
             </a>
@@ -66,7 +69,7 @@
           </div>
           <!-- Baidu Button END -->
           <!-- Baidu Button BEGIN -->
-          <script type="text/javascript" id="bdshare_js" data="type=slide&amp;img=3&amp;pos=right&amp;uid=692449" ></script>
+          <script type="text/javascript" id="bdshare_js" data="type=slide&amp;img=3&amp;pos=left&amp;uid=692449" ></script>
           <script type="text/javascript" id="bdshell_js"></script>
           <script type="text/javascript">
             document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000);
@@ -130,7 +133,7 @@
             <h6 class="SubAuthorProfileUnitTitle">
               <a href="/u/<%= topic.author %>" class="SubAuthorProfileUnitTitleUserName" title="<%= topic.author %>">
                 <img width="80" height="80"
-                     src="<%= authorInfo.imgUrl ? authorInfo.imgUrl : '/images/no_img/user_80x80.png' %>"
+                     src="<%= authorInfo.imgUrl || '/images/no_img/user_80x80.png' %>"
                      onerror="errorImage(this,'user80x80');"
                      class="SubAuthorProfileUnitTitleUserNameThumb"> <%= topic.author %>
               </a>
