@@ -10,7 +10,7 @@ var EventProxy = require('eventproxy');
 var sanitize = require('validator').sanitize;
 var check = require('validator').check;
 var Url = require('url');
-var http = require('follow-redirects').http;
+var request = require('request');
 var Iconv = require('iconv').Iconv;
 var BufferHelper = require('bufferhelper');
 var domain = require('domain');
@@ -768,42 +768,34 @@ function _getHtml(url, callback) {
     callback(err);
   });
   d.run(function () {
-    http.get(url, function (response) {
-      var bufferHelper = new BufferHelper();
-      response.on('data', function (chunk) {
-        bufferHelper.concat(chunk);
-      });
-      response.on('end', function () {
-        var temp;
-        var charset = !(temp = response.headers['content-type']) ? null :
-          !(temp = temp.match(/charset=([^;]+)/i)) ? null :
-            !temp[1] ? null : temp[1];
-        var buffer = bufferHelper.toBuffer();
-        console.log(charset);
+    request({url: url, encoding: null}, function (error, response, body) {
+      if (error) {
+        return callback(error);
+      }
+      var temp;
+      var charset = !(temp = response.headers['content-type']) ? null :
+        !(temp = temp.match(/charset=([^;]+)/i)) ? null :
+          !temp[1] ? null : temp[1];
+      var buffer = body;
+      console.log(charset);
+      try {
+        var html = new Iconv(charset || 'UTF-8', 'UTF-8//TRANSLIT//IGNORE').convert(buffer).toString();
+      } catch (err) {
+        return callback(err);
+      }
+      var charset2 = !(temp = html.match(/<meta[^<>]+charset\s*=\s*("|')?([^"']+)("|')[^<>]*>/i)) ? null : temp[2];
+      if (charset2 &&
+        (!charset
+          || charset2.toLowerCase() != charset.toLowerCase())) {
         try {
-          var html = new Iconv(charset || 'UTF-8', 'UTF-8//TRANSLIT//IGNORE').convert(buffer).toString();
+          var html = new Iconv(charset2 || 'UTF-8', 'UTF-8//TRANSLIT//IGNORE').convert(buffer).toString();
         } catch (err) {
-          callback(err);
-          return;
+          return callback(err);
         }
-        console.log(html);
-        var charset2 = !(temp = html.match(/<meta[^<>]+charset\s*=\s*("|')?([^"']+)("|')[^<>]*>/i)) ? null : temp[2];
-        if (charset2 &&
-          (!charset
-            || charset2.toLowerCase() != charset.toLowerCase())) {
-          try {
-            var html = new Iconv(charset2 || 'UTF-8', 'UTF-8//TRANSLIT//IGNORE').convert(buffer).toString();
-          } catch (err) {
-            callback(err);
-            return;
-          }
-        }
-        console.log(charset2);
+      }
+      console.log(charset2);
 
-        if (typeof callback === 'function') {
-          callback(null, html);
-        }
-      })
+      callback(null, html);
     });
   });
 }

@@ -12,7 +12,6 @@
     "ejs": "*",
     "express-partials": "*",
     "extend": "*",
-    "follow-redirects": "*",
     "iconv": "*",
     "mongoose": "*",
     "validator": "1.5.1",
