@@ -13,7 +13,7 @@
     "express-partials": "*",
     "extend": "*",
     "follow-redirects": "*",
-    "iconv-lite": "*",
+    "iconv": "*",
     "mongoose": "*",
     "validator": "1.5.1",
     "nodemailer": "*",

@@ -11,7 +11,7 @@ var sanitize = require('validator').sanitize;
 var check = require('validator').check;
 var Url = require('url');
 var http = require('follow-redirects').http;
-var iconv = require('iconv-lite');
+var Iconv = require('iconv').Iconv;
 var BufferHelper = require('bufferhelper');
 var domain = require('domain');
 
@@ -781,18 +781,18 @@ function _getHtml(url, callback) {
         var buffer = bufferHelper.toBuffer();
         console.log(charset);
         try {
-          var html = iconv.decode(buffer, charset);
+          var html = new Iconv(charset || 'UTF-8', 'UTF-8//TRANSLIT//IGNORE').convert(buffer).toString();
         } catch (err) {
           callback(err);
           return;
         }
-        var charset2 = (!(temp = html.match(/<meta\s+http-equiv\s*=\s*("|')?Content-Type("|')?\s+content\s*=\s*("|')[^"']*charset\s*=\s*([^"']+)\s*("|')[^>]*>/i)) ? null : temp[4])
-          || (!(temp = html.match(/<meta\s+charset\s*=\s*("|')([^"']+)("|')[^>]*>/i)) ? null : temp[2]);
+        console.log(html);
+        var charset2 = !(temp = html.match(/<meta[^<>]+charset\s*=\s*("|')?([^"']+)("|')[^<>]*>/i)) ? null : temp[2];
         if (charset2 &&
           (!charset
             || charset2.toLowerCase() != charset.toLowerCase())) {
           try {
-            var html = iconv.decode(buffer, charset2);
+            var html = new Iconv(charset2 || 'UTF-8', 'UTF-8//TRANSLIT//IGNORE').convert(buffer).toString();
           } catch (err) {
             callback(err);
             return;
