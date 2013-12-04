@@ -88,34 +88,26 @@ function getAllTopics(callback) {
  * @param publish
  * @param callback
  */
-function saveTopic(authorId, topicId, title, coverUrl, description, publish, callback) {
-  var ep = new EventProxy().fail(callback);
+function saveTopic(topic, title, coverUrl, description, publish, callback) {
+  callback = callback || function () {
+  };
 
-  TopicModel.findById(topicId, ep.done(function (topic) {
-    if (!topic) {
-      ep.emit('error', new Error('总结不存在'));
-      return;
+  topic.title = title;
+  topic.cover_url = coverUrl;
+  topic.description = description;
+  topic.update_at = Date.now();
+  if (publish) {
+    topic.publishDate = new Date();
+  }
+  topic.save(function (err) {
+    if (err) {
+      return callback(err);
     }
-
-    topic.title = title;
-    topic.cover_url = coverUrl;
-    topic.description = description;
-    topic.update_at = Date.now();
-    if (publish) {
-      topic.publishDate = new Date();
+    callback(null, topic);
+    if (topic.publishDate) {
+      NewTopic.saveNewTopic(topic);
     }
-    topic.save(ep.done(function () {
-      //add: 11.07 2013 add the published topic to new topics db.
-      //But this maybe not new topics here !!!
-      // in matome, it calls update list.
-      if (publish || topic.publishDate) {
-        NewTopic.saveNewTopic(topic);
-      }
-      if (typeof callback === 'function') {
-        callback(null, topic);
-      }
-    }));
-  }));
+  });
 }
 
 /**
@@ -124,34 +116,18 @@ function saveTopic(authorId, topicId, title, coverUrl, description, publish, cal
  * @param topicId
  * @param callback
  */
-function deleteTopic(authorId, topicId, callback) {
+function deleteTopic(topic, callback) {
   callback = callback || function () {
   };
-  TopicModel.findById(topicId, function (err, topic) {
-    if (err) {
-      callback(err);
-      return;
-    }
-    if (!topic) {
-      callback(new Error(404));
-      return;
-    }
-    if (topic.author_id != authorId) {
-      callback(new Error(403));
-      return;
-    }
 
-    topic.remove(function (err) {
-      if (err) {
-        callback(err);
-        return;
-      }
-      callback(null, topic);
-      Item.deleteItemList(topic.void_item_id, callback);
-      User.deleteTopic(authorId, topicId);
-      NewTopic.deleteNewTopic(topicId);
-      return;
-    });
+  topic.remove(function (err) {
+    if (err) {
+      return callback(err);
+    }
+    callback(null, topic);
+    Item.deleteItemList(topic.void_item_id, callback);
+    User.deleteTopic(topic.author_id, topic._id);
+    NewTopic.deleteNewTopic(topic._id);
   });
 }
 

@@ -1,7 +1,7 @@
 <script>
   window.shizier = window.shizier || {};
   shizier.deleteTopic = function (button) {
-    if (!confirm('删除后将不能恢复！您确定要删除该总结吗？')) {
+    if (!confirm('总结删除后将不能恢复！您确定要删除该总结吗？')) {
       return;
     }
     $(button).button('loading');
@@ -18,6 +18,6 @@
   };
 </script>
 <button data-loading-text="&lt;i class='icon-trash'&gt;&lt;/i&gt; 删除 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;"
-        onclick="shizier.deleteTopic(this);" class="btn btn-link text-danger" style="vertical-align: baseline;"
+        onclick="shizier.deleteTopic(this);" class="btn btn-link text-muted" style="vertical-align: baseline;"
         type="button"><i class="icon-trash"></i> 删除
 </button>

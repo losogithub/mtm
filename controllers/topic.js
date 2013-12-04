@@ -713,13 +713,18 @@ function deleteTopic(req, res, next) {
   var authorId = req.session.userId;
   var topicId = req.params.topicId;
 
-  Topic.deleteTopic(authorId, topicId, function (err) {
+  _getTopicWithAuth(function (err, topic) {
     if (err) {
       return next(err);
     }
-    res.send(200);
-    console.log('deleteTopic done');
-  });
+    Topic.deleteTopic(topic, function (err) {
+      if (err) {
+        return next(err);
+      }
+      res.send(200);
+      console.log('deleteTopic done');
+    });
+  }, topicId, authorId);
 }
 
 function saveTopic(req, res, next) {
@@ -735,17 +740,21 @@ function saveTopic(req, res, next) {
     check(title).len(5, 50);
     check(description).len(0, 150);
   } catch (err) {
-    next(err);
-    return;
+    return next(err);
   }
 
-  Topic.saveTopic(authorId, topicId, title, coverUrl, description, publish, function (err) {
+  _getTopicWithAuth(function (err, topic) {
     if (err) {
       return next(err);
     }
-    res.send(200);
-    console.log('saveTopic done');
-  });
+    Topic.saveTopic(topic, title, coverUrl, description, publish, function (err) {
+      if (err) {
+        return next(err);
+      }
+      res.send(200);
+      console.log('saveTopic done');
+    });
+  }, topicId, authorId);
 }
 
 function _getHtml(url, callback) {
