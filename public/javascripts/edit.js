@@ -500,7 +500,7 @@
           },
           showErrors: function (errorMap, errorList) {
             if (errorList.length) {
-              alert(errorMap.title || errorMap.summary || errorMap.description);
+              alertMessenger(errorMap.title || errorMap.summary || errorMap.description);
             }
           },
           rules: {
@@ -602,7 +602,7 @@
         },
         showErrors: function (errorMap, errorList) {
           if (errorList.length) {
-            alert(errorMap.url);
+            alertMessenger(errorMap.url);
           }
         },
         rules: {
@@ -717,7 +717,7 @@
           },
           showErrors: function (errorMap, errorList) {
             if (errorList.length) {
-              alert(errorMap.title || errorMap.quote || errorMap.description);
+              alertMessenger(errorMap.title || errorMap.quote || errorMap.description);
             }
           },
           rules: {
@@ -816,7 +816,7 @@
         },
         showErrors: function (errorMap, errorList) {
           if (errorList.length) {
-            alert(errorMap.url);
+            alertMessenger(errorMap.url);
           }
         },
         rules: {
@@ -905,7 +905,7 @@
           },
           showErrors: function (errorMap, errorList) {
             if (errorList.length) {
-              alert(errorMap.title || errorMap.description);
+              alertMessenger(errorMap.title || errorMap.description);
             }
           },
           rules: {
@@ -998,7 +998,7 @@
           },
           showErrors: function (errorMap, errorList) {
             if (errorList.length) {
-              alert(errorMap.url);
+              alertMessenger(errorMap.url);
             }
           },
           rules: {
@@ -1118,7 +1118,7 @@
           },
           showErrors: function (errorMap, errorList) {
             if (errorList.length) {
-              alert(errorMap.cite || errorMap.url || errorMap.title || errorMap.description);
+              alertMessenger(errorMap.cite || errorMap.url || errorMap.title || errorMap.description);
             }
           },
           rules: {
@@ -1226,7 +1226,7 @@
         },
         showErrors: function (errorMap, errorList) {
           if (errorList.length) {
-            alert(errorMap.text);
+            alertMessenger(errorMap.text);
           }
         },
         rules: {
@@ -1305,7 +1305,7 @@
         },
         showErrors: function (errorMap, errorList) {
           if (errorList.length) {
-            alert(errorMap.title);
+            alertMessenger(errorMap.title);
           }
         },
         rules: {
@@ -1380,6 +1380,17 @@
     Messenger().post({
       message: '操作失败，请重试',
       type: 'error'
+    });
+  }
+
+  function alertMessenger(msg) {
+    Messenger().post({
+      message: msg,
+      type: 'error',
+      id: "Only-one-message"
+    });
+    $(document).one('mousedown keydown', function () {
+      Messenger().hideAll();
     });
   }
 
@@ -1679,7 +1690,7 @@
 
   function __init() {
     $._messengerDefaults = {
-      extraClasses: 'messenger-fixed messenger-on-top'
+      extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right'
     }
     topicId = location.pathname.match(/^\/topic\/([0-9a-f]{24})\/edit$/)[1];
     $band = $('.Band');
@@ -1910,7 +1921,7 @@
       },
       showErrors: function (errorMap, errorList) {
         if (errorList.length) {
-          alert(errorMap.title || errorMap.description);
+          alertMessenger(errorMap.title || errorMap.description);
         }
       },
       rules: {

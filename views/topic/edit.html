@@ -7,7 +7,10 @@
                 data-loading-text="发布 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;" type="button">发布
         </button>
         <% } %>
-        <a class='btn btn-small btn-default' href="<%= topic.publishDate ? '/topic/' + topic._id : '/works' %>">返回</a>
+        <a class='btn btn-small btn-default'
+           href="<%= topic.publishDate ? '/topic/' + topic._id : '/works' %>">
+          完成<%= topic.publishDate ? '' : '草稿' %>
+        </a>
       </td>
     </table>
     <table class='Band_Ttl'>
