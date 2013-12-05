@@ -11,6 +11,7 @@ var sign = require('./controllers/sign');
 var personal = require('./controllers/personal');
 var auth = require('./middlewares/auth');
 
+var about = require('./controllers/about');
 
 module.exports = function (app) {
   app.get('/test', function (req, res) {
@@ -84,6 +85,19 @@ module.exports = function (app) {
    app.get('/reset_pass', sign.reset_pass);
    app.post('/reset_pass', sign.update_pass);
    */
+
+  //About
+  app.get('/rules', about.showRules);
+  //note  url with / ended not ok. todo
+  app.get('/privacy', about.showPrivacyCenter);
+  app.get('/glossary', about.showPrivacyCenter);
+  app.get('/policy', about.showPolicy);
+  app.get('/cope', about.showCope);
+  app.get('/service', about.showService);
+  app.get('/principle', about.showPrinciple);
+  app.get('/help', about.showHelp);
+  app.get('/faq/:helpId', about.showEachHelp);
+
   app.get('*', function (req, res, next) {
     next(new Error(404));
   })

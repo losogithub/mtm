@@ -30,12 +30,35 @@ var findByEmailAndSeries = function(email, series, callback){
 }
 
 var remove = function(email, series){
+  findByEmailAndSeries(email, series, function(err, logintoken){
+    if(err){
+      console.log("cannot find logintoken");
+      next(err);
+    }
+    else if (!logintoken){
+      console.log("no logintoken matched.")
+    }
+    else {
+      console.log("LoginToken: ", logintoken)
+      logintoken.remove(function(err, logintoken){
+        if(err){console.log("remove logintoken err");}
+        else {
+          console.log("remove logintoken successfully!");
+        }
+      });
+    }
+  })
+
+ /*
   LoginToken.remove({email: email, series: series}, function(err){
     if (err){
       console.log("cannot find user email from LoginToken.");
       next(err);
+    }  else {
+      console.log("err", err);
+      console.log("remove loginToken successfully");
     }
-  });
+  });*/
 }
 
 var removeAll = function(email){

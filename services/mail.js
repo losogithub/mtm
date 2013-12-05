@@ -18,6 +18,7 @@ var SITE_ROOT_URL = 'http://' + config.hostname;
  * @param {Object} data 邮件对象
  */
 var sendMail = function (data) {
+
   /*
     if (config.debug) {
         console.log('******************** 在测试环境下，不会真的发送邮件*******************');
@@ -28,12 +29,15 @@ var sendMail = function (data) {
     }*/
     // 遍历邮件数组，发送每一封邮件，如果有发送失败的，就再压入数组，同时触发mailEvent事件
     // the function said doesn't be implememted. 9.21.2013 taozan
+
     transport.sendMail(data, function (err) {
         if (err) {
-            // 写为日志
-            console.log(err);
+          // 写为日志
+          console.log(err);
+          next(err);
         }
     });
+
 };
 
 /**

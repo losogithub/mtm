@@ -1,0 +1,417 @@
+@import "theme";
+.MainBody {
+  position: relative;
+  width: 731px;
+  margin: 0 auto;
+  padding-top: 26px;
+  display: block;
+  font-size: 12px;
+  font-family: Arial,Helvetica,sans-serif;
+  color: #323232;
+
+  .Header {
+    margin-bottom: 15px;
+    zoom: 1;
+    display: block;
+    font-size: 12px;
+    font-family: Arial,Helvetica,sans-serif;
+    color: #323232;
+
+    &:after{
+      content: ".";
+      visibility: hidden;
+      height: 0;
+      display: block;
+      clear: both;
+    }
+
+    h1 {
+      float: left;
+      padding-left: 1px;
+      font-size: 0;
+      white-space: nowrap;
+      margin: 0;
+      display: block;
+      font-weight: bold;
+      zoom: 1;
+      font-family: Arial,Helvetica,sans-serif;
+      color: #323232;
+
+      a {
+        text-decoration: none;
+        margin: 0;
+        padding: 0;
+        &:-webkit-any-link {
+          cursor: auto;
+        }
+      }
+
+      span {
+        font-size: 16px;
+        margin-left: 10px;
+        line-height: 1;
+        position: absolute;
+        padding: 0;
+      }
+    } //h1
+
+    ul.CompanyTitleInfo {
+      list-style-type: none;
+      display: block;
+      margin: 0;
+      padding: 0;
+      font-family: arial,sans-serif;
+      position: absolute;
+      top: 26px;
+      right: 0;
+      line-height: 1;
+
+      li {
+        display: list-item;
+        text-align: -webkit-match-parent;
+        margin: 0;
+        float: left;
+        position: relative;
+
+        .CompanyTitle {
+          padding: 0;
+          border-right: none;
+        }
+
+        a {
+          display: block;
+          zoom: 1;
+          vertical-align: top;
+          line-height: 1.2;
+          color: #646464;
+          margin: -1px 0;
+          text-decoration: none;
+          padding: 0;
+          &:-webkit-any-link {
+            cursor: auto;
+          }
+        }
+      }
+    }
+
+  }
+
+
+  // privacy index
+  .PrivacyIndex {
+    padding: 38px 47px 26px 47px;
+    border-bottom: #ededed 1px solid;
+    margin: 0;
+
+    ul.PrivacyMenu {
+      overflow: hidden;
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        float: left;
+        width: 310px;
+        padding: 0px 0px 12px 0px;
+        margin: 0px;
+
+        a {
+          display: inline-block;
+          padding-left: 18px;
+          background: url(../images/bu_arrow3.gif) no-repeat left 2px;
+          color: #666;
+          text-decoration: underline;
+          font-weight: bold;
+          line-height: 1.33;
+          zoom: 1;
+        }
+      }
+      li.Selected {
+        float: left;
+        width: 310px;
+        padding: 0px 0px 12px 0px;
+        margin: 0px;
+
+        a {
+          background-image: url(../images/bu_arrow4.gif);
+          color: @theme-color;
+          display: inline-block;
+          padding-left: 18px;
+          background: url(../images/bu_arrow3.gif) no-repeat left 2px;
+          text-decoration: underline;
+          font-weight: bold;
+          line-height: 1.33;
+          zoom: 1;
+        }
+      }
+    }
+  }
+
+
+
+  hr.HrSeparate {
+      display: none;
+      margin: 0;
+      padding: 0;
+      border-style: inset;
+      border-width: 1px;
+  }
+
+ .TermContainer {
+   border: 5px solid #ededed;
+   margin: 0;
+   padding: 0;
+   display: block;
+
+   .Contents {
+     padding: 31px 47px 35px;
+     display: block;
+
+
+     //privacy page
+     .PrivacyArea {
+       line-height: 1.5;
+
+       h3 {
+         color: #000;
+         font-size: 14px;
+         height: 27px;
+         margin-bottom: 26px;
+         background: url(../images/shizier_v_05.gif) repeat-x bottom;
+       }
+
+       p {
+         margin-bottom: 33px;
+         color: #7d7d7d;
+         line-height: 1.5;
+       }
+
+       h4 {
+         margin-bottom: 18px;
+         color: #000;
+         font-size: 14px;
+       }
+
+       // I am not sure will be inherated by h4 or not. todo
+       a {
+         color: #0035d1;
+         text-decoration: underline;
+       }
+
+
+       ul.TitleType {
+         padding-bottom: 22px;
+         list-style-type: none;
+
+         li {
+           padding: 0 0 6px 9px;
+           background: url(../images/bu_dot.gif) no-repeat left 9px;
+           margin: 0;
+
+           h5 {
+             color: #000;
+             margin: 0;
+             padding: 0;
+           }
+
+           p {
+             margin: 5px 0 11px;
+             color: #7d7d7d;
+             line-height: 1.5;
+             padding: 0;
+           }
+         }
+       }
+
+       ul {
+         //padding-bottom: 22px;
+         list-style-type: none;
+         margin: 0;
+         padding: 0 0 22px 0;
+
+         li {
+           padding: 0 0 6px 9px;
+           background: url(../images/bu_dot2.gif) no-repeat left .6em;
+           color: #7d7d7d;
+           margin: 0;
+         }
+       }
+
+       .Date {
+         color: #7d7d7d;
+         text-align: right;
+         margin-bottom: 0;
+         line-height: 1.5;
+         padding: 0;
+       }
+
+       .TopButton {
+         padding-top: 51px;
+         text-align: right;
+         margin: 0;
+
+         a {
+           padding-left: 10px;
+           background: url(../images/bu_arrow2.gif) no-repeat left 5px;
+           color: #7d7d7d;
+           text-decoration: none;
+           margin: 0;
+         }
+       }
+
+     }
+
+
+
+
+
+
+     //rules page
+     .Agreement {
+        clear: both;
+       color: #7d7d7d;
+       line-height: 1.5;
+
+       h2 {
+         margin-top: -4px;
+         padding-bottom: 3px;
+         color: #000;
+         font-size: 15px;
+         border-bottom: 2px solid #4b4b4b;
+         font-weight: bold;
+       }
+       p {
+         line-height: 1.5;
+         .FirstPart {
+           margin-top: 9px;
+         }
+       }
+
+       h3 {
+         color: #000;
+         font-size: 14px;
+         margin: 36px 0 0;
+       }
+
+       ol {
+         margin-left: 18px;
+         list-style-type: none;
+
+         li {
+           list-style: decimal;
+           margin-top: 18px;
+         }
+       }
+
+       p.Last {
+         line-height: 1.5;
+         margin-top: 18px;
+         text-align: right;
+       }
+       p.Date {
+         line-height: 1.5;
+         margin-top: 18px;
+         color: #000;
+       }
+
+       .TopButton {
+         padding-top: 18px;
+         text-align: right;
+
+         a {
+           padding-left: 10px;
+           color: #7d7d7d;
+           background: url(../images/bu_arrow2.gif) no-repeat left 5px;
+           &:link {
+             text-decoration: underline;
+           }
+           &:visited{
+             text-decoration: underline;
+           }
+         }
+       }
+     }
+   }
+ }
+
+  .Footer {
+    width: auto ;
+    padding: 49px 0 50px;
+    text-align: center;
+    line-height: 1;
+    color: #858585;
+
+    h2 {
+      position: absolute;
+      left: -99999px;
+    }
+    ul.Links {
+        display: inline;
+        line-height: 1;
+        overflow: hidden;
+        list-style-type: none;
+
+      li {
+        padding: 0 4px 0 8px;
+        border-left: solid 1px #d7d7d7;
+        display: inline-block;
+        vertical-align: bottom;
+        line-height: 1;
+
+        a {
+          margin: -2px 0 0;
+          vertical-align: bottom;
+          display: inline-block;
+          line-height: 1;
+
+          &:link {
+            color: #858585;
+            text-decoration: none;
+          }
+          &:visited {
+            color: #858585;
+            text-decoration: none;
+          }
+        }
+      }
+
+      li.FirstChild {
+        padding: 0 4px 0 8px;
+        border-left: solid 1px #d7d7d7;
+        display: inline-block;
+        vertical-align: bottom;
+        line-height: 1;
+        border: none;
+        a {
+          margin: -2px 0 0;
+          vertical-align: bottom;
+          display: inline-block;
+          line-height: 1;
+
+          &:link {
+            color: #858585;
+            text-decoration: none;
+          }
+          &:visited {
+            color: #858585;
+            text-decoration: none;
+          }
+        }
+      }
+
+
+    }
+
+    p {
+      padding-left: 13px;
+      font-family: 'tohoma';
+      font-size: 10px;
+      display: inline;
+      line-height: 1;
+
+      b {
+        font-weight: bold;
+      }
+    }
+  }
+}

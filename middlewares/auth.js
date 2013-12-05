@@ -128,7 +128,7 @@ function _authenticateFromLoginToken(req, res, next) {
               if (user) {
                 req.session.userId = user._id;
                 req.currentUser = user; //what does this used for ?? get it, passed to the next middleware.
-
+                req.currentUser.series = cookie.series; //save series information.
                 //used in html template to judgfy and display user name.
                 res.locals.username = user.loginName;
                 //added 10.11 2013

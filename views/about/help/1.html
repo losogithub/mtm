@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="content-style-type" content="text/css">
+  <meta http-equiv="content-script-type" content="text/javascript">
+  <meta name="keywords" content="ネイバー,利用,方法,使い方,ガイド,質問,疑問,解決,問題,方法,やり方">
+  <meta name="description" content="NAVERサービスの利用方法や困った場合の対処方法についてご説明しています。">
+  <title>トピックとはなんですか？  - NAVERヘルプセンター</title>
+  <link rel="stylesheet" type="text/css" href="../stylesheets/helpCenter.css">
+  <script type="text/javascript" language="javascript">
+
+    function goPoll(poll) {
+
+      document.getElementById("fbDiv").style.display = "none";
+      document.getElementById("fbDivOk").style.display = "";
+
+      //ajaxPoll(poll, callback);
+    }
+
+    function _checkJson (obj) {
+      if (!obj.data) {
+        try {
+          alert(obj.error + " : " + obj.message);
+          return null;
+        } catch (e) {
+          return null;
+        }
+      }
+
+      return obj;
+    }
+
+    function callback(res, param) {
+      var json = _checkJson(res);
+      if (json == null) alert("fail");
+    }
+
+    function ajaxPoll(poll) {
+
+      var param = new Parameter();
+      param.add("method", "poll");
+      param.add("poll", poll);
+      param.add("itemNo", 1016);
+      callJsonAjax("faq", param, callback);
+    }
+
+    function goPrev() {
+
+      if(document.referrer.search(/search/) > 0) {
+        document.location.href=document.referrer;
+      } else {
+        document.location.href="/help";
+      }
+    }
+
+  </script>
+</head>
+<body>
+
+<div class="MainBody">
+
+  <div class="Header">
+
+    <h1><a href="http://www.naver.jp/"><img src="./topicisWhat_files/logo_naver2.gif" width="105" height="20" alt="NAVER"></a><span>ヘルプ</span></h1>
+
+    <h2><a href="http://help.naver.jp/"><img src="./topicisWhat_files/tit_helpcenter2.gif" width="957" height="121" alt="ヘルプセンター　NAVERサービスの利用方法や困った場合の対処方法などをご紹介いたします。お問い合わせをする前に該当ヘルプページをご確認ください。"></a></h2>
+
+    </div>
+    <hr>
+    <div class="MainContent">
+
+      <div class="ContentArea">
+
+        <ul class="SubNav">
+          <li class="root"><a href="http://help.naver.jp/faq">NAVERヘルプセンター</a></li>
+          <li><a href="http://help.naver.jp/faq?serviceNo=4">まとめ</a></li>
+          <li><a href="http://help.naver.jp/faq?groupNo=179">トピックについて</a></li>
+        </ul>
+        <div class="Content">
+
+          <div class="EachOne">
+
+            <h3>トピックとはなんですか？ </h3>
+
+            <div class="Answer"><p>
+              トピック機能は「まとめ」をグルーピングする機能です。<br>
+              同じトピックが設定されたまとめが1つのページ（トピックページ）に集約されて表示されます。</p></div>
+
+            <div class="FeedBack" style="">
+              <dl>
+                <dt>この記事で問題が解決されましたか？</dt>
+                <dd><div class="itemRadio"><input type="radio" name="typeList" id="typeList_1" value="1" onclick="goPoll(&#39;P&#39;);"><label for="typeList_1">はい</label><input type="radio" name="typeList" id="typeList_2" value="2" onclick="goPoll(&#39;N&#39;);"><label for="typeList_2">いいえ</label></div></dd>
+              </dl>
+            </div>
+
+            <div class="FeedBackOk"  style="display: none;">
+              <dl>
+                <dt>この記事で問題が解決されましたか？</dt>
+                <dd><span class="fbResponse">ご協力に感謝します。ありがとうございました。</span></dd>
+              </dl>
+            </div>
+
+            <ul class="AskLinks">
+              <li>運営に直接お問い合わせをする場合は<a href="http://help.naver.jp/faqToHelp?itemNo=1016">こちら</a></li>
+            </ul>
+
+            <div class="Related">
+              <h4>関連ヘルプ</h4>
+              <ul>
+                <li><a href="http://help.naver.jp/faq?itemNo=1017">まとめにトピックを設定するには？ </a></li>
+                <li><a href="http://help.naver.jp/faq?itemNo=1018">まとめに設定したトピックを解除したい </a></li>
+                <li><a href="http://help.naver.jp/faq?itemNo=1019">トピックを新しく自分で作ることはできますか？</a></li>
+                <li><a href="http://help.naver.jp/faq?itemNo=1022">トピックのページはどのようなページですか？</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- end content --></div>
+
+        <!-- end contentArea --></div>
+
+      <div class="Paging">
+        <p class="Prev"><a href="javascript:window.history.back();">前のページへ戻る</a></p>
+        <p class="Top"><a href="javascript:window.scrollTo(0,0);">このページの先頭へ戻る</a></p>
+      </div>
+
+      <!-- end contents --></div>
+
+    <hr>
+
+    <div class="Footer">
+      <h2>NAVER リンク</h2>
+      <ul class="Links">
+        <li class="FirstChild"><a href="/about">会社概要</a></li>
+        <li><a href="/rules/">利用規約</a></li>
+        <li><a href="/privacy/">プライバシー</a></li>
+        <li><a href="/help">ヘルプ</a></li>
+      </ul>
+      <p>© <b>shizier Corporation</b></p>
+    </div>
+  </div>
+
+</body>
+</html>

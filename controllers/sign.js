@@ -291,6 +291,7 @@ var showLogin = function (req, res) {
    }
    } */
 
+    console.log("here");
     return res.redirect(refer);
   }
 
@@ -459,11 +460,16 @@ var signout = function (req, res, next) {
   //console.log("curent user;")
   //console.log(req.currentUser);
   //I see, currentUser only passed between middleware and the final call.
-  if (req.currentUser) {
-    //combine email and series to make sure only only clear from on computer.
-    LoginToken.remove(req.currentUser.email, req.currentUser.series);
+  if(req.cookies.logintoken){
+    var cookie = JSON.parse(req.cookies.logintoken);
+    console.log(cookie);
+    //console.log(req.currentUser.series);
+    if (cookie.email && cookie.series) {
+      //combine email and series to make sure only only clear from on computer.
+      LoginToken.remove(cookie.email, cookie.series);
+    }
+    res.clearCookie('logintoken');
   }
-  res.clearCookie('logintoken');
   //add: 2013.11.24
   //delete user information in res, otherwise, will be displayed.
   //note: they are stored in locals under res. not res directly.
@@ -639,18 +645,58 @@ var resetPassword = function (req, res, next) {
 
 
 var activeAccount = function (req, res, next) {
+  console.log(req.query);
   var key = req.query.key;
   var email = req.query.email;
 
+  console.log("active account");
+  console.log(key);
+  console.log(email);
+
   User.getUserByMail(email, function (err, user) {
     if (err) {
+      console.log("errr");
       return next(err);
     }
     if (!user || encryp.md5(user.email + config.session_secret) !== key || user.active) {
+      console.log("check not equal");
       return res.render('sign/errLink');
     }
 
+    //2013.12.02 Before active, first check whether ther is an login user and logout it.
+    //copy from logout function
+    if (req.session.userId) {
+      console.log("logout");
+      console.log("session userId: %s", req.session.userId);
+      req.session.destroy(function () {
+      });
+    }
+    if(req.cookies.logintoken){
+      var cookie = JSON.parse(req.cookies.logintoken);
+      console.log(cookie);
+      if (cookie.email && cookie.series) {
+        //combine email and series to make sure only only clear from on computer.
+        LoginToken.remove(cookie.email, cookie.series);
+      }
+      res.clearCookie('logintoken');
+    }
+    res.locals.username = "";
+    res.locals.imageUrl = "";
+
+
+
+
+    //active the user and make him/her a logged in user.
+    //2013.12.02
     user.active = true;
+    //bug fix: change req to res. 2013.12.02 19:42
+    res.locals.username = user.loginName;
+    res.locals.imgUrl = user.url; //the name for image url is not good.
+    //bug fix: add one more:
+    //But I am wondering this session cannot be passed to next round.
+    //jihao: really workds. Ok, I don't unserstand hwo session is passed.
+    req.session.userId = user._id;
+
     user.save(function (err) {
       if (err) {
         return next(err);
