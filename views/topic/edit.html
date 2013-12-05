@@ -1,5 +1,5 @@
 <div class="Band">
-  <div class="Inner">
+  <div class="Inner clearfix">
     <table class="Band_Btn">
       <td>
         <% if (!topic.publishDate) { %>
@@ -12,60 +12,56 @@
           完成<%= topic.publishDate ? '' : '草稿' %>
         </a>
       </td>
-    </table>
-    <table class='Band_Ttl'>
-      <td>
-        <h5>
-          <b>编辑总结<%= topic.publishDate ? '' : '（草稿）' %></b>
-          <span id="_asterisk" style="display: none;">*</span>
-          <span id="_saved" style="display: none;" class="text-muted">- 所有修改都已保存，可以直接离开本页面</span>
-          <span id="_error" style="display: none;" class="text-danger">- 操作失败，请刷新页面撤销刚才的修改</span>
-          <span id="_loading" style="display: none;" class="text-muted">- 请稍候 <i class='icon-spinner icon-spin'></i></span>
-        </h5>
-      </td>
-    </table>
+    </table><h5 class='Band_Ttl'>
+      <b>编辑总结<%= topic.publishDate ? '' : '（草稿）' %></b>
+      <span id="_asterisk" style="display: none;">*</span>
+      <span id="_saved" style="display: none;" class="text-muted">- 所有修改都已保存，可以直接离开本页面</span>
+      <span id="_error" style="display: none;" class="text-danger">- 操作失败，请刷新页面撤销刚才的修改</span>
+      <span id="_loading" style="display: none;" class="text-muted">- 请稍候 <i class='icon-spinner icon-spin'></i></span>
+    </h5>
   </div>
 </div>
-<div class="Edit_Top">
+<div class="Top">
   <div class="Inner">
-    <form>
-      <fieldset>
-        <table>
-          <td>
-            <div class="Required Required-4px"></div>
-            <input name='title' class="" value="<%= !locals.topic ? '' : topic.title || '' %>"
-                   placeholder="输入总结标题（50字以内）" type="text"/></td>
-          <td>
-            <div id="_saveSet" class="BtnSet">
-              <button class="btn btn-inverse btn-mini" name="save" type="button"
-                      data-loading-text="保存 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;">
-                保存
-              </button>
-              <button class="btn btn-mini" name="cancel" type="button">
-                放弃
-              </button>
-            </div>
-            <button class="btn btn-link text-muted" name="options" type="button">可选项目
-              <i class="icon-caret-down"></i>
-            </button>
-          </td>
-          <td style="width: 100%;text-align: right;padding-right: 6px;">
+    <div id="_topItem" class="HeadMain clearfix">
+      <div class="HeadThumb" style="display: <%= !topic.coverUrl ? 'none' : 'block' %>;">
+        <img width="95" height="95" onerror="shizier.errorImage(this,'default_120x120', true);"
+             src="<%= topic.coverUrl || '' %>">
+      </div>
+
+      <div class="HeadTxt">
+        <div class="HeadTtlWrapper">
+          <h1 class="HeadTtlPlaceholder text-muted" style="<%= topic.title ? 'display: none' : '' %>">（未命名）</h1>
+          <h1 class="HeadTtl"><%= topic.title %></h1>
+
+          <div class='HeadUtil'>
+            <button name="edit" class="btn btn-link text-muted" type="button" style="vertical-align: baseline;"><i
+              class="icon-pencil"></i> 修改</button>
+            <span class='VLine VLine-Util'></span>
 
             <% include _deleteBtn.html %>
 
-          </td>
-        </table>
-      </fieldset>
-      <fieldset style='display: none;overflow: hidden;'>
-        <button name="cover" class="btn btn-link" title="设置总结封面" type="button">
-          <div class="Image">
-            <i class="icon-camera"></i>
           </div>
-          <img style="display: block;" width="95" height="95"
-               onerror="shizier.errorImage(this, 'default_120x120', true)"
-               src="<%= topic.coverUrl || '' %>">
-        </button>
+        </div>
 
+        <p class="HeadDescWrapper" style="<%= !topic.description ? 'display: none;' : '' %>">
+          <span class="HeadDesc text-secondary"><%= topic.description || '' %></span>
+        </p>
+
+      </div>
+    </div>
+    <form id="_topWidget" style="display: none;">
+      <fieldset class="clearfix">
+        <div id="_coverWrapper">
+          <button name="cover" class="btn btn-link" title="设置总结封面" type="button">
+            <img style="display: block;" width="95" height="95"
+                 onerror="shizier.errorImage(this, 'default_120x120', true)"
+                 src="/images/no_img/photo_95x95.png">
+          </button>
+
+          <% include _widget_BtnSet.html %>
+
+        </div>
         <div class="Edit_Top_Thumb_Extra">
           <input name="url" placeholder="图片URL" type="text">
           <div class="InfoHint text-muted" style="white-space: nowrap;">
@@ -76,16 +72,27 @@
             <button name="reset" class="btn btn-small" type="button">取消</button>
           </div>
         </div>
+
         <div style='overflow: hidden;'>
-          <textarea name='description' class="HeightAnimation" placeholder="总结描述（150字以内，换行符无效）"><%= !locals.topic
-            ? '' : topic.description || '' %></textarea>
+          <div id="_topWidget_title">
+            <div class="Required Required-4px"></div>
+            <input name='title'
+                   placeholder="输入总结标题（50字以内）" type="text"/>
+          </div>
+          <div id="_topWidget_description">
+            <textarea style='overflow: hidden;' name='description' class="HeightAnimation"
+                      placeholder="总结描述（150字以内，换行符无效）"></textarea>
+          </div>
         </div>
       </fieldset>
     </form>
-
-    <% include _menu.html %>
-
   </div>
+</div>
+
+<div class="StaticMenu Inner">
+
+  <% include _menu.html %>
+
 </div>
 
 <!--内容-->

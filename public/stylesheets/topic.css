@@ -242,90 +242,91 @@
 .Contents {
   padding-bottom: 25px;
 }
-.Top {
+.Band {
   height: 37px;
   background-color: #f5f5f5;
   border-bottom: 1px solid #e7e7e7;
 }
-.Top li {
+.Band li {
   display: inline;
 }
-.Top li i {
+.Band li i {
   font-size: 12px;
 }
-.Head {
+.Top {
   margin-bottom: 20px;
   border-bottom: 1px solid #f2f2f2;
   background-color: #f9f9f9;
 }
-.Head .Inner {
+.Top .Inner {
   overflow: hidden;
   padding: 15px 0;
   position: relative;
 }
-.Head .Inner .HeadMain {
+.Top .Inner .HeadMain {
   margin-top: -3px;
   width: 725px;
 }
-.Head .Inner .HeadMain .HeadThumb {
+.Top .Inner .HeadMain .HeadThumb {
   float: left;
   margin: 3px 15px 0 0;
   width: 95px;
   height: 95px;
 }
-.Head .Inner .HeadMain .HeadTxt {
+.Top .Inner .HeadMain .HeadTxt {
   overflow: hidden;
 }
-.Head .Inner .HeadMain .HeadTxt .HeadTtlWrapper {
-  margin-bottom: 7px;
-}
-.Head .Inner .HeadMain .HeadTxt .HeadTtlWrapper .HeadTtl {
+.Top .Inner .HeadMain .HeadTxt .HeadTtlWrapper .HeadTtl,
+.Top .Inner .HeadMain .HeadTxt .HeadTtlWrapper .HeadTtlPlaceholder {
   display: inline;
   font-size: 32px;
   line-height: 38px;
   margin-right: 15px;
 }
-.Head .Inner .HeadMain .HeadTxt .HeadTtlWrapper .HeadUtil {
+.Top .Inner .HeadMain .HeadTxt .HeadTtlWrapper .HeadUtil {
   display: inline-block;
 }
-.Head .Inner .HeadMain .HeadTxt .HeadDesc {
+.Top .Inner .HeadMain .HeadTxt .HeadDescWrapper {
+  margin-top: 7px;
+}
+.Top .Inner .HeadMain .HeadTxt .HeadDescWrapper .HeadDesc {
   margin-right: 8px;
 }
-.Head .Inner .HeadMain .HeadTxt .HeadOption {
+.Top .Inner .HeadMain .HeadTxt .HeadOption {
   margin-top: 13px;
 }
-.Head .Inner .HeadMain .HeadTxt .HeadOption .HeadUser {
+.Top .Inner .HeadMain .HeadTxt .HeadOption .HeadUser {
   margin-right: 6px;
 }
-.Head .Inner .HeadMain .HeadTxt .HeadOption .HeadUser .HeadUserThumb {
+.Top .Inner .HeadMain .HeadTxt .HeadOption .HeadUser .HeadUserThumb {
   display: inline-block;
   width: 30px;
   height: 30px;
   margin-right: 10px;
 }
-.Head .Inner .HeadMain .HeadTxt .HeadOption .HeadUser .HeadUserName {
+.Top .Inner .HeadMain .HeadTxt .HeadOption .HeadUser .HeadUserName {
   font-weight: bold;
 }
-.Head .Inner .HeadMain .HeadTxt .HeadOption #bdshare,
-.Head .Inner .HeadMain .HeadTxt .HeadOption #bdshare *,
-.Head .Inner .HeadMain .HeadTxt .HeadOption #bdshare *:before,
-.Head .Inner .HeadMain .HeadTxt .HeadOption #bdshare *:after {
+.Top .Inner .HeadMain .HeadTxt .HeadOption #bdshare,
+.Top .Inner .HeadMain .HeadTxt .HeadOption #bdshare *,
+.Top .Inner .HeadMain .HeadTxt .HeadOption #bdshare *:before,
+.Top .Inner .HeadMain .HeadTxt .HeadOption #bdshare *:after {
   -webkit-box-sizing: content-box;
   -moz-box-sizing: content-box;
   box-sizing: content-box;
 }
-.Head .Inner .HeadSub {
+.Top .Inner .HeadSub {
   width: 220px;
   text-align: right;
   position: absolute;
   top: 15px;
   right: 0;
 }
-.Head .Inner .HeadSub .HeadCount {
+.Top .Inner .HeadSub .HeadCount {
   margin: 0 0 8px;
   *margin-bottom: 5px;
 }
-.Head .Inner .HeadSub .HeadCount .HeadFVCount {
+.Top .Inner .HeadSub .HeadCount .HeadFVCount {
   display: inline-block;
   *display: inline;
   *zoom: 1;
@@ -334,7 +335,7 @@
   vertical-align: top;
   text-align: center;
 }
-.Head .Inner .HeadSub .HeadCount .HeadFVCount .HeadFVCountNum {
+.Top .Inner .HeadSub .HeadCount .HeadFVCount .HeadFVCountNum {
   display: block;
   line-height: 1;
   *line-height: 1.15;
@@ -343,11 +344,11 @@
   color: #000;
   font-size: 22px;
 }
-.Head .Inner .HeadSub .HeadCount .HeadFVCount .HeadFVIco {
+.Top .Inner .HeadSub .HeadCount .HeadFVCount .HeadFVIco {
   color: #ffdd11;
   text-shadow: 0 0 1px #443a00;
 }
-.Head .Inner .HeadSub .HeadCount .HeadFVCount .HeadFVCountLabel {
+.Top .Inner .HeadSub .HeadCount .HeadFVCount .HeadFVCountLabel {
   display: block;
   margin-top: 3px;
   *margin-top: 0;
@@ -356,36 +357,36 @@
   color: #666;
   font-size: 11px;
 }
-.Head .Inner .HeadSub .HeadCount .HeadPVCount {
+.Top .Inner .HeadSub .HeadCount .HeadPVCount {
   display: inline-block;
   border-left: 1px solid #eeeeee;
   padding-left: 13px;
   text-align: center;
 }
-.Head .Inner .HeadSub .HeadCount .HeadPVCount .HeadPVCountNum {
+.Top .Inner .HeadSub .HeadCount .HeadPVCount .HeadPVCountNum {
   display: block;
   line-height: 1;
   margin-top: -3px;
   color: black;
   font-size: 22px;
 }
-.Head .Inner .HeadSub .HeadCount .HeadPVCount .HeadPVCountLabel {
+.Top .Inner .HeadSub .HeadCount .HeadPVCount .HeadPVCountLabel {
   display: block;
   margin-top: 3px;
   line-height: 1;
   color: #666;
   font-size: 11px;
 }
-.Head .Inner .HeadSub .HeadFVBtnIco {
+.Top .Inner .HeadSub .HeadFVBtnIco {
   margin-right: 7px;
   color: #dddddd;
   text-shadow: 0 0 1px #777777;
 }
-.Head .Inner .HeadSub .ExSelected .HeadFVBtnIco {
+.Top .Inner .HeadSub .ExSelected .HeadFVBtnIco {
   color: #ffdd11;
   text-shadow: 0 0 1px #443a00;
 }
-.Head .Inner .HeadSub .HeadFVBtnTxt {
+.Top .Inner .HeadSub .HeadFVBtnTxt {
   font-weight: bold;
   font-size: 14px;
 }

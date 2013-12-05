@@ -21,6 +21,7 @@ var escape = helper.escape;
 var Topic = require('../proxy').Topic;
 var Item = require('../proxy').Item;
 var User = require('../proxy').User;
+var NewTopic = require('../proxy').NewTopic;
 
 var utils = require('../public/javascripts/utils');
 
@@ -548,7 +549,9 @@ function createItem(req, res, next) {
     }
 
     var item = results.item;
+    var topic = results.topic;
     res.json(_getItemData(item));
+    NewTopic.saveNewTopic(topic);
     console.log('createItem done');
   });
 }
@@ -610,7 +613,9 @@ function sortItem(req, res, next) {
       return next(err);
     }
 
+    var topic = results.topic;
     res.send(200);
+    NewTopic.saveNewTopic(topic);
     console.log('sort done');
   });
 }
@@ -666,7 +671,9 @@ function editItem(req, res, next) {
     }
 
     var newItem = results.newItem;
+    var topic = results.topic;
     res.json(_getItemData(newItem));
+    NewTopic.saveNewTopic(topic);
     console.log('editItem done');
   });
 }
@@ -705,7 +712,9 @@ function deleteItem(req, res, next) {
       return next(err);
     }
 
+    var topic = results.topic;
     res.send(200);
+    NewTopic.saveNewTopic(topic);
     console.log('deleteItem done');
   });
 }
@@ -736,7 +745,6 @@ function saveTopic(req, res, next) {
   var title = sanitize(req.body.title).trim();
   var coverUrl = sanitize(req.body.coverUrl).trim();
   var description = sanitize(req.body.description).trim();
-  var publish = req.body.publish;
 
   try {
     check(title).len(5, 50);
@@ -749,12 +757,36 @@ function saveTopic(req, res, next) {
     if (err) {
       return next(err);
     }
-    Topic.saveTopic(topic, title, coverUrl, description, publish, function (err) {
+    Topic.saveTopic(topic, title, coverUrl, description, function (err, topic) {
       if (err) {
         return next(err);
       }
-      res.send(200);
+      res.json({
+        topicId: topic._id,
+        title: topic.title,
+        coverUrl: topic.cover_url,
+        description: topic.description
+      });
       console.log('saveTopic done');
+    });
+  }, topicId, authorId);
+}
+
+function publishTopic(req, res, next) {
+  console.log('publishTopic=====');
+  var authorId = req.session.userId;
+  var topicId = req.body.topicId;
+
+  _getTopicWithAuth(function (err, topic) {
+    if (err) {
+      return next(err);
+    }
+    Topic.publishTopic(topic, function (err) {
+      if (err) {
+        return next(err);
+      }
+      res.json(200);
+      console.log('publishTopic done');
     });
   }, topicId, authorId);
 }
@@ -1198,6 +1230,7 @@ exports.sortItem = sortItem;
 exports.deleteItem = deleteItem;
 exports.deleteTopic = deleteTopic;
 exports.saveTopic = saveTopic;
+exports.publishTopic = publishTopic;
 exports.getLinkDetail = getLinkDetail;
 exports.getVideoDetail = getVideoDetail;
 exports.AddorRemoveLikes = AddorRemoveLikes;

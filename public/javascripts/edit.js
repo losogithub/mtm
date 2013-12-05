@@ -186,17 +186,6 @@
     __create: $.noop,
     __initFormValidation: $.noop,
 
-    stateHandler: function (defaultValue, event) {
-      if (this.options.disabled) {
-        return;
-      }
-      if (event.target.value == defaultValue) {
-        setState('create');
-      } else {
-        setState('edit');
-      }
-    },
-
     autoFocus: function () {
       this.widget()
         .find('.AUTO_FOCUS')
@@ -312,7 +301,27 @@
     },
 
     preview: $.noop,
-    _getCommitData: $.noop
+    _getCommitData: $.noop,
+
+    checkState: function () {
+      if (this.options.disabled) {
+        return;
+      }
+      if (!this.options.id
+        && (this.type == 'LINK'
+        || this.type == 'IMAGE'
+        || this.type == 'VIDEO')) {
+        return;
+      }
+      var originalData = this._getOriginalData();
+      var commitData = this._getCommitData();
+      for (var key in originalData) {
+        if (originalData[key] != commitData[key]) {
+          return setState('edit');
+        }
+      }
+      return setState('create');
+    }
 
   });
 
@@ -434,14 +443,14 @@
         .end()
         .find('input[name="title"]')
         .val(this.options.title)
-        .on(INPUT_EVENTS, !this.options.id ? $.noop : function (event) {
-          self.stateHandler(self.options.title, event);
+        .on(INPUT_EVENTS, function () {
+          self.checkState();
         })
         .end()
         .find('textarea[name="snippet"]')
         .val(this.options.snippet)
-        .on(INPUT_EVENTS, !this.options.id ? $.noop : function (event) {
-          self.stateHandler(self.options.snippet, event);
+        .on(INPUT_EVENTS, function () {
+          self.checkState();
         })
         .end()
         .find('.Image img')
@@ -481,8 +490,8 @@
         .end()
         .find('textarea[name="description"]')
         .val(this.options.description)
-        .on(INPUT_EVENTS, !this.options.id ? $.noop : function (event) {
-          self.stateHandler(self.options.description, event);
+        .on(INPUT_EVENTS, function () {
+          self.checkState();
         })
         .end();
     },
@@ -686,20 +695,20 @@
         .end()
         .find('input[name="title"]')
         .val(this.options.title)
-        .on(INPUT_EVENTS, !this.options.id ? $.noop : function (event) {
-          self.stateHandler(self.options.title, event);
+        .on(INPUT_EVENTS, function () {
+          self.checkState();
         })
         .end()
         .find('input[name="quote"]')
         .val(this.options.quote)
-        .on(INPUT_EVENTS, !this.options.id ? $.noop : function (event) {
-          self.stateHandler(self.options.quote, event);
+        .on(INPUT_EVENTS, function () {
+          self.checkState();
         })
         .end()
         .find('textarea[name="description"]')
         .val(this.options.description)
-        .on(INPUT_EVENTS, !this.options.id ? $.noop : function (event) {
-          self.stateHandler(self.options.description, event);
+        .on(INPUT_EVENTS, function () {
+          self.checkState();
         })
         .end();
     },
@@ -880,14 +889,14 @@
         .end()
         .find('input[name="title"]')
         .val(this.options.title)
-        .on(INPUT_EVENTS, !this.options.id ? $.noop : function (event) {
-          self.stateHandler(self.options.title, event);
+        .on(INPUT_EVENTS, function () {
+          self.checkState();
         })
         .end()
         .find('textarea[name="description"]')
         .val(this.options.description)
-        .on(INPUT_EVENTS, !this.options.id ? $.noop : function (event) {
-          self.stateHandler(self.options.description, event);
+        .on(INPUT_EVENTS, function () {
+          self.checkState();
         })
         .end();
     },
@@ -1081,26 +1090,26 @@
       this.widget()
         .find('textarea[name="cite"]')
         .val(this.options.cite)
-        .on(INPUT_EVENTS, function (event) {
-          self.stateHandler(self.options.cite, event);
+        .on(INPUT_EVENTS, function () {
+          self.checkState();
         })
         .end()
         .find('input[name="url"]')
         .val(this.options.url)
-        .on(INPUT_EVENTS, function (event) {
-          self.stateHandler(self.options.url, event);
+        .on(INPUT_EVENTS, function () {
+          self.checkState();
         })
         .end()
         .find('input[name="title"]')
         .val(this.options.title)
-        .on(INPUT_EVENTS, function (event) {
-          self.stateHandler(self.options.title, event);
+        .on(INPUT_EVENTS, function () {
+          self.checkState();
         })
         .end()
         .find('textarea[name="description"]')
         .val(this.options.description)
-        .on(INPUT_EVENTS, function (event) {
-          self.stateHandler(self.options.description, event);
+        .on(INPUT_EVENTS, function () {
+          self.checkState();
         })
         .end();
     },
@@ -1208,8 +1217,8 @@
       this.widget()
         .find('textarea')
         .val(this.options.text)
-        .on(INPUT_EVENTS, function (event) {
-          self.stateHandler(self.options.text, event);
+        .on(INPUT_EVENTS, function () {
+          self.checkState();
         })
         .end();
     },
@@ -1287,8 +1296,8 @@
       this.widget()
         .find('input')
         .val(this.options.title)
-        .on(INPUT_EVENTS, function (event) {
-          self.stateHandler(self.options.title, event);
+        .on(INPUT_EVENTS, function () {
+          self.checkState();
         })
         .end();
     },
@@ -1346,6 +1355,7 @@
   //数据库中该总结id
   var topicId;
   var state = 'default';
+  var topState = 'default';
   var $editingWidget;
 
   var $band;
@@ -1353,41 +1363,23 @@
   var $band_saved;
   var $band_error;
   var $band_loading;
-  var $form;
-  var $saveSet;
-  var $save;
-  var $cancel;
-  var $switch;
-  var $options;
+  var $_topItem;
+  var $_topWidget;
   var $ul;
   var $templates;
-  var $title;
-  var $cover;
-  var $description;
 
-  var titleModified;
-  var coverModified;
-  var descriptionModified;
-  var topModified;
-  var title;
-  var coverUrl;
-  var description;
   var fail;
   var savedOnce;
   var xhr;
 
   function retryMessenger() {
-    Messenger().post({
-      message: '操作失败，请重试',
-      type: 'error'
-    });
+    alertMessenger('操作失败，请重试');
   }
 
   function alertMessenger(msg) {
     Messenger().post({
       message: msg,
-      type: 'error',
-      id: "Only-one-message"
+      type: 'error'
     });
     $(document).one('mousedown keydown', function () {
       Messenger().hideAll();
@@ -1401,7 +1393,7 @@
       $band_asterisk.show();
       $band_error.show();
       $('body').attr('onbeforeunload', '');
-    } else if (state != 'default' || topModified) {
+    } else if (state == 'edit' || topState == 'edit') {
       $band_asterisk.show();
       $('body').attr('onbeforeunload', 'return "您有尚未保存的内容";');
     } else {
@@ -1412,26 +1404,14 @@
     }
   }
 
-  function onTopStateChange() {
-    topModified = titleModified || coverModified || descriptionModified;
-    if (topModified) {
-      $saveSet.show();
-    } else {
-      $saveSet.hide();
-    }
+  function notifyFail() {
+    fail = true;
     onStateChange();
   }
 
-  function onTopChange() {
-    title = $title.val();
-    coverUrl = $form.find('button[name="cover"] img').attr('src');
-    description = $description.val();
-    titleModified = coverModified = descriptionModified = false;
-    onTopStateChange();
-  }
-
-  function notifyFail() {
-    fail = true;
+  function setTopState(newState) {
+    console.log(newState);
+    topState = newState;
     onStateChange();
   }
 
@@ -1439,6 +1419,19 @@
     console.log(newState);
     state = newState;
     onStateChange();
+  }
+
+  function _checkRemoveWidget() {
+    //编辑中的微件处在已修改状态
+    if (state == 'edit'
+      && !confirm('您有正在编辑的内容，确定要放弃编辑中的内容吗？')) {
+      return false;
+    }
+    //删除编辑中的微件
+    if (state != 'default') {
+      $editingWidget[$editingWidget.data('type').toLowerCase() + 'Widget']('remove');
+    }
+    return true;
   }
 
   /**
@@ -1457,17 +1450,18 @@
     var $prevItem = options.$prevItem;
     var $li = options.$li;
 
-    //编辑中的微件处在已修改状态
-    if (state == 'edit'
-      && !confirm('您有正在编辑的内容，确定要放弃然后添加其他类型的条目吗？')) {
+    if (topState == 'edit'
+      && !confirm('您有正在编辑的内容，确定要放弃编辑中的内容吗？')) {
       return;
+    }
+    if (topState != 'default') {
+      remove();
     }
 
     var oldState = state;
 
-    //删除编辑中的微件
-    if (state != 'default') {
-      $editingWidget[$editingWidget.data('type').toLowerCase() + 'Widget']('remove');
+    if (!_checkRemoveWidget()) {
+      return;
     }
 
     //编辑中的微件和目标微件:类型相同、来源相同，删了可以直接返回了
@@ -1688,7 +1682,7 @@
     return $item;
   }
 
-  function __init() {
+  function _init() {
     $._messengerDefaults = {
       extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right'
     }
@@ -1698,21 +1692,14 @@
     $band_saved = $band.find('#_saved');
     $band_error = $band.find('#_error');
     $band_loading = $band.find('#_loading');
-    $form = $('.Edit_Top form');
-    $title = $form.find('input[name="title"]');
-    $cover = $form.find('button[name="cover"] img');
-    $description = $form.find('textarea[name="description"]');
-    $saveSet = $form.find('#_saveSet');
-    $save = $saveSet.find('button[name="save"]');
-    $cancel = $saveSet.find('button[name="cancel"]');
-    $switch = $form.find('button[name="options"]');
-    $options = $form.find('fieldset:last');
+    $_topItem = $('#_topItem');
+    $_topWidget = $('#_topWidget');
     $ul = $('.WidgetItemList');
     $templates = $('.TEMPLATES');
     $('.fancybox:visible').fancybox(shizier.fancyboxOptions);
   }
 
-  function __initListListener() {
+  function _initListListener() {
     console.log('__initListListener');
     $ul
       .on('click', '.SortUtil i', function () {
@@ -1833,7 +1820,7 @@
    * 总结菜单栏固定窗口顶部、监听按钮点击事件
    * @private
    */
-  function __initBand() {
+  function _initBand() {
     $(document)
       .ajaxStart(function () {
         $band_saved.hide();
@@ -1852,72 +1839,184 @@
       }
     });
 
-    $band.add($form).on('click',
-      'button[name="publish"], button[name="save"]',
-      function (event) {
-        var $target = $(event.target);
-        var name = $target.attr('name');
-        $form
-          .data('submitType', name)
-          .submit();
-      });
+    var $publish = $band.find('button[name="publish"]');
+    $publish.click(function () {
+      if (topState == 'edit'
+        && !confirm('您有正在编辑的内容，确定要放弃编辑中的内容吗？')) {
+        return;
+      }
+      if (topState != 'default') {
+        remove();
+      }
+      if (!_checkRemoveWidget()) {
+        return;
+      }
+      if (!$_topItem.find('.HeadTtl').text()) {
+        return alertMessenger('填写标题后才能发布');
+      }
+
+      $publish.button('loading');
+      $.ajax('/topic/publish', {
+        type: 'PUT',
+        data: {
+          topicId: topicId
+        }
+      })
+        .done(function () {
+          window.location = '/topic/' + topicId;
+        })
+        .fail(function (jqXHR, textStatus) {
+          console.error(jqXHR.responseText);
+          console.error(textStatus);
+          if (textStatus != 'abort') {
+            retryMessenger();
+          }
+        })
+        .always(function () {
+          $publish.button('reset');
+        });
+    });
   }
 
-  function ___commit() {
-    var submitType = $form.data('submitType');
-    if (submitType == 'publish'
-      && !confirm('发布后将无法退回草稿状态，您确定要发布吗？')) {
-      return;
+  function remove() {
+    if (xhr) {
+      console.log('abort');
+      xhr.abort();
     }
-
-    var coverUrl = $form.find('button[name="cover"] img').attr('src');
-    var $button = $band.add($form).find('button[name="' + submitType + '"]');
-    $button.button('loading');
-
-    xhr = $.ajax('/topic/save', {
-      type: 'PUT',
-      data: {
-        topicId: topicId,
-        title: $form.find('input[name="title"]').val(),
-        coverUrl: coverUrl == '/images/no_img/image_95x95.png' ? undefined : coverUrl,
-        description: $form.find('textarea[name="description"]').val(),
-        publish: submitType == 'publish' ? 1 : undefined
-      }
-    })
-      .done(function () {
-        savedOnce = true;
-        onTopChange();
-        if (submitType == 'publish') {
-          window.location = '/topic/' + topicId;
-        } else {
-          if ($options.is(':visible')) {
-            $switch.click();
-          }
-        }
-      })
-      .fail(function (jqXHR, textStatus) {
-        console.error(jqXHR.responseText);
-        console.error(textStatus);
-        if (textStatus != 'abort') {
-          retryMessenger();
-        }
-      })
-      .always(function () {
-        $button.button('reset');
-      });
-    if (submitType == 'publish') {
-      xhr = null;
+    if ($_topItem.find('.HeadTtl').text()) {
+      $_topItem.find('.HeadTtlPlaceholder').hide();
+    } else {
+      $_topItem.find('.HeadTtlPlaceholder').show();
     }
+    if ($_topItem.find('.HeadThumb img').attr('src')) {
+      $_topItem.find('.HeadThumb').show();
+    } else {
+      $_topItem.find('.HeadThumb').hide();
+    }
+    if ($_topItem.find('.HeadDesc').text()) {
+      $_topItem.find('.HeadDescWrapper').show();
+    } else {
+      $_topItem.find('.HeadDescWrapper').hide();
+    }
+    $_topItem.after($_topWidget);
+    $_topWidget.hiddenSlideUp();
+    $_topItem.fadeSlideDown();
+    setTopState('default');
   }
 
   /**
    * 初始化总结标题，总结描述
    * @private
    */
-  function __initTop() {
-    $form.validate({
+  function _initTop() {
+    var defaultImgSrc = '/images/no_img/photo_95x95.png';
+    var noImgSrc = '/images/no_img/default_120x120.png';
+    var $title = $_topWidget.find('input[name="title"]');
+    var $cover = $_topWidget.find('button[name="cover"] img');
+    var $description = $_topWidget.find('textarea[name="description"]');
+    var title = $_topItem.find('.HeadTtl').text();
+    var coverUrl = $_topItem.find('.HeadThumb img').attr('src');
+    var description = $_topItem.find('.HeadDesc').text();
+    var $extra = $_topWidget.find('.Edit_Top_Thumb_Extra');
+
+    var checkState = function () {
+      if (($cover.attr('src') == coverUrl || ($cover.attr('src') == defaultImgSrc && !coverUrl))
+        && $title.val() == title
+        && $description.val() == description) {
+        setTopState('create');
+      } else {
+        setTopState('edit');
+      }
+    };
+    $title.add($description).on(INPUT_EVENTS, checkState);
+
+    $_topItem.find('button[name="edit"]')
+      .click(function () {
+        if (!_checkRemoveWidget()) {
+          return;
+        }
+        title = $_topItem.find('.HeadTtl').text();
+        coverUrl = $_topItem.find('.HeadThumb img').attr('src');
+        description = $_topItem.find('.HeadDesc').text();
+
+        $title.val(title);
+        $cover.attr('src', coverUrl || defaultImgSrc);
+        $description.val(description);
+
+        $extra.hide();
+        $_topWidget.after($_topItem);
+        $_topItem.hiddenSlideUp();
+        $_topWidget
+          .find('textarea')
+          .trigger('autosize.resize')
+          .end()
+          .fadeSlideDown();
+
+        $title.focus();
+        //移动光标到输入框末尾
+        moveSelection2End($title[0]);
+        setTopState('create');
+      });
+    if (!title || /editTop=1/i.test(location.search)) {
+      $_topItem.find('button[name="edit"]').click();
+    }
+    $_topWidget.find('button[name="cancel"]')
+      .click(function () {
+        if (topState == 'edit'
+          && !confirm('您编辑的内容将被丢弃，确定要放弃吗？')) {
+          return;
+        }
+        remove();
+      });
+
+    $_topWidget
+      //防止slideDown动画期间获取焦点时的滚动
+      .scroll(function () {
+        self.widget().scrollTop(0);
+      })
+      .find('button[name="save"]')
+      .attr('type', 'submit')
+      .end()
+      .find('textarea').autosize({
+        append: '\n'
+      });
+
+    var commit = function () {
+      var coverUrl = $cover.attr('src');
+      var $button = $band.add($_topWidget).find('button[name="save"]');
+      $button.button('loading');
+
+      xhr = $.ajax('/topic/save', {
+        type: 'PUT',
+        data: {
+          topicId: topicId,
+          title: $title.val(),
+          coverUrl: (coverUrl == noImgSrc || coverUrl == defaultImgSrc) ? undefined : coverUrl,
+          description: $description.val()
+        }
+      })
+        .done(function (data) {
+          savedOnce = true;
+          $_topItem.find('.HeadTtl').text(data.title);
+          $_topItem.find('.HeadThumb img').attr('src', (data.coverUrl == noImgSrc || data.coverUrl == defaultImgSrc) ? '' : data.coverUrl);
+          $_topItem.find('.HeadDesc').text(data.description || '');
+          remove();
+        })
+        .fail(function (jqXHR, textStatus) {
+          console.error(jqXHR.responseText);
+          console.error(textStatus);
+          if (textStatus != 'abort') {
+            retryMessenger();
+          }
+        })
+        .always(function () {
+          $button.button('reset');
+        });
+    }
+
+    $_topWidget.validate({
       submitHandler: function () {
-        ___commit();
+        commit();
       },
       showErrors: function (errorMap, errorList) {
         if (errorList.length) {
@@ -1947,33 +2046,8 @@
       }
     });
 
-    //开关可选项目的动画
-    $switch.click(function () {
-      if ($(this).find('i').is('.icon-caret-down')) {
-        $options.fadeSlideDown();
-      } else {
-        $options.hiddenSlideUp();
-      }
-      $(this).find('i').toggleClass('icon-caret-down icon-caret-up');
-    });
-
-    $options
-      .show()
-      .find('textarea').autosize({
-        append: '\n'
-      })
-      .end()
-      .hide();
-
-    if (/showOption=true/.test(location.search)) {
-      $switch
-        .find('i')
-        .toggleClass('icon-caret-down icon-caret-up');
-      $options.toggle();
-    }
-
-    var $thumb = $('button[name="cover"]');
-    var $extra = $('.Edit_Top_Thumb_Extra');
+    //封面设置
+    var $thumb = $_topWidget.find('button[name="cover"]');
     var $input = $extra.find('input');
     var $preview = $extra.find('button[name="preview"]');
     var $reset = $extra.find('button[name="reset"]');
@@ -2002,60 +2076,30 @@
       }
     });
     $cover.on('load', function () {
-      if ($cover.attr('src') != '/images/no_img/image_95x95.png'
+      if ($cover.attr('src') != noImgSrc
         && autoHide) {
         hide();
       }
     });
-
     $reset.click(function () {
       hide();
-      $cover.attr('src', coverUrl);
-      coverModified = $cover.attr('src') != coverUrl;
-      onTopStateChange();
+      $cover.attr('src', coverUrl || defaultImgSrc);
+      checkState();
     });
     $preview.click(function () {
       autoHide = true;
-      $cover.attr('src', shizier.utils.suffixImage($input.val()));
-      coverModified = $cover.attr('src') != coverUrl;
+      $cover.attr('src', shizier.utils.suffixImage($input.val()) || defaultImgSrc);
       if (!$input.val()) {
         hide();
       }
-      onTopStateChange();
+      checkState();
     });
-
-    $title.on(INPUT_EVENTS, function () {
-      titleModified = $title.val() != title;
-      onTopStateChange();
-    });
-
-    $description.on(INPUT_EVENTS, function () {
-      descriptionModified = $description.val() != description;
-      onTopStateChange();
-    });
-
-    $cancel.click(function () {
-      if (xhr) {
-        xhr.abort();
-      }
-      $title.val(title);
-      $cover.attr('src', coverUrl);
-      $description.val(description);
-      titleModified = $title.val() != title;
-      coverModified = $cover.attr('src') != coverUrl;
-      descriptionModified = $description.val() != description;
-      if ($options.is(':visible')) {
-        $switch.click();
-      }
-      onTopStateChange();
-    })
-    onTopChange();
   }
 
   /**
    * 启用列表排序微件
    */
-  function __initSort() {
+  function _initSort() {
     $ul
       //防止拖动开始时高度减小导致的抖动
       .mousedown(function (e) {
@@ -2112,7 +2156,7 @@
    * 初始化条目创建菜单的点击响应
    * @private
    */
-  function __initMenu() {
+  function _initMenu() {
     $('.Contents').on('click', '.Menu li>button', function () {
       var $li = $(this).closest('.WidgetItemList>li');
       createWidget($(this).data('type'), {
@@ -2121,27 +2165,19 @@
     });
   }
 
-  /**
-   * 入口函数，必须要从服务器验证或获取topicId才能编辑总结
-   */
-  (function getTopicId() {
-    console.log('getTopicId');
-
-    $(function ($) {
-      $.validator.setDefaults({
-        debug: false,
-        ignore: "",
-        onkeyup: false,
-        onfocusout: false
-      });
-      __init();
-      __initListListener();
-      __initBand();
-      __initTop();
-      __initMenu();
-      __initSort();
+  $(function ($) {
+    $.validator.setDefaults({
+      debug: false,
+      ignore: "",
+      onkeyup: false,
+      onfocusout: false
     });
-  })();
+    _init();
+    _initListListener();
+    _initBand();
+    _initTop();
+    _initMenu();
+    _initSort();
+  });
 
-})
-  (jQuery);
+})(jQuery);

@@ -1,4 +1,4 @@
-<div class="Top">
+<div class="Band">
   <div class="Inner">
     <table>
       <td>
@@ -12,9 +12,9 @@
     </table>
   </div>
 </div>
-<div class="Head">
+<div class="Top">
   <div class="Inner">
-    <div class="HeadMain">
+    <div class="HeadMain clearfix">
       <div class="HeadThumb" style="display: <%= !locals.topic ? 'none' : !topic.coverUrl ? 'none' : 'block' %>;">
         <img width="95" height="95" onerror="shizier.errorImage(this,'image_95x95');"
              src="<%= topic.coverUrl || '' %>">
@@ -27,8 +27,7 @@
 
           <% if (locals.isAuthor) { %>
           <div class='HeadUtil'>
-            <a href="<%= !locals.topic ? '' : '/topic/' + topic._id + '/edit?showOption=true' %>"><i
-              class="icon-pencil"></i> 修改</a>
+            <a href="/topic/<%= topic._id %>/edit?editTop=1"><i class="icon-pencil"></i> 修改</a>
             <span class='VLine VLine-Util'></span>
 
             <% include _deleteBtn.html %>
@@ -37,14 +36,14 @@
           <% } %>
         </div>
 
-        <p>
+        <p class="HeadDescWrapper">
           <span style="<%= !topic.description ? 'display: none;' : '' %>"
                 class="HeadDesc text-secondary">
-            <%= !locals.topic ? '' : topic.description %>
+            <%= topic.description || '' %>
           </span>
           <span class="text-muted" style="font-size: 10px;">
             <i class="icon-edit" style="vertical-align: middle;"></i>
-            更新日期: <%= locals.topic ? topic.updateAt : '' %>
+            更新日期: <%= topic.updateAt %>
           </span>
         </p>
 
@@ -113,7 +112,7 @@
       </p>
       <% } %>
       <% if (locals.isAuthor) { %>
-      <a name="add" class="btn btn-default" href="<%= !locals.topic ? '' : topic._id + '/edit' %>" type="button"><i
+      <a name="add" class="btn btn-default" href="/topic/<%= topic._id %>/edit" type="button"><i
         class="icon-plus-sign"></i>
         添加条目</a>
       <% } %>
