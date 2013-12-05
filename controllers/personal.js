@@ -21,7 +21,7 @@ var LoginToken = require('../proxy').LoginToken;
 
 var utils = require('../public/javascripts/utils');
 
-var showWorks = function (req, res, next) {
+function showWorks(req, res, next) {
 
   //console.log(req.session);
   console.log("sort strategy: ")
@@ -67,7 +67,6 @@ var showWorks = function (req, res, next) {
       var topicsForShow = [];
       for (var i = (currentPage - 1) * 10; i < topicDetails.length && i < currentPage * 10; i++) {
         var temp = topicDetails[i];
-        temp.topicUrl = "/topic/" + topicDetails[i]._id;
         temp.create_date = topicDetails[i].create_at.getFullYear() + '年'
           + (topicDetails[i].create_at.getMonth() + 1) + '月'
           + topicDetails[i].create_at.getDate() + '日';
@@ -76,7 +75,7 @@ var showWorks = function (req, res, next) {
           + topicDetails[i].update_at.getDate() + '日';
         topicsForShow.push(temp);
       }
-      return renderWorks(res, user, topicsForShow, currentPage, totalPage, mt, mo);
+      return renderWorks(res, user, topicsForShow, currentPage, totalPage, mt, mo, topicDetails.length);
     });
   });
 }
@@ -98,7 +97,7 @@ var getAndSortTopics = function (mt, mo, topics, callback) {
   return Topic.getTopicsByIdsSorted(topics, order, callback);
 }
 
-var renderWorks = function (res, user, topicsInfos, currentPage, totalPage, mt, mo) {
+var renderWorks = function (res, user, topicsInfos, currentPage, totalPage, mt, mo, length) {
   res.render('personal/index', {
     css: [
       '/stylesheets/personal.css'
@@ -106,10 +105,10 @@ var renderWorks = function (res, user, topicsInfos, currentPage, totalPage, mt, 
     personalType: 'WORKS',
     username: user.loginName,
     favourite: user.favourite,
-    topicCount: user.topicCount,
-    topicsPageView: user.pageviewCount,
-    topics: topicsInfos,
     imageUrl: user.url,
+    topicsPageView: user.pageviewCount,
+    topicCount: length,
+    topics: topicsInfos,
     currentPage: currentPage,
     totalPage: totalPage,
     mt: mt,
@@ -542,7 +541,7 @@ var accountModify = function (req, res) {
 }
 
 
-var showPersonal = function (req, res, next) {
+function showPersonal(req, res, next) {
 
   //before render: check whether visitor is itself or not.
   //if so, jump to works page.
@@ -593,10 +592,6 @@ var showPersonal = function (req, res, next) {
       next(err);
     } else {
       //found the author information in DB
-
-      //todo: revise thisUrl
-      var thisUrl = "http://" + config.host + ':' + config.port + req.url;
-      var baseUrl = thisUrl.split('?')[0];
 
       //if the description contains some text url link.
       var description = user.description;
@@ -651,8 +646,7 @@ var showPersonal = function (req, res, next) {
           var topicsForShow = [];
           for (var i = (currentPage - 1) * 9; i < topicsInfo.length && i < currentPage * 9; i++) {
             var temp = topicsInfo[i];
-            temp.topicUrl = "/topic/" + topicsInfo[i]._id;
-            temp.create_date = topicsInfo[i].create_at.getFullYear() + '年'
+            topicsInfo[i].create_date = topicsInfo[i].create_at.getFullYear() + '年'
               + (topicsInfo[i].create_at.getMonth() + 1) + '月'
               + topicsInfo[i].create_at.getDate() + '日';
             topicsForShow.push(temp);
@@ -669,12 +663,10 @@ var showPersonal = function (req, res, next) {
             authorImage: user.url,
             authorDescription: description,
             authorPersonalUrl: user.personalSite,
-            topicCount: user.topicCount,
+            topicCount: topicsInfo.length,
             topicsPageView: user.pageviewCount,
             favourite: user.favourite,
             topics: topicsForShow,
-            thisUrl: thisUrl,
-            thisUrlJoin: baseUrl + '?type=J',
             sortOrder: sortOrder,
             totalPage: totalPage,
             currentPage: currentPage,
@@ -696,24 +688,23 @@ var getandSortTopicsforShow = function (sortName, topics, callback) {
   if (sortName == 'U') {
     //according to update time
     //this is default
-    return Topic.getTopicsByIdsSorted(topics, '-update_at', callback);
+    return Topic.getPublishedTopics(topics, '-update_at', callback);
   }
   else if (sortName == 'F') {
     //accordiing to liked count
     //todo: changed to favourite count.
-    return Topic.getTopicsByIdsSorted(topics, '-FVCount', callback);
+    return Topic.getPublishedTopics(topics, '-FVCount', callback);
   } else if (sortName == 'N') {
     //according to Name
-    return Topic.getTopicsByIdsSorted(topics, 'title', callback);
+    return Topic.getPublishedTopics(topics, 'title', callback);
   }
 }
 
-
-var AddorRemoveLikes = function (req, res) {
+function AddorRemoveLikes(req, res) {
   console.log("add or remove likes");
   console.log("req Body: %s", req.body);
 
-  var authorName = req.body.url.split('/').pop();
+  var authorName = req.body.authorName;
 
   //default true case means from unlogin --> login situation.
   //this also makes the duplication check necessary in later part.
@@ -723,7 +714,6 @@ var AddorRemoveLikes = function (req, res) {
   var viewerId = req.session.userId;
   //console.log("current User");
   console.log(req.currentUser);
-
 
   //extract the author model and update the  favourite and favouriteList.
   User.getUserByLoginName(authorName, function (err, author) {
@@ -820,22 +810,7 @@ var AddorRemoveLikes = function (req, res) {
 
 }
 
-
-var showFavourite = function (req, res) {
-  if (req.session && req.session.userId && req.session.userId !== 'undefined') {
-    console.log('render show favourite page');
-    res.render('personal/favourite', {
-      css: [
-        '/stylesheets/personal.css'
-      ]
-    });
-  } else {
-    return res.redirect('/home');
-  }
-
-}
 exports.showWorks = showWorks;
-exports.showFavourite = showFavourite;
 exports.showSettings = showSettings;
 exports.updateSettings = updateSettings;
 exports.showConfirmPassword = showConfirmPassword;

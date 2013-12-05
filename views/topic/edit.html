@@ -1,26 +1,27 @@
 <div class="Band">
   <div class="Inner">
-    <table class='Band_Ttl'>
-      <td>
-        <h5><%= locals.topic ? '修改' : '创建' %>总结</h5>
-      </td>
-    </table>
     <table class="Band_Btn">
       <td>
-        <% if (locals.topic && topic.publishDate) { %>
-        <button name="save" class='btn btn-small btn-success'
-                data-loading-text="保存 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;" type="button">保存
-        </button>
-        <% } else { %>
-        <button name="saveDraft" class='btn btn-small btn-inverse'
-                data-loading-text="保存草稿 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;" type="button">保存草稿
-        </button>
-        <button name="publish" class='btn btn-small btn-success'
+        <% if (!topic.publishDate) { %>
+        <button name="publish" class='btn btn-small btn-danger'
                 data-loading-text="发布 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;" type="button">发布
         </button>
         <% } %>
-        <button name="cancel" class='btn btn-small' type="button"
-                onclick="if (history.length > 1) history.back(); else location.href = '/';">返回</button>
+        <a class='btn btn-small btn-default'
+           href="<%= topic.publishDate ? '/topic/' + topic._id : '/works' %>">
+          完成<%= topic.publishDate ? '' : '草稿' %>
+        </a>
+      </td>
+    </table>
+    <table class='Band_Ttl'>
+      <td>
+        <h5>
+          <b>编辑总结<%= topic.publishDate ? '' : '（草稿）' %></b>
+          <span id="_asterisk" style="display: none;">*</span>
+          <span id="_saved" style="display: none;" class="text-muted">- 所有修改都已保存，可以直接离开本页面</span>
+          <span id="_error" style="display: none;" class="text-danger">- 操作失败，请刷新页面撤销刚才的修改</span>
+          <span id="_loading" style="display: none;" class="text-muted">- 请稍候 <i class='icon-spinner icon-spin'></i></span>
+        </h5>
       </td>
     </table>
   </div>
@@ -35,7 +36,16 @@
             <input name='title' class="" value="<%= !locals.topic ? '' : topic.title || '' %>"
                    placeholder="输入总结标题（50字以内）" type="text"/></td>
           <td>
-            <button class="btn btn-link" name="options" style='display: none;vertical-align: baseline;' type="button">可选项目
+            <div id="_saveSet" class="BtnSet">
+              <button class="btn btn-inverse btn-mini" name="save" type="button"
+                      data-loading-text="保存 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;">
+                保存
+              </button>
+              <button class="btn btn-mini" name="cancel" type="button">
+                放弃
+              </button>
+            </div>
+            <button class="btn btn-link text-muted" name="options" type="button">可选项目
               <i class="icon-caret-down"></i>
             </button>
           </td>
@@ -51,8 +61,9 @@
           <div class="Image">
             <i class="icon-camera"></i>
           </div>
-          <img style="display: block;" width="95" height="95" onerror="shizier.errorImage(this, 'image_95x95')"
-               src="<%= !locals.topic ? '' : topic.coverUrl || '' %>">
+          <img style="display: block;" width="95" height="95"
+               onerror="shizier.errorImage(this, 'default_120x120', true)"
+               src="<%= topic.coverUrl || '' %>">
         </button>
 
         <div class="Edit_Top_Thumb_Extra">
@@ -71,11 +82,9 @@
         </div>
       </fieldset>
     </form>
-    <table class="StaticMenu">
 
-      <% include _menu.html %>
+    <% include _menu.html %>
 
-    </table>
   </div>
 </div>
 
@@ -98,17 +107,6 @@
       </form>
 
       <div class="Widget">
-
-        <div class="Content MENU">
-          <table>
-
-            <% include _menu.html %>
-
-            <td class="MENU_Close">
-              <i name="cancel" class="icon-remove" title="关闭"></i>
-            </td>
-          </table>
-        </div>
 
         <div class='Content LINK_CREATE'>
           <div class="Required"></div>
@@ -133,7 +131,7 @@
           <div class="Thumb clearfix">
             <div class="Image">
               <div style="position: relative;display: inline-block;">
-                <img onerror="shizier.errorImage(this, 'photo_150x150');">
+                <img onerror="shizier.errorImage(this, 'default_120x120', true);">
 
                 <div class="Loading"
                      style="position: absolute;top: 0;left: 0;bottom: 0;right: 0;background-color: rgba(0,0,0,0.2);">
@@ -172,7 +170,7 @@
 
         <div class='Content IMAGE_CREATE'>
           <div class="Image">
-            <i class="icon-camera"></i>
+            <i class="icon-picture"></i>
           </div>
           <div style="overflow: hidden;">
             <div class="Required" style="float: left;"></div>
@@ -192,7 +190,7 @@
 
         <div class='Content IMAGE'>
           <div class="Image">
-            <img onerror="shizier.errorImage(this,'default_120x120');">
+            <img onerror="shizier.errorImage(this, 'default_120x120', true);">
           </div>
 
           <div style="overflow: hidden;">

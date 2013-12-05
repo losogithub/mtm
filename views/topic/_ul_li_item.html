@@ -4,9 +4,11 @@
   <% include _ul_li_item_contents.html %>
   <% } %>
 
-  <div class='BottomUtil' style="overflow: hidden;">
+  <div class='BottomUtil clearfix'>
     <div class='ItemUtil1'>
-      <button class="INSERT btn btn-link text-muted" type="button"><i class="icon-caret-down"></i> 插入</button>
+
+      <% include _menu.html %>
+
     </div>
     <div class='ItemUtil2'>
       <button class="EDIT btn btn-link text-muted" type="button"><i class="icon-pencil"></i> 修改</button>

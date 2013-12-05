@@ -19,19 +19,27 @@ var NewTopic = require('./newTopics');
  * @param userId
  * @param callback
  */
-function createTopic(userId, callback) {
+function createTopic(authorId, callback) {
+  callback = callback || function () {
+  };
   var ep = EventProxy.create('topic', 'voidItem', function (topic) {
-    if (typeof callback === 'function') {
-      callback(null, topic);
-    }
+    callback(null, topic);
   })
     .fail(callback);
 
   var topic = new TopicModel();
-  topic.author_id = userId;
-  topic.save(ep.done('topic'));
 
   Item.createVoidItem(topic, ep.done('voidItem'));
+
+  User.appendTopic(authorId, topic._id, ep.done(function (author) {
+    if (!author) {
+      ep.emit('error', new Error('作者不存在'))
+      return;
+    }
+    topic.author_id = authorId;
+    topic.author_name = author.loginName;
+    topic.save(ep.done('topic'));
+  }));
 }
 
 /**
@@ -65,7 +73,7 @@ function increasePVCountBy(topic, increment, callback) {
  * 获取人气总结
  */
 function getAllTopics(callback) {
-  TopicModel.find({ publishDate: { $ne: null } })
+  TopicModel.find({ publishDate: { $exists: true } })
     //.sort('-_id')
     .exec(callback);
 }
@@ -80,46 +88,26 @@ function getAllTopics(callback) {
  * @param publish
  * @param callback
  */
-function saveTopic(authorId, topicId, title, coverUrl, description, publish, callback) {
-  var ep = new EventProxy().fail(callback);
+function saveTopic(topic, title, coverUrl, description, publish, callback) {
+  callback = callback || function () {
+  };
 
-  TopicModel.findById(topicId, ep.done(function (topic) {
-    if (!topic) {
-      ep.emit('error', new Error('总结不存在'));
-      return;
+  topic.title = title;
+  topic.cover_url = coverUrl;
+  topic.description = description;
+  topic.update_at = Date.now();
+  if (publish) {
+    topic.publishDate = new Date();
+  }
+  topic.save(function (err) {
+    if (err) {
+      return callback(err);
     }
-
-    User.appendTopic(authorId, topicId, ep.done(function (author) {
-      if (!author) {
-        ep.emit('error', new Error('作者不存在'))
-        return;
-      }
-
-      topic.author_id = authorId;
-      topic.author_name = author.loginName;
-      topic.title = title;
-      topic.cover_url = coverUrl;
-      topic.description = description;
-      topic.update_at = Date.now();
-      if (publish) {
-        topic.draft = false;
-        topic.publishDate = new Date();
-      } else if (!topic.publishDate) {
-        topic.draft = true;
-      }
-      topic.save(ep.done(function () {
-        //add: 11.07 2013 add the published topic to new topics db.
-        //But this maybe not new topics here !!!
-        // in matome, it calls update list.
-        if (publish || topic.publishDate) {
-          NewTopic.saveNewTopic(topic);
-        }
-        if (typeof callback === 'function') {
-          callback(null, topic);
-        }
-      }));
-    }));
-  }));
+    callback(null, topic);
+    if (topic.publishDate) {
+      NewTopic.saveNewTopic(topic);
+    }
+  });
 }
 
 /**
@@ -128,34 +116,18 @@ function saveTopic(authorId, topicId, title, coverUrl, description, publish, cal
  * @param topicId
  * @param callback
  */
-function deleteTopic(authorId, topicId, callback) {
+function deleteTopic(topic, callback) {
   callback = callback || function () {
   };
-  TopicModel.findById(topicId, function (err, topic) {
-    if (err) {
-      callback(err);
-      return;
-    }
-    if (!topic) {
-      callback(new Error(404));
-      return;
-    }
-    if (topic.author_id != authorId) {
-      callback(new Error(403));
-      return;
-    }
 
-    topic.remove(function (err) {
-      if (err) {
-        callback(err);
-        return;
-      }
-      callback(null, topic);
-      Item.deleteItemList(topic.void_item_id, callback);
-      User.deleteTopic(authorId, topicId);
-      NewTopic.deleteNewTopic(topicId);
-      return;
-    });
+  topic.remove(function (err) {
+    if (err) {
+      return callback(err);
+    }
+    callback(null, topic);
+    Item.deleteItemList(topic.void_item_id, callback);
+    User.deleteTopic(topic.author_id, topic._id);
+    NewTopic.deleteNewTopic(topic._id);
   });
 }
 
@@ -174,6 +146,12 @@ function getTopicsByIdsSorted(topicIds, opt, callback) {
     .exec(callback);
 }
 
+function getPublishedTopics(topicIds, opt, callback) {
+  TopicModel.find({'_id': {"$in": topicIds}, publishDate: {$exists: true}})
+    .sort(opt)
+    .exec(callback);
+}
+
 exports.createTopic = createTopic;//增
 exports.getContents = getContents;//查
 exports.increaseItemCountBy = increaseItemCountBy;
@@ -183,3 +161,4 @@ exports.saveTopic = saveTopic;//改
 exports.deleteTopic = deleteTopic;//删
 exports.getTopicById = getTopicById;//查
 exports.getTopicsByIdsSorted = getTopicsByIdsSorted;
+exports.getPublishedTopics = getPublishedTopics;

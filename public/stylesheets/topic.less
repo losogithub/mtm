@@ -100,8 +100,7 @@
   height: 37px; background-color: rgb(245, 245, 245); border-bottom: 1px solid rgb(231, 231, 231);
   li {
     display: inline;
-    a { color: rgb(76, 76, 76); }
-    i { vertical-align: middle; padding: 0 4px; }
+    i { font-size: 12px; }
   }
 }
 
@@ -118,7 +117,6 @@
           margin-bottom: 7px;
           .HeadTtl {
             display: inline; font-size: 32px; line-height: 38px; margin-right: 15px;
-            a { color: rgb(0, 0, 0); }
           }
           .HeadUtil { display: inline-block; }
         }
@@ -131,6 +129,15 @@
               display: inline-block; width: 30px; height: 30px; margin-right: 10px;
             }
             .HeadUserName { font-weight: bold; }
+          }
+          #bdshare {
+            &, *,
+            *:before,
+            *:after {
+              -webkit-box-sizing: content-box;
+              -moz-box-sizing: content-box;
+              box-sizing: content-box;
+            }
           }
         }
       }

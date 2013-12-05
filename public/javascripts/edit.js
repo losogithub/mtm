@@ -10,6 +10,8 @@
 
   var console = window.console || {log: $.noop, error: $.noop};
 
+  var INPUT_EVENTS = 'input blur mousedown mouseup keydown keypress keyup';
+
   function fillVideo($li, url, vid) {
     var quote = shizier.utils.getVideoQuote(url);
     var temp;
@@ -82,7 +84,11 @@
         prevItemType: prevItemType,
         prevItemId: prevItemId
       }
-    });
+    })
+      .done(function () {
+        savedOnce = true;
+      })
+      .fail(notifyFail);
   }
 
   /**
@@ -111,10 +117,10 @@
   $.widget('shizier.editWidget', {
 
     type: undefined,
+    xhr: undefined,
 
     options: {
-      id: undefined,
-      from: ''
+      id: undefined
     },
 
     _create: function () {
@@ -125,6 +131,7 @@
         .addClass(this.type)
         .data('type', this.type)
         .data('id', this.options.id)
+        //防止slideDown动画期间获取焦点时的滚动
         .scroll(function () {
           self.widget().scrollTop(0);
         })
@@ -206,6 +213,10 @@
     remove: function () {
       console.log('remove');
 
+      if (this.xhr) {
+        console.log('abort');
+        this.xhr.abort();
+      }
       this.disable();
       //如果是新建的就删除dom元素，否则是修改就新建条目dom元素
       var id = this.widget().data('id');
@@ -232,7 +243,7 @@
       var self = this;
       if (this.widget().find('form').data('submitType') == 'preview') {
         this.widget().find('button[name="preview"]').button('loading');
-        this.preview();
+        this.xhr = this.preview();
       } else {
         this.widget().find('button[name="save"]').button('loading');
         this.widget().find('button[name="preview"]')
@@ -242,7 +253,7 @@
             .addClass('disabled')
             .attr('disabled', 'disabled');
         }, 0);
-        this.save();
+        this.xhr = this.save();
       }
     },
 
@@ -253,6 +264,7 @@
         if (self.options.disabled) {
           return;
         }
+        savedOnce = true;
         self.disable();
         self.widget().hiddenSlideUp(function () {
           $(this).remove();
@@ -260,12 +272,22 @@
         createItem(self.widget().prev(), self.type.replace('_CREATE', ''), data.itemId, data);
         setState('default');
       };
+      var fail = function (jqXHR, textStatus) {
+        console.error(jqXHR.responseText);
+        console.error(textStatus);
+        if (textStatus != 'abort') {
+          retryMessenger();
+        }
+        self.widget().find('button[name="save"]').button('reset');
+        self.widget().find('button[name="preview"]').button('reset');
+      };
 
       //如果是修改则传itemId，否则是新建则传prevId
       var data = this._getCommitData();
       var id = this.widget().data('id');
+      var xhr;
       if (id) {
-        $.ajax('/topic/item', {
+        xhr = $.ajax('/topic/item', {
           type: 'PUT',
           data: $.extend({
             topicId: topicId,
@@ -273,27 +295,20 @@
             type: self.type
           }, data)
         }).done(doneCallback)
-          .fail(function (jqXHR) {
-            alert(jqXHR.responseText);
-            self.widget().find('button[name="save"]').button('reset');
-            self.widget().find('button[name="preview"]').button('reset');
-          });
+          .fail(fail);
       } else {
         var prevItemType = this.widget().prev().data('type');
         var prevItemId = this.widget().prev().data('id');
-        $.post('/topic/item', $.extend({
+        xhr = $.post('/topic/item', $.extend({
             topicId: topicId,
             prevItemType: prevItemType,
             prevItemId: prevItemId,
             type: self.type
           }, data))
           .done(doneCallback)
-          .fail(function (jqXHR) {
-            alert(jqXHR.responseText);
-            self.widget().find('button[name="save"]').button('reset');
-            self.widget().find('button[name="preview"]').button('reset');
-          });
+          .fail(fail);
       }
+      return xhr;
     },
 
     preview: $.noop,
@@ -306,32 +321,10 @@
     createPreviewWidget: function (data) {
       var type = this.type.replace('_CREATE', '');
       createWidget(type, $.extend({
-        from: this.options.from,
         type: type,
-        $prevItem: this.widget().prev(),
         $li: this.widget()
       }, data));
       setState('edit');
-    }
-
-  });
-
-  /*
-   * 定义微件：动态菜单
-   */
-  $.widget('shizier.menuWidget', $.shizier.editWidget, {
-
-    type: 'MENU',
-
-    __create: function () {
-      var self = this;
-      this.widget()
-        .on('click', 'li>button', function (event) {
-          createWidget($(event.target).data('type'), {
-            from: 'DYNAMIC',
-            $prevItem: self.widget().prev()
-          });
-        });
     }
 
   });
@@ -342,7 +335,8 @@
   $.widget('shizier.linkWidget', $.shizier.editWidget, {
 
     type: 'LINK',
-    noImgSrc: '/images/no_img/photo_150x150.png',
+    defaultImgSrc: '/images/no_img/photo_150x150.png',
+    noImgSrc: '/images/no_img/default_120x120.png',
     index: -1,
 
     options: {
@@ -393,7 +387,7 @@
 
         self.widget()
           .find('.Image img')
-          .attr('src', !(self.options.srcs && self.options.srcs.length) ? self.noImgSrc : self.options.srcs[self.index])
+          .attr('src', (!self.options.srcs || !self.options.srcs.length) ? self.defaultImgSrc : self.options.srcs[self.index])
           .end()
           .find('.Image .Loading')
           .show()
@@ -440,13 +434,13 @@
         .end()
         .find('input[name="title"]')
         .val(this.options.title)
-        .on('input blur mousedown mouseup keydown keypress keyup', this.options.from != 'EDIT' ? $.noop : function (event) {
+        .on(INPUT_EVENTS, !this.options.id ? $.noop : function (event) {
           self.stateHandler(self.options.title, event);
         })
         .end()
         .find('textarea[name="snippet"]')
         .val(this.options.snippet)
-        .on('input blur mousedown mouseup keydown keypress keyup', this.options.from != 'EDIT' ? $.noop : function (event) {
+        .on(INPUT_EVENTS, !this.options.id ? $.noop : function (event) {
           self.stateHandler(self.options.snippet, event);
         })
         .end()
@@ -473,7 +467,7 @@
           if ($(this).is(':checked')) {
             self.widget()
               .find('.Image img')
-              .attr('src', self.noImgSrc)
+              .attr('src', self.defaultImgSrc)
               .end();
           } else {
             _increaseIndex(0);
@@ -487,7 +481,7 @@
         .end()
         .find('textarea[name="description"]')
         .val(this.options.description)
-        .on('input blur mousedown mouseup keydown keypress keyup', this.options.from != 'EDIT' ? $.noop : function (event) {
+        .on(INPUT_EVENTS, !this.options.id ? $.noop : function (event) {
           self.stateHandler(self.options.description, event);
         })
         .end();
@@ -506,7 +500,7 @@
           },
           showErrors: function (errorMap, errorList) {
             if (errorList.length) {
-              alert(errorMap.title || errorMap.summary || errorMap.description);
+              alertMessenger(errorMap.title || errorMap.summary || errorMap.description);
             }
           },
           rules: {
@@ -547,7 +541,7 @@
         url: this.options.url,
         title: this.widget().find('input[name="title"]').val(),
         snippet: this.widget().find('textarea[name="snippet"]').val(),
-        src: src == this.noImgSrc ? undefined : src,
+        src: (src == this.defaultImgSrc || src == this.noImgSrc) ? undefined : src,
         description: this.widget().find('textarea[name="description"]').val()
       }
     },
@@ -585,7 +579,7 @@
       //监听文本改变事件
       this.widget()
         .find('input')
-        .on('input blur mousedown mouseup keydown keypress keyup', function () {
+        .on(INPUT_EVENTS, function () {
           var $preview = self.widget().find('button[name="preview"]');
           if (this.value) {
             $preview.removeAttr('disabled');
@@ -608,7 +602,7 @@
         },
         showErrors: function (errorMap, errorList) {
           if (errorList.length) {
-            alert(errorMap.url);
+            alertMessenger(errorMap.url);
           }
         },
         rules: {
@@ -628,7 +622,6 @@
 
     preview: function () {
       var self = this;
-      var url = this.widget().find('input').val();
 
       var callback = function (data) {
         if (self.options.disabled) {
@@ -636,15 +629,19 @@
         }
         self.createPreviewWidget(data);
       };
-      $.getJSON('/topic/link_detail', { url: url }, callback)
+      return $.getJSON('/topic/link_detail', this._getCommitData(), callback)
         .done(function (data) {
           if (self.options.disabled) {
             return;
           }
           self.createPreviewWidget(data);
         })
-        .fail(function (jqXHR) {
-          alert(jqXHR.responseText);
+        .fail(function (jqXHR, textStatus) {
+          console.error(jqXHR.responseText);
+          console.error(textStatus);
+          if (textStatus != 'abort') {
+            retryMessenger();
+          }
           self.widget().find('button[name="preview"]').button('reset');
         });
     },
@@ -689,19 +686,19 @@
         .end()
         .find('input[name="title"]')
         .val(this.options.title)
-        .on('input blur mousedown mouseup keydown keypress keyup', this.options.from != 'EDIT' ? $.noop : function (event) {
+        .on(INPUT_EVENTS, !this.options.id ? $.noop : function (event) {
           self.stateHandler(self.options.title, event);
         })
         .end()
         .find('input[name="quote"]')
         .val(this.options.quote)
-        .on('input blur mousedown mouseup keydown keypress keyup', this.options.from != 'EDIT' ? $.noop : function (event) {
+        .on(INPUT_EVENTS, !this.options.id ? $.noop : function (event) {
           self.stateHandler(self.options.quote, event);
         })
         .end()
         .find('textarea[name="description"]')
         .val(this.options.description)
-        .on('input blur mousedown mouseup keydown keypress keyup', this.options.from != 'EDIT' ? $.noop : function (event) {
+        .on(INPUT_EVENTS, !this.options.id ? $.noop : function (event) {
           self.stateHandler(self.options.description, event);
         })
         .end();
@@ -720,7 +717,7 @@
           },
           showErrors: function (errorMap, errorList) {
             if (errorList.length) {
-              alert(errorMap.title || errorMap.quote || errorMap.description);
+              alertMessenger(errorMap.title || errorMap.quote || errorMap.description);
             }
           },
           rules: {
@@ -796,7 +793,7 @@
       //监听文本改变事件
       this.widget()
         .find('input')
-        .on('input blur mousedown mouseup keydown keypress keyup', function () {
+        .on(INPUT_EVENTS, function () {
           var $preview = self.widget().find('button[name="preview"]');
           if (this.value) {
             $preview.removeAttr('disabled');
@@ -819,7 +816,7 @@
         },
         showErrors: function (errorMap, errorList) {
           if (errorList.length) {
-            alert(errorMap.url);
+            alertMessenger(errorMap.url);
           }
         },
         rules: {
@@ -883,13 +880,13 @@
         .end()
         .find('input[name="title"]')
         .val(this.options.title)
-        .on('input blur mousedown mouseup keydown keypress keyup', this.options.from != 'EDIT' ? $.noop : function (event) {
+        .on(INPUT_EVENTS, !this.options.id ? $.noop : function (event) {
           self.stateHandler(self.options.title, event);
         })
         .end()
         .find('textarea[name="description"]')
         .val(this.options.description)
-        .on('input blur mousedown mouseup keydown keypress keyup', this.options.from != 'EDIT' ? $.noop : function (event) {
+        .on(INPUT_EVENTS, !this.options.id ? $.noop : function (event) {
           self.stateHandler(self.options.description, event);
         })
         .end();
@@ -908,7 +905,7 @@
           },
           showErrors: function (errorMap, errorList) {
             if (errorList.length) {
-              alert(errorMap.title || errorMap.description);
+              alertMessenger(errorMap.title || errorMap.description);
             }
           },
           rules: {
@@ -939,6 +936,7 @@
     _getCommitData: function () {
       return {
         url: this.options.url,
+        vid: this.options.vid,
         title: this.widget().find('input[name="title"]').val(),
         description: this.widget().find('textarea[name="description"]').val()
       }
@@ -951,6 +949,7 @@
     _getOriginalData: function () {
       return {
         url: this.options.url,
+        vid: this.options.vid,
         title: this.options.title,
         description: this.options.description
       }
@@ -975,7 +974,7 @@
       //监听文本改变事件
       this.widget()
         .find('input')
-        .on('input blur mousedown mouseup keydown keypress keyup', function () {
+        .on(INPUT_EVENTS, function () {
           var $preview = self.widget().find('button[name="preview"]');
           if (this.value) {
             $preview.removeAttr('disabled');
@@ -999,7 +998,7 @@
           },
           showErrors: function (errorMap, errorList) {
             if (errorList.length) {
-              alert(errorMap.url);
+              alertMessenger(errorMap.url);
             }
           },
           rules: {
@@ -1019,7 +1018,6 @@
 
     preview: function () {
       var self = this;
-      var url = this.widget().find('input').val();
 
       var callback = function (data) {
         if (self.options.disabled) {
@@ -1028,15 +1026,19 @@
         self.createPreviewWidget(data);
       };
 
-      $.getJSON('/topic/video_detail', { url: url }, callback)
+      return $.getJSON('/topic/video_detail', this._getCommitData(), callback)
         .done(function (data) {
           if (self.options.disabled) {
             return;
           }
           self.createPreviewWidget(data);
         })
-        .fail(function (jqXHR) {
-          alert(jqXHR.responseText);
+        .fail(function (jqXHR, textStatus) {
+          console.error(jqXHR.responseText);
+          console.error(textStatus);
+          if (textStatus != 'abort') {
+            retryMessenger();
+          }
           self.widget().find('button[name="preview"]').button('reset');
         });
     },
@@ -1079,25 +1081,25 @@
       this.widget()
         .find('textarea[name="cite"]')
         .val(this.options.cite)
-        .on('input blur mousedown mouseup keydown keypress keyup', function (event) {
+        .on(INPUT_EVENTS, function (event) {
           self.stateHandler(self.options.cite, event);
         })
         .end()
         .find('input[name="url"]')
         .val(this.options.url)
-        .on('input blur mousedown mouseup keydown keypress keyup', function (event) {
+        .on(INPUT_EVENTS, function (event) {
           self.stateHandler(self.options.url, event);
         })
         .end()
         .find('input[name="title"]')
         .val(this.options.title)
-        .on('input blur mousedown mouseup keydown keypress keyup', function (event) {
+        .on(INPUT_EVENTS, function (event) {
           self.stateHandler(self.options.title, event);
         })
         .end()
         .find('textarea[name="description"]')
         .val(this.options.description)
-        .on('input blur mousedown mouseup keydown keypress keyup', function (event) {
+        .on(INPUT_EVENTS, function (event) {
           self.stateHandler(self.options.description, event);
         })
         .end();
@@ -1116,7 +1118,7 @@
           },
           showErrors: function (errorMap, errorList) {
             if (errorList.length) {
-              alert(errorMap.cite || errorMap.url || errorMap.title || errorMap.description);
+              alertMessenger(errorMap.cite || errorMap.url || errorMap.title || errorMap.description);
             }
           },
           rules: {
@@ -1206,7 +1208,7 @@
       this.widget()
         .find('textarea')
         .val(this.options.text)
-        .on('input blur mousedown mouseup keydown keypress keyup', function (event) {
+        .on(INPUT_EVENTS, function (event) {
           self.stateHandler(self.options.text, event);
         })
         .end();
@@ -1224,7 +1226,7 @@
         },
         showErrors: function (errorMap, errorList) {
           if (errorList.length) {
-            alert(errorMap.text);
+            alertMessenger(errorMap.text);
           }
         },
         rules: {
@@ -1285,7 +1287,7 @@
       this.widget()
         .find('input')
         .val(this.options.title)
-        .on('input blur mousedown mouseup keydown keypress keyup', function (event) {
+        .on(INPUT_EVENTS, function (event) {
           self.stateHandler(self.options.title, event);
         })
         .end();
@@ -1303,7 +1305,7 @@
         },
         showErrors: function (errorMap, errorList) {
           if (errorList.length) {
-            alert(errorMap.title);
+            alertMessenger(errorMap.title);
           }
         },
         rules: {
@@ -1344,19 +1346,99 @@
   //数据库中该总结id
   var topicId;
   var state = 'default';
-  var from;
-  var editingWidgetName;
   var $editingWidget;
-  var $editingPrevItem;
 
-  var $form;
   var $band;
+  var $band_asterisk;
+  var $band_saved;
+  var $band_error;
+  var $band_loading;
+  var $form;
+  var $saveSet;
+  var $save;
+  var $cancel;
+  var $switch;
+  var $options;
   var $ul;
   var $templates;
+  var $title;
+  var $cover;
+  var $description;
+
+  var titleModified;
+  var coverModified;
+  var descriptionModified;
+  var topModified;
+  var title;
+  var coverUrl;
+  var description;
+  var fail;
+  var savedOnce;
+  var xhr;
+
+  function retryMessenger() {
+    Messenger().post({
+      message: '操作失败，请重试',
+      type: 'error'
+    });
+  }
+
+  function alertMessenger(msg) {
+    Messenger().post({
+      message: msg,
+      type: 'error',
+      id: "Only-one-message"
+    });
+    $(document).one('mousedown keydown', function () {
+      Messenger().hideAll();
+    });
+  }
+
+  function onStateChange() {
+    $band_asterisk.hide();
+    $band_saved.hide();
+    if (fail) {
+      $band_asterisk.show();
+      $band_error.show();
+      $('body').attr('onbeforeunload', '');
+    } else if (state != 'default' || topModified) {
+      $band_asterisk.show();
+      $('body').attr('onbeforeunload', 'return "您有尚未保存的内容";');
+    } else {
+      if (savedOnce) {
+        $band_saved.show();
+      }
+      $('body').attr('onbeforeunload', '');
+    }
+  }
+
+  function onTopStateChange() {
+    topModified = titleModified || coverModified || descriptionModified;
+    if (topModified) {
+      $saveSet.show();
+    } else {
+      $saveSet.hide();
+    }
+    onStateChange();
+  }
+
+  function onTopChange() {
+    title = $title.val();
+    coverUrl = $form.find('button[name="cover"] img').attr('src');
+    description = $description.val();
+    titleModified = coverModified = descriptionModified = false;
+    onTopStateChange();
+  }
+
+  function notifyFail() {
+    fail = true;
+    onStateChange();
+  }
 
   function setState(newState) {
     console.log(newState);
     state = newState;
+    onStateChange();
   }
 
   /**
@@ -1365,14 +1447,13 @@
    * @param options
    * @private
    */
-  var createWidget = function (type, options) {
+  function createWidget(type, options) {
     console.log('createWidget');
 
     if (!type) {
       return;
     }
 
-    var newFrom = options.from;
     var $prevItem = options.$prevItem;
     var $li = options.$li;
 
@@ -1385,18 +1466,17 @@
     var oldState = state;
 
     //删除编辑中的微件
-    if (state != 'default'
-      && editingWidgetName
-      && $editingWidget.is(':data("shizier-' + editingWidgetName + '")')) {
-      $editingWidget[editingWidgetName]('remove');
+    if (state != 'default') {
+      $editingWidget[$editingWidget.data('type').toLowerCase() + 'Widget']('remove');
     }
 
-    //编辑中的微件和目标微件:类型相同、来源相同，只需给输入框焦点
+    //编辑中的微件和目标微件:类型相同、来源相同，删了可以直接返回了
     if (oldState == 'create'
       && $editingWidget.data('type') == type
-      && from == newFrom
-      && (newFrom == 'STATIC'
-      || newFrom == 'INSERT' && $editingPrevItem.is($prevItem))) {
+      && $prevItem
+      && !$editingWidget.data('id')
+      && ($prevItem.is($editingWidget.prev())
+      || (!$prevItem.length && !$editingWidget.prev().length))) {
 
       return;
     }
@@ -1407,25 +1487,21 @@
       });
     }
 
-    //如果是修改就用原条目新建微件，否则是插入就复制新的li元素
-    var $editWidget = $templates.find('>ul>li').clone();
+    var $widget = $templates.find('>ul>li').clone();
     //如果是动态插入就插入前趋条目的后面，否则是静态插入就插入最前面
     if ($prevItem && $prevItem.length) {
-      $prevItem.after($editWidget);
+      $prevItem.after($widget);
+    } else if ($li && $li.length && $li.prev().length) {
+      $li.prev().after($widget);
     } else {
-      $ul.prepend($editWidget);
+      $ul.prepend($widget);
     }
 
     //根据类型选择微件，并保存调用微件方法的函数
-    console.log('_createEditWidget ' + type);
-    editingWidgetName = type.toLowerCase() + 'Widget';
-    $editWidget[editingWidgetName](options);
-
-    console.log('create');
-    state = 'create';
-    from = newFrom;
-    $editingWidget = $editWidget;
-    $editingPrevItem = $prevItem;
+    setState('create');
+    $editingWidget = $widget;
+    $widget[type.toLowerCase() + 'Widget'](options);
+    console.log('createWidget ' + type);
   }
 
   /**
@@ -1541,6 +1617,9 @@
         fillVideo($item, url, vid);
 
         $item
+          .find('.Content')
+          .data('vid', vid)
+          .end()
           .find('.VIDEO_URL')
           .attr('href', url)
           .end()
@@ -1610,6 +1689,24 @@
   }
 
   function __init() {
+    $._messengerDefaults = {
+      extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right'
+    }
+    topicId = location.pathname.match(/^\/topic\/([0-9a-f]{24})\/edit$/)[1];
+    $band = $('.Band');
+    $band_asterisk = $band.find('#_asterisk');
+    $band_saved = $band.find('#_saved');
+    $band_error = $band.find('#_error');
+    $band_loading = $band.find('#_loading');
+    $form = $('.Edit_Top form');
+    $title = $form.find('input[name="title"]');
+    $cover = $form.find('button[name="cover"] img');
+    $description = $form.find('textarea[name="description"]');
+    $saveSet = $form.find('#_saveSet');
+    $save = $saveSet.find('button[name="save"]');
+    $cancel = $saveSet.find('button[name="cancel"]');
+    $switch = $form.find('button[name="options"]');
+    $options = $form.find('fieldset:last');
     $ul = $('.WidgetItemList');
     $templates = $('.TEMPLATES');
     $('.fancybox:visible').fancybox(shizier.fancyboxOptions);
@@ -1651,14 +1748,7 @@
         }
 
         var $li = $(this).closest('li');
-        $li[editingWidgetName]('remove');
-      })
-      //绑定插入点击响应
-      .on('click', '.INSERT', function () {
-        createWidget('MENU', {
-          from: 'INSERT',
-          $prevItem: $(this).closest('li')
-        });
+        $li[$editingWidget.data('type').toLowerCase() + 'Widget']('remove');
       })
       //绑定删除点击响应
       .on('click', '.DELETE', function () {
@@ -1673,7 +1763,11 @@
             type: $li.data('type'),
             itemId: $li.data('id')
           }
-        });
+        })
+          .done(function () {
+            savedOnce = true;
+          })
+          .fail(notifyFail);
         $li.hiddenSlideUp(function () {
           $(this).remove();
         })
@@ -1704,6 +1798,7 @@
           case 'VIDEO':
             data = {
               url: $li.find('.Quote a').attr('href'),
+              vid: $li.find('.Content').data('vid'),
               title: $li.find('.Title a').text(),
               description: $('<div/>').html($li.find('.Description').html().replace(/<br>/g, '\n')).text()
             };
@@ -1729,8 +1824,6 @@
         }
         createWidget(type, $.extend({
           id: $li.data('id'),
-          from: 'EDIT',
-          $prevItem: $li.prev(),
           $li: $li
         }, data));
       })
@@ -1741,7 +1834,15 @@
    * @private
    */
   function __initBand() {
-    $band = $('.Band');
+    $(document)
+      .ajaxStart(function () {
+        $band_saved.hide();
+        $band_loading.show();
+      })
+      .ajaxStop(function () {
+        onStateChange();
+        $band_loading.hide();
+      });
 
     $(window).scroll(function () {
       if ($(this).scrollTop() >= 48) {
@@ -1751,13 +1852,15 @@
       }
     });
 
-    $band.on('click', 'button[name="save"], button[name="saveDraft"], button[name="publish"]', function (event) {
-      var $target = $(event.target);
-      var name = $target.attr('name');
-      $form
-        .data('submitType', name)
-        .submit();
-    });
+    $band.add($form).on('click',
+      'button[name="publish"], button[name="save"]',
+      function (event) {
+        var $target = $(event.target);
+        var name = $target.attr('name');
+        $form
+          .data('submitType', name)
+          .submit();
+      });
   }
 
   function ___commit() {
@@ -1768,10 +1871,10 @@
     }
 
     var coverUrl = $form.find('button[name="cover"] img').attr('src');
-    var $button = $band.find('button[name="' + submitType + '"]');
+    var $button = $band.add($form).find('button[name="' + submitType + '"]');
     $button.button('loading');
 
-    $.ajax('/topic/save', {
+    xhr = $.ajax('/topic/save', {
       type: 'PUT',
       data: {
         topicId: topicId,
@@ -1782,46 +1885,43 @@
       }
     })
       .done(function () {
-        if (submitType == 'saveDraft') {
-          alert('保存草稿成功。');
-          $button.button('reset');
-        } else {
+        savedOnce = true;
+        onTopChange();
+        if (submitType == 'publish') {
           window.location = '/topic/' + topicId;
+        } else {
+          if ($options.is(':visible')) {
+            $switch.click();
+          }
         }
       })
-      .fail(function (jqXHR) {
-        alert(jqXHR.responseText);
+      .fail(function (jqXHR, textStatus) {
+        console.error(jqXHR.responseText);
+        console.error(textStatus);
+        if (textStatus != 'abort') {
+          retryMessenger();
+        }
+      })
+      .always(function () {
         $button.button('reset');
       });
+    if (submitType == 'publish') {
+      xhr = null;
+    }
   }
 
   /**
    * 初始化总结标题，总结描述
    * @private
    */
-  var __initTop = function (topicData) {
-    $form = $('.Edit_Top form');
-
-    var coverUrl;
-
-    if (topicData) {
-      var title = topicData.title;
-      coverUrl = topicData.coverUrl;
-      var description = topicData.description;
-      $form.find('input[name="title"]').val(title ? title : '');
-      $form.find('button[name="cover"] img').attr('src', coverUrl ? coverUrl : '');
-      $form.find('textarea[name="description"]').val(description ? description : '');
-    } else {
-      coverUrl = $form.find('button[name="cover"] img').attr('src');
-    }
-
+  function __initTop() {
     $form.validate({
       submitHandler: function () {
         ___commit();
       },
       showErrors: function (errorMap, errorList) {
         if (errorList.length) {
-          alert(errorMap.title || errorMap.description);
+          alertMessenger(errorMap.title || errorMap.description);
         }
       },
       rules: {
@@ -1847,11 +1947,8 @@
       }
     });
 
-    var $button = $form.find('button[name="options"]');
-    var $options = $form.find('fieldset:last');
-
     //开关可选项目的动画
-    $button.click(function () {
+    $switch.click(function () {
       if ($(this).find('i').is('.icon-caret-down')) {
         $options.fadeSlideDown();
       } else {
@@ -1869,18 +1966,13 @@
       .hide();
 
     if (/showOption=true/.test(location.search)) {
-      $button
+      $switch
         .find('i')
-        .toggleClass('icon-caret-down icon-caret-up')
-        .end()
-        .show();
+        .toggleClass('icon-caret-down icon-caret-up');
       $options.toggle();
-    } else {
-      $button.fadeIn('slow');
     }
 
     var $thumb = $('button[name="cover"]');
-    var $img = $thumb.find('img');
     var $extra = $('.Edit_Top_Thumb_Extra');
     var $input = $extra.find('input');
     var $preview = $extra.find('button[name="preview"]');
@@ -1909,23 +2001,55 @@
         $input.focus();
       }
     });
-    $img.on('load', function () {
-      if ($img.attr('src') != '/images/no_img/image_95x95.png'
+    $cover.on('load', function () {
+      if ($cover.attr('src') != '/images/no_img/image_95x95.png'
         && autoHide) {
         hide();
       }
     });
+
     $reset.click(function () {
       hide();
-      $img.attr('src', coverUrl);
+      $cover.attr('src', coverUrl);
+      coverModified = $cover.attr('src') != coverUrl;
+      onTopStateChange();
     });
     $preview.click(function () {
       autoHide = true;
-      $img.attr('src', shizier.utils.suffixImage($input.val()));
-      if ($input.val() == '') {
+      $cover.attr('src', shizier.utils.suffixImage($input.val()));
+      coverModified = $cover.attr('src') != coverUrl;
+      if (!$input.val()) {
         hide();
       }
+      onTopStateChange();
     });
+
+    $title.on(INPUT_EVENTS, function () {
+      titleModified = $title.val() != title;
+      onTopStateChange();
+    });
+
+    $description.on(INPUT_EVENTS, function () {
+      descriptionModified = $description.val() != description;
+      onTopStateChange();
+    });
+
+    $cancel.click(function () {
+      if (xhr) {
+        xhr.abort();
+      }
+      $title.val(title);
+      $cover.attr('src', coverUrl);
+      $description.val(description);
+      titleModified = $title.val() != title;
+      coverModified = $cover.attr('src') != coverUrl;
+      descriptionModified = $description.val() != description;
+      if ($options.is(':visible')) {
+        $switch.click();
+      }
+      onTopStateChange();
+    })
+    onTopChange();
   }
 
   /**
@@ -1989,50 +2113,19 @@
    * @private
    */
   function __initMenu() {
-    $('.StaticMenu').on('click', 'li>button', function (event) {
-      createWidget($(event.target).data('type'), {
-        from: 'STATIC'
+    $('.Contents').on('click', '.Menu li>button', function () {
+      var $li = $(this).closest('.WidgetItemList>li');
+      createWidget($(this).data('type'), {
+        $prevItem: $li
       });
     });
   }
 
   /**
-   * 对于已经存在的总结，往条目列表填充服务器返回的数据
-   * @private
+   * 入口函数，必须要从服务器验证或获取topicId才能编辑总结
    */
-  function __initItems(itemsData) {
-    if (!itemsData) {
-      return;
-    }
-    var prevItem;
-    itemsData.forEach(function (itemData) {
-      prevItem = createItem(prevItem, itemData.type, itemData.itemId, itemData);
-    });
-  }
-
-  /**
-   * main function
-   * @param data
-   */
-  function _doIfGetIdDone(data) {
-    console.log('doIfGetIdDone');
-    data = data || {};
-
-    if (data.redirect) {
-      window.location.replace(data.redirect);
-      if (typeof window.history.pushState == "function") {
-        window.history.replaceState({}, document.title, window.location.href);
-      }
-      return;
-    }
-
-    if (data.topicId) {
-      topicId = data.topicId;
-      window.location.replace(window.location.pathname + "#" + topicId);
-      if (typeof window.history.pushState == "function") {
-        window.history.replaceState({}, document.title, window.location.href);
-      }
-    }
+  (function getTopicId() {
+    console.log('getTopicId');
 
     $(function ($) {
       $.validator.setDefaults({
@@ -2044,53 +2137,11 @@
       __init();
       __initListListener();
       __initBand();
-      __initTop(data.topicData);
+      __initTop();
       __initMenu();
       __initSort();
-      __initItems(data.itemsData);
     });
-  }
-
-  /**
-   * 入口函数，必须要从服务器验证或获取topicId才能编辑总结
-   */
-  (function getTopicId() {
-    console.log('getTopicId');
-
-    if (location.pathname != '/topic/create') {
-      topicId = location.pathname.match(/^\/topic\/([0-9a-f]{24})\/edit$/)[1];
-      console.log('topicId=' + topicId);
-
-      _doIfGetIdDone();
-    } else {
-      console.log('/topic/create');
-
-      (function createTopic() {
-        //#后面有16进制数字就验证id并获取items，否则获取新id
-        var jqXHR;
-        if (location.hash
-          && !isNaN(parseInt(location.hash.substr(1), 16))) {
-          topicId = location.hash.substr(1);
-          jqXHR = $.getJSON('/topic/contents', {
-            topicId: topicId
-          });
-        } else {
-          jqXHR = $.ajax('/topic/create', {
-            type: 'POST',
-            dataType: 'json'
-          });
-        }
-        jqXHR
-          .done(_doIfGetIdDone)
-          .fail(function (jqXHR) {
-            alert(jqXHR.responseText);
-            if (jqXHR.status == 500
-              && confirm('初始化总结失败：\n重试请按“确定”，忽略请按“取消”。')) {
-              createTopic();
-            }
-          });
-      })();
-    }
   })();
 
-})(jQuery);
+})
+  (jQuery);

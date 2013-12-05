@@ -28,7 +28,10 @@
     }
   };
 
-  shizier.errorImage = shizier.errorImage || function (img, name) {
+  shizier.errorImage = shizier.errorImage || function (img, name, ignoreNull) {
+    if (ignoreNull && !$(img).attr('src')) {
+      return;
+    }
     var url = '/images/no_img/' + name + '.png';
     if (url != $(img).attr('src')) {
       $(img).attr('src', url);
@@ -66,13 +69,13 @@
     $('button[name="favorite"]').click(function () {
       var $this = $(this);
       var topicId = $this.data('favorite').topicId;
-      var url = $this.data('favorite').url;
+      var authorName = $this.data('favorite').authorName;
       var toLike = !$this.is('.ExSelected');
       $.ajax({
         type: 'POST',
-        url: topicId ? '/topic/favorite' : url ? '/u/favorite' : '',
+        url: topicId ? '/topic/favorite' : authorName ? '/u/favorite' : '',
         xhrFields: { withCredentials: true },
-        data: {topicId: topicId, url: url, toLike: toLike}
+        data: {topicId: topicId, authorName: authorName, toLike: toLike}
       })
         .done(function (data) {
           console.log('done');
@@ -100,14 +103,14 @@
       var $button = $('button[name="favorite"]');
       var favorite = $button.data('favorite');
       var topicId = !favorite ? null : favorite.topicId;
-      var url = !favorite ? null : favorite.url;
+      var authorName = !favorite ? null : favorite.authorName;
       var toLike = !$button.is('.ExSelected');
       //using an ajax send to server to check for login.
       $.ajax({
         type: 'POST',
-        url: topicId ? '/topic/favorite' : url ? '/u/favorite' : '/loginDialogCheck',
+        url: topicId ? '/topic/favorite' : authorName ? '/u/favorite' : '/loginDialogCheck',
         xhrFields: { withCredentials: true },
-        data: {userName: username, password: password, rememberMe: rememberMe, topicId: topicId, url: url, toLike: toLike}
+        data: {userName: username, password: password, rememberMe: rememberMe, topicId: topicId, authorName: authorName, toLike: toLike}
       })
         .done(function (data) {
           location.reload();

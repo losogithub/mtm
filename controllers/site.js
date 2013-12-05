@@ -18,7 +18,7 @@ function index(req, res, next) {
 
 
   //2013.11.30
-  req.session._loginReferer = 'home';
+  req.session._loginReferer = '/';
   //console.log(hotTopics);
 
   //set default to the first page.

@@ -10,8 +10,8 @@ var EventProxy = require('eventproxy');
 var sanitize = require('validator').sanitize;
 var check = require('validator').check;
 var Url = require('url');
-var http = require('follow-redirects').http;
-var iconv = require('iconv-lite');
+var request = require('request');
+var Iconv = require('iconv').Iconv;
 var BufferHelper = require('bufferhelper');
 var domain = require('domain');
 
@@ -24,104 +24,22 @@ var User = require('../proxy').User;
 
 var utils = require('../public/javascripts/utils');
 
-function showCreate(req, res, next) {
-  res.set('Cache-Control', 'private, no-cache, no-store, must-revalidate, post-check=0, pre-check=0');
-  res.set('Connection', 'close');
-  res.set('Expire', '-1');
-  res.set('Pragma', 'no-cache');
-  res.render('topic/edit', {
-    title: '创建总结',
-    css: [
-      'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.css',
-      'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-buttons.css',
-      'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-thumbs.css',
-      '/stylesheets/topic.css',
-      '/stylesheets/edit.css'
-    ],
-    js: [
-      'http://cdn.bootcss.com/jquery-mousewheel/3.1.6/jquery.mousewheel.min.js',
-      'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.js',
-      'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-buttons.js',
-      'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-thumbs.js',
-      'http://cdn.bootcss.com/autosize.js/1.17.1/autosize-min.js',
-      '/javascripts/jquery-ui-1.10.3.custom.min.js',
-      'http://cdn.bootcss.com/jquery-validate/1.11.1/jquery.validate.min.js',
-      '/javascripts/utils.js',
-      '/javascripts/edit.js'
-    ]
-  });
-}
-
 function createTopic(req, res, next) {
-  console.log('createTopic=====');
   var userId = req.session.userId;
 
   Topic.createTopic(userId, function (err, topic) {
-    if (err || !topic) {
-      console.error(err.stack);
-      res.send(500, err);
+    if (err) {
+      next(err);
+      return;
+    }
+    if (!topic) {
+      next(new Error(404));
       return;
     }
 
     console.log('createTopic done');
-    console.log(topic);
-    res.json({ topicId: topic._id })
+    res.redirect('/topic/' + topic._id + '/edit');
   });
-}
-
-function getContents(req, res, next) {
-  console.log('getContents=====');
-  var userId = req.session.userId;
-  var topicId = req.query.topicId;
-
-  var ep = EventProxy.create('topic', 'items', function (topic, items) {
-    console.log('getContents done');
-    var topicData = {
-      title: topic.title,
-      coverUrl: topic.cover_url,
-      description: topic.description
-    }
-    var itemsData = [];
-    items.forEach(function (item) {
-      itemsData.push(_getItemData(item));
-    });
-    res.json({
-      topicData: topicData,
-      itemsData: itemsData
-    });
-  })
-    .fail(function (err) {
-      console.error(err.stack);
-      res.send(500, err);
-    });
-
-  Topic.getTopicById(topicId, ep.done(function (topic) {
-    if (!topic || topic.author_id != userId) {
-      ep.unbind();
-      createTopic(req, res, next);
-      return;
-    }
-
-    if (topic.publishDate) {
-      ep.unbind();
-      res.json({
-        redirect: '/topic/' + topicId + '/edit'
-      });
-      return;
-    }
-
-    ep.emit('topic', topic);
-    Topic.getContents(topic, ep.done(function (items) {
-      if (!items) {
-        ep.unbind();
-        console.error('查找总结失败');
-        res.send(500, '查找总结失败');
-        return;
-      }
-
-      ep.emit('items', items);
-    }));
-  }));
 }
 
 function showEdit(req, res, next) {
@@ -140,7 +58,6 @@ function showEdit(req, res, next) {
           callback(err);
           return;
         }
-
         if (!items) {
           callback(new Error(404));
           return;
@@ -157,6 +74,7 @@ function showEdit(req, res, next) {
     var topic = results.topic;
     var items = results.items;
     var topicData = {
+      _id: topic._id,
       title: topic.title,
       coverUrl: topic.cover_url,
       description: topic.description,
@@ -171,8 +89,9 @@ function showEdit(req, res, next) {
     res.set('Expire', '-1');
     res.set('Pragma', 'no-cache');
     res.render('topic/edit', {
-      title: '修改总结',
+      title: '编辑总结',
       css: [
+        'http://cdn.bootcss.com/messenger/1.3.3/css/messenger.css',
         'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.css',
         'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-buttons.css',
         'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-thumbs.css',
@@ -180,6 +99,7 @@ function showEdit(req, res, next) {
         '/stylesheets/edit.css'
       ],
       js: [
+        'http://cdn.bootcss.com/messenger/1.3.3/js/messenger.js',
         'http://cdn.bootcss.com/jquery-mousewheel/3.1.6/jquery.mousewheel.min.js',
         'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.js',
         'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-buttons.js',
@@ -361,6 +281,7 @@ function _getData(req) {
     case 'VIDEO_CREATE':
     case 'VIDEO':
       var url = sanitize(req.body.url).trim();
+      var vid = sanitize(req.body.vid).trim();
       var title = sanitize(req.body.title).trim();
       var description = sanitize(req.body.description).trim();
 
@@ -370,6 +291,7 @@ function _getData(req) {
 
       data = {
         url: url,
+        vid: vid,
         title: title,
         description: description
       }
@@ -560,13 +482,11 @@ function createItem(req, res, next) {
   try {
     var data = _getData(req);
   } catch (err) {
-    console.error(err.stack);
-    res.send(500, err);
+    next(err);
     return;
   }
   if (!data) {
-    console.error('创建条目失败');
-    res.send(500, '创建条目失败');
+    next(new Error(500));
     return;
   }
 
@@ -619,6 +539,8 @@ function createItem(req, res, next) {
         Topic.increaseItemCountBy(topic, 1).exec();
         callback(null, item);
       });
+      topic.update_at = Date.now();
+      topic.save();
     }]
   }, function (err, results) {
     if (err) {
@@ -680,6 +602,8 @@ function sortItem(req, res, next) {
 
         callback();
       });
+      topic.update_at = Date.now();
+      topic.save();
     }]
   }, function (err, results) {
     if (err) {
@@ -706,6 +630,7 @@ function editItem(req, res, next) {
       _getItemWithAuth(callback, type, itemId, topicId);
     },
     update: ['topic', 'item', function (callback, results) {
+      var topic = results.topic;
       var item = results.item;
       try {
         var data = _getData(req);
@@ -722,6 +647,8 @@ function editItem(req, res, next) {
 
         callback();
       });
+      topic.update_at = Date.now();
+      topic.save();
     }],
     newItem: ['update', function (callback, results) {
       Item.getItemById(type, itemId, function (err, item) {
@@ -770,6 +697,8 @@ function deleteItem(req, res, next) {
         Topic.increaseItemCountBy(topic, -1).exec();
         callback();
       });
+      topic.update_at = Date.now();
+      topic.save();
     }]
   }, function (err, results) {
     if (err) {
@@ -786,13 +715,18 @@ function deleteTopic(req, res, next) {
   var authorId = req.session.userId;
   var topicId = req.params.topicId;
 
-  Topic.deleteTopic(authorId, topicId, function (err) {
+  _getTopicWithAuth(function (err, topic) {
     if (err) {
       return next(err);
     }
-    res.send(200);
-    console.log('deleteTopic done');
-  });
+    Topic.deleteTopic(topic, function (err) {
+      if (err) {
+        return next(err);
+      }
+      res.send(200);
+      console.log('deleteTopic done');
+    });
+  }, topicId, authorId);
 }
 
 function saveTopic(req, res, next) {
@@ -808,65 +742,60 @@ function saveTopic(req, res, next) {
     check(title).len(5, 50);
     check(description).len(0, 150);
   } catch (err) {
-    console.error(err.stack);
-    next(err);
-    return;
+    return next(err);
   }
 
-  Topic.saveTopic(authorId, topicId, title, coverUrl, description, publish, function (err) {
+  _getTopicWithAuth(function (err, topic) {
     if (err) {
       return next(err);
     }
-    res.send(200);
-    console.log('saveTopic done');
-  });
+    Topic.saveTopic(topic, title, coverUrl, description, publish, function (err) {
+      if (err) {
+        return next(err);
+      }
+      res.send(200);
+      console.log('saveTopic done');
+    });
+  }, topicId, authorId);
 }
 
 function _getHtml(url, callback) {
   console.log(url);
+  callback = callback || function () {
+  };
   var d = domain.create();
   d.on('error', function (err) {
-    if (typeof callback == 'function') {
-      callback(err);
-    }
+    callback(err);
   });
   d.run(function () {
-    http.get(url, function (response) {
-      var bufferHelper = new BufferHelper();
-      response.on('data', function (chunk) {
-        bufferHelper.concat(chunk);
-      });
-      response.on('end', function () {
-        var temp;
-        var charset = !(temp = response.headers['content-type']) ? null :
-          !(temp = temp.match(/charset=([^;]+)/i)) ? null :
-            !temp[1] ? null : temp[1];
-        var buffer = bufferHelper.toBuffer();
-        console.log(charset);
+    request({url: url, encoding: null}, function (error, response, body) {
+      if (error) {
+        return callback(error);
+      }
+      var temp;
+      var charset = !(temp = response.headers['content-type']) ? null :
+        !(temp = temp.match(/charset=([^;]+)/i)) ? null :
+          !temp[1] ? null : temp[1];
+      var buffer = body;
+      console.log(charset);
+      try {
+        var html = new Iconv(charset || 'UTF-8', 'UTF-8//TRANSLIT//IGNORE').convert(buffer).toString();
+      } catch (err) {
+        return callback(err);
+      }
+      var charset2 = !(temp = html.match(/<meta[^<>]+charset\s*=\s*("|')?([^"']+)("|')[^<>]*>/i)) ? null : temp[2];
+      if (charset2 &&
+        (!charset
+          || charset2.toLowerCase() != charset.toLowerCase())) {
         try {
-          var html = iconv.decode(buffer, charset);
+          var html = new Iconv(charset2 || 'UTF-8', 'UTF-8//TRANSLIT//IGNORE').convert(buffer).toString();
         } catch (err) {
-          callback(err);
-          return;
+          return callback(err);
         }
-        var charset2 = (!(temp = html.match(/<meta\s+http-equiv\s*=\s*("|')?Content-Type("|')?\s+content\s*=\s*("|')[^"']*charset\s*=\s*([^"']+)\s*("|')[^>]*>/i)) ? null : temp[4])
-          || (!(temp = html.match(/<meta\s+charset\s*=\s*("|')([^"']+)("|')[^>]*>/i)) ? null : temp[2]);
-        if (charset2 &&
-          (!charset
-            || charset2.toLowerCase() != charset.toLowerCase())) {
-          try {
-            var html = iconv.decode(buffer, charset2);
-          } catch (err) {
-            callback(err);
-            return;
-          }
-        }
-        console.log(charset2);
+      }
+      console.log(charset2);
 
-        if (typeof callback === 'function') {
-          callback(null, html);
-        }
-      })
+      callback(null, html);
     });
   });
 }
@@ -951,11 +880,11 @@ function _getLinkDetail(url, callback) {
 }
 
 function _getVideoDetail(url, callback) {
+  callback = callback || function () {
+  };
   _getHtml(url, function (err, html) {
     if (err) {
-      if (typeof callback === 'function') {
-        callback(err);
-      }
+      callback(err);
       return;
     }
     var temp;
@@ -1110,12 +1039,10 @@ function _getVideoDetail(url, callback) {
     console.log(title);
     title = sanitize(title).entityDecode();
     title = sanitize(title).trim();
-    if (typeof callback == 'function') {
-      callback(null, {
-        vid: vid,
-        title: title
-      });
-    }
+    callback(null, {
+      vid: vid,
+      title: title
+    });
   });
 }
 
@@ -1125,7 +1052,7 @@ function getLinkDetail(req, res, next) {
 
   _getLinkDetail(url, function (err, results) {
     if (err) {
-      res.send(500, err);
+      next(err);
       return;
     }
     res.json({
@@ -1147,7 +1074,7 @@ function getVideoDetail(req, res, next) {
       return;
     }
     if (!results.vid) {
-      res.send(400, '对不起，无法识别您输入的视频链接');
+      next(new Error(400));
       return;
     }
     res.json({
@@ -1262,9 +1189,7 @@ function AddorRemoveLikes(req, res) {
 
 }
 
-exports.showCreate = showCreate;
 exports.createTopic = createTopic;
-exports.getContents = getContents;
 exports.showEdit = showEdit;
 exports.showIndex = showIndex;
 exports.createItem = createItem;

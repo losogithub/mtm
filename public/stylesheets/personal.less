@@ -3,9 +3,12 @@
 
 input[type="text"], textarea { width: 100%; }
 
-.Contents { padding: 25px 0; }
+.Contents {
+  padding: 25px 0;
+  .Inner { background: url("/images/bg_ContentsWrapper.png") repeat-y scroll 265px 0px transparent; }
+}
 
-.Sub { float: left; width: 264px; padding-right: 25px; }
+.Sub { float: left; width: 265px; padding-right: 25px; }
 
 .Thumb { width: 122px; height: 122px; border-radius: 3px 3px 3px 3px; border: 1px solid rgb(221, 221, 221); margin-right: 15px; }
 
@@ -50,7 +53,10 @@ input[type="text"], textarea { width: 100%; }
   a { position: absolute; right: 0; bottom: 0; color: #999; }
 }
 
-.MainTbl { width: 100%; margin-bottom: 20px; }
+.MainTbl {
+  width: 100%; margin-bottom: 20px;
+  td:first-child { max-width: 405px; }
+}
 
 .MainTbl thead {
   border-top: 1px solid rgb(232, 233, 234);
@@ -66,11 +72,15 @@ input[type="text"], textarea { width: 100%; }
 
 .MainTbl th + th>div { border-left: 1px solid #ddd; padding-left: 7px; text-align: center; }
 
-.MainTbl th .SELECTED { color: rgb(0, 0, 0); }
+.MainTbl th .SELECTED {
+  &, + i { color: black; }
+}
 
 .MainTbl th a { color: #999; }
 
-.MainTbl th i { font-size: 10px; vertical-align: middle; }
+.MainTbl th i {
+  font-size: 10px; vertical-align: middle;
+}
 
 .MainTblSortSub { float: right; font-size: 10px; }
 
@@ -90,8 +100,6 @@ input[type="text"], textarea { width: 100%; }
   margin-bottom: 3px;
   font-size: 16px;
 }
-
-.MainTblTtl a { color: black; }
 
 .MainTblPV { font-size: 18px; }
 
@@ -117,11 +125,11 @@ input[type="text"], textarea { width: 100%; }
 
 .TopicTable {
   margin-bottom: 20px;
-  &, td {width: 100%;}
+  &, td { width: 100%; }
   tr {
     border-top: 1px solid rgb(231, 231, 231);
     &:last-child { border-bottom: 1px solid rgb(231, 231, 231); }
-    th, td { padding: 16px 0;}
-    th { padding-right: 13px;}
+    th, td { padding: 16px 0; }
+    th { padding-right: 13px; }
   }
 }

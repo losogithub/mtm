@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <% var temp = !locals.body ? null : locals.body.match(/^.{4}([^#]*)##/); %>
 <% temp = !temp ? null : !temp[1] ? null : temp[1] %>
-<% if (!locals.pageType) locals.pageType = temp; %>
+<% locals.pageType = locals.pageType || temp; %>
 <html>
 <head>
   <title><%= locals.title ? title + ' - 石子儿' : '石子儿 - 与世界分享你的总结' %></title>
@@ -29,7 +29,7 @@
   <script type="text/javascript" src="<%= js[i] %>"></script>
   <% } %>
 </head>
-<body class="<%= !locals.pageType ? '' : pageType %>">
+<body class="<%= locals.pageType || '' %>">
 <div class='Header'>
   <div class="Inner" style="position: relative;">
     <% if (locals.pageType == 'PERSONAL') { %>
@@ -37,9 +37,7 @@
       <table>
         <td>
           <ul>
-            <!--<li class="<%= locals.path != '/favourites' ? '' : 'SELECTED' %>"><a href="/favourites">收藏</a></li>-->
             <li class="<%= locals.path != '/works' ? '' : 'SELECTED' %>"><a href="/works">管理</a></li>
-            <li class="<%= locals.path != '/connections' ? '' : 'SELECTED' %>"><a href="/connections">外部链接</a></li>
           </ul>
         </td>
       </table>
@@ -68,7 +66,7 @@
             <li><a href="/login">登录</a></li>
             <% } else { %>
             <li><a href="/works"><img width="20" height="20"
-                                      src="<%= locals.imageUrl ? locals.imageUrl : '/images/no_img/user_80x80.png' %>"
+                                      src="<%= locals.imageUrl || '/images/no_img/user_80x80.png' %>"
                                       onerror="shizier.errorImage(this,'user_80x80');"><%= username %></a><span
               class="VLine VLine-Header"></span></li>
             <li><a href="/notifications">通知</a><span class="mdHeadUtil01Count"

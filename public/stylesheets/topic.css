@@ -250,12 +250,8 @@
 .Top li {
   display: inline;
 }
-.Top li a {
-  color: #4c4c4c;
-}
 .Top li i {
-  vertical-align: middle;
-  padding: 0 4px;
+  font-size: 12px;
 }
 .Head {
   margin-bottom: 20px;
@@ -289,9 +285,6 @@
   line-height: 38px;
   margin-right: 15px;
 }
-.Head .Inner .HeadMain .HeadTxt .HeadTtlWrapper .HeadTtl a {
-  color: #000000;
-}
 .Head .Inner .HeadMain .HeadTxt .HeadTtlWrapper .HeadUtil {
   display: inline-block;
 }
@@ -312,6 +305,14 @@
 }
 .Head .Inner .HeadMain .HeadTxt .HeadOption .HeadUser .HeadUserName {
   font-weight: bold;
+}
+.Head .Inner .HeadMain .HeadTxt .HeadOption #bdshare,
+.Head .Inner .HeadMain .HeadTxt .HeadOption #bdshare *,
+.Head .Inner .HeadMain .HeadTxt .HeadOption #bdshare *:before,
+.Head .Inner .HeadMain .HeadTxt .HeadOption #bdshare *:after {
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
 }
 .Head .Inner .HeadSub {
   width: 220px;

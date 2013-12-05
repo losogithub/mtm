@@ -2,6 +2,7 @@
 <% var showOne; %>
 <% showThis = item.quote == 'youku.com' && item.vid; %>
 <% showOne = showOne || showThis; %>
+<% console.log(item.vid); %>
 <embed style="display: <%= !showThis ? 'none' : 'block' %>;"
        class="YOUKU"
        src="http://static.youku.com/v/swf/qplayer.swf?winType=adshow&amp;VideoIDS=<%= item.vid ? item.vid : '#vid#' %>"
@@ -77,10 +78,10 @@
 </embed>
 <% showThis = item.quote == 'ku6.com' && item.vid; %>
 <% showOne = showOne || showThis; %>
-<embed style="display: <%= !showThis ? 'none' : 'block' %>;" class="KU6"
+<embed style="display: <%= !showThis ? 'none' : 'block' %>;" class="KU6" wmode="Opaque"
        src="http://player.ku6.com/refer/<%= item.vid ? item.vid : '#vid#' %>/v.swf" width="480" height="400"
-       allowscriptaccess="always" allowfullscreen="true" type="application/x-shockwave-flash" flashvars="from=ku6"
-       wmode="Opaque"></embed>
+       allowscriptaccess="always" allowfullscreen="true" type="application/x-shockwave-flash"
+       flashvars="auto=0"></embed>
 <% showThis = item.quote == '56.com' && item.vid; %>
 <% showOne = showOne || showThis; %>
 <embed style="display: <%= !showThis ? 'none' : 'block' %>;" class="56"
@@ -89,10 +90,10 @@
        allowscriptaccess="always" wmode="Opaque"></embed>
 <% showThis = item.quote == 'baomihua.com' && item.vid; %>
 <% showOne = showOne || showThis; %>
-<embed style="display: <%= !showThis ? 'none' : 'block' %>;" class="BAOMIHUA" width="480" height="400"
-       flashvars="flvid=<%= item.vid ? item.vid : '#vid#' %>" wmode="opaque" allowscriptaccess="always"
-       allowfullscreen="true" quality="high" bgcolor="#000000" name="playerId" id="playerId"
-       src="http://resources.baomihua.com/swf/pomoho_player_640.swf" type="application/x-shockwave-flash">
+<embed style="display: <%= !showThis ? 'none' : 'block' %>;" class="BAOMIHUA" width="480" height="400" wmode="opaque"
+       flashvars="flvid=<%= item.vid ? item.vid : '#vid#' %>" allowscriptaccess="always"
+       allowfullscreen="true" quality="high"
+       src="http://resources.baomihua.com/swf/pomoho_player_640.swf?autoplay=0" type="application/x-shockwave-flash">
 </embed>
 <% showThis = item.quote == 'yinyuetai.com' && item.vid; %>
 <% showOne = showOne || showThis; %>

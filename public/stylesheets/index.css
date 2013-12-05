@@ -81,14 +81,13 @@ em {
   display: block;
   margin-bottom: 5px;
   word-break: break-all;
-}
-.TopicTtl a {
+  max-height: 42px;
   line-height: 20px;
   font-size: 16px;
+  overflow: hidden;
 }
 .TopicAuthor {
   float: left;
-  color: #999 !important;
   font-size: 11px;
   line-height: 1;
 }

@@ -1,5 +1,5 @@
 <!--PERSONAL##这是layout要用的参数，不能删！-->
-<div class="Inner">
+<div class="Inner clearfix">
   <div class="Sub">
     <ul class="SubPV">
       <li>
@@ -37,7 +37,7 @@
     </div>
     <% } %>
     <div class="BtnSet">
-      <button name="favorite" class="<%- locals.likedBefore ? 'ExSelected' : '' %> btn btn-small" data-favorite='{"url":"<%= thisUrl %>"}'>
+      <button name="favorite" class="<%- locals.likedBefore ? 'ExSelected' : '' %> btn btn-small" data-favorite='{"authorName":"<%= authorName %>"}'>
         <i class="icon-star StarIcon" style="vertical-align: middle;"></i>
         <span class="">喜欢</span>
       </button>
@@ -49,16 +49,16 @@
         <span class="mdFVCount01Num"><%= locals.favourite || '0' %></span></span>
     </div>
 
-    <% if (locals.personalType != 'PERSONAL') { %>
-    <hr>
+    <!--<% if (locals.personalType != 'PERSONAL') { %>-->
+    <!--<hr>-->
 
-    <nav class="Nav Nav-Personal">
-      <ul>
-        <!--<li><a href="/faq?groupNo=147">用户激励指南</a></li>-->
-        <li><a href="/bookmarklet">bookmarklet</a></li>
-      </ul>
-    </nav>
-    <% } %>
+    <!--<nav class="Nav Nav-Personal">-->
+      <!--<ul>-->
+        <!--&lt;!&ndash;<li><a href="/faq?groupNo=147">用户激励指南</a></li>&ndash;&gt;-->
+        <!--<li><a href="/bookmarklet">bookmarklet</a></li>-->
+      <!--</ul>-->
+    <!--</nav>-->
+    <!--<% } %>-->
   </div>
 
   <div class="Main">

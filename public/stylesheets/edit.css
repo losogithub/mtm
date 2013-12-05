@@ -31,6 +31,7 @@ textarea {
 }
 .WidgetItemList > li .BottomUtil {
   display: block;
+  margin-top: 2px;
 }
 .WidgetItemList > li .BottomUtil .ItemUtil1 {
   float: left;
@@ -49,10 +50,10 @@ textarea {
   visibility: hidden;
 }
 .WidgetItemList > li > div {
-  margin-bottom: 18px;
+  margin-bottom: 16px;
 }
 .WidgetItemList > li.TITLE > div {
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 .WidgetItemList > li.WidgetDragPlaceholder {
   margin-bottom: 18px;
@@ -96,12 +97,9 @@ textarea {
   max-width: 960px;
   width: auto;
 }
-.Band .Band_Ttl {
-  float: left;
-}
 .Band .Band_Ttl h5 {
-  margin: 0;
-  font-weight: bold;
+  white-space: nowrap;
+  margin-left: 6px;
 }
 .Band .Band_Btn {
   margin-right: 6px;
@@ -113,9 +111,10 @@ textarea {
   padding-bottom: 15px;
 }
 .Edit_Top form {
-  padding-top: 25px;
+  margin-top: 25px;
   padding-bottom: 11px;
   border-bottom: 3px solid black;
+  position: relative;
 }
 .Edit_Top form fieldset:first-child {
   height: 40px;
@@ -133,9 +132,16 @@ textarea {
   font-weight: bold;
   background-color: #fffeee;
 }
+.Edit_Top form fieldset:first-child #_saveSet {
+  position: absolute;
+  top: 0;
+  margin-top: 0;
+  display: none;
+}
+.Edit_Top form fieldset:first-child #_saveSet,
 .Edit_Top form fieldset:first-child button[name="options"] {
   margin-left: 15px;
-  color: #666 !important;
+  vertical-align: baseline;
 }
 .Edit_Top form fieldset:last-child {
   margin-top: 25px;
@@ -171,11 +177,30 @@ textarea {
 .Edit_Top form fieldset:last-child textarea[name='description'] {
   min-height: 97px;
 }
-/*静态菜单*/
-.StaticMenu {
+/*菜单*/
+.Menu {
+  display: inline-block;
+}
+.Menu span {
+  cursor: default;
+  font-weight: bold;
+}
+.Menu ul {
+  display: inline;
+}
+.Menu ul li {
+  display: inline;
+  margin-left: 11px;
+}
+.Menu ul li i {
+  vertical-align: middle;
+}
+.Edit_Top .Menu {
   width: 100%;
   height: 43px;
+  line-height: 43px;
   margin-bottom: 10px;
+  padding-left: 5px;
   background-image: -moz-linear-gradient(top, #ffffff, #fafafa);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#fafafa));
   background-image: -webkit-linear-gradient(top, #ffffff, #fafafa);
@@ -183,56 +208,26 @@ textarea {
   background-image: linear-gradient(to bottom, #ffffff, #fafafa);
   border-bottom: 1px solid #f0f0f0;
 }
-.StaticMenu td {
-  padding: 0 5px;
-}
-.StaticMenu td span {
-  cursor: default;
-  font-weight: bold;
-  vertical-align: middle;
-}
-.StaticMenu td ul {
+.Edit_Top .Menu ul {
   display: inline;
 }
-.StaticMenu td ul li {
+.Edit_Top .Menu ul li {
   margin-left: 25px;
   display: inline;
 }
-.StaticMenu td ul li i {
-  vertical-align: middle;
+.WidgetItemList .Menu {
+  color: #999 !important;
+}
+.WidgetItemList .Menu span {
+  padding-right: 6px;
+}
+.WidgetItemList .Menu ul li {
+  margin-left: 25px;
+}
+.WidgetItemList .Menu ul li button {
+  color: #999 !important;
 }
 /*微件*/
-.MENU table {
-  width: 100%;
-  height: 35px;
-  border: 1px solid #dbdbdb;
-  background-color: #efefef;
-}
-.MENU table span {
-  margin-left: 13px;
-  color: #838383;
-  font-weight: bold;
-  vertical-align: middle;
-}
-.MENU table ul {
-  display: inline;
-}
-.MENU table ul li {
-  display: inline;
-  margin-left: 11px;
-}
-.MENU table ul li i {
-  vertical-align: middle;
-}
-.MENU table .MENU_Close {
-  text-align: right;
-}
-.MENU table .MENU_Close i {
-  cursor: pointer;
-  line-height: 33px;
-  padding: 0 12px;
-  display: inline-block;
-}
 .LINK_CREATE input {
   float: left;
   width: 568px;
