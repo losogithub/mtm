@@ -7,7 +7,8 @@
                 data-loading-text="发布 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;" type="button">发布
         </button>
         <% } %>
-        <a class='btn btn-small btn-default'
+        <a name="done"
+           class='btn btn-small btn-default'
            href="<%= topic.publishDate ? '/topic/' + topic._id : '/works' %>">
           完成<%= topic.publishDate ? '' : '草稿' %>
         </a>
@@ -155,7 +156,7 @@
                 <button class="btn btn-mini" type="button"><i class="icon-angle-left"></i></button>
                 <button class="btn btn-mini" type="button"><i class="icon-angle-right"></i></button>
               </div>
-              <span name="pagination"></span>
+              <span class="text-muted" name="pagination"></span>
 
               <p style="margin-top: 7px;">
                 <input type="checkbox" id="noImg" style="vertical-align: middle;">
@@ -177,7 +178,7 @@
 
         <div class='Content IMAGE_CREATE'>
           <div class="Image">
-            <i class="icon-picture"></i>
+            <i class="icon-picture text-light"></i>
           </div>
           <div style="overflow: hidden;">
             <div class="Required" style="float: left;"></div>
@@ -212,7 +213,7 @@
 
         <div class='Content VIDEO_CREATE'>
           <div class="Thumb">
-            <i class="icon-film"></i>
+            <i class="icon-film text-light"></i>
           </div>
           <div style="margin-top: 7px;" class="clearfix">
             <div class="Required"></div>

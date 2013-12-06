@@ -67,7 +67,7 @@
   <tr>
     <td>
       <p class="MainTblTtl">
-        <a target="_blank" title="<%= topic.title || '未命名' %>"
+        <a target="<%= topic.publishDate ? '_blank' : '' %>" title="<%= topic.title || '未命名' %>"
            class="<%= topic.title ? 'text-default' : 'text-muted' %>"
         <% if (topic.publishDate) { %>
         href="/topic/<%= topic._id %>"

@@ -8,14 +8,14 @@
       <%= item.url || '' %>
     </a>
   </div>
-  <p class="Snippet" style="display: <%= (item.type != 'ALL') && !item.snippet ? 'none' : 'block' %>;"><%- item.snippet ?
+  <p class="Snippet text-muted" style="display: <%= (item.type != 'ALL') && !item.snippet ? 'none' : 'block' %>;"><%- item.snippet ?
     escape(item.snippet).replace(/\n/g, "<br>") : '' %></p>
   <div class="Thumb" style="display: <%= (item.type != 'ALL') && !item.src ? 'none' : 'block' %>;">
     <a class="fancybox" rel="gallery" href='<%= item.src || "" %>' title="<%= item.title || '' %>">
       <img src="<%= item.src || '' %>">
     </a>
   </div>
-  <p class="Description" style="display: <%= (item.type != 'ALL') && !item.description ? 'none' : 'block' %>;"><%- item.description ?
+  <p class="Description text-secondary" style="display: <%= (item.type != 'ALL') && !item.description ? 'none' : 'block' %>;"><%- item.description ?
     escape(item.description).replace(/\n/g, "<br>") : '' %></p>
 </div>
 <% } %>
@@ -38,7 +38,7 @@
   </div>
   <div style="overflow: hidden;">
     <div class="Title"><%= item.title || '' %></div>
-    <p class="Description"><%- item.description ? escape(item.description).replace(/\n/g, "<br>") : '' %></p>
+    <p class="Description text-secondary"><%- item.description ? escape(item.description).replace(/\n/g, "<br>") : '' %></p>
   </div>
 </div>
 <% } %>
@@ -58,15 +58,15 @@
   <p class="Title" style="display: <%= (item.type != 'ALL') && !item.title ? 'none' : 'block' %>;">
     <a target="_blank" class="VIDEO_URL text-default" href='<%= item.url ? item.url : "" %>'><%= item.title ? item.title : '' %></a>
   </p>
-  <p class="Description" style="display: <%= (item.type != 'ALL') && !item.description ? 'none' : 'block' %>;"><%- item.description ?
+  <p class="Description text-secondary" style="display: <%= (item.type != 'ALL') && !item.description ? 'none' : 'block' %>;"><%- item.description ?
     escape(item.description).replace(/\n/g, "<br>") : '' %></p>
 </div>
 <% } %>
 <% if (item.type == 'CITE' || item.type == 'ALL') { %>
 <div class='Content CITE'>
   <p class="Cite">
-    <i class="icon-quote-left"></i>
-    <q><%- item.cite ? escape(item.cite).replace(/\n/g, "<br>") : '' %></q>
+    <i class="icon-quote-left text-light"></i>
+    <q class="text-secondary"><%- item.cite ? escape(item.cite).replace(/\n/g, "<br>") : '' %></q>
   </p>
 
   <div class="Quote" style=<%- (item.type != 'ALL') && !item.url && !item.title ? 'display:none' : '' %>>
@@ -76,13 +76,13 @@
       <span ><%= item.url ? '' : !item.title ? '' : item.title %></span>
     </div>
   </div>
-  <p class="Description" style="display: <%= (item.type != 'ALL') && !item.description ? 'none' : 'block' %>;"><%- item.description ?
+  <p class="Description text-secondary" style="display: <%= (item.type != 'ALL') && !item.description ? 'none' : 'block' %>;"><%- item.description ?
     escape(item.description).replace(/\n/g, "<br>") : '' %></p>
 </div>
 <% } %>
 <% if (item.type == 'TEXT' || item.type == 'ALL') { %>
 <div class='Content TEXT'>
-  <p><%- item.text ? escape(item.text).replace(/\n/g, "<br>") : '' %></p>
+  <p class="text-secondary"><%- item.text ? escape(item.text).replace(/\n/g, "<br>") : '' %></p>
 </div>
 <% } %>
 <% if (item.type == 'TITLE' || item.type == 'ALL') { %>

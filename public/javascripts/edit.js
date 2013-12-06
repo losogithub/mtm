@@ -1455,7 +1455,7 @@
       return;
     }
     if (topState != 'default') {
-      remove();
+      __remove();
     }
 
     var oldState = state;
@@ -1821,6 +1821,14 @@
    * @private
    */
   function _initBand() {
+    $(window).scroll(function () {
+      if ($(this).scrollTop() >= 48) {
+        $band.css('top', 0);
+      } else {
+        $band.css('top', 48 - $(this).scrollTop());
+      }
+    });
+
     $(document)
       .ajaxStart(function () {
         $band_saved.hide();
@@ -1831,13 +1839,11 @@
         $band_loading.hide();
       });
 
-    $(window).scroll(function () {
-      if ($(this).scrollTop() >= 48) {
-        $band.addClass('Band-Fixed').removeAttr('style');
-      } else {
-        $band.removeClass('Band-Fixed').css('top', 48 - $(this).scrollTop());
-      }
-    });
+    var $done = $band.find('a[name="done"]');
+    if ($done.attr('href') == '/works'
+      && ~document.referrer.indexOf('/works?')) {
+      $done.attr('href', document.referrer);
+    }
 
     var $publish = $band.find('button[name="publish"]');
     $publish.click(function () {
@@ -1846,12 +1852,16 @@
         return;
       }
       if (topState != 'default') {
-        remove();
+        __remove();
       }
       if (!_checkRemoveWidget()) {
         return;
       }
       if (!$_topItem.find('.HeadTtl').text()) {
+        if ($_topItem.is(':visible')) {
+          $_topWidget.finish();
+          $_topItem.finish().find('button[name="edit"]').click();
+        }
         return alertMessenger('填写标题后才能发布');
       }
 
@@ -1878,7 +1888,7 @@
     });
   }
 
-  function remove() {
+  function __remove() {
     if (xhr) {
       console.log('abort');
       xhr.abort();
@@ -1952,12 +1962,14 @@
           .end()
           .fadeSlideDown();
 
-        $title.focus();
+        setTimeout(function () {
+          $title.focus();
+        }, 99);
         //移动光标到输入框末尾
         moveSelection2End($title[0]);
         setTopState('create');
       });
-    if (!title || /editTop=1/i.test(location.search)) {
+    if ((!title && !$ul.children().length) || /editTop=1/i.test(location.search)) {
       $_topItem.find('button[name="edit"]').click();
     }
     $_topWidget.find('button[name="cancel"]')
@@ -1966,7 +1978,7 @@
           && !confirm('您编辑的内容将被丢弃，确定要放弃吗？')) {
           return;
         }
-        remove();
+        __remove();
       });
 
     $_topWidget
@@ -1983,7 +1995,7 @@
 
     var commit = function () {
       var coverUrl = $cover.attr('src');
-      var $button = $band.add($_topWidget).find('button[name="save"]');
+      var $button = $_topWidget.find('button[name="save"]');
       $button.button('loading');
 
       xhr = $.ajax('/topic/save', {
@@ -2000,7 +2012,7 @@
           $_topItem.find('.HeadTtl').text(data.title);
           $_topItem.find('.HeadThumb img').attr('src', (data.coverUrl == noImgSrc || data.coverUrl == defaultImgSrc) ? '' : data.coverUrl);
           $_topItem.find('.HeadDesc').text(data.description || '');
-          remove();
+          __remove();
         })
         .fail(function (jqXHR, textStatus) {
           console.error(jqXHR.responseText);

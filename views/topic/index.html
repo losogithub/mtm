@@ -15,7 +15,7 @@
 <div class="Top">
   <div class="Inner">
     <div class="HeadMain clearfix">
-      <div class="HeadThumb" style="display: <%= !locals.topic ? 'none' : !topic.coverUrl ? 'none' : 'block' %>;">
+      <div class="HeadThumb" style="display: <%= !topic.coverUrl ? 'none' : 'block' %>;">
         <img width="95" height="95" onerror="shizier.errorImage(this,'image_95x95');"
              src="<%= topic.coverUrl || '' %>">
       </div>
@@ -81,11 +81,11 @@
       <div class="HeadCount">
         <span class="HeadFVCount">
           <span class="HeadFVCountNum"><i class="HeadFVIco icon-star" style="vertical-align: middle;"></i> <span><%= topic.FVCount %></span></span>
-          <span class="HeadFVCountLabel">喜欢</span>
+          <span class="HeadFVCountLabel text-secondary">喜欢</span>
         </span>
         <span class="HeadPVCount">
           <span class="HeadPVCountNum"><%= topic.PVCount %></span>
-          <span class="HeadPVCountLabel">浏览</span>
+          <span class="HeadPVCountLabel text-secondary">浏览</span>
         </span>
       </div>
 
@@ -103,18 +103,19 @@
   <div class="Main">
     <% if (!locals.items || !items.length) { %>
     <div class="NoItem">
-      <i class="icon-file-alt" style="font-size: 50px;color: #ccc"></i>
+      <i class="icon-file-alt text-light" style="font-size: 50px;"></i>
 
-      <p>这个总结还没有内容。
+      <p class="text-secondary">这个总结还没有内容。
         <% if (locals.isAuthor) { %>
         <br>要添加吗？
         <% } %>
       </p>
       <% } %>
       <% if (locals.isAuthor) { %>
-      <a name="add" class="btn btn-default" href="/topic/<%= topic._id %>/edit" type="button"><i
-        class="icon-plus-sign"></i>
-        添加条目</a>
+      <a name="add" class="btn btn-default text-success" href="/topic/<%= topic._id %>/edit" type="button">
+        <i class="icon-plus-sign"></i>
+        <span class="text-default">添加条目</span>
+      </a>
       <% } %>
       <% if (!locals.items || !items.length) { %>
     </div>

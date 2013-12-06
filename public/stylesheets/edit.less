@@ -46,7 +46,6 @@ input[type="text"], input[type="password"], textarea {
 .Band {
   position: fixed; top: 48px; left: 0; right: 0; height: 37px; z-index: 1001;
   border-bottom: 1px solid rgb(231, 231, 231); background-color: rgb(245, 245, 245);
-  &.Band-Fixed { top: 0; }
   .Inner { max-width: 960px; width: auto; }
   .Band_Ttl {
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0; line-height: 36px;
@@ -62,10 +61,6 @@ input[type="text"], input[type="password"], textarea {
       float: left;
       button[name="cover"] {
         margin-right: 15px; position: relative; width: 97px; height: 97px;
-        .Image {
-          width: 95px; height: 95px; background-color: #f3f3f3; text-align: center;
-          i { line-height: 95px; color: #ccd; font-size: 30px; }
-        }
         img { position: absolute; top: 0; left: 0; }
       }
     }
@@ -89,7 +84,7 @@ input[type="text"], input[type="password"], textarea {
   ul {
     display: inline;
     li {
-      display: inline; margin-left: 11px;
+      display: inline; margin-left: 25px;
       i { vertical-align: middle; }
     }
   }
@@ -104,23 +99,11 @@ input[type="text"], input[type="password"], textarea {
   background-image: -o-linear-gradient(top, #ffffff, #fafafa);
   background-image: linear-gradient(to bottom, #ffffff, #fafafa);
   border-bottom: 1px solid #f0f0f0;
-  ul {
-    display: inline;
-    li {
-      margin-left: 25px; display: inline;
-    }
-  }
 }
 
 .WidgetItemList .Menu {
-  color: #999 !important;
-  span { padding-right: 6px; }
-  ul {
-    li {
-      margin-left: 25px;
-      button { color: #999 !important; }
-    }
-  }
+  span { padding-right: 6px; color: #999; }
+  button { color: #999; }
 }
 
 /*微件*/
@@ -135,7 +118,7 @@ input[type="text"], input[type="password"], textarea {
       margin-right: 5px;
       .btn { padding: 0; width: 21px; height: 21px; }
     }
-    span[name="pagination"] { color: #aaa; font-weight: bold; vertical-align: middle; }
+    span[name="pagination"] { font-weight: bold; vertical-align: middle; }
   }
   textarea[name='description'] { margin-top: 10px; }
 }
@@ -144,7 +127,7 @@ input[type="text"], input[type="password"], textarea {
   input { float: left; width: 258px; }
   .Image {
     width: 300px; height: 220px; background-color: #f3f3f3; text-align: center;
-    i { line-height: 220px; color: #ccd; font-size: 30px; }
+    i { line-height: 220px; font-size: 30px; }
   }
 }
 
