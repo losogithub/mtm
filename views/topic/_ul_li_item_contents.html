@@ -27,7 +27,7 @@
       <img onerror="shizier.errorImage(this,'default_120x120');" src='<%= item.url || "" %>'>
     </a>
 
-    <div class="Quote" style=<%- (item.type != 'ALL') && !item.quote ? 'display:none' : '' %>>
+    <div class="Quote" style="<%- (item.type != 'ALL') && !item.quote ? 'display:none' : '' %>">
       <span>来源</span>
       <div>
         <a target="_blank" href="<%= item.quote || '' %>">
@@ -69,7 +69,7 @@
     <q class="text-secondary"><%- item.cite ? escape(item.cite).replace(/\n/g, "<br>") : '' %></q>
   </p>
 
-  <div class="Quote" style=<%- (item.type != 'ALL') && !item.url && !item.title ? 'display:none' : '' %>>
+  <div class="Quote" style="<%- (item.type != 'ALL') && !item.url && !item.title ? 'display:none' : '' %>">
     <span>来源</span>
     <div>
       <a target="_blank" href="<%= !item.url ? '' : item.url %>"><%= !item.url ? '' : !item.title ? item.url : item.title %></a>

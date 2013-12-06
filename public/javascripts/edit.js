@@ -1931,6 +1931,9 @@
     var $extra = $_topWidget.find('.Edit_Top_Thumb_Extra');
 
     var checkState = function () {
+      if ($_topWidget.is(':hidden')) {
+        return;
+      }
       if (($cover.attr('src') == coverUrl || ($cover.attr('src') == defaultImgSrc && !coverUrl))
         && $title.val() == title
         && $description.val() == description) {
