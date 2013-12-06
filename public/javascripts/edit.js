@@ -316,7 +316,8 @@
       var originalData = this._getOriginalData();
       var commitData = this._getCommitData();
       for (var key in originalData) {
-        if (originalData[key] != commitData[key]) {
+        if (originalData[key] != commitData[key]
+          && (originalData[key] || commitData[key])) {
           return setState('edit');
         }
       }
@@ -509,7 +510,7 @@
           },
           showErrors: function (errorMap, errorList) {
             if (errorList.length) {
-              alertMessenger(errorMap.title || errorMap.summary || errorMap.description);
+              alertMessenger(errorMap.title || errorMap.snippet || errorMap.description);
             }
           },
           rules: {
