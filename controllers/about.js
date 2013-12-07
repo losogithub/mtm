@@ -73,6 +73,15 @@ function showEachHelp(req, res){
   });
 }
 
+function showPrivacy(req,res){
+  res.render('about/privacy',
+    {
+      css: ['stylesheets/service.css'],
+      layout: false
+    });
+
+}
+
 exports.showRules = showRules;
 exports.showPrivacyCenter = showPrivacyCenter;
 exports.showPolicy = showPolicy;
@@ -81,3 +90,4 @@ exports.showService = showService;
 exports.showPrinciple = showPrinciple;
 exports.showHelp = showHelp;
 exports.showEachHelp = showEachHelp;
+exports.showPrivacy = showPrivacy;
