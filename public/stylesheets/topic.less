@@ -51,12 +51,12 @@
     font-size: 20px; line-height: 26px; text-decoration: underline;
     &:hover, &:active, &:focus { text-decoration: none; }
   }
-  .Snippet { line-height: 17px; margin-top: 3px; color: rgb(170, 170, 170); }
+  .Snippet { line-height: 17px; margin-top: 3px; }
   .Thumb {
     margin-top: 7px;
     img { max-width: 150px; max-height: 150px; }
   }
-  .Description { margin-top: 10px; padding-left: 6px; border-left: 2px solid #ccc; color: #666; font-size: 14px; line-height: 20px; }
+  .Description { margin-top: 10px; padding-left: 6px; border-left: 2px solid #ccc; font-size: 14px; line-height: 20px; }
 }
 
 .Image {
@@ -66,37 +66,37 @@
 .IMAGE {
   .Image img { max-width: 300px; max-height: 600px; }
   .Title { margin-bottom: 4px; line-height: 24px; font-weight: bold; font-size: 18px; }
-  .Description { line-height: 20px; color: #666; font-size: 14px; }
+  .Description { line-height: 20px; font-size: 14px; }
 }
 
 .VIDEO_CREATE, .VIDEO {
   .Thumb { text-align: center; width: 300px; height: 220px; background-color: #f3f3f3;
-    i { line-height: 220px; color: #ccd; font-size: 30px; }
+    i { line-height: 220px; font-size: 30px; }
   }
 }
 
 .VIDEO {
   .Title { margin-top: 8px; line-height: 24px; font-weight: bold; font-size: 18px; }
-  .Description { margin-top: 10px; padding-left: 6px; border-left: 2px solid #ddd; color: #666; font-size: 14px; line-height: 20px; }
+  .Description { margin-top: 10px; padding-left: 6px; border-left: 2px solid #ddd; font-size: 14px; line-height: 20px; }
 }
 
 .CITE {
   .Cite {
-    line-height: 26px; color: #666; font-weight: bold; font-size: 20px;
-    i { font-size: 20px; color: #ccc; }
+    line-height: 26px; font-weight: bold; font-size: 20px;
+    i { font-size: 20px; }
     q { quotes: none; }
   }
-  .Description { margin-top: 10px; padding-left: 6px; border-left: 2px solid #ccc; color: #666; font-size: 14px; line-height: 20px; }
+  .Description { margin-top: 10px; padding-left: 6px; border-left: 2px solid #ccc; font-size: 14px; line-height: 20px; }
 }
 
-.TEXT p { line-height: 20px; color: #666; font-size: 14px; }
+.TEXT p { line-height: 20px; font-size: 14px; }
 
-.TITLE p { line-height: 26px; font-size: 20px; font-weight: bold; color: black; padding-bottom: 5px; border-bottom: 2px solid #EAECEE; }
+.TITLE p { line-height: 26px; font-size: 20px; font-weight: bold; padding-bottom: 5px; border-bottom: 2px solid #EAECEE; }
 
 //框架
 .Contents { padding-bottom: 25px; }
 
-.Top {
+.Band {
   height: 37px; background-color: rgb(245, 245, 245); border-bottom: 1px solid rgb(231, 231, 231);
   li {
     display: inline;
@@ -104,7 +104,7 @@
   }
 }
 
-.Head {
+.Top {
   margin-bottom: 20px; border-bottom: 1px solid rgb(242, 242, 242); background-color: rgb(249, 249, 249);
   .Inner {
     overflow: hidden; padding: 15px 0; position: relative;
@@ -114,13 +114,15 @@
       .HeadTxt {
         overflow: hidden;
         .HeadTtlWrapper {
-          margin-bottom: 7px;
-          .HeadTtl {
+          .HeadTtl, .HeadTtlPlaceholder {
             display: inline; font-size: 32px; line-height: 38px; margin-right: 15px;
           }
           .HeadUtil { display: inline-block; }
         }
-        .HeadDesc { margin-right: 8px; }
+        .HeadDescWrapper {
+          margin-top: 7px;
+          .HeadDesc { margin-right: 8px; }
+        }
         .HeadOption {
           margin-top: 13px;
           .HeadUser {
@@ -148,14 +150,14 @@
         margin: 0 0 8px; *margin-bottom: 5px;
         .HeadFVCount {
           display: inline-block; *display: inline; *zoom: 1; padding-right: 13px; *padding-right: 17px; vertical-align: top; text-align: center;
-          .HeadFVCountNum { display: block; line-height: 1; *line-height: 1.15; margin-top: -3px; *margin-top: 0; color: #000; font-size: 22px; }
+          .HeadFVCountNum { display: block; line-height: 1; *line-height: 1.15; margin-top: -3px; *margin-top: 0; font-size: 22px; }
           .HeadFVIco { color: @FV-color; text-shadow: 0 0 1px @FV-shadow-color; }
-          .HeadFVCountLabel { display: block; margin-top: 3px; *margin-top: 0; line-height: 1; *line-height: 1.15; color: #666; font-size: 11px }
+          .HeadFVCountLabel { display: block; margin-top: 3px; *margin-top: 0; line-height: 1; *line-height: 1.15; font-size: 11px }
         }
         .HeadPVCount {
           display: inline-block; border-left: 1px solid rgb(238, 238, 238); padding-left: 13px; text-align: center;
-          .HeadPVCountNum { display: block; line-height: 1; margin-top: -3px; color: black; font-size: 22px; }
-          .HeadPVCountLabel { display: block; margin-top: 3px; line-height: 1; color: #666; font-size: 11px; }
+          .HeadPVCountNum { display: block; line-height: 1; margin-top: -3px; font-size: 22px; }
+          .HeadPVCountLabel { display: block; margin-top: 3px; line-height: 1; font-size: 11px; }
         }
       }
       .HeadFVBtnIco { margin-right: 7px; color: @FV-empty-color; text-shadow: 0 0 1px @FV-empty-shadow-color; }
@@ -168,8 +170,6 @@
 .Main { padding-bottom: 0; }
 
 .Main a[name="add"] { margin-bottom: 15px; }
-
-.Main a[name="add"]>i { color: @theme-color; }
 
 .NoItem { position: relative; padding: 140px 0px 160px; text-align: center; }
 

@@ -302,7 +302,7 @@ body.INDEX {
 /*页脚*/
 .Footer {
   border-top: 1px solid #e7e7e7;
-  height: 64px;
+  height: 65px;
   font-size: 11px;
 }
 .Footer a {
@@ -314,14 +314,14 @@ body.INDEX {
 }
 .Footer .Copyright {
   float: right;
-  color: #333333;
+  color: #333;
   font-family: Tahoma, Arial, sans-serif;
 }
 .INDEX .Footer a {
   color: black;
 }
 .PERSONAL .Footer {
-  height: 44px;
+  height: 45px;
 }
 .PERSONAL .Footer a {
   color: #aaaaaa;

@@ -40,45 +40,44 @@ function updateNewTopics(topics) {
 }
 
 function saveNewTopic(topic, callback) {
+  callback = callback || function () {
+  };
+  if (!topic.publishDate) {
+    return callback(null, topic);
+  }
+
   var newTopic = new NewTopicModel();
   newTopic._id = undefined;
   newTopic = extend(true, topic, newTopic);
 
-  NewTopicModel.findByIdAndRemove(newTopic._id, function (err, doc) {
+  NewTopicModel.findByIdAndRemove(newTopic._id, function (err) {
     if (err) {
-      if (typeof callback === 'function') {
-        callback(err);
-      }
-      return;
+      return callback(err);
     }
-    newTopic.save(function (err, doc) {
+    newTopic.save(function (err) {
       if (err) {
-        if (typeof callback === 'function') {
-          callback(err);
-        }
-        return;
+        return callback(err);
       }
       console.log("new topics save to updated topics list");
 
       getNewTopics(function (err, topics) {
         if (err) {
-          callback(err);
+          return callback(err);
         }
 
         //the new topics can only be 5. if more than 5, delete the old one
         if (topics.length <= 5) {
           updateNewTopics(topics);
-          return;
+          return callback(null, topic);
         }
 
         //always delete the first one
         NewTopicModel.findByIdAndRemove(topics[5]._id, function (err, doc) {
           if (err) {
-            if (typeof callback === 'function') {
-              callback(err);
-            }
-            return;
+            return callback(err);
           }
+
+          return callback(null, topic);
           console.log("delete old topics success");
           updateNewTopics(topics.slice(0, 5));
         });

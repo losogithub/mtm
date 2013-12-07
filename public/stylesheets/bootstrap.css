@@ -1361,6 +1361,15 @@ cite {
   /*added*/
   color: #999;
 }
+.text-light {
+  /*added*/
+  color: #ccc;
+}
+.text-light:hover,
+.text-light:focus {
+  /*added*/
+  color: #ccc;
+}
 .text-primary {
   color: #428bca;
 }

@@ -85,10 +85,9 @@ function getAllTopics(callback) {
  * @param title
  * @param coverUrl
  * @param description
- * @param publish
  * @param callback
  */
-function saveTopic(topic, title, coverUrl, description, publish, callback) {
+function saveTopic(topic, title, coverUrl, description, callback) {
   callback = callback || function () {
   };
 
@@ -96,17 +95,30 @@ function saveTopic(topic, title, coverUrl, description, publish, callback) {
   topic.cover_url = coverUrl;
   topic.description = description;
   topic.update_at = Date.now();
-  if (publish) {
-    topic.publishDate = new Date();
-  }
   topic.save(function (err) {
     if (err) {
       return callback(err);
     }
     callback(null, topic);
-    if (topic.publishDate) {
-      NewTopic.saveNewTopic(topic);
+    NewTopic.saveNewTopic(topic);
+  });
+}
+
+function publishTopic(topic, callback) {
+  callback = callback || function () {
+  };
+
+  if (!topic.title) {
+    return callback(new Error(400));
+  }
+  topic.update_at = Date.now();
+  topic.publishDate = Date.now();
+  topic.save(function (err) {
+    if (err) {
+      return callback(err);
     }
+    callback(null, topic);
+    NewTopic.saveNewTopic(topic);
   });
 }
 
@@ -158,6 +170,7 @@ exports.increaseItemCountBy = increaseItemCountBy;
 exports.increasePVCountBy = increasePVCountBy;
 exports.getAllTopics = getAllTopics;
 exports.saveTopic = saveTopic;//改
+exports.publishTopic = publishTopic;
 exports.deleteTopic = deleteTopic;//删
 exports.getTopicById = getTopicById;//查
 exports.getTopicsByIdsSorted = getTopicsByIdsSorted;
