@@ -29,7 +29,7 @@
         return src;
       }
       if (src.indexOf('?') < 0) {
-        return src + '?';
+        return src + '?&';//这个&是针对tianya加的
       } else {
         return src + '&';
       }
