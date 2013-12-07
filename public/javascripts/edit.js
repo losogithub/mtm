@@ -1877,14 +1877,12 @@
           window.location = '/topic/' + topicId;
         })
         .fail(function (jqXHR, textStatus) {
+          $publish.button('reset');//成功的话跳转可能要几秒时间，所以不能reset
           console.error(jqXHR.responseText);
           console.error(textStatus);
           if (textStatus != 'abort') {
             retryMessenger();
           }
-        })
-        .always(function () {
-          $publish.button('reset');
         });
     });
   }

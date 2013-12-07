@@ -43,7 +43,7 @@ function saveNewTopic(topic, callback) {
   callback = callback || function () {
   };
   if (!topic.publishDate) {
-    callback(null, topic);
+    return callback(null, topic);
   }
 
   var newTopic = new NewTopicModel();
