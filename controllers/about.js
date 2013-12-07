@@ -5,6 +5,12 @@
  * Time: 4:51 PM
  * To change this template use File | Settings | File Templates.
  */
+function showAbout(req, res){
+  res.render('about/about', {
+    css: ['stylesheets/service.css'],
+    layout: false
+  });
+}
 function showRules(req, res){
   res.render('about/rules', {
     css: ['stylesheets/service.css'],
@@ -81,7 +87,7 @@ function showPrivacy(req,res){
     });
 
 }
-
+exports.showAbout = showAbout;
 exports.showRules = showRules;
 exports.showPrivacyCenter = showPrivacyCenter;
 exports.showPolicy = showPolicy;

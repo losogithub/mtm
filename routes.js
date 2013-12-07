@@ -85,6 +85,7 @@ module.exports = function (app) {
    */
 
   //About
+  app.get('/about', about.showAbout);
   app.get('/rules', about.showRules);
   //note  url with / ended not ok. todo
   app.get('/privacy', about.showPrivacy);
