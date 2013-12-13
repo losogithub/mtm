@@ -7,13 +7,13 @@
  */
 function showAbout(req, res){
   res.render('about/about', {
-    css: ['stylesheets/service.css'],
+    css: ['/stylesheets/service.css'],
     layout: false
   });
 }
 function showRules(req, res){
   res.render('about/rules', {
-    css: ['stylesheets/service.css'],
+    css: ['/stylesheets/service.css'],
     layout: false
   });
 }
@@ -22,7 +22,7 @@ function showRules(req, res){
 function showPrivacyCenter(req, res){
   res.render('about/privacy/privacyCenter',
     {
-      css: ['stylesheets/service.css'],
+      css: ['/stylesheets/service.css'],
       layout: false
     });
 }
@@ -30,7 +30,7 @@ function showPrivacyCenter(req, res){
 function showPolicy(req, res){
   res.render('about/privacy/policy',
     {
-      css: ['stylesheets/service.css'],
+      css: ['/stylesheets/service.css'],
       layout: false
     });
 }
@@ -38,7 +38,7 @@ function showPolicy(req, res){
 function showCope(req, res){
   res.render('about/privacy/cope',
     {
-      css: ['stylesheets/service.css'],
+      css: ['/stylesheets/service.css'],
       layout: false
     });
 }
@@ -46,7 +46,7 @@ function showCope(req, res){
 function showService(req, res){
   res.render('about/privacy/service',
     {
-      css: ['stylesheets/service.css'],
+      css: ['/stylesheets/service.css'],
       layout: false
     });
 }
@@ -54,7 +54,7 @@ function showService(req, res){
 function showPrinciple(req, res){
   res.render('about/privacy/principle',
     {
-      css: ['stylesheets/service.css'],
+      css: ['/stylesheets/service.css'],
       layout: false
     });
 }
@@ -62,7 +62,7 @@ function showPrinciple(req, res){
 function showHelp(req, res){
   res.render('about/help',
     {
-      css: ['stylesheets/helpCenter.css'],
+      css: ['/stylesheets/helpCenter.css'],
       layout: false
     });
 }
@@ -74,7 +74,7 @@ function showEachHelp(req, res){
   var fileName = commonPart + helpId ;
 
   res.render(fileName, {
-    css: ['../stylesheets/helpCenter.css'],
+    css: ['/stylesheets/helpCenter.css'],
     layout: false
   });
 }
@@ -82,7 +82,7 @@ function showEachHelp(req, res){
 function showPrivacy(req,res){
   res.render('about/privacy',
     {
-      css: ['stylesheets/service.css'],
+      css: ['/stylesheets/service.css'],
       layout: false
     });
 
