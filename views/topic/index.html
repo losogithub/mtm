@@ -153,8 +153,45 @@
   </div>
 </div>
 
+<button id="_toTop" class="btn btn-link">
+  <i class="icon-angle-up"></i>
+</button>
+
 <script>
   $(function () {
+    //回顶部按钮
+    var $window = $(window);
+    var $_toTop = $('#_toTop');
+    var docHeight;
+    var winHeight;
+    var updateDisplay = function () {
+      docHeight = $(document).height();
+      winHeight = $window.height();
+      if (docHeight - winHeight > 500) {
+        $_toTop.show();
+      } else {
+        $_toTop.hide();
+      }
+    }
+    updateDisplay();
+    $window.on('resize', updateDisplay);
+    $window.on('scroll resize', function () {
+      var scroll = $window.scrollTop();
+      var delta = scroll + winHeight - (docHeight - 89);
+      if (scroll < 100) {
+        $_toTop.css('bottom', scroll - 100 + 25);
+      } else if (delta > 25) {
+        $_toTop.css('bottom', delta);
+      } else {
+        $_toTop.css('bottom', 25);
+      }
+    });
+    $_toTop.click(function () {
+      $_toTop.blur();
+      $('html, body').animate({scrollTop: 0}, 200);
+    });
+
+    //初始化fancybox
     $('.fancybox:visible').fancybox(shizier.fancyboxOptions);
   })
 </script>

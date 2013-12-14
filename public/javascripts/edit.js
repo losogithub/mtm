@@ -1822,11 +1822,12 @@
    * @private
    */
   function _initBand() {
-    $(window).scroll(function () {
-      if ($(this).scrollTop() >= 48) {
+    var $window = $(window);
+    $window.scroll(function () {
+      if ($window.scrollTop() >= 48) {
         $band.css('top', 0);
       } else {
-        $band.css('top', 48 - $(this).scrollTop());
+        $band.css('top', 48 - $window.scrollTop());
       }
     });
 
