@@ -30,6 +30,7 @@ module.exports = function (app) {
   app.get('/topic/video_detail', topic.getVideoDetail);
   app.get('/topic/:topicId', topic.showIndex);
   app.get('/topic/:topicId/edit', auth.loginRequired, topic.showEdit);
+  app.get('/topic/:topicId/chang', topic.showChang);
   app.post('/topic/item', auth.userRequired, topic.createItem);
   app.put('/topic/item', auth.userRequired, topic.editItem);
   app.put('/topic/sort', auth.userRequired, topic.sortItem);

@@ -119,13 +119,106 @@ function showEdit(req, res, next) {
   });
 }
 
+function showChang(req, res, next) {
+  console.log('showChang=====');
+  var topicId = req.params.topicId;
+
+  var ep = EventProxy.create('topic', 'items', 'author', function (topic, items, author) {
+    var updateDate = topic.update_at.getFullYear() + '-'
+      + (topic.update_at.getMonth() + 1) + '-'
+      + topic.update_at.getDate();
+
+    var topicData = {
+      _id: topic._id,
+      title: topic.title,
+      coverUrl: topic.cover_url,
+      description: topic.description,
+      updateAt: updateDate,
+      author: topic.author_name,
+      PVCount: topic.PV_count,
+      FVCount: topic.FVCount
+    };
+    var itemsData = [];
+    items.forEach(function (item) {
+      itemsData.push(_getItemData(item));
+    });
+
+    var authorData = {
+      author: author.loginName,
+      imgUrl: author.url,
+      description: author.description,
+      personalSite: author.personalSite
+    };
+
+    var liked = false; //default, not login user.
+    //If a login user, check liked before or not.
+    if (req.session && req.session.userId) {
+      //console.log("currentUser", req.currentUser);
+      //check in FVTopicList
+      var likeList = req.currentUser.FVTopicList;
+      if (likeList.indexOf(topic._id) > -1) {
+        console.log("liked before");
+        liked = true;
+      }
+    }
+
+    res.set('Cache-Control', 'private, no-cache, no-store, must-revalidate, post-check=0, pre-check=0');
+    res.set('Connection', 'close');
+    res.set('Expire', '-1');
+    res.set('Pragma', 'no-cache');
+    res.render('topic/chang', {
+      title: topicData.title,
+      description: topicData.description,
+      escape: escape,
+      topic: topicData,
+      items: itemsData,
+      authorInfo: authorData,
+      layout: false
+    });
+    console.log('showChang done');
+  })
+    .fail(function (err) {
+      console.error(err.stack);
+      res.send(500, err);
+    });
+
+  Topic.getTopicById(topicId, ep.done(function (topic) {
+    if (!topic || !topic.publishDate) {
+      ep.unbind();
+      res.send(404, '您要查看的总结不存在');
+      return;
+    }
+
+    ep.emit('topic', topic);
+    Topic.increasePVCountBy(topic, 1).exec();
+    Topic.getContents(topic, ep.done(function (items) {
+      if (!items) {
+        ep.unbind();
+        res.send(404, '条目列表头不存在');
+        return;
+      }
+
+      ep.emit('items', items);
+    }));
+    //author information: website url, description, images.
+    User.getUserByLoginName(topic.author_name, ep.done(function (author) {
+      if (!author) {
+        ep.unbind();
+        res.send(404, '作者不存在');
+        return;
+      }
+
+      ep.emit('author', author);
+    }));
+  }));
+}
+
 function showIndex(req, res, next) {
   console.log('showIndex=====');
   var userId = req.session.userId;
   var topicId = req.params.topicId;
   //2013.11.30
   req.session._loginReferer = '/topic/' + topicId;
-  var currentPage = req.query.page || 1;
 
   var ep = EventProxy.create('topic', 'items', 'author', function (topic, items, author) {
     var updateDate = topic.update_at.getFullYear() + '年'
@@ -191,9 +284,7 @@ function showIndex(req, res, next) {
       topic: topicData,
       items: itemsData,
       authorInfo: authorData,
-      liked: liked,
-      currentPage: currentPage,
-      totalPage: 4
+      liked: liked
     });
     console.log('showIndex done');
   })
@@ -1223,6 +1314,7 @@ function AddorRemoveLikes(req, res) {
 
 exports.createTopic = createTopic;
 exports.showEdit = showEdit;
+exports.showChang = showChang;
 exports.showIndex = showIndex;
 exports.createItem = createItem;
 exports.editItem = editItem;

@@ -30,7 +30,7 @@
 <% showThis = item.quote == 'pps.tv' && item.vid; %>
 <% showOne = showOne || showThis; %>
 <embed style="display: <%= !showThis ? 'none' : 'block' %>;" class="PPS" height="400" width="480"
-       id="video_player_other" allowscriptaccess="always" pluginspage="http://get.adobe.com/cn/flashplayer/"
+       allowscriptaccess="always" pluginspage="http://get.adobe.com/cn/flashplayer/"
        allowfullscreen="true" quality="hight"
        src="http://player.pps.tv/player/sid/<%= item.vid ? item.vid : '#vid#' %>/v.swf"
        type="application/x-shockwave-flash" wmode="Opaque"></embed>
