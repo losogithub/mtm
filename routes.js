@@ -39,7 +39,6 @@ module.exports = function (app) {
   app.delete('/topic/item', auth.userRequired, topic.deleteItem);
   app.delete('/topic/:topicId', auth.userRequired, topic.deleteTopic);
 
-
   // sign up, login, logout
   app.get('/signup', sign.showSignUp);
   app.post('/signup', sign.signup);
