@@ -14,6 +14,7 @@ var request = require('request');
 var Iconv = require('iconv').Iconv;
 var BufferHelper = require('bufferhelper');
 var domain = require('domain');
+var phantom = require('phantom');
 
 var helper = require('../helper/helper');
 var escape = helper.escape;
@@ -211,6 +212,65 @@ function showChang(req, res, next) {
       ep.emit('author', author);
     }));
   }));
+}
+
+function showShareChang(req, res, next) {
+  console.log('showShareChang=====');
+  var topicId = req.params.topicId;
+
+  Topic.getTopicById(topicId, function (err, topic) {
+    if (err) {
+      return next(err);
+    }
+    if (!topic || !topic.publishDate) {
+      return next(new Error(404));
+    }
+
+    res.set('Cache-Control', 'private, no-cache, no-store, must-revalidate, post-check=0, pre-check=0');
+    res.set('Connection', 'close');
+    res.set('Expire', '-1');
+    res.set('Pragma', 'no-cache');
+    res.render('topic/shareChang', {
+      title: topic.title,
+      description: topic.description,
+      layout: false
+    });
+    console.log('showShareChang done');
+  });
+}
+
+function createChang(req, res, next) {
+  console.log('createChang=====');
+  var topicId = req.params.topicId;
+
+
+  Topic.getTopicById(topicId, function (err, topic) {
+    if (err) {
+      return next(err);
+    }
+    if (!topic || !topic.publishDate) {
+      return next(new Error(404));
+    }
+
+    console.log(topic.update_at.getTime());
+    phantom.create(function (ph) {
+      ph.createPage(function (page) {
+        page.set('settings.resourceTimeout', 2000);
+        for (var key in page) {
+          console.log(key);
+        }
+        page.open('http://localhost:3000/topic/' + topicId + '/chang', function () {
+          setTimeout(function(){
+            page.render('public/images/chang/' + topic.update_at.getTime() + '_' + topicId + '.jpg', function () {
+              ph.exit();
+              res.json({src: '/images/chang/' + topic.update_at.getTime() + '_' + topicId + '.jpg'});
+              console.log('createChang done');
+            });
+          },3000);
+        });
+      })
+    });
+  });
 }
 
 function showIndex(req, res, next) {
@@ -1312,11 +1372,11 @@ function AddorRemoveLikes(req, res) {
 
 }
 
-
-
 exports.createTopic = createTopic;
 exports.showEdit = showEdit;
 exports.showChang = showChang;
+exports.showShareChang = showShareChang;
+exports.createChang = createChang;
 exports.showIndex = showIndex;
 exports.createItem = createItem;
 exports.editItem = editItem;

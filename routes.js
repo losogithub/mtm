@@ -31,13 +31,16 @@ module.exports = function (app) {
   app.get('/topic/:topicId', topic.showIndex);
   app.get('/topic/:topicId/edit', auth.loginRequired, topic.showEdit);
   app.get('/topic/:topicId/chang', topic.showChang);
+  app.get('/topic/:topicId/share_chang', topic.showShareChang);
   app.post('/topic/item', auth.userRequired, topic.createItem);
+  app.post('/topic/:topicId/share_chang', topic.createChang);
   app.put('/topic/item', auth.userRequired, topic.editItem);
   app.put('/topic/sort', auth.userRequired, topic.sortItem);
   app.put('/topic/save', auth.userRequired, topic.saveTopic);
   app.put('/topic/publish', auth.userRequired, topic.publishTopic);
   app.delete('/topic/item', auth.userRequired, topic.deleteItem);
   app.delete('/topic/:topicId', auth.userRequired, topic.deleteTopic);
+
 
   // sign up, login, logout
   app.get('/signup', sign.showSignUp);
@@ -97,8 +100,6 @@ module.exports = function (app) {
   app.get('/principle', about.showPrinciple);
   app.get('/help', about.showHelp);
   app.get('/faq/:helpId', about.showEachHelp);
-
-
 
   app.get('*', function (req, res, next) {
     next(new Error(404));
