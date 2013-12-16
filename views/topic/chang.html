@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= locals.title ? title + ' - 石子儿' : '石子儿 - 与世界分享你的总结' %></title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge;charset=UTF-8">
+  <meta name="description" content="<%= locals.description
+    || '把各种各样的信息，自由地搭配组合，总结成一个页面保存起来，展示给感兴趣的人。我们的致力于让任何人都可以设计信息，让其他人和信息相遇、相会。' %>">
+  <link type='text/css' rel='stylesheet' href='/stylesheets/bootstrap.css'/>
+  <link type='text/css' rel='stylesheet' href='/stylesheets/todc-bootstrap.css'/>
+  <link type='text/css' rel="stylesheet" href="/stylesheets/font-awesome.min.css">
+  <link type='text/css' rel='stylesheet' href='/stylesheets/common.css'/>
+  <link type='text/css' rel="stylesheet" href="/stylesheets/topic.css"/>
+  <link type='text/css' rel="stylesheet" href="/stylesheets/chang.css"/>
+</head>
+<body>
+<div style="max-height: 360px;position: relative; overflow: hidden;">
+  <div style="height: 40px;background-color: rgba(0,0,0,0.4);position: absolute;top: 0;width: 100%;">
+    <table style="margin-left: 10px; float: left">
+      <td>
+        <img src="/images/logo_white_50x20.png">
+      </td>
+    </table>
+    <p style="float: right; line-height: 40px; margin-right: 10px; color: white;">www.shizier.com</p>
+  </div>
+  <img src="<%= topic.coverUrl %>" style="width: 100%;">
+  <div class="Shadow"></div>
+</div>
+
+<div style="position: relative; top: -40px; margin: 0 10px;">
+  <div class="HeadMain clearfix">
+    <div class="HeadTxt">
+      <h1 class="HeadTtl"><%= topic.title %></h1>
+
+      <div class="HeadOption clearfix">
+        <div class="HeadUser" style="float: left;">
+          <span class="HeadUserThumb"><img width="30" height="30"
+                                           src="<%= authorInfo.imgUrl || '/images/no_img/user_80x80.png' %>"
+                                           onerror="shizier.errorImage(this,'user_80x80');"></span><span
+          class="HeadUserName"><%= topic.author %></span>
+        </div>
+        <p class="UserDesc"><%= authorInfo.description || '' %></p>
+      </div>
+
+      <p class="HeadDescWrapper">
+        <span style="<%= !topic.description ? 'display: none;' : '' %>"
+              class="HeadDesc text-secondary">
+          <%= topic.description || '' %>
+        </span>
+        <span class="text-muted" style="font-size: 10px;">
+          <i class="icon-edit" style="vertical-align: middle;"></i>
+          <%= topic.updateAt %>
+        </span>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!--内容-->
+<div class="TopicWrapper clearfix">
+  <div class="Main">
+
+    <% include _ul.html %>
+
+  </div>
+</div>
+</body>
+</html>

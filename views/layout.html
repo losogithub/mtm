@@ -14,7 +14,7 @@
   <link type='text/css' rel="stylesheet" href="/stylesheets/font-awesome.min.css">
   <link type='text/css' rel='stylesheet' href='/stylesheets/common.css'/>
   <% if (locals.pageType == 'ACCOUNT' || locals.pageType == 'LOGIN' || locals.pageType == 'SIGNUP') { %>
-  <link rel="stylesheet" href="/stylesheets/account.css"/>
+  <link type='text/css' rel="stylesheet" href="/stylesheets/account.css"/>
   <% } %>
   <% for (i in locals.css) { %>
   <link type='text/css' rel='stylesheet' href='<%= css[i] %>'/>
