@@ -252,18 +252,16 @@ function createChang(req, res, next) {
       return next(new Error(404));
     }
 
-    console.log(topic.update_at.getTime());
+    var time = topic.update_at.getTime();
+    var filename = time + '_' + topicId + '.jpg';
     phantom.create(function (ph) {
       ph.createPage(function (page) {
         page.set('settings.resourceTimeout', 2000);
-        for (var key in page) {
-          console.log(key);
-        }
         page.open('http://localhost:3000/topic/' + topicId + '/chang', function () {
           setTimeout(function(){
-            page.render('public/images/chang/' + topic.update_at.getTime() + '_' + topicId + '.jpg', function () {
+            page.render('public/images/chang/' + filename, function () {
               ph.exit();
-              res.json({src: '/images/chang/' + topic.update_at.getTime() + '_' + topicId + '.jpg'});
+              res.json({src: '/images/chang/' + filename});
               console.log('createChang done');
             });
           },3000);
