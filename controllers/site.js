@@ -14,11 +14,12 @@ var math = require('mathjs')();
 var topicsPerPage = 20;
 var goodTopicsPerPage = 10;
 
-function index(req, res, next) {
+function index(req, res) {
 
 
   //2013.11.30
-  req.session._loginReferer = '/';
+  //req.session._loginReferer = '/';
+
   //console.log(hotTopics);
 
   //set default to the first page.
@@ -50,8 +51,9 @@ function index(req, res, next) {
 
 function _showDate() {
   var today = new Date();
-  console.log("------------today----------");
+  console.log("---------------------today----------------");
   console.log(today);
+  console.log('\n');
   var day = today.getDay();
   var dayMap = {0: "星期日", 1: "星期一", 2: "星期二", 3: "星期三", 4: "星期四", 5: "星期五", 6: "星期六"}
   var dayInChn = dayMap[day];

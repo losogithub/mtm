@@ -29,14 +29,14 @@ var path = require('path');
 function loadUser(req, res, next) {
   console.log("loadUser");
   console.log("from Url: %s", req.query.fromUrl);
-  console.log("before the logineReferer: %s", req.session._loginReferer);
+ // console.log("before the logineReferer: %s", req.session._loginReferer);
   // the first priority is req.query.fromUrl, then referer, finally home
   //note: some req.headers.referer cannot be rendered !!!
   //e.g. if it is login, you shall not jump back to login page.
   //2013.11.30 But also not home page !!!!
 
-  req.session._loginReferer = req.query.fromUrl || req.session._loginReferer||'/';
-  console.log("loginReferer: %s", req.session._loginReferer);
+ // req.session._loginReferer = req.query.fromUrl || req.session._loginReferer||'/';
+ // console.log("loginReferer: %s", req.session._loginReferer);
 
   if (req.session && req.session.userId) {
     // session stores the userId information. means after login
@@ -55,7 +55,7 @@ function loadUser(req, res, next) {
         //check fail: not login. user cookie contain session id, but not correct.
         //in this case, no corresponding user in the db.
         // if it is showlogin, jump to login.
-        console.err("wrong uerId");
+        console.err("wrong uerId, not matched");
         req.session.userId = null;
         return next();
       }
@@ -161,7 +161,8 @@ function _authenticateFromLoginToken(req, res, next) {
  */
 function loginRequired(req, res, next) {
   console.log("LoginRequired");
-  console.log("loginReferer: %s", req.session._loginReferer);
+  //console.log("loginReferer: %s", req.session._loginReferer);
+    console.log("header referer : ", req.headers.referer);
   //if not login, then redirect to login page.
   if ((!req.session) || (!req.session.userId)) {
     return res.redirect('/login?fromUrl=' + req.url);
@@ -172,25 +173,34 @@ function loginRequired(req, res, next) {
 
 function userRequired(req, res, next) {
   console.log("userRequired");
-  console.log("loginReferer: %s", req.session._loginReferer);
+  //console.log("loginReferer: %s", req.session._loginReferer);
+    console.log("header referer: ", req.headers.referer);
   //if not login, then redirect to login page.
   if ((!req.session) || (!req.session.userId)) {
+      //todo: shall we send 401 ?
     return res.send(401, 'unauthorized');
   } else {
     return next();
   }
 }
 
+/*
+This is a post request.
+But still use if-else to check for sure.
+ */
 function loginDialog(req, res, next) {
   console.log("loginDialog");
-  console.log("loginReferer: %s", req.session._loginReferer);
+ // console.log("loginReferer: %s", req.session._loginReferer);
+    console.log("header referer: ", req.headers.referer);
 
   //if not login, then redirect to login page.
   if (req.session && req.session.userId) {
     next();
   } else {
 
-    req.body.url = req.session._loginReferer;
+     // req.body.url = req.session._loginReferer;
+      // what does req.body.url used for ?
+      req.body.url = req.query.fromUrl || req.headers.referer;
 
 
     //now login the user.

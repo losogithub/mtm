@@ -20,10 +20,24 @@ var mail = require('../services/mail');
 
 var showSignUp = function (req, res) {
   console.log("render register page");
-  console.log("login Referer: ", req.session._loginReferer);
+  //console.log("login Referer: ", req.session._loginReferer);
+  //2013.12.16 revise _loginReferer to loginOrSignup
+
   //2013.11.30 check whether is a already logged in user
-  var refer = req.session._loginReferer || '/';
+  //var refer = req.session._loginReferer || '/';
+
+  //for already logged in user
+    console.log("referer: ", req.headers.referer);
+  //var  refer = req.headers.referer || '/';
+
   if(req.session && req.session.userId){
+      /*
+      If it is a logged in user, jump to its refer or home.
+      shall we consider a black list ?
+      //todo:
+       */
+    // for signup, seems no need of req.query.fromUrl
+    var refer = req.headers.referer || '/';
     return res.redirect(refer);
   }
   else{
@@ -34,8 +48,10 @@ var showSignUp = function (req, res) {
 
 
 var signup = function (req, res, next) {
-  console.log("Register");
-  console.log("login Referer: ", req.session._loginReferer);
+  console.log("----- Register -------");
+  //console.log("login Referer: ", req.session._loginReferer);
+  console.log("header referer: ", req.headers.referer);
+
   var name = sanitize(req.body.username).trim();
   name = sanitize(name).xss();
   var loginname = name.toLowerCase();
@@ -256,7 +272,7 @@ var signup = function (req, res, next) {
  * @param  {HttpResponse} res
  */
 var showLogin = function (req, res) {
-  console.log("render login page ");
+  console.log("----- Show login page ----");
   //console.log("session: ", req.session);
   console.log("referer: ", req.headers.referer);
 
@@ -264,14 +280,17 @@ var showLogin = function (req, res) {
   //otherwise it was assigned by some middleware.
   //No, 2013.11.30 if it is not null, it must be assigned before not equal to /login. So you  cannot revise it.
   //even it equals to /singup. it is ok. later in login function will check this.
+  /*
   if (!req.session._loginReferer) {
     req.session._loginReferer =  req.headers.referer || '/';
   }
+  */
 
-  var refer = req.session._loginReferer || '/';
+  //var refer = req.session._loginReferer || '/';
 
 
   //todo: 2013.11.26 it seems needed for jump
+  //2013.12.16: seems no need.
   //e.g. before login: suppose you go to forgetPassword page, then  you click login.
   // after you successfully logged in, it shall not jump to forgetpassword page.
   // 2 example: suppose you are at register page, then click loggin, after succesfully loggin,
@@ -291,7 +310,8 @@ var showLogin = function (req, res) {
    }
    } */
 
-    console.log("here");
+    console.log("already logged in user.");
+    var refer = req.query.fromUrl || req.headers.referer || '/';
     return res.redirect(refer);
   }
 
@@ -320,6 +340,7 @@ var login = function (req, res, next) {
   var pass = sanitize(req.body.password).trim();
   var autoLogin = sanitize(req.body.autoLogin).trim();
 
+  console.log("---login post-------");
   console.log("name: %s", loginname);
   console.log("pass: %s", pass);
   console.log("autoLogin: %s", autoLogin);
@@ -379,7 +400,7 @@ var login = function (req, res, next) {
 
 //suppose the username id, or email address exists, now check the password:
 function checkOnlyPassword(emailIDFlag, pass, autoLogin, user, req, res) {
-  console.log("login: check user password.");
+  console.log("----login: check user password.------");
   pass = encryp.md5(pass);
   var email = user.email;
   if (!emailIDFlag) {
@@ -412,8 +433,14 @@ function checkOnlyPassword(emailIDFlag, pass, autoLogin, user, req, res) {
     });
   }
 
-  console.log("req.session._loginReferr: ", req.session._loginReferer);
-  var refer = req.session._loginReferer || '/';
+  /*
+  login successfully !
+  not jump to which page.
+   */
+ // console.log("req.session._loginReferr: ", req.session._loginReferer);
+  console.log("header referer: ", req.headers.referer);
+  //var refer = req.session._loginReferer || '/';
+  var refer = req.query.fromUrl || req.headers.referer || '/';
   //console.log("loginReferer");
   //console.log(req.session._loginReferer);
 
@@ -426,7 +453,7 @@ function checkOnlyPassword(emailIDFlag, pass, autoLogin, user, req, res) {
       break;
     }
   }
-  console.log("after login refer to: ", refer);
+  console.log("After login, jump to: ", refer);
   res.redirect(refer);
 };
 
@@ -449,8 +476,8 @@ var notJump = [
 var signout = function (req, res, next) {
   if (req.session) {
     //console.log("signout: currentUser: %s" , req.currentUser);
-    console.log("logout");
-    console.log("session userId: %s", req.session.userId);
+    console.log("-----logout------");
+    console.log("session userId: ", req.session.userId);
     req.session.destroy(function () {
     });
   }
@@ -462,7 +489,8 @@ var signout = function (req, res, next) {
   //I see, currentUser only passed between middleware and the final call.
   if(req.cookies.logintoken){
     var cookie = JSON.parse(req.cookies.logintoken);
-    console.log(cookie);
+
+    console.log("cookie: ", cookie);
     //console.log(req.currentUser.series);
     if (cookie.email && cookie.series) {
       //combine email and series to make sure only only clear from on computer.
@@ -482,6 +510,7 @@ var signout = function (req, res, next) {
   //res.redirect('/');
   //console.log(req.headers.referer);
   //need a black list
+  // logout cannot have req.query.fromUrl
   var refer = req.headers.referer || '/';
   for (var i = 0, len = notJump.length; i !== len; ++i) {
     if (refer.indexOf(notJump[i]) >= 0) {
@@ -498,7 +527,7 @@ var signout = function (req, res, next) {
 
 
 var showForgetPassword = function (req, res) {
-  console.log("render forget password page");
+  console.log("------ show forget password page -----");
   res.render('sign/forgetPassword', {
     errMsg: ''
   });
@@ -506,6 +535,7 @@ var showForgetPassword = function (req, res) {
 
 
 var forgetPassword = function (req, res, next) {
+  console.log("-----forget password check email ------");
   var email = sanitize(req.body.email).trim().toLowerCase();
   console.log(email);
   email = sanitize(email).xss();
@@ -649,13 +679,13 @@ var activeAccount = function (req, res, next) {
   var key = req.query.key;
   var email = req.query.email;
 
-  console.log("active account");
+  console.log("----active account-----");
   console.log(key);
   console.log(email);
 
   User.getUserByMail(email, function (err, user) {
     if (err) {
-      console.log("errr");
+      console.log("error: ", err);
       return next(err);
     }
     if (!user || encryp.md5(user.email + config.session_secret) !== key || user.active) {
@@ -665,15 +695,15 @@ var activeAccount = function (req, res, next) {
 
     //2013.12.02 Before active, first check whether ther is an login user and logout it.
     //copy from logout function
+    console.log("first logout");
     if (req.session.userId) {
-      console.log("logout");
-      console.log("session userId: %s", req.session.userId);
+      console.log("session userId: ", req.session.userId);
       req.session.destroy(function () {
       });
     }
     if(req.cookies.logintoken){
       var cookie = JSON.parse(req.cookies.logintoken);
-      console.log(cookie);
+      console.log("cookie: ", cookie);
       if (cookie.email && cookie.series) {
         //combine email and series to make sure only only clear from on computer.
         LoginToken.remove(cookie.email, cookie.series);

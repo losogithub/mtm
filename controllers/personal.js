@@ -332,6 +332,7 @@ var showAccountModify = function (req, res) {
 
 var timeSpanCheck = function (auth, req, res) {
 
+  console.log("---account modiy: time Span check----");
   //2013.11.30 sometimes if user change the auth data, decrypt may crash.
   try {
     var loginTime = encryp.decrypt(auth, 'mtm');
