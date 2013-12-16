@@ -98,6 +98,8 @@ module.exports = function (app) {
   app.get('/help', about.showHelp);
   app.get('/faq/:helpId', about.showEachHelp);
 
+
+
   app.get('*', function (req, res, next) {
     next(new Error(404));
   })
