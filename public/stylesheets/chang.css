@@ -25,7 +25,7 @@ body,
 }
 .HeadOption {
   margin-top: 7px;
-  width: 440px;
+  width: 420px;
 }
 .HeadOption .HeadUser {
   margin-right: 10px;
@@ -63,4 +63,7 @@ body,
 .VIDEO embed {
   width: 420px;
   height: 360px;
+}
+.SortUtil {
+  display: none;
 }

@@ -16,6 +16,7 @@
     "mongoose": "*",
     "validator": "1.5.1",
     "nodemailer": "*",
+    "phantom": "*",
     "xss": "*" ,
     "redis": "*",
     "request": "*",
