@@ -16,7 +16,7 @@
   <script type="text/javascript" src="/javascripts/common.js"></script>
 </head>
 <body>
-<div style="max-height: 360px;position: relative; overflow: hidden;">
+<div style="min-height: 150px;max-height: 360px;position: relative; overflow: hidden;">
   <div style="height: 40px;background-color: rgba(0,0,0,0.4);position: absolute;top: 0;width: 100%;">
     <table style="margin-left: 10px; float: left">
       <td>
@@ -25,7 +25,7 @@
     </table>
     <p style="float: right; line-height: 40px; margin-right: 10px; color: white;">www.shizier.com</p>
   </div>
-  <img src="<%= topic.coverUrl %>" style="width: 100%;">
+  <img src="<%= topic.coverUrl %>" style="width: 100%;<%= topic.coverUrl ? '' : 'display: none;' %>">
   <div class="Shadow"></div>
 </div>
 
