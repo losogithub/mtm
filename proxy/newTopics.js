@@ -76,10 +76,9 @@ function saveNewTopic(topic, callback) {
           if (err) {
             return callback(err);
           }
-
-          return callback(null, topic);
           console.log("delete old topics success");
           updateNewTopics(topics.slice(0, 5));
+          return callback(null, topic);
         });
       });
     });
