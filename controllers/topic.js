@@ -463,8 +463,6 @@ function showIndex(req, res, next) {
   console.log('showIndex=====');
   var userId = req.session.userId;
   var topicId = req.params.topicId;
-  //2013.11.30
-  req.session._loginReferer = '/topic/' + topicId;
 
   var ep = EventProxy.create('topic', 'items', 'author', function (topic, items, author) {
     var updateDate = topic.update_at.getFullYear() + '年'
