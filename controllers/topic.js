@@ -15,6 +15,10 @@ var Iconv = require('iconv').Iconv;
 var BufferHelper = require('bufferhelper');
 var domain = require('domain');
 var phantom = require('phantom');
+var fs = require('fs');
+var portfinder = require('portfinder');
+var mongodb = require('mongodb');
+var config = require('../config');
 
 var helper = require('../helper/helper');
 var escape = helper.escape;
@@ -25,6 +29,8 @@ var User = require('../proxy').User;
 var NewTopic = require('../proxy').NewTopic;
 
 var utils = require('../public/javascripts/utils');
+
+
 
 function createTopic(req, res, next) {
   var userId = req.session.userId;
@@ -254,22 +260,204 @@ function createChang(req, res, next) {
 
     var time = topic.update_at.getTime();
     var filename = time + '_' + topicId + '.jpg';
-    phantom.create(function (ph) {
-      ph.createPage(function (page) {
-        page.set('settings.resourceTimeout', 2000);
-        page.open('http://localhost:3000/topic/' + topicId + '/chang', function () {
-          setTimeout(function(){
-            page.render('public/images/chang/' + filename, function () {
-              ph.exit();
-              res.json({src: '/images/chang/' + filename});
-              console.log('createChang done');
-            });
-          },3000);
-        });
-      })
+
+    // 1. First read this file, if err. then create. else res.json.
+    // If the zongjie has been updated, the filename shall not existed.
+    //remember: another process need to check the duplication of the same zongjie
+    // in case of attack.
+
+    var fullFilePath = 'public/images/chang/' + filename;
+
+    /*
+    1. read from GridFS
+    2. If exists, check wheather updated or not.
+     */
+    _readFromMongoGrid(topicId, time, res);
+   /*
+    fs.stat(fullFilePath, function(err, stats){
+      if(!err && stats.isFile()){
+        //wait for 3s.
+        setTimeout(function(){
+          res.json({src: '/images/chang/' + filename});
+          console.log("already been created before !");
+        }, 3000);
+
+      } else {
+      // use phantom to  create, and send.
+      //generate image, response, store in mongo gridfs.
+        _generateImage(topicId, time, res)
+      }
+
     });
+      */
   });
 }
+
+function _generateImage(topicId,time, db, res){
+  /*
+   In order to avoid at the same time, many people render this, we need different port.
+   So using a random generated number to achieve it.
+   1/20000. The probability of collision shall be less.
+   Math.floor(Math.random() * 20000) + 22000
+   */
+
+  portfinder.getPort(function(err, port){
+    if(err){
+      console.log("no avalilale port ?");
+      throw err;
+    }
+    else {
+      console.log("port: ", port);
+      var filename = time + '_' + topicId + '.jpg';
+      phantom.create({port: port},function (ph) {
+        ph.createPage(function (page) {
+          page.set('settings.resourceTimeout', 2000);
+          page.open('http://localhost:3000/topic/' + topicId + '/chang', function () {
+            setTimeout(function(){
+              page.render('public/images/chang/' + filename, function () {
+                ph.exit();
+                res.json({src: '/images/chang/' + filename});
+                console.log('createChang done');
+                /*
+                 store this png in grid fs , wait for 30s, delete this one.
+                 */
+                _storeMongoGrid(topicId,time,db);
+              });
+            },3000);
+          });
+        })
+      });
+    }
+  })
+}
+
+function _storeMongoGrid(topicId, time, db){
+
+  //var MongoClient = require('mongodb').MongoClient;
+
+// Connect to the db
+  //MongoClient.connect(config.db, function(err, db) {
+   // if(err) return console.log(err);
+
+    var gs = new mongodb.GridStore(db, topicId, "w", {
+      "content/type": "img/jpeg",
+      "metadata": {
+        "topicId": topicId,
+        "updateAt": time
+      },
+      "chunk_size": 1024
+    });
+    var filename = time + '_' + topicId + '.jpg';
+    var fullFilePath = 'public/images/chang/' + filename;
+    gs.writeFile(fullFilePath, function(err, obj){
+      if(err){
+        console.log("write to grid err.");
+        throw err;
+      }
+      else {
+        console.log("write to grid success.");
+        gs.close(function(err, success){
+          if(err){
+            console.log("close gridfs err");
+            throw err;
+          }
+          else {
+            console.log("success closed gridfs");
+
+            //delete jpg file in public image folder
+            _setTimeDelete(fullFilePath);
+          }
+        });
+      }
+    })
+ // });
+
+
+}
+
+function _readFromMongoGrid(topicId, time, res){
+  console.log("read from Mongo Grid");
+  var MongoClient = require('mongodb').MongoClient;
+
+// Connect to the db
+  MongoClient.connect(config.db, function(err, db) {
+    if(err) return console.log(err);
+
+    //var gs = new mongodb.GridStore(db, topicId, "r");
+
+    //first check the existence
+    mongodb.GridStore.exist(db, topicId, function(err, result){
+      if(err){
+        throw err;
+      }
+      //result is null
+      if(!result){
+        //not exists; create.
+        console.log("~~~~~~~~~~~not exists, create~~~~~~~~~");
+        _generateImage(topicId,time, db, res);
+      }
+      else {
+        //1. first check the newest or not
+        //2. if so. Ok
+        //3. if not, generate a new one
+        var gs = new mongodb.GridStore(db, topicId, "r");
+        gs.open(function(err, gs){
+          if(err){throw err}
+          //console.log(gs.metadata.topicId);
+          //console.log(gs.metadata.updateAt);
+          if( gs.metadata.updateAt == time){
+            console.log("ok, not updated yet")
+
+            var filename = time + '_' + topicId + '.jpg';
+            var fullFilePath = 'public/images/chang/' + filename;
+            var fullFilePath1 = 'public/images/chang/' + filename;
+            gs.read(function(err, data){
+              if(err){console.log("read err");throw err;}
+
+              fs.writeFile(fullFilePath,data, function(err) {
+                if(err) {
+                  console.log(err);
+                } else {
+                  console.log("chang weibo was saved at chang folder!");
+                  res.json({src: '/images/chang/' + filename});
+                  console.log("render success");
+                  _setTimeDelete(fullFilePath);
+                }
+              });
+            })
+
+
+          }
+          else {
+            console.log("regenerate ");
+            //regenerate new
+            mongodb.GridStore.unlink(db, topicId, function(err){
+              if(err){console.log("unlink gridstore err"); throw err;}
+              console.log("unlink success");
+            })
+            //regenerate new
+            _generateImage(topicId,time,db, res);
+          }
+
+        })
+
+      }
+
+    })
+
+  });
+
+}
+
+function _setTimeDelete(fullFilePath){
+  setTimeout(function(){
+    fs.unlink(fullFilePath,function(err){
+      if(err){throw err;}
+      console.log("successfully delete " + fullFilePath);
+    });
+  }, 10*1000); //10s
+}
+
 
 function showIndex(req, res, next) {
   console.log('showIndex=====');

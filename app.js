@@ -25,6 +25,9 @@ config.hostname = urlinfo.hostname || config.host;
 //e.g. hotopicsData, updateTopicsData
 require('./offlineProcess/retriveUpdatedTopicList')();
 
+//deleted outdated images
+//require('./offlineProcess/changPictureUpdate')();
+
 //access log file and error log file
 var accessLogFile = fs.createWriteStream('access.log', {flags: 'a'});
 var errorLogFile = fs.createWriteStream('error.log', {flags: 'a'});
