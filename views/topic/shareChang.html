@@ -42,7 +42,7 @@
           $('#_loading').hide();
           $('#_bubble').show();
           $('#_src').attr('href', data.src);
-          $('#_chang').attr('src', data.src);
+          $('#_chang').attr('src', data.src + '?' + new Date().getTime());
         });
     }
     create();
