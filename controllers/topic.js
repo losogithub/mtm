@@ -272,7 +272,7 @@ function createChang(req, res, next) {
     1. read from GridFS
     2. If exists, check wheather updated or not.
      */
-    _readFromMongoGrid(topicId, time, res);
+    _readFromMongoGrid(topic, topicId, time, res);
    /*
     fs.stat(fullFilePath, function(err, stats){
       if(!err && stats.isFile()){
@@ -293,7 +293,7 @@ function createChang(req, res, next) {
   });
 }
 
-function _generateImage(topicId,time, db, res){
+function _generateImage(topic, topicId,time, db, res){
   /*
    In order to avoid at the same time, many people render this, we need different port.
    So using a random generated number to achieve it.
@@ -309,24 +309,29 @@ function _generateImage(topicId,time, db, res){
     else {
       console.log("port: ", port);
       var filename = time + '_' + topicId + '.jpg';
-      phantom.create({port: port},function (ph) {
-        ph.createPage(function (page) {
-          page.set('settings.resourceTimeout', 2000);
-          page.open('http://localhost:3000/topic/' + topicId + '/chang', function () {
-            setTimeout(function(){
-              page.render('public/images/chang/' + filename, function () {
-                ph.exit();
-                res.json({src: '/images/chang/' + filename});
-                console.log('createChang done');
-                /*
-                 store this png in grid fs , wait for 30s, delete this one.
-                 */
-                _storeMongoGrid(topicId,time,db);
-              });
-            },3000);
-          });
-        })
-      });
+      //var loadingTime = _countDifferentItemsInOneTopicAndSetTime(topic,res);
+
+      _countDifferentItemsInOneTopicAndSetTime(topic, res, function(loadingTime){
+        phantom.create({port: port},function (ph) {
+          ph.createPage(function (page) {
+            console.log("loading time: ", loadingTime);
+            page.set('settings.resourceTimeout', loadingTime);
+            page.open('http://localhost:3000/topic/' + topicId + '/chang', function () {
+              setTimeout(function(){
+                page.render('public/images/chang/' + filename, function () {
+                  ph.exit();
+                  res.json({src: '/images/chang/' + filename});
+                  console.log('createChang done');
+                  /*
+                   store this png in grid fs , wait for 30s, delete this one.
+                   */
+                  _storeMongoGrid(topicId,time,db);
+                });
+              },loadingTime);
+            });
+          })
+        });
+      })//countDifferentItemsInOneTopicAndSetTime
     }
   })
 }
@@ -375,7 +380,7 @@ function _storeMongoGrid(topicId, time, db){
 
 }
 
-function _readFromMongoGrid(topicId, time, res){
+function _readFromMongoGrid(topic, topicId, time, res){
   console.log("read from Mongo Grid");
   var MongoClient = require('mongodb').MongoClient;
 
@@ -394,7 +399,7 @@ function _readFromMongoGrid(topicId, time, res){
       if(!result){
         //not exists; create.
         console.log("~~~~~~~~~~~not exists, create~~~~~~~~~");
-        _generateImage(topicId,time, db, res);
+        _generateImage(topic, topicId,time, db, res);
       }
       else {
         //1. first check the newest or not
@@ -419,9 +424,11 @@ function _readFromMongoGrid(topicId, time, res){
                   console.log(err);
                 } else {
                   console.log("chang weibo was saved at chang folder!");
-                  res.json({src: '/images/chang/' + filename});
-                  console.log("render success");
-                  _setTimeDelete(fullFilePath);
+                  setTimeout(function(){
+                    res.json({src: '/images/chang/' + filename});
+                    console.log("render success");
+                    _setTimeDelete(fullFilePath);
+                  }, 2000);
                 }
               });
             })
@@ -436,7 +443,7 @@ function _readFromMongoGrid(topicId, time, res){
               console.log("unlink success");
             })
             //regenerate new
-            _generateImage(topicId,time,db, res);
+            _generateImage(topic, topicId,time,db, res);
           }
 
         })
@@ -458,6 +465,42 @@ function _setTimeDelete(fullFilePath){
   }, 10*60*1000); //10s
 }
 
+function _countDifferentItemsInOneTopicAndSetTime(topic, res, callback){
+  //console.log("count time for resource loading");
+  var ep = EventProxy.create('items', function (items) {
+    var textTimePer = 10;
+    var pictureTimePer = 200;
+    var videoTimePer = 1000;
+    var totalTime = 0;
+
+    items.forEach(function (item) {
+      //itemsData.push(_getItemData(item).type);
+      switch  (item.type){
+        case 'IMAGE' : totalTime += pictureTimePer; break;
+        case 'VIDEO' : totalTime += videoTimePer; break;
+        default : totalTime += textTimePer; break;
+      }
+    });
+  //console.log("total resource loading time: ", totalTime);
+  //return totalTime;
+    //Give a default lowest time
+    if(totalTime < 2000) {totalTime = 2000;}
+  callback(totalTime);
+  })
+    .fail(function (err) {
+      console.error(err.stack);
+      res.send(500, err);
+    });
+
+  Topic.getContents(topic, ep.done(function (items) {
+    if (!items) {
+      ep.unbind();
+      res.send(404, '条目列表头不存在');
+      return;
+    }
+    ep.emit('items', items);
+  }));
+}
 
 function showIndex(req, res, next) {
   console.log('showIndex=====');
@@ -483,6 +526,7 @@ function showIndex(req, res, next) {
     items.forEach(function (item) {
       itemsData.push(_getItemData(item));
     });
+
 
     var authorData = {
       author: author.loginName,
