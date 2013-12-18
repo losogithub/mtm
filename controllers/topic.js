@@ -455,7 +455,7 @@ function _setTimeDelete(fullFilePath){
       if(err){throw err;}
       console.log("successfully delete " + fullFilePath);
     });
-  }, 10*1000); //10s
+  }, 10*60*1000); //10s
 }
 
 
