@@ -22,25 +22,34 @@
 <div id="_bubble" style="display: none;position: fixed; top: 0; left: 50%; margin: 20px 20px 20px 260px; background-color: #eee; border-radius: 5px; padding: 20px;">
   <p style="position: absolute; left: -8px; font-size: 30px; top: 10px; line-height: 1; color: #eee;">◆</p>
   <a id="_src">图片地址</a>
+  <button id="_forceRender" class="btn btn-link text-muted" style="margin-left: 30px;">重新生成</button>
   <!-- Baidu Button BEGIN -->
   <div class="bdsharebuttonbox" style="margin-top: 10px;"><a href="#" class="bds_more" data-cmd="more"></a><a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a><a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a><a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"></a><a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"></a><a href="#" class="bds_t163" data-cmd="t163" title="分享到网易微博"></a></div>
   <script></script>
   <!-- Baidu Button END -->
 </div>
 <script>
-  $.post(location.href)
-    .done(function (data) {
-      window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdUrl":location.href.replace('/share_chang', ''),"bdPic":'http://' + location.host + data.src,"bdStyle":"2","bdSize":"16"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=86835285.js?cdnversion='+~(-new Date()/36e5)];
-      $(function () {
-        $('#_loading').hide();
-        $('#_bubble').show();
-        $('#_src').attr('href', data.src);
-        $('#_chang')
-          .attr({
-            src: data.src
-          });
-      })
+  $(function () {
+    function create(forceRender) {
+      $('#_loading').show();
+      $('#_bubble').hide();
+      $('#_chang').attr('src', '/images/loading.gif');
+      console.log(location.pathname);
+      $.post(location.pathname + (forceRender ? '?force=1' : ''))
+        .done(function (data) {
+          window._bd_share_config = {"common": {"bdSnsKey": {}, "bdText": "", "bdMini": "2", "bdMiniList": false, "bdUrl": location.href.replace('/share_chang', ''), "bdPic": 'http://' + location.host + data.src, "bdStyle": "2", "bdSize": "16"}, "share": {}};
+          with (document)0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=86835285.js?cdnversion=' + ~(-new Date() / 36e5)];
+          $('#_loading').hide();
+          $('#_bubble').show();
+          $('#_src').attr('href', data.src);
+          $('#_chang').attr('src', data.src);
+        });
+    }
+    create();
+    $('#_forceRender').click(function () {
+      create(true);
     });
+  });
 </script>
 </body>
 </html>
