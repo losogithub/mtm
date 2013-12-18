@@ -272,7 +272,7 @@ function createChang(req, res, next) {
     1. read from GridFS
     2. If exists, check wheather updated or not.
      */
-    _readFromMongoGrid(topic, topicId, time, res);
+    _readFromMongoGrid(topic, topicId, time, req, res);
    /*
     fs.stat(fullFilePath, function(err, stats){
       if(!err && stats.isFile()){
@@ -293,7 +293,10 @@ function createChang(req, res, next) {
   });
 }
 
-function _generateImage(topic, topicId,time, db, res){
+/*
+tag : used to notify regenrate
+ */
+function _generateImage(topic, topicId,time, db, res, tag){
   /*
    In order to avoid at the same time, many people render this, we need different port.
    So using a random generated number to achieve it.
@@ -315,6 +318,9 @@ function _generateImage(topic, topicId,time, db, res){
         phantom.create({port: port},function (ph) {
           ph.createPage(function (page) {
             console.log("loading time: ", loadingTime);
+            if(tag){
+              loadingTime = loadingTime + 3000;
+            }
             page.set('settings.resourceTimeout', loadingTime);
             page.open('http://localhost:3000/topic/' + topicId + '/chang', function () {
               setTimeout(function(){
@@ -380,7 +386,7 @@ function _storeMongoGrid(topicId, time, db){
 
 }
 
-function _readFromMongoGrid(topic, topicId, time, res){
+function _readFromMongoGrid(topic, topicId, time, req, res){
   console.log("read from Mongo Grid");
   var MongoClient = require('mongodb').MongoClient;
 
@@ -399,7 +405,7 @@ function _readFromMongoGrid(topic, topicId, time, res){
       if(!result){
         //not exists; create.
         console.log("~~~~~~~~~~~not exists, create~~~~~~~~~");
-        _generateImage(topic, topicId,time, db, res);
+        _generateImage(topic, topicId,time, db, res, false);
       }
       else {
         //1. first check the newest or not
@@ -413,26 +419,41 @@ function _readFromMongoGrid(topic, topicId, time, res){
           if( gs.metadata.updateAt == time){
             console.log("ok, not updated yet")
 
-            var filename = time + '_' + topicId + '.jpg';
-            var fullFilePath = 'public/images/chang/' + filename;
-            var fullFilePath1 = 'public/images/chang/' + filename;
-            gs.read(function(err, data){
-              if(err){console.log("read err");throw err;}
+            //If user want to render again, here check
+              //todo
+             if(req.query.force){
+               console.log("render jpg again!");
+               //regenerate new
+               mongodb.GridStore.unlink(db, topicId, function(err){
+                 if(err){console.log("unlink gridstore err"); throw err;}
+                 console.log("unlink success");
+               })
+               //regenerate new
+               _generateImage(topic, topicId,time,db, res, true);
+             }
 
-              fs.writeFile(fullFilePath,data, function(err) {
-                if(err) {
-                  console.log(err);
-                } else {
-                  console.log("chang weibo was saved at chang folder!");
-                  setTimeout(function(){
-                    res.json({src: '/images/chang/' + filename});
-                    console.log("render success");
-                    _setTimeDelete(fullFilePath);
-                  }, 2000);
-                }
-              });
-            })
+             else {
+               var filename = time + '_' + topicId + '.jpg';
+               var fullFilePath = 'public/images/chang/' + filename;
+               var fullFilePath1 = 'public/images/chang/' + filename;
+               gs.read(function(err, data){
+                 if(err){console.log("read err");throw err;}
 
+                 fs.writeFile(fullFilePath,data, function(err) {
+                   if(err) {
+                     console.log(err);
+                   } else {
+                     console.log("chang weibo was saved at chang folder!");
+                     setTimeout(function(){
+                       res.json({src: '/images/chang/' + filename});
+                       console.log("render success");
+                       _setTimeDelete(fullFilePath);
+                     }, 2000);
+                   }
+                 });
+               })
+
+             }
 
           }
           else {
@@ -443,7 +464,7 @@ function _readFromMongoGrid(topic, topicId, time, res){
               console.log("unlink success");
             })
             //regenerate new
-            _generateImage(topic, topicId,time,db, res);
+            _generateImage(topic, topicId,time,db, res, false);
           }
 
         })
