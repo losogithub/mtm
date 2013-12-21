@@ -480,7 +480,10 @@ function _readFromMongoGrid(topic, topicId, time, req, res){
 function _setTimeDelete(fullFilePath){
   setTimeout(function(){
     fs.unlink(fullFilePath,function(err){
-      if(err){throw err;}
+      if(err){
+        console.log("must been deleted already");
+        //throw err;
+        }
       console.log("successfully delete " + fullFilePath);
     });
   }, 10*60*1000); //10s

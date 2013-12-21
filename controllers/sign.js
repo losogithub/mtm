@@ -387,7 +387,7 @@ var login = function (req, res, next) {
       if (!user) {
         res.render('sign/login', {
           errMsg: '对不起，该邮箱尚未注册。',
-          email: user.loginName
+          email: loginname//user.loginName
         });
         return;
       } // user if
