@@ -168,8 +168,10 @@
     var $_toTop = $('#_toTop');
     var docHeight;
     var winHeight;
+    var $doc = $(document);
     var updateDisplay = function () {
-      docHeight = $(document).height();
+      console.log('1');
+      docHeight = $doc.height();
       winHeight = $window.height();
       if (docHeight - winHeight > MIN_SCROLL + MAX_BOTTOM - FIXED_BOTTOM) {
         $_toTop.show();
@@ -180,6 +182,8 @@
     updateDisplay();
     $window.on('resize', updateDisplay);
     $window.on('scroll resize', function () {
+      console.log('2');
+      docHeight = $doc.height();
       var scroll = $window.scrollTop();
       var delta = scroll + winHeight - (docHeight - MAX_BOTTOM);
       if (scroll < MIN_SCROLL) {
