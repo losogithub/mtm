@@ -1209,7 +1209,7 @@ function _getHtml(url, callback) {
       }
       var temp;
       var charset = !(temp = response.headers['content-type']) ? null :
-        !(temp = temp.match(/charset=([^;]+)/i)) ? null :
+        !(temp = temp.match(/charset=([^\s;]+)/i)) ? null :
           !temp[1] ? null : temp[1];
       var buffer = body;
       console.log(charset);
@@ -1218,7 +1218,7 @@ function _getHtml(url, callback) {
       } catch (err) {
         return callback(err);
       }
-      var charset2 = !(temp = html.match(/<meta[^<>]+charset\s*=\s*("|')?([^"']+)("|')[^<>]*>/i)) ? null : temp[2];
+      var charset2 = !(temp = html.match(/<meta[^<>]+charset\s*=\s*("|')?([^"'\s/>]+)/i)) ? null : temp[2];
       if (charset2 &&
         (!charset
           || charset2.toLowerCase() != charset.toLowerCase())) {
