@@ -1540,10 +1540,14 @@ function _getVideoDetail(url, callback) {
         cover = !/index(_1)\.html([?&#]|$)/i.test('url') ? null : !(temp = html.match(/<img src="([^"<>]*)" class="cover_image"\/>/i)) ? null : !temp[1] ? null : temp[1];
         break;
     }
+    if (!vid) {
+      callback(new Error(400));
+      return;
+    }
     console.log(title);
     console.log(cover);
-    if (title.length > 100) {
-      title = snippet.substr(0, 99) + '…';
+    if (title && title.length > 100) {
+      title = title.substr(0, 99) + '…';
     }
     title = sanitize(title).entityDecode();
     title = sanitize(title).trim();
@@ -1580,10 +1584,6 @@ function getVideoDetail(req, res, next) {
   _getVideoDetail(url, function (err, results) {
     if (err) {
       next(err);
-      return;
-    }
-    if (!results.vid) {
-      next(new Error(400));
       return;
     }
     res.json({

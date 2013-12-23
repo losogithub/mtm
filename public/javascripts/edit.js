@@ -12,19 +12,14 @@
 
   var INPUT_EVENTS = 'input blur mousedown mouseup keydown keypress keyup';
 
-  function fillVideo($li, url, vid, cover) {
+  function fillVideo($li, url, cover) {
     var quote = shizier.utils.getVideoQuote(url);
-    console.log(cover);
 
     //填充视频
-    if (vid) {
-      $li
-        .find('.Cover')
-        .css('background-image', 'url(' + cover + ')')
-        .end();
-    }
-
     $li
+      .find('.Cover')
+      .css('background-image', 'url(' + (cover || '') + ')')
+      .end()
       .find('.Quote a')
       .text(quote ? quote : url)
       .end();
@@ -876,7 +871,7 @@
     __create: function () {
       var self = this;
 
-      fillVideo(this.widget(), this.options.url, this.options.vid, this.options.cover);
+      fillVideo(this.widget(), this.options.url, this.options.cover);
 
       //填充文本
       this.widget()
@@ -1607,7 +1602,7 @@
         var title = data.title;
         var description = data.description;
 
-        fillVideo($item, url, vid, cover);
+        fillVideo($item, url, cover);
 
         $item
           .find('.Content')
