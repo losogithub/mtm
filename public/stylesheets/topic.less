@@ -69,13 +69,28 @@
   .Description { line-height: 20px; font-size: 14px; }
 }
 
-.VIDEO_CREATE, .VIDEO {
+.VIDEO_CREATE {
   .Thumb { text-align: center; width: 300px; height: 220px; background-color: #f3f3f3;
     i { line-height: 220px; font-size: 30px; }
   }
 }
 
 .VIDEO {
+  .Cover {
+    text-align: center; width: 122px; height: 92px;display: block;
+    background-color: #f3f3f3; background-repeat:  no-repeat; background-size: cover;
+    i {
+      line-height: 80px; font-size: 60px;
+      color: rgba(255, 255, 255, 0.6);
+      text-shadow: 0px 0px 2px rgba(51, 51, 51, 0.6);
+    }
+    &:hover, &:active, &:focus{
+      i {
+        color: rgba(255, 255, 255, 0.8);
+        text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.8);
+      }
+    }
+  }
   .Title { margin-top: 8px; line-height: 24px; font-weight: bold; font-size: 18px; }
   .Description { margin-top: 10px; padding-left: 6px; border-left: 2px solid #ddd; font-size: 14px; line-height: 20px; }
 }
@@ -197,11 +212,8 @@
 
 .SubAuthorProfileTxt { line-height: 1.5; margin: 7px 0 -4px; word-wrap: break-word; color: #666 }
 
-.bdshare-slide-button {
-  display: none !important;
-}
-@media (min-width: 1100px) {
-  .bdshare-slide-button { display: block !important; }
+@media (max-width: 1100px) {
+  .bdshare-slide-button { display: none !important; }
 }
 
 #_toTop {

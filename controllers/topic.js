@@ -116,6 +116,7 @@ function showEdit(req, res, next) {
         '/javascripts/jquery-ui-1.10.3.custom.min.js',
         'http://cdn.bootcss.com/jquery-validate/1.11.1/jquery.validate.min.js',
         '/javascripts/utils.js',
+        '/javascripts/topic.js',
         '/javascripts/edit.js'
       ],
       escape: escape,
@@ -589,7 +590,8 @@ function showIndex(req, res, next) {
         'http://cdn.bootcss.com/jquery-mousewheel/3.1.6/jquery.mousewheel.min.js',
         'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.js',
         'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-buttons.js',
-        'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-thumbs.js'
+        'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-thumbs.js',
+        '/javascripts/topic.js'
       ],
       escape: escape,
       isAuthor: topic.author_id == userId,
@@ -686,16 +688,19 @@ function _getData(req) {
     case 'VIDEO':
       var url = sanitize(req.body.url).trim();
       var vid = sanitize(req.body.vid).trim();
+      var cover = sanitize(req.body.cover).trim();
       var title = sanitize(req.body.title).trim();
       var description = sanitize(req.body.description).trim();
 
       check(url).notNull().isUrl();
+      if (cover.length) check(cover).isUrl();
       check(title).len(0, 100);
       check(description).len(0, 300);
 
       data = {
         url: url,
         vid: vid,
+        cover: cover,
         title: title,
         description: description
       }
@@ -777,6 +782,7 @@ function _getItemData(item) {
         type: item.type,
         url: item.url,
         quote: quote,
+        cover: item.cover,
         vid: item.vid,
         title: item.title,
         description: item.description
@@ -907,6 +913,7 @@ function createItem(req, res, next) {
         _getVideoDetail(data.url, function (err, results) {
           if (err) return callback(err);
           data.vid = results.vid;
+          data.cover = results.cover;
           data.title = results.title;
           callback();
         });
@@ -1219,6 +1226,7 @@ function _getHtml(url, callback) {
         return callback(err);
       }
       var charset2 = !(temp = html.match(/<meta[^<>]+charset\s*=\s*("|')?([^"'\s/>]+)/i)) ? null : temp[2];
+      console.log(charset2);
       if (charset2 &&
         (!charset
           || charset2.toLowerCase() != charset.toLowerCase())) {
@@ -1228,7 +1236,6 @@ function _getHtml(url, callback) {
           return callback(err);
         }
       }
-      console.log(charset2);
 
       callback(null, html);
     });
@@ -1326,6 +1333,7 @@ function _getVideoDetail(url, callback) {
     var title;
     var quote = utils.getVideoQuote(url);
     var vid;
+    var cover;
     console.log(quote);
     switch (quote) {
       case 'youku.com':
@@ -1333,7 +1341,11 @@ function _getVideoDetail(url, callback) {
         //&tt=第二十一回&nbsp;惊见摘头鬼 坑亲王谢幕&pu=
         title = !(temp = html.match(/&tt=(((?!&pu).)*)/i)) ? null : !temp[1] ? null : temp[1];
         //http://v.youku.com/v_show/id_XNjEyOTU3NjE2.html?f=20383529&ev=1
-        vid = !(temp = url) ? null : !(temp = temp.match(/id_([\w\-]{13})\.html\/?([?&#]|$)/i)) ? null : !temp[1] ? null : temp[1];
+        //http://v.youku.com/v_show/id_XNjQxNTE5MDYw_ev_1.html
+        vid = !(temp = url) ? null : !(temp = temp.match(/id_([\w\-]{13})/i)) ? null : !temp[1] ? null : temp[1];
+        //&pics=http://g1.ykimg.com/0100641F465298B35464C306340F021E6E83FF-FD92-B358-8009-D0B224F8C83D&site=优酷
+        //128x96
+        cover = !(temp = html.match(/&pics=([^&"']*)/i)) ? null : !temp[1] ? null : temp[1];
         break;
       case 'tudou.com':
         //plan A
@@ -1355,15 +1367,24 @@ function _getVideoDetail(url, callback) {
         //http://www.tudou.com/listplay/pKzzr-WLvwk/snBiS0Y74PQ.html
         //http://www.tudou.com/programs/view/TtwcrB0saxg
         vid = !(temp = url) ? null : !(temp = temp.match(/([\w\-]{11})(\.html)?\/?([?&#]|$)/i)) ? null : !temp[1] ? null : temp[1];
+        //<script...,pic:"http://i1.tdimg.com/183/538/614/p.jpg"...</script>
+        //<script...,pic: 'http://i2.tdimg.com/008/657/421/p.jpg'...</script>
+        //128x96
+        cover = !(temp = html.match(/<script[\s\S]*,pic:\s*("|')([^"']+)("|')[\s\S]*<\/script>/)) ? null : !temp[2] ? null : temp[2];
         break;
       case 'iqiyi.com':
         //专题性质的，即a_的暂不支持，同weibo，无技术障碍
         //plan A
         //<em data-widget-crumbs-elem="name" data-widget-crumbs-name-max="56">恐怖杀手：诡异人体寄生虫-热纪录</em>
         title = !(temp = html.match(/<em data-widget-crumbs-elem="name" data-widget-crumbs-name-max="56">([^<>]*)<\/em>/i)) ? null : !temp[1] ? null : temp[1];
+        //http://www.iqiyi.com/a_19rrgjauj5.html(无标题，封面)
         //http://www.iqiyi.com/v_19rrhfcr84.html
         //<div id="flashbox"......data-player-videoid="a97be8194627fef129d23cd05b834f79"......>
         vid = !(temp = html.match(/<div[^<>]*\sid="flashbox"[^<>]*\sdata-player-videoid="([^">]*)/i)) ? null : !temp[1] ? null : temp[1];
+        //<meta itemprop="image" content='http://pic5.qiyipic.com/image/20131121/v_103890888_m_601_160_120.jpg' />
+        //160x120
+        //todo 封面403
+        cover = !(temp = html.match(/<meta\s+itemprop="image"\s+content='([^'>]*)/i)) ? null : !temp[1] ? null : temp[1];
         break;
       case 'pps.tv':
         //plan A
@@ -1371,6 +1392,9 @@ function _getVideoDetail(url, callback) {
         title = !(temp = html.match(/<h1 class="p-title"><a title="([^"'>]*)/i)) ? null : !temp[1] ? null : temp[1];
         //http://v.pps.tv/play_38J3NV.html
         vid = !(temp = url) ? null : !(temp = temp.match(/(\w{6})\.html\/?([?&#]|$)/i)) ? null : !temp[1] ? null : temp[1];
+        //<script..."sharepic":"http:\/\/s2.ppsimg.com\/ugc\/ugc_pic\/1\/70\/18adf8c00dcb95a947c272ef063e8f631f8e791d\/480_360_pps-000.jpg"...</script>
+        //128x80
+        cover = !(temp = html.match(/<script[\s\S]*"sharepic":"([^">]*)"[\s\S]*<\/script>/i)) ? null : !temp[1] ? null : temp[1].replace(/\\\//g, '/').replace('480_360', '128_80');
         break;
       case 'sohu.com':
         //plan A
@@ -1379,6 +1403,9 @@ function _getVideoDetail(url, callback) {
         //http://tv.sohu.com/20130712/n381487508.shtml
         //<script type="text/javascript">......var vid="1237900";......</script>
         vid = !(temp = html.match(/<script type="text\/javascript">[^<>]*\svar vid="([^"<>;]+)";[^<>]*<\/script>/i)) ? null : !temp[1] ? null : temp[1];
+        //<script...var cover="http://photocdn.sohu.com/20130712/vrsb902245.jpg";...</script>
+        //120x90
+        cover = !(temp = html.match(/<script[\s\S]*var cover="([^">]*)";[\s\S]*<\/script>/i)) ? null : !temp[1] ? null : temp[1];
         break;
       case 'qq.com':
         //plan A
@@ -1388,6 +1415,9 @@ function _getVideoDetail(url, callback) {
         //http://v.qq.com/cover/r/r0yx3vkrlz4rj85.html?vid=i00135hjy5k
         vid = (!(temp = url) ? null : !(temp = temp.match(/vid=([\w\-]{11})/i)) ? null : !temp[1] ? null : temp[1])
           || (!(temp = url) ? null : !(temp = temp.match(/([\w\-]{11})\.html\/?([?&#]|$)/i)) ? null : !temp[1] ? null : temp[1]);
+        //http://vpic.video.qq.com/c00139loswm_160_90_3.jpg
+        //160x90
+        cover = 'http://vpic.video.qq.com/' + vid + '_160_90_3.jpg';
         break;
       case 'sina.com.cn':
         //http://video.sina.com.cn/haokan/play.html?url=http%3A%2F%2Fmy.tv.sohu.com%2Fus%2F53375285%2F62269772.shtml
@@ -1396,11 +1426,16 @@ function _getVideoDetail(url, callback) {
         //plan A
         //$SCOPE['video'] = {......title:'【拍客】险 学生穿梭烂尾无护栏天桥上学',......}
         title = !(temp = html.match(/\$SCOPE\['video'\]\s*=\s*\{[\s\S]*title\s*:\s*'([^'}]*)/i)) ? null : !temp[1] ? null : temp[1];
-        //http://video.sina.com.cn/bl/6646436-1624364062-117652070.html
+        //http://video.sina.com.cn/bl/6646436-1624364062-117652070.html(无封面)
         //http://video.sina.com.cn/v/b/50691086-1854900491.html
         //http://video.sina.com.cn/p/news/s/v/2013-11-26/110663190307.html
         //$SCOPE['video'] = {......vid:'120263847',......}
         vid = !(temp = html.match(/\$SCOPE\['video'\] = \{[^{}]*\svid:'([^'{}]*)',/i)) ? null : !temp[1] ? null : temp[1];
+        //$SCOPE['video'] = {...pic: 'http://p3.v.iask.com/271/848/50691086_2.jpg',......}
+        //119x90
+        //135x90
+        //160x90
+        cover = !(temp = html.match(/\$SCOPE\['video'\] = \{[^{}]*\spic:\s*'([^'{}]*)',/i)) ? null : !temp[1] ? null : temp[1].replace('2.jpg', '1.jpg');
         break;
       case 'ifeng.com':
         //plan A
@@ -1410,6 +1445,9 @@ function _getVideoDetail(url, callback) {
         //http://v.ifeng.com/ent/yllbt/special/20131125/index.shtml#b2755624-d591-4f08-ae54-349f473fe490(不能获取title，暂不支持，同weibo)
         //http://v.ifeng.com/live/#4AC51C17-9FBE-47F2-8EE0-8285A66EAFF5(直播用的channelId，暂不支持，同weibo)
         vid = !(temp = url) ? null : !(temp = temp.match(/(\w{8}-\w{4}-\w{4}-\w{4}-\w{12})\.shtml([?&#]|$)/i)) ? null : !temp[1] ? null : temp[1];
+        //<script..."img": "http://d.ifengimg.com/w120_h90/y0.ifengimg.com/pmop/storage_img/2013/11/25/9533e052-4f28-49b6-b545-87f95cdd643644.jpg",...</script>
+        //120x90
+        cover = !(temp = html.match(/<script[\s\S]*"img":\s*"([^";,<>]*)"[\s\S]*<\/script>/i)) ? null : !temp[1] ? null : temp[1];
         break;
       case 'letv.com':
         //plan A
@@ -1417,12 +1455,15 @@ function _getVideoDetail(url, callback) {
         title = !(temp = html.match(/var __INFO__=\{[\s\S]*video : \{[\s\S]*\stitle:"([^"}]*)/i)) ? null : !temp[1] ? null : temp[1];
         //http://www.letv.com/ptv/vplay/2050605.html
         vid = !(temp = url) ? null : !(temp = temp.match(/(\d{7})\.html\/?([?&#]|$)/i)) ? null : !temp[1] ? null : temp[1];
+        //<script...share:{pic:"http://i1.letvimg.com/yunzhuanma/201307/11/3790edee80983825b130eb660a067181/thumb/2.jpg",...</script>
+        //120x90
+        cover = !(temp = html.match(/<script[\s\S]*share:\{pic:"([^";,<>]*)"[\s\S]*<\/script>/i)) ? null : !temp[1] ? null : temp[1];
         break;
       case 'pptv.com':
         //plan A
         //<title>英超-1314赛季-联赛-第12轮-曼城6：0热刺-精华_PPTV网络电视</title>
         title = !(temp = html.match(/<title>([^<>]*)<\/title>/i)) ? null : !temp[1] ? null : temp[1].substr(0, temp[1].lastIndexOf('_PPTV网络电视'));
-        //http://v.pptv.com/show/icwtr6HibzIFicCQKg.html#
+        //http://v.pptv.com/show/icwtr6HibzIFicCQKg.html#(无封面)
         vid = !(temp = url) ? null : !(temp = temp.match(/(\w{18})\.html\/?([?&#]|$)/i)) ? null : !temp[1] ? null : temp[1];
         break;
       case 'ku6.com':
@@ -1431,6 +1472,9 @@ function _getVideoDetail(url, callback) {
         title = !(temp = html.match(/<h1 title="([^"'>]*)/i)) ? null : !temp[1] ? null : temp[1];
         //http://v.ku6.com/show/Dq-TEVeOSRPxpr-MKaAhHg...html?hpsrc=1_12_1_1_0
         vid = !(temp = url) ? null : !(temp = temp.match(/([\w\-]{22}\.\.)\.html\/?([?&#]|$)/i)) ? null : !temp[1] ? null : temp[1];
+        //<script...cover: "http://vi0.ku6img.com/data1/p9/ku6video/2013/11/22/18/1390433061875_86998474_86998474/1.jpg",...</script>
+        //132x99
+        cover = !(temp = html.match(/<script[\s\S]*cover:\s*"([^";,<>]*)"[\s\S]*<\/script>/i)) ? null : !temp[1] ? null : temp[1];
         break;
       case '56.com':
         //plan A
@@ -1440,6 +1484,15 @@ function _getVideoDetail(url, callback) {
         //http://www.56.com/u48/v_MTAxMTQ3MDYx.html
         //http://www.56.com/w92/play_album-aid-12053351_vid-MTAwOTU1MDI0.html
         vid = !(temp = url) ? null : !(temp = temp.match(/(\w{12})\.html\/?([?&#]|$)/i)) ? null : !temp[1] ? null : temp[1];
+        //<script..."URL_pURL":"24",..."user_id":"r480730716",..."URL_sURL":"3",..."URL_URLid":"sc_138478337743hd",..."img_host":"v19.56.com",...</script>
+        //上面对应的url=http://v19.56img.com/images/24/3/r480730716i56olo56i56.com_sc_138478337743hd.jpg
+        //130x78
+        var p = !(temp = html.match(/<script[\s\S]*"URL_pURL":"([^";,<>]*)"[\s\S]*<\/script>/i)) ? null : !temp[1] ? null : temp[1];
+        var u = !(temp = html.match(/<script[\s\S]*"user_id":"([^";,<>]*)"[\s\S]*<\/script>/i)) ? null : !temp[1] ? null : temp[1];
+        var s = !(temp = html.match(/<script[\s\S]*"URL_sURL":"([^";,<>]*)"[\s\S]*<\/script>/i)) ? null : !temp[1] ? null : temp[1];
+        var id = !(temp = html.match(/<script[\s\S]*"URL_URLid":"([^";,<>]*)"[\s\S]*<\/script>/i)) ? null : !temp[1] ? null : temp[1];
+        var h = !(temp = html.match(/<script[\s\S]*"img_host":"([^";,<>]*)"[\s\S]*<\/script>/i)) ? null : !temp[1] ? null : temp[1].replace('56.com', '56img.com');
+        cover = !(p && u && s && id && h) ? null : 'http://' + h + '/images/' + p + '/' + s + '/' + u + 'i56olo56i56.com_' + id + '.jpg';
         break;
       case 'baomihua.com':
         //plan A
@@ -1447,6 +1500,9 @@ function _getVideoDetail(url, callback) {
         title = !(temp = html.match(/var temptitle = '([^']*)';/i)) ? null : !temp[1] ? null : temp[1];
         //http://video.baomihua.com/11258722/28470044
         vid = !(temp = url) ? null : !(temp = temp.match(/(\d{8})\/?([?&#]|$)/i)) ? null : !temp[1] ? null : temp[1];
+        //<script...var pic = "http://img03.video.baomihua.com/x/28470044.jpg";...</script>(也可以直接拼)
+        //120x90
+        cover = 'http://img01.video.baomihua.com/x/' + vid + '.jpg';
         break;
       case 'yinyuetai.com':
         //plan A
@@ -1454,6 +1510,10 @@ function _getVideoDetail(url, callback) {
         title = !(temp = html.match(/<meta property="og:title"[^<>]*content="([^">]*)/i)) ? null : !temp[1] ? null : temp[1];
         //http://v.yinyuetai.com/video/818636
         vid = !(temp = url) ? null : !(temp = temp.match(/(\d{6})\/?([?&#]|$)/i)) ? null : !temp[1] ? null : temp[1];
+        //<meta property="og:image" content="http://img0.yytcdn.com/video/mv/131125/818636/E66901428C8A00732EBC7FE11A528C50_240x135.jpeg"/>
+        //240x135
+        //todo playlist
+        cover = !(temp = html.match(/<meta property="og:image"[^<>]*content="([^">]*)/i)) ? null : !temp[1] ? null : temp[1];
         break;
       case 'acfun.tv':
         //plan A
@@ -1462,20 +1522,34 @@ function _getVideoDetail(url, callback) {
         //http://www.acfun.tv/a/ac926643(这是文章，要排除)
         //http://www.acfun.tv/v/ac926028
         vid = !(temp = url) ? null : !(temp = temp.match(/\/v\/ac(\w+)\/?([?&#]|$)/i)) ? null : !temp[1] ? null : temp[1];
+        //<script...system.preview = 'http://g2.ykimg.com/1100641F4652B597CD8E39143587FD9AF045B5-DF29-7648-57B1-88D636269C65';...</script>
+        cover = !vid ? null : ~vid.indexOf('_') ? null : !(temp = html.match(/<script[\s\S]*system.preview\s*=\s*'([^';,<>]*)'[\s\S]*<\/script>/i)) ? null : !temp[1] ? null : temp[1];
         break;
       case 'bilibili.tv':
+      case 'bilibili.kankanews.com':
         //plan A
         //<h2 title="想恶搞女友却发现惊人秘密">
         title = !(temp = html.match(/<h2 title="([^">]*)>/i)) ? null : !temp[1] ? null : temp[1];
+        //http://www.bilibili.tv/video/av805830
+        //http://www.bilibili.tv/video/av805830/index.html
         //http://www.bilibili.tv/video/av805830/index_2.html
-        vid = !(temp = url) ? null : !(temp = temp.match(/\/av(\d+)\/(index_(\d+)\.html)?([?&#]|$)/i)) ? null : temp[1] + '&page=' + (temp[3] || '1');
+        vid = !(temp = url) ? null : !(temp = temp.match(/\/av(\d+)(\/index(_(\d+))?\.html)?\/?([?&#]|$)/i)) ? null : temp[1] + '&page=' + (temp[3] || '1');
+        //<img src="http://i0.hdslb.com/u_f/50e9761218ca14014408fa95e8e0af9c.jpg" class="cover_image"/>
+        //120x90
+        //todo 乱码无法解析
+        cover = !/index(_1)\.html([?&#]|$)/i.test('url') ? null : !(temp = html.match(/<img src="([^"<>]*)" class="cover_image"\/>/i)) ? null : !temp[1] ? null : temp[1];
         break;
     }
     console.log(title);
+    console.log(cover);
+    if (title.length > 100) {
+      title = snippet.substr(0, 99) + '…';
+    }
     title = sanitize(title).entityDecode();
     title = sanitize(title).trim();
     callback(null, {
       vid: vid,
+      cover: cover,
       title: title
     });
   });
@@ -1515,7 +1589,8 @@ function getVideoDetail(req, res, next) {
     res.json({
       url: url,
       vid: results ? results.vid : undefined,
-      title: results ? results.title : undefined
+      title: results ? results.title : undefined,
+      cover: results ? results.cover : undefined
     });
   });
 }

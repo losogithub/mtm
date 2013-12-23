@@ -12,21 +12,15 @@
 
   var INPUT_EVENTS = 'input blur mousedown mouseup keydown keypress keyup';
 
-  function fillVideo($li, url, vid) {
+  function fillVideo($li, url, vid, cover) {
     var quote = shizier.utils.getVideoQuote(url);
-    var temp;
-    var videoType = !quote ? null : !(temp = quote.match(/([^\.]+)\./)) ? null : !temp[1] ? null : temp[1].toUpperCase();
+    console.log(cover);
 
     //填充视频
     if (vid) {
       $li
-        .find('.' + videoType)
-        .attr('src', !(temp = $li.find('.' + videoType).attr('src')) ? '' : temp.replace('#vid#', vid))
-        .attr('flashvars', !(temp = $li.find('.' + videoType).attr('flashvars')) ? '' : temp.replace('#vid#', vid))
-        .css('display', 'block')
-        .end()
-        .find('.Thumb')
-        .hide()
+        .find('.Cover')
+        .css('background-image', 'url(' + cover + ')')
         .end();
     }
 
@@ -870,6 +864,7 @@
     options: {
       url: '',
       vid: '',
+      cover: '',
       title: '',
       description: ''
     },
@@ -881,7 +876,7 @@
     __create: function () {
       var self = this;
 
-      fillVideo(this.widget(), this.options.url, this.options.vid);
+      fillVideo(this.widget(), this.options.url, this.options.vid, this.options.cover);
 
       //填充文本
       this.widget()
@@ -947,6 +942,7 @@
       return {
         url: this.options.url,
         vid: this.options.vid,
+        cover: this.options.cover,
         title: this.widget().find('input[name="title"]').val(),
         description: this.widget().find('textarea[name="description"]').val()
       }
@@ -960,6 +956,7 @@
       return {
         url: this.options.url,
         vid: this.options.vid,
+        cover: this.options.cover,
         title: this.options.title,
         description: this.options.description
       }
@@ -1606,10 +1603,11 @@
         //填充视频信息
         var url = data.url;
         var vid = data.vid;
+        var cover = data.cover;
         var title = data.title;
         var description = data.description;
 
-        fillVideo($item, url, vid);
+        fillVideo($item, url, vid, cover);
 
         $item
           .find('.Content')
@@ -1697,7 +1695,6 @@
     $_topWidget = $('#_topWidget');
     $ul = $('.WidgetItemList');
     $templates = $('.TEMPLATES');
-    $('.fancybox:visible').fancybox(shizier.fancyboxOptions);
   }
 
   function _initListListener() {
@@ -1786,6 +1783,7 @@
           case 'VIDEO':
             data = {
               url: $li.find('.Quote a').attr('href'),
+              cover: $li.find('.Cover').css('background-image').replace('url("', '').replace('")', ''),
               vid: $li.find('.Content').data('vid'),
               title: $li.find('.Title a').text(),
               description: $('<div/>').html($li.find('.Description').html().replace(/<br>/g, '\n')).text()

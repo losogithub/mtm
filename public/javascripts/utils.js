@@ -19,7 +19,7 @@
       var urlParts = !url ? null : url.match(this.REGEXP_URL);
       var temp;
       var quote = !urlParts ? null : !urlParts[2] ? null : !(temp = urlParts[2].match(
-        /youku\.com|tudou\.com|iqiyi\.com|pps\.tv|sohu\.com|qq\.com|sina\.com\.cn|ifeng\.com|letv\.com|pptv\.com|ku6\.com|56\.com|baomihua\.com|yinyuetai\.com|acfun\.tv|bilibili\.tv$/i)) ? null : !temp[0] ? null : temp[0].toLowerCase();
+        /youku\.com|tudou\.com|iqiyi\.com|pps\.tv|sohu\.com|qq\.com|sina\.com\.cn|ifeng\.com|letv\.com|pptv\.com|ku6\.com|56\.com|baomihua\.com|yinyuetai\.com|acfun\.tv|bilibili\.tv|bilibili\.kankanews\.com$/i)) ? null : !temp[0] ? null : temp[0].toLowerCase();
 
       return quote;
     },

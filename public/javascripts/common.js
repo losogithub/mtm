@@ -119,4 +119,33 @@
       return false;
     };
   });
+
+  var VIDEO_MAP = {
+    'youku.com': ['http://player.youku.com/player.php/sid/#vid#/v.swf', 'isAutoPlay=true'],
+    'tudou.com': ['http://www.tudou.com/v/#vid#&autoPlay=true/v.swf', ''],
+    'iqiyi.com': ['http://www.iqiyi.com/player/20131119102234/Player.swf?vid=#vid#', 'playMovie=true'],
+    'pps.tv': ['http://player.pps.tv/player/sid/#vid#/v.swf', 'auto=1'],
+    'sohu.com': ['http://share.vrs.sohu.com/#vid#/v.swf', 'autoplay=true'],
+    'qq.com': ['http://static.video.qq.com/TPout.swf?vid=#vid#', 'auto=1'],
+    'sina.com.cn': ['http://you.video.sina.com.cn/api/sinawebApi/outplayrefer.php/vid=#vid#&autoPlay=1/s.swf', ''],
+    'ifeng.com': ['http://v.ifeng.com/include/exterior.swf?guid=#vid#&AutoPlay=true', ''],
+    'letv.com': ['http://i7.imgs.letv.com/player/swfPlayer.swf?id=#vid#', 'autoplay=1'],
+    'pptv.com': ['http://player.pptv.com/v/#vid#.swf', 'autostart=true'],
+    'ku6.com': ['http://player.ku6.com/refer/#vid#/v.swf', 'auto=1'],
+    '56.com': ['http://player.56.com/v_#vid#.swf', 'auto=1'],
+    'baomihua.com': ['http://resources.pomoho.com/swf/out_player.swf?flvid=#vid#', ''],
+    'yinyuetai.com': ['http://player.yinyuetai.com/video/swf/#vid#/1/a.swf', 'playMovie=true'],
+    'acfun.tv': ['http://static.acfun.tv/player/ACFlashPlayerX.out.20130927.swf?type=page&url=ac#vid#', ''],
+    'bilibili.tv': ['http://static.hdslb.com/miniloader.swf?aid=#vid#', ''],
+    'bilibili.kankanews.com': ['http://static.hdslb.com/miniloader.swf?aid=#vid#', '']
+  };
+
+  shizier.getVideoSrc = function (quote, vid) {
+    var temp = VIDEO_MAP[quote];
+    return {
+      src: (temp[0] || '').replace('#vid#', vid),
+      vars: temp[1]
+    };
+  };
+
 })(jQuery);

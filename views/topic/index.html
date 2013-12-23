@@ -110,6 +110,13 @@
 
     <% include _ul.html %>
 
+    <!--模板-->
+    <div class="TEMPLATES" style="display:none;">
+
+      <% include _video_player.html %>
+
+    </div>
+
   </div>
   <div class="Sub"><!--right side--->
     <div class="SubInner">
@@ -170,7 +177,6 @@
     var winHeight;
     var $doc = $(document);
     var updateDisplay = function () {
-      console.log('1');
       docHeight = $doc.height();
       winHeight = $window.height();
       if (docHeight - winHeight > MIN_SCROLL + MAX_BOTTOM - FIXED_BOTTOM) {
@@ -182,7 +188,6 @@
     updateDisplay();
     $window.on('resize', updateDisplay);
     $window.on('scroll resize', function () {
-      console.log('2');
       docHeight = $doc.height();
       var scroll = $window.scrollTop();
       var delta = scroll + winHeight - (docHeight - MAX_BOTTOM);
@@ -198,8 +203,5 @@
       $_toTop.blur();
       $('html, body').animate({scrollTop: 0}, 200);
     });
-
-    //初始化fancybox
-    $('.fancybox:visible').fancybox(shizier.fancyboxOptions);
   })
 </script>

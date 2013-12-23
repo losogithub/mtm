@@ -18,6 +18,7 @@ module.exports = mongoose.model('VideoItem', {
 
   url: String,
   vid: String,
+  cover: String,
   title: String,
   description: String
 });

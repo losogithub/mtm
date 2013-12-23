@@ -45,14 +45,12 @@
 <% if (item.type == 'VIDEO' || item.type == 'ALL') { %>
 <div class='Content VIDEO' data-vid="<%= item.vid %>">
 
-  <% include _videoPlayers.html %>
+  <% include _video_cover.html %>
 
   <div class="Quote">
     <span>来源</span>
     <div>
-      <a target="_blank" class="VIDEO_URL" href="<%= item.url ? item.url : '' %>">
-        <%= item.quote ? item.quote : item.url ? item.url : '' %>
-      </a>
+      <a target="_blank" class="VIDEO_URL" href="<%= item.url || '' %>"><%= item.quote || item.url || '' %></a>
     </div>
   </div>
   <p class="Title" style="display: <%= (item.type != 'ALL') && !item.title ? 'none' : 'block' %>;">
