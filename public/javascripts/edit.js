@@ -1821,6 +1821,7 @@
    * @private
    */
   function _initBand() {
+    $band.css('position', 'fixed');
     var $window = $(window);
     $window.scroll(function () {
       if ($window.scrollTop() >= 48) {

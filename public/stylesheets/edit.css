@@ -79,9 +79,12 @@ textarea {
   visibility: visible !important;
   outline: none !important;
 }
+body {
+  position: relative;
+}
 /*悬浮菜单栏*/
 .Band {
-  position: fixed;
+  position: absolute;
   top: 48px;
   left: 0;
   right: 0;

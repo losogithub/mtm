@@ -1557,7 +1557,7 @@ function _getVideoDetail(url, callback) {
         vid = !(temp = url) ? null : !(temp = temp.match(/\/av(\d+)(\/index(_(\d+))?\.html)?\/?([?&#]|$)/i)) ? null : temp[1] + '&page=' + (temp[3] || '1');
         //<img src="http://i0.hdslb.com/u_f/50e9761218ca14014408fa95e8e0af9c.jpg" class="cover_image"/>
         //120x90
-        cover = (/index_\d+\.html([?&#]|$)/i.test(url) && !/index(_1)\.html([?&#]|$)/i.test(url)) ? null : !(temp = html.match(/<img src="([^"<>]*)" class="cover_image"\/>/i)) ? null : !temp[1] ? null : temp[1];
+        cover = (/index_\d+\.html([?&#]|$)/i.test(url) && !/index(_1)?\.html([?&#]|$)/i.test(url)) ? null : !(temp = html.match(/<img src="([^"<>]+)" class="cover_image"\/>/i)) ? null : !temp[1] ? null : temp[1];
         break;
     }
     if (!vid) {
