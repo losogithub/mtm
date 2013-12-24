@@ -39,10 +39,12 @@
         .done(function (data) {
           window._bd_share_config = {"common": {"bdSnsKey": {}, "bdText": "", "bdMini": "2", "bdMiniList": false, "bdUrl": location.href.replace('/share_chang', ''), "bdPic": 'http://' + location.host + data.src, "bdStyle": "2", "bdSize": "16"}, "share": {}};
           with (document)0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=86835285.js?cdnversion=' + ~(-new Date() / 36e5)];
+
           $('#_loading').hide();
           $('#_bubble').show();
           $('#_src').attr('href', data.src);
-          $('#_chang').attr('src', data.src + '?' + new Date().getTime());
+          $('#_chang').attr('src', data.src + (forceRender ? '?force=1' : '')+ '?' + new Date().getTime() );
+
         });
     }
     create();
