@@ -876,6 +876,9 @@
 
       //填充文本
       this.widget()
+        .find('.Content')
+        .data('vid', this.options.vid)
+        .end()
         .find('.VIDEO_URL')
         .attr('href', this.options.url)
         .end()
