@@ -18,6 +18,7 @@ var phantom = require('phantom');
 var fs = require('fs');
 var portfinder = require('portfinder');
 var mongodb = require('mongodb');
+var zlib = require('zlib');
 var config = require('../config');
 
 var helper = require('../helper/helper');
@@ -1210,34 +1211,57 @@ function _getHtml(url, callback) {
     callback(err);
   });
   d.run(function () {
-    request({url: url, encoding: null}, function (error, response, body) {
+    request({url: url, encoding: null, 'headers': {'Accept-Encoding': 'gzip,deflate'}}, function (error, response, body) {
       if (error) {
         return callback(error);
       }
-      var temp;
-      var charset = !(temp = response.headers['content-type']) ? null :
-        !(temp = temp.match(/charset=([^\s;]+)/i)) ? null :
-          !temp[1] ? null : temp[1];
       var buffer = body;
-      console.log(charset);
-      try {
-        var html = new Iconv(charset || 'UTF-8', 'UTF-8//TRANSLIT//IGNORE').convert(buffer).toString();
-      } catch (err) {
-        return callback(err);
-      }
-      var charset2 = !(temp = html.match(/<meta[^<>]+charset\s*=\s*("|')?([^"'\s/>]+)/i)) ? null : temp[2];
-      console.log(charset2);
-      if (charset2 &&
-        (!charset
-          || charset2.toLowerCase() != charset.toLowerCase())) {
+      async.series([function (callback) {
+        switch (response.headers['content-encoding']) {
+          case 'gzip':
+          case 'deflate':
+            zlib.unzip(buffer, function(err, buf) {
+              if (err) {
+                return callback(err);
+              }
+
+              buffer = buf;
+              callback();
+            });
+            break;
+          default:
+            callback();
+            break;
+        }
+      }], function (err) {
+        if (err) {
+          return callback(err);
+        }
+
+        var temp;
+        var charset = !(temp = response.headers['content-type']) ? null :
+          !(temp = temp.match(/charset=([^\s;]+)/i)) ? null :
+            !temp[1] ? null : temp[1];
+        console.log(charset);
         try {
-          var html = new Iconv(charset2 || 'UTF-8', 'UTF-8//TRANSLIT//IGNORE').convert(buffer).toString();
+          var html = new Iconv(charset || 'UTF-8', 'UTF-8//TRANSLIT//IGNORE').convert(buffer).toString();
         } catch (err) {
           return callback(err);
         }
-      }
+        var charset2 = !(temp = html.match(/<meta[^<>]+charset\s*=\s*("|')?([^"'\s/>]+)/i)) ? null : temp[2];
+        console.log(charset2);
+        if (charset2 &&
+          (!charset
+            || charset2.toLowerCase() != charset.toLowerCase())) {
+          try {
+            var html = new Iconv(charset2 || 'UTF-8', 'UTF-8//TRANSLIT//IGNORE').convert(buffer).toString();
+          } catch (err) {
+            return callback(err);
+          }
+        }
 
-      callback(null, html);
+        callback(null, html);
+      })
     });
   });
 }
@@ -1296,16 +1320,13 @@ function _getLinkDetail(url, callback) {
       height = !img ? null : !(temp = img.match(/\sheight\s*=\s*("|')([\d]+)("|')/i)) ? null : temp[2];
       if (width || height) {
         if (width >= 150 && height >= 70) {
-          console.log('++' + img);
           addToSrcs(img);
         } else {
-          console.log('--' + img);
         }
         continue;
       }
       thumb = !img ? null : !(temp = img.match(/\ssrc\s*=\s*("|')[^"']+\.jpg("|')/i)) ? null : temp[0];
       if (thumb) {
-        console.log('++' + img);
         addToSrcs(img);
         continue;
       }
