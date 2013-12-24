@@ -251,27 +251,6 @@ function createChang(req, res, next) {
   console.log('===== createChang =====');
   var topicId = req.params.topicId;
   res.json({src : "/chang/" + topicId}) ;
-
-  /*
-  Topic.getTopicById(topicId, function (err, topic) {
-    if (err) {
-      return next(err);
-    }
-    if (!topic || !topic.publishDate) {
-      return next(new Error(404));
-    }
-
-    var time = topic.update_at.getTime();
-    var filename = time + '_' + topicId + '.jpg';
-
-    /*
-     1. read from GridFS
-     2. If exists, check wheather updated or not.
-     */
-  /*
-    _readFromMongoGrid(topic, topicId, time, req, res);
-  });
- */
 }
 
 
@@ -354,9 +333,6 @@ function sendChang(req,res){
 
   });
 }
-
-
-
 
 
 /*
