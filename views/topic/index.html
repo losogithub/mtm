@@ -161,47 +161,4 @@
   </div>
 </div>
 
-<button id="_toTop" class="btn btn-link" title="返回顶部">
-  <i class="icon-angle-up"></i>
-</button>
-
-<script>
-  $(function () {
-    //回顶部按钮
-    var MIN_SCROLL = 100;
-    var FIXED_BOTTOM = 25;
-    var MAX_BOTTOM = 89;
-    var $window = $(window);
-    var $_toTop = $('#_toTop');
-    var docHeight;
-    var winHeight;
-    var $doc = $(document);
-    var updateDisplay = function () {
-      docHeight = $doc.height();
-      winHeight = $window.height();
-      if (docHeight - winHeight > MIN_SCROLL + MAX_BOTTOM - FIXED_BOTTOM) {
-        $_toTop.show();
-      } else {
-        $_toTop.hide();
-      }
-    }
-    updateDisplay();
-    $window.on('resize', updateDisplay);
-    $window.on('scroll resize', function () {
-      docHeight = $doc.height();
-      var scroll = $window.scrollTop();
-      var delta = scroll + winHeight - (docHeight - MAX_BOTTOM);
-      if (scroll < MIN_SCROLL) {
-        $_toTop.css('bottom', scroll - MIN_SCROLL + FIXED_BOTTOM);
-      } else if (delta > FIXED_BOTTOM) {
-        $_toTop.css('bottom', delta);
-      } else {
-        $_toTop.css('bottom', FIXED_BOTTOM);
-      }
-    });
-    $_toTop.click(function () {
-      $_toTop.blur();
-      $('html, body').animate({scrollTop: 0}, 200);
-    });
-  })
-</script>
+<% include ../_toTop.html %>
