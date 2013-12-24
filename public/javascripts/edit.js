@@ -13,12 +13,13 @@
   var INPUT_EVENTS = 'input blur mousedown mouseup keydown keypress keyup';
 
   function fillVideo($li, url, cover) {
+    console.log(cover);
     var quote = shizier.utils.getVideoQuote(url);
 
     //填充视频
     $li
       .find('.Cover')
-      .css('background-image', 'url(' + (cover || '') + ')')
+      .css('background-image', !cover ? '' : 'url(' + cover + ')')
       .end()
       .find('.Quote a')
       .text(quote ? quote : url)
@@ -875,6 +876,9 @@
 
       //填充文本
       this.widget()
+        .find('.Content')
+        .data('vid', this.options.vid)
+        .end()
         .find('.VIDEO_URL')
         .attr('href', this.options.url)
         .end()
@@ -1776,9 +1780,11 @@
             };
             break;
           case 'VIDEO':
+            var temp = $li.find('.Cover').css('background-image')
+              .replace('url(', '').replace(')', '').replace(/"/g, '');
             data = {
               url: $li.find('.Quote a').attr('href'),
-              cover: $li.find('.Cover').css('background-image').replace('url("', '').replace('")', ''),
+              cover: (!temp || temp == 'none') ? '' : temp,
               vid: $li.find('.Content').data('vid'),
               title: $li.find('.Title a').text(),
               description: $('<div/>').html($li.find('.Description').html().replace(/<br>/g, '\n')).text()
@@ -1815,6 +1821,7 @@
    * @private
    */
   function _initBand() {
+    $band.css('position', 'fixed');
     var $window = $(window);
     $window.scroll(function () {
       if ($window.scrollTop() >= 48) {

@@ -478,19 +478,3 @@
     display: none !important;
   }
 }
-#_toTop {
-  position: fixed;
-  display: none;
-  right: 30px;
-  opacity: 0.5;
-  padding: 4px 12px;
-  background-color: #999;
-  color: white;
-}
-#_toTop:hover,
-#_toTop:active,
-#_toTop:focus {
-  opacity: 1;
-  background-color: #eee;
-  color: black;
-}
