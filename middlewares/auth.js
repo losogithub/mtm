@@ -178,6 +178,7 @@ function userRequired(req, res, next) {
   //if not login, then redirect to login page.
   if ((!req.session) || (!req.session.userId)) {
       //todo: shall we send 401 ?
+    console.log("not login user! ");
     return res.send(401, 'unauthorized');
   } else {
     return next();
