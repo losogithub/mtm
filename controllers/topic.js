@@ -1519,8 +1519,8 @@ function _getVideoDetail(url, callback) {
       case 'bilibili.tv':
       case 'bilibili.kankanews.com':
         //plan A
-        //<h2 title="想恶搞女友却发现惊人秘密">
-        title = !(temp = html.match(/<h2 title="([^">]*)>/i)) ? null : !temp[1] ? null : temp[1];
+        //<meta name="title" content="【舍长实况】《逃生》全集（6P完结）" />
+        title = !(temp = html.match(/<meta name="title" content="([^"<>]+)/i)) ? null : !temp[1] ? null : temp[1];
         //http://www.bilibili.tv/video/av805830
         //http://www.bilibili.tv/video/av805830/index.html
         //http://www.bilibili.tv/video/av805830/index_2.html
