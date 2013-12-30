@@ -162,7 +162,7 @@ body {
 }
 .Menu ul li {
   display: inline;
-  margin-left: 25px;
+  margin-left: 15px;
 }
 .Menu ul li i {
   vertical-align: middle;
@@ -187,6 +187,9 @@ body {
 }
 .WidgetItemList .Menu button {
   color: #999;
+}
+.WidgetItemList .Menu img {
+  opacity: 0.5;
 }
 /*微件*/
 .LINK_CREATE input {
@@ -264,6 +267,10 @@ body {
 }
 .CITE textarea[name='description'] {
   min-height: 45px;
+}
+.WEIBO_CREATE input {
+  float: left;
+  width: 508px;
 }
 .TEXT textarea {
   font-size: 14px;

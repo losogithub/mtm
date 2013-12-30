@@ -13,9 +13,9 @@ $(function () {
   $('.fancybox:visible').fancybox(shizier.fancyboxOptions);
 
   $('.WidgetItemList').on('click', '.Cover', function () {
-    var $content = $(this).closest('.Content');
-    var vid = $content.data('vid');
-    var quote = $content.find('.Quote a').text();
+    var $li = $(this).closest('li');
+    var vid = $li.data('options').vid;
+    var quote = $li.find('.Quote a').text();
     var temp = shizier.getVideoSrc(quote, vid);
     $player.clone()
       .find('embed')

@@ -100,11 +100,10 @@
 <div class="TopicWrapper clearfix">
   <div class="Main">
 
-    <% include _ul.html %>
+  <% include _ul.html %>
 
     <!--模板-->
     <div class="TEMPLATES" style="display:none;">
-
       <ul>
         <% var item = null; %>
         <% include _ul_li.html %>
@@ -277,6 +276,53 @@
 
         </div>
 
+        <div class='Content WEIBO_CREATE'>
+          <div class="Avatar">
+            <img src="/images/tsina_avatar_50x50.gif">
+          </div>
+          <div style="overflow: hidden;">
+            <div class="Required" style="float: left;"></div>
+            <input name="url" class="AUTO_FOCUS" placeholder="新浪微博URL" type="text">
+            <button name="preview" class="btn btn-small" type="button" disabled='disabled'
+                    data-loading-text="预览 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;">预览
+            </button>
+            <div class="clearfix"></div>
+            <div class="InfoHint text-muted">
+              由于受隐私设置保护，有些微博将无法引用
+            </div>
+
+            <% include _widget_BtnSet.html %>
+
+          </div>
+        </div>
+
+        <div class='Content WEIBO'>
+          <a target="_blank"  class="Avatar AuthorUrl">
+            <img>
+          </a>
+
+          <div style="overflow: hidden;">
+            <a target="_blank" class="Author AuthorUrl text-default">
+              <span class="ScreenName"></span>
+            </a>
+            <a target="_blank" class="Verify" href="http://verified.weibo.com/verify"><b>V</b></a>
+            <span class="AuthorDescription text-muted"></span>
+            <p class="Text"></p>
+            <div class="Pic clearfix"></div>
+            <a target="_blank" class="Time text-muted" style="float: left;"></a>
+            <div style="float: right;">
+              <a target="_blank" class="Forward">转发</a>
+              <a target="_blank" class="Comment">评论</a>
+            </div>
+            <div class="clearfix"></div>
+
+            <textarea name="description" class="AUTO_FOCUS" placeholder="微博介绍、评论"></textarea>
+
+            <% include _widget_BtnSet.html %>
+
+          </div>
+        </div>
+
         <div class='Content TEXT'>
           <div class="Required"></div>
           <textarea name="text" class="AUTO_FOCUS" placeholder="文本"></textarea>
@@ -307,6 +353,24 @@
 
       <% include _video_player.html %>
 
+      <a class="WeiboImage fancybox" rel="gallery"><img></a>
+
+      <div class="Retweeted clearfix">
+        <p class="CaretShadow">◆</p>
+        <p class="Caret">◆</p>
+        <a target="_blank" class="Author AuthorUrl text-default">
+          @<span class="ScreenName"></span>
+        </a>
+        <a target="_blank" class="Verify" href="http://verified.weibo.com/verify"><b>V</b></a>
+        <span class="AuthorDescription text-muted"></span>
+        <p class="Text"></p>
+        <div class="Pic clearfix"></div>
+        <a target="_blank" class="Time text-muted" style="float: left;"></a>
+        <div style="float: right;">
+          <a target="_blank" class="Forward">转发</a>
+          <a target="_blank" class="Comment">评论</a>
+        </div>
+      </div>
     </div>
   </div>
   <div class="Sub"></div>

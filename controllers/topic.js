@@ -19,6 +19,8 @@ var fs = require('fs');
 var portfinder = require('portfinder');
 var mongodb = require('mongodb');
 var zlib = require('zlib');
+var weibo = require('weibo');
+var extend = require('extend');
 var config = require('../config');
 
 var helper = require('../helper/helper');
@@ -30,7 +32,6 @@ var User = require('../proxy').User;
 var NewTopic = require('../proxy').NewTopic;
 
 var utils = require('../public/javascripts/utils');
-
 
 
 function createTopic(req, res, next) {
@@ -250,15 +251,15 @@ function showShareChang(req, res, next) {
 function createChang(req, res, next) {
   console.log('===== createChang =====');
   var topicId = req.params.topicId;
-  res.json({src : "/chang/" + topicId}) ;
+  res.json({src: "/chang/" + topicId});
 }
 
 
-function sendChang(req,res){
+function sendChang(req, res) {
 
   var MongoClient = require('mongodb').MongoClient;
-  MongoClient.connect(config.db, function(err, db) {
-    if(err) return console.log(err);
+  MongoClient.connect(config.db, function (err, db) {
+    if (err) return console.log(err);
 
     var topicId = req.params.topicId;
     //get the topic data
@@ -274,39 +275,46 @@ function sendChang(req,res){
 
 
       //check the existence
-      mongodb.GridStore.exist(db, topicId, function(err, result){
-        if(err){
+      mongodb.GridStore.exist(db, topicId, function (err, result) {
+        if (err) {
           throw err;
         }
-        if(!result){
+        if (!result) {
           console.log("~~~~~~~~~~~not exists, create~~~~~~~~~");
-          _generateImage(topic, topicId,time, db, res, false);
+          _generateImage(topic, topicId, time, db, res, false);
         }
-        else
-        {
+        else {
           var gs = new mongodb.GridStore(db, topicId, "r");
-          gs.open(function(err, gs){
-            if(err){throw err}
+          gs.open(function (err, gs) {
+            if (err) {
+              throw err
+            }
 
-            if( gs.metadata.updateAt == time){
+            if (gs.metadata.updateAt == time) {
               console.log("ok, not updated yet")
 
               //If user want to render again, here check
-              if(req.query.force){
+              if (req.query.force) {
                 console.log("render jpg again!");
                 //regenerate new
-                mongodb.GridStore.unlink(db, topicId, function(err){
-                  if(err){console.log("unlink gridstore err"); throw err;}
+                mongodb.GridStore.unlink(db, topicId, function (err) {
+                  if (err) {
+                    console.log("unlink gridstore err");
+                    throw err;
+                  }
                   console.log("unlink success");
                 })
                 //regenerate new
-                _generateImage(topic, topicId,time,db, res, true);
+                _generateImage(topic, topicId, time, db, res, true);
               }
 
               else {
                 //directly render it
-                gs.read(function(err, data){
-                  if(err){console.log("read err");throw err;}
+                gs.read(function (err, data) {
+                  if (err) {
+                    console.log("read err");
+                    throw err;
+                  }
                   res.writeHead('200', {'Content-Type': 'image/png'});
                   res.end(data, 'binary');
                 })
@@ -316,29 +324,32 @@ function sendChang(req,res){
             else {
               console.log("regenerate as the topic updated ");
               //regenerate new
-              mongodb.GridStore.unlink(db, topicId, function(err){
-                if(err){console.log("unlink gridstore err"); throw err;}
+              mongodb.GridStore.unlink(db, topicId, function (err) {
+                if (err) {
+                  console.log("unlink gridstore err");
+                  throw err;
+                }
                 console.log("unlink success");
               })
               //regenerate new
-              _generateImage(topic, topicId,time,db, res, true);
+              _generateImage(topic, topicId, time, db, res, true);
             }
             //_readFromMongoGrid(topic, topicId, time, req, res);
           });
         }
 
-        })
+      })
 
-      });
+    });
 
   });
 }
 
 
 /*
-tag : used to notify regenerate
+ tag : used to notify regenerate
  */
-function _generateImage(topic, topicId,time, db, res, tag){
+function _generateImage(topic, topicId, time, db, res, tag) {
   /*
    In order to avoid at the same time, many people render this, we need different port.
    So using a random generated number to achieve it.
@@ -346,8 +357,8 @@ function _generateImage(topic, topicId,time, db, res, tag){
    Math.floor(Math.random() * 20000) + 22000
    */
 
-  portfinder.getPort(function(err, port){
-    if(err){
+  portfinder.getPort(function (err, port) {
+    if (err) {
       console.log("no avalilale port ?");
       throw err;
     }
@@ -355,21 +366,23 @@ function _generateImage(topic, topicId,time, db, res, tag){
       console.log("port: ", port);
       var filename = time + '_' + topicId + '.jpg';
       var fullFilePath = 'public/images/chang/' + filename;
-      _countDifferentItemsInOneTopicAndSetTime(topic, res, function(loadingTime){
-        phantom.create({port: port},function (ph) {
+      _countDifferentItemsInOneTopicAndSetTime(topic, res, function (loadingTime) {
+        phantom.create({port: port}, function (ph) {
           ph.createPage(function (page) {
             console.log("loading time: ", loadingTime);
-            if(tag){
+            if (tag) {
               loadingTime = loadingTime + 2000;
             }
             page.set('settings.resourceTimeout', loadingTime);
             page.open('http://localhost:3000/topic/' + topicId + '/chang', function () {
-              setTimeout(function(){
+              setTimeout(function () {
                 page.render(fullFilePath, function () {
                   ph.exit();
 
-                  fs.readFile('public/images/chang/' + filename, function(err, data){
-                    if(err){throw err}
+                  fs.readFile('public/images/chang/' + filename, function (err, data) {
+                    if (err) {
+                      throw err
+                    }
                     //render data
                     res.writeHead('200', {'Content-Type': 'image/png'});
                     res.end(data, 'binary');
@@ -379,9 +392,9 @@ function _generateImage(topic, topicId,time, db, res, tag){
                   /*
                    store this png in grid fs , wait for 10min, delete this one.
                    */
-                  _storeMongoGrid(topicId,time,db, res);
+                  _storeMongoGrid(topicId, time, db, res);
                 });
-              },loadingTime);
+              }, loadingTime);
             });
           })
         });
@@ -390,54 +403,54 @@ function _generateImage(topic, topicId,time, db, res, tag){
   })
 }
 
-function _setTimeDelete(fullFilePath){
-  setTimeout(function(){
-    fs.unlink(fullFilePath,function(err){
-      if(err){
+function _setTimeDelete(fullFilePath) {
+  setTimeout(function () {
+    fs.unlink(fullFilePath, function (err) {
+      if (err) {
         console.log("must been deleted already");
         //throw err;
       }
       console.log("successfully delete " + fullFilePath);
     });
-  }, 60*1000); //10min
+  }, 60 * 1000); //10min
 }
 
-function _storeMongoGrid(topicId, time, db, res){
+function _storeMongoGrid(topicId, time, db, res) {
 
-    var gs = new mongodb.GridStore(db, topicId, "w", {
-      "content/type": "img/jpeg",
-      "metadata": {
-        "topicId": topicId,
-        "updateAt": time
-      },
-      "chunk_size": 1024
-    });
-    var filename = time + '_' + topicId + '.jpg';
-    var fullFilePath = 'public/images/chang/' + filename;
-    gs.writeFile(fullFilePath, function(err, obj){
-      if(err){
-        console.log("write to grid err.");
-        throw err;
-      }
-      else {
+  var gs = new mongodb.GridStore(db, topicId, "w", {
+    "content/type": "img/jpeg",
+    "metadata": {
+      "topicId": topicId,
+      "updateAt": time
+    },
+    "chunk_size": 1024
+  });
+  var filename = time + '_' + topicId + '.jpg';
+  var fullFilePath = 'public/images/chang/' + filename;
+  gs.writeFile(fullFilePath, function (err, obj) {
+    if (err) {
+      console.log("write to grid err.");
+      throw err;
+    }
+    else {
 
-        console.log("write to grid success.");
-        gs.close(function(err, success){
-          if(err){
-            console.log("close gridfs err");
-            throw err;
-          }
-          else {
-            console.log("success closed gridfs");
-          }
-        });
-      }
-    })
+      console.log("write to grid success.");
+      gs.close(function (err, success) {
+        if (err) {
+          console.log("close gridfs err");
+          throw err;
+        }
+        else {
+          console.log("success closed gridfs");
+        }
+      });
+    }
+  })
 
 }
 
 
-function _countDifferentItemsInOneTopicAndSetTime(topic, res, callback){
+function _countDifferentItemsInOneTopicAndSetTime(topic, res, callback) {
   //console.log("count time for resource loading");
   var ep = EventProxy.create('items', function (items) {
     var textTimePer = 10;
@@ -447,17 +460,25 @@ function _countDifferentItemsInOneTopicAndSetTime(topic, res, callback){
 
     items.forEach(function (item) {
       //itemsData.push(_getItemData(item).type);
-      switch  (item.type){
-        case 'IMAGE' : totalTime += pictureTimePer; break;
-        case 'VIDEO' : totalTime += videoTimePer; break;
-        default : totalTime += textTimePer; break;
+      switch (item.type) {
+        case 'IMAGE' :
+          totalTime += pictureTimePer;
+          break;
+        case 'VIDEO' :
+          totalTime += videoTimePer;
+          break;
+        default :
+          totalTime += textTimePer;
+          break;
       }
     });
-  //console.log("total resource loading time: ", totalTime);
-  //return totalTime;
+    //console.log("total resource loading time: ", totalTime);
+    //return totalTime;
     //Give a default lowest time
-    if(totalTime < 2000) {totalTime = 2000;}
-  callback(totalTime);
+    if (totalTime < 2000) {
+      totalTime = 2000;
+    }
+    callback(totalTime);
   })
     .fail(function (err) {
       console.error(err.stack);
@@ -670,6 +691,35 @@ function _getData(req) {
         description: description
       }
       break;
+    case 'WEIBO_CREATE':
+    case 'WEIBO':
+      var url = sanitize(req.body.url).trim();
+      var description = sanitize(req.body.description).trim();
+      var created_at = sanitize(req.body.created_at).trim();
+      var idstr = sanitize(req.body.idstr).trim();
+      var mid62 = sanitize(req.body.mid62).trim();
+      var text = sanitize(req.body.text).trim();
+      var source = sanitize(req.body.source).trim();
+      var pic_urls = req.body.pic_urls;
+      var user = req.body.user;
+      var retweeted_status = req.body.retweeted_status;
+
+      check(url).notNull().isUrl();
+      check(description).len(0, 300);
+
+      data = {
+        url: url,
+        description: description,
+        created_at: created_at,
+        idstr: idstr,
+        mid62: mid62,
+        text: text,
+        source: source,
+        pic_urls: pic_urls,
+        user: user,
+        retweeted_status: retweeted_status
+      }
+      break;
     case 'TEXT':
       var text = sanitize(req.body.text).trim();
 
@@ -702,8 +752,6 @@ function _getItemData(item) {
   switch (item.type) {
     case 'LINK':
       itemData = {
-        itemId: item._id,
-        type: item.type,
         url: item.url,
         title: item.title,
         snippet: item.snippet,
@@ -713,22 +761,17 @@ function _getItemData(item) {
       break;
     case 'IMAGE':
       itemData = {
-        itemId: item._id,
-        type: item.type,
         url: item.url,
         title: item.title,
         quote: item.quote,
-        quoteDomain: utils.getImageQuoteDomain(item.quote),
+        quoteDomain: utils.getQuote(item.quote),
         description: item.description
       }
       break;
     case 'VIDEO':
-      var quote = utils.getVideoQuote(item.url);
       itemData = {
-        itemId: item._id,
-        type: item.type,
         url: item.url,
-        quote: quote,
+        quote: utils.getQuote(item.url, 'VIDEO'),
         cover: item.cover,
         vid: item.vid,
         title: item.title,
@@ -737,25 +780,39 @@ function _getItemData(item) {
       break;
     case 'CITE':
       itemData = {
-        itemId: item._id,
-        type: item.type,
         cite: item.cite,
         url: item.url,
         title: item.title,
         description: item.description
       }
       break;
+    case 'WEIBO':
+      itemData = {
+        url: item.url,
+        description: item.description,
+        created_at: item.created_at,
+        time: utils.getWeiboTime(item.created_at),
+        idstr: item.idstr,
+        mid62: item.mid62,
+        text: item.text,
+        source: item.source,
+        pic_urls: item.pic_urls,
+        user: item.user,
+        retweeted_status: item.retweeted_status
+      }
+
+      if (itemData.retweeted_status) {
+        itemData.retweeted_status.time = utils.getWeiboTime(item.retweeted_status.created_at);
+      }
+      console.log(itemData.time);
+      break;
     case 'TEXT':
       itemData = {
-        itemId: item._id,
-        type: item.type,
         text: item.text
       }
       break;
     case 'TITLE':
       itemData = {
-        itemId: item._id,
-        type: item.type,
         title: item.title
       }
       break;
@@ -763,6 +820,8 @@ function _getItemData(item) {
       itemData = {};
       break;
   }
+  itemData._id = item._id;
+  itemData.type = item.type;
   return itemData;
 }
 
@@ -918,7 +977,7 @@ function sortItem(req, res, next) {
   var userId = req.session.userId;
   var topicId = req.body.topicId;
   var type = req.body.type;
-  var itemId = req.body.itemId;
+  var itemId = req.body._id;
   var prevItemType = req.body.prevItemType;
   var prevItemId = req.body.prevItemId;
 
@@ -981,7 +1040,7 @@ function editItem(req, res, next) {
   console.log('editItem=====');
   var userId = req.session.userId;
   var topicId = req.body.topicId;
-  var itemId = req.body.itemId;
+  var itemId = req.body._id;
   var type = req.body.type;
 
   async.auto({
@@ -1040,7 +1099,7 @@ function deleteItem(req, res, next) {
   var userId = req.session.userId;
   var topicId = req.body.topicId;
   var type = req.body.type;
-  var itemId = req.body.itemId;
+  var itemId = req.body._id;
 
   async.auto({
     topic: function (callback) {
@@ -1142,7 +1201,7 @@ function publishTopic(req, res, next) {
       if (err) {
         return next(err);
       }
-      res.json(200);
+      res.send(200);
       console.log('publishTopic done');
     });
   }, topicId, authorId);
@@ -1165,8 +1224,17 @@ function _getHtml(url, callback) {
       async.series([function (callback) {
         switch (response.headers['content-encoding']) {
           case 'gzip':
+            zlib.gunzip(buffer, function(err, buf) {
+              if (err) {
+                return callback(err);
+              }
+
+              buffer = buf;
+              callback();
+            });
+            break;
           case 'deflate':
-            zlib.unzip(buffer, function(err, buf) {
+            zlib.inflateRaw(buffer, function(err, buf) {
               if (err) {
                 return callback(err);
               }
@@ -1213,12 +1281,11 @@ function _getHtml(url, callback) {
 }
 
 function _getLinkDetail(url, callback) {
+  callback = callback || function () {
+  };
   _getHtml(url, function (err, html) {
     if (err) {
-      if (typeof callback === 'function') {
-        callback(err);
-      }
-      return;
+      return callback(err);
     }
     var temp;
     var title = !(temp = html.match(/<title[^>]*>([^<]*)<\/title[^>]*>/i)) ? null : temp[1];
@@ -1278,13 +1345,11 @@ function _getLinkDetail(url, callback) {
       }
     }
     console.log(srcs.length);
-    if (typeof callback == 'function') {
-      callback(null, {
-        title: title,
-        snippet: snippet,
-        srcs: srcs
-      });
-    }
+    callback(null, {
+      title: title,
+      snippet: snippet,
+      srcs: srcs
+    });
   });
 }
 
@@ -1298,7 +1363,7 @@ function _getVideoDetail(url, callback) {
     }
     var temp;
     var title;
-    var quote = utils.getVideoQuote(url);
+    var quote = utils.getQuote(url, 'VIDEO');
     var vid;
     var cover;
     console.log(quote);
@@ -1309,7 +1374,8 @@ function _getVideoDetail(url, callback) {
         title = !(temp = html.match(/&tt=(((?!&pu).)*)/i)) ? null : !temp[1] ? null : temp[1];
         //http://v.youku.com/v_show/id_XNjEyOTU3NjE2.html?f=20383529&ev=1
         //http://v.youku.com/v_show/id_XNjQxNTE5MDYw_ev_1.html
-        vid = !(temp = url) ? null : !(temp = temp.match(/id_([\w\-]{13})/i)) ? null : !temp[1] ? null : temp[1];
+        //http://v.youku.com/v_show/id_XOTc4MTQ5MDg=.html
+        vid = !(temp = url) ? null : !(temp = temp.match(/id_([\w\-=]{13})/i)) ? null : !temp[1] ? null : temp[1];
         //&pics=http://g1.ykimg.com/0100641F465298B35464C306340F021E6E83FF-FD92-B358-8009-D0B224F8C83D&site=优酷
         //128x96
         cover = !(temp = html.match(/&pics=([^&"']*)/i)) ? null : !temp[1] ? null : temp[1];
@@ -1525,6 +1591,111 @@ function _getVideoDetail(url, callback) {
   });
 }
 
+function _getWeiboDetail(url, callback) {
+  callback = callback || function () {
+  };
+  var temp;
+  var mid = (temp = /weibo\.com\/\d+\/(\w+)/i.exec(url)) && temp[1];
+  console.log(mid);
+  var data;
+
+  _getHtml('https://api.weibo.com/2/statuses/queryid.json?source=' + config.WEIBO_APPKEY + '&type=1&isBase62=1&mid=' + mid, function (err, html) {
+    if (err) {
+      return callback(err);
+    }
+    var idstr = JSON.parse(html).id;
+    console.log(idstr);
+
+    _getHtml('https://api.weibo.com/2/statuses/show.json?source=' + config.WEIBO_APPKEY + '&id=' + idstr, function (err, html) {
+      if (err) {
+        return callback(err);
+      }
+      console.log(html);
+      async.series([function (callback) {
+        data = extend(JSON.parse(html), {mid62: mid, id: null});
+        if (!data.retweeted_status) {
+          return callback();
+        }
+        _getHtml('https://api.weibo.com/2/statuses/querymid.json?source=' + config.WEIBO_APPKEY + '&type=1&id=' + data.retweeted_status.idstr, function (err, html) {
+          if (err) {
+            return callback(err);
+          }
+          console.log(JSON.parse(html));
+          extend(data.retweeted_status, {mid62: JSON.parse(html).mid, id: null});
+          return callback();
+        });
+      }], function (err) {
+        if (err) {
+          return callback(err);
+        }
+        callback(null, data);
+      });
+//    var title = !(temp = html.match(/<title[^>]*>([^<]*)<\/title[^>]*>/i)) ? null : temp[1];
+//    title = sanitize(title).entityDecode();
+//    title = sanitize(title).trim();
+//
+//    temp = !(temp = html.match(/<meta([^>]*)name\s*=\s*("|')description("|')([^>]*)>/i)) ? null : temp[1] + temp[4];
+//    var snippet = (!temp ? null : !(temp = temp.match(/content\s*=\s*("|')([^"']*)("|')/i)) ? null : temp[2].trim())
+//      || html.substr((temp = html.indexOf('<body')) < 0 ? 0 : temp)
+//      .replace(/<script((?!<\/script>)[\s\S])*<\/script>/gi, ' ')
+//      .replace(/<style((?!<\/style>)[\s\S])*<\/style>/gi, ' ')
+//      .replace(/<[^>]*>/g, ' ')
+//      .replace(/\s+/g, ' ')
+//      .trim();
+//    if (snippet.length > 200) {
+//      snippet = snippet.substr(0, 199) + '…';
+//    }
+//    snippet = sanitize(snippet).entityDecode();
+//    snippet = sanitize(snippet).trim();
+//
+//    var imgs = !html ? null : html.match(/<img[^>]*>/gi);
+//    console.log(imgs ? imgs.length : 0);
+//    var thumb;
+//    var img;
+//    var width;
+//    var height;
+//    var srcs = [];
+//    var obj = {};
+//    var addToSrcs = function (img) {
+//      var src = !img ? null : !(temp = img.match(/\ssrc\s*=\s*("|')([^"']+)("|')/i)) ? null : temp[2];
+//      if (!src) {
+//        return;
+//      }
+//      src = utils.suffixImage(Url.resolve(url, src));
+//      if (!src || obj[src]) {
+//        return;
+//      }
+//      console.log('++' + src);
+//      srcs.push(src);
+//      obj[src] = true;
+//    };
+//    for (var i in imgs) {
+//      img = imgs[i];
+//      width = !img ? null : !(temp = img.match(/\swidth\s*=\s*("|')([\d]+)("|')/i)) ? null : temp[2];
+//      height = !img ? null : !(temp = img.match(/\sheight\s*=\s*("|')([\d]+)("|')/i)) ? null : temp[2];
+//      if (width || height) {
+//        if (width >= 150 && height >= 70) {
+//          addToSrcs(img);
+//        } else {
+//        }
+//        continue;
+//      }
+//      thumb = !img ? null : !(temp = img.match(/\ssrc\s*=\s*("|')[^"']+\.jpg("|')/i)) ? null : temp[0];
+//      if (thumb) {
+//        addToSrcs(img);
+//        continue;
+//      }
+//    }
+//    console.log(srcs.length);
+//      callback(null, {
+//        title: title,
+//        snippet: snippet,
+//        srcs: srcs
+//      });
+    });
+  });
+}
+
 function getLinkDetail(req, res, next) {
   console.log('getLinkDetail');
   var url = req.query.url;
@@ -1535,6 +1706,7 @@ function getLinkDetail(req, res, next) {
       return;
     }
     res.json({
+      type: 'LINK',
       url: url,
       title: results ? results.title : undefined,
       snippet: results ? results.snippet : undefined,
@@ -1553,11 +1725,28 @@ function getVideoDetail(req, res, next) {
       return;
     }
     res.json({
+      type: 'VIDEO',
       url: url,
       vid: results ? results.vid : undefined,
       title: results ? results.title : undefined,
       cover: results ? results.cover : undefined
     });
+  });
+}
+
+function getWeiboDetail(req, res, next) {
+  console.log('getWeiboDetail');
+  var url = req.query.url;
+
+  _getWeiboDetail(url, function (err, results) {
+    if (err) {
+      next(err);
+      return;
+    }
+    res.json(extend(results, {
+      type: 'WEIBO',
+      url: url
+    }));
   });
 }
 
@@ -1650,7 +1839,6 @@ function AddorRemoveLikes(req, res) {
             //console.log(topic);
             //now successfully update info for both author and viewer.
             //send information back
-            res.header('Access-Control-Allow-Credentials', 'true')
             res.contentType('json');
             //res.writeHead(200);
             //if need login, then in auth.js, loginDialog : true,
@@ -1680,5 +1868,6 @@ exports.saveTopic = saveTopic;
 exports.publishTopic = publishTopic;
 exports.getLinkDetail = getLinkDetail;
 exports.getVideoDetail = getVideoDetail;
+exports.getWeiboDetail = getWeiboDetail;
 exports.AddorRemoveLikes = AddorRemoveLikes;
 exports.sendChang = sendChang;
