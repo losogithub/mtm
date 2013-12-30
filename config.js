@@ -21,12 +21,11 @@ module.exports = {
     session_secret: 'shizier',
     auth_cookie_name: 'shizierCookie',
     mail_opts : {
-         host: 'weiji.com' ,
-         port: 25,
-        service: "shiziweiji",
+        host: 'shizier.com',
+        port: 25,
         auth: {
-            user: 'shizier@weiji.com',
-            pass: 'shizi0725'
+            user: 'notification@shizier.com',
+            pass: 'shizier0725'
         }
 
     }
