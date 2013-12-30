@@ -28,6 +28,7 @@ exports.ItemModels = {
   'IMAGE': require('./image_item'),
   'VIDEO': require('./video_item'),
   'CITE': require('./cite_item'),
+  'WEIBO': require('./weibo_item'),
   'TEXT': require('./text_item'),
   'TITLE': require('./title_item')
 }

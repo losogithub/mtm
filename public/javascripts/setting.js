@@ -15,44 +15,39 @@ $(function ($) {
   var $thumbEdit = $('#_thumbEdit');
   var $img = $thumbEdit.find('#_thumb');
   var coverUrl = $img.attr('src');
-  var $input = $thumbEdit.find('input');
+  var $input = $thumbEdit.find('input[name="url"]');
   var $preview = $thumbEdit.find('button[name="preview"]');
   var $reset = $thumbEdit.find('button[name="reset"]');
-  var autoHide = false;
-  $reset.click(function() {
-    autoHide = true;
-    $img.attr('src', coverUrl);
+  $input.keypress(function (event) {
+    if (event.keyCode != 13) {
+      return;
+    }
+    $preview.click();
+    return false;
   });
   $preview.click(function () {
-    autoHide = true;
     $img.attr('src', shizier.utils.suffixImage($input.val()));
   });
-})
-
-$(function ($) {
-  $('button[name="save"]')
-    .click(function () {
-      console.log("click on save settings button");
-      var imageUrl = $('input[name="url" ]').val();
-      var description = $('textarea[class="InputBox_Introduce"]').val();
-      var connectUrl = $('input[name="site"]').val();
-      console.log(imageUrl);
-      console.log(description);
-      console.log(connectUrl);
-      //then send ajax to server.
-      $.ajax({
-        type: 'POST',
-        url: '/settings',
-        xhrFields: { withCredentials: true },
-        data: {imageUrl: imageUrl, description: description, connectUrl: connectUrl},
-        success: function () {
-          alert('您的个人设置已经成功更新！');
-          return;
-        },
-        error: function () {
-          alert('failed');
-        }
+  $reset.click(function () {
+    $img.attr('src', coverUrl);
+  });
+  $('.SettingsForm').submit(function () {
+    console.log("click on save settings button");
+    var imageUrl = $img.attr('src');
+    var description = $('textarea[class="InputBox_Introduce"]').val();
+    var connectUrl = $('input[name="site"]').val();
+    console.log(imageUrl);
+    console.log(description);
+    console.log(connectUrl);
+    //then send ajax to server.
+    $.post('/settings', {
+      imageUrl: imageUrl, description: description, connectUrl: connectUrl
+    }).done(function () {
+        alert('已更新您的个人设置');
+      })
+      .fail(function () {
+        alert('未能成功更新您的个人设置！');
       });
-    })
-})
-
+    return false;
+  });
+});

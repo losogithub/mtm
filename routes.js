@@ -28,6 +28,7 @@ module.exports = function (app) {
   app.get('/topic/create', auth.loginRequired, topic.createTopic);
   app.get('/topic/link_detail', topic.getLinkDetail);
   app.get('/topic/video_detail', topic.getVideoDetail);
+  app.get('/topic/weibo_detail', topic.getWeiboDetail);
   app.get('/topic/:topicId', topic.showIndex);
   app.get('/topic/:topicId/edit', auth.loginRequired, topic.showEdit);
   app.get('/topic/:topicId/chang', topic.showChang);

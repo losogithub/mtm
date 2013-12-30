@@ -50,6 +50,34 @@
       }
     });
 
+    var URL_INPUT_SELECTOR = 'input[name="url"], input.Url';
+
+    shizier.normalizeUrl = function($url) {
+      var url = $url.val();
+      if (!$url.length || !url) {
+        return;
+      }
+      url = url.trim().replace('。', '.');
+      if (!shizier.utils.REGEXP_PROTOCOL.test(url)) {
+        url = 'http://' + url;
+      }
+      $url.val(url);
+    };
+
+    $('form').submit(function () {
+      var $urls = $(this).find(URL_INPUT_SELECTOR);
+      for (var i = 0; i < $urls.size(); i++) {
+        shizier.normalizeUrl($($urls.get(i)));
+      }
+    });
+
+    $(URL_INPUT_SELECTOR).keypress(function (event) {
+      if (event.keyCode != 13) {
+        return;
+      }
+      shizier.normalizeUrl($(this));
+    });
+
     $(".Nav-Right_Inner>li:last>button")
       .click(function () {
         var $i = $(this).find('>i');

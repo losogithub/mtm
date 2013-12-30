@@ -24,6 +24,8 @@
     "mathjs": "*" ,
     "fibers": "*",
     "mongodb": "*",
-    "portfinder": "*"
+    "portfinder": "*",
+    "weibo": "*",
+    "stream-buffers": "*"
   }
 }

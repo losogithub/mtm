@@ -17,7 +17,7 @@
       &:hover { background-color: #f8f8f8; box-shadow: 0 0 0 3px #f8f8f8; }
       >:first-child { .clearfix(); }
     }
-    &:last-child>div {margin-bottom: 0 !important;}
+    &:last-child>div { margin-bottom: 0 !important; }
     &.TITLE>div { margin-bottom: 25px; }
   }
   .Content { .clearfix(); }
@@ -59,8 +59,8 @@
   .Description { margin-top: 10px; padding-left: 6px; border-left: 2px solid #ccc; font-size: 14px; line-height: 20px; }
 }
 
-.Image {
-  .IMAGE_CREATE &, .IMAGE & { float: left; margin-right: 10px; }
+.IMAGE_CREATE, .IMAGE {
+  .Image { float: left; margin-right: 10px; }
 }
 
 .IMAGE {
@@ -77,14 +77,14 @@
 
 .VIDEO {
   .Cover {
-    text-align: center; width: 122px; height: 92px;display: block;
-    background-color: #f3f3f3; background-repeat:  no-repeat; background-size: cover;
+    text-align: center; width: 122px; height: 92px; display: block;
+    background-color: #f3f3f3; background-repeat: no-repeat; background-size: cover;
     i {
       line-height: 80px; font-size: 60px;
       color: rgba(255, 255, 255, 0.6);
       text-shadow: 0px 0px 2px rgba(51, 51, 51, 0.6);
     }
-    &:hover, &:focus{
+    &:hover, &:focus {
       i {
         color: rgba(255, 255, 255, 0.8);
         text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
@@ -107,6 +107,39 @@
     q { quotes: none; }
   }
   .Description { margin-top: 10px; padding-left: 6px; border-left: 2px solid #ccc; font-size: 14px; line-height: 20px; }
+}
+
+.WEIBO, .WEIBO_CREATE {
+  .Avatar {
+    float: left; margin-right: 10px;
+    img { width: 50px; height: 50px; background-color: #f3f3f3; }
+  }
+  .Author { font-weight: bold; }
+  >div>.Author { font-size: 14px; }
+  .Text { line-height: 23px; margin-top: 4px; color: #333; }
+  >div>.Text { font-size: 14px; }
+  .Verify {
+    display: none;
+    &.PERSONAL {
+      display: inline; text-decoration: none; color: #fb0; text-shadow: 0 0 1px #f90;
+    }
+    &.ORG {
+      display: inline; text-decoration: none; color: #07e; text-shadow: 0 0 1px #14f;
+    }
+  }
+  >div>.Verify {font-size: 14px;}
+  .Pic { width: 255px;
+    img { float: left; margin: 5px 5px 0 0; }
+  }
+  .Retweeted {
+    background-color: #f2f2f2; border: solid 1px #d9d9d9; border-radius: 5px;
+    padding: 10px 20px; margin: 5px 0 15px; position: relative;
+    .CaretShadow { position: absolute; top: -11px; color: #d9d9d9; }
+    .Caret { position: absolute; top: -10px; color: #f2f2f2; }
+    .AuthorDescription {font-size: 10px;}
+  }
+  textarea[name="description"] {margin-top: 10px;}
+  .Description { margin-top: 10px; padding-left: 6px; border-left: 2px solid #ddd; font-size: 14px; line-height: 20px; }
 }
 
 .TEXT p { line-height: 20px; font-size: 14px; }
@@ -191,7 +224,7 @@
 
 .SubSeparator { height: 15px; background: #fff }
 
-.SubSeparator hr {display: none}
+.SubSeparator hr { display: none }
 
 .SubAuthor { border: 5px solid #e2e5e8 }
 

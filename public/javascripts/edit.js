@@ -14,7 +14,7 @@
 
   function fillVideo($li, url, cover) {
     console.log(cover);
-    var quote = shizier.utils.getVideoQuote(url);
+    var quote = shizier.utils.getQuote(url, 'VIDEO');
 
     //填充视频
     $li
@@ -24,6 +24,70 @@
       .find('.Quote a')
       .text(quote ? quote : url)
       .end();
+  }
+
+  function fillWeibo($li, options) {
+    var time = shizier.utils.getWeiboTime(options.created_at);
+
+    $li
+      .find('.Avatar img')
+      .attr('src', options.user.profile_image_url)
+      .end()
+      .find('.AuthorUrl')
+      .attr('href', 'http://weibo.com/' + options.user.profile_url)
+      .end()
+      .find('.ScreenName')
+      .text(options.user.screen_name)
+      .end()
+      .find('.Verify')
+      .addClass(!options.user.verified ? '' : options.user.verified_type ? 'ORG' : 'PERSONAL')
+      .end()
+      .find('.AuthorDescription')
+      .text(options.user.description)
+      .end()
+      .find('.Text')
+      .text(options.text)
+      .end()
+      .find('.Time')
+      .attr('href', 'http://weibo.com/' + options.user.idstr + '/' + options.mid62)
+      .text(time)
+      .end()
+      .find('.Forward')
+      .attr('href', 'http://weibo.com/' + options.user.idstr + '/' + options.mid62 + '?type=repost')
+      .end()
+      .find('.Comment')
+      .attr('href', 'http://weibo.com/' + options.user.idstr + '/' + options.mid62)
+      .end();
+
+    var $pic = $li.find('.Pic');
+    var $image = $templates.find('>.WeiboImage');
+    if (options.pic_urls) {
+      if (options.pic_urls.length == 4) {
+        $pic.css('width', '170px');
+      }
+      if (options.pic_urls.length == 1) {
+        $image
+          .clone(true)
+          .prependTo($pic)
+          .attr('href', options.pic_urls[0].thumbnail_pic)
+          .find('img')
+          .attr('src', options.pic_urls[0].thumbnail_pic);
+      } else {
+        for (var i = 0; i < options.pic_urls.length; i++) {
+          var src = options.pic_urls[i].thumbnail_pic.replace('/thumbnail/', '/square/');
+          $image
+            .clone(true)
+            .prependTo($pic)
+            .attr('href', src)
+            .find('img')
+            .attr('src', src);
+        }
+      }
+    }
+
+    if (options.retweeted_status) {
+      fillWeibo($templates.find('>.Retweeted').clone(true).insertAfter($li.find('.Pic')), options.retweeted_status);
+    }
   }
 
   $.fn.extend({
@@ -51,26 +115,32 @@
   });
 
   function updateList($li) {
+    var _id = $li.data('options')._id;
     //拖动的item是editWidget，不用重排
-    var itemId = $li.data('id');
-    if (!itemId) {
+    if (!_id) {
       return;
     }
     //拖动的item放在了editWidget下面，用
     var prevItem = $li.prev();
-    var prevItemType = prevItem.data('type');
-    var prevItemId = prevItem.data('id');
-    if (!prevItemId) {
-      prevItemType = prevItem.prev().data('type');
-      prevItemId = prevItem.prev().data('id');
+    var prevItemType;
+    var prevItemId;
+    var options = prevItem.data('options');
+    if (options) {
+      prevItemType = options.type;
+      prevItemId = options._id;
+    }
+    options = prevItem.prev().data('options');
+    if (!prevItemId && options) {
+      prevItemType = options.type;
+      prevItemId = options._id;
     }
     //拖动改变了列表顺序，通知服务器将item插入他前一个item的后面
     $.ajax('/topic/sort', {
       type: 'PUT',
       data: {
         topicId: topicId,
-        type: $li.data('type'),
-        itemId: itemId,
+        type: $li.data('options').type,
+        _id: _id,
         prevItemType: prevItemType,
         prevItemId: prevItemId
       }
@@ -109,27 +179,21 @@
     type: undefined,
     xhr: undefined,
 
-    options: {
-      id: undefined
-    },
-
     _create: function () {
       console.log('_create');
       var self = this;
 
       this.widget()
-        .addClass(this.type)
-        .data('type', this.type)
-        .data('id', this.options.id)
+        .data('options', this.options.options)
         //防止slideDown动画期间获取焦点时的滚动
         .scroll(function () {
           self.widget().scrollTop(0);
         })
         .find('>div')
-        .prepend($templates.find('.Widget:first').clone())
+        .prepend($templates.find('.Widget:first').clone(true))
         .end()
         .find('.Widget')
-        .prepend($templates.find('.Widget .' + this.type).clone())
+        .prepend($templates.find('.Widget .' + this.type).clone(true))
         .end()
         //更改保存按钮类型以实现回车提交表单的功能
         .find('button[name="save"]')
@@ -140,22 +204,6 @@
         .css('resize', 'none')
         .autosize({
           append: '\n'
-        })
-        .end()
-        .find('form')
-        .submit(function () {
-          var $url = self.widget().find('input[name="url"], input.Url');
-          if (!$url.length) {
-            return;
-          }
-          var url = $url.val();
-          if (url) {
-            url = url.trim().replace('。', '.');
-          }
-          if (url && !shizier.utils.REGEXP_PROTOCOL.test(url)) {
-            url = 'http://' + url;
-          }
-          $url.val(url);
         })
         .end();
 
@@ -198,22 +246,18 @@
       }
       this.disable();
       //如果是新建的就删除dom元素，否则是修改就新建条目dom元素
-      var id = this.widget().data('id');
       this.widget().hiddenSlideUp(function () {
         $(this).remove();
       });
-      if (id) {
-        var data = $.extend({
-          $li: this.widget(),
-          itemId: id,
-          type: this.type
-        }, this._getOriginalData());
-        createItem(this.widget().prev(), this.type, id, data);
+      if (this.options._id) {
+        createItem(this.widget().prev(), this._getOriginalData());
       }
       setState('default');
     },
 
-    _getOriginalData: $.noop,
+    _getOriginalData: function () {
+      return this.options.options;
+    },
 
     /**
      * 保存修改验证表格通过后的发送新文本到服务器
@@ -248,7 +292,7 @@
         self.widget().hiddenSlideUp(function () {
           $(this).remove();
         });
-        createItem(self.widget().prev(), self.type.replace('_CREATE', ''), data.itemId, data);
+        createItem(self.widget().prev(), data);
         setState('default');
       };
       var fail = function (jqXHR, textStatus) {
@@ -262,28 +306,25 @@
       };
 
       //如果是修改则传itemId，否则是新建则传prevId
-      var data = this._getCommitData();
-      var id = this.widget().data('id');
+      var data = this.getCommitData();
       var xhr;
-      if (id) {
+      if (this.options._id) {
         xhr = $.ajax('/topic/item', {
           type: 'PUT',
-          data: $.extend({
-            topicId: topicId,
-            itemId: id,
-            type: self.type
-          }, data)
+          data: $.extend({}, data, {
+            topicId: topicId
+          })
         }).done(doneCallback)
           .fail(fail);
       } else {
-        var prevItemType = this.widget().prev().data('type');
-        var prevItemId = this.widget().prev().data('id');
-        xhr = $.post('/topic/item', $.extend({
+        var options = this.widget().prev().data('options');
+        var prevItemType = options && options.type;
+        var prevItemId = options && options._id;
+        xhr = $.post('/topic/item', $.extend({}, data, {
             topicId: topicId,
             prevItemType: prevItemType,
-            prevItemId: prevItemId,
-            type: self.type
-          }, data))
+            prevItemId: prevItemId
+          }))
           .done(doneCallback)
           .fail(fail);
       }
@@ -291,22 +332,28 @@
     },
 
     preview: $.noop,
+
+    getCommitData: function () {
+      return $.extend({}, this.options.options, this._getCommitData());
+    },
     _getCommitData: $.noop,
 
     checkState: function () {
       if (this.options.disabled) {
         return;
       }
-      if (!this.options.id
+      if (!this.options._id
         && (this.type == 'LINK'
         || this.type == 'IMAGE'
-        || this.type == 'VIDEO')) {
+        || this.type == 'VIDEO'
+        || this.type == 'WEIBO')) {
         return;
       }
       var originalData = this._getOriginalData();
-      var commitData = this._getCommitData();
-      for (var key in originalData) {
-        if (originalData[key] != commitData[key]
+      var commitData = this.getCommitData();
+      for (var key in commitData) {
+        if (typeof originalData[key] !== 'object'
+          && originalData[key] != commitData[key]
           && (originalData[key] || commitData[key])) {
           return setState('edit');
         }
@@ -318,13 +365,96 @@
 
   $.widget('shizier.edit_createWidget', $.shizier.editWidget, {
 
+    /**
+     * 子类的构造函数
+     * @private
+     */
+    _create: function () {
+      var self = this;
+
+      this._super();
+
+      //监听文本改变事件
+      this.widget()
+        .find('input')
+        .on(INPUT_EVENTS, function () {
+          var $preview = self.widget().find('button[name="preview"]');
+          if (this.value) {
+            $preview.removeAttr('disabled');
+          } else {
+            $preview.attr('disabled', 'disabled');
+          }
+        })
+        .end();
+    },
+
+    /**
+     * 子类的表单验证
+     * @private
+     */
+    __initFormValidation: function () {
+      var self = this;
+      this.widget().find('form').validate({
+        submitHandler: function () {
+          if (!shizier.utils.getQuote(self.widget().find('input').val(), self.type.replace('_CREATE', ''))) {
+            alertMessenger('暂不支持该网站');
+            return;
+          }
+          self.commit();
+        },
+        showErrors: function (errorMap, errorList) {
+          if (errorList.length) {
+            alertMessenger(errorMap.url);
+          }
+        },
+        rules: {
+          url: {
+            required: true,
+            url: true
+          }
+        },
+        messages: {
+          url: {
+            required: "尚未输入URL。",
+            url: "URL格式错误。"
+          }
+        }
+      });
+    },
+
+    preview: function () {
+      var self = this;
+
+      return $.getJSON('/topic/' + this.type.toLowerCase().replace('_create', '_detail'), this.getCommitData())
+        .done(function (data) {
+          if (self.options.disabled) {
+            return;
+          }
+          self.createPreviewWidget(data);
+        })
+        .fail(function (jqXHR, textStatus) {
+          console.error(jqXHR.responseText);
+          console.error(textStatus);
+          if (textStatus != 'abort') {
+            retryMessenger();
+          }
+          self.widget().find('button[name="preview"]').button('reset');
+        });
+    },
+
     createPreviewWidget: function (data) {
-      var type = this.type.replace('_CREATE', '');
-      createWidget(type, $.extend({
-        type: type,
-        $li: this.widget()
-      }, data));
+      createWidget($.extend({}, data, {type: data.type.replace('_CREATE', '')}), this.widget().prev(), this.widget());
       setState('edit');
+    },
+
+    /**
+     * 子类提交给服务器的数据
+     * @private
+     */
+    _getCommitData: function () {
+      return {
+        url: this.widget().find('input').val()
+      }
     }
 
   });
@@ -338,15 +468,6 @@
     defaultImgSrc: '/images/no_img/photo_150x150.png',
     noImgSrc: '/images/no_img/default_120x120.png',
     index: -1,
-
-    options: {
-      url: '',
-      title: '',
-      snippet: '',
-      srcs: null,
-      src: null,
-      description: ''
-    },
 
     /**
      * 子类的构造函数
@@ -474,9 +595,18 @@
           }
         })
         .end()
+        .find('.Thumb input.Url')
+        .keypress(function (event) {
+          if (event.keyCode != 13) {
+            return;
+          }
+          self.widget().find('.Thumb button[name="customize"]').click();
+          return false;
+        })
+        .end()
         .find('.Thumb button[name="customize"]')
         .click(function () {
-          _prependSrc(shizier.utils.suffixImage(self.widget().find('.Thumb input[type="text"]').val()));
+          _prependSrc(shizier.utils.suffixImage(self.widget().find('.Thumb input.Url').val()));
         })
         .end()
         .find('textarea[name="description"]')
@@ -493,42 +623,41 @@
      */
     __initFormValidation: function () {
       var self = this;
-      this.widget().find('form')
-        .validate({
-          submitHandler: function () {
-            self.commit();
-          },
-          showErrors: function (errorMap, errorList) {
-            if (errorList.length) {
-              alertMessenger(errorMap.title || errorMap.snippet || errorMap.description);
-            }
-          },
-          rules: {
-            title: {
-              maxlength: 100,
-              required: false
-            },
-            snippet: {
-              maxlength: 200,
-              required: false
-            },
-            description: {
-              maxlength: 300,
-              required: false
-            }
-          },
-          messages: {
-            title: {
-              maxlength: '标题太长，请缩写到100字以内。'
-            },
-            snippet: {
-              maxlength: '摘要太长，请缩写到200字以内。'
-            },
-            description: {
-              maxlength: '评论太长，请缩写到300字以内。'
-            }
+      this.widget().find('form').validate({
+        submitHandler: function () {
+          self.commit();
+        },
+        showErrors: function (errorMap, errorList) {
+          if (errorList.length) {
+            alertMessenger(errorMap.title || errorMap.snippet || errorMap.description);
           }
-        });
+        },
+        rules: {
+          title: {
+            maxlength: 100,
+            required: false
+          },
+          snippet: {
+            maxlength: 200,
+            required: false
+          },
+          description: {
+            maxlength: 300,
+            required: false
+          }
+        },
+        messages: {
+          title: {
+            maxlength: '标题太长，请缩写到100字以内。'
+          },
+          snippet: {
+            maxlength: '摘要太长，请缩写到200字以内。'
+          },
+          description: {
+            maxlength: '评论太长，请缩写到300字以内。'
+          }
+        }
+      });
     },
 
     /**
@@ -538,25 +667,10 @@
     _getCommitData: function () {
       var src = this.widget().find('.Image img').attr('src');
       return {
-        url: this.options.url,
         title: this.widget().find('input[name="title"]').val(),
         snippet: this.widget().find('textarea[name="snippet"]').val(),
         src: (src == this.defaultImgSrc || src == this.noImgSrc) ? undefined : src,
         description: this.widget().find('textarea[name="description"]').val()
-      }
-    },
-
-    /**
-     * 子类的原始数据
-     * @private
-     */
-    _getOriginalData: function () {
-      return {
-        url: this.options.url,
-        title: this.options.title,
-        snippet: this.options.snippet,
-        src: this.options.src,
-        description: this.options.description
       }
     }
 
@@ -567,94 +681,7 @@
    */
   $.widget('shizier.link_createWidget', $.shizier.edit_createWidget, {
 
-    type: 'LINK_CREATE',
-
-    /**
-     * 子类的构造函数
-     * @private
-     */
-    __create: function () {
-      var self = this;
-
-      //监听文本改变事件
-      this.widget()
-        .find('input')
-        .on(INPUT_EVENTS, function () {
-          var $preview = self.widget().find('button[name="preview"]');
-          if (this.value) {
-            $preview.removeAttr('disabled');
-          } else {
-            $preview.attr('disabled', 'disabled');
-          }
-        })
-        .end();
-    },
-
-    /**
-     * 子类的表单验证
-     * @private
-     */
-    __initFormValidation: function () {
-      var self = this;
-      this.widget().find('form').validate({
-        submitHandler: function () {
-          self.commit();
-        },
-        showErrors: function (errorMap, errorList) {
-          if (errorList.length) {
-            alertMessenger(errorMap.url);
-          }
-        },
-        rules: {
-          url: {
-            required: true,
-            url: true
-          }
-        },
-        messages: {
-          url: {
-            required: "尚未输入URL。",
-            url: "URL格式错误。"
-          }
-        }
-      });
-    },
-
-    preview: function () {
-      var self = this;
-
-      var callback = function (data) {
-        if (self.options.disabled) {
-          return;
-        }
-        self.createPreviewWidget(data);
-      };
-      return $.getJSON('/topic/link_detail', this._getCommitData(), callback)
-        .done(function (data) {
-          if (self.options.disabled) {
-            return;
-          }
-          self.createPreviewWidget(data);
-        })
-        .fail(function (jqXHR, textStatus) {
-          console.error(jqXHR.responseText);
-          console.error(textStatus);
-          if (textStatus != 'abort') {
-            retryMessenger();
-          }
-          self.widget().find('button[name="preview"]').button('reset');
-        });
-    },
-
-    /**
-     * 子类提交给服务器的数据
-     * @private
-     */
-    _getCommitData: function () {
-      return {
-        url: this.widget().find('input').val()
-      }
-    }
+    type: 'LINK_CREATE'
 
   });
 
@@ -664,13 +691,6 @@
   $.widget('shizier.imageWidget', $.shizier.editWidget, {
 
     type: 'IMAGE',
-
-    options: {
-      url: '',
-      title: '',
-      quote: '',
-      description: ''
-    },
 
     /**
      * 子类的构造函数
@@ -710,42 +730,41 @@
      */
     __initFormValidation: function () {
       var self = this;
-      this.widget().find('form')
-        .validate({
-          submitHandler: function () {
-            self.commit();
-          },
-          showErrors: function (errorMap, errorList) {
-            if (errorList.length) {
-              alertMessenger(errorMap.title || errorMap.quote || errorMap.description);
-            }
-          },
-          rules: {
-            title: {
-              maxlength: 100,
-              required: false
-            },
-            quote: {
-              url: true,
-              required: false
-            },
-            description: {
-              maxlength: 300,
-              required: false
-            }
-          },
-          messages: {
-            title: {
-              maxlength: '标题太长，请缩写到100字以内。'
-            },
-            quote: {
-              url: 'URL格式错误。'
-            },
-            description: {
-              maxlength: '介绍、评论太长，请缩写到300字以内。'
-            }
+      this.widget().find('form').validate({
+        submitHandler: function () {
+          self.commit();
+        },
+        showErrors: function (errorMap, errorList) {
+          if (errorList.length) {
+            alertMessenger(errorMap.title || errorMap.quote || errorMap.description);
           }
-        });
+        },
+        rules: {
+          title: {
+            maxlength: 100,
+            required: false
+          },
+          quote: {
+            url: true,
+            required: false
+          },
+          description: {
+            maxlength: 300,
+            required: false
+          }
+        },
+        messages: {
+          title: {
+            maxlength: '标题太长，请缩写到100字以内。'
+          },
+          quote: {
+            url: 'URL格式错误。'
+          },
+          description: {
+            maxlength: '介绍、评论太长，请缩写到300字以内。'
+          }
+        }
+      });
     },
 
     /**
@@ -754,23 +773,9 @@
      */
     _getCommitData: function () {
       return {
-        url: this.options.url,
         title: this.widget().find('input[name="title"]').val(),
         quote: this.widget().find('input[name="quote"]').val(),
         description: this.widget().find('textarea[name="description"]').val()
-      }
-    },
-
-    /**
-     * 子类的原始数据
-     * @private
-     */
-    _getOriginalData: function () {
-      return {
-        url: this.options.url,
-        title: this.options.title,
-        quote: this.options.quote,
-        description: this.options.description
       }
     }
 
@@ -783,59 +788,8 @@
 
     type: 'IMAGE_CREATE',
 
-    /**
-     * 子类的构造函数
-     * @private
-     */
-    __create: function () {
-      var self = this;
-
-      //监听文本改变事件
-      this.widget()
-        .find('input')
-        .on(INPUT_EVENTS, function () {
-          var $preview = self.widget().find('button[name="preview"]');
-          if (this.value) {
-            $preview.removeAttr('disabled');
-          } else {
-            $preview.attr('disabled', 'disabled');
-          }
-        })
-        .end();
-    },
-
-    /**
-     * 子类的表单验证
-     * @private
-     */
-    __initFormValidation: function () {
-      var self = this;
-      this.widget().find('form').validate({
-        submitHandler: function () {
-          self.commit();
-        },
-        showErrors: function (errorMap, errorList) {
-          if (errorList.length) {
-            alertMessenger(errorMap.url);
-          }
-        },
-        rules: {
-          url: {
-            required: true,
-            url: true
-          }
-        },
-        messages: {
-          url: {
-            required: "尚未输入URL。",
-            url: "URL格式错误。"
-          }
-        }
-      });
-    },
-
     preview: function () {
-      this.createPreviewWidget(this._getCommitData());
+      this.createPreviewWidget(this.getCommitData());
     },
 
     /**
@@ -857,14 +811,6 @@
 
     type: 'VIDEO',
 
-    options: {
-      url: '',
-      vid: '',
-      cover: '',
-      title: '',
-      description: ''
-    },
-
     /**
      * 子类的构造函数
      * @private
@@ -876,9 +822,6 @@
 
       //填充文本
       this.widget()
-        .find('.Content')
-        .data('vid', this.options.vid)
-        .end()
         .find('.VIDEO_URL')
         .attr('href', this.options.url)
         .end()
@@ -902,35 +845,34 @@
      */
     __initFormValidation: function () {
       var self = this;
-      this.widget().find('form')
-        .validate({
-          submitHandler: function () {
-            self.commit();
-          },
-          showErrors: function (errorMap, errorList) {
-            if (errorList.length) {
-              alertMessenger(errorMap.title || errorMap.description);
-            }
-          },
-          rules: {
-            title: {
-              maxlength: 100,
-              required: false
-            },
-            description: {
-              maxlength: 300,
-              required: false
-            }
-          },
-          messages: {
-            title: {
-              maxlength: '标题太长，请缩写到100字以内。'
-            },
-            description: {
-              maxlength: '介绍、评论太长，请缩写到300字以内。'
-            }
+      this.widget().find('form').validate({
+        submitHandler: function () {
+          self.commit();
+        },
+        showErrors: function (errorMap, errorList) {
+          if (errorList.length) {
+            alertMessenger(errorMap.title || errorMap.description);
           }
-        });
+        },
+        rules: {
+          title: {
+            maxlength: 100,
+            required: false
+          },
+          description: {
+            maxlength: 300,
+            required: false
+          }
+        },
+        messages: {
+          title: {
+            maxlength: '标题太长，请缩写到100字以内。'
+          },
+          description: {
+            maxlength: '介绍、评论太长，请缩写到300字以内。'
+          }
+        }
+      });
     },
 
     /**
@@ -939,25 +881,8 @@
      */
     _getCommitData: function () {
       return {
-        url: this.options.url,
-        vid: this.options.vid,
-        cover: this.options.cover,
         title: this.widget().find('input[name="title"]').val(),
         description: this.widget().find('textarea[name="description"]').val()
-      }
-    },
-
-    /**
-     * 子类的原始数据
-     * @private
-     */
-    _getOriginalData: function () {
-      return {
-        url: this.options.url,
-        vid: this.options.vid,
-        cover: this.options.cover,
-        title: this.options.title,
-        description: this.options.description
       }
     }
 
@@ -968,96 +893,7 @@
    */
   $.widget('shizier.video_createWidget', $.shizier.edit_createWidget, {
 
-    type: 'VIDEO_CREATE',
-
-    /**
-     * 子类的构造函数
-     * @private
-     */
-    __create: function () {
-      var self = this;
-
-      //监听文本改变事件
-      this.widget()
-        .find('input')
-        .on(INPUT_EVENTS, function () {
-          var $preview = self.widget().find('button[name="preview"]');
-          if (this.value) {
-            $preview.removeAttr('disabled');
-          } else {
-            $preview.attr('disabled', 'disabled');
-          }
-        })
-        .end();
-    },
-
-    /**
-     * 子类的表单验证
-     * @private
-     */
-    __initFormValidation: function () {
-      var self = this;
-      this.widget().find('form')
-        .validate({
-          submitHandler: function () {
-            self.commit();
-          },
-          showErrors: function (errorMap, errorList) {
-            if (errorList.length) {
-              alertMessenger(errorMap.url);
-            }
-          },
-          rules: {
-            url: {
-              required: true,
-              url: true
-            }
-          },
-          messages: {
-            url: {
-              required: "尚未输入URL。",
-              url: "URL格式错误。"
-            }
-          }
-        });
-    },
-
-    preview: function () {
-      var self = this;
-
-      var callback = function (data) {
-        if (self.options.disabled) {
-          return;
-        }
-        self.createPreviewWidget(data);
-      };
-
-      return $.getJSON('/topic/video_detail', this._getCommitData(), callback)
-        .done(function (data) {
-          if (self.options.disabled) {
-            return;
-          }
-          self.createPreviewWidget(data);
-        })
-        .fail(function (jqXHR, textStatus) {
-          console.error(jqXHR.responseText);
-          console.error(textStatus);
-          if (textStatus != 'abort') {
-            retryMessenger();
-          }
-          self.widget().find('button[name="preview"]').button('reset');
-        });
-    },
-
-    /**
-     * 子类提交给服务器的数据
-     * @private
-     */
-    _getCommitData: function () {
-      return {
-        url: this.widget().find('input').val()
-      }
-    }
+    type: 'VIDEO_CREATE'
 
   });
 
@@ -1067,14 +903,6 @@
   $.widget('shizier.citeWidget', $.shizier.editWidget, {
 
     type: 'CITE',
-
-    options: {
-      //初始值
-      cite: '',
-      url: '',
-      title: '',
-      description: ''
-    },
 
     /**
      * 子类的构造函数
@@ -1117,50 +945,49 @@
      */
     __initFormValidation: function () {
       var self = this;
-      this.widget().find('form')
-        .validate({
-          submitHandler: function () {
-            self.commit();
-          },
-          showErrors: function (errorMap, errorList) {
-            if (errorList.length) {
-              alertMessenger(errorMap.cite || errorMap.url || errorMap.title || errorMap.description);
-            }
-          },
-          rules: {
-            cite: {
-              required: true,
-              maxlength: 500
-            },
-            url: {
-              required: false,
-              url: true
-            },
-            title: {
-              required: false,
-              maxlength: 100
-            },
-            description: {
-              required: false,
-              maxlength: 300
-            }
-          },
-          messages: {
-            cite: {
-              required: "尚未输入引文。",
-              maxlength: "引文太长，请缩写到500字以内。"
-            },
-            url: {
-              url: 'URL格式错误。'
-            },
-            title: {
-              maxlength: "网页标题太长，请缩写到100字以内。"
-            },
-            description: {
-              maxlength: "介绍、评论太长，请缩写到300字以内。"
-            }
+      this.widget().find('form').validate({
+        submitHandler: function () {
+          self.commit();
+        },
+        showErrors: function (errorMap, errorList) {
+          if (errorList.length) {
+            alertMessenger(errorMap.cite || errorMap.url || errorMap.title || errorMap.description);
           }
-        });
+        },
+        rules: {
+          cite: {
+            required: true,
+            maxlength: 500
+          },
+          url: {
+            required: false,
+            url: true
+          },
+          title: {
+            required: false,
+            maxlength: 100
+          },
+          description: {
+            required: false,
+            maxlength: 300
+          }
+        },
+        messages: {
+          cite: {
+            required: "尚未输入引文。",
+            maxlength: "引文太长，请缩写到500字以内。"
+          },
+          url: {
+            url: 'URL格式错误。'
+          },
+          title: {
+            maxlength: "网页标题太长，请缩写到100字以内。"
+          },
+          description: {
+            maxlength: "介绍、评论太长，请缩写到300字以内。"
+          }
+        }
+      });
     },
 
     /**
@@ -1174,19 +1001,80 @@
         title: this.widget().find('input[name="title"]').val(),
         description: this.widget().find('textarea[name="description"]').val()
       }
+    }
+
+  });
+
+  /*
+   * 定义微件：weibo创建微件
+   */
+  $.widget('shizier.weibo_createWidget', $.shizier.edit_createWidget, {
+
+    type: 'WEIBO_CREATE'
+
+  });
+
+  /*
+   * 定义微件：weibo微件
+   */
+  $.widget('shizier.weiboWidget', $.shizier.editWidget, {
+
+    type: 'WEIBO',
+
+    /**
+     * 子类的构造函数
+     * @private
+     */
+    __create: function () {
+      var self = this;
+
+      fillWeibo(this.widget().find('.Content'), this.options);
+
+      //填充文本
+      this.widget()
+        .find('textarea[name="description"]')
+        .val(this.options.description)
+        .on(INPUT_EVENTS, function () {
+          self.checkState();
+        })
+        .end();
     },
 
     /**
-     * 子类的原始数据
+     * 子类的表单验证
      * @private
      */
-    _getOriginalData: function () {
-      return {
-        cite: this.options.cite,
-        url: this.options.url,
-        title: this.options.title,
-        description: this.options.description
-      }
+    __initFormValidation: function () {
+      var self = this;
+      this.widget().find('form').validate({
+        submitHandler: function () {
+          self.commit();
+        },
+        showErrors: function (errorMap, errorList) {
+          if (errorList.length) {
+            alertMessenger(errorMap.description);
+          }
+        },
+        rules: {
+          description: {
+            maxlength: 300,
+            required: false
+          }
+        },
+        messages: {
+          description: {
+            maxlength: '介绍、评论太长，请缩写到300字以内。'
+          }
+        }
+      });
+    },
+
+    /**
+     * 子类提交给服务器的数据
+     * @private
+     */
+    _getCommitData: function () {
+      return {description: this.widget().find('textarea[name="description"]').val()};
     }
 
   });
@@ -1197,11 +1085,6 @@
   $.widget('shizier.textWidget', $.shizier.editWidget, {
 
     type: 'TEXT',
-
-    options: {
-      //初始文本
-      text: ''
-    },
 
     /**
      * 子类的构造函数
@@ -1257,15 +1140,6 @@
      */
     _getCommitData: function () {
       return { text: this.widget().find('textarea').val() }
-    },
-
-    /**
-     * 子类的原始数据
-     * @returns {{text: (string)}}
-     * @private
-     */
-    _getOriginalData: function () {
-      return { text: this.options.text}
     }
 
   });
@@ -1276,11 +1150,6 @@
   $.widget('shizier.titleWidget', $.shizier.editWidget, {
 
     type: 'TITLE',
-
-    options: {
-      //初始标题
-      title: ''
-    },
 
     /**
      * 子类的构造函数
@@ -1336,15 +1205,6 @@
      */
     _getCommitData: function () {
       return { title: this.widget().find('input').val() }
-    },
-
-    /**
-     * 子类的原始数据
-     * @returns {{title: (string)}}
-     * @private
-     */
-    _getOriginalData: function () {
-      return { title: this.options.title}
     }
 
   });
@@ -1426,7 +1286,7 @@
     }
     //删除编辑中的微件
     if (state != 'default') {
-      $editingWidget[$editingWidget.data('type').toLowerCase() + 'Widget']('remove');
+      $editingWidget[$editingWidget.data('options').type.toLowerCase() + 'Widget']('remove');
     }
     return true;
   }
@@ -1437,15 +1297,13 @@
    * @param options
    * @private
    */
-  function createWidget(type, options) {
+  function createWidget(options, $prevItem, $li) {
     console.log('createWidget');
 
+    var type = options.type;
     if (!type) {
       return;
     }
-
-    var $prevItem = options.$prevItem;
-    var $li = options.$li;
 
     if (topState == 'edit'
       && !confirm('您有正在编辑的内容，确定要放弃编辑中的内容吗？')) {
@@ -1463,9 +1321,9 @@
 
     //编辑中的微件和目标微件:类型相同、来源相同，删了可以直接返回了
     if (oldState == 'create'
-      && $editingWidget.data('type') == type
-      && $prevItem
-      && !$editingWidget.data('id')
+      && $editingWidget.data('options').type == type
+      && !$li
+      && !$editingWidget.data('options')._id
       && ($prevItem.is($editingWidget.prev())
       || (!$prevItem.length && !$editingWidget.prev().length))) {
 
@@ -1480,10 +1338,8 @@
 
     var $widget = $templates.find('>ul>li').clone();
     //如果是动态插入就插入前趋条目的后面，否则是静态插入就插入最前面
-    if ($prevItem && $prevItem.length) {
+    if ($prevItem.length) {
       $prevItem.after($widget);
-    } else if ($li && $li.length && $li.prev().length) {
-      $li.prev().after($widget);
     } else {
       $ul.prepend($widget);
     }
@@ -1491,16 +1347,17 @@
     //根据类型选择微件，并保存调用微件方法的函数
     setState('create');
     $editingWidget = $widget;
-    $widget[type.toLowerCase() + 'Widget'](options);
+    $widget[type.toLowerCase() + 'Widget']($.extend({}, options, {options: options}));
     console.log('createWidget ' + type);
   }
 
   /**
    * 创建条目
    */
-  function createItem($prevItem, type, id, data) {
+  function createItem($prevItem, options) {
     console.log('createItem');
 
+    var type = options.type;
     var $item = $templates.find('>ul>li').clone();
     //如果指定了前趋条目就插入其后面，否则插入最前
     if ($prevItem && $prevItem[0]) {
@@ -1511,9 +1368,7 @@
 
     //填充新内容，然后删除旧内容，顺序很重要！！！防止抖动
     $item
-      .addClass(type)
-      .data('type', type)
-      .data('id', id)
+      .data('options', options)
       .find('>div')
       .prepend($templates.find('.Item:first').clone())
       .end()
@@ -1524,11 +1379,11 @@
     switch (type) {
       case 'LINK':
         //填充链接信息
-        var url = data.url;
-        var title = data.title;
-        var snippet = data.snippet;
-        var src = data.src;
-        var description = data.description;
+        var url = options.url;
+        var title = options.title;
+        var snippet = options.snippet;
+        var src = options.src;
+        var description = options.description;
 
         $item
           .find('.LINK_URL')
@@ -1567,11 +1422,11 @@
         break;
       case 'IMAGE':
         //填充图片信息
-        var url = data.url;
-        var title = data.title;
-        var quote = data.quote;
-        var quoteDomain = shizier.utils.getImageQuoteDomain(quote);
-        var description = data.description;
+        var url = options.url;
+        var title = options.title;
+        var quote = options.quote;
+        var quoteDomain = shizier.utils.getQuote(quote);
+        var description = options.description;
         $item
           .find('.IMAGE_LINK')
           .attr('href', url)
@@ -1600,18 +1455,15 @@
         break;
       case 'VIDEO':
         //填充视频信息
-        var url = data.url;
-        var vid = data.vid;
-        var cover = data.cover;
-        var title = data.title;
-        var description = data.description;
+        var url = options.url;
+        var vid = options.vid;
+        var cover = options.cover;
+        var title = options.title;
+        var description = options.description;
 
         fillVideo($item, url, cover);
 
         $item
-          .find('.Content')
-          .data('vid', vid)
-          .end()
           .find('.VIDEO_URL')
           .attr('href', url)
           .end()
@@ -1630,10 +1482,10 @@
         break;
       case 'CITE':
         //填充引用信息
-        var cite = data.cite;
-        var url = data.url;
-        var title = data.title;
-        var description = data.description;
+        var cite = options.cite;
+        var url = options.url;
+        var title = options.title;
+        var description = options.description;
         $item
           .find('.Cite q')
           .html($('<div/>').text(cite).html().replace(/\n/g, '<br>'))
@@ -1657,9 +1509,23 @@
           $item.find('.Description').hide();
         }
         break;
+      case 'WEIBO':
+        //填充视频信息
+        var description = options.description;
+
+        fillWeibo($item, options);
+
+        $item
+          .find('.Description')
+          .html($('<div/>').text(description).html().replace(/\n/g, '<br>'))
+          .end();
+        if (!description) {
+          $item.find('.Description').hide();
+        }
+        break;
       case 'TEXT':
         //填充文本
-        var text = data.text;
+        var text = options.text;
         $item
           .find('p')
           .html($('<div/>').text(text).html().replace(/\n/g, '<br>'))
@@ -1667,7 +1533,7 @@
         break;
       case 'TITLE':
         //填充标题
-        var title = data.title;
+        var title = options.title;
         $item
           .find('p')
           .text(title)
@@ -1732,7 +1598,7 @@
         }
 
         var $li = $(this).closest('li');
-        $li[$editingWidget.data('type').toLowerCase() + 'Widget']('remove');
+        $li[$editingWidget.data('options').type.toLowerCase() + 'Widget']('remove');
       })
       //绑定删除点击响应
       .on('click', '.DELETE', function () {
@@ -1744,8 +1610,8 @@
           type: 'DELETE',
           data: {
             topicId: topicId,
-            type: $li.data('type'),
-            itemId: $li.data('id')
+            type: $li.data('options').type,
+            _id: $li.data('options')._id
           }
         })
           .done(function () {
@@ -1759,60 +1625,8 @@
       //绑定修改点击响应
       .on('click', '.EDIT', function () {
         var $li = $(this).closest('li');
-        var type = $li.data('type');
-        var data;
-        switch (type) {
-          case 'LINK':
-            data = {
-              url: $li.find('.Quote a').attr('href'),
-              title: $li.find('.Title a').text(),
-              snippet: $('<div/>').html($li.find('.Snippet').html().replace(/<br>/g, '\n')).text(),
-              src: $li.find('.Thumb img').attr('src'),
-              description: $('<div/>').html($li.find('.Description').html().replace(/<br>/g, '\n')).text()
-            };
-            break;
-          case 'IMAGE':
-            data = {
-              url: $li.find('img').attr('src'),
-              title: $li.find('.Title').text(),
-              quote: $li.find('.Quote a').attr('href'),
-              description: $('<div/>').html($li.find('.Description').html().replace(/<br>/g, '\n')).text()
-            };
-            break;
-          case 'VIDEO':
-            var temp = $li.find('.Cover').css('background-image')
-              .replace('url(', '').replace(')', '').replace(/"/g, '');
-            data = {
-              url: $li.find('.Quote a').attr('href'),
-              cover: (!temp || temp == 'none') ? '' : temp,
-              vid: $li.find('.Content').data('vid'),
-              title: $li.find('.Title a').text(),
-              description: $('<div/>').html($li.find('.Description').html().replace(/<br>/g, '\n')).text()
-            };
-            break;
-          case 'CITE':
-            data = {
-              cite: $('<div/>').html($li.find('.Cite q').html().replace(/<br>/g, '\n')).text(),
-              url: $li.find('.Quote a').attr('href'),
-              title: $li.find('.Quote a').text() || $li.find('.Quote span:last').text(),
-              description: $('<div/>').html($li.find('.Description').html().replace(/<br>/g, '\n')).text()
-            };
-            break;
-          case 'TEXT':
-            data = {
-              text: $('<div/>').html($li.find('p').html().replace(/<br>/g, '\n')).text()
-            };
-            break;
-          case 'TITLE':
-            data = {
-              title: $li.find('p').text()
-            };
-            break;
-        }
-        createWidget(type, $.extend({
-          id: $li.data('id'),
-          $li: $li
-        }, data));
+        var data = $li.data('options');
+        createWidget(data, $li.prev(), $li);
       })
   }
 
@@ -1943,35 +1757,34 @@
     };
     $title.add($description).on(INPUT_EVENTS, checkState);
 
-    $_topItem.find('button[name="edit"]')
-      .click(function () {
-        if (!_checkRemoveWidget()) {
-          return;
-        }
-        title = $_topItem.find('.HeadTtl').text();
-        coverUrl = $_topItem.find('.HeadThumb img').attr('src');
-        description = $_topItem.find('.HeadDesc').text();
+    $_topItem.find('button[name="edit"]').click(function () {
+      if (!_checkRemoveWidget()) {
+        return;
+      }
+      title = $_topItem.find('.HeadTtl').text();
+      coverUrl = $_topItem.find('.HeadThumb img').attr('src');
+      description = $_topItem.find('.HeadDesc').text();
 
-        $title.val(title);
-        $cover.attr('src', coverUrl || defaultImgSrc);
-        $description.val(description);
+      $title.val(title);
+      $cover.attr('src', coverUrl || defaultImgSrc);
+      $description.val(description);
 
-        $extra.hide();
-        $_topWidget.after($_topItem);
-        $_topItem.hiddenSlideUp();
-        $_topWidget
-          .find('textarea')
-          .trigger('autosize.resize')
-          .end()
-          .fadeSlideDown();
+      $extra.hide();
+      $_topWidget.after($_topItem);
+      $_topItem.hiddenSlideUp();
+      $_topWidget
+        .find('textarea')
+        .trigger('autosize.resize')
+        .end()
+        .fadeSlideDown();
 
-        setTimeout(function () {
-          $title.focus();
-        }, 99);
-        //移动光标到输入框末尾
-        moveSelection2End($title[0]);
-        setTopState('create');
-      });
+      setTimeout(function () {
+        $title.focus();
+      }, 99);
+      //移动光标到输入框末尾
+      moveSelection2End($title[0]);
+      setTopState('create');
+    });
     if ((!title && !$ul.children().length) || /editTop=1/i.test(location.search)) {
       $_topItem.find('button[name="edit"]').click();
     }
@@ -2068,13 +1881,13 @@
     var $reset = $extra.find('button[name="reset"]');
     var autoHide = false;
     var hide = function () {
+      autoHide = false;
       $extra.css('visibility', 'hidden')
         .hide('fast', function () {
           $extra.removeAttr('style');
         })
     };
     $thumb.click(function () {
-      autoHide = false;
       if ($extra.is(':visible')) {
         hide();
       } else {
@@ -2096,17 +1909,25 @@
         hide();
       }
     });
-    $reset.click(function () {
-      hide();
-      $cover.attr('src', coverUrl || defaultImgSrc);
-      checkState();
+    $input.keypress(function (event) {
+      if (event.keyCode != 13) {
+        return;
+      }
+      $preview.click();
+      return false;
     });
     $preview.click(function () {
       autoHide = true;
-      $cover.attr('src', shizier.utils.suffixImage($input.val()) || defaultImgSrc);
-      if (!$input.val()) {
+      var newCover = shizier.utils.suffixImage($input.val());
+      if (!$input.val() || $cover.attr('src') == newCover) {
         hide();
       }
+      $cover.attr('src', newCover || defaultImgSrc);
+      checkState();
+    });
+    $reset.click(function () {
+      hide();
+      $cover.attr('src', coverUrl || defaultImgSrc);
       checkState();
     });
   }
@@ -2174,9 +1995,7 @@
   function _initMenu() {
     $('.Contents').on('click', '.Menu li>button', function () {
       var $li = $(this).closest('.WidgetItemList>li');
-      createWidget($(this).data('type'), {
-        $prevItem: $li
-      });
+      createWidget({type: $(this).data('type')}, $li);
     });
   }
 

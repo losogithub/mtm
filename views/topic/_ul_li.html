@@ -1,5 +1,4 @@
-<li class="<%- !item ? '' : !item.type ? '' : item.type %>" data-type="<%- !item ? '' : !item.type ? '' : item.type %>"
-    data-id="<%- !item ? '' : !item.itemId ? '' : item.itemId %>">
+<li class="<%= item && item.type || '' %>" data-options="<%= item && JSON.stringify(item) || '' %>">
   <div style="position: relative;">
 
     <% if (item) { %>

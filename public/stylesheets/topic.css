@@ -239,6 +239,103 @@
   font-size: 14px;
   line-height: 20px;
 }
+.WEIBO .Avatar,
+.WEIBO_CREATE .Avatar {
+  float: left;
+  margin-right: 10px;
+}
+.WEIBO .Avatar img,
+.WEIBO_CREATE .Avatar img {
+  width: 50px;
+  height: 50px;
+  background-color: #f3f3f3;
+}
+.WEIBO .Author,
+.WEIBO_CREATE .Author {
+  font-weight: bold;
+}
+.WEIBO > div > .Author,
+.WEIBO_CREATE > div > .Author {
+  font-size: 14px;
+}
+.WEIBO .Text,
+.WEIBO_CREATE .Text {
+  line-height: 23px;
+  margin-top: 4px;
+  color: #333;
+}
+.WEIBO > div > .Text,
+.WEIBO_CREATE > div > .Text {
+  font-size: 14px;
+}
+.WEIBO .Verify,
+.WEIBO_CREATE .Verify {
+  display: none;
+}
+.WEIBO .Verify.PERSONAL,
+.WEIBO_CREATE .Verify.PERSONAL {
+  display: inline;
+  text-decoration: none;
+  color: #fb0;
+  text-shadow: 0 0 1px #f90;
+}
+.WEIBO .Verify.ORG,
+.WEIBO_CREATE .Verify.ORG {
+  display: inline;
+  text-decoration: none;
+  color: #07e;
+  text-shadow: 0 0 1px #14f;
+}
+.WEIBO > div > .Verify,
+.WEIBO_CREATE > div > .Verify {
+  font-size: 14px;
+}
+.WEIBO .Pic,
+.WEIBO_CREATE .Pic {
+  width: 255px;
+}
+.WEIBO .Pic img,
+.WEIBO_CREATE .Pic img {
+  float: left;
+  margin: 5px 5px 0 0;
+}
+.WEIBO .Retweeted,
+.WEIBO_CREATE .Retweeted {
+  background-color: #f2f2f2;
+  border: solid 1px #d9d9d9;
+  border-radius: 5px;
+  padding: 10px 20px;
+  margin: 5px 0 15px;
+  position: relative;
+}
+.WEIBO .Retweeted .CaretShadow,
+.WEIBO_CREATE .Retweeted .CaretShadow {
+  position: absolute;
+  top: -11px;
+  color: #d9d9d9;
+}
+.WEIBO .Retweeted .Caret,
+.WEIBO_CREATE .Retweeted .Caret {
+  position: absolute;
+  top: -10px;
+  color: #f2f2f2;
+}
+.WEIBO .Retweeted .AuthorDescription,
+.WEIBO_CREATE .Retweeted .AuthorDescription {
+  font-size: 10px;
+}
+.WEIBO textarea[name="description"],
+.WEIBO_CREATE textarea[name="description"] {
+  margin-top: 10px;
+}
+.WEIBO .Description,
+.WEIBO_CREATE .Description {
+  margin-top: 10px;
+  padding-left: 6px;
+  border-left: 2px solid #ddd;
+  font-size: 14px;
+  line-height: 20px;
+}
 .TEXT p {
   line-height: 20px;
   font-size: 14px;

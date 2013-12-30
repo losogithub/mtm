@@ -9,17 +9,19 @@
   var utils = {
     REGEXP_URL: /^(https?|ftp):\/\/(([\w\-]+\.)+[\w\-]+)(:|\/|\?|$)/i,
     REGEXP_PROTOCOL: /^(https?|ftp):\/\//i,
-
-    getImageQuoteDomain: function (quote) {
-      var temp;
-      return !quote ? null : !(temp = quote.match(this.REGEXP_URL)) ? null : temp[2];
+    REGEXP_QUOTE: {
+      VIDEO: /youku\.com|tudou\.com|iqiyi\.com|pps\.tv|sohu\.com|qq\.com|sina\.com\.cn|ifeng\.com|letv\.com|pptv\.com|ku6\.com|56\.com|baomihua\.com|yinyuetai\.com|acfun\.tv|bilibili\.tv|bilibili\.kankanews\.com$/i,
+      WEIBO: /weibo\.com$/i
     },
 
-    getVideoQuote: function (url) {
-      var urlParts = !url ? null : url.match(this.REGEXP_URL);
+    getQuote: function (url, type) {
       var temp;
-      var quote = !urlParts ? null : !urlParts[2] ? null : !(temp = urlParts[2].match(
-        /youku\.com|tudou\.com|iqiyi\.com|pps\.tv|sohu\.com|qq\.com|sina\.com\.cn|ifeng\.com|letv\.com|pptv\.com|ku6\.com|56\.com|baomihua\.com|yinyuetai\.com|acfun\.tv|bilibili\.tv|bilibili\.kankanews\.com$/i)) ? null : !temp[0] ? null : temp[0].toLowerCase();
+      var quote = (temp = this.REGEXP_URL.exec(url)) && temp[2];
+      var re = this.REGEXP_QUOTE[type];
+      if (!re) {
+        return quote;
+      }
+      quote = (temp = re.exec(quote)) && temp[0] && temp[0].toLowerCase();
 
       return quote;
     },
@@ -33,6 +35,22 @@
       } else {
         return src + '&';
       }
+    },
+
+    _normalizeTime: function (time) {
+      if (time >= 10) {
+        return time;
+      }
+      return '0' + time;
+    },
+
+    getWeiboTime: function (created_at) {
+      var date = new Date(created_at);
+      return date.getFullYear() + '.'
+        + (date.getMonth() + 1) + '.'
+        + date.getDate() + ' '
+        + this._normalizeTime(date.getHours()) + ':'
+        + this._normalizeTime(date.getMinutes());
     }
   };
 
