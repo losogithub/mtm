@@ -23,6 +23,7 @@ module.exports = mongoose.model('WeiboItem', {
   "idstr": String,
   "mid62": String,
   "text": String,
+  "parsed_text": String,
   "source": String,//html代码
   "pic_urls": [
     {"thumbnail_pic": String}
@@ -42,6 +43,7 @@ module.exports = mongoose.model('WeiboItem', {
     "idstr": String,
     "mid62": String,
     "text": String,
+    "parsed_text": String,
     "source": String,//html代码
     "pic_urls": [
       {"thumbnail_pic": String}

@@ -90,20 +90,19 @@
     </a>
     <a target="_blank" class="Verify <%= !item.user ? '' : !item.user.verified ? '' : item.user.verified_type ? 'ORG' : 'PERSONAL' %>" href="http://verified.weibo.com/verify"><b>V</b></a>
     <span class="AuthorDescription text-muted"><%= item.user && item.user.description || '' %></span>
-    <p class="Text"><%= item.text || '' %></p>
-    <div class="Pic clearfix" style="<%= item.pic_urls && item.pic_urls.length == 4 && 'width: 170px;' || '' %>">
+    <p class="Text"><%- item.parsed_text || '' %></p>
+    <div class="Pic clearfix" style="<%= item.pic_urls && item.pic_urls.length && 'display: block;' || '' %><%= item.pic_urls && item.pic_urls.length == 4 && 'width: 170px;' || '' %>">
       <% if (item.pic_urls) { %>
       <% if (item.pic_urls.length == 1) { %>
-      <a class="WeiboImage fancybox" rel="gallery" href="item.pic_urls[0].thumbnail_pic"><img src="item.pic_urls[0].thumbnail_pic"></a>
+      <a class="WeiboImage fancybox" rel="gallery" href="<%= item.pic_urls[0].thumbnail_pic.replace('/thumbnail/', '/large/') %>"><img src="<%= item.pic_urls[0].thumbnail_pic %>"></a>
       <% } else { %>
       <% for (var i = 0; i < item.pic_urls.length; i++) { %>
-      <% var src = item.pic_urls[i].thumbnail_pic.replace('/thumbnail/', '/square/'); %>
-      <a class="WeiboImage fancybox" rel="gallery" href="src"><img src="src"></a>
+      <a class="WeiboImage fancybox" rel="gallery" href="<%= item.pic_urls[i].thumbnail_pic.replace('/thumbnail/', '/large/') %>"><img src="<%= item.pic_urls[i].thumbnail_pic.replace('/thumbnail/', '/square/') %>"></a>
       <% } %>
       <% } %>
       <% } %>
     </div>
-    <% if (item.retweeted_status) { %>
+    <% if (item.retweeted_status && item.retweeted_status.idstr) { %>
     <% var retweetedItem = item.retweeted_status; %>
     <div class="Retweeted clearfix">
       <p class="CaretShadow">◆</p>
@@ -113,24 +112,24 @@
       </a>
       <a target="_blank" class="Verify <%= !retweetedItem.user ? '' : !retweetedItem.user.verified ? '' : retweetedItem.user.verified_type ? 'ORG' : 'PERSONAL' %>" href="http://verified.weibo.com/verify"><b>V</b></a>
       <span class="AuthorDescription text-muted"><%= retweetedItem.user && retweetedItem.user.description || '' %></span>
-      <p class="Text"><%= retweetedItem.text || '' %></p>
-      <div class="Pic clearfix" style="<%= retweetedItem.pic_urls && retweetedItem.pic_urls.length == 4 && 'width: 170px;' || '' %>">
+      <p class="Text"><%- retweetedItem.parsed_text || '' %></p>
+      <div class="Pic clearfix" style="<%= retweetedItem.pic_urls && retweetedItem.pic_urls.length && 'display: block;' || '' %><%= retweetedItem.pic_urls && retweetedItem.pic_urls.length == 4 && 'width: 170px;' || '' %>">
         <% if (retweetedItem.pic_urls) { %>
         <% if (retweetedItem.pic_urls.length == 1) { %>
-        <a class="WeiboImage fancybox" rel="gallery" href="retweetedItem.pic_urls[0].thumbnail_pic"><img src="retweetedItem.pic_urls[0].thumbnail_pic"></a>
+        <a class="WeiboImage fancybox" rel="gallery" href="<%= retweetedItem.pic_urls[0].thumbnail_pic.replace('/thumbnail/', '/large/') %>"><img src="<%= retweetedItem.pic_urls[0].thumbnail_pic %>"></a>
         <% } else { %>
         <% for (var i = 0; i < retweetedItem.pic_urls.length; i++) { %>
-        <% var src = retweetedItem.pic_urls[i].thumbnail_pic.replace('/thumbnail/', '/square/'); %>
-        <a class="WeiboImage fancybox" rel="gallery" href="<%= src %>"><img src="<%= src %>"></a>
+        <a class="WeiboImage fancybox" rel="gallery" href="<%= retweetedItem.pic_urls[i].thumbnail_pic.replace('/thumbnail/', '/large/') %>"><img src="<%= retweetedItem.pic_urls[i].thumbnail_pic.replace('/thumbnail/', '/square/') %>"></a>
         <% } %>
         <% } %>
         <% } %>
       </div>
       <% console.log(retweetedItem.time); %>
       <a target="_blank" class="Time text-muted" style="float: left;" href="<%= retweetedItem.user && 'http://weibo.com/' + retweetedItem.user.idstr + '/' + retweetedItem.mid62 || '' %>"><%= retweetedItem.time || '' %></a>
-      <div style="float: right;">
-        <a target="_blank" class="Forward" href="<%= retweetedItem.user && 'http://weibo.com/' + retweetedItem.user.idstr + '/' + retweetedItem.mid62 + '?type=repost' || '' %>">转发</a>
-        <a target="_blank" class="Comment" href="<%= retweetedItem.user && 'http://weibo.com/' + retweetedItem.user.idstr + '/' + retweetedItem.mid62 || '' %>">评论</a>
+      <div class="Handle" style="float: right;">
+        <a target="_blank" class="Forward text-muted" href="<%= retweetedItem.user && 'http://weibo.com/' + retweetedItem.user.idstr + '/' + retweetedItem.mid62 + '?type=repost' || '' %>"><i class="icon-share"></i> 转发</a>
+        <span class='VLine VLine-Util'></span>
+        <a target="_blank" class="Comment text-muted" href="<%= retweetedItem.user && 'http://weibo.com/' + retweetedItem.user.idstr + '/' + retweetedItem.mid62 || '' %>"><i class="icon-comment-alt"></i> 评论</a>
       </div>
       <div class="clearfix"></div>
       <p class="Description text-secondary" style="display: <%= (retweetedItem.type != 'ALL') && !retweetedItem.description ? 'none' : 'block' %>;"><%- retweetedItem.description ?
@@ -138,9 +137,10 @@
     </div>
     <% } %>
     <a target="_blank" class="Time text-muted" style="float: left;" href="<%= item.user && 'http://weibo.com/' + item.user.idstr + '/' + item.mid62 || '' %>"><%= item.time || '' %></a>
-    <div style="float: right;">
-      <a target="_blank" class="Forward" href="<%= item.user && 'http://weibo.com/' + item.user.idstr + '/' + item.mid62 + '?type=repost' || '' %>">转发</a>
-      <a target="_blank" class="Comment" href="<%= item.user && 'http://weibo.com/' + item.user.idstr + '/' + item.mid62 || '' %>">评论</a>
+    <div class="Handle" style="float: right;">
+      <a target="_blank" class="Forward text-muted" href="<%= item.user && 'http://weibo.com/' + item.user.idstr + '/' + item.mid62 + '?type=repost' || '' %>"><i class="icon-share"></i> 转发</a>
+      <span class='VLine VLine-Util'></span>
+      <a target="_blank" class="Comment text-muted" href="<%= item.user && 'http://weibo.com/' + item.user.idstr + '/' + item.mid62 || '' %>"><i class="icon-comment-alt"></i> 评论</a>
     </div>
     <div class="clearfix"></div>
     <p class="Description text-secondary" style="display: <%= (item.type != 'ALL') && !item.description ? 'none' : 'block' %>;"><%- item.description ?

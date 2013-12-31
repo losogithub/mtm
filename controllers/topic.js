@@ -700,6 +700,7 @@ function _getData(req) {
       var idstr = sanitize(req.body.idstr).trim();
       var mid62 = sanitize(req.body.mid62).trim();
       var text = sanitize(req.body.text).trim();
+      var parsed_text = sanitize(req.body.parsed_text).trim();
       var source = sanitize(req.body.source).trim();
       var pic_urls = req.body.pic_urls;
       var user = req.body.user;
@@ -715,6 +716,7 @@ function _getData(req) {
         idstr: idstr,
         mid62: mid62,
         text: text,
+        parsed_text: parsed_text,
         source: source,
         pic_urls: pic_urls,
         user: user,
@@ -796,13 +798,14 @@ function _getItemData(item) {
         idstr: item.idstr,
         mid62: item.mid62,
         text: item.text,
+        parsed_text: item.parsed_text,
         source: item.source,
         pic_urls: item.pic_urls,
         user: item.user,
         retweeted_status: item.retweeted_status
       }
 
-      if (itemData.retweeted_status) {
+      if (itemData.retweeted_status && itemData.retweeted_status.idstr) {
         itemData.retweeted_status.time = utils.getWeiboTime(item.retweeted_status.created_at);
       }
       console.log(itemData.time);
@@ -912,16 +915,19 @@ function createItem(req, res, next) {
       if (data.type == 'LINK_CREATE') {
         _getLinkDetail(data.url, function (err, results) {
           if (err) return callback(err);
-          data.title = results.title;
-          data.snippet = results.snippet;
+          data = results;
           callback();
         });
       } else if (data.type == 'VIDEO_CREATE') {
         _getVideoDetail(data.url, function (err, results) {
           if (err) return callback(err);
-          data.vid = results.vid;
-          data.cover = results.cover;
-          data.title = results.title;
+          data = results;
+          callback();
+        });
+      } else if (data.type == 'WEIBO_CREATE') {
+        _getWeiboDetail(data.url, function (err, results) {
+          if (err) return callback(err);
+          data = results;
           callback();
         });
       } else {
@@ -1347,6 +1353,8 @@ function _getLinkDetail(url, callback) {
     }
     console.log(srcs.length);
     callback(null, {
+      type: 'LINK',
+      url: url,
       title: title,
       snippet: snippet,
       srcs: srcs
@@ -1585,6 +1593,8 @@ function _getVideoDetail(url, callback) {
     title = sanitize(title).entityDecode();
     title = sanitize(title).trim();
     callback(null, {
+      type: 'VIDEO',
+      url: url,
       vid: vid,
       cover: cover,
       title: title
@@ -1614,7 +1624,7 @@ function _getWeiboDetail(url, callback) {
       console.log(html);
       async.series([function (callback) {
         data = extend(JSON.parse(html), {mid62: mid, id: null});
-        if (!data.retweeted_status) {
+        if (!data.retweeted_status || !data.retweeted_status.idstr) {
           return callback();
         }
         _getHtml('https://api.weibo.com/2/statuses/querymid.json?source=' + config.WEIBO_APPKEY + '&type=1&id=' + data.retweeted_status.idstr, function (err, html) {
@@ -1629,75 +1639,20 @@ function _getWeiboDetail(url, callback) {
         if (err) {
           return callback(err);
         }
-        if (!data) {
+        if (!data || data.error) {
           return callback(new Error(400));
         }
-//        console.log(data.text);
-//        console.log(WeiboHelper.process_text(data.text));
-        callback(null, data);
+        console.log(data.text);
+        data.parsed_text = WeiboHelper.process_text(escape(data.text));
+        if (data.retweeted_status && data.retweeted_status.idstr) {
+          data.retweeted_status.parsed_text = WeiboHelper.process_text(escape(data.retweeted_status.text));
+        }
+        console.log(data.parsed_text);
+        callback(null, extend(data, {
+          type: 'WEIBO',
+          url: url
+        }));
       });
-//    var title = !(temp = html.match(/<title[^>]*>([^<]*)<\/title[^>]*>/i)) ? null : temp[1];
-//    title = sanitize(title).entityDecode();
-//    title = sanitize(title).trim();
-//
-//    temp = !(temp = html.match(/<meta([^>]*)name\s*=\s*("|')description("|')([^>]*)>/i)) ? null : temp[1] + temp[4];
-//    var snippet = (!temp ? null : !(temp = temp.match(/content\s*=\s*("|')([^"']*)("|')/i)) ? null : temp[2].trim())
-//      || html.substr((temp = html.indexOf('<body')) < 0 ? 0 : temp)
-//      .replace(/<script((?!<\/script>)[\s\S])*<\/script>/gi, ' ')
-//      .replace(/<style((?!<\/style>)[\s\S])*<\/style>/gi, ' ')
-//      .replace(/<[^>]*>/g, ' ')
-//      .replace(/\s+/g, ' ')
-//      .trim();
-//    if (snippet.length > 200) {
-//      snippet = snippet.substr(0, 199) + '…';
-//    }
-//    snippet = sanitize(snippet).entityDecode();
-//    snippet = sanitize(snippet).trim();
-//
-//    var imgs = !html ? null : html.match(/<img[^>]*>/gi);
-//    console.log(imgs ? imgs.length : 0);
-//    var thumb;
-//    var img;
-//    var width;
-//    var height;
-//    var srcs = [];
-//    var obj = {};
-//    var addToSrcs = function (img) {
-//      var src = !img ? null : !(temp = img.match(/\ssrc\s*=\s*("|')([^"']+)("|')/i)) ? null : temp[2];
-//      if (!src) {
-//        return;
-//      }
-//      src = utils.suffixImage(Url.resolve(url, src));
-//      if (!src || obj[src]) {
-//        return;
-//      }
-//      console.log('++' + src);
-//      srcs.push(src);
-//      obj[src] = true;
-//    };
-//    for (var i in imgs) {
-//      img = imgs[i];
-//      width = !img ? null : !(temp = img.match(/\swidth\s*=\s*("|')([\d]+)("|')/i)) ? null : temp[2];
-//      height = !img ? null : !(temp = img.match(/\sheight\s*=\s*("|')([\d]+)("|')/i)) ? null : temp[2];
-//      if (width || height) {
-//        if (width >= 150 && height >= 70) {
-//          addToSrcs(img);
-//        } else {
-//        }
-//        continue;
-//      }
-//      thumb = !img ? null : !(temp = img.match(/\ssrc\s*=\s*("|')[^"']+\.jpg("|')/i)) ? null : temp[0];
-//      if (thumb) {
-//        addToSrcs(img);
-//        continue;
-//      }
-//    }
-//    console.log(srcs.length);
-//      callback(null, {
-//        title: title,
-//        snippet: snippet,
-//        srcs: srcs
-//      });
     });
   });
 }
@@ -1711,13 +1666,7 @@ function getLinkDetail(req, res, next) {
       next(err);
       return;
     }
-    res.json({
-      type: 'LINK',
-      url: url,
-      title: results ? results.title : undefined,
-      snippet: results ? results.snippet : undefined,
-      srcs: results ? results.srcs : undefined
-    });
+    res.json(results);
   });
 }
 
@@ -1730,13 +1679,7 @@ function getVideoDetail(req, res, next) {
       next(err);
       return;
     }
-    res.json({
-      type: 'VIDEO',
-      url: url,
-      vid: results ? results.vid : undefined,
-      title: results ? results.title : undefined,
-      cover: results ? results.cover : undefined
-    });
+    res.json(results);
   });
 }
 
@@ -1749,10 +1692,7 @@ function getWeiboDetail(req, res, next) {
       next(err);
       return;
     }
-    res.json(extend(results, {
-      type: 'WEIBO',
-      url: url
-    }));
+    res.json(results);
   });
 }
 

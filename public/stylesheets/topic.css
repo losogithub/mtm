@@ -261,7 +261,7 @@
 .WEIBO .Text,
 .WEIBO_CREATE .Text {
   line-height: 23px;
-  margin-top: 4px;
+  margin: 4px 0;
   color: #333;
 }
 .WEIBO > div > .Text,
@@ -293,9 +293,11 @@
 .WEIBO .Pic,
 .WEIBO_CREATE .Pic {
   width: 255px;
+  margin-bottom: 15px;
+  display: none;
 }
-.WEIBO .Pic img,
-.WEIBO_CREATE .Pic img {
+.WEIBO .Pic a,
+.WEIBO_CREATE .Pic a {
   float: left;
   margin: 5px 5px 0 0;
 }
@@ -305,7 +307,7 @@
   border: solid 1px #d9d9d9;
   border-radius: 5px;
   padding: 10px 20px;
-  margin: 5px 0 15px;
+  margin: 10px 0 15px;
   position: relative;
 }
 .WEIBO .Retweeted .CaretShadow,
@@ -324,6 +326,11 @@
 .WEIBO_CREATE .Retweeted .AuthorDescription {
   font-size: 10px;
 }
+.WEIBO .Handle,
+.WEIBO_CREATE .Handle {
+  float: right;
+  visibility: hidden;
+}
 .WEIBO textarea[name="description"],
 .WEIBO_CREATE textarea[name="description"] {
   margin-top: 10px;
@@ -335,6 +342,10 @@
   border-left: 2px solid #ddd;
   font-size: 14px;
   line-height: 20px;
+}
+.WidgetItemList > li:hover .WEIBO .Handle,
+.WidgetItemList > li:hover .WEIBO_CREATE .Handle {
+  visibility: visible;
 }
 .TEXT p {
   line-height: 20px;

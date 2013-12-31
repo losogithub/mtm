@@ -116,7 +116,7 @@
   }
   .Author { font-weight: bold; }
   >div>.Author { font-size: 14px; }
-  .Text { line-height: 23px; margin-top: 4px; color: #333; }
+  .Text { line-height: 23px; margin: 4px 0; color: #333; }
   >div>.Text { font-size: 14px; }
   .Verify {
     display: none;
@@ -128,18 +128,25 @@
     }
   }
   >div>.Verify {font-size: 14px;}
-  .Pic { width: 255px;
-    img { float: left; margin: 5px 5px 0 0; }
+  .Pic { width: 255px; margin-bottom: 15px; display: none;
+    a { float: left; margin: 5px 5px 0 0; }
   }
   .Retweeted {
     background-color: #f2f2f2; border: solid 1px #d9d9d9; border-radius: 5px;
-    padding: 10px 20px; margin: 5px 0 15px; position: relative;
+    padding: 10px 20px; margin: 10px 0 15px; position: relative;
     .CaretShadow { position: absolute; top: -11px; color: #d9d9d9; }
     .Caret { position: absolute; top: -10px; color: #f2f2f2; }
     .AuthorDescription {font-size: 10px;}
   }
+  .Handle {float: right; visibility: hidden;}
   textarea[name="description"] {margin-top: 10px;}
   .Description { margin-top: 10px; padding-left: 6px; border-left: 2px solid #ddd; font-size: 14px; line-height: 20px; }
+}
+
+.WidgetItemList>li:hover {
+  .WEIBO, .WEIBO_CREATE {
+    .Handle { visibility: visible;}
+  }
 }
 
 .TEXT p { line-height: 20px; font-size: 14px; }

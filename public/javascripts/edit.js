@@ -46,7 +46,7 @@
       .text(options.user.description)
       .end()
       .find('.Text')
-      .text(options.text)
+      .html(options.parsed_text)
       .end()
       .find('.Time')
       .attr('href', 'http://weibo.com/' + options.user.idstr + '/' + options.mid62)
@@ -61,7 +61,8 @@
 
     var $pic = $li.find('.Pic');
     var $image = $templates.find('>.WeiboImage');
-    if (options.pic_urls) {
+    if (options.pic_urls && options.pic_urls.length) {
+      $pic.show();
       if (options.pic_urls.length == 4) {
         $pic.css('width', '170px');
       }
@@ -85,7 +86,7 @@
       }
     }
 
-    if (options.retweeted_status) {
+    if (options.retweeted_status && options.retweeted_status.idstr) {
       fillWeibo($templates.find('>.Retweeted').clone(true).insertAfter($li.find('.Pic')), options.retweeted_status);
     }
   }
