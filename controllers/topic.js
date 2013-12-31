@@ -249,100 +249,94 @@ function showShareChang(req, res, next) {
   });
 }
 
-function createChang(req, res, next) {
-  console.log('===== createChang =====');
+function sendChang(req, res, next) {
   var topicId = req.params.topicId;
-  res.json({src: "/chang/" + topicId});
-}
+  async.auto({
+    db: function (callback) {
+      var MongoClient = mongodb.MongoClient;
+      MongoClient.connect(config.db, function (err, db) {
+        if (err) return next(err);
 
+        callback(null, db);
+      });
+    },
+    topic: function (callback) {
+      //get the topic data
+      Topic.getTopicById(topicId, function (err, topic) {
+        if (err) {
+          return next(err);
+        }
+        if (!topic) {
+          return next(new Error(404));
+        }
+        if (!topic.publishDate) {
+          return next(new Error(403));
+        }
 
-function sendChang(req, res) {
+        callback(null, topic);
+      });
+    },
+    needRender: ['db', 'topic', function (callback, results) {
+      var db = results.db;
+      var time = results.topic.update_at.getTime();
 
-  var MongoClient = require('mongodb').MongoClient;
-  MongoClient.connect(config.db, function (err, db) {
-    if (err) return console.log(err);
-
-    var topicId = req.params.topicId;
-    //get the topic data
-    Topic.getTopicById(topicId, function (err, topic) {
-      if (err) {
-        return next(err);
+      if (req.query.force) {
+        return callback(null, 2);
       }
-      if (!topic || !topic.publishDate) {
-        return next(new Error(404));
-      }
-
-      var time = topic.update_at.getTime();
-
-
       //check the existence
       mongodb.GridStore.exist(db, topicId, function (err, result) {
         if (err) {
-          throw err;
+          return next(err);
         }
         if (!result) {
           console.log("~~~~~~~~~~~not exists, create~~~~~~~~~");
-          _generateImage(topic, topicId, time, db, res, false);
+          return callback(null, 1);
         }
-        else {
-          var gs = new mongodb.GridStore(db, topicId, "r");
-          gs.open(function (err, gs) {
-            if (err) {
-              throw err
-            }
+        var gs = new mongodb.GridStore(db, topicId, "r");
+        gs.open(function (err, gs) {
+          if (err) {
+            return next(err);
+          }
 
-            if (gs.metadata.updateAt == time) {
-              console.log("ok, not updated yet")
+          if (gs.metadata.updateAt != time) {
+            console.log("render jpg again!");
+            //regenerate new
+            return callback(null, 1);
+          }
 
-              //If user want to render again, here check
-              if (req.query.force) {
-                console.log("render jpg again!");
-                //regenerate new
-                mongodb.GridStore.unlink(db, topicId, function (err) {
-                  if (err) {
-                    console.log("unlink gridstore err");
-                    throw err;
-                  }
-                  console.log("unlink success");
-                })
-                //regenerate new
-                _generateImage(topic, topicId, time, db, res, true);
-              }
+          callback(null, 0);
+        });
+      });
+    }],
+    render: ['db', 'topic', 'needRender', function (callback, results) {
+      var db = results.db;
+      var topic = results.topic;
+      var time = results.topic.update_at.getTime();
+      var type = results.needRender;
 
-              else {
-                //directly render it
-                gs.read(function (err, data) {
-                  if (err) {
-                    console.log("read err");
-                    throw err;
-                  }
-                  res.writeHead('200', {'Content-Type': 'image/png'});
-                  res.end(data, 'binary');
-                })
-              }
+      if (!type) return callback();
 
-            }
-            else {
-              console.log("regenerate as the topic updated ");
-              //regenerate new
-              mongodb.GridStore.unlink(db, topicId, function (err) {
-                if (err) {
-                  console.log("unlink gridstore err");
-                  throw err;
-                }
-                console.log("unlink success");
-              })
-              //regenerate new
-              _generateImage(topic, topicId, time, db, res, true);
-            }
-            //_readFromMongoGrid(topic, topicId, time, req, res);
-          });
+      _generateImage(topic, topicId, time, db, res, type - 1, callback);
+    }]
+  }, function (err, results) {
+    if (err) return next(err);
+
+    var db = results.db;
+    var render = results.render;
+
+    var gs = new mongodb.GridStore(db, topicId, "r");
+    gs.open(function (err, gs) {
+      if (err) return next(err);
+      gs.read(function (err, data) {
+        if (err) {
+          console.log("read err");
+          throw err;
         }
-
-      })
-
+        res.writeHead('200', {'Content-Type': 'image/jpeg'});
+        res.end(data, 'binary');
+        if (typeof render === 'function') render();//删除临时文件
+      });
     });
-
   });
 }
 
@@ -350,104 +344,53 @@ function sendChang(req, res) {
 /*
  tag : used to notify regenerate
  */
-function _generateImage(topic, topicId, time, db, res, tag) {
-  /*
-   In order to avoid at the same time, many people render this, we need different port.
-   So using a random generated number to achieve it.
-   1/20000. The probability of collision shall be less.
-   Math.floor(Math.random() * 20000) + 22000
-   */
-
+function _generateImage(topic, topicId, time, db, res, tag, callback) {
   portfinder.getPort(function (err, port) {
-    if (err) {
-      console.log("no avalilale port ?");
-      throw err;
-    }
-    else {
-      console.log("port: ", port);
-      var filename = time + '_' + topicId + '.jpg';
-      var fullFilePath = 'public/images/chang/' + filename;
-      _countDifferentItemsInOneTopicAndSetTime(topic, res, function (loadingTime) {
-        phantom.create({port: port}, function (ph) {
-          ph.createPage(function (page) {
-            console.log("loading time: ", loadingTime);
-            if (tag) {
-              loadingTime = loadingTime + 2000;
-            }
-            page.set('settings.resourceTimeout', loadingTime);
-            page.open('http://localhost:3000/topic/' + topicId + '/chang', function () {
-              setTimeout(function () {
-                page.render(fullFilePath, function () {
-                  ph.exit();
+    if (err) return callback(err);
 
-                  fs.readFile('public/images/chang/' + filename, function (err, data) {
-                    if (err) {
-                      throw err
-                    }
-                    //render data
-                    res.writeHead('200', {'Content-Type': 'image/png'});
-                    res.end(data, 'binary');
-                    console.log("render success");
-                    _setTimeDelete(fullFilePath)
-                  })
-                  /*
-                   store this png in grid fs , wait for 10min, delete this one.
-                   */
-                  _storeMongoGrid(topicId, time, db, res);
-                });
-              }, loadingTime);
-            });
-          })
-        });
-      })//countDifferentItemsInOneTopicAndSetTime
-    }
-  })
-}
+    console.log("port: ", port);
+    var filename = time + '_' + topicId + '.jpg';
+    var fullFilePath = 'public/images/chang/' + filename;
+    _countDifferentItemsInOneTopicAndSetTime(topic, res, function (loadingTime) {
+      phantom.create({port: port}, function (ph) {
+        ph.createPage(function (page) {
+          console.log("loading time: ", loadingTime);
+          if (tag) {
+            loadingTime = loadingTime + 2000;
+          }
+//          page.set('settings.resourceTimeout', loadingTime);
+          page.open('http://localhost:3000/topic/' + topicId + '/chang', function () {
+//            setTimeout(function () {
+              page.render(fullFilePath, function () {
+                ph.exit();
 
-function _setTimeDelete(fullFilePath) {
-  setTimeout(function () {
-    fs.unlink(fullFilePath, function (err) {
-      if (err) {
-        console.log("must been deleted already");
-        //throw err;
-      }
-      console.log("successfully delete " + fullFilePath);
-    });
-  }, 60 * 1000); //10min
-}
-
-function _storeMongoGrid(topicId, time, db, res) {
-
-  var gs = new mongodb.GridStore(db, topicId, "w", {
-    "content/type": "img/jpeg",
-    "metadata": {
-      "topicId": topicId,
-      "updateAt": time
-    },
-    "chunk_size": 1024
-  });
-  var filename = time + '_' + topicId + '.jpg';
-  var fullFilePath = 'public/images/chang/' + filename;
-  gs.writeFile(fullFilePath, function (err, obj) {
-    if (err) {
-      console.log("write to grid err.");
-      throw err;
-    }
-    else {
-
-      console.log("write to grid success.");
-      gs.close(function (err, success) {
-        if (err) {
-          console.log("close gridfs err");
-          throw err;
-        }
-        else {
-          console.log("success closed gridfs");
-        }
+                _storeMongoGrid(topicId, time, fullFilePath, db, callback);
+              });
+//            }, loadingTime);
+          });
+        })
       });
-    }
-  })
+    });//countDifferentItemsInOneTopicAndSetTime
+  });
+}
 
+function _storeMongoGrid(topicId, time, fullFilePath, db, callback) {
+  var gs = new mongodb.GridStore(db, topicId, "w", {
+    "metadata": {
+      "updateAt": time
+    }
+  });
+  gs.writeFile(fullFilePath, function (err) {
+    if (err) return callback(err);
+
+    gs.close(function (err) {
+      if (err) return callback(err);
+
+      callback(null, function () {
+        fs.unlink(fullFilePath);
+      });
+    });
+  });
 }
 
 
@@ -1231,7 +1174,7 @@ function _getHtml(url, callback) {
       async.series([function (callback) {
         switch (response.headers['content-encoding']) {
           case 'gzip':
-            zlib.gunzip(buffer, function(err, buf) {
+            zlib.gunzip(buffer, function (err, buf) {
               if (err) {
                 return callback(err);
               }
@@ -1241,7 +1184,7 @@ function _getHtml(url, callback) {
             });
             break;
           case 'deflate':
-            zlib.inflateRaw(buffer, function(err, buf) {
+            zlib.inflateRaw(buffer, function (err, buf) {
               if (err) {
                 return callback(err);
               }
@@ -1803,7 +1746,6 @@ exports.createTopic = createTopic;
 exports.showEdit = showEdit;
 exports.showChang = showChang;
 exports.showShareChang = showShareChang;
-exports.createChang = createChang;
 exports.showIndex = showIndex;
 exports.createItem = createItem;
 exports.editItem = editItem;
