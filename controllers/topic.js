@@ -24,6 +24,7 @@ var extend = require('extend');
 var config = require('../config');
 
 var helper = require('../helper/helper');
+var WeiboHelper = require('../helper/weibo');
 var escape = helper.escape;
 
 var Topic = require('../proxy').Topic;
@@ -1216,7 +1217,7 @@ function _getHtml(url, callback) {
     callback(err);
   });
   d.run(function () {
-    request({url: url, encoding: null, 'headers': {'Accept-Encoding': 'gzip,deflate'}}, function (error, response, body) {
+    request({url: url, encoding: null, 'headers': {'Accept-Encoding': 'gzip,deflate', Cookie: config.WEIBO_COOKIE}}, function (error, response, body) {
       if (error) {
         return callback(error);
       }
@@ -1628,6 +1629,11 @@ function _getWeiboDetail(url, callback) {
         if (err) {
           return callback(err);
         }
+        if (!data) {
+          return callback(new Error(400));
+        }
+//        console.log(data.text);
+//        console.log(WeiboHelper.process_text(data.text));
         callback(null, data);
       });
 //    var title = !(temp = html.match(/<title[^>]*>([^<]*)<\/title[^>]*>/i)) ? null : temp[1];
