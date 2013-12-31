@@ -426,9 +426,6 @@
 .Top .Inner .HeadMain .HeadTxt .HeadOption .HeadUser .HeadUserName {
   font-weight: bold;
 }
-.Top .Inner .HeadMain .HeadTxt .HeadOption .bdsharebuttonbox {
-  float: left;
-}
 .Top .Inner .HeadSub {
   width: 220px;
   text-align: right;
