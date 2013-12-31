@@ -6,6 +6,7 @@
 
 <script>
   $(function () {
+    console.log('hha')
     //回顶部按钮
     var MIN_SCROLL = 100;
     var FIXED_BOTTOM = 25;
@@ -15,7 +16,8 @@
     var docHeight;
     var winHeight;
     var $doc = $(document);
-    var updateDisplay = function () {
+    $window.on('scroll resize', function () {
+      console.log('hha')
       docHeight = $doc.height();
       winHeight = $window.height();
       if (docHeight - winHeight > MIN_SCROLL + MAX_BOTTOM - FIXED_BOTTOM) {
@@ -23,18 +25,16 @@
       } else {
         $_toTop.hide();
       }
-    }
-    updateDisplay();
-    $window.on('resize', updateDisplay);
-    $window.on('scroll resize', function () {
-      docHeight = $doc.height();
       var scroll = $window.scrollTop();
       var delta = scroll + winHeight - (docHeight - MAX_BOTTOM);
       if (scroll < MIN_SCROLL) {
+        console.log('1')
         $_toTop.css('bottom', scroll - MIN_SCROLL + FIXED_BOTTOM);
       } else if (delta > FIXED_BOTTOM) {
+        console.log('2')
         $_toTop.css('bottom', delta);
       } else {
+        console.log('3')
         $_toTop.css('bottom', FIXED_BOTTOM);
       }
     });

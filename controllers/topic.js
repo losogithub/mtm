@@ -281,7 +281,7 @@ function sendChang(req, res, next) {
       var time = results.topic.update_at.getTime();
 
       if (req.query.force) {
-        return callback(null, 2);
+        return callback(null, 1);
       }
       //check the existence
       mongodb.GridStore.exist(db, topicId, function (err, result) {
@@ -312,11 +312,11 @@ function sendChang(req, res, next) {
       var db = results.db;
       var topic = results.topic;
       var time = results.topic.update_at.getTime();
-      var type = results.needRender;
+      var needRender = results.needRender;
 
-      if (!type) return callback();
+      if (!needRender) return callback();
 
-      _generateImage(topic, topicId, time, db, res, type - 1, callback);
+      _generateImage(db, topicId, time, callback);
     }]
   }, function (err, results) {
     if (err) return next(err);
@@ -344,37 +344,28 @@ function sendChang(req, res, next) {
 /*
  tag : used to notify regenerate
  */
-function _generateImage(topic, topicId, time, db, res, tag, callback) {
+function _generateImage(db, topicId, time, callback) {
   portfinder.getPort(function (err, port) {
     if (err) return callback(err);
 
     console.log("port: ", port);
-    var filename = time + '_' + topicId + '.jpg';
+    var filename = topicId + '_' + time + '.jpg';
     var fullFilePath = 'public/images/chang/' + filename;
-    _countDifferentItemsInOneTopicAndSetTime(topic, res, function (loadingTime) {
-      phantom.create({port: port}, function (ph) {
-        ph.createPage(function (page) {
-          console.log("loading time: ", loadingTime);
-          if (tag) {
-            loadingTime = loadingTime + 2000;
-          }
-//          page.set('settings.resourceTimeout', loadingTime);
-          page.open('http://localhost:3000/topic/' + topicId + '/chang', function () {
-//            setTimeout(function () {
-              page.render(fullFilePath, function () {
-                ph.exit();
+    phantom.create({port: port}, function (ph) {
+      ph.createPage(function (page) {
+        page.open('http://localhost:3000/topic/' + topicId + '/chang', function () {
+          page.render(fullFilePath, function () {
+            ph.exit();
 
-                _storeMongoGrid(topicId, time, fullFilePath, db, callback);
-              });
-//            }, loadingTime);
+            _storeMongoGrid(db, topicId, time, fullFilePath, callback);
           });
-        })
+        });
       });
-    });//countDifferentItemsInOneTopicAndSetTime
+    });
   });
 }
 
-function _storeMongoGrid(topicId, time, fullFilePath, db, callback) {
+function _storeMongoGrid(db, topicId, time, fullFilePath, callback) {
   var gs = new mongodb.GridStore(db, topicId, "w", {
     "metadata": {
       "updateAt": time
@@ -391,52 +382,6 @@ function _storeMongoGrid(topicId, time, fullFilePath, db, callback) {
       });
     });
   });
-}
-
-
-function _countDifferentItemsInOneTopicAndSetTime(topic, res, callback) {
-  //console.log("count time for resource loading");
-  var ep = EventProxy.create('items', function (items) {
-    var textTimePer = 10;
-    var pictureTimePer = 100;
-    var videoTimePer = 100;
-    var totalTime = 0;
-
-    items.forEach(function (item) {
-      //itemsData.push(_getItemData(item).type);
-      switch (item.type) {
-        case 'IMAGE' :
-          totalTime += pictureTimePer;
-          break;
-        case 'VIDEO' :
-          totalTime += videoTimePer;
-          break;
-        default :
-          totalTime += textTimePer;
-          break;
-      }
-    });
-    //console.log("total resource loading time: ", totalTime);
-    //return totalTime;
-    //Give a default lowest time
-    if (totalTime < 2000) {
-      totalTime = 2000;
-    }
-    callback(totalTime);
-  })
-    .fail(function (err) {
-      console.error(err.stack);
-      res.send(500, err);
-    });
-
-  Topic.getContents(topic, ep.done(function (items) {
-    if (!items) {
-      ep.unbind();
-      res.send(404, '条目列表头不存在');
-      return;
-    }
-    ep.emit('items', items);
-  }));
 }
 
 function showIndex(req, res, next) {

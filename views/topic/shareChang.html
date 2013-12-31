@@ -17,38 +17,65 @@
 <body style="background-color: #ddd; width: 520px; min-width: 520px; margin: 0 auto;">
 <div style="width: 480px; background-color: #eee; margin: 20px; border-radius: 5px; padding: 20px;">
   <img id="_chang" src="/images/loading.gif" style="display: block;margin: 0 auto;">
-  <p id="_loading" style="margin-top: 20px;text-align: center;font-size: 20px;line-height: 1;">正在生成长微博</p>
+  <div id="_loading">
+    <img src="/images/loading.gif" style="display: block;margin: 0 auto;">
+    <p style="margin-top: 20px;text-align: center;font-size: 20px;line-height: 1;">正在生成长微博</p>
+  </div>
 </div>
-<div id="_bubble" style="display: none;position: fixed; top: 0; left: 50%; margin: 20px 20px 20px 260px; background-color: #eee; border-radius: 5px; padding: 20px;">
+<div id="_bubble" style="width: 180px;position: fixed; top: 0; left: 50%; margin: 20px 20px 20px 260px; background-color: #eee; border-radius: 5px; padding: 20px;">
   <p style="position: absolute; left: -8px; font-size: 30px; top: 10px; line-height: 1; color: #eee;">◆</p>
-  <a id="_src">图片地址</a>
-  <button id="_forceRender" class="btn btn-link text-muted" style="margin-left: 30px;">重新生成</button>
   <!-- Baidu Button BEGIN -->
-  <div class="bdsharebuttonbox" style="margin-top: 10px;"><a href="#" class="bds_more" data-cmd="more"></a><a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a><a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a><a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"></a><a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"></a><a href="#" class="bds_t163" data-cmd="t163" title="分享到网易微博"></a></div>
-  <script></script>
+  <div class="bdsharebuttonbox" style="position: absolute; top: 20px;"><a href="#" class="bds_more" data-cmd="more"></a><a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a><a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a><a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"></a><a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"></a><a href="#" class="bds_t163" data-cmd="t163" title="分享到网易微博"></a></div>
   <!-- Baidu Button END -->
+  <p id="_src" style="margin: 40px 0 10px;"><a>图片地址</a></p>
+  <a id="_return" class="text-muted" href="./">返回总结</a>
+  <button id="_forceRender" style="margin-left: 36px;" class="btn btn-link text-muted">重新生成</button>
 </div>
+
+<% include ../_toTop.html %>
+
 <script>
-  $(function () {
+  (function () {
     var id = /\/topic\/(\w+)/i.exec(location.pathname)[1];
     window._bd_share_config = {"common": {"bdSnsKey": {}, "bdText": "", "bdMini": "2", "bdMiniList": false, "bdUrl": location.href.replace('/share_chang', ''), "bdPic": 'http://' + location.host + '/chang/' + id, "bdStyle": "2", "bdSize": "16"}, "share": {}};
     with (document)0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=86835285.js?cdnversion=' + ~(-new Date() / 36e5)];
-    function create(forceRender) {
-//      $('#_loading').show();
-//      $('#_bubble').hide();
-      $('#_chang').attr('src', '');
-      $('#_chang').attr('src', '/images/loading.gif');
 
-      $('#_loading').hide();
-      $('#_bubble').show();
-      $('#_src').attr('href', '/chang/' + id);
-      $('#_chang').attr('src', '/chang/' + id + '?' + new Date().getTime() + (forceRender ? '&force=1' : '') );
-    }
-    create();
-    $('#_forceRender').click(function () {
-      create(true);
+    $(function () {
+      var $loading = $('#_loading');
+      var $chang = $('#_chang');
+      var $bubble = $('#_bubble');
+      var $src = $('#_src');
+      var $src_a = $src.find('a');
+      var $force = $('#_forceRender');
+      var $baidu = $('.bdsharebuttonbox');
+      $chang.on('load abort error', function () {
+        $bubble.css('width', '180px');
+        $loading.hide();
+        $chang.show();
+        $force.show();
+      });
+      $chang.on('load', function () {
+        $src.show();
+        $baidu.show();
+      });
+      function create(forceRender) {
+        $loading.show();
+
+        $bubble.css('width', '90px');
+        $src.hide();
+        $baidu.hide();
+        $force.hide();
+
+        $src_a.attr('href', '/chang/' + id);
+        $chang.attr('src', '/chang/' + id + '?' + new Date().getTime() + (forceRender ? '&force=1' : '') );
+        $chang.hide();
+      }
+      create();
+      $force.click(function () {
+        create(true);
+      });
     });
-  });
+  })();
 </script>
 </body>
 </html>
