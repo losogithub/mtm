@@ -688,7 +688,52 @@ var activeAccount = function (req, res, next) {
       console.log("error: ", err);
       return next(err);
     }
-    if (!user || encryp.md5(user.email + config.session_secret) !== key) {
+    if(user.active){
+
+      //duplicated code
+      //start
+      console.log("firstly logout");
+      if (req.session.userId) {
+        console.log("session userId: ", req.session.userId);
+        req.session.destroy(function () {
+        });
+      }
+      if(req.cookies.logintoken){
+        var cookie = JSON.parse(req.cookies.logintoken);
+        console.log("cookie: ", cookie);
+        if (cookie.email && cookie.series) {
+          //combine email and series to make sure only only clear from on computer.
+          LoginToken.remove(cookie.email, cookie.series);
+        }
+        res.clearCookie('logintoken');
+      }
+      res.locals.username = "";
+      res.locals.imageUrl = "";
+
+
+
+
+      //active the user and make him/her a logged in user.
+      //2013.12.02
+      user.active = true;
+      //bug fix: change req to res. 2013.12.02 19:42
+      res.locals.username = user.loginName;
+      res.locals.imgUrl = user.url; //the name for image url is not good.
+      //bug fix: add one more:
+      //But I am wondering this session cannot be passed to next round.
+      //jihao: really workds. Ok, I don't unserstand hwo session is passed.
+      req.session.userId = user._id;
+
+      user.save(function (err) {
+        if (err) {
+          return next(err);
+        }
+        res.render('sign/activeAccountSuccess')
+        return;
+      });
+      //end
+    }
+    else if (!user || encryp.md5(user.email + config.session_secret) !== key) {
       console.log("check not equal");
       return res.render('sign/errLink');
     }
@@ -712,7 +757,6 @@ var activeAccount = function (req, res, next) {
     }
     res.locals.username = "";
     res.locals.imageUrl = "";
-
 
 
 
