@@ -688,14 +688,14 @@ var activeAccount = function (req, res, next) {
       console.log("error: ", err);
       return next(err);
     }
-    if (!user || encryp.md5(user.email + config.session_secret) !== key || user.active) {
+    if (!user || encryp.md5(user.email + config.session_secret) !== key) {
       console.log("check not equal");
       return res.render('sign/errLink');
     }
 
     //2013.12.02 Before active, first check whether ther is an login user and logout it.
     //copy from logout function
-    console.log("first logout");
+    console.log("firstly logout");
     if (req.session.userId) {
       console.log("session userId: ", req.session.userId);
       req.session.destroy(function () {
