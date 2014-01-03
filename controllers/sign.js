@@ -688,7 +688,13 @@ var activeAccount = function (req, res, next) {
       console.log("error: ", err);
       return next(err);
     }
-    if(user.active){
+
+    if(!user)
+    {
+      console.log("user not exists!");
+      return res.render('sign/errLink');
+    }
+    else if(user.active){
 
       //duplicated code
       //start
@@ -733,7 +739,7 @@ var activeAccount = function (req, res, next) {
       });
       //end
     }
-    else if (!user || encryp.md5(user.email + config.session_secret) !== key) {
+    else if (encryp.md5(user.email + config.session_secret) !== key) {
       console.log("check not equal");
       return res.render('sign/errLink');
     }
