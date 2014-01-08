@@ -689,14 +689,13 @@ function _getItemData(item) {
         parsed_text: item.parsed_text,
         source: item.source,
         pic_urls: item.pic_urls,
-        user: item.user,
-        retweeted_status: item.retweeted_status
+        user: item.user.toObject(),
+        retweeted_status: item.retweeted_status.toObject()
       }
 
       if (itemData.retweeted_status && itemData.retweeted_status.idstr) {
         itemData.retweeted_status.time = _getWeiboTime(item.retweeted_status.created_at);
       }
-      console.log(itemData.time);
       break;
     case 'TEXT':
       itemData = {
@@ -1530,12 +1529,10 @@ function _getWeiboDetail(url, callback) {
         if (!data || data.error) {
           return callback(new Error(400));
         }
-        console.log(data.text);
         data.parsed_text = WeiboHelper.process_text(escape(data.text));
         if (data.retweeted_status && data.retweeted_status.idstr) {
           data.retweeted_status.parsed_text = WeiboHelper.process_text(escape(data.retweeted_status.text));
         }
-        console.log(data.parsed_text);
 
         if (data.retweeted_status && data.retweeted_status.idstr) {
           data.retweeted_status.time = _getWeiboTime(data.retweeted_status.created_at);
