@@ -1352,13 +1352,15 @@ function _getVideoDetail(url, callback) {
         //http://video.sina.com.cn/haokan/play.html?url=http%3A%2F%2Fmy.tv.sohu.com%2Fus%2F53375285%2F62269772.shtml
         //http://video.sina.com.cn/m/sztvyw_63172701.html
         //上面两种url暂不支持，同weibo，未尝试
-        //plan A
-        //$SCOPE['video'] = {......title:'【拍客】险 学生穿梭烂尾无护栏天桥上学',......}
-        title = !(temp = html.match(/\$SCOPE\['video'\]\s*=\s*\{[\s\S]*title\s*:\s*'([^'}]*)/i)) ? null : !temp[1] ? null : temp[1];
         //http://video.sina.com.cn/bl/6646436-1624364062-117652070.html(无封面)
         //http://tv.video.sina.com.cn/play/214323.html(无封面)
         //http://video.sina.com.cn/v/b/50691086-1854900491.html
         //http://video.sina.com.cn/p/news/s/v/2013-11-26/110663190307.html
+        //plan A
+        //$SCOPE['video'] = {......title:'【拍客】险 学生穿梭烂尾无护栏天桥上学',......}
+        //<h1 class="titName" id="videoTitle">我们约会吧 20111115 张孟宁  </h1>
+        title = (!(temp = html.match(/\$SCOPE\['video'\]\s*=\s*\{[\s\S]*title\s*:\s*'([^'}]*)/i)) ? null : !temp[1] ? null : temp[1])
+          || (!(temp = html.match(/<h1[^>]*>([^<>]*)<\/h1>/i)) ? null : !temp[1] ? null : temp[1]);
         //<script......vid:'120263847',......</script>
         vid = !(temp = html.match(/<script((?!<\/script>)[\s\S])*vid:'(\d+)',/i)) ? null : !temp[2] ? null : temp[2];
         //$SCOPE['video'] = {...pic: 'http://p3.v.iask.com/271/848/50691086_2.jpg',......}
