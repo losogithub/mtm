@@ -682,7 +682,7 @@ function _getItemData(item) {
         url: item.url,
         description: item.description,
         created_at: item.created_at,
-        time: utils.getWeiboTime(item.created_at),
+        time: _getWeiboTime(item.created_at),
         idstr: item.idstr,
         mid62: item.mid62,
         text: item.text,
@@ -694,7 +694,7 @@ function _getItemData(item) {
       }
 
       if (itemData.retweeted_status && itemData.retweeted_status.idstr) {
-        itemData.retweeted_status.time = utils.getWeiboTime(item.retweeted_status.created_at);
+        itemData.retweeted_status.time = _getWeiboTime(item.retweeted_status.created_at);
       }
       console.log(itemData.time);
       break;
@@ -1536,13 +1536,33 @@ function _getWeiboDetail(url, callback) {
           data.retweeted_status.parsed_text = WeiboHelper.process_text(escape(data.retweeted_status.text));
         }
         console.log(data.parsed_text);
+
+        if (data.retweeted_status && data.retweeted_status.idstr) {
+          data.retweeted_status.time = _getWeiboTime(data.retweeted_status.created_at);
+        }
         callback(null, extend(data, {
           type: 'WEIBO',
-          url: url
+          url: url,
+          time: _getWeiboTime(data.created_at)
         }));
       });
     });
   });
+}
+
+function _getWeiboTime(created_at) {
+  var date = new Date(created_at);
+  var _normalizeTime = function (time) {
+    if (time >= 10) {
+      return time;
+    }
+    return '0' + time;
+  }
+  return date.getFullYear() + '.'
+    + (date.getMonth() + 1) + '.'
+    + date.getDate() + ' '
+    + _normalizeTime(date.getHours()) + ':'
+    + _normalizeTime(date.getMinutes());
 }
 
 function getLinkDetail(req, res, next) {

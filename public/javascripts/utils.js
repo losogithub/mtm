@@ -35,22 +35,6 @@
       } else {
         return src + '&';
       }
-    },
-
-    _normalizeTime: function (time) {
-      if (time >= 10) {
-        return time;
-      }
-      return '0' + time;
-    },
-
-    getWeiboTime: function (created_at) {
-      var date = new Date(created_at);
-      return date.getFullYear() + '.'
-        + (date.getMonth() + 1) + '.'
-        + date.getDate() + ' '
-        + this._normalizeTime(date.getHours()) + ':'
-        + this._normalizeTime(date.getMinutes());
     }
   };
 

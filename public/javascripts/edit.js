@@ -27,8 +27,6 @@
   }
 
   function fillWeibo($li, options) {
-    var time = shizier.utils.getWeiboTime(options.created_at);
-
     $li
       .find('.Avatar img')
       .attr('src', options.user.profile_image_url)
@@ -50,7 +48,7 @@
       .end()
       .find('.Time')
       .attr('href', 'http://weibo.com/' + options.user.idstr + '/' + options.mid62)
-      .text(time)
+      .text(options.time)
       .end()
       .find('.Forward')
       .attr('href', 'http://weibo.com/' + options.user.idstr + '/' + options.mid62 + '?type=repost')
