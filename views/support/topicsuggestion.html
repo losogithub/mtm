@@ -1,0 +1,35 @@
+<h1>话题建议</h1>
+
+<a href="/topicSuggestionLog">话题领取日志</a>
+
+<br>
+<br>
+<h2>添加话题</h2>
+<form name="input" action="/addSuggestionTopic" method="post">
+
+    <input type="text" name="content"/>
+    <input type="submit" value="添加"/>
+</form>
+
+<br>
+<br>
+<br>
+<h2>当前话题</h2>
+
+
+<%
+for (i in suggestions) {
+var actionString = '/takeSuggestionTopic/'+ suggestions[i]._id;
+%>
+&nbsp&nbsp
+
+<!--<form name="input"  action = <%=actionString%> method="post">-->
+<form name="input" action='/takeSuggestionTopic' method="post">
+    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+    <%= suggestions[i].content %> &nbsp&nbsp(来自<%= suggestions[i].proposer %>的建议)&nbsp&nbsp
+    <input name="_id" type="hidden" value=<%=suggestions[i]._id%> />
+    <input type="submit" value="我来做"/>
+</form>
+<br>
+<% } %>
+<br/>

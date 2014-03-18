@@ -19,6 +19,10 @@ mongoose.connect(config.db, function (err) {
 require('./user');
 require('./loginToken');
 
+
+exports.TopicSuggestionModel = require('./topic_suggestion').TopicSuggestionModel;
+exports.SuggestionTopicLogModel = require('./topic_suggestion').SuggestionTopicLogModel;
+
 exports.NewTopicModel = require('./topic').NewTopicModel;
 
 exports.TopicModel = require('./topic').TopicModel;

@@ -1,0 +1,17 @@
+<head>
+    <title>话题建议日志</title>
+</head>
+<body>
+
+<h1>日志</h1>
+
+<%for (i in logs) {
+%>
+
+<p>
+<%=logs[i].taker%> 领走了 <%=logs[i].proposer%> 的建议 <%=logs[i].content%>
+</p>
+
+<%}%>
+
+</body>

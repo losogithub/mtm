@@ -28,7 +28,10 @@ var UserSchema = new Schema({
   likeList: [ObjectId], //like some one
 
   //the topics that user like
-  FVTopicList: [ObjectId]
+  FVTopicList: [ObjectId],
+
+  //topic creation task
+  TopicTaskList: [ObjectId] // suggestion task
 
 });
 
