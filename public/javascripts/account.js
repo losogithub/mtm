@@ -16,7 +16,7 @@ shizier.account = shizier.account || {};
     },
     setPasswdCheckConfirm: function () {
       var rules = this.rules;
-      $("#_passwd").shizierPasswdCheck(rules);
+      $("#_password").shizierPasswdCheck(rules);
       $("#_passwd_confirm").shizierPasswdCheck($.extend(rules, {
         confirm: '#_passwd'
       }));
@@ -34,27 +34,6 @@ shizier.account = shizier.account || {};
   $.extend(shizier.account.initAccountInfoChangeForm.prototype, shizier.account.validate.prototype);
 })(jQuery);
 /**
- * /accountVerify
- **/
-(function ($) {
-  shizier.account.initMailChangeForm = function () {
-    this.setPasswdCheck();
-  }
-  $.extend(shizier.account.initMailChangeForm.prototype, shizier.account.validate.prototype, {
-    setPasswdCheck: function () {
-      $("#_passwd").shizierPasswdCheck({
-        required: this.required,
-        showError: function (bError, sMessage) {
-          if (!bError) {
-            $(this).next().html('');
-          }
-        }
-      });
-    }
-  });
-})(jQuery);
-
-/**
  * /resetPassword
  **/
 (function ($) {
@@ -67,18 +46,18 @@ shizier.account = shizier.account || {};
  * /signup
  **/
 (function ($) {
-  shizier.account.initRegistForm = function () {
-    this.setPasswdCheck();
+  shizier.account.initRegistForm = function ($scope) {
+    this.setPasswdCheck($scope);
   };
   $.extend(shizier.account.initRegistForm.prototype, shizier.account.validate.prototype, {
-    setPasswdCheck: function () {
-      $("#_passwd").shizierPasswdCheck(this.rules);
+    setPasswdCheck: function ($scope) {
+      $("#_password").shizierPasswdCheck(this.rules, $scope);
     }
   });
 })(jQuery);
 
 (function ($) {
-  $.fn.shizierPasswdCheck = function (options) {
+  $.fn.shizierPasswdCheck = function (options, $scope) {
     if (!this.length) {
       return;
     }
@@ -102,9 +81,9 @@ shizier.account = shizier.account || {};
       required: null,
       range: "密码太短",
       format: '含有非法字符',
-      high: '<span class="SafetyHigh"><i class="icon-ok"></i> 高</span>',
-      middle: '<span class="SafetyMiddle"><i class="icon-ok"></i> 中</span>',
-      low: '<span class="SafetyLow"><i class="icon-ok"></i> 低</span>',
+      high: '安全性：高',
+      middle: '安全性：中',
+      low: '安全性：低',
       confirm: '两次输入不一致',
       valid: "ok"
     };
@@ -193,7 +172,11 @@ shizier.account = shizier.account || {};
       self.options.showError ? self.options.showError.call(self, bError, sMessage) : self.defaultShowError(sMessage);
     }
     this.defaultShowError = function (sMessage) {
-      $(this).next().html(sMessage);
+//      $(this).next().html(sMessage);
+      $scope.passwordTooltip = sMessage;
+      $scope.$apply();
+//      $(this).attr('tooltip', !($(this).val()) && this.originalTitle || sMessage || '密码最少6位');
+//      console.log($(this).attr('tooltip'));
     }
     var escapeRegExp = function (str) {
       if (!str) return str;
@@ -260,11 +243,12 @@ shizier.account = shizier.account || {};
      * @description パスワード強度が強かチェックする
      **/
     checkStrong = function (sPasswd) {
+      console.log(sPasswd);
       // 8文字以上で、大/小文字、特殊文字、数字が混用されている
       if (sPasswd.length >= 8 &&
         sPasswd.match(/[a-zA-Z]/) &&
         sPasswd.match(/[0-9]/) &&
-        sPasswd.match(/[~!@#$%^&*()_+|{}:"<>?'-=`]/)
+        sPasswd.match(/[~!@#$%^&*()_+|{}:"<>?'\-=`]/)
         ) {
         return true;
       }

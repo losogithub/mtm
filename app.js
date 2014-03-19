@@ -8,7 +8,8 @@ var partials = require('express-partials');
 var fs = require('fs');
 
 //using redis to store session data
-var RedisStore = require("connect-redis")(express);
+var session = require('express-session');
+var RedisStore = require("connect-redis")(session);
 var redis = require('redis').createClient();
 
 var config = require('./config');
@@ -84,7 +85,7 @@ app.use(function (err, req, res, next) {
         res.send(403, '您无权修改他人的总结');
         break;
       case '404':
-        res.status(404).render('sign/errLink');
+        res.status(404).render('error');
         break;
       default :
         res.send(500, '服务器出错：\n' + '\n' + err.stack);

@@ -1,12 +1,9 @@
-<div class="MainHead">
-  <h5><%= username %> 的总结</h5>
-</div>
+<h5><%= username %> 的总结</h5>
 
-<table class="MainTbl">
+<table class="table table-hover">
   <colgroup>
-    <col style="width:405px;">
-    <col style="width:115px;">
-    <col style="width:95px;">
+    <col style="width:70%;">
+    <col style="width:15%;">
     <col>
   </colgroup>
   <thead class="text-muted">
@@ -14,49 +11,48 @@
     <th>
       <div>
         标题
-        <div class="MainTblSortSub">
-          <a class="<%= (mt == 'c') ? 'SELECTED' : '' %>"
-             href="?mt=c&amp;mo=<%= mt != 'c' || mo == 'a' ? 'd' : 'a' %>">创建日期</a>
+        <span class="pull-right">
+          <a class="text-muted <%= (mt == 'c') ? 'text-primary' : '' %>"
+             href="?mt=c&amp;mo=<%= mt != 'c' || mo == 'a' ? 'd' : 'a' %>">创建日期
           <% if (mt != 'c' || mo == 'd') { %>
           <i class="icon-caret-down"></i>
           <% } else { %>
           <i class="icon-caret-up"></i>
           <% } %>
-          <a class="<%= (mt == 'u') ? 'SELECTED' : '' %>"
-             href="?mt=u&amp;mo=<%= mt != 'u' || mo == 'a' ? 'd' : 'a' %>">更新日期</a>
+          </a>
+          <a class="text-muted <%= (mt == 'u') ? 'text-primary' : '' %>"
+             href="?mt=u&amp;mo=<%= mt != 'u' || mo == 'a' ? 'd' : 'a' %>">更新日期
           <% if (mt != 'u' || mo == 'd') { %>
           <i class="icon-caret-down"></i>
           <% } else { %>
           <i class="icon-caret-up"></i>
           <% } %>
-        </div>
+          </a>
+        </span>
       </div>
     </th>
     <th>
-      <div>
-        <a class="MainTblSort <%= (mt == 'p') ? 'SELECTED' : '' %>"
-           href="?mt=p&amp;mo=<%= mt != 'p' || mo == 'a' ? 'd' : 'a' %>">访问量</a>
+      <div class="text-center">
+        <a class="text-muted <%= (mt == 'p') ? 'text-primary' : '' %>"
+           href="?mt=p&amp;mo=<%= mt != 'p' || mo == 'a' ? 'd' : 'a' %>">访问量
         <% if (mt != 'p' || mo == 'd') { %>
         <i class="icon-caret-down"></i>
         <% } else { %>
         <i class="icon-caret-up"></i>
         <% } %>
+        </a>
       </div>
     </th>
     <th>
-      <div>
-        <a class="MainTblSort <%= (mt == 'r') ? 'SELECTED' : '' %>"
-           href="?mt=r&amp;mo=<%= mt != 'r' || mo == 'a' ? 'd' : 'a' %>">上升率</a>
+      <div class="text-center">
+        <a class="text-muted <%= (mt == 'r') ? 'text-primary' : '' %>"
+           href="?mt=r&amp;mo=<%= mt != 'r' || mo == 'a' ? 'd' : 'a' %>">上升率
         <% if (mt != 'r' || mo == 'd') { %>
         <i class="icon-caret-down"></i>
         <% } else { %>
         <i class="icon-caret-up"></i>
         <% } %>
-      </div>
-    </th>
-    <th>
-      <div>
-        <span>&nbsp;</span><span style="display: none;">页面详细链接</span>
+        </a>
       </div>
     </th>
   </tr>
@@ -64,9 +60,9 @@
   <tbody>
   <% for (i in locals.topics) { %>
   <% var topic = topics[i] %>
-  <tr>
-    <td>
-      <p class="MainTblTtl">
+  <tr class="<%= !topic.publishDate && 'warning' || '' %>">
+    <td width="70%">
+      <h6>
         <a target="<%= topic.publishDate ? '_blank' : '' %>" title="<%= topic.title || '未命名' %>"
            class="<%= topic.title ? 'text-default' : 'text-muted' %>"
         <% if (topic.publishDate) { %>
@@ -78,17 +74,15 @@
         <% if (!topic.publishDate) { %>
         <span class="text-muted">（草稿）</span>
         <% } %>
-      </p>
+      </h6>
 
       <p class="text-muted"><%= mt == 'u' ? ('更新：' + topic.update_date) : ('创建：' + topic.create_date)%></p>
     </td>
-    <td class="MainTblPV">
+    <td class="text-center" style="vertical-align: middle;">
       <%= topic.PV_count || '-' %>
     </td>
-    <td class="MainTblRate">
+    <td class="text-center" style="vertical-align: middle;">
       -
-    </td>
-    <td>
     </td>
   </tr>
   <% } %>

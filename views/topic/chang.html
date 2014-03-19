@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title><%= locals.title ? title + ' - 石子儿' : '石子儿 - 与世界分享你的总结' %></title>
+  <title><%= locals.title ? title + ' - 石子儿' : '石子儿 - 让互联网讲故事' %></title>
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge;charset=UTF-8">
   <meta name="description" content="<%= locals.description
@@ -25,36 +25,36 @@
     </table>
     <p style="float: right; line-height: 40px; margin-right: 10px; color: white;">www.shizier.com</p>
   </div>
-  <img onerror="$(this).hide();" src="<%= topic.coverUrl %>" style="width: 100%;<%= topic.coverUrl ? '' : 'display: none;' %>">
+  <img onerror="$(this).hide();" src="<%= topic.coverUrl %>"
+       style="width: 100%;<%= topic.coverUrl ? '' : 'display: none;' %>">
+
   <div class="Shadow"></div>
 </div>
 
 <div style="position: relative; top: -40px; margin: 0 10px;">
-  <div class="HeadMain clearfix">
-    <div class="HeadTxt">
-      <h1 class="HeadTtl"><%= topic.title %></h1>
+  <div class="HeadTxt clearfix">
+    <h1 class="HeadTtl"><%= topic.title %></h1>
 
-      <div class="HeadOption clearfix">
-        <div class="HeadUser" style="float: left;">
+    <div class="HeadOption clearfix">
+      <div class="HeadUser" style="float: left;">
           <span class="HeadUserThumb"><img width="30" height="30"
                                            src="<%= authorInfo.imgUrl || '/images/no_img/user_80x80.png' %>"
                                            onerror="shizier.errorImage(this,'user_80x80');"></span><span
-          class="HeadUserName"><%= topic.author %></span>
-        </div>
-        <p class="UserDesc"><%= authorInfo.description || '' %></p>
+        class="HeadUserName"><%= topic.author %></span>
       </div>
-
-      <p class="HeadDescWrapper">
-        <span style="<%= !topic.description ? 'display: none;' : '' %>"
-              class="HeadDesc text-secondary">
-          <%= topic.description || '' %>
-        </span>
-        <span class="text-muted" style="font-size: 10px;">
-          <i class="icon-edit" style="vertical-align: middle;"></i>
-          <%= topic.updateAt %>
-        </span>
-      </p>
+      <p class="UserDesc"><%= authorInfo.description || '' %></p>
     </div>
+
+    <p class="HeadDescWrapper">
+      <span style="<%= !topic.description ? 'display: none;' : '' %>"
+            class="HeadDesc text-secondary">
+        <%= topic.description || '' %>
+      </span>
+      <span class="text-muted" style="font-size: 10px;">
+        <i class="icon-edit" style="vertical-align: middle;"></i>
+        <%= topic.updateAt %>
+      </span>
+    </p>
   </div>
 </div>
 

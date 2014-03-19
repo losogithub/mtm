@@ -43,7 +43,7 @@ function showWorks(req, res, next) {
     var mo = req.query.mo || 'd';
 
     //the page to show. default 1
-    var currentPage = req.query.page || 1;
+    var currentPage = parseInt(req.query.page) || 1;
 
     //empty topics
     //todo: empty topics shall show you have no topics
@@ -116,7 +116,7 @@ var renderWorks = function (res, user, topicsInfos, currentPage, totalPage, mt, 
   });
 }
 
-var showSettings = function (req, res) {
+function showSettings(req, res) {
   console.log('render settings  page');
 
   var userId = req.session.userId;
@@ -131,8 +131,7 @@ var showSettings = function (req, res) {
         '/stylesheets/personal.css'
       ],
       js: [
-        '/javascripts/utils.js',
-        '/javascripts/setting.js'
+        '/javascripts/utils.js'
       ],
       pageType: 'PERSONAL',
       personalType: 'SETTINGS',
@@ -148,23 +147,21 @@ var showSettings = function (req, res) {
   });
 }
 
-var updateSettings = function (req, res) {
+var updateSettings = function (req, res, next) {
   console.log("update Settings");
   var imageUrl = req.body.imageUrl;
   var description = req.body.description;
   var connectUrl = req.body.connectUrl;
-  //console.log(imageUrl);
-  //console.log(description);
-  //console.log(connectUrl);
-  //console.log(req.session.userId);
   var userId = req.session.userId;
 
   User.getUserById(userId, function (err, user) {
     if (err) {
       console.log("cannot find userid: %s", userId);
+      return next(err);
     }
     if (!user) {
       console.log("err cannot find user");
+      return next(new Error(400));
     } else {
       if (imageUrl) {
         user.url = imageUrl;
@@ -181,44 +178,33 @@ var updateSettings = function (req, res) {
       }
       user.personalSite = connectUrl;
 
-
-      //console.log(user);
-
       user.save(function (err) {
         if (err) {
           console.log("save user info err in updateUser Info.");
-          console.log(err);
-          return;
+          return next(err);
         }
       });
-      res.header('Access-Control-Allow-Credentials', 'true')
-      res.contentType('json');
-      //res.writeHead(200);
-      res.send({success: JSON.stringify("success") });
+      res.send(200);
     }
-  })
-
-  return;
+  });
 }
 
 
-var showConfirmPassword = function (req, res) {
+function showConfirmPassword(req, res) {
   res.render('personal/accountVerify')
 }
-
 
 /*
  When user want to change his/her personal information.
  login first.
  */
-var passwordVerify = function (req, res) {
-  //user name alos unique
-  var username = sanitize(req.body.username).trim().toLowerCase();
+function passwordVerify(req, res) {
+  //user name also unique
+  var username = res.locals.username;
   var pass = sanitize(req.body.password).trim();
   //console.log(req.body);
   console.log("name: %s", username);
   console.log("pass: %s", pass);
-  res.locals.username = username;
   User.getUserByLoginName(username, function (err, user) {
     if (err) {
       console.log("cannot find user by name: %s", username);
@@ -270,13 +256,8 @@ var showAccountModify = function (req, res) {
   console.log(req.query);
   //check how long after login
 
-  //2013.11.30 check the existence of arguments
-  if (Object.keys(req.query).length === 0) {
-    return res.render('sign/errLink');
-  }
-
   if (!req.query.auth) {
-    return res.render('sign/errLink');
+    return res.redirect('/account');
   }
   var auth = req.query.auth.toString();
 
@@ -332,12 +313,12 @@ var showAccountModify = function (req, res) {
 
 var timeSpanCheck = function (auth, req, res) {
 
-  console.log("---account modiy: time Span check----");
+  console.log("---account modify: time Span check----");
   //2013.11.30 sometimes if user change the auth data, decrypt may crash.
   try {
     var loginTime = encryp.decrypt(auth, 'mtm');
   } catch (err) {
-    return res.render('sign/errLink');
+    return res.redirect('/account');
   }
 
 //console.log("time stamp: %s", loginTime);
@@ -389,13 +370,12 @@ var timeSpanCheck = function (auth, req, res) {
  * update account private information page.
  *
  */
-var accountModify = function (req, res) {
-
-  console.log(req.body);
+function accountModify(req, res) {
   var auth = req.body.auth.toString();
   timeSpanCheck(auth, req, res);
 
   console.log("accountModify");
+  console.log(req.body);
   //console.log(req.body);
   //do password check then store in the db.
   //show update notification.
@@ -425,10 +405,8 @@ var accountModify = function (req, res) {
   if (newPassword || newPasswordConfirm) {
     //empty and not empty
     if ((!newPassword) && newPasswordConfirm) {
-      var infoMsg = "请输入密码";
-
       return res.render('personal/account', {
-        infoMsg: infoMsg,
+        passwordMsg: "请输入密码",
         fChecked: fChecked,
         mChecked: mChecked,
         uChecked: uChecked,
@@ -438,11 +416,9 @@ var accountModify = function (req, res) {
     }
 
     // first not empty. check length.
-    else if (newPassword.length < 6 || newPassword > 20) {
-      var infoMsg = "密码长度介于6-20位数之间";
-
+    else if (newPassword.length < 6 || newPassword.length > 20) {
       return res.render('personal/account', {
-        infoMsg: infoMsg,
+        passwordMsg: "密码长度介于6-20位数之间",
         fChecked: fChecked,
         mChecked: mChecked,
         uChecked: uChecked,
@@ -453,10 +429,8 @@ var accountModify = function (req, res) {
 
     // check equal
     else if (newPassword !== newPasswordConfirm) {
-      var infoMsg = "两次密码不一样";
-
       return res.render('personal/account', {
-        infoMsg: infoMsg,
+        confirmMsg: "两次密码不一样",
         fChecked: fChecked,
         mChecked: mChecked,
         uChecked: uChecked,
@@ -495,8 +469,6 @@ var accountModify = function (req, res) {
         uYFlag = true;
         user.birthday = birthYear;
       }
-
-      console.log(user);
 
       if ((!uPFlag) && (!uYFlag) && (!uGFlag)) {
         //nothing is updated
@@ -574,7 +546,7 @@ function showPersonal(req, res, next) {
   // default order is according to update date. 'F' means favourte, i.e. likes
   // 'N' means name
 
-  var currentPage = req.query.page || '1';
+  var currentPage = parseInt(req.query.page) || 1;
   //default currentPage is the first page.
 
   console.log("workType: %s", workType);

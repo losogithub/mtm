@@ -1526,7 +1526,7 @@
         //填充文本
         var text = options.text;
         $item
-          .find('p')
+          .find('.Content')
           .html($('<div/>').text(text).html().replace(/\n/g, '<br>'))
           .end();
         break;
@@ -1534,7 +1534,7 @@
         //填充标题
         var title = options.title;
         $item
-          .find('p')
+          .find('.Content')
           .text(title)
           .end();
         break;
@@ -1547,8 +1547,10 @@
 
   function _init() {
     $._messengerDefaults = {
-      extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right'
+      extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right',
+      theme: 'flat'
     }
+
     topicId = location.pathname.match(/^\/topic\/([0-9a-f]{24})\/edit$/)[1];
     $band = $('.Band');
     $band_asterisk = $band.find('#_asterisk');
@@ -1634,16 +1636,6 @@
    * @private
    */
   function _initBand() {
-    $band.css('position', 'fixed');
-    var $window = $(window);
-    $window.scroll(function () {
-      if ($window.scrollTop() >= 48) {
-        $band.css('top', 0);
-      } else {
-        $band.css('top', 48 - $window.scrollTop());
-      }
-    });
-
     $(document)
       .ajaxStart(function () {
         $band_saved.hide();
@@ -1731,16 +1723,16 @@
    * 初始化总结标题，总结描述
    * @private
    */
+
   function _initTop() {
     var defaultImgSrc = '/images/no_img/photo_95x95.png';
     var noImgSrc = '/images/no_img/default_120x120.png';
     var $title = $_topWidget.find('input[name="title"]');
-    var $cover = $_topWidget.find('button[name="cover"] img');
+    var $cover = $_topWidget.find('.HeadThumb2');
     var $description = $_topWidget.find('textarea[name="description"]');
     var title = $_topItem.find('.HeadTtl').text();
-    var coverUrl = $_topItem.find('.HeadThumb img').attr('src');
+    var coverUrl = $_topItem.find('.HeadThumb2').attr('src');
     var description = $_topItem.find('.HeadDesc').text();
-    var $extra = $_topWidget.find('.Edit_Top_Thumb_Extra');
 
     var checkState = function () {
       if ($_topWidget.is(':hidden')) {
@@ -1756,19 +1748,30 @@
     };
     $title.add($description).on(INPUT_EVENTS, checkState);
 
+    $_topWidget
+      //防止slideDown动画期间获取焦点时的滚动
+      .scroll(function () {
+        this.scrollTop(0);
+      })
+      .find('button[name="save"]')
+      .attr('type', 'submit')
+      .end()
+      .find('textarea').autosize({
+        append: '\n'
+      });
+
     $_topItem.find('button[name="edit"]').click(function () {
       if (!_checkRemoveWidget()) {
         return;
       }
       title = $_topItem.find('.HeadTtl').text();
-      coverUrl = $_topItem.find('.HeadThumb img').attr('src');
+      coverUrl = $_topItem.find('.HeadThumb2').attr('src');
       description = $_topItem.find('.HeadDesc').text();
 
       $title.val(title);
       $cover.attr('src', coverUrl || defaultImgSrc);
       $description.val(description);
 
-      $extra.hide();
       $_topWidget.after($_topItem);
       $_topItem.hiddenSlideUp();
       $_topWidget
@@ -1778,13 +1781,13 @@
         .fadeSlideDown();
 
       setTimeout(function () {
-        $title.focus();
+//        $title.focus();
       }, 99);
       //移动光标到输入框末尾
-      moveSelection2End($title[0]);
+//      moveSelection2End($title[0]);
       setTopState('create');
     });
-    if ((!title && !$ul.children().length) || /editTop=1/i.test(location.search)) {
+    if (!title && !$ul.children().length) {
       $_topItem.find('button[name="edit"]').click();
     }
     $_topWidget.find('button[name="cancel"]')
@@ -1794,18 +1797,6 @@
           return;
         }
         __remove();
-      });
-
-    $_topWidget
-      //防止slideDown动画期间获取焦点时的滚动
-      .scroll(function () {
-        self.widget().scrollTop(0);
-      })
-      .find('button[name="save"]')
-      .attr('type', 'submit')
-      .end()
-      .find('textarea').autosize({
-        append: '\n'
       });
 
     var commit = function () {
@@ -1825,7 +1816,7 @@
         .done(function (data) {
           savedOnce = true;
           $_topItem.find('.HeadTtl').text(data.title);
-          $_topItem.find('.HeadThumb img').attr('src', (data.coverUrl == noImgSrc || data.coverUrl == defaultImgSrc) ? '' : data.coverUrl);
+          $_topItem.find('.HeadThumb').attr('src', data.coverUrl || defaultImgSrc);
           $_topItem.find('.HeadDesc').text(data.description || '');
           __remove();
         })
@@ -1874,40 +1865,9 @@
     });
 
     //封面设置
-    var $thumb = $_topWidget.find('button[name="cover"]');
-    var $input = $extra.find('input');
-    var $preview = $extra.find('button[name="preview"]');
-    var $reset = $extra.find('button[name="reset"]');
-    var autoHide = false;
-    var hide = function () {
-      autoHide = false;
-      $extra.css('visibility', 'hidden')
-        .hide('fast', function () {
-          $extra.removeAttr('style');
-        })
-    };
-    $thumb.click(function () {
-      if ($extra.is(':visible')) {
-        hide();
-      } else {
-        $extra
-          .css({ 'opacity': 0 })
-          .animate({
-            opacity: 0.5,
-            width: 'toggle'
-          }, 100)
-          .fadeTo(100, 1, function () {
-            $extra.css('opacity', 'inherit');
-          });
-        $input.focus();
-      }
-    });
-    $cover.on('load', function () {
-      if ($cover.attr('src') != noImgSrc
-        && autoHide) {
-        hide();
-      }
-    });
+    var $input = $_topWidget.find('input[name="url"]');
+    var $preview = $_topWidget.find('button[name="preview"]');
+    var $reset = $_topWidget.find('button[name="reset"]');
     $input.keypress(function (event) {
       if (event.keyCode != 13) {
         return;
@@ -1916,16 +1876,11 @@
       return false;
     });
     $preview.click(function () {
-      autoHide = true;
       var newCover = shizier.utils.suffixImage($input.val());
-      if (!$input.val() || $cover.attr('src') == newCover) {
-        hide();
-      }
       $cover.attr('src', newCover || defaultImgSrc);
       checkState();
     });
     $reset.click(function () {
-      hide();
       $cover.attr('src', coverUrl || defaultImgSrc);
       checkState();
     });
@@ -1957,7 +1912,6 @@
         containment: 'body',
 
         start: function () {
-          console.log('start');
           $(this)
             .addClass('WidgetItemList-Sorting')
             .mousemove(function (e) {
@@ -1973,7 +1927,6 @@
         },
 
         stop: function () {
-          console.log('stop');
           $(this)
             .removeClass('WidgetItemList-Sorting')
             .unbind('mousemove');
@@ -1981,7 +1934,6 @@
 
         //列表顺序改变后的回调函数
         update: function (event, data) {
-          console.log('sort');
           updateList(data.item);
         }
       });
@@ -2008,6 +1960,7 @@
     _init();
     _initListListener();
     _initBand();
+    _initTop();
     _initTop();
     _initMenu();
     _initSort();

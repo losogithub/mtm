@@ -1,40 +1,85 @@
 <!--LOGIN##这是layout要用的参数，不能删！-->
-<form action="/login" method="post">
-  <div class="LoginForm">
-    <div class="Inner">
-      <fieldset class="clearfix">
-
-          <p class="ErrorHint"><%= locals.errMsg || '' %>&nbsp;</p>
-          <input type="text" value="<%= locals.email || '' %>"
-                 id="_email" name="email"
-                 placeholder="用户名或邮箱">
-          <input type="password" id="_passwd" name="password"
-                 maxlength="20"
-                 placeholder="密码">
-          <span class="AutoComplete">
-            <input type="checkbox" name="autoLogin" value="Y"
-                   id="autocomplete"/><label
-            for="autocomplete"> 记住密码</label>
-          </span>
-          <button type="submit" class="btn btn-large" value="Log in">登录</button>
-          <br><a class="ForgetPassword" href="/forgetPassword">忘记密码?</a>
-      </fieldset>
-    </div>
+<div class="container">
+  <div class="mal pull-left text-muted">
+    登录
   </div>
-</form>
-<div class="LoginBottom">
-  <div class="Inner">
-    <dl>
-      <dt><a href="/signup" class="btn btn-success btn-large">注册</a></dt>
-      <dd>与世界分享你的总结</dd>
-    </dl>
+  <a href="/" class="Logo text-inverse">
+    <img src="/images/logo_white.png">
+    <p>让互联网讲故事</p>
+  </a>
+
+  <form class="tile center-block pal" style="text-align: left;" action="/login" method="post"
+        ng-controller="Form" name="form">
+    <div class="form-group" ng-controller="Username"
+         ng-class="{ 'has-error': error || (!form.username.$valid && !focused) }">
+      <input type="text" class="form-control flat" maxlength="20"
+             name="username" id="_username" placeholder="用户名或邮箱"
+             ng-init="$parent.focused = true;" ng-focus="$parent.focused = true;" ng-blur="$parent.focused = false;"
+             ng-minlength="2" required
+             ng-model="$parent.username" ng-change="$parent.error = '';"
+             tooltip="{{getTooltip()}}"
+             tooltip-trigger="focus" tooltip-placement="{{placement}}" autofocus/>
+      <label class="input-icon fui-user" for="_username"></label>
+    </div>
+    <div class="form-group"
+         ng-class="{ 'has-error': passwordTooltip || (!form.password.$valid && !focused) }">
+      <input type="password" class="form-control flat" maxlength="20"
+             name="password" id="_password" placeholder="密码"
+             ng-init="$parent.focused = true; $parent.passwordTooltip = '<%= locals.passwordMsg || '' %>';"
+             ng-focus="$parent.focused = true;" ng-blur="$parent.focused = false;"
+             ng-minlength="6" required
+             ng-model="$parent.password" ng-change="$parent.passwordTooltip = '';"
+             tooltip="{{passwordTooltip}}"
+             tooltip-trigger="focus" tooltip-placement="{{placement}}"/>
+      <label class="input-icon fui-lock" for="_password"></label>
+    </div>
+
+    <div class="form-group">
+      <label class="checkbox">
+        <input type="checkbox" name="autoLogin" data-toggle="checkbox" id="autocomplete"/>
+        自动登录
+      </label>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-block center-block">登录</button>
+  </form>
+
+  <div class="row mtm">
+    <div class="col-xs-6">
+      <a class="text-muted mll" href="/forgetPassword">忘记密码?</a>
+    </div>
+    <div class="col-xs-6 text-right">
+      <a class="text-muted mrl" href="/signup">注册</a>
+    </div>
   </div>
 </div>
 
 <script>
-  $(function () {
-    if (!$("#_email").val()) {
-      $("#_email").focus();
-    }
-  });
+  (function () {
+    sng.controller('Username', function ($scope) {
+      $scope.error = '<%= locals.usernameMsg || "" %>';
+
+      $scope.getTooltip = function () {
+        return !$scope.username && $scope.error || '用户名或邮箱';
+      };
+    });
+    sng.controller('Form', function ($scope) {
+      var refreshPlacement = function () {
+        if ($(window).width() < 769) {
+          $scope.placement = 'top';
+        } else {
+          $scope.placement = 'right';
+        }
+        var active = document.activeElement;
+        active.blur();
+        active.focus();
+      };
+      setTimeout(function () {
+        refreshPlacement();
+      }, 0);
+      $(window).resize(function () {
+        refreshPlacement();
+      });
+    });
+  })();
 </script>
