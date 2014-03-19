@@ -27,20 +27,20 @@ var showSignUp = function (req, res) {
   //var refer = req.session._loginReferer || '/';
 
   //for already logged in user
-    console.log("referer: ", req.headers.referer);
+  console.log("referer: ", req.headers.referer);
   //var  refer = req.headers.referer || '/';
 
-  if(req.session && req.session.userId){
-      /*
-      If it is a logged in user, jump to its refer or home.
-      shall we consider a black list ?
-      //todo:
-       */
+  if (req.session && req.session.userId) {
+    /*
+     If it is a logged in user, jump to its refer or home.
+     shall we consider a black list ?
+     //todo:
+     */
     // for signup, seems no need of req.query.fromUrl
     var refer = req.headers.referer || '/';
     return res.redirect(refer);
   }
-  else{
+  else {
     res.render('sign/signup');
   }
 
@@ -79,11 +79,15 @@ var signup = function (req, res, next) {
   else if (name.length < 2) {
     console.log('name length less than 2');
     nFlag = false;
-    nMsg = '长度不能少于2.';
+    nMsg = '长度不能少于2';
+  }
+  else if (name.length > 20) {
+    nFlag = false;
+    nMsg = '长度不能大于20';
   }
   else {
     try {
-      check(name, '用户名只能使用0-9，a-z，A-Z。').isAlphanumeric();
+      check(name, '用户名只能使用0-9、a-z、A-Z。').isAlphanumeric();
     } catch (e) {
       nMsg = e.message;
       nFlag = false;
@@ -281,10 +285,10 @@ var showLogin = function (req, res) {
   //No, 2013.11.30 if it is not null, it must be assigned before not equal to /login. So you  cannot revise it.
   //even it equals to /singup. it is ok. later in login function will check this.
   /*
-  if (!req.session._loginReferer) {
-    req.session._loginReferer =  req.headers.referer || '/';
-  }
-  */
+   if (!req.session._loginReferer) {
+   req.session._loginReferer =  req.headers.referer || '/';
+   }
+   */
 
   //var refer = req.session._loginReferer || '/';
 
@@ -299,16 +303,16 @@ var showLogin = function (req, res) {
 
   // suppose an already logged in user, you shall jump to home.
   if (req.session && req.session.userId && req.session.userId !== 'undefined') {
-   //if logged in, jump to refer page.
-   //note: not all page jump to loginReferer.
-   //add: 2013.11.23: it seems impossible for this situation. So I commented it.
-   // 2013.11.26. No, maybe not.
-   /*for (var i = 0, len = notJump.length; i !== len; ++i) {
-   if (refer.indexOf(notJump[i]) >= 0) {
-   refer = '/';
-   break;
-   }
-   } */
+    //if logged in, jump to refer page.
+    //note: not all page jump to loginReferer.
+    //add: 2013.11.23: it seems impossible for this situation. So I commented it.
+    // 2013.11.26. No, maybe not.
+    /*for (var i = 0, len = notJump.length; i !== len; ++i) {
+     if (refer.indexOf(notJump[i]) >= 0) {
+     refer = '/';
+     break;
+     }
+     } */
 
     console.log("already logged in user.");
     var refer = req.query.fromUrl || req.headers.referer || '/';
@@ -335,8 +339,8 @@ var notJumpForLogin = [
  * @param {HttpResponse} res
  * @param {Function} next
  */
-var login = function (req, res, next) {
-  var loginname = sanitize(req.body.email).trim().toLowerCase();
+function login(req, res, next) {
+  var loginname = sanitize(req.body.username).trim().toLowerCase();
   var pass = sanitize(req.body.password).trim();
   var autoLogin = sanitize(req.body.autoLogin).trim();
 
@@ -345,17 +349,18 @@ var login = function (req, res, next) {
   console.log("pass: %s", pass);
   console.log("autoLogin: %s", autoLogin);
 
-  var errMsg = '';
+  var usernameMsg = '';
+  var passwordMsg = '';
   if (!loginname) {
-    if (!pass) errMsg = '请输入您的用户名，密码。';
-    else errMsg = '请输入您的用户名或则邮箱。';
-  } else {
-    if (!pass) errMsg = '请输入您的密码。';
+    usernameMsg = '请输入用户名或邮箱';
+  }
+  if (!pass) {
+    passwordMsg = '请输入密码';
   }
 
-  if (errMsg) {
+  if (usernameMsg || passwordMsg) {
     return res.render('sign/login', {
-      errMsg: errMsg, email: loginname
+      usernameMsg: usernameMsg, email: loginname, passwordMsg: passwordMsg
     });
   }
 
@@ -369,7 +374,7 @@ var login = function (req, res, next) {
       }
       if (!user) {
         res.render('sign/login', {
-          errMsg: '对不起，该用户名尚未注册。',
+          usernameMsg: '对不起，该用户名尚未注册',
           email: loginname
         });
         return;
@@ -386,7 +391,7 @@ var login = function (req, res, next) {
       }
       if (!user) {
         res.render('sign/login', {
-          errMsg: '对不起，该邮箱尚未注册。',
+          usernameMsg: '对不起，该邮箱尚未注册',
           email: loginname//user.loginName
         });
         return;
@@ -408,7 +413,7 @@ function checkOnlyPassword(emailIDFlag, pass, autoLogin, user, req, res) {
   }
   if (pass !== user.password) {
     res.render('sign/login', {
-      errMsg: '您输入的密码不正确。',
+      passwordMsg: '您输入的密码不正确。',
       email: email
     });
     return;
@@ -434,10 +439,10 @@ function checkOnlyPassword(emailIDFlag, pass, autoLogin, user, req, res) {
   }
 
   /*
-  login successfully !
-  not jump to which page.
+   login successfully !
+   not jump to which page.
    */
- // console.log("req.session._loginReferr: ", req.session._loginReferer);
+  // console.log("req.session._loginReferr: ", req.session._loginReferer);
   console.log("header referer: ", req.headers.referer);
   //var refer = req.session._loginReferer || '/';
   var refer = req.query.fromUrl || req.headers.referer || '/';
@@ -487,7 +492,7 @@ var signout = function (req, res, next) {
   //console.log("curent user;")
   //console.log(req.currentUser);
   //I see, currentUser only passed between middleware and the final call.
-  if(req.cookies.logintoken){
+  if (req.cookies.logintoken) {
     var cookie = JSON.parse(req.cookies.logintoken);
 
     console.log("cookie: ", cookie);
@@ -528,9 +533,7 @@ var signout = function (req, res, next) {
 
 var showForgetPassword = function (req, res) {
   console.log("------ show forget password page -----");
-  res.render('sign/forgetPassword', {
-    errMsg: ''
-  });
+  res.render('sign/forgetPassword');
 };
 
 
@@ -541,13 +544,13 @@ var forgetPassword = function (req, res, next) {
   email = sanitize(email).xss();
 
   //1. check email format
-  var errMsg = '';
-  if (email === '') {
-    errMsg = '请输入您的注册邮箱。';
+  var errMsg;
+  if (!email) {
+    errMsg = '请输入您的注册邮箱';
   }
   else {
     try {
-      check(email, '您的电子邮箱格式不正确。').isEmail();
+      check(email, '您的电子邮箱格式不正确').isEmail();
     } catch (e) {
       errMsg = e.message;
     }
@@ -567,7 +570,7 @@ var forgetPassword = function (req, res, next) {
     //console.log(user);
     if (!user) {
       res.render('sign/forgetPassword', {
-        errMsg: '对不起，该邮箱不存在。'
+        errMsg: '对不起，该邮箱不存在'
       });
     }
     else {
@@ -595,23 +598,22 @@ var showResetPassword = function (req, res, next) {
   var email = req.query.email;
   User.getUserByEmail(email, key, function (err, user) {
     if (!user) {
-      return res.render('sign/errLink');
+      return next(new Error(404));
     }
     var now = new Date().getTime();
     var oneHour = 1000 * 60 * 60;
     if (!user.retrieve_time || now - user.retrieve_time > oneHour) {
-      return res.render('sign/errLink');
+      return next(new Error(404));
     }
     //finally correct
     return res.render('sign/resetPassword', {
       key: key,
-      email: email,
-      errMsg: ''
+      email: email
     });
   });
 }
 
-var resetPassword = function (req, res, next) {
+function resetPassword(req, res, next) {
   var psw = req.body.newPassword || '';
   var repsw = req.body.newPasswordConfirm || '';
   var key = req.body.key || '';
@@ -623,7 +625,7 @@ var resetPassword = function (req, res, next) {
     return res.render('sign/resetPassword', {
       key: key,
       email: email,
-      errMsg: '两次密码输入不一致'
+      confirmMsg: '两次密码输入不一致'
     });
   }
   //if (psw === '' && repsw === '') {
@@ -633,14 +635,14 @@ var resetPassword = function (req, res, next) {
     return res.render('sign/resetPassword', {
       key: key,
       email: email,
-      errMsg: '密码不能为空'
+      passwordMsg: '密码不能为空'
     });
   }
   if (psw.length < 6) {
     return res.render('sign/resetPassword', {
       key: key,
       email: email,
-      errMsg: '密码不能少于6位'
+      passwordMsg: '密码不能少于6位'
     });
   }
 
@@ -653,7 +655,7 @@ var resetPassword = function (req, res, next) {
       return next(err);
     }
     if (!user) {
-      return res.render('sign/errLink');
+      return next(new Error(404));
     }
     //console.log(encryp.md5(psw));
     //bug fixed: 10.11.2013. user.pass
@@ -689,12 +691,11 @@ var activeAccount = function (req, res, next) {
       return next(err);
     }
 
-    if(!user)
-    {
+    if (!user) {
       console.log("user not exists!");
-      return res.render('sign/errLink');
+      return next(new Error(404));
     }
-    else if(user.active){
+    else if (user.active) {
 
       //duplicated code
       //start
@@ -704,7 +705,7 @@ var activeAccount = function (req, res, next) {
         req.session.destroy(function () {
         });
       }
-      if(req.cookies.logintoken){
+      if (req.cookies.logintoken) {
         var cookie = JSON.parse(req.cookies.logintoken);
         console.log("cookie: ", cookie);
         if (cookie.email && cookie.series) {
@@ -715,8 +716,6 @@ var activeAccount = function (req, res, next) {
       }
       res.locals.username = "";
       res.locals.imageUrl = "";
-
-
 
 
       //active the user and make him/her a logged in user.
@@ -741,7 +740,7 @@ var activeAccount = function (req, res, next) {
     }
     else if (encryp.md5(user.email + config.session_secret) !== key) {
       console.log("check not equal");
-      return res.render('sign/errLink');
+      return next(new Error(404));
     }
 
     //2013.12.02 Before active, first check whether ther is an login user and logout it.
@@ -752,7 +751,7 @@ var activeAccount = function (req, res, next) {
       req.session.destroy(function () {
       });
     }
-    if(req.cookies.logintoken){
+    if (req.cookies.logintoken) {
       var cookie = JSON.parse(req.cookies.logintoken);
       console.log("cookie: ", cookie);
       if (cookie.email && cookie.series) {
@@ -763,7 +762,6 @@ var activeAccount = function (req, res, next) {
     }
     res.locals.username = "";
     res.locals.imageUrl = "";
-
 
 
     //active the user and make him/her a logged in user.

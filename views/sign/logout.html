@@ -1,9 +1,8 @@
 <!--ACCOUNT##这是layout要用的参数，不能删！-->
-<div class="Inner">
-  <div class="Message">
-    <h4>您已成功登出。</h4>
-    <ul class="BtnSet">
-      <li><a href="<%= !locals.refer ? '/' : refer %>" class="btn btn-success btn-large btn-block">返回</a></li>
-    </ul>
+<div class="container">
+  <div class="center-block pal text-center"
+       style="background-color: #ecf0f1;border-radius: 6px;max-width: 600px;">
+    <h5>您已成功登出</h5>
+    <a href="<%= locals.refer || '/' %>" class="btn btn-primary btn-hg btn-block">返回</a>
   </div>
 </div>

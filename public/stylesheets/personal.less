@@ -1,26 +1,13 @@
 @import "theme";
-@import "utils";
 
-input[type="text"], textarea { width: 100%; }
-
-.Contents {
-  padding: 25px 0;
-  .Inner { background: url("/images/bg_ContentsWrapper.png") repeat-y scroll 265px 0px transparent; }
+.affix {position: static;}
+@media (min-width: 992px){
+  .affix { position: fixed;width: 293px;top:20px;}
 }
 
-.Sub { float: left; width: 265px; padding-right: 25px; }
-
-.Thumb { width: 122px; height: 122px; border-radius: 3px 3px 3px 3px; border: 1px solid rgb(221, 221, 221); margin-right: 15px; }
-
-.SubPV { float: right; width: 102px; margin-top: 2px; }
-
-.SubPV>li { padding: 9px 0 9px; }
-
-.SubPV>li>p:first-child { color: rgb(51, 51, 51); font-size: 20px; font-family: Arial, Helvetica, sans-serif; line-height: 1; }
-
-.SubPV>li>p:last-child { color: rgb(84, 84, 84); font-size: 10px; margin-top: 8px; line-height: 1; }
-
-.SubTtl { margin-top: 14px; color: rgb(51, 51, 51); font-size: 14px; font-weight: bold; }
+@media (min-width: 1200px){
+  .affix { width: 263px;}
+}
 
 .SubFV {
   bottom: 0;
@@ -32,104 +19,4 @@ input[type="text"], textarea { width: 100%; }
 .FVIco {
   color: @FV-color;
   text-shadow: 0 0 1px @FV-shadow-color;
-}
-
-.Nav-Personal { padding-bottom: 20px; }
-
-.Nav-Personal li { line-height: 1; margin-bottom: 10px; padding-left: 7px; position: relative; }
-
-.Nav-Personal li:before { content: '·'; position: absolute; left: 0; top: 0; }
-
-.Main { overflow: hidden; border-left: 1px solid rgb(221, 221, 221); padding: 0 0 50px 25px; }
-
-.MainHead {
-  margin-bottom: 10px;
-  >h5 {
-    margin: 0;
-    line-height: 20px;
-    color: rgb(0, 0, 0);
-    font-weight: bold;
-    font-size: 16px; }
-  a { position: absolute; right: 0; bottom: 0; color: #999; }
-}
-
-.MainTbl {
-  width: 100%; margin-bottom: 20px;
-  td:first-child { max-width: 405px; }
-}
-
-.MainTbl thead {
-  border-top: 1px solid rgb(232, 233, 234);
-  border-bottom: 1px solid rgb(232, 233, 234);
-  background-color: whitesmoke;
-}
-
-.MainTbl th {
-  padding: 9px 0;
-  font-weight: normal; }
-
-.MainTbl th:first-child { text-align: left; padding: 0 15px; }
-
-.MainTbl th + th>div { border-left: 1px solid #ddd; padding-left: 7px; text-align: center; }
-
-.MainTbl th .SELECTED {
-  &, + i { color: black; }
-}
-
-.MainTbl th a { color: #999; }
-
-.MainTbl th i {
-  font-size: 10px; vertical-align: middle;
-}
-
-.MainTblSortSub { float: right; font-size: 10px; }
-
-.MainTblSortSub a { vertical-align: middle; }
-
-.MainTbl td {
-  padding: 9px 10px;
-  border-bottom: 1px solid rgb(242, 242, 242);
-  text-align: center;
-  vertical-align: middle;
-  word-wrap: break-word; height: 80px; }
-
-.MainTbl td:first-child { text-align: left; }
-
-.MainTblTtl {
-  line-height: 21px;
-  margin-bottom: 3px;
-  font-size: 16px;
-}
-
-.MainTblPV { font-size: 18px; }
-
-.MainTblRate { font-size: 10px; }
-
-.SettingsForm { padding-top: 20px; color: #999; }
-
-.SettingsForm li { padding-bottom: 20px; .clearfix(); }
-
-.SettingsForm li>h6 {
-  margin-top: 0;
-  display: block;
-  float: left;
-  width: 130px;
-  color: #333;
-  font-weight: bold; }
-
-.InputBox_Introduce { padding: 8px; height: 104px; resize: none; color: rgb(102, 102, 102); }
-
-.IntroduceCount { position: absolute; right: 0; top: 0; font-family: Tahoma, Arial, Helvetica, sans-serif; font-size: 10px; }
-
-.IntroduceCount>span { font-weight: bold; }
-
-.TopicTable {
-  margin-bottom: 20px;
-  &, td { width: 100%; }
-  tr {
-    border-top: 1px solid rgb(231, 231, 231);
-    &:last-child { border-bottom: 1px solid rgb(231, 231, 231); }
-    th, td { padding: 16px 0; }
-    th { padding-right: 13px; }
-  }
 }

@@ -20,6 +20,9 @@ module.exports = function (app) {
   });
   // home page
   app.get('/', site.index);
+  app.get('/hot', site.showHot);
+  app.get('/classic', site.showClassic);
+  app.get('/new', site.showNew);
 
   //console.log("router start");
   app.post('/loginDialogCheck', auth.loginDialog, auth.loginDialogCheck);

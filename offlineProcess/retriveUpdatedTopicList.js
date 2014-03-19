@@ -47,16 +47,16 @@ function extractRecentHotTopics() {
     console.log(topics.length);
     console.log("更新经典总结");
     var hotTopics = topics || [];
-    hotTopics.sort(scoreCompare).slice(0, 500);
+    hotTopics.sort(scoreCompare).slice(0, 240);
     for (var i = 0; i < hotTopics.length; i++) {
       //console.log("hot topics");
       global.realGoodTopicsData.push({
-        id: hotTopics[i]._id,
+        _id: hotTopics[i]._id,
         coverUrl: hotTopics[i].cover_url,
         title: hotTopics[i].title,
         author: hotTopics[i].author_name,
-        PVCount: hotTopics[i].PV_count,
-        des: hotTopics[i].description
+        FVCount: hotTopics[i].FVCount,
+        PVCount: hotTopics[i].PV_count
       });
     }
 
@@ -67,16 +67,16 @@ function extractRecentHotTopics() {
     for (var i = 0; i < topics.length; i++) {
       topics[i].score = newHotScore(topics[i].score, topics[i].update_at);
     }
-    hotTopics.sort(scoreCompare).slice(0, 1000);
+    hotTopics.sort(scoreCompare).slice(0, 240);
     for (var i = 0; i < hotTopics.length; i++) {
       //console.log("hot topics");
       global.recentHotTopicsData.push({
-        id: hotTopics[i]._id,
+        _id: hotTopics[i]._id,
         coverUrl: hotTopics[i].cover_url,
         title: hotTopics[i].title,
         author: hotTopics[i].author_name,
-        PVCount: hotTopics[i].PV_count,
-        des: hotTopics[i].description
+        FVCount: hotTopics[i].FVCount,
+        PVCount: hotTopics[i].PV_count
       });
     }
     if (typeof callback === 'function') {

@@ -1,76 +1,112 @@
 <!--SIGNUP##这是layout要用的参数，不能删！-->
-<form method="post" action="/signup">
-  <div class="RegisterForm">
-    <div class="Inner">
-      <fieldset class="clearfix">
-        <dl>
-          <dt>用户名</dt>
-          <dd>
-            <input type="text" value="" maxlength="20"
-                   id="_userName" name="username"/>
-
-            <span></span>
-            <p class="ErrorHint"><%- locals.nameMsg || '' %></p>
-          </dd>
-        </dl>
-        <dl>
-          <dt>邮箱</dt>
-          <dd>
-            <input type="text" id="_email" name="email" value=""/>
-
-            <p class="ErrorHint">
-              <%= locals.emailMsg ? emailMsg : '' %>
-            </p>
-          </dd>
-        </dl>
-        <dl>
-          <dt>密码</dt>
-          <dd>
-            <input type="password" maxlength="20" id="_passwd" name="password"/>
-
-            <p class="ErrorHint">
-              <%= locals.passwordMsg ? passwordMsg : '' %>
-            </p>
-          </dd>
-        </dl>
-      </fieldset>
-    </div>
+<div class="container">
+  <div class="mal pull-left text-muted">
+    注册
   </div>
+  <div class="navbar pull-right">
+    <ul class="nav navbar-nav">
+      <li><a href="/login">登录 <i class="icon-circle-arrow-right"></i></a></li>
+    </ul>
+  </div>
+  <a href="/" class="palette palette-turquoise Logo">
+    <img src="/images/logo_white.png">
 
-  <fieldset class="Agreement">
-    <input type="checkbox" id="rules"/>
-    <strong>同意石子儿的<a href="/rules" target="_blank">使用条规</a>和<a href="/privacy" target="_blank">隐私条款</a></strong>
-  </fieldset>
+    <p>让互联网讲故事</p>
+  </a>
 
-  <button name="signup" style="margin: 30px auto;width: 230px;height: 50px;"
-          class="btn btn-success btn-block btn-large" disabled="disabled">注册
-  </button>
-</form>
+  <form class="tile center-block pal" style="text-align: left;" method="post" action="/signup"
+        ng-controller="Form" name="form">
+    <div class="form-group" ng-controller="Username"
+         ng-class="{ 'has-error': error || (!form.username.$valid && !focused) }">
+      <input type="text" class="form-control flat" maxlength="20"
+             name="username" id="_userName" placeholder="用户名"
+             ng-init="$parent.focused = true;" ng-focus="$parent.focused = true;" ng-blur="$parent.focused = false;"
+             ng-minlength="2" required
+             ng-model="$parent.username" ng-change="$parent.error = '';"
+             tooltip="{{getTooltip()}}"
+             tooltip-trigger="focus" tooltip-placement="{{placement}}" autofocus/>
+      <label class="input-icon fui-user" for="_userName"></label>
+    </div>
+    <div class="form-group" ng-controller="Email"
+         ng-class="{ 'has-error': error || (!form.email.$valid && !focused) }">
+      <input type="email" class="form-control flat"
+             name="email" id="_email" placeholder="邮箱"
+             ng-init="$parent.focused = true;" ng-focus="$parent.focused = true;" ng-blur="$parent.focused = false;"
+             required
+             ng-model="$parent.email" ng-change="$parent.error = '';"
+             tooltip="{{getTooltip()}}"
+             tooltip-trigger="focus" tooltip-placement="{{placement}}"/>
+      <label class="input-icon fui-mail" for="_email"></label>
+    </div>
+    <div class="form-group" ng-controller="Password"
+         ng-class="{ 'has-error': error || (!form.password.$valid && !focused) }">
+      <input type="password" class="form-control flat" maxlength="20"
+             name="password" id="_password" placeholder="密码"
+             ng-init="$parent.focused = true;" ng-focus="$parent.focused = true;" ng-blur="$parent.focused = false;"
+             ng-minlength="6" required
+             ng-model="$parent.password" ng-change="$parent.error = '';"
+             tooltip="{{passwordTooltip}}"
+             tooltip-trigger="focus" tooltip-placement="{{placement}}"/>
+      <label class="input-icon fui-lock" for="_password"></label>
+    </div>
+
+    <div class="form-group">
+      <label class="checkbox" ng-init="rules = true;" ng-click="rules = !rules;">
+        <input type="checkbox" data-toggle="checkbox" id="rules" checked/>
+        <strong>同意石子儿的<a href="/rules" target="_blank"
+          >《使用条规》</a>和<a href="/privacy" target="_blank"
+          >《隐私条款》</a></strong>
+      </label>
+    </div>
+
+    <button ng-class="{disabled: !rules}" type="submit" name="signup" class="btn btn-primary btn-block">注册</button>
+  </form>
+</div>
 
 <script>
-  $(function () {
-    new shizier.account.initRegistForm();
-    $("input#_userName").on('focus keyup', function (event) {
-      var $this = $(this);
-      var errorHintVal = $this.next().next().text();
-      if (event.type == 'focus' && errorHintVal && errorHintVal.length) {
-        return;
-      }
-      $this
-        .next()
-        .text('个人页面: http://shizier.com/u/' + ($(this).val() || '用户名'))
-        .next()
-        .text('用户名不能更改。');
+  (function () {
+    sng.controller('Username', function ($scope) {
+      $scope.error = '<%= locals.nameMsg || "" %>';
+
+      $scope.getTooltip = function () {
+        return !$scope.username && ($scope.error || '请输入2-20位用户名，注册后不能更改') || '个人页面： shizier.com/u/' + ($scope.username || '用户名');
+      };
     });
-    if (!$("#_userName").val()) {
-      $("#_userName").focus();
-    }
-    $("input#rules:checkbox").click(function () {
-      if ($(this).is(':checked')) {
-        $("button[name='signup']").removeAttr("disabled");
-      } else {
-        $("button[name='signup']").attr("disabled", "disabled");
-      }
+
+    sng.controller('Email', function ($scope) {
+      $scope.error = '<%= locals.emailMsg || "" %>';
+
+      $scope.getTooltip = function () {
+        return !$scope.email && $scope.error || '用来接收激活邮件、找回密码';
+      };
     });
-  });
+
+    sng.controller('Password', function ($scope) {
+      new shizier.account.initRegistForm($scope);
+      $scope.error = '<%= locals.passwordMsg || "" %>';
+
+      $scope.passwordTooltip = '请输入6-20位密码';
+    });
+
+    sng.controller('Form', function ($scope) {
+      var $checkbox = $(":checkbox");
+      $checkbox.checkbox('check');
+      var refreshPlacement = function () {
+        if ($(window).width() < 769) {
+          $scope.placement = 'top';
+        } else {
+          $scope.placement = 'right';
+        }
+        var active = document.activeElement;
+        active.blur();
+        active.focus();
+      };
+      setTimeout(function () {
+        refreshPlacement();
+      }, 0);
+      $(window).resize(function () {
+        refreshPlacement();
+      });
+    });
+  })();
 </script>

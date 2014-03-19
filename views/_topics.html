@@ -1,0 +1,34 @@
+<div class="row">
+  <% for (i in topics) { %>
+  <% var topic = topics[i]; %>
+  <div class="col-sm-6 col-md-4 col-lg-3 mtl">
+    <div style="background-color: white;">
+      <style>
+        .Cover:hover { opacity: 0.8;}
+      </style>
+      <a target="_blank" class="Cover" href="/topic/<%= topic._id %>" title="<%= topic.title %>"
+         style="display: block;height: 200px; background: url('<%= topic.coverUrl %>') no-repeat center #7f8c8d; background-size: cover;">
+      </a>
+
+      <div class="clearfix" style="margin: 0 10px;">
+        <a class="HeadTtl h6 mtm"
+           style="display: block;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;"
+           target="_blank" href="/topic/<%= topic._id %>" title="<%= topic.title %>"><%= topic.title %></a>
+
+        <div class="HeadUser">
+          <a target="_blank" href="/u/<%= topic.author %>" title="<%= topic.author %>">
+            <span class="HeadUserName"><%= topic.author %></span>
+          </a>
+        </div>
+
+            <span class="text-muted pull-left">
+            <i class="icon-star"></i> <%= topic.FVCount %>
+            </span>
+            <span class="text-muted pull-right">
+            <i class="icon-eye-open"></i> <%= topic.PVCount %>
+            </span>
+      </div>
+    </div>
+  </div>
+  <% } %>
+</div>

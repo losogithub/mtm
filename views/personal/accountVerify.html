@@ -1,42 +1,51 @@
-<!--ACCOUNT##这是layout要用的参数，不能删！-->
-<div class="Inner">
-  <div class="Message Message-AL">
-    <form method="post" action="/account" id="_registForm" onsubmit="return validatePass()">
-      <input type="hidden" name="fromUrl" id="fromUrl" value="/accountVerify">
-      <input type="hidden" name="username" value="<%= locals.username || '' %>" id="_username">
-      <h4>密码确认</h4>
+<!--VERIFY##这是layout要用的参数，不能删！-->
+<div class="container mtl">
+  <div class="text-center">
+    <h6>密码确认</h6>
 
-      <p>为了您的账户安全，请再次登录。</p>
-      <table class="Settings MarginTop MarginBottom">
-        <tbody>
-        <tr class="BorderTop">
-          <th><strong>用户名</strong></th>
-          <td><strong><%= locals.username || '' %></strong></td>
-        </tr>
-        <tr class="BorderBottom">
-          <th><strong>密码</strong></th>
-          <td><input type="password" id="_passwd" name="password" maxlength="20">
-            <span class="ErrorHint"><%= locals.errMsg || '' %></span>
-          </td>
-        </tr>
-        </tbody>
-      </table>
-      <div style="text-align: center;">
-        <button class="btn btn-large btn-success" type="submit">登录</button>
-      </div>
-    </form>
+    <p>为了您的账户安全，请再次登录。</p>
   </div>
+  <form method="post" action="/account" class="pal"
+        style="background-color: #ecf0f1;border-radius: 6px;"
+        ng-controller="Form" name="form">
+    <div class="form-group">
+      <span class="ptm"><%= locals.username || '' %></span>
+    </div>
+    <div class="form-group"
+         ng-class="{ 'has-error': passwordTooltip || (!form.password.$valid && !focused) }">
+      <input class="form-control flat" type="password" id="_password" name="password"
+             maxlength="20" ng-model="password" placeholder="密码"
+             ng-init="$parent.focused = true; $parent.passwordTooltip = '<%= locals.errMsg || '' %>';"
+             ng-focus="$parent.focused = true;" ng-blur="$parent.focused = false;"
+             ng-minlength="6" required
+             ng-model="$parent.password" ng-change="$parent.passwordTooltip = '';"
+             tooltip="{{passwordTooltip}}"
+             tooltip-trigger="focus" tooltip-placement="{{placement}}" autofocus>
+      <label class="input-icon fui-lock" for="_password"></label>
+    </div>
+    <button class="btn btn-primary btn-block" type="submit">登录</button>
+  </form>
 </div>
 
 <script>
-  $().ready(function () {
-    new shizier.account.initMailChangeForm();
-  });
-  function validatePass() {
-    var password = $("#_passwd").val();
-    if (!password) {
-      $('span[class="ErrorHint"]').text('请输入密码');
-      return false;
-    }
-  }
+  (function () {
+    sng.controller('Form', function ($scope) {
+      var refreshPlacement = function () {
+        if ($(window).width() < 769) {
+          $scope.placement = 'top';
+        } else {
+          $scope.placement = 'right';
+        }
+        var active = document.activeElement;
+        active.blur();
+        active.focus();
+      };
+      setTimeout(function () {
+        refreshPlacement();
+      }, 0);
+      $(window).resize(function () {
+        refreshPlacement();
+      });
+    });
+  })();
 </script>

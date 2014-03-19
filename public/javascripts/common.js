@@ -7,6 +7,7 @@
  */
 //使用全局变量应避免污染命名空间
 (function ($) {
+  window.sng = angular.module('sng', ['ui.bootstrap']);
 
   window.shizier = window.shizier || {};
 
@@ -29,12 +30,13 @@
   };
 
   shizier.errorImage = shizier.errorImage || function (img, name, ignoreNull) {
-    if (ignoreNull && !$(img).attr('src')) {
+    var $img = $(img);
+    if (ignoreNull && !$img.attr('src')) {
       return;
     }
     var url = '/images/no_img/' + name + '.png';
-    if (url != $(img).attr('src')) {
-      $(img).attr('src', url);
+    if (url != $img.attr('src')) {
+      $img.attr('src', url);
     }
   }
 
@@ -112,8 +114,8 @@
           } else {
             $this.removeClass('ExSelected');
           }
-          $('.HeadFVIco').next().text(data.FVCount);
           $('.mdFVCount01Num').text(data.favourite);
+          $this.find('.FVCount').text(data.FVCount);
         });
     });
 
@@ -134,15 +136,16 @@
       var authorName = !favorite ? null : favorite.authorName;
       var toLike = !$button.is('.ExSelected');
       //using an ajax send to server to check for login.
-      $.ajax({
-        type: 'POST',
-        url: topicId ? '/topic/favorite' : authorName ? '/u/favorite' : '/loginDialogCheck',
-        xhrFields: { withCredentials: true },
-        data: {userName: username, password: password, rememberMe: rememberMe, topicId: topicId, authorName: authorName, toLike: toLike}
+      $.post(topicId ? '/topic/favorite' : authorName ? '/u/favorite' : '/loginDialogCheck', {
+        userName: username,
+        password: password,
+        rememberMe: rememberMe,
+        topicId: topicId,
+        authorName: authorName,
+        toLike: toLike
       })
-        .done(function (data) {
+        .done(function () {
           location.reload();
-          return false;
         });
       return false;
     };

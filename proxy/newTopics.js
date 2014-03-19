@@ -29,12 +29,12 @@ function updateNewTopics(topics) {
   topics = topics || [];
   topics.forEach(function (topic) {
     global.recentUpdatedTopicsData.push({
-      id: topic._id,
+      _id: topic._id,
       coverUrl: topic.cover_url,
       title: topic.title,
       author: topic.author_name,
-      PVCount: topic.PV_count,
-      des: topic.description
+      FVCount: topic.FVCount,
+      PVCount: topic.PV_count
     });
   });
 }
@@ -66,18 +66,18 @@ function saveNewTopic(topic, callback) {
         }
 
         //the new topics can only be 5. if more than 5, delete the old one
-        if (topics.length <= 5) {
+        if (topics.length <= 240) {
           updateNewTopics(topics);
           return callback(null, topic);
         }
 
         //always delete the first one
-        NewTopicModel.findByIdAndRemove(topics[5]._id, function (err, doc) {
+        NewTopicModel.findByIdAndRemove(topics[240]._id, function (err, doc) {
           if (err) {
             return callback(err);
           }
           console.log("delete old topics success");
-          updateNewTopics(topics.slice(0, 5));
+          updateNewTopics(topics.slice(0, 240));
           return callback(null, topic);
         });
       });
