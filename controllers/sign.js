@@ -82,13 +82,29 @@ var signup = function (req, res, next) {
     nMsg = '长度不能少于2.';
   }
   else {
-    try {
-      check(name, '用户名只能使用0-9，a-z，A-Z。').isAlphanumeric();
+      /*
+       2014-3-20 20:30
+       in order to support underscore and chinese character, update to use regex
+       */
+    /*
+      try {
+      //check(name, '用户名只能使用0-9，a-z，A-Z。').isAlphanumeric();
+
+
     } catch (e) {
       nMsg = e.message;
       nFlag = false;
     }
+    */
+      var nameOK = name.match(/^[\u0391-\uFFE5\w]+$/);
+      if (nameOK == null){
+       nMsg = "用户名只能使用中文，英文，和下划线的组合";
+       nFlag = false;
+        }
+
   }
+
+
 
 
   // 2. check email
