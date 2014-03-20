@@ -100,7 +100,7 @@ var signup = function (req, res, next) {
       var nameOK = name.match(/^[\x3130-\x318F\xAC00-\xD7A3\u0800-\u4e00\u0391-\uFFE5\w]+$/);
      // var nameOK = name.match(/^[\u0391-\uFFE5\w]+$/);
       if (nameOK == null){
-       nMsg = "用户名只能使用中文，英文，和下划线的组合";
+       nMsg = "用户名只能使用中文，英文，日文，韩文和下划线的组合";
        nFlag = false;
         }
 
