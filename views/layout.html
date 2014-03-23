@@ -4,6 +4,7 @@
 <% locals.pageType = locals.pageType || temp; %>
 <html ng-app="sng">
 <head>
+  <meta name="viewport" content="width=device-width">
   <title><%= locals.title ? title + ' - 石子儿' : '石子儿 - 让互联网讲故事' %></title>
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge;charset=UTF-8">
@@ -39,60 +40,135 @@
 </head>
 <body class="<%= locals.pageType || '' %>">
 <% if (locals.pageType != 'SIGNUP' && locals.pageType != 'LOGIN') { %>
-<header class="navbar Header" style="margin-bottom: 0;">
-  <div class="container">
-    <div class="nav navbar-nav">
-      <style>
-        .navbar .nav .active {background-color: #ecf0f1;}
-      </style>
-      <li>
-        <a class="Logo" href="/" title="让互联网讲故事"><img src="/images/logo_full_160x64.png"></a>
-      </li>
-      <li class="<%= pageType == 'HOT' && 'active' || '' %>"><a href="/hot" title="热门总结"><i class="icon-fire"></i> 热门</a></li>
-      <li class="<%= pageType == 'CLASSIC' && 'active' || '' %>"><a href="/classic" title="经典总结"><i class="icon-book"></i> 经典</a></li>
-      <li class="<%= pageType == 'NEW' && 'active' || '' %>" style="border-radius: 0;"><a href="/new" title="最新总结"><i class="icon-time"></i> 最新</a></li>
-    </div>
-    <ul class="nav navbar-nav navbar-right">
-      <% if (!locals.username) { %>
-      <li><a href="/signup">注册</a></li>
-      <li><a href="/login">登录</a></li>
-      <li><a href="/topic/create">创建总结</a></li>
-      <% } else { %>
-      <li><a href="/works"><i class="icon-caret-down"></i> <img class="img-circle"
-        width="20" height="20"
-        src="<%= locals.imageUrl || '/images/no_img/user_80x80.png' %>"
-        onerror="shizier.errorImage(this,'user_80x80');"> <%= username %></a>
-        <ul style="z-index: 1002;">
-          <li>
-            <a href="/settings">
-              <i class="icon-cog"></i>
-              设置
-            </a>
-          </li>
-          <li>
-            <a href="/faq?serviceNo=4">
-              <i class="icon-question-sign"></i>
-              帮助
-            </a>
-          </li>
-          <li>
-            <form action="/logout" method="post">
-              <button class="btn btn-link btn-block" style="text-align: left !important; padding: 0 !important;text-decoration: none !important;" type="submit">
-                <a style="line-height: 1.7222;"><i class="icon-signout"></i>
-                登出</a>
-              </button>
-            </form>
-          </li>
+<div class="container">
+<nav class="navbar navbar-default" role="navigation" style="margin-bottom: 0;background-color: #ffffff;">
+
+    <div class="navbar-header" >
+
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-navbar-collapse-1" style="margin-top: 20px">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+
+        <ul class="nav navbar-nav">
+            <li><a class="Logo" href="/" title="让互联网讲故事"><img src="/images/logo_full_160x64.png"></a></li>
         </ul>
-      </li>
-      <li><a href="/notifications">通知</a><span class="mdHeadUtil01Count"
-                                               style="display: none;"><span
-        class="mdHeadUtil01CountInner">0</span></span></li>
-      <li><a href="/topic/create">创建总结</a></li>
-      <% } %>
-    </ul>
-  </div>
-</header>
+
+    </div>
+
+
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+            <li class="<%= pageType == 'HOT' && 'active' || '' %>"><a href="/hot" title="热门总结"><i class="icon-fire"></i> 热门</a></li>
+            <li class="<%= pageType == 'CLASSIC' && 'active' || '' %>"><a href="/classic" title="经典总结"><i class="icon-book"></i> 经典</a></li>
+            <li class="<%= pageType == 'NEW' && 'active' || '' %>" style="border-radius: 0;"><a href="/new" title="最新总结"><i class="icon-time"></i> 最新</a></li>
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right">
+            <% if (!locals.username) { %>
+            <li><a href="/signup">注册</a></li>
+            <li><a href="/login">登录</a></li>
+            <li><a href="/topic/create">创建总结</a></li>
+            <% } else { %>
+            <li><a href="/works"><i class="icon-caret-down"></i> <img class="img-circle"
+                                                                      width="20" height="20"
+                                                                      src="<%= locals.imageUrl || '/images/no_img/user_80x80.png' %>"
+                                                                      onerror="shizier.errorImage(this,'user_80x80');"> <%= username %></a>
+                <ul style="z-index: 1002;">
+                    <li>
+                        <a href="/settings">
+                            <i class="icon-cog"></i>
+                            设置
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/faq?serviceNo=4">
+                            <i class="icon-question-sign"></i>
+                            帮助
+                        </a>
+                    </li>
+                    <li>
+                        <form action="/logout" method="post">
+                            <button class="btn btn-link btn-block" style="text-align: left !important; padding: 0 !important;text-decoration: none !important;" type="submit">
+                                <a style="line-height: 1.7222;"><i class="icon-signout"></i>
+                                    登出</a>
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            </li>
+            <li><a href="/notifications">通知</a><span class="mdHeadUtil01Count"
+                                                     style="display: none;"><span
+                    class="mdHeadUtil01CountInner">0</span></span></li>
+            <li><a href="/topic/create">创建总结</a></li>
+            <% } %>
+        </ul>
+    </div>
+
+</nav>
+</div>
+<!--<nav class="navbar navbar-default" role="navigation">-->
+<!--<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">-->
+<!--<header class="navbar Header" style="margin-bottom: 0;">-->
+  <!--<div class="container">-->
+    <!--<div class="nav navbar-nav">-->
+      <!--<style>-->
+        <!--.navbar .nav .active {background-color: #ecf0f1;}-->
+      <!--</style>-->
+      <!--<li>-->
+        <!--<a class="Logo" href="/" title="让互联网讲故事"><img src="/images/logo_full_160x64.png"></a>-->
+      <!--</li>-->
+      <!--<li class="<%= pageType == 'HOT' && 'active' || '' %>"><a href="/hot" title="热门总结"><i class="icon-fire"></i> 热门</a></li>-->
+      <!--<li class="<%= pageType == 'CLASSIC' && 'active' || '' %>"><a href="/classic" title="经典总结"><i class="icon-book"></i> 经典</a></li>-->
+      <!--<li class="<%= pageType == 'NEW' && 'active' || '' %>" style="border-radius: 0;"><a href="/new" title="最新总结"><i class="icon-time"></i> 最新</a></li>-->
+    <!--</div>-->
+    <!--<ul class="nav navbar-nav navbar-right">-->
+      <!--<% if (!locals.username) { %>-->
+      <!--<li><a href="/signup">注册</a></li>-->
+      <!--<li><a href="/login">登录</a></li>-->
+      <!--<li><a href="/topic/create">创建总结</a></li>-->
+      <!--<% } else { %>-->
+      <!--<li><a href="/works"><i class="icon-caret-down"></i> <img class="img-circle"-->
+        <!--width="20" height="20"-->
+        <!--src="<%= locals.imageUrl || '/images/no_img/user_80x80.png' %>"-->
+        <!--onerror="shizier.errorImage(this,'user_80x80');"> <%= username %></a>-->
+        <!--<ul style="z-index: 1002;">-->
+          <!--<li>-->
+            <!--<a href="/settings">-->
+              <!--<i class="icon-cog"></i>-->
+              <!--设置-->
+            <!--</a>-->
+          <!--</li>-->
+          <!--<li>-->
+            <!--<a href="/faq?serviceNo=4">-->
+              <!--<i class="icon-question-sign"></i>-->
+              <!--帮助-->
+            <!--</a>-->
+          <!--</li>-->
+          <!--<li>-->
+            <!--<form action="/logout" method="post">-->
+              <!--<button class="btn btn-link btn-block" style="text-align: left !important; padding: 0 !important;text-decoration: none !important;" type="submit">-->
+                <!--<a style="line-height: 1.7222;"><i class="icon-signout"></i>-->
+                <!--登出</a>-->
+              <!--</button>-->
+            <!--</form>-->
+          <!--</li>-->
+        <!--</ul>-->
+      <!--</li>-->
+      <!--<li><a href="/notifications">通知</a><span class="mdHeadUtil01Count"-->
+                                               <!--style="display: none;"><span-->
+        <!--class="mdHeadUtil01CountInner">0</span></span></li>-->
+      <!--<li><a href="/topic/create">创建总结</a></li>-->
+      <!--<% } %>-->
+    <!--</ul>-->
+  <!--</div>-->
+<!--</div>-->
+<!--</nav>-->
+
 <% } %>
 
 <div class="Contents">
@@ -102,12 +178,12 @@
 </div>
 
 <footer class='Footer'>
-    <ul class="pan">
+    <div class="pan" style="white-space: nowrap;">
       <li><a href="/about">关于我们</a></li>
       <li><a href="/rules">使用条规</a></li>
       <li><a href="/privacy">隐私条款</a></li>
       <li><a href="/help">帮助</a></li>
-    </ul>
+    </div>
     <p>Copyright © 2013-2014 shizier.com 保留所有权利</p>
 </footer>
 
