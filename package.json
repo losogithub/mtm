@@ -26,6 +26,7 @@
     "mongodb": "*",
     "portfinder": "*",
     "weibo": "*",
-    "stream-buffers": "*"
+    "stream-buffers": "*",
+    "qiniu":"*"
   }
 }
