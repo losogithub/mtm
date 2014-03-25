@@ -20,6 +20,10 @@
 .WidgetItemList > li .MoveUtil {
   cursor: move !important;
 }
+.WidgetItemList > li .SortUtil {
+  visibility: hidden;
+  display: block;
+}
 .WidgetItemList > li:hover .SortUtil {
   visibility: visible;
 }

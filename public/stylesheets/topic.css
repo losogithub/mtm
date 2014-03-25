@@ -47,7 +47,7 @@
   position: absolute;
   top: 0px;
   right: -21px;
-  visibility: hidden;
+  display: none;
 }
 .SortUtil i {
   display: block;
@@ -180,10 +180,7 @@
   color: #eee;
 }
 .VIDEO .Title {
-  margin-top: 8px;
-  line-height: 20px;
   font-weight: bold;
-  font-size: 18px;
 }
 .VIDEO .Description {
   margin-top: 10px;
