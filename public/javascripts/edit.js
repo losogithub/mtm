@@ -92,13 +92,22 @@
   $.fn.extend({
     fadeSlideDown: function (callback) {
       return this
+        //防止slideDown动画期间获取焦点时的滚动
+        .on('scroll.slide', function () {
+          $(this).scrollTop(0);
+        })
         .hide()
         .css({ 'opacity': 0 })
         .animate({
-          opacity: 0.5,
+          'opacity': 0.5,
           height: 'toggle'
         }, 100)
-        .fadeTo(100, 1, callback);
+        .fadeTo(100, 1, function () {
+          $(this).off('scroll.slide');
+          if ($.isFunction(callback)) {
+            callback.call(this);
+          }
+        });
     },
 
     hiddenSlideUp: function (callback) {
@@ -184,10 +193,6 @@
 
       this.widget()
         .data('options', this.options.options)
-        //防止slideDown动画期间获取焦点时的滚动
-        .scroll(function () {
-          self.widget().scrollTop(0);
-        })
         .find('>div')
         .prepend($templates.find('.Widget:first').clone(true))
         .end()
@@ -474,11 +479,24 @@
      */
     __create: function () {
       var self = this;
+      var $label = self.widget().find('.checkbox');
+      var $checkbox = self.widget().find(':checkbox');
+
+      $checkbox.checkbox();
+      $checkbox.on('toggle', function () {
+        console.log('haha');
+        if ($label.is('.checked')) {
+          self.widget()
+            .find('.Image img')
+            .attr('src', self.defaultImgSrc)
+            .end();
+        } else {
+          _increaseIndex(0);
+        }
+      });
 
       var _increaseIndex = function (increment) {
-        var $noImg = self.widget()
-          .find('.Thumb input[type="checkbox"]');
-        $noImg.removeAttr('checked');
+        $checkbox.checkbox('uncheck');
 
         if (self.options.srcs && self.options.srcs.length > 1) {
           if (self.index + increment >= self.options.srcs.length) {
@@ -580,18 +598,6 @@
         .find('.Thumb .btn-group .btn:last')
         .click(function () {
           _increaseIndex(1);
-        })
-        .end()
-        .find('.Thumb input[type="checkbox"]')
-        .click(function () {
-          if ($(this).is(':checked')) {
-            self.widget()
-              .find('.Image img')
-              .attr('src', self.defaultImgSrc)
-              .end();
-          } else {
-            _increaseIndex(0);
-          }
         })
         .end()
         .find('.Thumb input.Url')
@@ -1545,6 +1551,8 @@
     return $item;
   }
 
+  var $cover;
+
   function _init() {
     $._messengerDefaults = {
       extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right',
@@ -1557,6 +1565,7 @@
     $band_saved = $band.find('#_saved');
     $band_error = $band.find('#_error');
     $band_loading = $band.find('#_loading');
+    $cover = $('.HeadThumb');
     $_topItem = $('#_topItem');
     $_topWidget = $('#_topWidget');
     $ul = $('.WidgetItemList');
@@ -1693,26 +1702,14 @@
     });
   }
 
+  var oldCover;
+
   function __remove() {
     if (xhr) {
       console.log('abort');
       xhr.abort();
     }
-    if ($_topItem.find('.HeadTtl').text()) {
-      $_topItem.find('.HeadTtlPlaceholder').hide();
-    } else {
-      $_topItem.find('.HeadTtlPlaceholder').show();
-    }
-    if ($_topItem.find('.HeadThumb img').attr('src')) {
-      $_topItem.find('.HeadThumb').show();
-    } else {
-      $_topItem.find('.HeadThumb').hide();
-    }
-    if ($_topItem.find('.HeadDesc').text()) {
-      $_topItem.find('.HeadDescWrapper').show();
-    } else {
-      $_topItem.find('.HeadDescWrapper').hide();
-    }
+    $cover.attr('src', oldCover);
     $_topItem.after($_topWidget);
     $_topWidget.hiddenSlideUp();
     $_topItem.fadeSlideDown();
@@ -1728,10 +1725,9 @@
     var defaultImgSrc = '/images/no_img/photo_95x95.png';
     var noImgSrc = '/images/no_img/default_120x120.png';
     var $title = $_topWidget.find('input[name="title"]');
-    var $cover = $_topWidget.find('.HeadThumb2');
     var $description = $_topWidget.find('textarea[name="description"]');
     var title = $_topItem.find('.HeadTtl').text();
-    var coverUrl = $_topItem.find('.HeadThumb2').attr('src');
+    var coverUrl = $cover.attr('src');
     var description = $_topItem.find('.HeadDesc').text();
 
     var checkState = function () {
@@ -1749,10 +1745,6 @@
     $title.add($description).on(INPUT_EVENTS, checkState);
 
     $_topWidget
-      //防止slideDown动画期间获取焦点时的滚动
-      .scroll(function () {
-        this.scrollTop(0);
-      })
       .find('button[name="save"]')
       .attr('type', 'submit')
       .end()
@@ -1765,7 +1757,7 @@
         return;
       }
       title = $_topItem.find('.HeadTtl').text();
-      coverUrl = $_topItem.find('.HeadThumb2').attr('src');
+      coverUrl = $cover.attr('src');
       description = $_topItem.find('.HeadDesc').text();
 
       $title.val(title);
@@ -1780,11 +1772,12 @@
         .end()
         .fadeSlideDown();
 
-      setTimeout(function () {
-//        $title.focus();
-      }, 99);
+      $title.focus();
       //移动光标到输入框末尾
-//      moveSelection2End($title[0]);
+      moveSelection2End($title[0]);
+
+      oldCover = coverUrl || defaultImgSrc;
+
       setTopState('create');
     });
     if (!title && !$ul.children().length) {
@@ -1816,7 +1809,7 @@
         .done(function (data) {
           savedOnce = true;
           $_topItem.find('.HeadTtl').text(data.title);
-          $_topItem.find('.HeadThumb').attr('src', data.coverUrl || defaultImgSrc);
+          oldCover = data.coverUrl || defaultImgSrc;
           $_topItem.find('.HeadDesc').text(data.description || '');
           __remove();
         })
@@ -1960,7 +1953,6 @@
     _init();
     _initListListener();
     _initBand();
-    _initTop();
     _initTop();
     _initMenu();
     _initSort();

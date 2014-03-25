@@ -25,57 +25,46 @@
   </div>
 </div>
 
-<div class="StaticMenu container">
-
-  <% include _menu.html %>
-
-</div>
-
 <!--内容-->
-<div class="TopicWrapper" style="background-color: #ecf0f1;">
+<div class="TopicWrapper" style="background-color: #ecf0f1; padding-top: 48px;">
   <div class="container">
     <div class="row">
       <div class="col-md-9 col-lg-8 mvl">
         <div style="background-color: white;border-radius: 6px;">
-          <div id="_topItem">
-            <img class="HeadThumb" onerror="shizier.errorImage(this, 'default_120x120', true);" src="<%= topic.coverUrl || '/images/no_img/photo_95x95.png' %>"
-               style="border-radius: 6px 6px 0 0;width: 100%;">
-
+          <img class="HeadThumb" onerror="shizier.errorImage(this, 'default_120x120', true);" src="<%= topic.coverUrl || '/images/no_img/photo_95x95.png' %>"
+             style="border-radius: 6px 6px 0 0;width: 100%;">
+          <div id="_topItem" class="phl">
             <div class="HeadTxt clearfix">
               <h4 class="HeadTtl"><%= topic.title %></h4>
 
               <p class="HeadDesc"><%= topic.description || '' %></p>
               <div class="pull-right">
                 <button name="edit" class="btn btn-link text-muted" type="button"
-                        style="vertical-align: baseline;padding: 5px;font-size: 18px;"><i
+                        style="vertical-align: baseline;padding: 0;font-size: 18px;"><i
                   class="icon-pencil"></i> 编辑封面、标题、简介</button>
 
                 <% include _deleteBtn.html %>
 
               </div>
+              <div class="pull-left">
+                <div class="StaticMenu">
+
+                  <% include _menu.html %>
+
+                </div>
+              </div>
             </div>
           </div>
-          <form id="_topWidget" style="display: none;">
-            <!--<div id="_coverWrapper">-->
-              <!--<button name="cover" class="btn btn-link" title="设置总结封面" type="button">-->
-                <!--<img style="display: block;" width="95" height="95"-->
-                     <!--onerror="shizier.errorImage(this, 'default_120x120', true)"-->
-                     <!--src="/images/no_img/photo_95x95.png">-->
-              <!--</button>-->
-
-            <!--</div>-->
-            <img class="HeadThumb" onerror="shizier.errorImage(this, 'default_120x120', true);" src="<%= topic.coverUrl %>"
-                 style="border-radius: 6px 6px 0 0;width: 100%;">
-
-            <div class="pal">
+          <form id="_topWidget" class="phl" style="display: none;">
+            <div class="pvl">
               <div class="form-group">
                 <input name="url" class="form-control" placeholder="图片URL" type="text">
                 <div class="InfoHint text-muted">
                   由于受版权保护，有些图片可能无法引用
                 </div>
                 <div class="BtnSet">
-                  <button name="preview" class="btn btn-small btn-inverse" type="button">预览</button>
-                  <button name="reset" class="btn btn-small" type="button">取消</button>
+                  <button name="preview" class="btn btn-inverse" type="button">预览</button>
+                  <button name="reset" class="btn btn-default" type="button">取消</button>
                 </div>
               </div>
 
@@ -84,7 +73,7 @@
                 <input name="title" type="text" class="form-control"
                        placeholder="总结标题（5~50字）"/>
               </div>
-              <div id="_topWidget_description">
+              <div id="_topWidget_description" class="form-group">
                 <textarea style='overflow: hidden;' name="description" class="form-control HeightAnimation"
                           placeholder="总结描述（150字以内，换行符无效）"></textarea>
               </div>
@@ -110,9 +99,11 @@
             <div class="Widget">
 
               <div class='Content LINK_CREATE'>
-                <div class="Required"></div>
-                <input name="url" class="AUTO_FOCUS" placeholder="链接URL" type="text">
-                <button name="preview" class="btn btn-small" type="button" disabled='disabled'
+                <div class="form-group">
+                  <div class="Required"></div>
+                  <input name="url" class="form-control AUTO_FOCUS" placeholder="链接URL" type="text">
+                </div>
+                <button name="preview" class="btn btn-info pull-left mrx" type="button" disabled='disabled'
                         data-loading-text="预览 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;">预览
                 </button>
 
@@ -121,22 +112,26 @@
               </div>
 
               <div class='Content LINK'>
-                <input name="title" class="Bold" placeholder="链接标题" type="text">
+                <div class="form-group">
+                  <input name="title" class="form-control" placeholder="链接标题" type="text">
 
-                <div class="Quote">
-                  <a class="LINK_URL"></a>
+                  <div class="Quote">
+                    <a class="LINK_URL"></a>
+                  </div>
                 </div>
 
-                <textarea name="snippet" placeholder="链接摘要"></textarea>
+                <div class="form-group">
+                  <textarea name="snippet" class="form-control" placeholder="链接摘要"></textarea>
+                </div>
 
-                <div class="Thumb clearfix">
+                <div class="Thumb">
                   <div class="Image">
                     <div style="position: relative;display: inline-block;">
                       <img onerror="shizier.errorImage(this, 'default_120x120', true);">
 
                       <div class="Loading"
                            style="position: absolute;top: 0;left: 0;bottom: 0;right: 0;background-color: rgba(0,0,0,0.2);">
-                        <table style="margin: 0 auto;">
+                        <table style="margin: 0 auto;height: 100%;">
                           <td>
                             <i class="icon-spinner icon-spin" style="color: white"></i>
                           </td>
@@ -144,26 +139,25 @@
                       </div>
                     </div>
                   </div>
-                  <div class="Thumb_Editor" style="overflow: hidden;">
-                    <div class="btn-group">
-                      <button class="btn btn-mini" type="button"><i class="icon-angle-left"></i></button>
-                      <button class="btn btn-mini" type="button"><i class="icon-angle-right"></i></button>
-                    </div>
-                    <span class="text-muted" name="pagination"></span>
+                  <div class="btn-group">
+                    <button class="btn btn-xs btn-default" type="button"><i class="fui-arrow-left"></i></button>
+                    <button class="btn btn-xs btn-default" type="button"><i class="fui-arrow-right"></i></button>
+                  </div>
+                  <span class="text-muted" name="pagination"></span>
 
-                    <p style="margin-top: 7px;">
-                      <input type="checkbox" id="noImg" style="vertical-align: middle;">
-                      <label for="noImg" style="vertical-align: middle;line-height: 1;">无图片</label>
-                    </p>
+                  <label class="checkbox">
+                    <input type="checkbox" id="noImg">
+                    无图片
+                  </label>
 
-                    <p style="margin-top: 7px;">
-                      <input style="width: 240px;float: left" class="Url" placeholder="自定义图片URL（可选）" type="text">
-                      <button style="float: left;margin-left: 5px;" name="customize" class="btn btn-small" type="button">确定
-                      </button>
-                    </p>
+                  <div class="form-group">
+                    <input class="form-control Url" placeholder="自定义图片URL（可选）" type="text">
+                    <button name="customize" class="btn btn-default mtx" type="button">确定</button>
                   </div>
                 </div>
-                <textarea name="description" class="AUTO_FOCUS" placeholder="链接评论"></textarea>
+                <div class="form-group">
+                  <textarea name="description" class="form-control AUTO_FOCUS" placeholder="链接评论"></textarea>
+                </div>
 
                 <% include _widget_BtnSet.html %>
 
@@ -173,16 +167,17 @@
                 <div class="Image">
                   <i class="icon-picture text-light"></i>
                 </div>
-                <div style="overflow: hidden;">
-                  <div class="Required" style="float: left;"></div>
-                  <input name="url" class="AUTO_FOCUS" placeholder="图片URL" type="text">
-                  <button name="preview" class="btn btn-small" type="button" disabled='disabled'
+                <div class="InfoHint text-muted">
+                  由于受版权保护，有些图片可能无法引用
+                </div>
+                <div>
+                  <div class="form-group">
+                    <div class="Required"></div>
+                    <input name="url" class="form-control AUTO_FOCUS" placeholder="图片URL" type="text">
+                  </div>
+                  <button name="preview" class="btn btn-info pull-left mrx" type="button" disabled='disabled'
                           data-loading-text="预览 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;">预览
                   </button>
-                  <div class="clearfix"></div>
-                  <div class="InfoHint text-muted">
-                    由于受版权保护，有些图片可能无法引用
-                  </div>
 
                   <% include _widget_BtnSet.html %>
 
@@ -194,10 +189,14 @@
                   <img onerror="shizier.errorImage(this, 'default_120x120', true);">
                 </div>
 
-                <div style="overflow: hidden;">
-                  <input name="title" class="Bold AUTO_FOCUS" placeholder="图片标题" type="text">
-                  <input name="quote" class="Url" placeholder="图片来源网页URL" type="text">
-                  <textarea name="description" placeholder="图片介绍、评论"></textarea>
+                <div class="form-group">
+                  <input name="title" class="form-control Bold AUTO_FOCUS" placeholder="图片标题" type="text">
+                </div>
+                <div class="form-group">
+                  <input name="quote" class="form-control Url" placeholder="图片来源网页URL" type="text">
+                </div>
+                <div class="form-group">
+                  <textarea name="description" class="form-control" placeholder="图片介绍、评论"></textarea>
                 </div>
 
                 <% include _widget_BtnSet.html %>
@@ -207,13 +206,6 @@
               <div class='Content VIDEO_CREATE'>
                 <div class="Thumb">
                   <i class="icon-film text-light"></i>
-                </div>
-                <div style="margin-top: 7px;" class="clearfix">
-                  <div class="Required"></div>
-                  <input name="url" class="AUTO_FOCUS" placeholder="视频URL" type="text">
-                  <button name="preview" class="btn btn-small" type="button" disabled='disabled'
-                          data-loading-text="预览 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;">预览
-                  </button>
                 </div>
                 <div class="InfoHint text-muted">
                   目前已支持<a
@@ -234,6 +226,13 @@
                   target="_blank" class="text-primary" href="http://www.acfun.tv/">AcFun</a>、<a
                   target="_blank" class="text-primary" href="http://www.bilibili.tv/">bilibili</a>等视频网站的视频播放页链接。
                 </div>
+                <div class="form-group">
+                  <div class="Required"></div>
+                  <input name="url" class="form-control AUTO_FOCUS" placeholder="视频URL" type="text">
+                </div>
+                <button name="preview" class="btn btn-info pull-left mrx" type="button" disabled='disabled'
+                        data-loading-text="预览 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;">预览
+                </button>
 
                 <% include _widget_BtnSet.html %>
 
@@ -245,26 +244,35 @@
                 <% include _video_cover.html %>
 
                 <div class="Quote">
-                  <span>来源</span>
-
-                  <div>
-                    <a class="VIDEO_URL"></a>
-                  </div>
+                  来源
+                  <a class="VIDEO_URL"></a>
                 </div>
 
-                <input name="title" class="Bold" placeholder="视频标题" type="text">
-                <textarea class="AUTO_FOCUS" name="description" placeholder="视频介绍、评论"></textarea>
+                <div class="form-group">
+                  <input name="title" class="form-control Bold" placeholder="视频标题" type="text">
+                </div>
+                <div class="form-group">
+                  <textarea class="form-control AUTO_FOCUS" name="description" placeholder="视频介绍、评论"></textarea>
+                </div>
 
                 <% include _widget_BtnSet.html %>
 
               </div>
 
               <div class='Content CITE'>
-                <div class="Required"></div>
-                <textarea class="AUTO_FOCUS" name="cite" placeholder="引文"></textarea>
-                <input name="url" placeholder="引文来源网页URL" type="text">
-                <input name="title" placeholder="引文来源网页标题" type="text">
-                <textarea name="description" placeholder="引文介绍、评论"></textarea>
+                <div class="form-group">
+                  <div class="Required"></div>
+                  <textarea class="form-control AUTO_FOCUS" name="cite" placeholder="引文"></textarea>
+                </div>
+                <div class="form-group">
+                  <input class="form-control" name="url" placeholder="引文来源网页URL" type="text">
+                </div>
+                <div class="form-group">
+                  <input class="form-control" name="title" placeholder="引文来源网页标题" type="text">
+                </div>
+                <div class="form-group">
+                  <textarea class="form-control" name="description" placeholder="引文介绍、评论"></textarea>
+                </div>
 
                 <% include _widget_BtnSet.html %>
 
@@ -319,16 +327,20 @@
               </div>
 
               <div class='Content TEXT'>
-                <div class="Required"></div>
-                <textarea name="text" class="AUTO_FOCUS" placeholder="文本"></textarea>
+                <div class="form-group">
+                  <div class="Required"></div>
+                  <textarea name="text" class="form-control AUTO_FOCUS" placeholder="文本"></textarea>
+                </div>
 
                 <% include _widget_BtnSet.html %>
 
               </div>
 
               <div class='Content TITLE'>
-                <div class="Required"></div>
-                <input name="title" class="Bold AUTO_FOCUS" placeholder="标题" type="text">
+                <div class="form-group">
+                  <div class="Required"></div>
+                  <input name="title" class="form-control Bold AUTO_FOCUS" placeholder="标题" type="text">
+                </div>
 
                 <% include _widget_BtnSet.html %>
 

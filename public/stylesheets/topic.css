@@ -23,33 +23,11 @@
 /*条目*/
 .WidgetItemList {
   list-style: none;
-  padding: 0 0 30px;
+  padding: 0 0 40px;
   margin-bottom: 0;
-}
-.WidgetItemList > li > div {
-  background-color: #ffffff;
-  margin-bottom: 35px;
 }
 .WidgetItemList > li > div:hover {
   background-color: #f8f8f8;
-  box-shadow: 0 0 0 3px #f8f8f8;
-}
-.WidgetItemList > li > div > :first-child {
-  *zoom: 1;
-}
-.WidgetItemList > li > div > :first-child:before,
-.WidgetItemList > li > div > :first-child:after {
-  display: table;
-  content: " ";
-}
-.WidgetItemList > li > div > :first-child:after {
-  clear: both;
-}
-.WidgetItemList > li:last-child > div {
-  margin-bottom: 0 !important;
-}
-.WidgetItemList > li.TITLE > div {
-  margin-bottom: 25px;
 }
 .WidgetItemList .Content {
   *zoom: 1;
@@ -63,29 +41,13 @@
   clear: both;
 }
 .WidgetItemList .Quote {
-  *zoom: 1;
   font-size: 11px;
   line-height: 13px;
   margin-top: 3px;
-  min-width: 100px;
 }
-.WidgetItemList .Quote:before,
-.WidgetItemList .Quote:after {
-  display: table;
-  content: " ";
-}
-.WidgetItemList .Quote:after {
-  clear: both;
-}
+.WidgetItemList .Quote,
 .WidgetItemList .Quote * {
-  color: #aaaaaa;
-}
-.WidgetItemList .Quote span {
-  float: left;
-  margin-right: 5px;
-}
-.WidgetItemList .Quote div {
-  overflow: hidden;
+  color: #999;
 }
 .LINK .Quote a {
   color: #7c94aa;
@@ -97,9 +59,8 @@
 .SortUtil {
   position: absolute;
   top: 0px;
-  right: -24px;
-  padding-left: 3px;
-  visibility: hidden;
+  right: -21px;
+  display: none;
 }
 .SortUtil i {
   display: block;
@@ -110,12 +71,33 @@
   cursor: pointer;
 }
 .SortUtil i:hover {
-  outline: dotted 1px;
+  color: #1abc9c;
 }
 .BottomUtil {
   display: none;
-  visibility: hidden;
   line-height: 1;
+  position: absolute;
+  bottom: -18px;
+  left: 0;
+  right: 0;
+  padding: 0 15px;
+  z-index: 1000;
+}
+.BottomUtil .AddUtil {
+  background-color: rgba(0, 0, 0, 0.03);
+  border-radius: 6px;
+}
+.BottomUtil .EditUtil {
+  background-color: #f8f8f8;
+  border-radius: 6px;
+}
+.BottomUtil .EditUtil .btn {
+  color: #999;
+}
+.BottomUtil .btn {
+  vertical-align: baseline;
+  padding: 0;
+  font-size: 18px;
 }
 .Content.LINK .Title {
   font-size: 20px;
@@ -142,25 +124,25 @@
   font-size: 14px;
   line-height: 20px;
 }
-.IMAGE {
+.Item .IMAGE {
   width: 600px;
   max-width: 100%;
   margin: auto;
 }
-.IMAGE .Image {
+.Item .IMAGE .Image {
   text-align: center;
 }
-.IMAGE img {
+.Item .IMAGE img {
   max-width: 100%;
   max-height: 600px;
 }
-.IMAGE .Title {
+.Item .IMAGE .Title {
   text-align: center;
   line-height: 24px;
   font-weight: bold;
   font-size: 18px;
 }
-.IMAGE .Description {
+.Item .IMAGE .Description {
   line-height: 20px;
   font-size: 14px;
 }
@@ -343,11 +325,7 @@
 .WidgetItemList > li:hover .WEIBO_CREATE .Handle {
   visibility: visible;
 }
-.Content.TEXT {
-  line-height: 20px;
-  font-size: 14px;
-}
-.Content.TITLE {
+.Item .TITLE {
   padding-bottom: 5px;
   border-bottom: 2px solid #EAECEE;
 }
@@ -435,9 +413,6 @@
   font-weight: bold;
   font-size: 14px;
 }
-.Main {
-  padding-bottom: 0;
-}
 .Main a[name="add"] {
   margin-bottom: 15px;
 }
@@ -449,65 +424,6 @@
 .NoItem > p {
   color: #666666;
   margin-bottom: 11px;
-}
-.SubAuthor {
-  background-color: white;
-}
-.SubAuthorProfile {
-  padding: 15px 15px 15px;
-}
-.SubAuthorProfileUnit {
-  position: relative;
-  min-height: 80px;
-  padding: 0 0 0 90px;
-}
-.SubAuthorProfileUnitTitle {
-  line-height: 1.2;
-  padding: 0 0 7px;
-  color: #666;
-  margin: 0;
-}
-.SubAuthorProfileUnit .SubAuthorProfileUnitTitle a {
-  color: #000;
-  font-weight: bold;
-}
-.SubAuthorProfileUnitTitleUserNameThumb {
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 80px;
-  height: 80px;
-}
-.SubAuthorProfileUnitLinkSiteBtn {
-  width: 86px;
-  height: 23px;
-  background-position: -70px -90px;
-  vertical-align: middle;
-  background-image: url("/images/personal/sprite_MdBtn_130918.png");
-  display: inline-block;
-  *display: inline;
-  *zoom: 1;
-  overflow: hidden;
-  padding: 0;
-  border: 0;
-  background-color: transparent;
-  background-repeat: no-repeat;
-  text-align: left;
-  text-indent: -9999px;
-  *text-indent: 0;
-  *line-height: 9999px;
-  *word-wrap: normal;
-}
-.SubAuthorProfileUnitLinkSite.ExDisabled .SubAuthorProfileUnitLinkSiteBtn {
-  background-position: -70px -120px;
-  cursor: default;
-}
-.SubAuthorProfileTxt {
-  line-height: 1.5;
-  margin: 7px 0 -4px;
-  word-wrap: break-word;
-  color: #666666;
 }
 @media (max-width: 1100px) {
   .bdshare-slide-button {

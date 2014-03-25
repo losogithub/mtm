@@ -1,30 +1,18 @@
 @import "theme";
 
-input[type="text"], input[type="password"], textarea {
-  width: 100%;
-}
-
 /*li*/
 .WidgetItemList {
-  button[name='preview'] { float: left; width: 62px; padding-left: 0; padding-right: 0; margin-left: 5px; }
   &.WidgetItemList-Sorting>li>div {
     box-shadow: 0 0 0 2px @theme-color;
     &:hover { background-color: white; }
   }
   >li {
     .MoveUtil { cursor: move !important; }
-    .BottomUtil {
-      display: block;
-      margin-top: 2px;
-      .ItemUtil1 { float: left; }
-      .ItemUtil2 { float: right; }
-    }
     &:hover {
-      .SortUtil, .BottomUtil { visibility: visible; }
+      .SortUtil, .BottomUtil { display: block; }
     }
     &:first-child .SortUtil>div:first-of-type { visibility: hidden; }
     &:last-child .SortUtil>div:last-of-type { visibility: hidden; }
-    >div { margin-bottom: 16px; }
     &.TITLE>div { margin-bottom: 6px; }
 
     &.WidgetDragPlaceholder { margin-bottom: 18px; height: 20px;
@@ -46,8 +34,8 @@ body { position: relative; }
 
 /*悬浮菜单栏*/
 .Band {
-  top:72px;left: 0; right: 0;z-index: 1001;position: absolute;
-  &.affix{top:0;position: fixed;}
+  top:72px; left: 0; right: 0;z-index: 1001;position: absolute;
+  &.affix{ top:0; position: fixed; }
   .Band_Ttl {
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0; line-height: 36px;
   }
@@ -73,48 +61,33 @@ body { position: relative; }
     display: inline;
     li {
       display: inline; margin-left: 15px;
-      i { vertical-align: middle; }
     }
+  }
+  .btn {
+    vertical-align: baseline;
+    padding: 0;
+    font-size: 18px;
   }
 }
 
-.StaticMenu .Menu {
-  padding-top: 48px;
-  width: 100%; height: 46px; line-height: 43px; margin-bottom: 10px; border-top: 3px solid black;
-  padding-left: 5px;
-  background-image: -moz-linear-gradient(top, #ffffff, #fafafa);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#fafafa));
-  background-image: -webkit-linear-gradient(top, #ffffff, #fafafa);
-  background-image: -o-linear-gradient(top, #ffffff, #fafafa);
-  background-image: linear-gradient(to bottom, #ffffff, #fafafa);
-  border-bottom: 1px solid #f0f0f0;
-}
-
 .WidgetItemList .Menu {
-  span { padding-right: 6px; color: #999; }
+  span { color: #999; }
   button { color: #999; }
   img { opacity: 0.5; }
 }
 
 /*微件*/
-.LINK_CREATE input { float: left; width: 568px; }
-
 .LINK {
-  textarea[name='snippet'] { margin-top: 3px; }
   .Thumb {
-    .Image { width: 150px; float: left; margin-right: 20px; min-height: 1px; }
-    .Thumb_Editor { padding-top: 5px; }
+    .Image { width: 150px; }
     .btn-group {
       margin-right: 5px;
-      .btn { padding: 0; width: 21px; height: 21px; }
     }
     span[name="pagination"] { font-weight: bold; vertical-align: middle; }
   }
-  textarea[name='description'] { margin-top: 10px; }
 }
 
 .IMAGE_CREATE {
-  input { float: left; width: 258px; }
   .Image {
     width: 300px; height: 220px; background-color: #f3f3f3; text-align: center;
     i { line-height: 220px; font-size: 30px; }
@@ -126,22 +99,11 @@ body { position: relative; }
   input[name='quote'] { margin-bottom: 10px; }
 }
 
-.VIDEO_CREATE input { float: left; width: 568px; }
-
 .VIDEO {
   input[name='title'] { margin-top: 8px; }
   textarea[name='description'] { margin-top: 10px; }
 }
 
-.CITE {
-  textarea[name='cite'] { min-height: 95px; font-size: 14px; margin-bottom: 10px; }
-  input[name='url'] { margin-bottom: 7px; }
-  input[name='title'] { height: 25px; margin-bottom: 10px; }
-  textarea[name='description'] { min-height: 45px; }
-}
-
 .WEIBO_CREATE {
   input { float: left; width: 508px; }
 }
-
-.TEXT textarea { font-size: 14px; }
