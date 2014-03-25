@@ -39,7 +39,7 @@
   <% } %>
 </head>
 <body class="<%= locals.pageType || '' %>">
-<% if (locals.pageType != 'SIGNUP' && locals.pageType != 'LOGIN') { %>
+<% if (locals.pageType != 'SIGNUP' && locals.pageType != 'LOGIN' && locals.pageType != 'VERIFY') { %>
 <header class="navbar Header hidden-xs mbn">
   <div class="container">
     <ul class="nav navbar-nav Category">
@@ -125,6 +125,14 @@
           <li><a href="/login">登录</a></li>
           <li><a href="/topic/create">创建总结</a></li>
           <% } else { %>
+          <li>
+            <a href="/works" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
+              <img class="img-circle" width="20" height="20"
+                   src="<%= locals.imageUrl || '/images/no_img/user_80x80.png' %>"
+                   onerror="shizier.errorImage(this,'user_80x80');">
+              <%= username %>
+            </a>
+          </li>
           <li><a href="/notifications">通知</a></li>
           <li><a href="/topic/create">创建总结</a></li>
           <li>

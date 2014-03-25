@@ -17,7 +17,8 @@ table {
 .SIGNUP .container,
 .LOGIN .container,
 .VERIFY .container {
-  width: 400px;
+  max-width: 400px;
+  position: relative;
 }
 .btn-link:hover,
 .btn-link:focus {
@@ -71,7 +72,8 @@ table {
   height: 40px;
 }
 .LOGIN .Logo img,
-.SIGNUP .Logo img {
+.SIGNUP .Logo img,
+.VERIFY .Logo img {
   width: 160px;
   height: 64px;
 }
@@ -79,7 +81,8 @@ table {
   opacity: 0.8;
 }
 .LOGIN .Logo,
-.SIGNUP .Logo {
+.SIGNUP .Logo,
+.VERIFY .Logo {
   position: relative;
   display: block;
   border-radius: 50%;
@@ -89,18 +92,21 @@ table {
   margin: 40px auto;
 }
 .LOGIN .Logo img,
-.SIGNUP .Logo img {
+.SIGNUP .Logo img,
+.VERIFY .Logo img {
   position: absolute;
   margin-top: 25px;
   transition: all 0.25s ease 0s;
 }
 .LOGIN .Logo p,
-.SIGNUP .Logo p {
+.SIGNUP .Logo p,
+.VERIFY .Logo p {
   text-align: center;
   margin-top: 109px;
 }
 .LOGIN .Logo:hover img,
-.SIGNUP .Logo:hover img {
+.SIGNUP .Logo:hover img,
+.VERIFY .Logo:hover img {
   margin-top: 58px;
 }
 /*分割线*/

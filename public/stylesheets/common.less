@@ -11,7 +11,7 @@ table {
 }
 
 .SIGNUP, .LOGIN, .VERIFY {
-  .container {width: 400px;}
+  .container { max-width: 400px; position: relative; }
 }
 
 .btn-link {
@@ -51,10 +51,10 @@ table {
   padding: 10px 20px !important;
   img {
     width: 100px; height: 40px;
-    .LOGIN &, .SIGNUP & { width: 160px; height: 64px; }
+    .LOGIN &, .SIGNUP &, .VERIFY & { width: 160px; height: 64px; }
   }
   &:hover { opacity: 0.8;}
-  .LOGIN &, .SIGNUP & {
+  .LOGIN &, .SIGNUP &, .VERIFY & {
     position: relative;
     display: block; border-radius: 50%; background-color: #1abc9c;
     width: 200px; height: 200px; margin: 40px auto;
