@@ -7,7 +7,7 @@
           <img onerror="$(this).hide();" src="<%= topic.coverUrl %>"
                style="border-radius: 6px 6px 0 0;width: 100%;<%= topic.coverUrl ? '' : 'display: none;' %>">
 
-          <div style="position: relative; margin: 0 10px;">
+          <div class="phl">
             <div class="HeadTxt clearfix">
               <h4 class="HeadTtl"><a href="/topic/<%= topic._id %>"><%= topic.title %></a></h4>
 
@@ -52,10 +52,10 @@
               <p class="text-secondary">这个总结还没有内容</p>
             </div>
             <% } %>
-
-            <% include _ul.html %>
-
           </div>
+
+          <% include _ul.html %>
+
           <!--模板-->
           <div class="TEMPLATES" style="display:none;">
 

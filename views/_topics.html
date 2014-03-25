@@ -2,65 +2,31 @@
   <% for (i in topics) { %>
   <% var topic = topics[i]; %>
   <div class="col-sm-6 col-md-4 col-lg-3 mtl">
-    <div style="background-color: white;">
+    <div style="background-color: white;border-radius: 6px;">
+      <style>
+        .Cover:hover { opacity: 0.8;}
+      </style>
+      <a target="_blank" class="Cover" href="/topic/<%= topic._id %>" title="<%= topic.title %>"
+         style="display: block;height: 200px; background: url('<%= topic.coverUrl %>') no-repeat center #7f8c8d; background-size: cover;border-radius: 6px 6px 0 0;">
+      </a>
 
-
-
-
-      <div class="clearfix" style="margin: 0 10px;">
-
-
-        <div >
-
-          <style>
-          .Cover:hover { opacity: 0.8;}
-          </style>
-          <a target="_blank" class="Cover" href="/topic/<%= topic._id %>" title="<%= topic.title %>"
-           style="display: block;height: 200px; background: url('<%= topic.coverUrl %>') no-repeat center #7f8c8d; background-size: cover;">
-         </a>
-
-       </div>
-
-
-       <div style=" height:48px;overflow: hidden;">
-        <a class="HeadTtl h6 mtm"
-        style="display: block;overflow: hidden;text-overflow: ellipsis; font-size: 18px; font-weight:normal"
-        target="_blank" href="/topic/<%= topic._id %>" title="<%= topic.title %>"><%=topic.title%></a>
-      </div>
-
-      <div style= "padding-top:7px;">
-        <div class="HeadUser" style="font-size:16px;">
-
-          <a class = "pull-left" target="_blank" href="/u/<%= topic.author %>" title="<%= topic.author %>">
-            <span class="HeadUserName"><%= topic.author %></span>
-          </a>
-
-
-          <div style ="padding-top:3px">
-            <a class = "pull-right"style="padding-left :10px ; font-size: 13px" target="_blank" href="/topic/<%= topic._id %>/share_chang" title="分享"><i class="icon-share-alt"></i>分享    
-            </a>
-            <span class="pull-right "style="padding-left :10px ;font-size: 13px">
-              <i class="icon-star"></i> <%= topic.FVCount %>
-            </span>
-            <span class = "pull-right" style="font-size:13px;padding-left:5px;" >
-              <i class="icon-eye-open"></i> <%= topic.PVCount %>
-            </span>
-          </div>
-
+      <div class="mhm">
+        <div class="mtm mbm" style="height:56px;overflow: hidden;">
+          <a class="h6" style="font-weight: normal;"
+             target="_blank" href="/topic/<%= topic._id %>" title="<%= topic.title %>"><%= topic.title %></a>
         </div>
-
-
-
-
+        <div class="clearfix pbx">
+          <div class="pull-right">
+            <span class="text-muted mrx"><i class="icon-star"></i> <%= topic.FVCount %></span>
+            <span class="text-muted mrx"><i class="icon-eye-open"></i> <%= topic.PVCount %></span>
+            <a class="text-muted" target="_blank" href="/topic/<%= topic._id %>/share_chang" title="分享"><i class="icon-share-alt"></i></a>
+          </div>
+          <div style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
+            <a target="_blank" href="/u/<%= topic.author %>" title="<%= topic.author %>"><%= topic.author %></a>
+          </div>
+        </div>
       </div>
-
     </div>
-
-
-
-
-
   </div>
-</div>
-<% } %>
+  <% } %>
 </div>

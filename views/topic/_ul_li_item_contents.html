@@ -63,11 +63,9 @@
   </div>
 
   <div class="Quote" style="<%- (item.type != 'ALL') && !item.url && !item.title ? 'display:none' : '' %>">
-    <span>来源</span>
-    <div>
-      <a target="_blank" href="<%= !item.url ? '' : item.url %>"><%= !item.url ? '' : !item.title ? item.url : item.title %></a>
-      <span ><%= item.url ? '' : !item.title ? '' : item.title %></span>
-    </div>
+    来源
+    <a target="_blank" href="<%= !item.url ? '' : item.url %>"><%= !item.url ? '' : !item.title ? item.url : item.title %></a>
+    <span ><%= item.url ? '' : !item.title ? '' : item.title %></span>
   </div>
   <div class="Description" style="display: <%= (item.type != 'ALL') && !item.description ? 'none' : 'block' %>;"><%- item.description ?
     escape(item.description).replace(/\n/g, "<br>") : '' %></div>

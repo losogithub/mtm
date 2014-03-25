@@ -1,5 +1,6 @@
-<li class="<%= item && item.type || '' %>" data-options="<%= item && JSON.stringify(item) || '' %>">
-  <div style="position: relative;">
+<li class="<%= item && item.type || '' %>"
+    data-options="<%= item && JSON.stringify(item) || '' %>">
+  <div class="pal" style="position: relative;">
 
     <% if (item) { %>
     <% include _ul_li_item.html %>

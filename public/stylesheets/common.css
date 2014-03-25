@@ -8,11 +8,6 @@ input[name='url'],
 input.Url {
   color: #999;
 }
-input.Bold {
-  font-size: 14px;
-  font-weight: bold;
-  height: 30px;
-}
 body {
   word-wrap: break-word;
 }
@@ -65,18 +60,7 @@ table {
 }
 /*按钮*/
 .InfoHint {
-  margin-top: 3px;
-  font-size: 10px;
-}
-.BtnSet {
-  margin-top: 14px;
-  white-space: nowrap;
-}
-.Widget .BtnSet {
-  float: left;
-}
-.InfoHint + .BtnSet {
-  margin-top: 3px;
+  font-size: 14px;
 }
 /*徽标*/
 .Logo {
