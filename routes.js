@@ -10,6 +10,7 @@ var topic = require('./controllers/topic');
 var sign = require('./controllers/sign');
 var personal = require('./controllers/personal');
 var auth = require('./middlewares/auth');
+var support = require('./controllers/support');
 
 var about = require('./controllers/about');
 
@@ -106,6 +107,13 @@ module.exports = function (app) {
   app.get('/principle', about.showPrinciple);
   app.get('/help', about.showHelp);
   app.get('/faq/:helpId', about.showEachHelp);
+
+  //support
+  app.get('/topicsuggestion',support.topicSuggestion);
+  app.post('/addSuggestionTopic',support.addSuggestionTopic);
+//  app.post('/takeSuggestionTopic/:suggId',support.takeSuggestionTopic);
+  app.post('/takeSuggestionTopic',support.takeSuggestionTopic);
+  app.get('/topicSuggestionLog',support.topicSuggestionLog);
 
   app.get('*', function (req, res, next) {
     next(new Error(404));
