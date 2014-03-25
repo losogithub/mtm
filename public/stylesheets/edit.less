@@ -2,30 +2,36 @@
 
 /*li*/
 .WidgetItemList {
-  &.WidgetItemList-Sorting>li>div {
+  &.WidgetItemList-Sorting>li {
     box-shadow: 0 0 0 2px @theme-color;
-    &:hover { background-color: white; }
+    &:hover {
+      background-color: white;
+      .BottomUtil { display: none; }
+    }
   }
   >li {
     .MoveUtil { cursor: move !important; }
     &:hover {
-      .SortUtil, .BottomUtil { display: block; }
+      .SortUtil { visibility: visible; }
+      .BottomUtil { display: block; }
     }
     &:first-child .SortUtil>div:first-of-type { visibility: hidden; }
     &:last-child .SortUtil>div:last-of-type { visibility: hidden; }
-    &.TITLE>div { margin-bottom: 6px; }
 
-    &.WidgetDragPlaceholder { margin-bottom: 18px; height: 20px;
-      background: url(/images/bg_WidgetDragPlaceholder.png) repeat; box-shadow: 0 0 0 0 !important; }
+    &.WidgetDragPlaceholder {
+      height: 70px;
+      background: url(/images/bg_WidgetDragPlaceholder.png) repeat;
+      box-shadow: none !important;
+    }
 
     &.ui-sortable-helper {
-      >div {
-        background-color: transparent !important; box-shadow: 0 0 0 0 !important;
-        >:first-child { max-height: 100px !important; margin-left: 200px !important;
-          background-color: fade(@theme-color, 20%) !important; box-shadow: 0 0 0 3px fade(@theme-color, 20%) !important; }
-      }
+      .Item, .Widget { overflow: hidden; max-height: 100px !important; }
+      max-height: 140px !important;
+      box-shadow: none !important;
+
+      background-color: fade(@theme-color, 20%) !important;
       .SortUtil>div, .BottomUtil { visibility: hidden !important; }
-      .MoveUtil { visibility: visible !important; outline: none !important; }
+      .MoveUtil { visibility: visible !important; }
     }
   }
 }
@@ -71,9 +77,9 @@ body { position: relative; }
 }
 
 .WidgetItemList .Menu {
-  span { color: #999; }
-  button { color: #999; }
-  img { opacity: 0.5; }
+  span { color: #bdc3c7; }
+  button { color: #bdc3c7; }
+  img { opacity: 0.2; }
 }
 
 /*微件*/
@@ -102,8 +108,4 @@ body { position: relative; }
 .VIDEO {
   input[name='title'] { margin-top: 8px; }
   textarea[name='description'] { margin-top: 10px; }
-}
-
-.WEIBO_CREATE {
-  input { float: left; width: 508px; }
 }

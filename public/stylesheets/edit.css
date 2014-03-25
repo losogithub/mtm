@@ -8,16 +8,21 @@
   text-shadow: 0 0 1px #443a00;
 }
 /*li*/
-.WidgetItemList.WidgetItemList-Sorting > li > div {
+.WidgetItemList.WidgetItemList-Sorting > li {
   box-shadow: 0 0 0 2px #669966;
 }
-.WidgetItemList.WidgetItemList-Sorting > li > div:hover {
+.WidgetItemList.WidgetItemList-Sorting > li:hover {
   background-color: white;
+}
+.WidgetItemList.WidgetItemList-Sorting > li:hover .BottomUtil {
+  display: none;
 }
 .WidgetItemList > li .MoveUtil {
   cursor: move !important;
 }
-.WidgetItemList > li:hover .SortUtil,
+.WidgetItemList > li:hover .SortUtil {
+  visibility: visible;
+}
 .WidgetItemList > li:hover .BottomUtil {
   display: block;
 }
@@ -27,24 +32,20 @@
 .WidgetItemList > li:last-child .SortUtil > div:last-of-type {
   visibility: hidden;
 }
-.WidgetItemList > li.TITLE > div {
-  margin-bottom: 6px;
-}
 .WidgetItemList > li.WidgetDragPlaceholder {
-  margin-bottom: 18px;
-  height: 20px;
+  height: 70px;
   background: url(/images/bg_WidgetDragPlaceholder.png) repeat;
-  box-shadow: 0 0 0 0 !important;
+  box-shadow: none !important;
 }
-.WidgetItemList > li.ui-sortable-helper > div {
-  background-color: transparent !important;
-  box-shadow: 0 0 0 0 !important;
-}
-.WidgetItemList > li.ui-sortable-helper > div > :first-child {
-  max-height: 100px !important;
-  margin-left: 200px !important;
+.WidgetItemList > li.ui-sortable-helper {
+  max-height: 140px !important;
+  box-shadow: none !important;
   background-color: rgba(102, 153, 102, 0.2) !important;
-  box-shadow: 0 0 0 3px rgba(102, 153, 102, 0.2) !important;
+}
+.WidgetItemList > li.ui-sortable-helper .Item,
+.WidgetItemList > li.ui-sortable-helper .Widget {
+  overflow: hidden;
+  max-height: 100px !important;
 }
 .WidgetItemList > li.ui-sortable-helper .SortUtil > div,
 .WidgetItemList > li.ui-sortable-helper .BottomUtil {
@@ -52,7 +53,6 @@
 }
 .WidgetItemList > li.ui-sortable-helper .MoveUtil {
   visibility: visible !important;
-  outline: none !important;
 }
 body {
   position: relative;
@@ -113,13 +113,13 @@ body {
   font-size: 18px;
 }
 .WidgetItemList .Menu span {
-  color: #999;
+  color: #bdc3c7;
 }
 .WidgetItemList .Menu button {
-  color: #999;
+  color: #bdc3c7;
 }
 .WidgetItemList .Menu img {
-  opacity: 0.5;
+  opacity: 0.2;
 }
 /*微件*/
 .LINK .Thumb .Image {
@@ -153,8 +153,4 @@ body {
 }
 .VIDEO textarea[name='description'] {
   margin-top: 10px;
-}
-.WEIBO_CREATE input {
-  float: left;
-  width: 508px;
 }

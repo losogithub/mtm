@@ -16,25 +16,17 @@
 .WidgetItemList {
   list-style: none; padding: 0 0 40px; margin-bottom: 0;
   >li {
-    >div {
       &:hover { background-color: #f8f8f8; }
-    }
   }
-  .Content { .clearfix(); }
   .Quote {
-    &, * { color: #999; }
+    &, * { color: #bdc3c7; }
     font-size: 11px; line-height: 13px; margin-top: 3px;
   }
 }
 
-.Quote {
-  .LINK & a { color: rgb(124, 148, 170); }
-  .CITE & { margin-top: 5px; }
-}
-
 /*工具栏*/
 .SortUtil {
-  position: absolute; top: 0px; right: -21px; display: none;
+  position: absolute; top: 0px; right: -21px; visibility: hidden;
   i {
     display: block; line-height: 21px; width: 21px; height: 21px; text-align: center; cursor: pointer;
     &:hover { color: #1abc9c; }
@@ -51,7 +43,13 @@
   .EditUtil {
     background-color: #f8f8f8; border-radius: 6px;
     .btn {
-      color: #999;
+      color: #bdc3c7;
+    }
+    .EDIT:hover {
+      color: #1abc9c;
+    }
+    .DELETE:hover {
+      color: #e74c3c;
     }
   }
   .btn {
@@ -126,32 +124,27 @@
     img { width: 50px; height: 50px; background-color: #f3f3f3; }
   }
   .Author { font-weight: bold; }
-  >div>.Author { font-size: 14px; }
-  .Text { line-height: 23px; margin: 4px 0; color: #333; }
-  >div>.Text { font-size: 14px; }
+  .Text { margin: 4px 0; color: #333; }
   .Verify {
     display: none;
     &.PERSONAL {
-      display: inline; text-decoration: none; color: #fb0; text-shadow: 0 0 1px #f90;
+      display: inline; text-decoration: none; color: #fb0;
     }
     &.ORG {
-      display: inline; text-decoration: none; color: #07e; text-shadow: 0 0 1px #14f;
+      display: inline; text-decoration: none; color: #07e;
     }
   }
-  >div>.Verify { font-size: 14px; }
   .Pic { width: 255px; margin-bottom: 15px; display: none;
     a { float: left; margin: 5px 5px 0 0; }
   }
   .Retweeted {
-    background-color: #f2f2f2; border: solid 1px #d9d9d9; border-radius: 5px;
-    padding: 10px 20px; margin: 10px 0 15px; position: relative;
-    .CaretShadow { position: absolute; top: -11px; color: #d9d9d9; }
-    .Caret { position: absolute; top: -10px; color: #f2f2f2; }
-    .AuthorDescription { font-size: 10px; }
+    background-color: #f2f2f2; border-radius: 6px;
+    padding: 10px 20px; margin: 10px 0 15px;font-size: 80%;
+//    .Author, .Verify, .Text, .Time, .Handle { font-size: 80%; }
   }
   .Handle { float: right; visibility: hidden; }
   textarea[name="description"] { margin-top: 10px; }
-  .Description { margin-top: 10px; padding-left: 6px; border-left: 2px solid #ddd; font-size: 14px; line-height: 20px; }
+  .Description { padding-left: 6px; border-left: 2px solid #ddd; font-size: 80%; }
 }
 
 .WidgetItemList>li:hover {

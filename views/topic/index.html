@@ -9,7 +9,7 @@
 
           <div class="phl">
             <div class="HeadTxt clearfix">
-              <h4 class="HeadTtl"><a href="/topic/<%= topic._id %>"><%= topic.title %></a></h4>
+              <h5 class="HeadTtl"><a href="/topic/<%= topic._id %>"><%= topic.title %></a></h5>
 
               <div class="clearfix mbm">
                 <div class="pull-left">
@@ -26,17 +26,17 @@
                   </span>
                 </div>
                 <div class="pull-right">
-                  <span class="text-muted"><i class="icon-eye-open"></i> <%= topic.PVCount %></span>
-                  <button name="favorite" class="<%- locals.liked ? 'ExSelected' : '' %> btn btn-link"
-                          style="padding: 5px;vertical-align: baseline;font-size: 18px;"
+                  <span class="text-muted mrs"><i class="icon-eye-open"></i> <%= topic.PVCount %></span>
+                  <button name="favorite" class="<%- locals.liked ? 'ExSelected' : '' %> btn btn-link mrs"
+                          style="padding: 0;vertical-align: baseline;font-size: 18px;"
                           data-favorite='{"topicId":"<%= topic._id %>"}'>
                     <i class="HeadFVBtnIco icon-star StarIcon"></i> <span class="FVCount text-muted"><%= topic.FVCount %></span>
                   </button>
                   <% if (locals.isAuthor) { %>
-                  <a style="padding: 5px;" href="/topic/<%= topic._id %>/edit" title="编辑"><i class="icon-pencil"></i></a>
+                  <a class="mrs" href="/topic/<%= topic._id %>/edit" title="编辑"><i class="icon-pencil"></i></a>
                   <% include _deleteBtn.html %>
                   <% } %>
-                  <a style="padding: 5px;" target="_blank" href="/topic/<%= topic._id %>/share_chang" title="分享"><i
+                  <a class="mls" target="_blank" href="/topic/<%= topic._id %>/share_chang" title="分享"><i
                     class="icon-share-alt"></i></a>
                 </div>
               </div>

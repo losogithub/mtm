@@ -7,6 +7,10 @@
   color: #ffdd11;
   text-shadow: 0 0 1px #443a00;
 }
+.noTransition * {
+  -webkit-transition: none !important;
+  transition: none !important;
+}
 .Shadow {
   position: absolute;
   bottom: 0;
@@ -26,19 +30,8 @@
   padding: 0 0 40px;
   margin-bottom: 0;
 }
-.WidgetItemList > li > div:hover {
+.WidgetItemList > li:hover {
   background-color: #f8f8f8;
-}
-.WidgetItemList .Content {
-  *zoom: 1;
-}
-.WidgetItemList .Content:before,
-.WidgetItemList .Content:after {
-  display: table;
-  content: " ";
-}
-.WidgetItemList .Content:after {
-  clear: both;
 }
 .WidgetItemList .Quote {
   font-size: 11px;
@@ -47,20 +40,14 @@
 }
 .WidgetItemList .Quote,
 .WidgetItemList .Quote * {
-  color: #999;
-}
-.LINK .Quote a {
-  color: #7c94aa;
-}
-.CITE .Quote {
-  margin-top: 5px;
+  color: #bdc3c7;
 }
 /*工具栏*/
 .SortUtil {
   position: absolute;
   top: 0px;
   right: -21px;
-  display: none;
+  visibility: hidden;
 }
 .SortUtil i {
   display: block;
@@ -92,7 +79,13 @@
   border-radius: 6px;
 }
 .BottomUtil .EditUtil .btn {
-  color: #999;
+  color: #bdc3c7;
+}
+.BottomUtil .EditUtil .EDIT:hover {
+  color: #1abc9c;
+}
+.BottomUtil .EditUtil .DELETE:hover {
+  color: #e74c3c;
 }
 .BottomUtil .btn {
   vertical-align: baseline;
@@ -232,19 +225,10 @@
 .WEIBO_CREATE .Author {
   font-weight: bold;
 }
-.WEIBO > div > .Author,
-.WEIBO_CREATE > div > .Author {
-  font-size: 14px;
-}
 .WEIBO .Text,
 .WEIBO_CREATE .Text {
-  line-height: 23px;
   margin: 4px 0;
   color: #333;
-}
-.WEIBO > div > .Text,
-.WEIBO_CREATE > div > .Text {
-  font-size: 14px;
 }
 .WEIBO .Verify,
 .WEIBO_CREATE .Verify {
@@ -255,18 +239,12 @@
   display: inline;
   text-decoration: none;
   color: #fb0;
-  text-shadow: 0 0 1px #f90;
 }
 .WEIBO .Verify.ORG,
 .WEIBO_CREATE .Verify.ORG {
   display: inline;
   text-decoration: none;
   color: #07e;
-  text-shadow: 0 0 1px #14f;
-}
-.WEIBO > div > .Verify,
-.WEIBO_CREATE > div > .Verify {
-  font-size: 14px;
 }
 .WEIBO .Pic,
 .WEIBO_CREATE .Pic {
@@ -282,27 +260,10 @@
 .WEIBO .Retweeted,
 .WEIBO_CREATE .Retweeted {
   background-color: #f2f2f2;
-  border: solid 1px #d9d9d9;
-  border-radius: 5px;
+  border-radius: 6px;
   padding: 10px 20px;
   margin: 10px 0 15px;
-  position: relative;
-}
-.WEIBO .Retweeted .CaretShadow,
-.WEIBO_CREATE .Retweeted .CaretShadow {
-  position: absolute;
-  top: -11px;
-  color: #d9d9d9;
-}
-.WEIBO .Retweeted .Caret,
-.WEIBO_CREATE .Retweeted .Caret {
-  position: absolute;
-  top: -10px;
-  color: #f2f2f2;
-}
-.WEIBO .Retweeted .AuthorDescription,
-.WEIBO_CREATE .Retweeted .AuthorDescription {
-  font-size: 10px;
+  font-size: 80%;
 }
 .WEIBO .Handle,
 .WEIBO_CREATE .Handle {
@@ -315,11 +276,9 @@
 }
 .WEIBO .Description,
 .WEIBO_CREATE .Description {
-  margin-top: 10px;
   padding-left: 6px;
   border-left: 2px solid #ddd;
-  font-size: 14px;
-  line-height: 20px;
+  font-size: 80%;
 }
 .WidgetItemList > li:hover .WEIBO .Handle,
 .WidgetItemList > li:hover .WEIBO_CREATE .Handle {

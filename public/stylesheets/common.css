@@ -4,10 +4,6 @@ textarea {
   padding-bottom: 0;
   resize: vertical;
 }
-input[name='url'],
-input.Url {
-  color: #999;
-}
 body {
   word-wrap: break-word;
 }

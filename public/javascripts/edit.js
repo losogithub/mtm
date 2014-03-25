@@ -40,9 +40,6 @@
       .find('.Verify')
       .addClass(!options.user.verified ? '' : options.user.verified_type ? 'ORG' : 'PERSONAL')
       .end()
-      .find('.AuthorDescription')
-      .text(options.user.description)
-      .end()
       .find('.Text')
       .html(options.parsed_text)
       .end()
@@ -112,9 +109,12 @@
 
     hiddenSlideUp: function (callback) {
       return this
+        .addClass('noTransition')
         .css('visibility', 'hidden')
         .slideUp(100, function () {
-          $(this).css('visibility', 'visible');
+          $(this)
+            .css('visibility', 'visible')
+            .removeClass('noTransition');
           if ($.isFunction(callback)) {
             callback.call(this);
           }
@@ -193,9 +193,8 @@
 
       this.widget()
         .data('options', this.options.options)
-        .find('>div')
+        .css('background-color', '#2c3e50')
         .prepend($templates.find('.Widget:first').clone(true))
-        .end()
         .find('.Widget')
         .prepend($templates.find('.Widget .' + this.type).clone(true))
         .end()
@@ -1374,9 +1373,7 @@
     //填充新内容，然后删除旧内容，顺序很重要！！！防止抖动
     $item
       .data('options', options)
-      .find('>div')
       .prepend($templates.find('.Item:first').clone())
-      .end()
       .find('.Item')
       .prepend($templates.find('.Item .' + type).clone())
       .end();
@@ -1886,7 +1883,7 @@
     $ul
       //防止拖动开始时高度减小导致的抖动
       .mousedown(function (e) {
-        $(this).css('min-height', $(this).height());
+        $(this).css('min-height', $(this).outerHeight());
       })
       .mouseup(function () {
         $(this).removeAttr('style');
