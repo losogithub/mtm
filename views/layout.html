@@ -2,7 +2,7 @@
 <% var temp = !locals.body ? null : locals.body.match(/^.{4}([^#]*)##/); %>
 <% temp = !temp ? null : !temp[1] ? null : temp[1] %>
 <% locals.pageType = locals.pageType || temp; %>
-<html ng-app="sng">
+<html lang="zh-cn" ng-app="sng">
 <head>
   <title><%= locals.title ? title + ' - 石子儿' : '石子儿 - 让互联网讲故事' %></title>
   <meta name="viewport" content="width=device-width">
@@ -115,8 +115,8 @@
       <li>
         <a class="Logo" href="/" title="让互联网讲故事"><img src="/images/logo_full_160x64.png"></a>
       </li>
-      <li><a href="/works"><i class="icon-caret-down"></i> 菜单</a>
-        <ul style="z-index: 1002;">
+      <li><a><i class="icon-caret-down"></i> 菜单</a>
+        <ul style="z-index: 1002; width: 100px;">
           <li class="<%= pageType == 'HOT' && 'active' || '' %>"><a href="/hot" title="热门总结"><i class="icon-fire"></i> 热门</a></li>
           <li class="<%= pageType == 'CLASSIC' && 'active' || '' %>"><a href="/classic" title="经典总结"><i class="icon-book"></i> 经典</a></li>
           <li class="<%= pageType == 'NEW' && 'active' || '' %>" style="border-radius: 0;"><a href="/new" title="最新总结"><i class="icon-time"></i> 最新</a></li>
