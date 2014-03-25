@@ -36,7 +36,7 @@
           <div class="mtm">
             <a target="_blank" href="<%= locals.authorPersonalUrl || '' %>"
                title="<%= locals.authorPersonalUrl || '' %>" class="text-default">
-              <i class="icon-home"></i>
+              <i class="fa fa-home"></i>
               <%= locals.authorPersonalUrl || '' %>
             </a>
           </div>
@@ -44,14 +44,14 @@
           <div class="mtm">
             <button name="favorite" class="<%= locals.likedBefore ? 'ExSelected' : '' %> btn btn-danger"
                     data-favorite='{"authorName":"<%= authorName %>"}'>
-              <i class="icon-star StarIcon" style="vertical-align: middle;"></i>
+              <i class="fa fa-star StarIcon" style="vertical-align: middle;"></i>
               <span class="">喜欢</span>
             </button>
           </div>
           <% } %>
 
           <div style="position: relative;">
-            <span class="SubFV"><i class="FVIco icon-star"></i>
+            <span class="SubFV"><i class="FVIco fa fa-star"></i>
               <span class="mdFVCount01Num"><%= locals.favourite || '0' %></span></span>
           </div>
 

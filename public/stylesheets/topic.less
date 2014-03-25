@@ -61,25 +61,21 @@
 
 .Content.LINK {
   .Title {
-    font-size: 20px; line-height: 1.1;
-    a {
-      font-weight: bold;
-    }
+    font-size: 20px; line-height: 1.1;font-weight: bold;
   }
-  .Snippet { line-height: 17px; margin-top: 3px; }
+  .Snippet { line-height: 1.2; }
   .Thumb {
-    margin-top: 7px;
     img { max-width: 150px; max-height: 150px; }
   }
-  .Description { margin-top: 10px; padding-left: 6px; border-left: 2px solid #ccc; font-size: 14px; line-height: 20px; }
+  .Description { padding-left: 6px; border-left: 2px solid #ccc; line-height: 1.4; }
 }
 
 .Item .IMAGE {
   width: 600px; max-width: 100%; margin: auto;
   .Image { text-align: center;}
   img { max-width: 100%; max-height: 600px; }
-  .Title { text-align: center; line-height: 24px; font-weight: bold; font-size: 18px; }
-  .Description { line-height: 20px; font-size: 14px; }
+  .Title { line-height: 1.1; font-weight: bold; }
+  .Description { line-height: 1.4; }
 }
 
 .VIDEO_CREATE {
@@ -105,8 +101,8 @@
       }
     }
   }
-  .Title { font-weight: bold; }
-  .Description { margin-top: 10px; padding-left: 6px; border-left: 2px solid #ddd; font-size: 14px; line-height: 20px; }
+  .Title { font-weight: bold; line-height: 1.1; }
+  .Description { padding-left: 6px; border-left: 2px solid #ddd;line-height: 1.4; }
 }
 
 .CITE {
@@ -115,7 +111,7 @@
     i { font-size: 20px; }
     q { quotes: none; }
   }
-  .Description { margin-top: 5px; padding-left: 6px; border-left: 2px solid #ccc; font-size: 14px; line-height: 20px; }
+  .Description { padding-left: 6px; border-left: 2px solid #ccc; line-height: 1.4; }
 }
 
 .WEIBO, .WEIBO_CREATE {
@@ -139,12 +135,10 @@
   }
   .Retweeted {
     background-color: #f2f2f2; border-radius: 6px;
-    padding: 10px 20px; margin: 10px 0 15px;font-size: 80%;
-//    .Author, .Verify, .Text, .Time, .Handle { font-size: 80%; }
+    padding: 10px 20px; margin: 10px 0 15px; font-size: 80%;
   }
   .Handle { float: right; visibility: hidden; }
-  textarea[name="description"] { margin-top: 10px; }
-  .Description { padding-left: 6px; border-left: 2px solid #ddd; font-size: 80%; }
+  .Description { padding-left: 6px; border-left: 2px solid #ddd; line-height: 1.4; }
 }
 
 .WidgetItemList>li:hover {
@@ -154,12 +148,6 @@
 }
 
 .Item .TITLE { padding-bottom: 5px; border-bottom: 2px solid #EAECEE; }
-
-.Band {
-  li {
-    display: inline;
-  }
-}
 
 .HeadTxt {
   overflow: hidden;

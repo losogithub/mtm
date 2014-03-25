@@ -8,14 +8,14 @@
       <%= item.url || '' %>
     </a>
   </div>
-  <div class="Snippet text-muted small" style="display: <%= (item.type != 'ALL') && !item.snippet ? 'none' : 'block' %>;"><%- item.snippet ?
+  <div class="Snippet text-muted small mtx" style="display: <%= (item.type != 'ALL') && !item.snippet ? 'none' : 'block' %>;"><%- item.snippet ?
     escape(item.snippet).replace(/\n/g, "<br>") : '' %></div>
-  <div class="Thumb" style="display: <%= (item.type != 'ALL') && !item.src ? 'none' : 'block' %>;">
+  <div class="Thumb mts" style="display: <%= (item.type != 'ALL') && !item.src ? 'none' : 'block' %>;">
     <a class="fancybox" rel="gallery" href='<%= item.src || "" %>' title="<%= item.title || '' %>">
       <img src="<%= item.src || '' %>">
     </a>
   </div>
-  <div class="Description" style="display: <%= (item.type != 'ALL') && !item.description ? 'none' : 'block' %>;"><%- item.description ?
+  <div class="Description mts small" style="display: <%= (item.type != 'ALL') && !item.description ? 'none' : 'block' %>;"><%- item.description ?
     escape(item.description).replace(/\n/g, "<br>") : '' %></div>
 </div>
 <% } %>
@@ -30,7 +30,7 @@
   </div>
 
   <div class="Title text-center mts"><%= item.title || '' %></div>
-  <div class="Description text-center mts"><%- item.description ? escape(item.description).replace(/\n/g, "<br>") : '' %></div>
+  <div class="Description text-center small mtx"><%- item.description ? escape(item.description).replace(/\n/g, "<br>") : '' %></div>
   <div class="Quote" style="<%- (item.type != 'ALL') && !item.quote ? 'display:none' : '' %>">
     图片来源
     <a target="_blank" href="<%= item.quote || '' %>">
@@ -48,17 +48,17 @@
     来源
     <a target="_blank" class="VIDEO_URL" href="<%= item.url || '' %>"><%= item.quote || item.url || '' %></a>
   </div>
-  <div class="Title" style="display: <%= (item.type != 'ALL') && !item.title ? 'none' : 'block' %>;">
+  <div class="Title mtx" style="display: <%= (item.type != 'ALL') && !item.title ? 'none' : 'block' %>;">
     <a target="_blank" class="VIDEO_URL text-default" href='<%= item.url ? item.url : "" %>'><%= item.title ? item.title : '' %></a>
   </div>
-  <div class="Description" style="display: <%= (item.type != 'ALL') && !item.description ? 'none' : 'block' %>;"><%- item.description ?
+  <div class="Description small mtx" style="display: <%= (item.type != 'ALL') && !item.description ? 'none' : 'block' %>;"><%- item.description ?
     escape(item.description).replace(/\n/g, "<br>") : '' %></div>
 </div>
 <% } %>
 <% if (item.type == 'CITE' || item.type == 'ALL') { %>
 <div class='Content CITE'>
   <div class="Cite" style="color: #2980b9;">
-    <i class="icon-quote-left"></i>
+    <i class="fa fa-quote-left"></i>
     <q><%- item.cite ? escape(item.cite).replace(/\n/g, "<br>") : '' %></q>
   </div>
 
@@ -67,7 +67,7 @@
     <a target="_blank" href="<%= !item.url ? '' : item.url %>"><%= !item.url ? '' : !item.title ? item.url : item.title %></a>
     <span ><%= item.url ? '' : !item.title ? '' : item.title %></span>
   </div>
-  <div class="Description" style="display: <%= (item.type != 'ALL') && !item.description ? 'none' : 'block' %>;"><%- item.description ?
+  <div class="Description small mtx" style="display: <%= (item.type != 'ALL') && !item.description ? 'none' : 'block' %>;"><%- item.description ?
     escape(item.description).replace(/\n/g, "<br>") : '' %></div>
 </div>
 <% } %>
@@ -90,11 +90,13 @@
   <div class="Text"><%- item.parsed_text || '' %></div>
   <div class="Pic clearfix" style="<%= item.pic_urls && item.pic_urls.length && 'display: block;' || '' %><%= item.pic_urls && item.pic_urls.length == 4 && 'width: 170px;' || '' %>">
     <% if (item.pic_urls) { %>
-    <% if (item.pic_urls.length == 1) { %>
+    <% if (item.pic_urls.length == 1 && item.pic_urls[0]) { %>
     <a class="WeiboImage fancybox" rel="gallery" href="<%= item.pic_urls[0].thumbnail_pic.replace('/thumbnail/', '/large/') %>"><img src="<%= item.pic_urls[0].thumbnail_pic %>"></a>
     <% } else { %>
     <% for (var i = 0; i < item.pic_urls.length; i++) { %>
+    <% if (item.pic_urls[i]) { %>
     <a class="WeiboImage fancybox" rel="gallery" href="<%= item.pic_urls[i].thumbnail_pic.replace('/thumbnail/', '/large/') %>"><img src="<%= item.pic_urls[i].thumbnail_pic.replace('/thumbnail/', '/square/') %>"></a>
+    <% } %>
     <% } %>
     <% } %>
     <% } %>
@@ -109,36 +111,37 @@
     <div class="Text"><%- retweetedItem.parsed_text || '' %></div>
     <div class="Pic clearfix" style="<%= retweetedItem.pic_urls && retweetedItem.pic_urls.length && 'display: block;' || '' %><%= retweetedItem.pic_urls && retweetedItem.pic_urls.length == 4 && 'width: 170px;' || '' %>">
       <% if (retweetedItem.pic_urls) { %>
-      <% if (retweetedItem.pic_urls.length == 1) { %>
+      <% if (retweetedItem.pic_urls.length == 1 && retweetedItem.pic_urls[0]) { %>
       <a class="WeiboImage fancybox" rel="gallery" href="<%= retweetedItem.pic_urls[0].thumbnail_pic.replace('/thumbnail/', '/large/') %>"><img src="<%= retweetedItem.pic_urls[0].thumbnail_pic %>"></a>
       <% } else { %>
       <% for (var i = 0; i < retweetedItem.pic_urls.length; i++) { %>
+      <% if (retweetedItem.pic_urls[i]) { %>
       <a class="WeiboImage fancybox" rel="gallery" href="<%= retweetedItem.pic_urls[i].thumbnail_pic.replace('/thumbnail/', '/large/') %>"><img src="<%= retweetedItem.pic_urls[i].thumbnail_pic.replace('/thumbnail/', '/square/') %>"></a>
       <% } %>
       <% } %>
       <% } %>
+      <% } %>
     </div>
-    <% console.log(retweetedItem.time); %>
     <a target="_blank" class="Time text-muted" style="float: left;" href="<%= retweetedItem.user && 'http://weibo.com/' + retweetedItem.user.idstr + '/' + retweetedItem.mid62 || '' %>"><%= retweetedItem.time || '' %></a>
     <div class="Handle">
-      <a target="_blank" class="Forward text-muted mrs" href="<%= retweetedItem.user && 'http://weibo.com/' + retweetedItem.user.idstr + '/' + retweetedItem.mid62 + '?type=repost' || '' %>"><i class="icon-share"></i> 转发</a>
-      <a target="_blank" class="Comment text-muted" href="<%= retweetedItem.user && 'http://weibo.com/' + retweetedItem.user.idstr + '/' + retweetedItem.mid62 || '' %>"><i class="icon-comment-alt"></i> 评论</a>
+      <a target="_blank" class="Forward text-muted mrs" href="<%= retweetedItem.user && 'http://weibo.com/' + retweetedItem.user.idstr + '/' + retweetedItem.mid62 + '?type=repost' || '' %>"><i class="fa fa-share"></i> 转发</a>
+      <a target="_blank" class="Comment text-muted" href="<%= retweetedItem.user && 'http://weibo.com/' + retweetedItem.user.idstr + '/' + retweetedItem.mid62 || '' %>"><i class="fa fa-comment"></i> 评论</a>
     </div>
     <div class="clearfix"></div>
   </div>
   <% } %>
   <a target="_blank" class="Time text-muted" style="float: left;" href="<%= item.user && 'http://weibo.com/' + item.user.idstr + '/' + item.mid62 || '' %>"><%= item.time || '' %></a>
   <div class="Handle">
-    <a target="_blank" class="Forward text-muted mrs" href="<%= item.user && 'http://weibo.com/' + item.user.idstr + '/' + item.mid62 + '?type=repost' || '' %>"><i class="icon-share"></i> 转发</a>
-    <a target="_blank" class="Comment text-muted" href="<%= item.user && 'http://weibo.com/' + item.user.idstr + '/' + item.mid62 || '' %>"><i class="icon-comment-alt"></i> 评论</a>
+    <a target="_blank" class="Forward text-muted mrs" href="<%= item.user && 'http://weibo.com/' + item.user.idstr + '/' + item.mid62 + '?type=repost' || '' %>"><i class="fa fa-share"></i> 转发</a>
+    <a target="_blank" class="Comment text-muted" href="<%= item.user && 'http://weibo.com/' + item.user.idstr + '/' + item.mid62 || '' %>"><i class="fa fa-comment"></i> 评论</a>
   </div>
   <div class="clearfix"></div>
-  <div class="Description mtm" style="display: <%= (item.type != 'ALL') && !item.description ? 'none' : 'block' %>;"><%- item.description ?
+  <div class="Description small mtx" style="display: <%= (item.type != 'ALL') && !item.description ? 'none' : 'block' %>;"><%- item.description ?
     escape(item.description).replace(/\n/g, "<br>") : '' %></div>
 </div>
 <% } %>
 <% if (item.type == 'TEXT' || item.type == 'ALL') { %>
-<div class='Content TEXT' style="line-height: 1.2;">
+<div class='Content TEXT' style="line-height: 1.4;">
   <%- item.text ? escape(item.text).replace(/\n/g, "<br>") : '' %>
 </div>
 <% } %>

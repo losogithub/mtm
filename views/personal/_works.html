@@ -15,17 +15,17 @@
           <a class="text-muted <%= (mt == 'c') ? 'text-primary' : '' %>"
              href="?mt=c&amp;mo=<%= mt != 'c' || mo == 'a' ? 'd' : 'a' %>">创建日期
           <% if (mt != 'c' || mo == 'd') { %>
-          <i class="icon-caret-down"></i>
+          <i class="fa fa-caret-down"></i>
           <% } else { %>
-          <i class="icon-caret-up"></i>
+          <i class="fa fa-caret-up"></i>
           <% } %>
           </a>
           <a class="text-muted <%= (mt == 'u') ? 'text-primary' : '' %>"
              href="?mt=u&amp;mo=<%= mt != 'u' || mo == 'a' ? 'd' : 'a' %>">更新日期
           <% if (mt != 'u' || mo == 'd') { %>
-          <i class="icon-caret-down"></i>
+          <i class="fa fa-caret-down"></i>
           <% } else { %>
-          <i class="icon-caret-up"></i>
+          <i class="fa fa-caret-up"></i>
           <% } %>
           </a>
         </span>
@@ -36,9 +36,9 @@
         <a class="text-muted <%= (mt == 'p') ? 'text-primary' : '' %>"
            href="?mt=p&amp;mo=<%= mt != 'p' || mo == 'a' ? 'd' : 'a' %>">访问量
         <% if (mt != 'p' || mo == 'd') { %>
-        <i class="icon-caret-down"></i>
+        <i class="fa fa-caret-down"></i>
         <% } else { %>
-        <i class="icon-caret-up"></i>
+        <i class="fa fa-caret-up"></i>
         <% } %>
         </a>
       </div>
@@ -48,9 +48,9 @@
         <a class="text-muted <%= (mt == 'r') ? 'text-primary' : '' %>"
            href="?mt=r&amp;mo=<%= mt != 'r' || mo == 'a' ? 'd' : 'a' %>">上升率
         <% if (mt != 'r' || mo == 'd') { %>
-        <i class="icon-caret-down"></i>
+        <i class="fa fa-caret-down"></i>
         <% } else { %>
-        <i class="icon-caret-up"></i>
+        <i class="fa fa-caret-up"></i>
         <% } %>
         </a>
       </div>

@@ -62,21 +62,25 @@
         $pic.css('width', '170px');
       }
       if (options.pic_urls.length == 1) {
-        $image
-          .clone(true)
-          .prependTo($pic)
-          .attr('href', options.pic_urls[0].thumbnail_pic)
-          .find('img')
-          .attr('src', options.pic_urls[0].thumbnail_pic);
-      } else {
-        for (var i = 0; i < options.pic_urls.length; i++) {
-          var src = options.pic_urls[i].thumbnail_pic.replace('/thumbnail/', '/square/');
+        if (options.pic_urls[0]) {
           $image
             .clone(true)
             .prependTo($pic)
-            .attr('href', src)
+            .attr('href', options.pic_urls[0].thumbnail_pic)
             .find('img')
-            .attr('src', src);
+            .attr('src', options.pic_urls[0].thumbnail_pic);
+        }
+      } else {
+        for (var i = 0; i < options.pic_urls.length; i++) {
+          var src = options.pic_urls[i].thumbnail_pic.replace('/thumbnail/', '/square/');
+          if (options.pic_urls[i]) {
+            $image
+              .clone(true)
+              .prependTo($pic)
+              .attr('href', src)
+              .find('img')
+              .attr('src', src);
+          }
         }
       }
     }
@@ -317,7 +321,8 @@
           data: $.extend({}, data, {
             topicId: topicId
           })
-        }).done(doneCallback)
+        })
+          .done(doneCallback)
           .fail(fail);
       } else {
         var options = this.widget().prev().data('options');

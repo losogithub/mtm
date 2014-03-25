@@ -17,9 +17,9 @@
         </div>
         <div class="clearfix pbx">
           <div class="pull-right">
-            <span class="text-muted mrx"><i class="icon-star"></i> <%= topic.FVCount %></span>
-            <span class="text-muted mrx"><i class="icon-eye-open"></i> <%= topic.PVCount %></span>
-            <a class="text-muted" target="_blank" href="/topic/<%= topic._id %>/share_chang" title="分享"><i class="icon-share-alt"></i></a>
+            <span class="text-muted mrx"><i class="fa fa-star"></i> <%= topic.FVCount %></span>
+            <span class="text-muted mrx"><i class="fa fa-eye"></i> <%= topic.PVCount %></span>
+            <a class="text-muted" target="_blank" href="/topic/<%= topic._id %>/share_chang" title="分享"><i class="fa fa-share"></i></a>
           </div>
           <div style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
             <a target="_blank" href="/u/<%= topic.author %>" title="<%= topic.author %>"><%= topic.author %></a>

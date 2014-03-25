@@ -11,9 +11,12 @@
   <meta name="description" content="<%= locals.description
     || '把各种各样的信息，自由地搭配组合，总结成一个页面保存起来，展示给感兴趣的人。我们的致力于让任何人都可以设计信息，让其他人和信息相遇、相会。' %>">
 
-  <link type='text/css' rel='stylesheet' href='http://cdn.bootcss.com/twitter-bootstrap/3.0.3/css/bootstrap.css'/>
+  <link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+  <!--<link type='text/css' rel='stylesheet' href='http://cdn.bootcss.com/twitter-bootstrap/3.0.3/css/bootstrap.css'/>-->
   <link type='text/css' rel='stylesheet' href="/stylesheets/flat-ui.css">
-  <link type='text/css' rel="stylesheet" href="/stylesheets/font-awesome.min.css">
+  <!--<link href="http://cdn.bootcss.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">-->
+  <link href="//libs.baidu.com/fontawesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
+  <!--<link type='text/css' rel="stylesheet" href="/stylesheets/font-awesome.min.css">-->
   <link type='text/css' rel='stylesheet' href='/stylesheets/common.css'/>
   <% if (locals.pageType == 'ACCOUNT' || locals.pageType == 'LOGIN' || locals.pageType == 'SIGNUP') { %>
   <link type='text/css' rel="stylesheet" href="/stylesheets/account.css"/>
@@ -22,10 +25,13 @@
   <link type='text/css' rel='stylesheet' href='<%= css[i] %>'/>
   <% } %>
 
-  <script src="http://cdn.bootcss.com/angular.js/1.2.5/angular.min.js"></script>
-  <script type="text/javascript" src="http://cdn.bootcss.com/jquery/1.10.2/jquery.min.js"></script>
+  <script src="http://cdn.bootcss.com/angular.js/1.2.0rc3/angular.min.js"></script>
+  <!--<script src="http://cdn.bootcss.com/angular.js/1.2.5/angular.min.js"></script>-->
+  <script src="http://libs.baidu.com/jquery/1.10.2/jquery.min.js"></script>
+  <!--<script type="text/javascript" src="http://cdn.bootcss.com/jquery/1.10.2/jquery.min.js"></script>-->
   <!--<script type="text/javascript" src="/javascripts/bootstrap.js"></script>-->
-  <script src="http://cdn.bootcss.com/twitter-bootstrap/3.0.3/js/bootstrap.min.js"></script>
+  <script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+  <!--<script src="http://cdn.bootcss.com/twitter-bootstrap/3.0.3/js/bootstrap.min.js"></script>-->
   <script type="text/javascript" src="/javascripts/ui-bootstrap-tpls-0.10.0.js"></script>
   <script type="text/javascript" src="/javascripts/bootstrap-select.js"></script>
   <script type="text/javascript" src="/javascripts/flatui-checkbox.js"></script>
@@ -62,9 +68,9 @@
       <li>
         <a class="Logo" href="/" title="让互联网讲故事"><img src="/images/logo_full_160x64.png"></a>
       </li>
-      <li class="<%= pageType == 'HOT' && 'active' || '' %>"><a href="/hot" title="热门总结"><i class="icon-fire"></i> 热门</a></li>
-      <li class="<%= pageType == 'CLASSIC' && 'active' || '' %>"><a href="/classic" title="经典总结"><i class="icon-book"></i> 经典</a></li>
-      <li class="<%= pageType == 'NEW' && 'active' || '' %>" style="border-radius: 0;"><a href="/new" title="最新总结"><i class="icon-time"></i> 最新</a></li>
+      <li class="<%= pageType == 'HOT' && 'active' || '' %>"><a href="/hot" title="热门总结"><i class="fa fa-fire"></i> 热门</a></li>
+      <li class="<%= pageType == 'CLASSIC' && 'active' || '' %>"><a href="/classic" title="经典总结"><i class="fa fa-book"></i> 经典</a></li>
+      <li class="<%= pageType == 'NEW' && 'active' || '' %>" style="border-radius: 0;"><a href="/new" title="最新总结"><i class="fa fa-clock-o"></i> 最新</a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
       <% if (!locals.username) { %>
@@ -74,7 +80,7 @@
       <% } else { %>
       <li>
         <a href="/works">
-          <i class="icon-caret-down"></i>
+          <i class="fa fa-caret-down"></i>
           <img class="img-circle" width="20" height="20"
             src="<%= locals.imageUrl || '/images/no_img/user_80x80.png' %>"
             onerror="shizier.errorImage(this,'user_80x80');">
@@ -83,20 +89,20 @@
         <ul style="z-index: 1002;">
           <li>
             <a href="/settings">
-              <i class="icon-cog"></i>
+              <i class="fa fa-cog"></i>
               设置
             </a>
           </li>
           <li>
             <a href="/faq?serviceNo=4">
-              <i class="icon-question-sign"></i>
+              <i class="fa fa-question-circle"></i>
               帮助
             </a>
           </li>
           <li>
             <form action="/logout" method="post">
               <button class="btn btn-link btn-block" type="submit">
-                <i class="icon-signout"></i>
+                <i class="fa fa-sign-out"></i>
                 登出
               </button>
             </form>
@@ -115,11 +121,11 @@
       <li>
         <a class="Logo" href="/" title="让互联网讲故事"><img src="/images/logo_full_160x64.png"></a>
       </li>
-      <li><a href="##"><i class="icon-caret-down"></i> 菜单</a>
+      <li><a href="##"><i class="fa fa-caret-down"></i> 菜单</a>
         <ul style="z-index: 1002; width: 100px;">
-          <li class="<%= pageType == 'HOT' && 'active' || '' %>"><a href="/hot" title="热门总结"><i class="icon-fire"></i> 热门</a></li>
-          <li class="<%= pageType == 'CLASSIC' && 'active' || '' %>"><a href="/classic" title="经典总结"><i class="icon-book"></i> 经典</a></li>
-          <li class="<%= pageType == 'NEW' && 'active' || '' %>" style="border-radius: 0;"><a href="/new" title="最新总结"><i class="icon-time"></i> 最新</a></li>
+          <li class="<%= pageType == 'HOT' && 'active' || '' %>"><a href="/hot" title="热门总结"><i class="fa fa-fire"></i> 热门</a></li>
+          <li class="<%= pageType == 'CLASSIC' && 'active' || '' %>"><a href="/classic" title="经典总结"><i class="fa fa-book"></i> 经典</a></li>
+          <li class="<%= pageType == 'NEW' && 'active' || '' %>" style="border-radius: 0;"><a href="/new" title="最新总结"><i class="fa fa-clock-o"></i> 最新</a></li>
           <% if (!locals.username) { %>
           <li><a href="/signup">注册</a></li>
           <li><a href="/login">登录</a></li>
@@ -138,7 +144,7 @@
           <li>
             <form action="/logout" method="post">
               <button class="btn btn-link btn-block" type="submit">
-                <i class="icon-signout"></i>
+                <i class="fa fa-sign-out"></i>
                 登出
               </button>
             </form>

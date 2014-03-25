@@ -5,7 +5,7 @@
       <td>
         <% if (!topic.publishDate) { %>
         <button name="publish" class='btn btn-sm btn-danger'
-                data-loading-text="发布 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;" type="button">发布
+                data-loading-text="发布 &lt;i class='fa fa-spinner fa-spin'&gt;&lt;/i&gt;" type="button">发布
         </button>
         <% } %>
         <a name="done"
@@ -20,7 +20,7 @@
       <span id="_asterisk" style="display: none;">*</span>
       <span id="_saved" style="display: none;" class="text-muted">- 所有修改都已保存，可以直接离开本页面</span>
       <span id="_error" style="display: none;" class="text-danger">- 操作失败，请刷新页面撤销刚才的修改</span>
-      <span id="_loading" style="display: none;" class="text-muted">- 请稍候 <i class='icon-spinner icon-spin'></i></span>
+      <span id="_loading" style="display: none;" class="text-muted">- 请稍候 <i class='fa fa-spinner fa-spin'></i></span>
     </h5>
   </div>
 </div>
@@ -41,7 +41,7 @@
               <div class="pull-right">
                 <button name="edit" class="btn btn-link text-muted mrs" type="button"
                         style="vertical-align: baseline;padding: 0;font-size: 18px;"><i
-                  class="icon-pencil"></i> 编辑封面、标题、简介</button>
+                  class="fa fa-pencil"></i> 编辑封面、标题、简介</button>
 
                 <% include _deleteBtn.html %>
 
@@ -104,7 +104,7 @@
                   <input name="url" class="form-control flat AUTO_FOCUS" placeholder="链接URL" type="text">
                 </div>
                 <button name="preview" class="btn btn-info pull-left mrx" type="button" disabled='disabled'
-                        data-loading-text="预览 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;">预览
+                        data-loading-text="预览 &lt;i class='fa fa-spinner fa-spin'&gt;&lt;/i&gt;">预览
                 </button>
 
                 <% include _widget_BtnSet.html %>
@@ -133,7 +133,7 @@
                            style="position: absolute;top: 0;left: 0;bottom: 0;right: 0;background-color: rgba(0,0,0,0.2);">
                         <table style="margin: 0 auto;height: 100%;">
                           <td>
-                            <i class="icon-spinner icon-spin" style="color: white"></i>
+                            <i class="fa fa-spinner fa-spin" style="color: white"></i>
                           </td>
                         </table>
                       </div>
@@ -165,7 +165,7 @@
 
               <div class='Content IMAGE_CREATE'>
                 <div class="Image">
-                  <i class="icon-picture text-light"></i>
+                  <i class="fa fa-picture-o text-muted"></i>
                 </div>
                 <div class="InfoHint text-muted">
                   由于受版权保护，有些图片可能无法引用
@@ -176,7 +176,7 @@
                     <input name="url" class="form-control flat AUTO_FOCUS" placeholder="图片URL" type="text">
                   </div>
                   <button name="preview" class="btn btn-info pull-left mrx" type="button" disabled='disabled'
-                          data-loading-text="预览 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;">预览
+                          data-loading-text="预览 &lt;i class='fa fa-spinner fa-spin'&gt;&lt;/i&gt;">预览
                   </button>
 
                   <% include _widget_BtnSet.html %>
@@ -205,7 +205,7 @@
 
               <div class='Content VIDEO_CREATE'>
                 <div class="Thumb">
-                  <i class="icon-film text-light"></i>
+                  <i class="fa fa-film text-muted"></i>
                 </div>
                 <div class="InfoHint text-muted">
                   目前已支持<a
@@ -231,7 +231,7 @@
                   <input name="url" class="form-control flat AUTO_FOCUS" placeholder="视频URL" type="text">
                 </div>
                 <button name="preview" class="btn btn-info pull-left mrx" type="button" disabled='disabled'
-                        data-loading-text="预览 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;">预览
+                        data-loading-text="预览 &lt;i class='fa fa-spinner fa-spin'&gt;&lt;/i&gt;">预览
                 </button>
 
                 <% include _widget_BtnSet.html %>
@@ -291,7 +291,7 @@
                     <input name="url" class="form-control flat AUTO_FOCUS" placeholder="新浪微博URL" type="text">
                   </div>
                   <button name="preview" class="btn btn-info pull-left mrx" type="button" disabled='disabled'
-                          data-loading-text="预览 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;">预览
+                          data-loading-text="预览 &lt;i class='fa fa-spinner fa-spin'&gt;&lt;/i&gt;">预览
                   </button>
 
                   <% include _widget_BtnSet.html %>
@@ -318,8 +318,8 @@
                 <div class="Pic clearfix"></div>
                 <a target="_blank" class="Time text-muted pull-left"></a>
                 <div class="Handle">
-                  <a target="_blank" class="Forward text-muted mrs"><i class="icon-share"></i> 转发</a>
-                  <a target="_blank" class="Comment text-muted"><i class="icon-comment-alt"></i> 评论</a>
+                  <a target="_blank" class="Forward text-muted mrs"><i class="fa fa-share"></i> 转发</a>
+                  <a target="_blank" class="Comment text-muted"><i class="fa fa-comment"></i> 评论</a>
                 </div>
                 <div class="clearfix"></div>
 
@@ -376,8 +376,8 @@
               <div class="Pic clearfix"></div>
               <a target="_blank" class="Time text-muted pull-left"></a>
               <div class="Handle">
-                <a target="_blank" class="Forward text-muted mrs"><i class="icon-share"></i> 转发</a>
-                <a target="_blank" class="Comment text-muted"><i class="icon-comment-alt"></i> 评论</a>
+                <a target="_blank" class="Forward text-muted mrs"><i class="fa fa-share"></i> 转发</a>
+                <a target="_blank" class="Comment text-muted"><i class="fa fa-comment"></i> 评论</a>
               </div>
             </div>
           </div>

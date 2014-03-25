@@ -21,23 +21,23 @@
                     </span><span><%= topic.author %></span>
                   </a>
                   <span class="text-muted small mls">
-                    <i class="icon-edit"></i>
+                    <i class="fa fa-edit"></i>
                     <%= topic.updateAt %>
                   </span>
                 </div>
                 <div class="pull-right">
-                  <span class="text-muted mrs"><i class="icon-eye-open"></i> <%= topic.PVCount %></span>
+                  <span class="text-muted mrs"><i class="fa fa-eye"></i> <%= topic.PVCount %></span>
                   <button name="favorite" class="<%- locals.liked ? 'ExSelected' : '' %> btn btn-link mrs"
                           style="padding: 0;vertical-align: baseline;font-size: 18px;"
                           data-favorite='{"topicId":"<%= topic._id %>"}'>
-                    <i class="HeadFVBtnIco icon-star StarIcon"></i> <span class="FVCount text-muted"><%= topic.FVCount %></span>
+                    <i class="HeadFVBtnIco fa fa-star StarIcon"></i> <span class="FVCount text-muted"><%= topic.FVCount %></span>
                   </button>
                   <% if (locals.isAuthor) { %>
-                  <a class="mrs" href="/topic/<%= topic._id %>/edit" title="编辑"><i class="icon-pencil"></i></a>
+                  <a class="mrs" href="/topic/<%= topic._id %>/edit" title="编辑"><i class="fa fa-pencil"></i></a>
                   <% include _deleteBtn.html %>
                   <% } %>
                   <a class="mls" target="_blank" href="/topic/<%= topic._id %>/share_chang" title="分享"><i
-                    class="icon-share-alt"></i></a>
+                    class="fa fa-share"></i></a>
                 </div>
               </div>
 
@@ -47,7 +47,7 @@
             </div>
             <% if (!locals.items || !items.length) { %>
             <div class="NoItem">
-              <i class="icon-file-alt text-light" style="font-size: 50px;"></i>
+              <i class="fa fa-file-o text-light" style="font-size: 50px;"></i>
 
               <p class="text-secondary">这个总结还没有内容</p>
             </div>
@@ -87,7 +87,7 @@
               <a target="_blank" href="<%= site %>"
                  title="<%= site %>"
                  style="word-break: break-all;">
-                <i class="icon-home"></i>
+                <i class="fa fa-home"></i>
                 <%= site %>
               </a>
             </p>

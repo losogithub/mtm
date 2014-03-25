@@ -95,27 +95,19 @@
 .Content.LINK .Title {
   font-size: 20px;
   line-height: 1.1;
-}
-.Content.LINK .Title a {
   font-weight: bold;
 }
 .Content.LINK .Snippet {
-  line-height: 17px;
-  margin-top: 3px;
-}
-.Content.LINK .Thumb {
-  margin-top: 7px;
+  line-height: 1.2;
 }
 .Content.LINK .Thumb img {
   max-width: 150px;
   max-height: 150px;
 }
 .Content.LINK .Description {
-  margin-top: 10px;
   padding-left: 6px;
   border-left: 2px solid #ccc;
-  font-size: 14px;
-  line-height: 20px;
+  line-height: 1.4;
 }
 .Item .IMAGE {
   width: 600px;
@@ -130,14 +122,11 @@
   max-height: 600px;
 }
 .Item .IMAGE .Title {
-  text-align: center;
-  line-height: 24px;
+  line-height: 1.1;
   font-weight: bold;
-  font-size: 18px;
 }
 .Item .IMAGE .Description {
-  line-height: 20px;
-  font-size: 14px;
+  line-height: 1.4;
 }
 .VIDEO_CREATE .Thumb {
   text-align: center;
@@ -181,13 +170,12 @@
 }
 .VIDEO .Title {
   font-weight: bold;
+  line-height: 1.1;
 }
 .VIDEO .Description {
-  margin-top: 10px;
   padding-left: 6px;
   border-left: 2px solid #ddd;
-  font-size: 14px;
-  line-height: 20px;
+  line-height: 1.4;
 }
 .CITE .Cite {
   line-height: 26px;
@@ -201,11 +189,9 @@
   quotes: none;
 }
 .CITE .Description {
-  margin-top: 5px;
   padding-left: 6px;
   border-left: 2px solid #ccc;
-  font-size: 14px;
-  line-height: 20px;
+  line-height: 1.4;
 }
 .WEIBO .Avatar,
 .WEIBO_CREATE .Avatar {
@@ -267,15 +253,11 @@
   float: right;
   visibility: hidden;
 }
-.WEIBO textarea[name="description"],
-.WEIBO_CREATE textarea[name="description"] {
-  margin-top: 10px;
-}
 .WEIBO .Description,
 .WEIBO_CREATE .Description {
   padding-left: 6px;
   border-left: 2px solid #ddd;
-  font-size: 80%;
+  line-height: 1.4;
 }
 .WidgetItemList > li:hover .WEIBO .Handle,
 .WidgetItemList > li:hover .WEIBO_CREATE .Handle {
@@ -284,9 +266,6 @@
 .Item .TITLE {
   padding-bottom: 5px;
   border-bottom: 2px solid #EAECEE;
-}
-.Band li {
-  display: inline;
 }
 .HeadTxt {
   overflow: hidden;

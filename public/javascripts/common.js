@@ -80,21 +80,6 @@
       shizier.normalizeUrl($(this));
     });
 
-    $(".Nav-Right_Inner>li:last>button")
-      .click(function () {
-        var $i = $(this).find('>i');
-        $i.toggleClass('icon-caret-down icon-caret-up');
-        var $menu = $('.Nav-Drop').toggle();
-
-        $(document).one('click', function () {
-          $i.addClass('icon-caret-down');
-          $i.removeClass('icon-caret-up');
-          $menu.hide();
-        });
-
-        return false;
-      });
-
 
     $('button[name="favorite"]').click(function () {
       var $this = $(this);
