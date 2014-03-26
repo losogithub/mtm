@@ -4,17 +4,16 @@
 .WidgetItemList {
   &.WidgetItemList-Sorting>li {
     box-shadow: 0 0 0 2px @theme-color;
-    &:hover {
-      background-color: white;
-      .BottomUtil { display: none; }
-    }
+    background-color: white !important;
+    .AddUtil { display: none !important; }
+    .EditUtil { display: none !important; }
   }
   >li {
     .MoveUtil { cursor: move !important; }
     .SortUtil { visibility: hidden; display: block; }
     &:hover {
       .SortUtil { visibility: visible; }
-      .BottomUtil { display: block; }
+      .EditUtil { display: block; }
     }
     &:first-child .SortUtil>div:first-of-type { visibility: hidden; }
     &:last-child .SortUtil>div:last-of-type { visibility: hidden; }
@@ -31,13 +30,27 @@
       box-shadow: none !important;
 
       background-color: fade(@theme-color, 20%) !important;
-      .SortUtil>div, .BottomUtil { visibility: hidden !important; }
+      .SortUtil>div, .AddUtil, .EditUtil { visibility: hidden !important; }
       .MoveUtil { visibility: visible !important; }
     }
   }
+  .AddUtil {
+    display: block;
+    opacity: 0;
+    -webkit-transition: 0.2s linear;
+    transition: 0.2s linear;
+    &:hover { opacity: 1 !important; }
+    .Menu {
+      span { color: white; }
+      button { color: white; }
+    }
+  }
+  li:last-child {
+    .AddUtil {
+      opacity: 0.1;
+    }
+  }
 }
-
-body { position: relative; }
 
 /*悬浮菜单栏*/
 .Band {
@@ -49,23 +62,13 @@ body { position: relative; }
   .Band_Btn { float: right; }
 }
 
-/*编辑标题、缩略图、简介*/
-.Top {
-  #_topWidget_title {
-      input[name="title"] { display: inline-block; padding: 0 10px; height: 40px; line-height: 38px; font-size: 23px; font-weight: bold;
-        background-color: rgb(255, 254, 238); }
-    }
-    #_topWidget_description {
-      textarea { min-height: 90px; }
-    }
-}
-
 /*菜单*/
 .Menu {
   display: inline-block;
   span { cursor: default; font-weight: bold; }
   ul {
     display: inline;
+    padding: 0 20px;
     li {
       display: inline; margin-left: 15px;
     }
@@ -75,12 +78,6 @@ body { position: relative; }
     padding: 0;
     font-size: 18px;
   }
-}
-
-.WidgetItemList .Menu {
-  span { color: #bdc3c7; }
-  button { color: #bdc3c7; }
-  img { opacity: 0.2; }
 }
 
 /*微件*/
@@ -109,4 +106,8 @@ body { position: relative; }
 .VIDEO {
   input[name='title'] { margin-top: 8px; }
   textarea[name='description'] { margin-top: 10px; }
+}
+
+.WEIBO {
+  .Handle { visibility: hidden !important; }
 }

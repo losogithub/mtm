@@ -1,17 +1,6 @@
 @import "theme";
 @import "utils";
 
-.Shadow {
-  position: absolute; bottom: 0; height: 150px; width: 100%;
-  background-image: -moz-linear-gradient(top, fadeout(white, 100%), white);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(fadeout(white, 100%)), to(white));
-  background-image: -webkit-linear-gradient(top, fadeout(white, 100%), white);
-  background-image: -o-linear-gradient(top, fadeout(white, 100%), white);
-  background-image: linear-gradient(to bottom, fadeout(white, 100%), white);
-  background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00ffffff', endColorstr='#ffffffff', GradientType=0);
-}
-
 /*条目*/
 .WidgetItemList {
   list-style: none; padding: 0 0 40px; margin-bottom: 0;
@@ -33,25 +22,30 @@
   }
 }
 
-.BottomUtil {
+.AddUtil {
+  background-color: fade(#16a085, 80%); border-radius: 6px;
   display: none; line-height: 1;
-  position: absolute; bottom: -18px; left: 0; right: 0; padding: 0 15px;
+  position: absolute; bottom: -18px; left: 15px;
   z-index: 1000;
-  .AddUtil {
-    background-color: fade(#000, 3%); border-radius: 6px;
+  .btn {
+    vertical-align: baseline;
+    padding: 0;
+    font-size: 18px;
   }
-  .EditUtil {
-    background-color: #f8f8f8; border-radius: 6px;
-    .btn {
-      color: #bdc3c7;
-    }
-    .EDIT:hover {
-      color: #1abc9c;
-    }
-    .DELETE:hover {
-      color: #e74c3c;
-    }
+}
+.EditUtil {
+  background-color: #f8f8f8; border-radius: 6px;
+  .btn {
+    color: #bdc3c7;
   }
+  .EDIT:hover {
+    color: #1abc9c;
+  }
+  .DELETE:hover {
+    color: #e74c3c;
+  }
+  display: none; line-height: 1;
+  position: absolute; bottom: 0; right: 15px;
   .btn {
     vertical-align: baseline;
     padding: 0;

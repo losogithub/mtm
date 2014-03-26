@@ -244,8 +244,7 @@ function showShareChang(req, res, next) {
     res.set('Pragma', 'no-cache');
     res.render('topic/shareChang', {
       title: topic.title,
-      description: topic.description,
-      layout: false
+      description: topic.description
     });
     console.log('showShareChang done');
   });
@@ -355,13 +354,17 @@ function _generateImage(db, topicId, time, callback) {
     var fullFilePath = 'public/images/chang/' + filename;
     phantom.create({port: port}, function (ph) {
       ph.createPage(function (page) {
-        page.open('http://localhost:3000/topic/' + topicId + '/chang', function () {
-          page.render(fullFilePath, function () {
-            ph.exit();
+        try {
+          page.open('http://localhost:3000/topic/' + topicId + '/chang', function () {
+            page.render(fullFilePath, function () {
+              ph.exit();
 
-            _storeMongoGrid(db, topicId, time, fullFilePath, callback);
+              _storeMongoGrid(db, topicId, time, fullFilePath, callback);
+            });
           });
-        });
+        } catch (e) {
+          ph.exit();
+        }
       });
     });
   });

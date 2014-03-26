@@ -10,12 +10,13 @@
 /*li*/
 .WidgetItemList.WidgetItemList-Sorting > li {
   box-shadow: 0 0 0 2px #669966;
+  background-color: white !important;
 }
-.WidgetItemList.WidgetItemList-Sorting > li:hover {
-  background-color: white;
+.WidgetItemList.WidgetItemList-Sorting > li .AddUtil {
+  display: none !important;
 }
-.WidgetItemList.WidgetItemList-Sorting > li:hover .BottomUtil {
-  display: none;
+.WidgetItemList.WidgetItemList-Sorting > li .EditUtil {
+  display: none !important;
 }
 .WidgetItemList > li .MoveUtil {
   cursor: move !important;
@@ -27,7 +28,7 @@
 .WidgetItemList > li:hover .SortUtil {
   visibility: visible;
 }
-.WidgetItemList > li:hover .BottomUtil {
+.WidgetItemList > li:hover .EditUtil {
   display: block;
 }
 .WidgetItemList > li:first-child .SortUtil > div:first-of-type {
@@ -52,14 +53,30 @@
   max-height: 100px !important;
 }
 .WidgetItemList > li.ui-sortable-helper .SortUtil > div,
-.WidgetItemList > li.ui-sortable-helper .BottomUtil {
+.WidgetItemList > li.ui-sortable-helper .AddUtil,
+.WidgetItemList > li.ui-sortable-helper .EditUtil {
   visibility: hidden !important;
 }
 .WidgetItemList > li.ui-sortable-helper .MoveUtil {
   visibility: visible !important;
 }
-body {
-  position: relative;
+.WidgetItemList .AddUtil {
+  display: block;
+  opacity: 0;
+  -webkit-transition: 0.2s linear;
+  transition: 0.2s linear;
+}
+.WidgetItemList .AddUtil:hover {
+  opacity: 1 !important;
+}
+.WidgetItemList .AddUtil .Menu span {
+  color: white;
+}
+.WidgetItemList .AddUtil .Menu button {
+  color: white;
+}
+.WidgetItemList li:last-child .AddUtil {
+  opacity: 0.1;
 }
 /*悬浮菜单栏*/
 .Band {
@@ -83,19 +100,6 @@ body {
 .Band .Band_Btn {
   float: right;
 }
-/*编辑标题、缩略图、简介*/
-.Top #_topWidget_title input[name="title"] {
-  display: inline-block;
-  padding: 0 10px;
-  height: 40px;
-  line-height: 38px;
-  font-size: 23px;
-  font-weight: bold;
-  background-color: #fffeee;
-}
-.Top #_topWidget_description textarea {
-  min-height: 90px;
-}
 /*菜单*/
 .Menu {
   display: inline-block;
@@ -106,6 +110,7 @@ body {
 }
 .Menu ul {
   display: inline;
+  padding: 0 20px;
 }
 .Menu ul li {
   display: inline;
@@ -115,15 +120,6 @@ body {
   vertical-align: baseline;
   padding: 0;
   font-size: 18px;
-}
-.WidgetItemList .Menu span {
-  color: #bdc3c7;
-}
-.WidgetItemList .Menu button {
-  color: #bdc3c7;
-}
-.WidgetItemList .Menu img {
-  opacity: 0.2;
 }
 /*微件*/
 .LINK .Thumb .Image {
@@ -157,4 +153,7 @@ body {
 }
 .VIDEO textarea[name='description'] {
   margin-top: 10px;
+}
+.WEIBO .Handle {
+  visibility: hidden !important;
 }

@@ -6,65 +6,80 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge;charset=UTF-8">
   <meta name="description" content="<%= locals.description
     || '把各种各样的信息，自由地搭配组合，总结成一个页面保存起来，展示给感兴趣的人。我们的致力于让任何人都可以设计信息，让其他人和信息相遇、相会。' %>">
-  <link type='text/css' rel='stylesheet' href='/stylesheets/bootstrap.css'/>
-  <link type='text/css' rel='stylesheet' href='/stylesheets/todc-bootstrap.css'/>
-  <link type='text/css' rel="stylesheet" href="/stylesheets/font-awesome.min.css">
+  <link type='text/css' rel='stylesheet' href='/stylesheets/bootstrap.min.css'/>
+  <link type='text/css' rel='stylesheet' href="/stylesheets/flat-ui.css">
+  <link type='text/css' rel="stylesheet" href="/font-awesome-4.0.3/css/font-awesome.min.css">
   <link type='text/css' rel='stylesheet' href='/stylesheets/common.css'/>
   <link type='text/css' rel="stylesheet" href="/stylesheets/topic.css"/>
-  <link type='text/css' rel="stylesheet" href="/stylesheets/chang.css"/>
   <script type="text/javascript" src="/javascripts/jquery.min.js"></script>
   <script type="text/javascript" src="/javascripts/common.js"></script>
 </head>
-<body>
-<div style="min-height: 150px;max-height: 360px;position: relative; overflow: hidden;">
+<body style="width: 440px; min-width: 440px; background-color: white; position: relative;">
   <div style="height: 40px;background-color: rgba(0,0,0,0.4);position: absolute;top: 0;width: 100%;">
-    <table style="margin-left: 10px; float: left">
+    <table class="pull-left mlm" style=" height: 100%;">
       <td>
         <img src="/images/logo_white_50x20.png">
       </td>
     </table>
-    <p style="float: right; line-height: 40px; margin-right: 10px; color: white;">www.shizier.com</p>
+    <span class="pull-right" style="line-height: 40px; color: white;">www.shizier.com</span>
   </div>
   <img onerror="$(this).hide();" src="<%= topic.coverUrl %>"
        style="width: 100%;<%= topic.coverUrl ? '' : 'display: none;' %>">
 
-  <div class="Shadow"></div>
-</div>
+  <div class="phl">
+    <div class="HeadTxt clearfix">
+      <h5 class="HeadTtl"><a href="/topic/<%= topic._id %>"><%= topic.title %></a></h5>
 
-<div style="position: relative; top: -40px; margin: 0 10px;">
-  <div class="HeadTxt clearfix">
-    <h1 class="HeadTtl"><%= topic.title %></h1>
-
-    <div class="HeadOption clearfix">
-      <div class="HeadUser" style="float: left;">
-          <span class="HeadUserThumb"><img width="30" height="30"
-                                           src="<%= authorInfo.imgUrl || '/images/no_img/user_80x80.png' %>"
-                                           onerror="shizier.errorImage(this,'user_80x80');"></span><span
-        class="HeadUserName"><%= topic.author %></span>
+      <div class="clearfix mbm">
+        <div class="pull-left">
+          <a href="/u/<%= topic.author %>" title="<%= topic.author %>">
+            <span class="mrs" style="display: inline-block; width: 30px; height: 30px;">
+              <img width="30" height="30" class="img-circle"
+                   src="<%= authorInfo.imgUrl || '/images/no_img/user_80x80.png' %>"
+                   onerror="shizier.errorImage(this,'user_80x80');">
+            </span><span><%= topic.author %></span>
+          </a>
+            <span class="text-muted small mls">
+              <i class="fa fa-edit"></i>
+              <%= topic.updateAt %>
+            </span>
+        </div>
+        <div class="pull-right">
+          <span class="text-muted mrs"><i class="fa fa-eye"></i> <%= topic.PVCount %></span>
+          <button name="favorite" class="<%- locals.liked ? 'ExSelected' : '' %> btn btn-link mrs"
+                  style="padding: 0;vertical-align: baseline;font-size: 18px;"
+                  data-favorite='{"topicId":"<%= topic._id %>"}'>
+            <i class="HeadFVBtnIco fa fa-star StarIcon"></i> <span class="FVCount text-muted"><%= topic.FVCount %></span>
+          </button>
+          <% if (locals.isAuthor) { %>
+          <a class="mrs" href="/topic/<%= topic._id %>/edit" title="编辑"><i class="fa fa-pencil"></i></a>
+          <% include _deleteBtn.html %>
+          <% } %>
+          <a class="mls" target="_blank" href="/topic/<%= topic._id %>/share_chang" title="分享"><i
+            class="fa fa-share"></i></a>
+        </div>
       </div>
-      <p class="UserDesc"><%= authorInfo.description || '' %></p>
-    </div>
 
-    <p class="HeadDescWrapper">
-      <span style="<%= !topic.description ? 'display: none;' : '' %>"
-            class="HeadDesc text-secondary">
+      <p style="<%= !topic.description ? 'display: none;' : '' %>">
         <%= topic.description || '' %>
-      </span>
-      <span class="text-muted" style="font-size: 10px;">
-        <i class="fa fa-edit" style="vertical-align: middle;"></i>
-        <%= topic.updateAt %>
-      </span>
-    </p>
+      </p>
+    </div>
+    <% if (!locals.items || !items.length) { %>
+    <div class="NoItem">
+      <i class="fa fa-file-o text-light" style="font-size: 50px;"></i>
+
+      <p class="text-secondary">这个总结还没有内容</p>
+    </div>
+    <% } %>
   </div>
-</div>
 
-<!--内容-->
-<div class="TopicWrapper clearfix">
-  <div class="Main">
+  <% include _ul.html %>
 
-    <% include _ul.html %>
+  <!--模板-->
+  <div class="TEMPLATES" style="display:none;">
+
+    <% include _video_player.html %>
 
   </div>
-</div>
 </body>
 </html>

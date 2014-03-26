@@ -29,19 +29,20 @@
 <div class="TopicWrapper" style="background-color: #ecf0f1; padding-top: 48px;">
   <div class="container">
     <div class="row">
-      <div class="col-md-9 col-lg-8 mvl">
+      <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-8 col-lg-7 mvl">
         <div style="background-color: white;border-radius: 6px;">
           <img class="HeadThumb" onerror="shizier.errorImage(this, 'default_120x120', true);" src="<%= topic.coverUrl || '/images/no_img/photo_95x95.png' %>"
              style="border-radius: 6px 6px 0 0;width: 100%;">
-          <div id="_topItem" class="phl pbl">
+          <div id="_topItem" class="phl pbm">
             <div class="HeadTxt clearfix">
               <h5 class="HeadTtl"><%= topic.title %></h5>
 
               <p class="HeadDesc"><%= topic.description || '' %></p>
               <div class="pull-right">
                 <button name="edit" class="btn btn-link text-muted mrs" type="button"
-                        style="vertical-align: baseline;padding: 0;font-size: 18px;"><i
-                  class="fa fa-pencil"></i> 编辑封面、标题、简介</button>
+                        style="vertical-align: baseline;padding: 0;font-size: 18px;"
+                        title="编辑封面、标题、简介"><i
+                  class="fa fa-pencil"></i></button>
 
                 <% include _deleteBtn.html %>
 
@@ -317,10 +318,6 @@
                 <div class="Text" style="color: white;"></div>
                 <div class="Pic clearfix"></div>
                 <a target="_blank" class="Time text-muted pull-left"></a>
-                <div class="Handle">
-                  <a target="_blank" class="Forward text-muted mrs"><i class="fa fa-share"></i> 转发</a>
-                  <a target="_blank" class="Comment text-muted"><i class="fa fa-comment"></i> 评论</a>
-                </div>
                 <div class="clearfix"></div>
 
                 <div class="form-group">
@@ -375,10 +372,6 @@
               <div class="Text"></div>
               <div class="Pic clearfix"></div>
               <a target="_blank" class="Time text-muted pull-left"></a>
-              <div class="Handle">
-                <a target="_blank" class="Forward text-muted mrs"><i class="fa fa-share"></i> 转发</a>
-                <a target="_blank" class="Comment text-muted"><i class="fa fa-comment"></i> 评论</a>
-              </div>
             </div>
           </div>
         </div>

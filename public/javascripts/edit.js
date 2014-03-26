@@ -1901,6 +1901,7 @@
         opacity: 0.4,
         cursor: 'move',
         handle: '.MoveUtil',
+        helper: "clone",//加这个是为了解决拖动后添加条目util的index问题
         scrollSensitivity: 100,
         scrollSpeed: 10,
         axis: 'y',
@@ -1924,7 +1925,7 @@
         stop: function () {
           $(this)
             .removeClass('WidgetItemList-Sorting')
-            .unbind('mousemove');
+            .off('mousemove');
         },
 
         //列表顺序改变后的回调函数

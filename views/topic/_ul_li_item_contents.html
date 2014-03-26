@@ -125,7 +125,7 @@
     <a target="_blank" class="Time text-muted" style="float: left;" href="<%= retweetedItem.user && 'http://weibo.com/' + retweetedItem.user.idstr + '/' + retweetedItem.mid62 || '' %>"><%= retweetedItem.time || '' %></a>
     <div class="Handle">
       <a target="_blank" class="Forward text-muted mrs" href="<%= retweetedItem.user && 'http://weibo.com/' + retweetedItem.user.idstr + '/' + retweetedItem.mid62 + '?type=repost' || '' %>"><i class="fa fa-share"></i> 转发</a>
-      <a target="_blank" class="Comment text-muted" href="<%= retweetedItem.user && 'http://weibo.com/' + retweetedItem.user.idstr + '/' + retweetedItem.mid62 || '' %>"><i class="fa fa-comment"></i> 评论</a>
+      <a target="_blank" class="Comment text-muted" href="<%= retweetedItem.user && 'http://weibo.com/' + retweetedItem.user.idstr + '/' + retweetedItem.mid62 || '' %>"><i class="fa fa-comment-o"></i> 评论</a>
     </div>
     <div class="clearfix"></div>
   </div>
@@ -133,7 +133,7 @@
   <a target="_blank" class="Time text-muted" style="float: left;" href="<%= item.user && 'http://weibo.com/' + item.user.idstr + '/' + item.mid62 || '' %>"><%= item.time || '' %></a>
   <div class="Handle">
     <a target="_blank" class="Forward text-muted mrs" href="<%= item.user && 'http://weibo.com/' + item.user.idstr + '/' + item.mid62 + '?type=repost' || '' %>"><i class="fa fa-share"></i> 转发</a>
-    <a target="_blank" class="Comment text-muted" href="<%= item.user && 'http://weibo.com/' + item.user.idstr + '/' + item.mid62 || '' %>"><i class="fa fa-comment"></i> 评论</a>
+    <a target="_blank" class="Comment text-muted" href="<%= item.user && 'http://weibo.com/' + item.user.idstr + '/' + item.mid62 || '' %>"><i class="fa fa-comment-o"></i> 评论</a>
   </div>
   <div class="clearfix"></div>
   <div class="Description small mtx" style="display: <%= (item.type != 'ALL') && !item.description ? 'none' : 'block' %>;"><%- item.description ?
