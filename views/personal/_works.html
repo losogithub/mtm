@@ -64,7 +64,7 @@
     <td width="70%">
       <h6>
         <a target="<%= topic.publishDate ? '_blank' : '' %>" title="<%= topic.title || '未命名' %>"
-           class="<%= topic.title ? 'text-default' : 'text-muted' %>"
+           class="<%= topic.title ? '' : 'text-muted' %>"
         <% if (topic.publishDate) { %>
         href="/topic/<%= topic._id %>"
         <% } else { %>

@@ -1,11 +1,9 @@
 .StarIcon {
-  color: #dddddd;
-  text-shadow: 0 0 1px #777777;
+  color: white;
 }
 .ExSelected .StarIcon,
 .StarIconFull {
   color: #ffdd11;
-  text-shadow: 0 0 1px #443a00;
 }
 .text-default {
   color: #34495e;
@@ -184,11 +182,13 @@
   line-height: 220px;
   font-size: 30px;
 }
-.IMAGE input[name='title'] {
-  margin-bottom: 7px;
+.Widget .IMAGE .Image {
+  width: 500px;
+  margin: 0 auto 20px;
 }
-.IMAGE input[name='quote'] {
-  margin-bottom: 10px;
+.Widget .IMAGE .Image img {
+  max-width: 100%;
+  max-height: 500px;
 }
 .VIDEO_CREATE .Thumb {
   text-align: center;
@@ -199,12 +199,6 @@
 .VIDEO_CREATE .Thumb i {
   line-height: 220px;
   font-size: 30px;
-}
-.VIDEO input[name='title'] {
-  margin-top: 8px;
-}
-.VIDEO textarea[name='description'] {
-  margin-top: 10px;
 }
 .WEIBO .Handle {
   visibility: hidden !important;

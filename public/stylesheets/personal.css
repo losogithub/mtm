@@ -1,11 +1,9 @@
 .StarIcon {
-  color: #dddddd;
-  text-shadow: 0 0 1px #777777;
+  color: white;
 }
 .ExSelected .StarIcon,
 .StarIconFull {
   color: #ffdd11;
-  text-shadow: 0 0 1px #443a00;
 }
 .text-default {
   color: #34495e;

@@ -5,7 +5,7 @@
 .WidgetItemList {
   list-style: none; padding: 0 0 40px; margin-bottom: 0;
   >li {
-      &:hover { background-color: #f8f8f8; }
+      &:hover { background-color: lighten(@color-clouds, 4%); }
   }
   .Quote {
     &, * { color: #bdc3c7; }
@@ -65,8 +65,8 @@
 }
 
 .Item .IMAGE {
+  border-radius: 6px; background-color: @color-clouds; //border: 2px solid @color-muted;
   width: 500px; max-width: 100%; margin: auto;
-  .Image { text-align: center;}
   img { max-width: 100%; max-height: 500px; }
   .Title { line-height: 1.1; font-weight: bold; }
   .Description { line-height: 1.4; }
@@ -95,8 +95,7 @@
 
 .CITE {
   .Cite {
-    line-height: 26px; font-weight: bold; font-size: 20px;
-    i { font-size: 20px; }
+    line-height: 1.4; font-weight: bold; font-size: 20px;
     q { quotes: none; }
   }
   .Description { padding-left: 6px; border-left: 2px solid #ccc; line-height: 1.4; }
@@ -137,43 +136,4 @@
 
 .Item .TITLE { padding-bottom: 5px; border-bottom: 2px solid #EAECEE; }
 
-.HeadTxt {
-  overflow: hidden;
-  .HeadTtlWrapper {
-    .HeadTtl, .HeadTtlPlaceholder {
-      display: inline; font-size: 32px; line-height: 38px; margin-right: 15px;
-    }
-    .HeadUtil { display: inline-block; }
-  }
-}
-
-.HeadSub {
-  width: 220px; text-align: right;
-  .HeadCount {
-    margin: 0 0 8px; *margin-bottom: 5px;
-    .HeadFVCount {
-      display: inline-block; *display: inline; *zoom: 1; padding-right: 13px; *padding-right: 17px; vertical-align: top; text-align: center;
-      .HeadFVCountNum { display: block; line-height: 1; *line-height: 1.15; margin-top: -3px; *margin-top: 0; font-size: 22px; }
-      .HeadFVIco { color: @FV-color; text-shadow: 0 0 1px @FV-shadow-color; }
-      .HeadFVCountLabel { display: block; margin-top: 3px; *margin-top: 0; line-height: 1; *line-height: 1.15; font-size: 11px }
-    }
-    .HeadPVCount {
-      display: inline-block; border-left: 1px solid rgb(238, 238, 238); padding-left: 13px; text-align: center;
-      .HeadPVCountNum { display: block; line-height: 1; margin-top: -3px; font-size: 22px; }
-      .HeadPVCountLabel { display: block; margin-top: 3px; line-height: 1; font-size: 11px; }
-    }
-  }
-  .HeadFVBtnIco { margin-right: 7px; color: @FV-empty-color; text-shadow: 0 0 1px @FV-empty-shadow-color; }
-  .ExSelected .HeadFVBtnIco { color: @FV-color; text-shadow: 0 0 1px @FV-shadow-color; }
-  .HeadFVBtnTxt { font-weight: bold; font-size: 14px }
-}
-
-.Main a[name="add"] { margin-bottom: 15px; }
-
-.NoItem { position: relative; padding: 140px 0px 160px; text-align: center; }
-
-.NoItem>p { color: rgb(102, 102, 102); margin-bottom: 11px; }
-
-@media (max-width: 1100px) {
-  .bdshare-slide-button { display: none !important; }
-}
+.NoItem { padding: 140px 0px; }

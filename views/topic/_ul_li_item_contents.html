@@ -1,7 +1,7 @@
 <% if (item.type == 'LINK' || item.type == 'ALL') { %>
 <div class='Content LINK'>
   <div class="Title" style="display: <%= (item.type != 'ALL') && !item.title ? 'none' : 'block' %>;">
-    <a target="_blank" class="LINK_URL text-default" href='<%= item.url ? item.url : "" %>'><%= item.title || '' %></a>
+    <a target="_blank" class="LINK_URL" href='<%= item.url ? item.url : "" %>'><%= item.title || '' %></a>
   </div>
   <div class="Quote">
     <a target="_blank" class="LINK_URL" style="color: #7f8c8d;" href="<%= item.url || '' %>">
@@ -20,9 +20,8 @@
 </div>
 <% } %>
 <% if (item.type == 'IMAGE' || item.type == 'ALL') { %>
-<div class="Content IMAGE pam"
-     style="background-color: #2c3e50;color:white;border-radius: 6px;">
-  <div class="Image">
+<div class="Content IMAGE pam">
+  <div class="Image text-center">
     <a class="IMAGE_LINK fancybox" rel="gallery" href='<%= item.url || "" %>'
        title="<%= (item.title || '') + (item.title && item.description ? ' -- ' : '') + (item.description || '') %>">
       <img onerror="shizier.errorImage(this,'default_120x120');" src='<%= item.url || "" %>'>
@@ -49,7 +48,7 @@
     <a target="_blank" class="VIDEO_URL" href="<%= item.url || '' %>"><%= item.quote || item.url || '' %></a>
   </div>
   <div class="Title mtx" style="display: <%= (item.type != 'ALL') && !item.title ? 'none' : 'block' %>;">
-    <a target="_blank" class="VIDEO_URL text-default" href='<%= item.url ? item.url : "" %>'><%= item.title ? item.title : '' %></a>
+    <a target="_blank" class="VIDEO_URL" href='<%= item.url ? item.url : "" %>'><%= item.title ? item.title : '' %></a>
   </div>
   <div class="Description small mtx" style="display: <%= (item.type != 'ALL') && !item.description ? 'none' : 'block' %>;"><%- item.description ?
     escape(item.description).replace(/\n/g, "<br>") : '' %></div>
@@ -57,8 +56,8 @@
 <% } %>
 <% if (item.type == 'CITE' || item.type == 'ALL') { %>
 <div class='Content CITE'>
-  <div class="Cite" style="color: #2980b9;">
-    <i class="fa fa-quote-left"></i>
+  <div class="Cite">
+    <i class="fa fa-quote-left text-muted"></i>
     <q><%- item.cite ? escape(item.cite).replace(/\n/g, "<br>") : '' %></q>
   </div>
 
@@ -80,7 +79,7 @@
     </a>
 
     <div style="overflow: hidden;">
-      <a target="_blank" class="ScreenName AuthorUrl text-default" href="<%= (item.user && 'http://weibo.com/' + item.user.profile_url) || '' %>">
+      <a target="_blank" class="ScreenName AuthorUrl" href="<%= (item.user && 'http://weibo.com/' + item.user.profile_url) || '' %>">
         <span class="ScreenName"><%= item.user && item.user.screen_name || '' %></span>
       </a>
       <a target="_blank" class="Verify <%= !item.user ? '' : !item.user.verified ? '' : item.user.verified_type ? 'ORG' : 'PERSONAL' %>" href="http://verified.weibo.com/verify"><b>V</b></a>
@@ -104,7 +103,7 @@
   <% if (item.retweeted_status && item.retweeted_status.idstr) { %>
   <% var retweetedItem = item.retweeted_status; %>
   <div class="Retweeted clearfix">
-    <a target="_blank" class="Author AuthorUrl text-default" href="<%= (retweetedItem.user && 'http://weibo.com/' + retweetedItem.user.profile_url) || '' %>">
+    <a target="_blank" class="Author AuthorUrl" href="<%= (retweetedItem.user && 'http://weibo.com/' + retweetedItem.user.profile_url) || '' %>">
       @<span class="ScreenName"><%= retweetedItem.user && retweetedItem.user.screen_name || '' %></span>
     </a>
     <a target="_blank" class="Verify <%= !retweetedItem.user ? '' : !retweetedItem.user.verified ? '' : retweetedItem.user.verified_type ? 'ORG' : 'PERSONAL' %>" href="http://verified.weibo.com/verify"><b>V</b></a>

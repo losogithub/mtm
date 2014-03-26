@@ -4,12 +4,12 @@
     <table class="Band_Btn">
       <td>
         <% if (!topic.publishDate) { %>
-        <button name="publish" class='btn btn-sm btn-danger'
+        <button name="publish" class='btn btn-sm btn-primary'
                 data-loading-text="发布 &lt;i class='fa fa-spinner fa-spin'&gt;&lt;/i&gt;" type="button">发布
         </button>
         <% } %>
         <a name="done"
-           class='btn btn-sm btn-primary'
+           class='btn btn-sm btn-default'
            href="<%= topic.publishDate ? '/topic/' + topic._id : '/works' %>">
           完成<%= topic.publishDate ? '' : '草稿' %>
         </a>
@@ -30,14 +30,14 @@
   <div class="container">
     <div class="row">
       <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-8 col-lg-7 mvl">
-        <div style="background-color: white;border-radius: 6px;">
+        <div style="background-color: white; border-radius: 6px;">
           <img class="HeadThumb" onerror="shizier.errorImage(this, 'default_120x120', true);" src="<%= topic.coverUrl || '/images/no_img/photo_95x95.png' %>"
              style="border-radius: 6px 6px 0 0;width: 100%;">
           <div id="_topItem" class="phl pbm">
-            <div class="HeadTxt clearfix">
-              <h5 class="HeadTtl"><%= topic.title %></h5>
+            <h5 class="HeadTtl"><%= topic.title %></h5>
 
-              <p class="HeadDesc"><%= topic.description || '' %></p>
+            <p class="HeadDesc"><%= topic.description || '' %></p>
+            <div class="clearfix">
               <div class="pull-right">
                 <button name="edit" class="btn btn-link text-muted mrs" type="button"
                         style="vertical-align: baseline;padding: 0;font-size: 18px;"
@@ -186,7 +186,7 @@
               </div>
 
               <div class='Content IMAGE'>
-                <div class="Image">
+                <div class="Image text-center">
                   <img onerror="shizier.errorImage(this, 'default_120x120', true);">
                 </div>
 
@@ -249,7 +249,7 @@
                   <a class="VIDEO_URL"></a>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group mtx">
                   <input name="title" class="form-control flat Bold" placeholder="视频标题" type="text">
                 </div>
                 <div class="form-group">
@@ -308,7 +308,7 @@
                   </a>
 
                   <div style="overflow: hidden;">
-                    <a target="_blank" class="Author AuthorUrl text-default">
+                    <a target="_blank" class="Author AuthorUrl">
                       <span class="ScreenName"></span>
                     </a>
                     <a target="_blank" class="Verify" href="http://verified.weibo.com/verify"><b>V</b></a>
@@ -365,7 +365,7 @@
             <a class="WeiboImage fancybox" rel="gallery"><img></a>
 
             <div class="Retweeted clearfix">
-              <a target="_blank" class="Author AuthorUrl text-default">
+              <a target="_blank" class="Author AuthorUrl">
                 @<span class="ScreenName"></span>
               </a>
               <a target="_blank" class="Verify" href="http://verified.weibo.com/verify"><b>V</b></a>

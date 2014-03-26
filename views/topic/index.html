@@ -3,53 +3,55 @@
   <div class="container">
     <div class="row">
       <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-8 col-lg-7 mvl">
-        <div style="background-color: white;border-radius: 6px;">
+        <div style="background-color: white; border-radius: 6px; overflow: hidden;">
           <img onerror="$(this).hide();" src="<%= topic.coverUrl %>"
-               style="border-radius: 6px 6px 0 0;width: 100%;<%= topic.coverUrl ? '' : 'display: none;' %>">
+               style="width: 100%;<%= topic.coverUrl ? '' : 'display: none;' %>">
 
           <div class="phl">
-            <div class="HeadTxt clearfix">
-              <h5 class="HeadTtl"><a href="/topic/<%= topic._id %>"><%= topic.title %></a></h5>
+            <h5 class="HeadTtl"><a href="/topic/<%= topic._id %>"><%= topic.title %></a></h5>
 
-              <div class="clearfix mbm">
-                <div class="pull-left">
-                  <a href="/u/<%= topic.author %>" title="<%= topic.author %>">
-                    <span class="mrs" style="display: inline-block; width: 30px; height: 30px;">
-                      <img width="30" height="30" class="img-circle"
-                         src="<%= authorInfo.imgUrl || '/images/no_img/user_80x80.png' %>"
-                         onerror="shizier.errorImage(this,'user_80x80');">
-                    </span><span><%= topic.author %></span>
-                  </a>
-                  <span class="text-muted small mls">
-                    <i class="fa fa-edit"></i>
-                    <%= topic.updateAt %>
-                  </span>
-                </div>
-                <div class="pull-right">
-                  <span class="text-muted mrs"><i class="fa fa-eye"></i> <%= topic.PVCount %></span>
-                  <button name="favorite" class="<%- locals.liked ? 'ExSelected' : '' %> btn btn-link mrs"
-                          style="padding: 0;vertical-align: baseline;font-size: 18px;"
-                          data-favorite='{"topicId":"<%= topic._id %>"}'>
-                    <i class="HeadFVBtnIco fa fa-star StarIcon"></i> <span class="FVCount text-muted"><%= topic.FVCount %></span>
-                  </button>
-                  <% if (locals.isAuthor) { %>
-                  <a class="mrs" href="/topic/<%= topic._id %>/edit" title="编辑"><i class="fa fa-pencil"></i></a>
-                  <% include _deleteBtn.html %>
-                  <% } %>
-                  <a class="mls" target="_blank" href="/topic/<%= topic._id %>/share_chang" title="分享"><i
-                    class="fa fa-share"></i></a>
-                </div>
+            <div class="clearfix mbm">
+              <div class="pull-left">
+                <a href="/u/<%= topic.author %>" title="<%= topic.author %>">
+                  <span class="mrs" style="display: inline-block; width: 30px; height: 30px;">
+                    <img width="30" height="30" class="img-circle"
+                       src="<%= authorInfo.imgUrl || '/images/no_img/user_80x80.png' %>"
+                       onerror="shizier.errorImage(this,'user_80x80');">
+                  </span><span><%= topic.author %></span>
+                </a>
+                <span class="text-muted small mls">
+                  <i class="fa fa-edit"></i>
+                  <%= topic.updateAt %>
+                </span>
               </div>
-
-              <p style="<%= !topic.description ? 'display: none;' : '' %>">
-                <%= topic.description || '' %>
-              </p>
+              <div class="pull-right">
+                <% if (locals.isAuthor) { %>
+                <a class="mrs btn btn-primary"
+                   style="padding: 0 5px; font-size: 18px; vertical-align: baseline;"
+                   href="/topic/<%= topic._id %>/edit" title="编辑"><i class="fa fa-pencil"></i></a>
+                <% include _deleteBtn.html %>
+                <% } %>
+                <a class="mls text-info mls" target="_blank"
+                   href="/topic/<%= topic._id %>/share_chang" title="分享"><i
+                  class="fa fa-share"></i></a>
+                <button name="favorite" class="<%- locals.liked ? 'ExSelected' : '' %> btn btn-default mls"
+                        style="padding: 0 5px;vertical-align: baseline;font-size: 18px;"
+                        data-favorite='{"topicId":"<%= topic._id %>"}'>
+                  <i class="HeadFVBtnIco fa fa-star StarIcon"></i> <span class="FVCount text-inverse"><%= topic.FVCount %></span>
+                </button>
+                <span class="text-muted mls"><i class="fa fa-eye"></i> <%= topic.PVCount %></span>
+              </div>
             </div>
-            <% if (!locals.items || !items.length) { %>
-            <div class="NoItem">
-              <i class="fa fa-file-o text-light" style="font-size: 50px;"></i>
 
-              <p class="text-secondary">这个总结还没有内容</p>
+            <p style="<%= !topic.description ? 'display: none;' : '' %>">
+              <%= topic.description || '' %>
+            </p>
+
+            <% if (!locals.items || !items.length) { %>
+            <div class="NoItem text-muted text-center">
+              <i class="fa fa-file-o" style="font-size: 50px;"></i>
+
+              <div>这个总结还没有内容</div>
             </div>
             <% } %>
           </div>
