@@ -49,28 +49,19 @@
 .text-info:hover {
   color: #2a7aaf;
 }
-.affix {
-  position: static;
+#_left {
+  width: 480px;
 }
-@media (min-width: 992px) {
-  .affix {
-    position: fixed;
-    width: 293px;
-    top: 20px;
+#_bubble {
+  width: 180px;
+}
+@media (max-width: 768px) {
+  #_left {
+    width: 100%;
   }
-}
-@media (min-width: 1200px) {
-  .affix {
-    width: 263px;
+  #_bubble {
+    width: 480px;
+    max-width: 100%;
+    margin: 0 auto;
   }
-}
-.SubFV {
-  bottom: 0;
-  right: 0;
-  position: absolute;
-  line-height: 1;
-}
-.FVIco {
-  color: #ffdd11;
-  text-shadow: 0 0 1px #443a00;
 }

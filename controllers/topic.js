@@ -244,7 +244,10 @@ function showShareChang(req, res, next) {
     res.set('Pragma', 'no-cache');
     res.render('topic/shareChang', {
       title: topic.title,
-      description: topic.description
+      description: topic.description,
+      css: [
+        '/stylesheets/shareChang.css'
+      ]
     });
     console.log('showShareChang done');
   });

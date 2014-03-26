@@ -3,8 +3,8 @@
     <div class="row">
       <div class="col-sm-4 col-sm-push-8 mvl">
         <div id="_bubble" class="pal" style="background-color: #ecf0f1; border-radius: 6px;">
-          <div><a id="_return" class="text-muted" href="./">返回总结</a></div>
-          <button id="_forceRender" style="color: #c0392b; font-size: 18px;" class="btn btn-link pan">重新生成</button>
+          <div><a id="_return" class="text-default" href="./">返回总结</a></div>
+          <button id="_forceRender" style="font-size: 18px;" class="btn btn-link pan text-danger">重新生成</button>
           <div id="_src"><a>图片地址</a></div>
           <!-- Baidu Button BEGIN -->
           <div class="bdsharebuttonbox"><a href="#" class="bds_more" data-cmd="more"></a><a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a><a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a><a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"></a><a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"></a><a href="#" class="bds_t163" data-cmd="t163" title="分享到网易微博"></a></div>
@@ -12,11 +12,13 @@
         </div>
       </div>
       <div class="col-sm-8 col-sm-pull-4 mvl clearfix">
-        <div class="pal pull-right" style="width: 480px; background-color: #ecf0f1; border-radius: 6px;">
-          <img id="_chang" src="/images/loading.gif" style="display: block;margin: 0 auto;">
-          <div id="_loading">
-            <img src="/images/loading.gif" style="display: block;margin: 0 auto;">
-            <div class="mtl text-center" style="font-size: 20px;line-height: 1;">正在生成长微博</div>
+        <div id="_left" class="pull-right">
+          <div class="pal" style="width: 480px; max-width: 100%; background-color: #ecf0f1; border-radius: 6px; margin: 0 auto;">
+            <img id="_chang" class="img-responsive" src="/images/loading.gif" style="display: block;margin: 0 auto;">
+            <div id="_loading">
+              <img src="/images/loading.gif" style="display: block;margin: 0 auto;">
+              <div class="mtl text-center" style="font-size: 20px;line-height: 1;">正在生成长微博</div>
+            </div>
           </div>
         </div>
       </div>
@@ -35,7 +37,6 @@
     $(function () {
       var $loading = $('#_loading');
       var $chang = $('#_chang');
-      var $bubble = $('#_bubble');
       var $src = $('#_src');
       var $src_a = $src.find('a');
       var $force = $('#_forceRender');
@@ -46,14 +47,12 @@
         $force.show();
       });
       $chang.on('load', function () {
-        $bubble.css('width', '180px');
         $src.show();
         $baidu.show();
       });
       function create(forceRender) {
         $loading.show();
 
-        $bubble.css('width', '115px');
         $src.hide();
         $baidu.hide();
         $force.hide();
