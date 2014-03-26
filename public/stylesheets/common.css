@@ -6,6 +6,34 @@ textarea {
 }
 body {
   word-wrap: break-word;
+  font-family: "微软雅黑", arial, sans-serif;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+  font-family: "微软雅黑", arial, sans-serif;
+}
+.navbar-unread,
+.navbar-new {
+  font-family: "微软雅黑", arial, sans-serif;
+}
+.form-control {
+  font-family: "微软雅黑", arial, sans-serif;
+}
+.tagsinput input {
+  font-family: "微软雅黑", arial, sans-serif;
+}
+.video-js .vjs-text-track-display {
+  font-family: "微软雅黑", arial, sans-serif;
 }
 table {
   word-break: break-all;

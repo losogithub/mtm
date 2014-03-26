@@ -135,7 +135,7 @@
 .IMAGE_CREATE .Image {
   width: 300px;
   height: 220px;
-  background-color: #f3f3f3;
+  background-color: #ecf0f1;
   text-align: center;
 }
 .IMAGE_CREATE .Image i {
@@ -147,6 +147,16 @@
 }
 .IMAGE input[name='quote'] {
   margin-bottom: 10px;
+}
+.VIDEO_CREATE .Thumb {
+  text-align: center;
+  width: 300px;
+  height: 220px;
+  background-color: #ecf0f1;
+}
+.VIDEO_CREATE .Thumb i {
+  line-height: 220px;
+  font-size: 30px;
 }
 .VIDEO input[name='title'] {
   margin-top: 8px;

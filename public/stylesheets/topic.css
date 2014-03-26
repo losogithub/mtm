@@ -121,22 +121,12 @@
 .Item .IMAGE .Description {
   line-height: 1.4;
 }
-.VIDEO_CREATE .Thumb {
-  text-align: center;
-  width: 300px;
-  height: 220px;
-  background-color: #f3f3f3;
-}
-.VIDEO_CREATE .Thumb i {
-  line-height: 220px;
-  font-size: 30px;
-}
 .VIDEO .Cover {
   text-align: center;
   width: 120px;
   height: 90px;
   display: block;
-  background-color: #f3f3f3;
+  background-color: #7f8c8d;
   background-repeat: no-repeat;
   background-size: cover;
   border-radius: 0;
@@ -195,7 +185,7 @@
 .WEIBO_CREATE .Avatar img {
   width: 50px;
   height: 50px;
-  background-color: #f3f3f3;
+  background-color: #7f8c8d;
 }
 .WEIBO .Author,
 .WEIBO_CREATE .Author {
@@ -203,8 +193,7 @@
 }
 .WEIBO .Text,
 .WEIBO_CREATE .Text {
-  margin: 4px 0;
-  color: #333;
+  margin-top: 5px;
 }
 .WEIBO .Verify,
 .WEIBO_CREATE .Verify {
@@ -235,7 +224,7 @@
 }
 .WEIBO .Retweeted,
 .WEIBO_CREATE .Retweeted {
-  background-color: #f2f2f2;
+  background-color: #ecf0f1;
   border-radius: 6px;
   padding: 10px 20px;
   margin: 10px 0;
