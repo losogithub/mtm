@@ -41,12 +41,12 @@
       var $force = $('#_forceRender');
       var $baidu = $('.bdsharebuttonbox');
       $chang.on('load abort error', function () {
-        $bubble.css('width', '180px');
         $loading.hide();
         $chang.show();
         $force.show();
       });
       $chang.on('load', function () {
+        $bubble.css('width', '180px');
         $src.show();
         $baidu.show();
       });
