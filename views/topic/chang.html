@@ -3,7 +3,7 @@
 <head>
   <title><%= locals.title ? title + ' - 石子儿' : '石子儿 - 让互联网讲故事' %></title>
   <meta name="renderer" content="webkit">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge;charset=UTF-8">
   <meta name="description" content="<%= locals.description
     || '把各种各样的信息，自由地搭配组合，总结成一个页面保存起来，展示给感兴趣的人。我们的致力于让任何人都可以设计信息，让其他人和信息相遇、相会。' %>">
   <link type='text/css' rel='stylesheet' href='/stylesheets/bootstrap.min.css'/>
@@ -11,8 +11,6 @@
   <link type='text/css' rel="stylesheet" href="/font-awesome-4.0.3/css/font-awesome.min.css">
   <link type='text/css' rel='stylesheet' href='/stylesheets/common.css'/>
   <link type='text/css' rel="stylesheet" href="/stylesheets/topic.css"/>
-  <script type="text/javascript" src="/javascripts/jquery.min.js"></script>
-  <script type="text/javascript" src="/javascripts/common.js"></script>
 </head>
 <body style="width: 440px; min-width: 440px; background-color: white; position: relative;">
   <div style="height: 40px;background-color: rgba(0,0,0,0.4);position: absolute;top: 0;width: 100%;">
@@ -21,7 +19,7 @@
         <img src="/images/logo_white_50x20.png">
       </td>
     </table>
-    <span class="pull-right" style="line-height: 40px; color: white;">www.shizier.com</span>
+    <span class="pull-right mrm" style="line-height: 40px; color: white;">shizier.com</span>
   </div>
   <img onerror="$(this).hide();" src="<%= topic.coverUrl %>"
        style="width: 100%;<%= topic.coverUrl ? '' : 'display: none;' %>">
@@ -39,10 +37,10 @@
                    onerror="shizier.errorImage(this,'user_80x80');">
             </span><span><%= topic.author %></span>
           </a>
-            <span class="text-muted small mls">
-              <i class="fa fa-edit"></i>
-              <%= topic.updateAt %>
-            </span>
+              <span class="text-muted small mls">
+                <i class="fa fa-edit"></i>
+                <%= topic.updateAt %>
+              </span>
         </div>
         <div class="pull-right">
           <span class="text-muted mrs"><i class="fa fa-eye"></i> <%= topic.PVCount %></span>
