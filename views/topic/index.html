@@ -3,14 +3,19 @@
   <div class="container">
     <div class="row">
       <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-8 col-lg-7 mvl">
-        <div style="background-color: white; border-radius: 6px; overflow: hidden;">
-          <img onerror="$(this).hide();" src="<%= topic.coverUrl %>"
-               style="width: 100%;<%= topic.coverUrl ? '' : 'display: none;' %>">
+        <div style="background-color: white; border-radius: 6px;">
+          <div style="position: relative; min-height: 140px;">
+            <img onerror="$(this).hide();" src="<%= topic.coverUrl %>"
+                 style="width: 100%; border-radius: 6px 6px 0 0; <%= topic.coverUrl ? '' : 'display: none;' %>">
+            <h5 class="mbn pal hidden-xs" style="position: absolute; bottom: 0; left: 0; right: 0; background-color: rgba(0, 0, 0, 0.6);">
+              <a class="text-inverse" href="/topic/<%= topic._id %>"><%= topic.title %></a>
+            </h5>
+          </div>
 
           <div class="phl">
-            <h5 class="HeadTtl"><a href="/topic/<%= topic._id %>"><%= topic.title %></a></h5>
+            <h5 class="HeadTtl visible-xs"><a href="/topic/<%= topic._id %>"><%= topic.title %></a></h5>
 
-            <div class="clearfix mbm">
+            <div class="clearfix mtm mbm">
               <div class="pull-left">
                 <a href="/u/<%= topic.author %>" title="<%= topic.author %>">
                   <span class="mrs" style="display: inline-block; width: 30px; height: 30px;">
@@ -48,7 +53,7 @@
             </p>
 
             <% if (!locals.items || !items.length) { %>
-            <div class="NoItem text-muted text-center">
+            <div class="text-muted text-center" style="padding: 140px 0px;">
               <i class="fa fa-file-o" style="font-size: 50px;"></i>
 
               <div>这个总结还没有内容</div>

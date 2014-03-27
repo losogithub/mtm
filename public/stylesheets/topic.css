@@ -139,7 +139,7 @@
 }
 .Content.LINK .Description {
   padding-left: 6px;
-  border-left: 2px solid #ccc;
+  border-left: 2px solid #bdc3c7;
   line-height: 1.4;
 }
 .Item .IMAGE {
@@ -196,7 +196,7 @@
 }
 .VIDEO .Description {
   padding-left: 6px;
-  border-left: 2px solid #ddd;
+  border-left: 2px solid #bdc3c7;
   line-height: 1.4;
 }
 .CITE .Cite {
@@ -209,7 +209,7 @@
 }
 .CITE .Description {
   padding-left: 6px;
-  border-left: 2px solid #ccc;
+  border-left: 2px solid #bdc3c7;
   line-height: 1.4;
 }
 .WEIBO .Avatar,
@@ -274,7 +274,7 @@
 .WEIBO .Description,
 .WEIBO_CREATE .Description {
   padding-left: 6px;
-  border-left: 2px solid #ddd;
+  border-left: 2px solid #bdc3c7;
   line-height: 1.4;
 }
 .WidgetItemList > li:hover .WEIBO .Handle,
@@ -283,8 +283,5 @@
 }
 .Item .TITLE {
   padding-bottom: 5px;
-  border-bottom: 2px solid #EAECEE;
-}
-.NoItem {
-  padding: 140px 0px;
+  border-bottom: 2px solid #bdc3c7;
 }

@@ -61,11 +61,11 @@
   .Thumb {
     img { max-width: 150px; max-height: 150px; }
   }
-  .Description { padding-left: 6px; border-left: 2px solid #ccc; line-height: 1.4; }
+  .Description { padding-left: 6px; border-left: 2px solid @color-muted; line-height: 1.4; }
 }
 
 .Item .IMAGE {
-  border-radius: 6px; background-color: @color-clouds; //border: 2px solid @color-muted;
+  border-radius: 6px; background-color: @color-clouds;
   width: 500px; max-width: 100%; margin: auto;
   img { max-width: 100%; max-height: 500px; }
   .Title { line-height: 1.1; font-weight: bold; }
@@ -90,7 +90,7 @@
     }
   }
   .Title { font-weight: bold; line-height: 1.1; }
-  .Description { padding-left: 6px; border-left: 2px solid #ddd;line-height: 1.4; }
+  .Description { padding-left: 6px; border-left: 2px solid @color-muted;line-height: 1.4; }
 }
 
 .CITE {
@@ -98,7 +98,7 @@
     line-height: 1.4; font-weight: bold; font-size: 20px;
     q { quotes: none; }
   }
-  .Description { padding-left: 6px; border-left: 2px solid #ccc; line-height: 1.4; }
+  .Description { padding-left: 6px; border-left: 2px solid @color-muted; line-height: 1.4; }
 }
 
 .WEIBO, .WEIBO_CREATE {
@@ -125,7 +125,7 @@
     padding: 10px 20px; margin: 10px 0; font-size: 80%;
   }
   .Handle { float: right; visibility: hidden; }
-  .Description { padding-left: 6px; border-left: 2px solid #ddd; line-height: 1.4; }
+  .Description { padding-left: 6px; border-left: 2px solid @color-muted; line-height: 1.4; }
 }
 
 .WidgetItemList>li:hover {
@@ -134,6 +134,4 @@
   }
 }
 
-.Item .TITLE { padding-bottom: 5px; border-bottom: 2px solid #EAECEE; }
-
-.NoItem { padding: 140px 0px; }
+.Item .TITLE { padding-bottom: 5px; border-bottom: 2px solid @color-muted; }
