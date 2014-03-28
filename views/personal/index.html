@@ -42,18 +42,13 @@
           </div>
           <% } %>
           <div class="mtm">
-            <button name="favorite" class="<%= locals.likedBefore ? 'ExSelected' : '' %> btn btn-danger"
-                    data-favorite='{"authorName":"<%= authorName %>"}'>
-              <i class="fa fa-star StarIcon" style="vertical-align: middle;"></i>
-              <span class="">喜欢</span>
+            <button name="favorite" class="<%= locals.likedBefore ? 'ExSelected' : '' %> btn btn-default"
+                    data-favorite='{"authorName":"<%= authorName %>"}' title="喜欢">
+              <i class="fa fa-star StarIcon"></i>
+              <span class="mdFVCount01Num"><%= locals.favourite || '0' %></span>
             </button>
           </div>
           <% } %>
-
-          <div style="position: relative;">
-            <span class="SubFV"><i class="FVIco fa fa-star"></i>
-              <span class="mdFVCount01Num"><%= locals.favourite || '0' %></span></span>
-          </div>
 
           <!--<% if (locals.personalType != 'PERSONAL') { %>-->
           <!--<hr>-->

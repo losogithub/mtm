@@ -2,9 +2,11 @@
   <% for (i in topics) { %>
   <% var topic = topics[i]; %>
   <div class="col-sm-6 col-md-4 col-lg-3 mtl">
-    <div style="background-color: white; border-radius: 6px;">
+    <div class="Tile" style="background-color: white; border-radius: 6px;">
       <style>
         .Cover:hover { opacity: 0.8;}
+        .Share { display: none; }
+        .Tile:hover .Share { display: inline; }
       </style>
       <a target="_blank" class="Cover" href="/topic/<%= topic._id %>" title="<%= topic.title %>"
          style="border-radius: 6px 6px 0 0; display: block; height: 200px; background: url('<%= topic.coverUrl %>') no-repeat center #7f8c8d; background-size: cover;">
@@ -17,7 +19,7 @@
         </div>
         <div class="clearfix pbx" style="font-size: 14px;">
           <div class="pull-right">
-            <a class="text-muted mrs" target="_blank" href="/topic/<%= topic._id %>/share_chang" title="分享"><i class="fa fa-share"></i></a>
+            <a class="text-muted mrs Share" target="_blank" href="/topic/<%= topic._id %>/share_chang" title="分享"><i class="fa fa-share"></i></a>
             <span class="text-muted mrs"><i class="fa fa-star"></i> <%= topic.FVCount %></span>
             <span class="text-muted"><i class="fa fa-eye"></i> <%= topic.PVCount %></span>
           </div>

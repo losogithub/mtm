@@ -41,8 +41,8 @@
                   class="fa fa-share"></i></a>
                 <button name="favorite" class="<%- locals.liked ? 'ExSelected' : '' %> btn btn-default mls"
                         style="padding: 0 5px;vertical-align: baseline;font-size: 18px;"
-                        data-favorite='{"topicId":"<%= topic._id %>"}'>
-                  <i class="HeadFVBtnIco fa fa-star StarIcon"></i> <span class="FVCount text-inverse"><%= topic.FVCount %></span>
+                        data-favorite='{"topicId":"<%= topic._id %>"}' title="喜欢">
+                  <i class="HeadFVBtnIco fa fa-star StarIcon"></i> <span class="FVCount"><%= topic.FVCount %></span>
                 </button>
                 <span class="text-muted mls"><i class="fa fa-eye"></i> <%= topic.PVCount %></span>
               </div>
