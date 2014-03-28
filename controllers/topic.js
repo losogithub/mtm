@@ -30,7 +30,6 @@ var escape = helper.escape;
 var Topic = require('../proxy').Topic;
 var Item = require('../proxy').Item;
 var User = require('../proxy').User;
-var NewTopic = require('../proxy').NewTopic;
 
 var utils = require('../public/javascripts/utils');
 
@@ -867,9 +866,8 @@ function createItem(req, res, next) {
     }
 
     var item = results.item;
-    var topic = results.topic;
     res.json(_getItemData(item));
-    NewTopic.saveNewTopic(topic);
+    Topic.updateNewTopics();
     console.log('createItem done');
   });
 }
@@ -931,9 +929,8 @@ function sortItem(req, res, next) {
       return next(err);
     }
 
-    var topic = results.topic;
     res.send(200);
-    NewTopic.saveNewTopic(topic);
+    Topic.updateNewTopics();
     console.log('sort done');
   });
 }
@@ -989,9 +986,8 @@ function editItem(req, res, next) {
     }
 
     var newItem = results.newItem;
-    var topic = results.topic;
     res.json(_getItemData(newItem));
-    NewTopic.saveNewTopic(topic);
+    Topic.updateNewTopics();
     console.log('editItem done');
   });
 }
@@ -1030,9 +1026,8 @@ function deleteItem(req, res, next) {
       return next(err);
     }
 
-    var topic = results.topic;
     res.send(200);
-    NewTopic.saveNewTopic(topic);
+    Topic.updateNewTopics();
     console.log('deleteItem done');
   });
 }

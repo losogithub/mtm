@@ -58,11 +58,12 @@ function showClassic(req, res) {
 function showNew(req, res) {
   var currentPage = parseInt(req.query.page) || 1;
 
+  var recentUpdatedTopicsDataPage = global.recentUpdatedTopicsData.slice((currentPage - 1) * topicsPerPage, currentPage * topicsPerPage);
   var totalPages = math.ceil(global.recentUpdatedTopicsData.length / topicsPerPage);
 
   res.render('category', {
     pageType: 'NEW',
-    topics: global.recentUpdatedTopicsData,
+    topics: recentUpdatedTopicsDataPage,
     totalPage: totalPages,
     currentPage: currentPage
   });

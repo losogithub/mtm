@@ -27,4 +27,3 @@ var TopicSchema = new Schema({
 
 
 exports.TopicModel = mongoose.model('Topic', TopicSchema);
-exports.NewTopicModel = mongoose.model('Topic', TopicSchema, 'newTopics');

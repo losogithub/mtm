@@ -9,7 +9,7 @@
         .Tile:hover .Share { display: inline; }
       </style>
       <a target="_blank" class="Cover" href="/topic/<%= topic._id %>" title="<%= topic.title %>"
-         style="border-radius: 6px 6px 0 0; display: block; height: 200px; background: url('<%= topic.coverUrl %>') no-repeat center #7f8c8d; background-size: cover;">
+         style="border-radius: 6px 6px 0 0; display: block; height: 200px; background: url('<%= topic.cover_url %>') no-repeat center #7f8c8d; background-size: cover;">
       </a>
 
       <div class="mhm">
@@ -21,10 +21,10 @@
           <div class="pull-right">
             <a class="text-muted mrs Share" target="_blank" href="/topic/<%= topic._id %>/share_chang" title="分享"><i class="fa fa-share"></i></a>
             <span class="text-muted mrs"><i class="fa fa-star"></i> <%= topic.FVCount %></span>
-            <span class="text-muted"><i class="fa fa-eye"></i> <%= topic.PVCount %></span>
+            <span class="text-muted"><i class="fa fa-eye"></i> <%= topic.PV_count %></span>
           </div>
           <div style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
-            <a target="_blank" href="/u/<%= topic.author %>" title="<%= topic.author %>"><%= topic.author %></a>
+            <a target="_blank" href="/u/<%= topic.author_name %>" title="<%= topic.author_name %>"><%= topic.author_name %></a>
           </div>
         </div>
       </div>
