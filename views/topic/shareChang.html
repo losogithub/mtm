@@ -2,13 +2,14 @@
   <div class="container">
     <div class="row">
       <div class="col-sm-4 col-sm-push-8 mvl">
-        <div id="_bubble" class="pal" style="background-color: #ecf0f1; border-radius: 6px;">
+        <div id="_bubble" class="pal" data-spy="affix" data-offset-top="72"
+             style="background-color: #ecf0f1; border-radius: 6px;">
           <!-- Baidu Button BEGIN -->
           <div class="bdsharebuttonbox"><a href="#" class="bds_more" data-cmd="more"></a><a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a><a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a><a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"></a><a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"></a><a href="#" class="bds_t163" data-cmd="t163" title="分享到网易微博"></a></div>
           <!-- Baidu Button END -->
           <div><a id="_return" class="text-default" href="./">返回总结</a></div>
-          <button id="_forceRender" style="font-size: 18px;" class="btn btn-link pan text-danger">重新生成</button>
           <div id="_src"><a>图片地址</a></div>
+          <button id="_forceRender" style="font-size: 18px;" class="btn btn-link pan text-danger">重新生成</button>
         </div>
       </div>
       <div class="col-sm-8 col-sm-pull-4 mvl clearfix">
@@ -28,6 +29,13 @@
 
 <% include ../_toTop.html %>
 
+<style>
+  .affix {position: static;}
+  @media (min-width: 992px){
+    .affix { position: fixed;top:20px;}
+  }
+</style>
+
 <script>
   (function () {
     var id = /\/topic\/(\w+)/i.exec(location.pathname)[1];
@@ -40,7 +48,6 @@
       var $src = $('#_src');
       var $src_a = $src.find('a');
       var $force = $('#_forceRender');
-      var $baidu = $('.bdsharebuttonbox');
       $chang.on('load abort error', function () {
         $loading.hide();
         $chang.show();
@@ -48,13 +55,11 @@
       });
       $chang.on('load', function () {
         $src.show();
-//        $baidu.show();
       });
       function create(forceRender) {
         $loading.show();
 
         $src.hide();
-//        $baidu.hide();
         $force.hide();
 
         $src_a.attr('href', '/chang/' + id);
