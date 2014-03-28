@@ -1,3 +1,52 @@
+.StarIcon {
+  color: white;
+}
+.ExSelected .StarIcon,
+.StarIconFull {
+  color: #ffdd11;
+}
+.text-default {
+  color: #34495e;
+}
+.text-default:hover {
+  color: #2c3e50;
+}
+.text-muted {
+  color: #bdc3c7;
+}
+.text-inverse {
+  color: #ffffff;
+}
+.text-primary {
+  color: #1abc9c;
+}
+.text-primary:hover {
+  color: #15967d;
+}
+.text-warning {
+  color: #f1c40f;
+}
+.text-warning:hover {
+  color: #c19d0c;
+}
+.text-danger {
+  color: #e74c3c;
+}
+.text-danger:hover {
+  color: #b93d30;
+}
+.text-success {
+  color: #2ecc71;
+}
+.text-success:hover {
+  color: #25a35a;
+}
+.text-info {
+  color: #3498db;
+}
+.text-info:hover {
+  color: #2a7aaf;
+}
 textarea {
   font-family: arial, sans-serif;
   min-height: 85px;
@@ -47,6 +96,18 @@ table {
 .btn-link:hover,
 .btn-link:focus {
   text-decoration: none;
+}
+.input-icon {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  line-height: 37px;
+  vertical-align: middle;
+  font-size: 20px;
+  color: #b2bcc5;
+  background-color: #ffffff;
+  padding: 0 12px 0 0;
+  border-radius: 6px;
 }
 .checkbox .icons .first-icon,
 .radio .icons .first-icon,
@@ -139,31 +200,8 @@ table {
 .Footer p {
   margin: 10px 0 0;
 }
-.LoginDialog .modal-dialog {
-  width: 400px;
-}
-.LoginDialog .modal-dialog .AutoComplete input[type="checkbox"] {
-  vertical-align: middle;
-}
-.LoginDialog .modal-dialog .AutoComplete * {
-  cursor: pointer;
-}
-.LoginDialog .modal-dialog .modal-header {
-  background-color: #fcfcfc;
-}
-.LoginDialog .modal-dialog .modal-header .Logo {
-  width: auto;
-}
-.LoginDialog .modal-dialog .modal-header .Logo,
-.LoginDialog .modal-dialog .modal-header .Logo img {
-  display: inline-block;
-}
-.LoginDialog .modal-dialog .modal-header .Logo strong {
-  font-size: 14px;
-  vertical-align: bottom;
-}
-.LoginDialog .modal-dialog .modal-footer {
-  background-color: #f3f3f3;
+.LoginDialog .modal-body {
+  background-color: #ecf0f1;
 }
 #_toTop {
   position: fixed;
