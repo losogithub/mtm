@@ -6,94 +6,32 @@
  * To change this template use File | Settings | File Templates.
  */
 function showAbout(req, res){
-  res.render('about/about', {
-    css: ['/stylesheets/service.css'],
-    layout: false
-  });
+  res.render('about/about');
 }
 function showRules(req, res){
-  res.render('about/rules', {
-    css: ['/stylesheets/service.css'],
-    layout: false
-  });
+  res.render('about/rules');
 }
 
+function showPrivacy(req,res){
+  res.render('about/privacy');
 
-function showPrivacyCenter(req, res){
-  res.render('about/privacy/privacyCenter',
-    {
-      css: ['/stylesheets/service.css'],
-      layout: false
-    });
-}
-
-function showPolicy(req, res){
-  res.render('about/privacy/policy',
-    {
-      css: ['/stylesheets/service.css'],
-      layout: false
-    });
-}
-
-function showCope(req, res){
-  res.render('about/privacy/cope',
-    {
-      css: ['/stylesheets/service.css'],
-      layout: false
-    });
-}
-
-function showService(req, res){
-  res.render('about/privacy/service',
-    {
-      css: ['/stylesheets/service.css'],
-      layout: false
-    });
-}
-
-function showPrinciple(req, res){
-  res.render('about/privacy/principle',
-    {
-      css: ['/stylesheets/service.css'],
-      layout: false
-    });
 }
 
 function showHelp(req, res){
-  res.render('about/help',
-    {
-      css: ['/stylesheets/helpCenter.css'],
-      layout: false
-    });
+  res.render('about/help');
 }
 
 function showEachHelp(req, res){
-  helpId =req.params.helpId;
+  helpId = req.params.helpId;
 
   var commonPart = 'about/help/';
   var fileName = commonPart + helpId ;
 
-  res.render(fileName, {
-    css: ['/stylesheets/helpCenter.css'],
-    layout: false
-  });
+  res.render(fileName);
 }
 
-function showPrivacy(req,res){
-  res.render('about/privacy',
-    {
-      css: ['/stylesheets/service.css'],
-      layout: false
-    });
-
-}
 exports.showAbout = showAbout;
 exports.showRules = showRules;
-exports.showPrivacyCenter = showPrivacyCenter;
-exports.showPolicy = showPolicy;
-exports.showCope = showCope;
-exports.showService = showService;
-exports.showPrinciple = showPrinciple;
+exports.showPrivacy = showPrivacy;
 exports.showHelp = showHelp;
 exports.showEachHelp = showEachHelp;
-exports.showPrivacy = showPrivacy;

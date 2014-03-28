@@ -100,11 +100,6 @@ module.exports = function (app) {
   //note  url with / ended not ok. todo
   app.get('/privacy', about.showPrivacy);
   //app.get('/privacy', about.showPrivacyCenter);
-  app.get('/glossary', about.showPrivacyCenter);
-  app.get('/policy', about.showPolicy);
-  app.get('/cope', about.showCope);
-  app.get('/service', about.showService);
-  app.get('/principle', about.showPrinciple);
   app.get('/help', about.showHelp);
   app.get('/faq/:helpId', about.showEachHelp);
 
