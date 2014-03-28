@@ -10,11 +10,12 @@ var math = require('mathjs')();
 
 var topicsPerPage = 24;
 var topicsInIndex = 12;
+var newTopicsPerPage = 9;
 
 function index(req, res) {
   var recentHotTopicsDataPage = global.recentHotTopicsData.slice(0, topicsInIndex);
   var goodTopicsDataPage = global.realGoodTopicsData.slice(0, topicsInIndex);
-  var recentUpdatedTopicsData = global.recentUpdatedTopicsData.slice(0, topicsInIndex);
+  var recentUpdatedTopicsData = global.recentUpdatedTopicsData.slice(0, newTopicsPerPage);
 
   res.render('index', {
     pageType: 'INDEX',

@@ -66,17 +66,42 @@
 </div>
 <% } %>
 
-<div class="pbl" style="background-color: #ecf0f1;">
+<div style="background-color: #ecf0f1;">
   <div class="container">
-    <div class="row" style="margin-top: 40px;">
-      <div class="col-xs-12">
-        <h4 class="mvn pull-left"><a href="/hot">热门总结</a></h4>
-        <a class="btn btn-primary btn-wide pull-right" href="/hot">更多</a>
+    <div class="row">
+      <div class="col-sm-9 col-md-10 pbl">
+        <div class="row mtl">
+          <div class="col-xs-12">
+            <h4 class="mvn pull-left"><a href="/hot">热门总结</a></h4>
+          </div>
+        </div>
+
+        <% var topics = hot; %>
+        <% include _topics_main.html %>
+
+        <div class="row mtl">
+          <div class="col-xs-12">
+            <a class="btn btn-primary btn-wide pull-right" href="/hot">更多</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-md-2 pvl" style="background-color: #2c3e50;">
+        <div class="row">
+          <div class="col-xs-12">
+            <h6 class="mvn pull-left"><a class="text-inverse" href="/new">最近更新</a></h6>
+          </div>
+        </div>
+
+        <% var topics = newTopics; %>
+        <% include _topics_sub.html %>
+
+        <div class="row mtl">
+          <div class="col-xs-12">
+            <a class="btn btn-sm btn-primary pull-right" href="/new">更多</a>
+          </div>
+        </div>
       </div>
     </div>
-
-    <% var topics = hot; %>
-    <% include _topics.html %>
 
     <!--<div class="row" style="margin-top: 40px;">-->
       <!--<div class="col-xs-12">-->
@@ -87,16 +112,6 @@
 
     <!--<% var topics = realGood; %>-->
     <!--<% include _topics.html %>-->
-
-    <div class="row" style="margin-top: 40px;">
-      <div class="col-xs-12">
-        <h4 class="mvn pull-left"><a href="/new">最新总结</a></h4>
-        <a class="btn btn-primary btn-wide pull-right" href="/new">更多</a>
-      </div>
-    </div>
-
-    <% var topics = newTopics; %>
-    <% include _topics.html %>
 
   </div>
 </div>

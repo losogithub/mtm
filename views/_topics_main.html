@@ -2,14 +2,14 @@
   <% for (i in topics) { %>
   <% var topic = topics[i]; %>
   <div class="col-sm-6 col-md-4 col-lg-3 mtl">
-    <div class="Tile" style="background-color: white; border-radius: 6px;">
+    <div class="Tile" style="background-color: white; border-radius: 6px; max-width: 260px; margin: 0 auto;">
       <style>
         .Cover:hover { opacity: 0.8;}
         .Share { display: none; }
         .Tile:hover .Share { display: inline; }
       </style>
       <a target="_blank" class="Cover" href="/topic/<%= topic._id %>" title="<%= topic.title %>"
-         style="border-radius: 6px 6px 0 0; display: block; height: 200px; background: url('<%= topic.cover_url %>') no-repeat center #7f8c8d; background-size: cover;">
+         style="border-radius: 6px 6px 0 0; display: block; height: 150px; background: url('<%= topic.cover_url %>') no-repeat center #7f8c8d; background-size: cover;">
       </a>
 
       <div class="mhm">
