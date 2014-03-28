@@ -20,7 +20,7 @@ var UserSchema = new Schema({
   //topics array
   topics: [ObjectId ],
   topicCount: {type: Number, default: 0},
-  pageviewCount: {type: Number, default: 0},
+  PVCount: {type: Number, default: 0},
 
   //support user likes
   favourite: {type: Number, default: 0},

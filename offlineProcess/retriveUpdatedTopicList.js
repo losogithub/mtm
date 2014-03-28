@@ -7,6 +7,7 @@
  */
 var math = require('mathjs')();
 var Topic = require('../proxy').Topic;
+var User = require('../proxy').User;
 
 function traditionalScore(pv, likes) {
   return math.round(pv / 100, 7) + likes;
@@ -42,17 +43,40 @@ function extractRecentHotTopics() {
       topics[i].score = traditionalScore(topics[i].PV_count, topics[i].FVCount);
     }
 
-    //first set it to empty. this is important.
-    console.log(topics.length);
-    console.log("更新经典总结");
+    console.log("更新热门总结");
     global.realGoodTopicsData = topics.sort(scoreCompare).slice(0, 240);
 
-    //first set it to empty. this is important.
-    console.log("更新左边人气总结");
+    var authorMap = {};
     for (var i = 0; i < topics.length; i++) {
       topics[i].score = newHotScore(topics[i].score, topics[i].update_at);
+      if (!authorMap[topics[i].author_id]) {
+        authorMap[topics[i].author_id] = { score: 0 };
+      }
+      authorMap[topics[i].author_id].score += topics[i].score ;
     }
     global.recentHotTopicsData = topics.sort(scoreCompare).slice(0, 240);
+
+    var authorScore = [];
+    for (var id in authorMap) {
+      authorScore.push({ id: id, score: authorMap[id].score });
+    }
+    authorScore.sort(function (a, b) {
+      return (b.score - a.score);
+    });
+    var authorIds = [];
+    var hotAuthorScore = authorScore.slice(0, 14);
+    for (var i in hotAuthorScore) {
+      authorIds.push(hotAuthorScore[i].id);
+    }
+    User.getUserByIds(authorIds, function (err, authors) {
+      for (var i in authors) {
+        authors[i].score = authorMap[authors[i]._id].score;
+      }
+      authors.sort(function (a, b) {
+        return (b.score - a.score);
+      });
+      global.hotAuthors = authors;
+    });
   });
 }
 

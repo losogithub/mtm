@@ -68,11 +68,39 @@
 
 <div style="background-color: #ecf0f1;">
   <div class="container">
-    <div class="row">
-      <div class="col-sm-9 col-md-10 pbl">
+    <div class="row" style="background-color: #bdc3c7;">
+      <div class="col-sm-9 col-md-10 pbl" style="background-color: #ecf0f1;">
         <div class="row mtl">
           <div class="col-xs-12">
-            <h4 class="mvn pull-left"><a href="/hot">热门总结</a></h4>
+            <i class="fa fa-thumbs-o-up" style="color: #c0392b;"></i> 人气策展人
+          </div>
+        </div>
+        <style>
+          .Authors img {
+            border: 5px solid #fff; background-color: white;
+            -webkit-filter: grayscale(75%); -webkit-transition: all 0.25s; transition: all 0.25s;
+          }
+          .Authors:hover img { -webkit-filter: blur(1px); opacity: 0.5; }
+          .Authors a:hover img { -webkit-filter: blur(0) grayscale(0%); opacity: 1;}
+        </style>
+        <div class="row mts">
+          <div class="col-xs-12 Authors" style="max-height: 60px; overflow: hidden;">
+            <% for (i in authors) { %>
+            <% var author = authors[i]; %>
+            <a class="mrs" title="<%= author.loginName %>" target="_blank"
+               href="/u/<%= author.loginName %>">
+              <img src="<%= author.url || '/images/no_img/user_80x80.png' %>"
+                 title="<%= author.loginName %>"
+                 style=""
+                 width="60" height="60"
+                 class="img-circle">
+            </a>
+            <% } %>
+          </div>
+        </div>
+        <div class="row mtl">
+          <div class="col-xs-12">
+            <a class="h6" href="/hot"><i class="fa fa-fire" style="color: #e67e22;"></i> 热门总结</a>
           </div>
         </div>
 
@@ -85,10 +113,11 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-3 col-md-2 pvl" style="background-color: #2c3e50;">
+      <div class="col-sm-3 col-md-2 pvl">
         <div class="row">
           <div class="col-xs-12">
-            <h6 class="mvn pull-left"><a class="text-inverse" href="/new">最近更新</a></h6>
+            <a class="h6 text-inverse" style="font-size: 16px; display: block;"
+               href="/new"><i class="fa fa-clock-o"></i> 最近更新</a>
           </div>
         </div>
 
