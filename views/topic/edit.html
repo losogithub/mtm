@@ -1,42 +1,44 @@
-<div class="Band" style="background-color: #2c3e50;color:white;"
+<div class="Band text-inverse" style="background-color: #2c3e50;"
      data-spy="affix" data-offset-top="72">
-  <div class="container pvs">
-    <table class="Band_Btn">
-      <td>
-        <% if (!topic.publishDate) { %>
-        <button name="publish" class='btn btn-sm btn-primary'
-                data-loading-text="发布 &lt;i class='fa fa-spinner fa-spin'&gt;&lt;/i&gt;" type="button">发布
-        </button>
-        <% } %>
-        <a name="done"
-           class='btn btn-sm btn-default'
-           href="<%= topic.publishDate ? '/topic/' + topic._id : '/works' %>">
-          完成<%= topic.publishDate ? '' : '草稿' %>
-        </a>
-      </td>
-    </table>
-    <h5 class='Band_Ttl'>
+  <div class="container">
+    <div class="Band_Btn">
+      <% if (!topic.publishDate) { %>
+      <button name="publish" class='btn btn-xs btn-primary'
+              data-loading-text="发布 &lt;i class='fa fa-spinner fa-spin'&gt;&lt;/i&gt;" type="button">发布
+      </button>
+      <% } %>
+      <a name="done"
+         class='btn btn-xs btn-default'
+         href="<%= topic.publishDate ? '/topic/' + topic._id : '/works' %>">
+        完成<%= topic.publishDate ? '' : '草稿' %>
+      </a>
+    </div>
+    <h6 class="Band_Ttl" style="font-size: 18px;">
       <b>编辑总结<%= topic.publishDate ? '' : '（草稿）' %></b>
       <span id="_asterisk" style="display: none;">*</span>
       <span id="_saved" style="display: none;" class="text-muted">- 所有修改都已保存，可以直接离开本页面</span>
       <span id="_error" style="display: none;" class="text-danger">- 操作失败，请刷新页面撤销刚才的修改</span>
       <span id="_loading" style="display: none;" class="text-muted">- 请稍候 <i class='fa fa-spinner fa-spin'></i></span>
-    </h5>
+    </h6>
   </div>
 </div>
 
 <!--内容-->
-<div class="TopicWrapper" style="background-color: #ecf0f1; padding-top: 48px;">
+<div class="TopicWrapper" style="background-color: #ecf0f1; padding-top: 32px;">
   <div class="container">
     <div class="row">
       <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-8 col-lg-7 mvl">
         <div style="background-color: white; border-radius: 6px;">
-          <img class="HeadThumb" onerror="shizier.errorImage(this, 'default_120x120', true);" src="<%= topic.coverUrl || '/images/no_img/photo_95x95.png' %>"
-             style="border-radius: 6px 6px 0 0;width: 100%;">
+          <div style="position: relative; min-height: 140px; border-radius: 6px 6px 0 0; background-color: #7f8c8d;">
+            <img class="HeadThumb" onerror="shizier.errorImage(this, 'default_120x120', true);" src="<%= topic.coverUrl || '' %>"
+                 style="border-radius: 6px 6px 0 0;width: 100%;">
+            <h5 class="HeadTtl mbn pal hidden-xs text-inverse"
+                style="position: absolute; bottom: 0; left: 0; right: 0; background-color: rgba(0, 0, 0, 0.6);"><%= topic.title %></h5>
+          </div>
           <div id="_topItem" class="phl pbm">
-            <h5 class="HeadTtl"><%= topic.title %></h5>
+            <h5 class="HeadTtl visible-xs"><%= topic.title %></h5>
 
-            <p class="HeadDesc"><%= topic.description || '' %></p>
+            <p class="HeadDesc mtm"><%= topic.description || '' %></p>
             <div class="clearfix">
               <div class="pull-right">
                 <button name="edit" class="btn btn-link text-muted mrs" type="button"
@@ -104,7 +106,7 @@
                   <div class="Required"></div>
                   <input name="url" class="form-control flat AUTO_FOCUS" placeholder="链接URL" type="text">
                 </div>
-                <button name="preview" class="btn btn-info pull-left mrx" type="button" disabled='disabled'
+                <button name="preview" class="btn btn-info pull-left mrs" type="button" disabled='disabled'
                         data-loading-text="预览 &lt;i class='fa fa-spinner fa-spin'&gt;&lt;/i&gt;">预览
                 </button>
 
@@ -146,7 +148,7 @@
                   </div>
                   <span class="text-muted" name="pagination"></span>
 
-                  <label class="checkbox">
+                  <label class="checkbox text-inverse">
                     <input type="checkbox" id="noImg">
                     无图片
                   </label>
@@ -176,7 +178,7 @@
                     <div class="Required"></div>
                     <input name="url" class="form-control flat AUTO_FOCUS" placeholder="图片URL" type="text">
                   </div>
-                  <button name="preview" class="btn btn-info pull-left mrx" type="button" disabled='disabled'
+                  <button name="preview" class="btn btn-info pull-left mrs" type="button" disabled='disabled'
                           data-loading-text="预览 &lt;i class='fa fa-spinner fa-spin'&gt;&lt;/i&gt;">预览
                   </button>
 
@@ -231,7 +233,7 @@
                   <div class="Required"></div>
                   <input name="url" class="form-control flat AUTO_FOCUS" placeholder="视频URL" type="text">
                 </div>
-                <button name="preview" class="btn btn-info pull-left mrx" type="button" disabled='disabled'
+                <button name="preview" class="btn btn-info pull-left mrs" type="button" disabled='disabled'
                         data-loading-text="预览 &lt;i class='fa fa-spinner fa-spin'&gt;&lt;/i&gt;">预览
                 </button>
 
@@ -280,8 +282,10 @@
               </div>
 
               <div class='Content WEIBO_CREATE'>
-                <div class="Avatar">
-                  <img src="/images/tsina_avatar_50x50.gif">
+                <div class="Avatar img-circle text-center"
+                     style="background-color: white; width: 50px; height: 50px;">
+                  <i class="fa fa-weibo"
+                     style="font-size: 30px; line-height: 1.7;"></i>
                 </div>
                 <div style="overflow: hidden;">
                   <div class="InfoHint text-muted">
@@ -291,7 +295,7 @@
                     <div class="Required" style="float: left;"></div>
                     <input name="url" class="form-control flat AUTO_FOCUS" placeholder="新浪微博URL" type="text">
                   </div>
-                  <button name="preview" class="btn btn-info pull-left mrx" type="button" disabled='disabled'
+                  <button name="preview" class="btn btn-info pull-left mrs" type="button" disabled='disabled'
                           data-loading-text="预览 &lt;i class='fa fa-spinner fa-spin'&gt;&lt;/i&gt;">预览
                   </button>
 

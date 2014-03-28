@@ -1554,6 +1554,7 @@
   }
 
   var $cover;
+  var $title;
 
   function _init() {
     $._messengerDefaults = {
@@ -1568,6 +1569,7 @@
     $band_error = $band.find('#_error');
     $band_loading = $band.find('#_loading');
     $cover = $('.HeadThumb');
+    $title = $('.HeadTtl');
     $_topItem = $('#_topItem');
     $_topWidget = $('#_topWidget');
     $ul = $('.WidgetItemList');
@@ -1675,7 +1677,8 @@
       if (!_checkRemoveWidget()) {
         return;
       }
-      if (!$_topItem.find('.HeadTtl').text()) {
+      console.log($title.text());
+      if (!$title.text()) {
         if ($_topItem.is(':visible')) {
           $_topWidget.finish();
           $_topItem.finish().find('button[name="edit"]').click();
@@ -1724,11 +1727,11 @@
    */
 
   function _initTop() {
-    var defaultImgSrc = '/images/no_img/photo_95x95.png';
+    var defaultImgSrc = '';//'/images/no_img/photo_95x95.png';
     var noImgSrc = '/images/no_img/default_120x120.png';
-    var $title = $_topWidget.find('input[name="title"]');
+    var $titleInput = $_topWidget.find('input[name="title"]');
     var $description = $_topWidget.find('textarea[name="description"]');
-    var title = $_topItem.find('.HeadTtl').text();
+    var title = $title.text();
     var coverUrl = $cover.attr('src');
     var description = $_topItem.find('.HeadDesc').text();
 
@@ -1737,14 +1740,14 @@
         return;
       }
       if (($cover.attr('src') == coverUrl || ($cover.attr('src') == defaultImgSrc && !coverUrl))
-        && $title.val() == title
+        && $titleInput.val() == title
         && $description.val() == description) {
         setTopState('create');
       } else {
         setTopState('edit');
       }
     };
-    $title.add($description).on(INPUT_EVENTS, checkState);
+    $titleInput.add($description).on(INPUT_EVENTS, checkState);
 
     $_topWidget
       .find('button[name="save"]')
@@ -1758,11 +1761,11 @@
       if (!_checkRemoveWidget()) {
         return;
       }
-      title = $_topItem.find('.HeadTtl').text();
+      title = $title.first().text();
       coverUrl = $cover.attr('src');
       description = $_topItem.find('.HeadDesc').text();
 
-      $title.val(title);
+      $titleInput.val(title);
       $cover.attr('src', coverUrl || defaultImgSrc);
       $description.val(description);
 
@@ -1774,9 +1777,9 @@
         .end()
         .fadeSlideDown();
 
-      $title.focus();
+      $titleInput.focus();
       //移动光标到输入框末尾
-      moveSelection2End($title[0]);
+      moveSelection2End($titleInput[0]);
 
       oldCover = coverUrl || defaultImgSrc;
 
@@ -1803,14 +1806,14 @@
         type: 'PUT',
         data: {
           topicId: topicId,
-          title: $title.val(),
+          title: $titleInput.val(),
           coverUrl: (coverUrl == noImgSrc || coverUrl == defaultImgSrc) ? undefined : coverUrl,
           description: $description.val()
         }
       })
         .done(function (data) {
           savedOnce = true;
-          $_topItem.find('.HeadTtl').text(data.title);
+          $title.text(data.title);
           oldCover = data.coverUrl || defaultImgSrc;
           $_topItem.find('.HeadDesc').text(data.description || '');
           __remove();

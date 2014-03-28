@@ -120,6 +120,7 @@
 }
 /*悬浮菜单栏*/
 .Band {
+  height: 36px;
   top: 72px;
   left: 0;
   right: 0;
@@ -139,6 +140,9 @@
 }
 .Band .Band_Btn {
   float: right;
+}
+.Band .Band_Btn .btn {
+  margin-top: 4px;
 }
 /*菜单*/
 .Menu {

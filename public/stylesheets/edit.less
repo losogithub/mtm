@@ -54,12 +54,15 @@
 
 /*悬浮菜单栏*/
 .Band {
+  height: 36px;
   top:72px; left: 0; right: 0;z-index: 1001;position: absolute;
   &.affix{ top:0; position: fixed; }
   .Band_Ttl {
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0; line-height: 36px;
   }
-  .Band_Btn { float: right; }
+  .Band_Btn { float: right;
+    .btn { margin-top: 4px; }
+  }
 }
 
 /*菜单*/

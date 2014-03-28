@@ -25,7 +25,7 @@
        style="width: 100%;<%= topic.coverUrl ? '' : 'display: none;' %>">
 
   <div class="phl">
-    <h5 class="HeadTtl"><a href="/topic/<%= topic._id %>"><%= topic.title %></a></h5>
+    <h5><a href="/topic/<%= topic._id %>"><%= topic.title %></a></h5>
 
     <div class="clearfix mbm">
       <div class="pull-left">
@@ -41,19 +41,9 @@
               <%= topic.updateAt %>
             </span>
       </div>
-      <div class="pull-right">
-        <span class="text-muted mrs"><i class="fa fa-eye"></i> <%= topic.PVCount %></span>
-        <button name="favorite" class="<%- locals.liked ? 'ExSelected' : '' %> btn btn-link mrs"
-                style="padding: 0;vertical-align: baseline;font-size: 18px;"
-                data-favorite='{"topicId":"<%= topic._id %>"}'>
-          <i class="HeadFVBtnIco fa fa-star StarIcon"></i> <span class="FVCount text-muted"><%= topic.FVCount %></span>
-        </button>
-        <% if (locals.isAuthor) { %>
-        <a class="mrs" href="/topic/<%= topic._id %>/edit" title="编辑"><i class="fa fa-pencil"></i></a>
-        <% include _deleteBtn.html %>
-        <% } %>
-        <a class="mls" target="_blank" href="/topic/<%= topic._id %>/share_chang" title="分享"><i
-          class="fa fa-share"></i></a>
+      <div class="pull-right text-muted">
+        <span class="mrs"><i class="fa fa-star"></i> <%= topic.FVCount %></span>
+        <i class="fa fa-eye"></i> <%= topic.PVCount %>
       </div>
     </div>
 
