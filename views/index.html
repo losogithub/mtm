@@ -1,149 +1,142 @@
-<div class="Top">
-  <div class="TopInner">
-    <p class="TopInnerDate">
-      <time datetime="<%= today1 %>">
-        <em class="TopInnerDateToday"><%= today %></em>
-        <span class="TopInnerDateWeek">(<%= dayInChn %>)</span>
-      </time>
-    </p>
-  </div>
-</div>
-
-<div class="Inner clearfix">
-  <div class="Main">
-    <div class="ColWrapper clearfix">
-      <div class="Col01">
-        <ul>
-          <li class="SELECTED"><a href="/">综合</a></li>
-          <li><a href="/">精选</a></li>
-        </ul>
+<% if (!locals.username) { %>
+<div class="text-muted" style="background-color: #2c3e50;">
+  <div class="container pvl">
+    <div class="row">
+      <div class="col-sm-12 col-md-8">
+        <div class="row">
+          <div class="col-sm-12 col-md-12">
+            <h5 class="text-inverse">让互联网讲故事</h5>
+            <p>我们不生产信息，我们只是互联网的搬运工。</p>
+          </div>
+        </div>
+        <div class="row text-center mbl" style="font-size: 20px;">
+          <div class="col-sm-4 col-md-4">
+            <div><i class="fa fa-globe" style="font-size: 100px;"></i></div>
+            1. <span class="text-inverse"><b>搜集</b></span>互联网上和某话题相关的信息
+          </div>
+          <div class="col-sm-4 col-md-4">
+            <div><i class="fa fa-align-left" style="font-size: 100px;"></i></div>
+            2. <span class="text-inverse"><b>排列</b></span>这些信息，将他们串成一个故事
+          </div>
+          <div class="col-sm-4 col-md-4">
+            <div><i class="fa fa-group" style="font-size: 100px;"></i></div>
+            3. <span class="text-inverse"><b>分享</b></span>给您的好友或听众
+          </div>
+        </div>
       </div>
-      <div class="clearfix" style="overflow: hidden;">
-        <div class="Col02">
-          <h6>人气总结</h6>
-          <ul class="HotTopicList">
-            <% for (i in hot) { %>
-            <li>
-              <table style="width: 100%;">
-                <td class="TopicThumb">
-                  <a target="_blank" href="/topic/<%= hot[i].id %>" title="<%= hot[i].title %>">
-                    <img width="60" height="60"
-                         onerror="shizier.errorImage(this,'image_95x95');"
-                         src="<%= hot[i].coverUrl || '/images/no_img/image_95x95.png' %>">
-                  </a>
-                </td>
-                <td style="width: 100%;">
-                  <div class="">
-                    <a target="_blank" class="TopicTtl text-default" href="/topic/<%= hot[i].id %>" title="<%= hot[i].title %>">
-                      <%= hot[i].title %>
-                    </a>
-                    <a target="_blank" class="TopicAuthor text-muted" href="/u/<%= hot[i].author %>" title="<%= hot[i].author %>">
-                      <%= hot[i].author %>
-                    </a>
-                    <span class="PVCount text-muted">
-                      <b><%= hot[i].PVCount %></b> 浏览
-                    </span>
-                  </div>
-                </td>
-              </table>
-            </li>
-            <% } %>
-          </ul>
-        </div>
-        <div class="Col03">
-          <ul class="Col03HotContentList">
-            <% for (i in realGood) { %>
-            <li>
-              <a target="_blank" href="/topic/<%= realGood[i].id %>" title="<%= realGood[i].title %>" class="text-muted">
-                <p class="Col03HotContentListItemTtl text-default">
-                  <%= realGood[i].title %>
-                </p>
+      <div class="col-sm-12 col-md-4">
+        <form class="tile center-block pal" style="text-align: left;" method="post" action="/signup">
+          <div class="form-group <%= locals.nameMsg && 'has-error' || '' %>">
+            <input type="text" class="form-control flat" maxlength="20"
+                   name="username" id="_userName" placeholder="用户名" ng-model="username"
+                   data-original-title="{{!username && '<%= locals.nameMsg || '用户名不能更改' %>' || '个人页面：\nshizier.com/u/' + (username || '用户名');}}"/>
+            <label class="input-icon fui-user" for="_userName"></label>
+          </div>
+          <div class="form-group <%= locals.emailMsg && 'has-error' || '' %>">
+            <input type="email" class="form-control flat" name="email" id="_email" placeholder="邮箱" ng-model="email"
+                   data-original-title="{{!email && '<%= locals.emailMsg || '' %>' || '激活邮件将发送到该邮箱'}}"/>
+            <label class="input-icon fui-mail" for="_email"></label>
+          </div>
+          <div class="form-group <%= locals.passwordMsg && 'has-error' || '' %>">
+            <input type="password" class="form-control flat" maxlength="20"
+                   name="password" id="_passwd" placeholder="密码"
+                   data-original-title="<%= locals.passwordMsg || '' %>"/>
+            <label class="input-icon fui-lock" for="_passwd"></label>
+          </div>
 
-                <p class="Col03HotContentListItemDes">
-                  <%= realGood[i].des %>
-                </p>
-              </a>
+          <div class="form-group">
+            <label class="checkbox">
+              <input type="checkbox" data-toggle="checkbox" id="rules" checked/>
+              <strong>同意石子儿的<a href="/rules" target="_blank"
+                >《使用条规》</a>和<a href="/privacy" target="_blank"
+                >《隐私条款》</a></strong>
+            </label>
+          </div>
 
-              <div class="Col03HotContentListItemOption clearfix">
-                <a target="_blank" class="Col03HotContentListItemUserName text-muted"
-                   href="/u/<%= realGood[i].author %>"
-                   title="<%= realGood[i].author %>">
-                  <%= realGood[i].author %>
-                </a>
-
-                <p class="Col03HotContentListItemPVCount text-muted">
-                  <span class="Col03HotContentListItemPVCountNum"><%= realGood[i].PVCount %></span>
-                  <span class="Col03HotContentListItemPVCountUnit">浏览</span>
-                </p>
-              </div>
-            </li>
-            <% } %>
-          </ul>
-        </div>
-        <div class="clearfix"></div>
-        <hr style="margin: 15px 0 25px;">
-
-        <% include _pagination.html %>
-
+          <button type="submit" class="btn btn-primary btn-block center-block">注册</button>
+        </form>
       </div>
     </div>
   </div>
-  <div class="Sub">
-    <div class="SubSeparator">
-      <hr>
-    </div>
+</div>
+<% } %>
 
+<div style="background-color: #ecf0f1;">
+  <div class="container">
+    <div class="row" style="background-color: #bdc3c7;">
+      <div class="col-sm-9 col-md-10 pbl" style="background-color: #ecf0f1;">
+        <div class="row ptl">
+          <div class="col-xs-12">
+            <i class="fa fa-thumbs-o-up" style="color: #c0392b;"></i> 人气策展人
+          </div>
+        </div>
+        <style>
+          .Authors img {
+            border: 5px solid #fff; background-color: white;
+            -webkit-filter: grayscale(75%); -webkit-transition: all 0.25s; transition: all 0.25s;
+          }
+          .Authors:hover img { -webkit-filter: blur(1px); opacity: 0.5; }
+          .Authors a:hover img { -webkit-filter: blur(0) grayscale(0%); opacity: 1;}
+        </style>
+        <div class="row mts">
+          <div class="col-xs-12 Authors" style="max-height: 60px; overflow: hidden;">
+            <% for (i in authors) { %>
+            <% var author = authors[i]; %>
+            <a class="mrs" title="<%= author.loginName %>" target="_blank"
+               href="/u/<%= author.loginName %>">
+              <img src="<%= author.url || '/images/no_img/user_80x80.png' %>"
+                 title="<%= author.loginName %>"
+                 style=""
+                 width="60" height="60"
+                 class="img-circle">
+            </a>
+            <% } %>
+          </div>
+        </div>
+        <div class="row mtl">
+          <div class="col-xs-12">
+            <a class="h6" href="/hot"><i class="fa fa-fire" style="color: #e67e22;"></i> 热门总结</a>
+          </div>
+        </div>
 
-    <!---the guide of making --->
-    <div class="SubContent">
-      <ul class="GuideBanner">
-        <li>
-          <a href="">
-            <img src="/images/bnr_guide.png" alt="制作指导">
-          </a>
-        </li>
-      </ul>
-    </div>
-    <div class="SubSeparator">
-      <hr>
-    </div>
+        <% var topics = hot; %>
+        <% include _topics_main.html %>
 
+        <div class="row mtl">
+          <div class="col-xs-12">
+            <a class="btn btn-primary btn-wide pull-right" href="/hot">更多</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-md-2 pvl">
+        <div class="row">
+          <div class="col-xs-12">
+            <a class="h6 text-inverse" style="font-size: 16px; display: block;"
+               href="/new"><i class="fa fa-clock-o"></i> 最近更新</a>
+          </div>
+        </div>
 
-    <!--the newest summarise-->
-    <div class="SubContent">
-      <div class="SubContentTopicListBox">
-        <h6 class="SubContentTopicListTtl">最新的总结</h6>
-        <ul class="SubContentTopicListList">
-          <% for (i in newTopics) { %>
-          <li class="SubContentTopicListListItem">
-            <div class="SubContentTopicListListItemThumb">
-              <a target="_blank" href="/topic/<%= newTopics[i].id %>" title="<%= newTopics[i].title %>">
-                <img width="45" height="45"
-                     onerror="shizier.errorImage(this,'image_95x95');"
-                     src="<%= newTopics[i].coverUrl || '/images/no_img/image_95x95.png' %>">
-              </a>
-            </div>
-            <div class="SubContentTopicListListItemTxt">
-              <p class="SubContentTopicListListItemTxtLink">
-                <a target="_blank" href="/topic/<%= newTopics[i].id %>"
-                   title="<%= newTopics[i].title %>" class="text-default">
-                  <%= newTopics[i].title %>
-                </a>
-              </p>
+        <% var topics = newTopics; %>
+        <% include _topics_sub.html %>
 
-              <p>
-                <a target="_blank" class="SubContentTopicListListItemUserName"
-                   href="/u/<%= newTopics[i].author %>"
-                   title="<%= newTopics[i].author %>">
-                  <%= newTopics[i].author %>
-                </a>
-              </p>
-            </div>
-          </li>
-          <% } %>
-        </ul>
+        <div class="row mtl">
+          <div class="col-xs-12">
+            <a class="btn btn-sm btn-primary pull-right" href="/new">更多</a>
+          </div>
+        </div>
       </div>
     </div>
+
+    <!--<div class="row" style="margin-top: 40px;">-->
+      <!--<div class="col-xs-12">-->
+        <!--<h4 class="mvn pull-left"><a href="/classic">经典总结</a></h4>-->
+        <!--<a class="btn btn-primary btn-wide pull-right" href="/classic">更多</a>-->
+      <!--</div>-->
+    <!--</div>-->
+
+    <!--<% var topics = realGood; %>-->
+    <!--<% include _topics.html %>-->
+
   </div>
 </div>
 

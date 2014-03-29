@@ -30,7 +30,6 @@ var escape = helper.escape;
 var Topic = require('../proxy').Topic;
 var Item = require('../proxy').Item;
 var User = require('../proxy').User;
-var NewTopic = require('../proxy').NewTopic;
 
 var utils = require('../public/javascripts/utils');
 
@@ -102,7 +101,8 @@ function showEdit(req, res, next) {
     res.render('topic/edit', {
       title: '编辑总结',
       css: [
-        'http://cdn.bootcss.com/messenger/1.3.3/css/messenger.css',
+        'http://cdn.bootcss.com/messenger/1.4.0/css/messenger.css',
+        'http://cdn.bootcss.com/messenger/1.4.0/css/messenger-theme-flat.css',
         'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.css',
         'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-buttons.css',
         'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-thumbs.css',
@@ -110,7 +110,8 @@ function showEdit(req, res, next) {
         '/stylesheets/edit.css'
       ],
       js: [
-        'http://cdn.bootcss.com/messenger/1.3.3/js/messenger.js',
+        'http://cdn.bootcss.com/messenger/1.4.0/js/messenger.js',
+        'http://cdn.bootcss.com/messenger/1.4.0/js/messenger-theme-flat.js',
         'http://cdn.bootcss.com/jquery-mousewheel/3.1.6/jquery.mousewheel.min.js',
         'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.js',
         'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-buttons.js',
@@ -243,7 +244,9 @@ function showShareChang(req, res, next) {
     res.render('topic/shareChang', {
       title: topic.title,
       description: topic.description,
-      layout: false
+      css: [
+        '/stylesheets/shareChang.css'
+      ]
     });
     console.log('showShareChang done');
   });
@@ -353,13 +356,17 @@ function _generateImage(db, topicId, time, callback) {
     var fullFilePath = 'public/images/chang/' + filename;
     phantom.create({port: port}, function (ph) {
       ph.createPage(function (page) {
-        page.open('http://localhost:3000/topic/' + topicId + '/chang', function () {
-          page.render(fullFilePath, function () {
-            ph.exit();
+        try {
+          page.open('http://localhost:3000/topic/' + topicId + '/chang', function () {
+            page.render(fullFilePath, function () {
+              ph.exit();
 
-            _storeMongoGrid(db, topicId, time, fullFilePath, callback);
+              _storeMongoGrid(db, topicId, time, fullFilePath, callback);
+            });
           });
-        });
+        } catch (e) {
+          ph.exit();
+        }
       });
     });
   });
@@ -859,9 +866,8 @@ function createItem(req, res, next) {
     }
 
     var item = results.item;
-    var topic = results.topic;
     res.json(_getItemData(item));
-    NewTopic.saveNewTopic(topic);
+    Topic.updateNewTopics();
     console.log('createItem done');
   });
 }
@@ -923,9 +929,8 @@ function sortItem(req, res, next) {
       return next(err);
     }
 
-    var topic = results.topic;
     res.send(200);
-    NewTopic.saveNewTopic(topic);
+    Topic.updateNewTopics();
     console.log('sort done');
   });
 }
@@ -981,9 +986,8 @@ function editItem(req, res, next) {
     }
 
     var newItem = results.newItem;
-    var topic = results.topic;
     res.json(_getItemData(newItem));
-    NewTopic.saveNewTopic(topic);
+    Topic.updateNewTopics();
     console.log('editItem done');
   });
 }
@@ -1022,9 +1026,8 @@ function deleteItem(req, res, next) {
       return next(err);
     }
 
-    var topic = results.topic;
     res.send(200);
-    NewTopic.saveNewTopic(topic);
+    Topic.updateNewTopics();
     console.log('deleteItem done');
   });
 }

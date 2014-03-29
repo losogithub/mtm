@@ -6,8 +6,8 @@
  * To change this template use File | Settings | File Templates.
  */
 var math = require('mathjs')();
-var NewTopic = require('../proxy').NewTopic;
 var Topic = require('../proxy').Topic;
+var User = require('../proxy').User;
 
 function traditionalScore(pv, likes) {
   return math.round(pv / 100, 7) + likes;
@@ -35,64 +35,53 @@ function extractRecentHotTopics() {
       console.log(err);
       return;
     }
-    //console.log("get all topics from topics collection");
-    //console.log(topics);
+    if (!topics) {
+      return;
+    }
 
     for (var i = 0; i < topics.length; i++) {
       topics[i].score = traditionalScore(topics[i].PV_count, topics[i].FVCount);
     }
 
-    //first set it to empty. this is important.
-    global.realGoodTopicsData = [];
-    console.log(topics.length);
-    console.log("更新经典总结");
-    var hotTopics = topics || [];
-    hotTopics.sort(scoreCompare).slice(0, 500);
-    for (var i = 0; i < hotTopics.length; i++) {
-      //console.log("hot topics");
-      global.realGoodTopicsData.push({
-        id: hotTopics[i]._id,
-        coverUrl: hotTopics[i].cover_url,
-        title: hotTopics[i].title,
-        author: hotTopics[i].author_name,
-        PVCount: hotTopics[i].PV_count,
-        des: hotTopics[i].description
-      });
-    }
+    console.log("更新热门总结");
+    global.realGoodTopicsData = topics.sort(scoreCompare).slice(0, 240);
 
-    //first set it to empty. this is important.
-    global.recentHotTopicsData = [];
-    console.log("更新左边人气总结");
-    hotTopics = topics || [];
+    var authorMap = {};
     for (var i = 0; i < topics.length; i++) {
       topics[i].score = newHotScore(topics[i].score, topics[i].update_at);
+      if (!authorMap[topics[i].author_id]) {
+        authorMap[topics[i].author_id] = { score: 0 };
+      }
+      authorMap[topics[i].author_id].score += topics[i].score ;
     }
-    hotTopics.sort(scoreCompare).slice(0, 1000);
-    for (var i = 0; i < hotTopics.length; i++) {
-      //console.log("hot topics");
-      global.recentHotTopicsData.push({
-        id: hotTopics[i]._id,
-        coverUrl: hotTopics[i].cover_url,
-        title: hotTopics[i].title,
-        author: hotTopics[i].author_name,
-        PVCount: hotTopics[i].PV_count,
-        des: hotTopics[i].description
+    global.recentHotTopicsData = topics.sort(scoreCompare).slice(0, 240);
+
+    var authorScore = [];
+    for (var id in authorMap) {
+      authorScore.push({ id: id, score: authorMap[id].score });
+    }
+    authorScore.sort(function (a, b) {
+      return (b.score - a.score);
+    });
+    var authorIds = [];
+    var hotAuthorScore = authorScore.slice(0, 14);
+    for (var i in hotAuthorScore) {
+      authorIds.push(hotAuthorScore[i].id);
+    }
+    User.getUserByIds(authorIds, function (err, authors) {
+      for (var i in authors) {
+        authors[i].score = authorMap[authors[i]._id].score;
+      }
+      authors.sort(function (a, b) {
+        return (b.score - a.score);
       });
-    }
-    if (typeof callback === 'function') {
-      callback(false, topics.length);
-    }
-  })
+      global.hotAuthors = authors;
+    });
+  });
 }
 
 module.exports = function () {
-  NewTopic.getNewTopics(function (err, topics) {
-    if (err) {
-      console.error(err.stack);
-      return;
-    }
-    NewTopic.updateNewTopics(topics);
-  })
+  Topic.updateNewTopics();
 
   extractRecentHotTopics();
   setInterval(extractRecentHotTopics, 60 * 1000);

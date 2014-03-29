@@ -1,59 +1,66 @@
 .StarIcon {
-  color: #dddddd;
-  text-shadow: 0 0 1px #777777;
+  color: white;
 }
 .ExSelected .StarIcon,
 .StarIconFull {
   color: #ffdd11;
-  text-shadow: 0 0 1px #443a00;
 }
-input[type="text"],
-textarea {
-  width: 100%;
+.text-default {
+  color: #34495e;
 }
-.Contents {
-  padding: 25px 0;
+.text-default:hover {
+  color: #2c3e50;
 }
-.Contents .Inner {
-  background: url("/images/bg_ContentsWrapper.png") repeat-y scroll 265px 0px transparent;
+.text-muted {
+  color: #bdc3c7;
 }
-.Sub {
-  float: left;
-  width: 265px;
-  padding-right: 25px;
+.text-inverse {
+  color: #ffffff;
 }
-.Thumb {
-  width: 122px;
-  height: 122px;
-  border-radius: 3px 3px 3px 3px;
-  border: 1px solid #dddddd;
-  margin-right: 15px;
+.text-primary {
+  color: #1abc9c;
 }
-.SubPV {
-  float: right;
-  width: 102px;
-  margin-top: 2px;
+.text-primary:hover {
+  color: #15967d;
 }
-.SubPV > li {
-  padding: 9px 0 9px;
+.text-warning {
+  color: #f1c40f;
 }
-.SubPV > li > p:first-child {
-  color: #333333;
-  font-size: 20px;
-  font-family: Arial, Helvetica, sans-serif;
-  line-height: 1;
+.text-warning:hover {
+  color: #c19d0c;
 }
-.SubPV > li > p:last-child {
-  color: #545454;
-  font-size: 10px;
-  margin-top: 8px;
-  line-height: 1;
+.text-danger {
+  color: #e74c3c;
 }
-.SubTtl {
-  margin-top: 14px;
-  color: #333333;
-  font-size: 14px;
-  font-weight: bold;
+.text-danger:hover {
+  color: #b93d30;
+}
+.text-success {
+  color: #2ecc71;
+}
+.text-success:hover {
+  color: #25a35a;
+}
+.text-info {
+  color: #3498db;
+}
+.text-info:hover {
+  color: #2a7aaf;
+}
+.affix {
+  position: static;
+}
+@media (min-width: 992px) {
+  .affix {
+    position: fixed;
+    width: 293px;
+    top: 20px;
+  }
+}
+@media (min-width: 1200px) {
+  .affix {
+    width: 263px;
+  }
 }
 .SubFV {
   bottom: 0;
@@ -64,165 +71,4 @@ textarea {
 .FVIco {
   color: #ffdd11;
   text-shadow: 0 0 1px #443a00;
-}
-.Nav-Personal {
-  padding-bottom: 20px;
-}
-.Nav-Personal li {
-  line-height: 1;
-  margin-bottom: 10px;
-  padding-left: 7px;
-  position: relative;
-}
-.Nav-Personal li:before {
-  content: '·';
-  position: absolute;
-  left: 0;
-  top: 0;
-}
-.Main {
-  overflow: hidden;
-  border-left: 1px solid #dddddd;
-  padding: 0 0 50px 25px;
-}
-.MainHead {
-  margin-bottom: 10px;
-}
-.MainHead > h5 {
-  margin: 0;
-  line-height: 20px;
-  color: #000000;
-  font-weight: bold;
-  font-size: 16px;
-}
-.MainHead a {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  color: #999;
-}
-.MainTbl {
-  width: 100%;
-  margin-bottom: 20px;
-}
-.MainTbl td:first-child {
-  max-width: 405px;
-}
-.MainTbl thead {
-  border-top: 1px solid #e8e9ea;
-  border-bottom: 1px solid #e8e9ea;
-  background-color: whitesmoke;
-}
-.MainTbl th {
-  padding: 9px 0;
-  font-weight: normal;
-}
-.MainTbl th:first-child {
-  text-align: left;
-  padding: 0 15px;
-}
-.MainTbl th + th > div {
-  border-left: 1px solid #ddd;
-  padding-left: 7px;
-  text-align: center;
-}
-.MainTbl th .SELECTED,
-.MainTbl th .SELECTED + i {
-  color: black;
-}
-.MainTbl th a {
-  color: #999;
-}
-.MainTbl th i {
-  font-size: 10px;
-  vertical-align: middle;
-}
-.MainTblSortSub {
-  float: right;
-  font-size: 10px;
-}
-.MainTblSortSub a {
-  vertical-align: middle;
-}
-.MainTbl td {
-  padding: 9px 10px;
-  border-bottom: 1px solid #f2f2f2;
-  text-align: center;
-  vertical-align: middle;
-  word-wrap: break-word;
-  height: 80px;
-}
-.MainTbl td:first-child {
-  text-align: left;
-}
-.MainTblTtl {
-  line-height: 21px;
-  margin-bottom: 3px;
-  font-size: 16px;
-}
-.MainTblPV {
-  font-size: 18px;
-}
-.MainTblRate {
-  font-size: 10px;
-}
-.SettingsForm {
-  padding-top: 20px;
-  color: #999;
-}
-.SettingsForm li {
-  padding-bottom: 20px;
-  *zoom: 1;
-}
-.SettingsForm li:before,
-.SettingsForm li:after {
-  display: table;
-  content: " ";
-}
-.SettingsForm li:after {
-  clear: both;
-}
-.SettingsForm li > h6 {
-  margin-top: 0;
-  display: block;
-  float: left;
-  width: 130px;
-  color: #333;
-  font-weight: bold;
-}
-.InputBox_Introduce {
-  padding: 8px;
-  height: 104px;
-  resize: none;
-  color: #666666;
-}
-.IntroduceCount {
-  position: absolute;
-  right: 0;
-  top: 0;
-  font-family: Tahoma, Arial, Helvetica, sans-serif;
-  font-size: 10px;
-}
-.IntroduceCount > span {
-  font-weight: bold;
-}
-.TopicTable {
-  margin-bottom: 20px;
-}
-.TopicTable,
-.TopicTable td {
-  width: 100%;
-}
-.TopicTable tr {
-  border-top: 1px solid #e7e7e7;
-}
-.TopicTable tr:last-child {
-  border-bottom: 1px solid #e7e7e7;
-}
-.TopicTable tr th,
-.TopicTable tr td {
-  padding: 16px 0;
-}
-.TopicTable tr th {
-  padding-right: 13px;
 }

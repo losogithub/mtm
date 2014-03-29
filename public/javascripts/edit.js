@@ -40,9 +40,6 @@
       .find('.Verify')
       .addClass(!options.user.verified ? '' : options.user.verified_type ? 'ORG' : 'PERSONAL')
       .end()
-      .find('.AuthorDescription')
-      .text(options.user.description)
-      .end()
       .find('.Text')
       .html(options.parsed_text)
       .end()
@@ -65,21 +62,25 @@
         $pic.css('width', '170px');
       }
       if (options.pic_urls.length == 1) {
-        $image
-          .clone(true)
-          .prependTo($pic)
-          .attr('href', options.pic_urls[0].thumbnail_pic)
-          .find('img')
-          .attr('src', options.pic_urls[0].thumbnail_pic);
-      } else {
-        for (var i = 0; i < options.pic_urls.length; i++) {
-          var src = options.pic_urls[i].thumbnail_pic.replace('/thumbnail/', '/square/');
+        if (options.pic_urls[0]) {
           $image
             .clone(true)
             .prependTo($pic)
-            .attr('href', src)
+            .attr('href', options.pic_urls[0].thumbnail_pic)
             .find('img')
-            .attr('src', src);
+            .attr('src', options.pic_urls[0].thumbnail_pic);
+        }
+      } else {
+        for (var i = 0; i < options.pic_urls.length; i++) {
+          var src = options.pic_urls[i].thumbnail_pic.replace('/thumbnail/', '/square/');
+          if (options.pic_urls[i]) {
+            $image
+              .clone(true)
+              .prependTo($pic)
+              .attr('href', src)
+              .find('img')
+              .attr('src', src);
+          }
         }
       }
     }
@@ -92,20 +93,32 @@
   $.fn.extend({
     fadeSlideDown: function (callback) {
       return this
+        //防止slideDown动画期间获取焦点时的滚动
+        .on('scroll.slide', function () {
+          $(this).scrollTop(0);
+        })
         .hide()
         .css({ 'opacity': 0 })
         .animate({
-          opacity: 0.5,
+          'opacity': 0.5,
           height: 'toggle'
         }, 100)
-        .fadeTo(100, 1, callback);
+        .fadeTo(100, 1, function () {
+          $(this).off('scroll.slide');
+          if ($.isFunction(callback)) {
+            callback.call(this);
+          }
+        });
     },
 
     hiddenSlideUp: function (callback) {
       return this
+        .addClass('noTransition')
         .css('visibility', 'hidden')
         .slideUp(100, function () {
-          $(this).css('visibility', 'visible');
+          $(this)
+            .css('visibility', 'visible')
+            .removeClass('noTransition');
           if ($.isFunction(callback)) {
             callback.call(this);
           }
@@ -184,13 +197,8 @@
 
       this.widget()
         .data('options', this.options.options)
-        //防止slideDown动画期间获取焦点时的滚动
-        .scroll(function () {
-          self.widget().scrollTop(0);
-        })
-        .find('>div')
+        .css('background-color', '#2c3e50')
         .prepend($templates.find('.Widget:first').clone(true))
-        .end()
         .find('.Widget')
         .prepend($templates.find('.Widget .' + this.type).clone(true))
         .end()
@@ -313,7 +321,8 @@
           data: $.extend({}, data, {
             topicId: topicId
           })
-        }).done(doneCallback)
+        })
+          .done(doneCallback)
           .fail(fail);
       } else {
         var options = this.widget().prev().data('options');
@@ -474,11 +483,24 @@
      */
     __create: function () {
       var self = this;
+      var $label = self.widget().find('.checkbox');
+      var $checkbox = self.widget().find(':checkbox');
+
+      $checkbox.checkbox();
+      $checkbox.on('toggle', function () {
+        console.log('haha');
+        if ($label.is('.checked')) {
+          self.widget()
+            .find('.Image img')
+            .attr('src', self.defaultImgSrc)
+            .end();
+        } else {
+          _increaseIndex(0);
+        }
+      });
 
       var _increaseIndex = function (increment) {
-        var $noImg = self.widget()
-          .find('.Thumb input[type="checkbox"]');
-        $noImg.removeAttr('checked');
+        $checkbox.checkbox('uncheck');
 
         if (self.options.srcs && self.options.srcs.length > 1) {
           if (self.index + increment >= self.options.srcs.length) {
@@ -580,18 +602,6 @@
         .find('.Thumb .btn-group .btn:last')
         .click(function () {
           _increaseIndex(1);
-        })
-        .end()
-        .find('.Thumb input[type="checkbox"]')
-        .click(function () {
-          if ($(this).is(':checked')) {
-            self.widget()
-              .find('.Image img')
-              .attr('src', self.defaultImgSrc)
-              .end();
-          } else {
-            _increaseIndex(0);
-          }
         })
         .end()
         .find('.Thumb input.Url')
@@ -1368,9 +1378,7 @@
     //填充新内容，然后删除旧内容，顺序很重要！！！防止抖动
     $item
       .data('options', options)
-      .find('>div')
       .prepend($templates.find('.Item:first').clone())
-      .end()
       .find('.Item')
       .prepend($templates.find('.Item .' + type).clone())
       .end();
@@ -1526,7 +1534,7 @@
         //填充文本
         var text = options.text;
         $item
-          .find('p')
+          .find('.Content')
           .html($('<div/>').text(text).html().replace(/\n/g, '<br>'))
           .end();
         break;
@@ -1534,7 +1542,7 @@
         //填充标题
         var title = options.title;
         $item
-          .find('p')
+          .find('.Content')
           .text(title)
           .end();
         break;
@@ -1545,16 +1553,23 @@
     return $item;
   }
 
+  var $cover;
+  var $title;
+
   function _init() {
     $._messengerDefaults = {
-      extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right'
+      extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right',
+      theme: 'flat'
     }
+
     topicId = location.pathname.match(/^\/topic\/([0-9a-f]{24})\/edit$/)[1];
     $band = $('.Band');
     $band_asterisk = $band.find('#_asterisk');
     $band_saved = $band.find('#_saved');
     $band_error = $band.find('#_error');
     $band_loading = $band.find('#_loading');
+    $cover = $('.HeadThumb');
+    $title = $('.HeadTtl');
     $_topItem = $('#_topItem');
     $_topWidget = $('#_topWidget');
     $ul = $('.WidgetItemList');
@@ -1634,16 +1649,6 @@
    * @private
    */
   function _initBand() {
-    $band.css('position', 'fixed');
-    var $window = $(window);
-    $window.scroll(function () {
-      if ($window.scrollTop() >= 48) {
-        $band.css('top', 0);
-      } else {
-        $band.css('top', 48 - $window.scrollTop());
-      }
-    });
-
     $(document)
       .ajaxStart(function () {
         $band_saved.hide();
@@ -1672,7 +1677,8 @@
       if (!_checkRemoveWidget()) {
         return;
       }
-      if (!$_topItem.find('.HeadTtl').text()) {
+      console.log($title.text());
+      if (!$title.text()) {
         if ($_topItem.is(':visible')) {
           $_topWidget.finish();
           $_topItem.finish().find('button[name="edit"]').click();
@@ -1701,26 +1707,14 @@
     });
   }
 
+  var oldCover;
+
   function __remove() {
     if (xhr) {
       console.log('abort');
       xhr.abort();
     }
-    if ($_topItem.find('.HeadTtl').text()) {
-      $_topItem.find('.HeadTtlPlaceholder').hide();
-    } else {
-      $_topItem.find('.HeadTtlPlaceholder').show();
-    }
-    if ($_topItem.find('.HeadThumb img').attr('src')) {
-      $_topItem.find('.HeadThumb').show();
-    } else {
-      $_topItem.find('.HeadThumb').hide();
-    }
-    if ($_topItem.find('.HeadDesc').text()) {
-      $_topItem.find('.HeadDescWrapper').show();
-    } else {
-      $_topItem.find('.HeadDescWrapper').hide();
-    }
+    $cover.attr('src', oldCover);
     $_topItem.after($_topWidget);
     $_topWidget.hiddenSlideUp();
     $_topItem.fadeSlideDown();
@@ -1731,44 +1725,50 @@
    * 初始化总结标题，总结描述
    * @private
    */
+
   function _initTop() {
-    var defaultImgSrc = '/images/no_img/photo_95x95.png';
+    var defaultImgSrc = '';//'/images/no_img/photo_95x95.png';
     var noImgSrc = '/images/no_img/default_120x120.png';
-    var $title = $_topWidget.find('input[name="title"]');
-    var $cover = $_topWidget.find('button[name="cover"] img');
+    var $titleInput = $_topWidget.find('input[name="title"]');
     var $description = $_topWidget.find('textarea[name="description"]');
-    var title = $_topItem.find('.HeadTtl').text();
-    var coverUrl = $_topItem.find('.HeadThumb img').attr('src');
+    var title = $title.text();
+    var coverUrl = $cover.attr('src');
     var description = $_topItem.find('.HeadDesc').text();
-    var $extra = $_topWidget.find('.Edit_Top_Thumb_Extra');
 
     var checkState = function () {
       if ($_topWidget.is(':hidden')) {
         return;
       }
       if (($cover.attr('src') == coverUrl || ($cover.attr('src') == defaultImgSrc && !coverUrl))
-        && $title.val() == title
+        && $titleInput.val() == title
         && $description.val() == description) {
         setTopState('create');
       } else {
         setTopState('edit');
       }
     };
-    $title.add($description).on(INPUT_EVENTS, checkState);
+    $titleInput.add($description).on(INPUT_EVENTS, checkState);
+
+    $_topWidget
+      .find('button[name="save"]')
+      .attr('type', 'submit')
+      .end()
+      .find('textarea').autosize({
+        append: '\n'
+      });
 
     $_topItem.find('button[name="edit"]').click(function () {
       if (!_checkRemoveWidget()) {
         return;
       }
-      title = $_topItem.find('.HeadTtl').text();
-      coverUrl = $_topItem.find('.HeadThumb img').attr('src');
+      title = $title.first().text();
+      coverUrl = $cover.attr('src');
       description = $_topItem.find('.HeadDesc').text();
 
-      $title.val(title);
+      $titleInput.val(title);
       $cover.attr('src', coverUrl || defaultImgSrc);
       $description.val(description);
 
-      $extra.hide();
       $_topWidget.after($_topItem);
       $_topItem.hiddenSlideUp();
       $_topWidget
@@ -1777,14 +1777,15 @@
         .end()
         .fadeSlideDown();
 
-      setTimeout(function () {
-        $title.focus();
-      }, 99);
+      $titleInput.focus();
       //移动光标到输入框末尾
-      moveSelection2End($title[0]);
+      moveSelection2End($titleInput[0]);
+
+      oldCover = coverUrl || defaultImgSrc;
+
       setTopState('create');
     });
-    if ((!title && !$ul.children().length) || /editTop=1/i.test(location.search)) {
+    if (!title && !$ul.children().length) {
       $_topItem.find('button[name="edit"]').click();
     }
     $_topWidget.find('button[name="cancel"]')
@@ -1796,18 +1797,6 @@
         __remove();
       });
 
-    $_topWidget
-      //防止slideDown动画期间获取焦点时的滚动
-      .scroll(function () {
-        self.widget().scrollTop(0);
-      })
-      .find('button[name="save"]')
-      .attr('type', 'submit')
-      .end()
-      .find('textarea').autosize({
-        append: '\n'
-      });
-
     var commit = function () {
       var coverUrl = $cover.attr('src');
       var $button = $_topWidget.find('button[name="save"]');
@@ -1817,15 +1806,15 @@
         type: 'PUT',
         data: {
           topicId: topicId,
-          title: $title.val(),
+          title: $titleInput.val(),
           coverUrl: (coverUrl == noImgSrc || coverUrl == defaultImgSrc) ? undefined : coverUrl,
           description: $description.val()
         }
       })
         .done(function (data) {
           savedOnce = true;
-          $_topItem.find('.HeadTtl').text(data.title);
-          $_topItem.find('.HeadThumb img').attr('src', (data.coverUrl == noImgSrc || data.coverUrl == defaultImgSrc) ? '' : data.coverUrl);
+          $title.text(data.title);
+          oldCover = data.coverUrl || defaultImgSrc;
           $_topItem.find('.HeadDesc').text(data.description || '');
           __remove();
         })
@@ -1874,40 +1863,9 @@
     });
 
     //封面设置
-    var $thumb = $_topWidget.find('button[name="cover"]');
-    var $input = $extra.find('input');
-    var $preview = $extra.find('button[name="preview"]');
-    var $reset = $extra.find('button[name="reset"]');
-    var autoHide = false;
-    var hide = function () {
-      autoHide = false;
-      $extra.css('visibility', 'hidden')
-        .hide('fast', function () {
-          $extra.removeAttr('style');
-        })
-    };
-    $thumb.click(function () {
-      if ($extra.is(':visible')) {
-        hide();
-      } else {
-        $extra
-          .css({ 'opacity': 0 })
-          .animate({
-            opacity: 0.5,
-            width: 'toggle'
-          }, 100)
-          .fadeTo(100, 1, function () {
-            $extra.css('opacity', 'inherit');
-          });
-        $input.focus();
-      }
-    });
-    $cover.on('load', function () {
-      if ($cover.attr('src') != noImgSrc
-        && autoHide) {
-        hide();
-      }
-    });
+    var $input = $_topWidget.find('input[name="url"]');
+    var $preview = $_topWidget.find('button[name="preview"]');
+    var $reset = $_topWidget.find('button[name="reset"]');
     $input.keypress(function (event) {
       if (event.keyCode != 13) {
         return;
@@ -1916,16 +1874,11 @@
       return false;
     });
     $preview.click(function () {
-      autoHide = true;
       var newCover = shizier.utils.suffixImage($input.val());
-      if (!$input.val() || $cover.attr('src') == newCover) {
-        hide();
-      }
       $cover.attr('src', newCover || defaultImgSrc);
       checkState();
     });
     $reset.click(function () {
-      hide();
       $cover.attr('src', coverUrl || defaultImgSrc);
       checkState();
     });
@@ -1938,7 +1891,7 @@
     $ul
       //防止拖动开始时高度减小导致的抖动
       .mousedown(function (e) {
-        $(this).css('min-height', $(this).height());
+        $(this).css('min-height', $(this).outerHeight());
       })
       .mouseup(function () {
         $(this).removeAttr('style');
@@ -1951,13 +1904,13 @@
         opacity: 0.4,
         cursor: 'move',
         handle: '.MoveUtil',
+        helper: "clone",//加这个是为了解决拖动后添加条目util的index问题
         scrollSensitivity: 100,
         scrollSpeed: 10,
         axis: 'y',
         containment: 'body',
 
         start: function () {
-          console.log('start');
           $(this)
             .addClass('WidgetItemList-Sorting')
             .mousemove(function (e) {
@@ -1973,15 +1926,13 @@
         },
 
         stop: function () {
-          console.log('stop');
           $(this)
             .removeClass('WidgetItemList-Sorting')
-            .unbind('mousemove');
+            .off('mousemove');
         },
 
         //列表顺序改变后的回调函数
         update: function (event, data) {
-          console.log('sort');
           updateList(data.item);
         }
       });

@@ -17,8 +17,13 @@ $(function () {
     var vid = $li.data('options').vid;
     var quote = $li.find('.Quote a').text();
     var temp = shizier.getVideoSrc(quote, vid);
+    var width = $li.width();
+    width = width < 480 && width || 480;
+    var height = width * 5 / 6;
     $player.clone()
       .find('embed')
+      .attr('width', width)
+      .attr('height', height)
       .attr('flashvars', temp.vars)
       .attr('src', temp.src)
       .end()

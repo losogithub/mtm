@@ -20,6 +20,9 @@ module.exports = function (app) {
   });
   // home page
   app.get('/', site.index);
+  app.get('/hot', site.showHot);
+  app.get('/classic', site.showClassic);
+  app.get('/new', site.showNew);
 
   //console.log("router start");
   app.post('/loginDialogCheck', auth.loginDialog, auth.loginDialogCheck);
@@ -97,11 +100,6 @@ module.exports = function (app) {
   //note  url with / ended not ok. todo
   app.get('/privacy', about.showPrivacy);
   //app.get('/privacy', about.showPrivacyCenter);
-  app.get('/glossary', about.showPrivacyCenter);
-  app.get('/policy', about.showPolicy);
-  app.get('/cope', about.showCope);
-  app.get('/service', about.showService);
-  app.get('/principle', about.showPrinciple);
   app.get('/help', about.showHelp);
   app.get('/faq/:helpId', about.showEachHelp);
 

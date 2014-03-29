@@ -1,116 +1,80 @@
 .StarIcon {
-  color: #dddddd;
-  text-shadow: 0 0 1px #777777;
+  color: white;
 }
 .ExSelected .StarIcon,
 .StarIconFull {
   color: #ffdd11;
-  text-shadow: 0 0 1px #443a00;
 }
-/*内容*/
-.TopicWrapper {
-  width: 960px;
-  min-height: 81px;
-  margin: 0 auto;
-  background: url("/images/bg_ContentsWrapper.png") repeat-y scroll 660px 0px transparent;
+.text-default {
+  color: #34495e;
 }
-.TopicWrapper .Main {
-  float: left;
-  width: 635px;
-  min-height: 41px;
-  margin-bottom: 40px;
+.text-default:hover {
+  color: #2c3e50;
 }
-.TopicWrapper .Pagination {
-  line-height: 19px;
-  margin: 30px 0 40px 0;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 16px;
-  text-align: center;
+.text-muted {
+  color: #bdc3c7;
 }
-.TopicWrapper .Sub {
-  position: relative;
-  float: right;
-  width: 300px;
-  margin-bottom: 40px;
+.text-inverse {
+  color: #ffffff;
+}
+.text-primary {
+  color: #1abc9c;
+}
+.text-primary:hover {
+  color: #15967d;
+}
+.text-warning {
+  color: #f1c40f;
+}
+.text-warning:hover {
+  color: #c19d0c;
+}
+.text-danger {
+  color: #e74c3c;
+}
+.text-danger:hover {
+  color: #b93d30;
+}
+.text-success {
+  color: #2ecc71;
+}
+.text-success:hover {
+  color: #25a35a;
+}
+.text-info {
+  color: #3498db;
+}
+.text-info:hover {
+  color: #2a7aaf;
+}
+.noTransition * {
+  -webkit-transition: none !important;
+  transition: none !important;
 }
 /*条目*/
-.WidgetItemList > li > div {
-  background-color: #ffffff;
-  margin-bottom: 35px;
+.WidgetItemList {
+  list-style: none;
+  padding: 0 0 40px;
+  margin-bottom: 0;
 }
-.WidgetItemList > li > div:hover {
-  background-color: #f8f8f8;
-  box-shadow: 0 0 0 3px #f8f8f8;
-}
-.WidgetItemList > li > div > :first-child {
-  *zoom: 1;
-}
-.WidgetItemList > li > div > :first-child:before,
-.WidgetItemList > li > div > :first-child:after {
-  display: table;
-  content: " ";
-}
-.WidgetItemList > li > div > :first-child:after {
-  clear: both;
-}
-.WidgetItemList > li:last-child > div {
-  margin-bottom: 0 !important;
-}
-.WidgetItemList > li.TITLE > div {
-  margin-bottom: 25px;
-}
-.WidgetItemList .Content {
-  *zoom: 1;
-}
-.WidgetItemList .Content:before,
-.WidgetItemList .Content:after {
-  display: table;
-  content: " ";
-}
-.WidgetItemList .Content:after {
-  clear: both;
+.WidgetItemList > li:hover {
+  background-color: #f8f9fa;
 }
 .WidgetItemList .Quote {
-  *zoom: 1;
   font-size: 11px;
   line-height: 13px;
   margin-top: 3px;
-  min-width: 100px;
 }
-.WidgetItemList .Quote:before,
-.WidgetItemList .Quote:after {
-  display: table;
-  content: " ";
-}
-.WidgetItemList .Quote:after {
-  clear: both;
-}
+.WidgetItemList .Quote,
 .WidgetItemList .Quote * {
-  color: #aaaaaa;
-}
-.WidgetItemList .Quote span {
-  float: left;
-  margin-right: 5px;
-}
-.WidgetItemList .Quote div {
-  overflow: hidden;
-}
-.LINK .Quote a {
-  color: #7c94aa;
-}
-.IMAGE .Quote {
-  max-width: 300px;
-}
-.CITE .Quote {
-  margin-top: 7px;
+  color: #bdc3c7;
 }
 /*工具栏*/
 .SortUtil {
   position: absolute;
   top: 0px;
-  right: -24px;
-  padding-left: 3px;
-  visibility: hidden;
+  right: -21px;
+  display: none;
 }
 .SortUtil i {
   display: block;
@@ -121,123 +85,132 @@
   cursor: pointer;
 }
 .SortUtil i:hover {
-  outline: dotted 1px;
+  color: #1abc9c;
 }
-.BottomUtil {
+.AddUtil {
+  background-color: rgba(22, 160, 133, 0.8);
+  border-radius: 6px;
   display: none;
-  visibility: hidden;
   line-height: 1;
+  position: absolute;
+  bottom: -18px;
+  left: 15px;
+  z-index: 1000;
 }
-.LINK .Title a {
+.AddUtil .btn {
+  vertical-align: baseline;
+  padding: 0;
+  font-size: 18px;
+}
+.EditUtil {
+  background-color: #f8f8f8;
+  border-radius: 6px;
+  display: none;
+  line-height: 1;
+  position: absolute;
+  bottom: 0;
+  right: 15px;
+}
+.EditUtil .btn {
+  color: #bdc3c7;
+}
+.EditUtil .EDIT:hover {
+  color: #1abc9c;
+}
+.EditUtil .DELETE:hover {
+  color: #e74c3c;
+}
+.EditUtil .btn {
+  vertical-align: baseline;
+  padding: 0;
+  font-size: 18px;
+}
+.Content.LINK .Title {
   font-size: 20px;
-  line-height: 26px;
-  text-decoration: underline;
+  line-height: 1.1;
+  font-weight: bold;
 }
-.LINK .Title a:hover,
-.LINK .Title a:active,
-.LINK .Title a:focus {
-  text-decoration: none;
+.Content.LINK .Snippet {
+  line-height: 1.2;
 }
-.LINK .Snippet {
-  line-height: 17px;
-  margin-top: 3px;
-}
-.LINK .Thumb {
-  margin-top: 7px;
-}
-.LINK .Thumb img {
+.Content.LINK .Thumb img {
   max-width: 150px;
   max-height: 150px;
 }
-.LINK .Description {
-  margin-top: 10px;
+.Content.LINK .Description {
   padding-left: 6px;
-  border-left: 2px solid #ccc;
-  font-size: 14px;
-  line-height: 20px;
+  border-left: 2px solid #bdc3c7;
+  line-height: 1.4;
 }
-.IMAGE_CREATE .Image,
-.IMAGE .Image {
-  float: left;
-  margin-right: 10px;
+.Item .IMAGE {
+  border-radius: 6px;
+  background-color: #ecf0f1;
+  width: 500px;
+  max-width: 100%;
+  margin: auto;
 }
-.IMAGE .Image img {
-  max-width: 300px;
-  max-height: 600px;
+.Item .IMAGE img {
+  max-width: 100%;
+  max-height: 500px;
 }
-.IMAGE .Title {
-  margin-bottom: 4px;
-  line-height: 24px;
+.Item .IMAGE .Title {
+  line-height: 1.1;
   font-weight: bold;
-  font-size: 18px;
 }
-.IMAGE .Description {
-  line-height: 20px;
-  font-size: 14px;
-}
-.VIDEO_CREATE .Thumb {
-  text-align: center;
-  width: 300px;
-  height: 220px;
-  background-color: #f3f3f3;
-}
-.VIDEO_CREATE .Thumb i {
-  line-height: 220px;
-  font-size: 30px;
+.Item .IMAGE .Description {
+  line-height: 1.4;
 }
 .VIDEO .Cover {
   text-align: center;
-  width: 122px;
-  height: 92px;
+  width: 120px;
+  height: 90px;
   display: block;
-  background-color: #f3f3f3;
+  background-color: #7f8c8d;
   background-repeat: no-repeat;
   background-size: cover;
+  border-radius: 0;
+  padding: 0;
+}
+.VIDEO .Cover .Background {
+  width: 120px;
+  height: 90px;
 }
 .VIDEO .Cover i {
-  line-height: 80px;
+  line-height: 95px;
   font-size: 60px;
   color: rgba(255, 255, 255, 0.6);
-  text-shadow: 0px 0px 2px rgba(51, 51, 51, 0.6);
+}
+.VIDEO .Cover:hover .Background,
+.VIDEO .Cover:focus .Background,
+.VIDEO .Cover:active .Background {
+  background-color: rgba(0, 0, 0, 0.6);
 }
 .VIDEO .Cover:hover i,
-.VIDEO .Cover:focus i {
-  color: rgba(255, 255, 255, 0.8);
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
-}
+.VIDEO .Cover:focus i,
 .VIDEO .Cover:active i {
-  text-shadow: 0px 0px 2px rgba(0, 0, 0, 0.8);
+  color: #eee;
 }
 .VIDEO .Title {
-  margin-top: 8px;
-  line-height: 24px;
   font-weight: bold;
-  font-size: 18px;
+  line-height: 1.1;
 }
 .VIDEO .Description {
-  margin-top: 10px;
   padding-left: 6px;
-  border-left: 2px solid #ddd;
-  font-size: 14px;
-  line-height: 20px;
+  border-left: 2px solid #bdc3c7;
+  line-height: 1.4;
 }
 .CITE .Cite {
-  line-height: 26px;
+  line-height: 1.4;
   font-weight: bold;
-  font-size: 20px;
-}
-.CITE .Cite i {
   font-size: 20px;
 }
 .CITE .Cite q {
   quotes: none;
 }
 .CITE .Description {
-  margin-top: 10px;
   padding-left: 6px;
-  border-left: 2px solid #ccc;
-  font-size: 14px;
-  line-height: 20px;
+  border-left: 2px solid #bdc3c7;
+  line-height: 1.4;
 }
 .WEIBO .Avatar,
 .WEIBO_CREATE .Avatar {
@@ -248,25 +221,15 @@
 .WEIBO_CREATE .Avatar img {
   width: 50px;
   height: 50px;
-  background-color: #f3f3f3;
+  background-color: #7f8c8d;
 }
 .WEIBO .Author,
 .WEIBO_CREATE .Author {
   font-weight: bold;
 }
-.WEIBO > div > .Author,
-.WEIBO_CREATE > div > .Author {
-  font-size: 14px;
-}
 .WEIBO .Text,
 .WEIBO_CREATE .Text {
-  line-height: 23px;
-  margin: 4px 0;
-  color: #333;
-}
-.WEIBO > div > .Text,
-.WEIBO_CREATE > div > .Text {
-  font-size: 14px;
+  margin-top: 5px;
 }
 .WEIBO .Verify,
 .WEIBO_CREATE .Verify {
@@ -277,18 +240,12 @@
   display: inline;
   text-decoration: none;
   color: #fb0;
-  text-shadow: 0 0 1px #f90;
 }
 .WEIBO .Verify.ORG,
 .WEIBO_CREATE .Verify.ORG {
   display: inline;
   text-decoration: none;
   color: #07e;
-  text-shadow: 0 0 1px #14f;
-}
-.WEIBO > div > .Verify,
-.WEIBO_CREATE > div > .Verify {
-  font-size: 14px;
 }
 .WEIBO .Pic,
 .WEIBO_CREATE .Pic {
@@ -303,283 +260,28 @@
 }
 .WEIBO .Retweeted,
 .WEIBO_CREATE .Retweeted {
-  background-color: #f2f2f2;
-  border: solid 1px #d9d9d9;
-  border-radius: 5px;
+  background-color: #ecf0f1;
+  border-radius: 6px;
   padding: 10px 20px;
-  margin: 10px 0 15px;
-  position: relative;
-}
-.WEIBO .Retweeted .CaretShadow,
-.WEIBO_CREATE .Retweeted .CaretShadow {
-  position: absolute;
-  top: -11px;
-  color: #d9d9d9;
-}
-.WEIBO .Retweeted .Caret,
-.WEIBO_CREATE .Retweeted .Caret {
-  position: absolute;
-  top: -10px;
-  color: #f2f2f2;
-}
-.WEIBO .Retweeted .AuthorDescription,
-.WEIBO_CREATE .Retweeted .AuthorDescription {
-  font-size: 10px;
+  margin: 10px 0;
+  font-size: 80%;
 }
 .WEIBO .Handle,
 .WEIBO_CREATE .Handle {
   float: right;
   visibility: hidden;
 }
-.WEIBO textarea[name="description"],
-.WEIBO_CREATE textarea[name="description"] {
-  margin-top: 10px;
-}
 .WEIBO .Description,
 .WEIBO_CREATE .Description {
-  margin-top: 10px;
   padding-left: 6px;
-  border-left: 2px solid #ddd;
-  font-size: 14px;
-  line-height: 20px;
+  border-left: 2px solid #bdc3c7;
+  line-height: 1.4;
 }
 .WidgetItemList > li:hover .WEIBO .Handle,
 .WidgetItemList > li:hover .WEIBO_CREATE .Handle {
   visibility: visible;
 }
-.TEXT p {
-  line-height: 20px;
-  font-size: 14px;
-}
-.TITLE p {
-  line-height: 26px;
-  font-size: 20px;
-  font-weight: bold;
+.Item .TITLE {
   padding-bottom: 5px;
-  border-bottom: 2px solid #EAECEE;
-}
-.Contents {
-  padding-bottom: 25px;
-}
-.Band {
-  height: 37px;
-  background-color: #f5f5f5;
-  border-bottom: 1px solid #e7e7e7;
-}
-.Band li {
-  display: inline;
-}
-.Band li i {
-  font-size: 12px;
-}
-.Top {
-  margin-bottom: 20px;
-  border-bottom: 1px solid #f2f2f2;
-  background-color: #f9f9f9;
-}
-.Top .Inner {
-  overflow: hidden;
-  padding: 15px 0;
-  position: relative;
-}
-.Top .Inner .HeadMain {
-  margin-top: -3px;
-  width: 725px;
-}
-.Top .Inner .HeadMain .HeadThumb {
-  float: left;
-  margin: 3px 15px 0 0;
-  width: 95px;
-  height: 95px;
-}
-.Top .Inner .HeadMain .HeadTxt {
-  overflow: hidden;
-}
-.Top .Inner .HeadMain .HeadTxt .HeadTtlWrapper .HeadTtl,
-.Top .Inner .HeadMain .HeadTxt .HeadTtlWrapper .HeadTtlPlaceholder {
-  display: inline;
-  font-size: 32px;
-  line-height: 38px;
-  margin-right: 15px;
-}
-.Top .Inner .HeadMain .HeadTxt .HeadTtlWrapper .HeadUtil {
-  display: inline-block;
-}
-.Top .Inner .HeadMain .HeadTxt .HeadDescWrapper {
-  margin-top: 7px;
-}
-.Top .Inner .HeadMain .HeadTxt .HeadDescWrapper .HeadDesc {
-  margin-right: 8px;
-}
-.Top .Inner .HeadMain .HeadTxt .HeadOption {
-  margin-top: 13px;
-}
-.Top .Inner .HeadMain .HeadTxt .HeadOption .HeadUser {
-  margin-right: 10px;
-}
-.Top .Inner .HeadMain .HeadTxt .HeadOption .HeadUser .HeadUserThumb {
-  display: inline-block;
-  width: 30px;
-  height: 30px;
-  margin-right: 10px;
-}
-.Top .Inner .HeadMain .HeadTxt .HeadOption .HeadUser .HeadUserName {
-  font-weight: bold;
-}
-.Top .Inner .HeadSub {
-  width: 220px;
-  text-align: right;
-  position: absolute;
-  top: 15px;
-  right: 0;
-}
-.Top .Inner .HeadSub .HeadCount {
-  margin: 0 0 8px;
-  *margin-bottom: 5px;
-}
-.Top .Inner .HeadSub .HeadCount .HeadFVCount {
-  display: inline-block;
-  *display: inline;
-  *zoom: 1;
-  padding-right: 13px;
-  *padding-right: 17px;
-  vertical-align: top;
-  text-align: center;
-}
-.Top .Inner .HeadSub .HeadCount .HeadFVCount .HeadFVCountNum {
-  display: block;
-  line-height: 1;
-  *line-height: 1.15;
-  margin-top: -3px;
-  *margin-top: 0;
-  font-size: 22px;
-}
-.Top .Inner .HeadSub .HeadCount .HeadFVCount .HeadFVIco {
-  color: #ffdd11;
-  text-shadow: 0 0 1px #443a00;
-}
-.Top .Inner .HeadSub .HeadCount .HeadFVCount .HeadFVCountLabel {
-  display: block;
-  margin-top: 3px;
-  *margin-top: 0;
-  line-height: 1;
-  *line-height: 1.15;
-  font-size: 11px;
-}
-.Top .Inner .HeadSub .HeadCount .HeadPVCount {
-  display: inline-block;
-  border-left: 1px solid #eeeeee;
-  padding-left: 13px;
-  text-align: center;
-}
-.Top .Inner .HeadSub .HeadCount .HeadPVCount .HeadPVCountNum {
-  display: block;
-  line-height: 1;
-  margin-top: -3px;
-  font-size: 22px;
-}
-.Top .Inner .HeadSub .HeadCount .HeadPVCount .HeadPVCountLabel {
-  display: block;
-  margin-top: 3px;
-  line-height: 1;
-  font-size: 11px;
-}
-.Top .Inner .HeadSub .HeadFVBtnIco {
-  margin-right: 7px;
-  color: #dddddd;
-  text-shadow: 0 0 1px #777777;
-}
-.Top .Inner .HeadSub .ExSelected .HeadFVBtnIco {
-  color: #ffdd11;
-  text-shadow: 0 0 1px #443a00;
-}
-.Top .Inner .HeadSub .HeadFVBtnTxt {
-  font-weight: bold;
-  font-size: 14px;
-}
-.Main {
-  padding-bottom: 0;
-}
-.Main a[name="add"] {
-  margin-bottom: 15px;
-}
-.NoItem {
-  position: relative;
-  padding: 140px 0px 160px;
-  text-align: center;
-}
-.NoItem > p {
-  color: #666666;
-  margin-bottom: 11px;
-}
-.SubSeparator {
-  height: 15px;
-  background: #ffffff;
-}
-.SubSeparator hr {
-  display: none;
-}
-.SubAuthor {
-  border: 5px solid #e2e5e8;
-}
-.SubAuthorProfile {
-  padding: 15px 15px 15px;
-}
-.SubAuthorProfileUnit {
-  position: relative;
-  min-height: 80px;
-  padding: 0 0 0 90px;
-}
-.SubAuthorProfileUnitTitle {
-  line-height: 1.2;
-  padding: 0 0 7px;
-  color: #666;
-  margin: 0;
-}
-.SubAuthorProfileUnit .SubAuthorProfileUnitTitle a {
-  color: #000;
-  font-weight: bold;
-}
-.SubAuthorProfileUnitTitleUserNameThumb {
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 80px;
-  height: 80px;
-}
-.SubAuthorProfileUnitLinkSiteBtn {
-  width: 86px;
-  height: 23px;
-  background-position: -70px -90px;
-  vertical-align: middle;
-  background-image: url("/images/personal/sprite_MdBtn_130918.png");
-  display: inline-block;
-  *display: inline;
-  *zoom: 1;
-  overflow: hidden;
-  padding: 0;
-  border: 0;
-  background-color: transparent;
-  background-repeat: no-repeat;
-  text-align: left;
-  text-indent: -9999px;
-  *text-indent: 0;
-  *line-height: 9999px;
-  *word-wrap: normal;
-}
-.SubAuthorProfileUnitLinkSite.ExDisabled .SubAuthorProfileUnitLinkSiteBtn {
-  background-position: -70px -120px;
-  cursor: default;
-}
-.SubAuthorProfileTxt {
-  line-height: 1.5;
-  margin: 7px 0 -4px;
-  word-wrap: break-word;
-  color: #666666;
-}
-@media (max-width: 1100px) {
-  .bdshare-slide-button {
-    display: none !important;
-  }
+  border-bottom: 2px solid #bdc3c7;
 }

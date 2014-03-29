@@ -54,11 +54,11 @@ var signup = function (req, res, next) {
 
   var name = sanitize(req.body.username).trim();
   name = sanitize(name).xss();
-  var loginname = name.toLowerCase();
+  var loginname = name;
   var pass = sanitize(req.body.password).trim();
   pass = sanitize(pass).xss();
   var email = sanitize(req.body.email).trim();
-  email = email.toLowerCase();
+  email = email;
   email = sanitize(email).xss();
 
   // 1. check name
@@ -82,31 +82,28 @@ var signup = function (req, res, next) {
     nMsg = '长度不能少于2.';
   }
   else {
-      /*
-       2014-3-20 20:30
-       in order to support underscore and chinese character, update to use regex
-       */
     /*
-      try {
-      //check(name, '用户名只能使用0-9，a-z，A-Z。').isAlphanumeric();
+     2014-3-20 20:30
+     in order to support underscore and chinese character, update to use regex
+     */
+    /*
+     try {
+     //check(name, '用户名只能使用0-9，a-z，A-Z。').isAlphanumeric();
 
 
-    } catch (e) {
-      nMsg = e.message;
+     } catch (e) {
+     nMsg = e.message;
+     nFlag = false;
+     }
+     */
+    //韩语，日语，中文
+    var nameOK = name.match(/^[\x3130-\x318F\xAC00-\xD7A3\u0800-\u4e00\u0391-\uFFE5\w]+$/);
+    // var nameOK = name.match(/^[\u0391-\uFFE5\w]+$/);
+    if (nameOK == null){
+      nMsg = "用户名只能使用中文，英文，日文，韩文和下划线的组合";
       nFlag = false;
     }
-    */
-      //韩语，日语，中文
-      var nameOK = name.match(/^[\x3130-\x318F\xAC00-\xD7A3\u0800-\u4e00\u0391-\uFFE5\w]+$/);
-     // var nameOK = name.match(/^[\u0391-\uFFE5\w]+$/);
-      if (nameOK == null){
-       nMsg = "用户名只能使用中文，英文，日文，韩文和下划线的组合";
-       nFlag = false;
-        }
-
   }
-
-
 
 
   // 2. check email
@@ -353,8 +350,8 @@ var notJumpForLogin = [
  * @param {HttpResponse} res
  * @param {Function} next
  */
-var login = function (req, res, next) {
-  var loginname = sanitize(req.body.email).trim().toLowerCase();
+function login(req, res, next) {
+  var loginname = sanitize(req.body.email).trim();
   var pass = sanitize(req.body.password).trim();
   var autoLogin = sanitize(req.body.autoLogin).trim();
 
@@ -554,7 +551,7 @@ var showForgetPassword = function (req, res) {
 
 var forgetPassword = function (req, res, next) {
   console.log("-----forget password check email ------");
-  var email = sanitize(req.body.email).trim().toLowerCase();
+  var email = sanitize(req.body.email).trim();
   console.log(email);
   email = sanitize(email).xss();
 
@@ -629,7 +626,7 @@ var showResetPassword = function (req, res, next) {
   });
 }
 
-var resetPassword = function (req, res, next) {
+function resetPassword(req, res, next) {
   var psw = req.body.newPassword || '';
   var repsw = req.body.newPasswordConfirm || '';
   var key = req.body.key || '';

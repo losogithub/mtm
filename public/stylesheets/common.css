@@ -1,46 +1,61 @@
-body,
-p,
-dl,
-dt,
-dd,
-ul,
-ol,
-li,
-th,
-td,
-div,
-blockquote,
-pre,
-form,
-fieldset,
-input {
-  margin: 0;
-  padding: 0;
+.StarIcon {
+  color: white;
 }
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-dl,
-dt,
-dd,
-ul,
-ol,
-li,
-table,
-th,
-td,
-div,
-blockquote,
-pre,
-form,
-fieldset,
-legend,
-header {
-  *zoom: 1;
+.ExSelected .StarIcon,
+.StarIconFull {
+  color: #ffdd11;
+}
+.text-default {
+  color: #34495e;
+}
+.text-default:hover {
+  color: #2c3e50;
+}
+.text-muted {
+  color: #bdc3c7;
+}
+.text-inverse {
+  color: #ffffff;
+}
+.text-primary {
+  color: #1abc9c;
+}
+.text-primary:hover {
+  color: #15967d;
+}
+.text-warning {
+  color: #f1c40f;
+}
+.text-warning:hover {
+  color: #c19d0c;
+}
+.text-danger {
+  color: #e74c3c;
+}
+.text-danger:hover {
+  color: #b93d30;
+}
+.text-success {
+  color: #2ecc71;
+}
+.text-success:hover {
+  color: #25a35a;
+}
+.text-info {
+  color: #3498db;
+}
+.text-info:hover {
+  color: #2a7aaf;
+}
+textarea {
+  font-family: arial, sans-serif;
+  min-height: 85px;
+  padding-bottom: 0;
+  resize: vertical;
+}
+body {
+  word-wrap: break-word;
+  font-family: "微软雅黑", arial, sans-serif;
 }
 h1,
 h2,
@@ -54,77 +69,54 @@ h6,
 .h4,
 .h5,
 .h6 {
-  font-family: "ff-tisa-web-pro-1", "ff-tisa-web-pro-2", "Lucida Grande", "Helvetica Neue", Helvetica, Arial, "Hiragino Sans GB", "Hiragino Sans GB W3", "Microsoft YaHei UI", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+  font-family: "微软雅黑", arial, sans-serif;
 }
-button,
-img,
-fieldset,
-table,
-th,
-td {
-  border: 0 none;
+.navbar-unread,
+.navbar-new {
+  font-family: "微软雅黑", arial, sans-serif;
 }
-input[type="text"],
-input[type="password"],
-textarea {
-  font-size: 1em;
+.form-control {
+  font-family: "微软雅黑", arial, sans-serif;
 }
-input[type="text"]:focus,
-input[type="password"]:focus,
-textarea:focus {
-  outline: 0 none;
+.tagsinput input {
+  font-family: "微软雅黑", arial, sans-serif;
 }
-input[type="text"],
-input[type="password"] {
-  height: 27px;
-}
-textarea {
-  font-family: arial, sans-serif;
-  min-height: 85px;
-  padding-bottom: 0;
-  resize: vertical;
-}
-input[name='url'],
-input.Url {
-  color: #999;
-}
-input.Bold {
-  font-size: 14px;
-  font-weight: bold;
-  height: 30px;
-}
-ol,
-ul {
-  list-style: none;
-}
-i {
-  font-size: 14px;
+.video-js .vjs-text-track-display {
+  font-family: "微软雅黑", arial, sans-serif;
 }
 table {
-  height: 100%;
+  word-break: break-all;
 }
-html {
-  overflow-y: scroll;
+.SIGNUP .container,
+.LOGIN .container,
+.VERIFY .container {
+  max-width: 400px;
+  position: relative;
 }
-body {
-  font: 12px/1.5 "微软雅黑", arial, sans-serif;
-  word-wrap: break-word;
-  min-width: 960px;
+.btn-link:hover,
+.btn-link:focus {
+  text-decoration: none;
 }
-body.INDEX {
-  min-width: 1010px;
+.input-icon {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  line-height: 37px;
+  vertical-align: middle;
+  font-size: 20px;
+  color: #b2bcc5;
+  background-color: #ffffff;
+  padding: 0 12px 0 0;
+  border-radius: 6px;
+}
+.checkbox .icons .first-icon,
+.radio .icons .first-icon,
+.checkbox .icons .second-icon,
+.radio .icons .second-icon {
+  background-color: transparent;
 }
 #fancybox-thumbs.bottom {
   bottom: 15px !important;
-}
-.Inner {
-  width: 960px;
-  margin: 0 auto;
-  min-height: 100%;
-  height: 100%;
-}
-.INDEX .Inner {
-  width: 1010px;
 }
 .Required {
   position: relative;
@@ -142,239 +134,74 @@ body.INDEX {
 }
 /*按钮*/
 .InfoHint {
-  margin-top: 3px;
-  font-size: 10px;
-}
-.BtnSet {
-  margin-top: 14px;
-  white-space: nowrap;
-}
-.Widget .BtnSet {
-  float: left;
-}
-.InfoHint + .BtnSet {
-  margin-top: 3px;
+  font-size: 14px;
 }
 /*徽标*/
-.Logo,
+.Logo {
+  padding: 10px 20px !important;
+}
 .Logo img {
-  display: block;
-  width: 50px;
-  height: 20px;
+  width: 100px;
+  height: 40px;
 }
-.INDEX .Logo,
-.INDEX .Logo img {
-  width: 80px;
-  height: 32px;
-}
-.LOGIN .Logo,
 .LOGIN .Logo img,
-.SIGNUP .Logo,
-.SIGNUP .Logo img {
+.SIGNUP .Logo img,
+.VERIFY .Logo img {
   width: 160px;
   height: 64px;
 }
-.SIGNUP .Logo {
-  margin-top: 30px;
+.Logo:hover {
+  opacity: 0.8;
 }
-/*分割线*/
-.VLine {
-  display: inline-block;
-  width: 0;
-  height: 11px;
-  border-left: 1px solid #eee;
-  vertical-align: middle;
-}
-.VLine.VLine-Header {
-  margin: 0 9px 0 11px;
-}
-.VLine.VLine-Footer {
-  margin: 0 11px 0 15px;
-}
-.VLine.VLine-Util {
-  margin: 0 5px;
-}
-.HLine {
-  border-top: 1px solid #dddddd;
-}
-.HLine.HLine-Personal {
-  margin: 25px 0;
-}
-/*页眉*/
-.Header {
-  z-index: 501;
-  height: 48px;
-  border-top: 3px solid #333;
-  border-bottom: 1px solid #e7e7e7;
-}
-.INDEX .Header {
-  height: 112px;
-}
-.PERSONAL .Header {
-  height: 64px;
-}
-.LOGIN .Header,
-.SIGNUP .Header {
-  height: 178px;
-}
-/*导航*/
-.Nav a,
-.Nav button {
-  text-align: left !important;
-}
-.Nav a,
-.Nav button,
-.Nav a:hover,
-.Nav button:hover,
-.Nav a:focus,
-.Nav button:focus {
-  color: #545454;
-}
-.Nav.Nav-Left {
-  left: 0;
-  position: absolute;
-  top: 0;
-  height: 100%;
-}
-.Nav.Nav-Left li {
-  display: inline;
-  margin-right: 30px;
-}
-.Nav.Nav-Left .SELECTED > a {
-  font-weight: bold;
-  color: #000000;
-}
-.Nav.Nav-Right {
-  position: absolute;
-  right: 0;
-  top: 0;
-  height: 100%;
-}
-.Nav.Nav-Right .Nav-Right_Inner {
-  margin: 10px 0;
-}
-.Nav.Nav-Right .Nav-Right_Inner * {
-  vertical-align: middle;
-}
-.Nav.Nav-Right .Nav-Right_Inner img {
-  margin-right: 5px;
-}
-.Nav.Nav-Right .Nav-Right_Inner > li {
-  display: inline;
-}
-.Nav.Nav-Right .Nav-Right_Inner > li:last-of-type > button {
-  margin-left: -6px;
-  padding: 0 6px;
-  vertical-align: middle;
-}
-.Nav.Nav-Right .Nav-Right_Inner > li:last-of-type > button > i {
-  font-size: 8px;
-  vertical-align: middle;
-}
-.Nav.Nav-Drop {
-  z-index: 1002;
-  position: absolute;
-  right: 0;
-  width: 98px;
-  background-color: white;
-  border: 1px solid #cfcfcf;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
-}
-.Nav.Nav-Drop a,
-.Nav.Nav-Drop button {
+.LOGIN .Logo,
+.SIGNUP .Logo,
+.VERIFY .Logo {
+  position: relative;
   display: block;
-  height: 30px;
-  line-height: 30px;
-  padding: 0 8px;
+  border-radius: 50%;
+  background-color: #1abc9c;
+  width: 200px;
+  height: 200px;
+  margin: 40px auto;
 }
-.Nav.Nav-Drop a:hover,
-.Nav.Nav-Drop button:hover,
-.Nav.Nav-Drop a:focus,
-.Nav.Nav-Drop button:focus {
-  background-color: #f0f0f0;
-  text-decoration: none;
+.LOGIN .Logo img,
+.SIGNUP .Logo img,
+.VERIFY .Logo img {
+  position: absolute;
+  margin-top: 25px;
+  transition: all 0.25s ease 0s;
 }
-.Nav.Nav-Drop a i,
-.Nav.Nav-Drop button i {
-  display: inline-block;
-  width: 18px;
+.LOGIN .Logo p,
+.SIGNUP .Logo p,
+.VERIFY .Logo p {
+  text-align: center;
+  margin-top: 109px;
+}
+.LOGIN .Logo:hover img,
+.SIGNUP .Logo:hover img,
+.VERIFY .Logo:hover img {
+  margin-top: 58px;
+}
+.navbar-nav > li {
+  float: none;
 }
 /*页脚*/
 .Footer {
-  border-top: 1px solid #e7e7e7;
-  height: 65px;
-  font-size: 11px;
-}
-.Footer a {
-  color: #333;
-  vertical-align: middle;
+  padding: 25px;
+  background-color: #fff;
+  text-align: center;
 }
 .Footer li {
   display: inline;
 }
-.Footer .Copyright {
-  float: right;
-  color: #333;
-  font-family: Tahoma, Arial, sans-serif;
+.Footer li + li {
+  margin-left: 20px;
 }
-.INDEX .Footer a {
-  color: black;
+.Footer p {
+  margin: 10px 0 0;
 }
-.PERSONAL .Footer {
-  height: 45px;
-}
-.PERSONAL .Footer a {
-  color: #aaaaaa;
-}
-.LoginDialog .modal-dialog {
-  width: 400px;
-}
-.LoginDialog .modal-dialog .AutoComplete input[type="checkbox"] {
-  vertical-align: middle;
-}
-.LoginDialog .modal-dialog .AutoComplete * {
-  cursor: pointer;
-}
-.LoginDialog .modal-dialog .modal-header {
-  background-color: #fcfcfc;
-}
-.LoginDialog .modal-dialog .modal-header .Logo {
-  width: auto;
-}
-.LoginDialog .modal-dialog .modal-header .Logo,
-.LoginDialog .modal-dialog .modal-header .Logo img {
-  display: inline-block;
-}
-.LoginDialog .modal-dialog .modal-header .Logo strong {
-  font-size: 14px;
-  vertical-align: bottom;
-}
-.LoginDialog .modal-dialog .modal-footer {
-  background-color: #f3f3f3;
-}
-/* 页码显示 */
-.Pagination {
-  line-height: 1.2;
-  text-align: center;
-}
-.Pagination a,
-.Pagination strong {
-  display: inline-block;
-  *display: inline;
-  *zoom: 1;
-  margin: 0 2px;
-  padding: 6px 8px;
-  font-weight: bold;
-}
-.Pagination a {
-  border: 1px solid #ebebeb;
-  text-decoration: none;
-}
-.Pagination a:hover,
-.Pagination a:active,
-.Pagination a:focus {
-  background-color: #f0f0f0;
-  color: black !important;
+.LoginDialog .modal-body {
+  background-color: #ecf0f1;
 }
 #_toTop {
   position: fixed;

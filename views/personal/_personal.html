@@ -2,7 +2,7 @@
   <h5 style="float: left;"><%= authorName %> 的总结</h5>
 
   <div class="dropdown" style="float: right;">
-    <button style="width: 160px;" class="btn dropdown-toggle" type="button" data-toggle="dropdown">
+    <button style="width: 160px;" class="mtm btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
       <% if (sortOrder == 'U') { %>
       更新日期排序
       <% } else if (sortOrder == 'F') { %>
@@ -12,7 +12,8 @@
       <% } %>
       <span class="caret"></span>
     </button>
-    <ul class="dropdown-menu">
+    <span class="dropdown-arrow dropdown-arrow-inverse"></span>
+    <ul class="dropdown-menu dropdown-inverse">
       <li><a href="?order=U">更新日期排序</a></li>
       <li><a href="?order=F">喜欢数排序</a></li>
       <li><a href="?order=N">名字排序</a></li>
@@ -21,42 +22,63 @@
 </div>
 
 <% if (topics.length) { %>
-<table class="TopicTable">
+<table class="table table-hover">
+  <colgroup>
+    <col style="width: 166px;">
+  </colgroup>
+  <style>
+    .Cover:hover { opacity: 0.8;}
+  </style>
   <% for (i in locals.topics) { %>
   <% var topic = topics[i] %>
   <tr>
-    <th>
-      <a target="_blank" href="/topic/<%= topic._id || '' %>" title="<%= topic.title || '' %>">
-        <img src="<%= topic.cover_url || '/images/no_img/image_95x95.png' %>" width="60"
-             height="60" onerror="shizier.errorImage(this,'image_95x95');">
+
+ 
+
+
+
+
+    <th id="cover" width="100px">
+      <a class="Cover" target="_blank" href="/topic/<%= topic._id || '' %>" title="<%= topic.title || '' %>"
+        style="display: block; width: 100%; height: 90px;margin-top:18px; background: url('<%= topic.cover_url %>') no-repeat center; background-size: cover;">
       </a>
     </th>
     <td>
-      <p style="font-size: 14px;">
-        <a target="_blank" href="/topic/<%= topic._id || '' %>" title="<%= topic.title || '' %>" class="text-default">
+      <h6>
+        <a target="_blank" href="/topic/<%= topic._id || '' %>" title="<%= topic.title || '' %>">
           <%= topic.title || '' %>
         </a>
-      </p>
+      </h6>
 
-      <p class="text-muted">更新日期: <%= topic.create_date || '' %></p>
-      <i class="icon-star StarIconFull"></i>
-      <span style="width: 40px;display: inline-block;"> <%= topic.FVCount || '0' %></span>
-      <span class="text-muted">浏览</span>
-      <span><%= topic.PV_count || '0' %></span>
+      <p class="text-muted pull-left">更新日期: <%= topic.create_date || '' %></p>
+      <p class="pull-right">
+        <i class="fa fa-star StarIconFull"></i>
+        <span style="width: 40px;display: inline-block;"> <%= topic.FVCount || '0' %></span>
+        <span class="text-muted"><i class="fa fa-eye"></i></span>
+        <span style="width: 80px;display: inline-block;"><%= topic.PV_count || '0' %></span>
+      </p>
     </td>
   </tr>
   <% } %>
 </table>
 
+    <script>
+    var coverWidth;
+    if(document.body.clientWidth>640){
+      coverWidth = "80px";
+    }else{
+      coverWidth= "25%";
+    }
+    document.getElementById('cover').width = coverWidth;
+    </script>
+
 <% locals.query = 'order=' + sortOrder + '&'; %>
-<% console.log(totalPage); %>
-<% console.log(currentPage); %>
 <% include ../_pagination.html %>
 
 <% } else { %>
 <div class="mdMypageMTMList01NoItem mdNoItem01NoLink" data-na="NA:noitem">
   <p class="mdMypageMTMList01NoItemTxt">
-    没制作总结。
+    还没制作总结。
   </p>
 </div>
 <% } %>

@@ -1,21 +1,20 @@
-<li class="<%= item && item.type || '' %>" data-options="<%= item && JSON.stringify(item) || '' %>">
-  <div style="position: relative;">
+<li class="<%= item && item.type || '' %> pal" style="position: relative;"
+    data-options="<%= item && JSON.stringify(item) || '' %>">
 
-    <% if (item) { %>
-    <% include _ul_li_item.html %>
-    <% } %>
+  <% if (item) { %>
+  <% include _ul_li_item.html %>
+  <% } %>
 
-    <div class="SortUtil">
-      <i class="MoveUtil icon-move"></i>
+  <div class="SortUtil" style="color: #bdc3c7;">
+    <i class="MoveUtil fa fa-arrows-v" title="移动"></i>
 
-      <div>
-        <i class="icon-double-angle-up"></i>
-        <i class="icon-angle-up"></i>
-      </div>
-      <div>
-        <i class="icon-angle-down"></i>
-        <i class="icon-double-angle-down"></i>
-      </div>
+    <div>
+      <i class="fa fa-angle-double-up" title="移到顶部"></i>
+      <i class="fa fa-angle-up" title="上移一行"></i>
+    </div>
+    <div>
+      <i class="fa fa-angle-down" title="下移一行"></i>
+      <i class="fa fa-angle-double-down" title="移到底部"></i>
     </div>
   </div>
 </li>

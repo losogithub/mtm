@@ -1,38 +1,40 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title><%= locals.title ? title + ' - 石子儿' : '石子儿 - 与世界分享你的总结' %></title>
-  <meta name="renderer" content="webkit">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge;charset=UTF-8">
-  <meta name="description" content="<%= locals.description
-    || '把各种各样的信息，自由地搭配组合，总结成一个页面保存起来，展示给感兴趣的人。我们的致力于让任何人都可以设计信息，让其他人和信息相遇、相会。' %>">
-  <link type='text/css' rel='stylesheet' href='/stylesheets/bootstrap.css'/>
-  <link type='text/css' rel='stylesheet' href='/stylesheets/todc-bootstrap.css'/>
-  <link type='text/css' rel="stylesheet" href="/stylesheets/font-awesome.min.css">
-  <link type='text/css' rel='stylesheet' href='/stylesheets/common.css'/>
-  <script type="text/javascript" src="http://cdn.bootcss.com/jquery/1.10.2/jquery.min.js"></script>
-  <script type="text/javascript" src="/javascripts/bootstrap.js"></script>
-  <script type="text/javascript" src="/javascripts/common.js"></script>
-</head>
-<body style="background-color: #ddd; width: 520px; min-width: 520px; margin: 0 auto;">
-<div style="width: 480px; background-color: #eee; margin: 20px; border-radius: 5px; padding: 20px;">
-  <img id="_chang" src="/images/loading.gif" style="display: block;margin: 0 auto;">
-  <div id="_loading">
-    <img src="/images/loading.gif" style="display: block;margin: 0 auto;">
-    <p style="margin-top: 20px;text-align: center;font-size: 20px;line-height: 1;">正在生成长微博</p>
+<div style="background-color: #2c3e50;">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-4 col-sm-push-8 mvl">
+        <div id="_bubble" class="pal" data-spy="affix" data-offset-top="72"
+             style="background-color: #ecf0f1; border-radius: 6px;">
+          <!-- Baidu Button BEGIN -->
+          <div class="bdsharebuttonbox"><a href="#" class="bds_more" data-cmd="more"></a><a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a><a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a><a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"></a><a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"></a><a href="#" class="bds_t163" data-cmd="t163" title="分享到网易微博"></a></div>
+          <!-- Baidu Button END -->
+          <div><a id="_return" class="text-default" href="./">返回总结</a></div>
+          <div id="_src"><a>图片地址</a></div>
+          <button id="_forceRender" style="font-size: 18px;" class="btn btn-link pan text-danger">重新生成</button>
+        </div>
+      </div>
+      <div class="col-sm-8 col-sm-pull-4 mvl clearfix">
+        <div id="_left" class="pull-right">
+          <div class="pal" style="width: 480px; max-width: 100%; background-color: #ecf0f1; border-radius: 6px; margin: 0 auto;">
+            <img id="_chang" class="img-responsive" src="/images/loading.gif" style="display: block;margin: 0 auto;">
+            <div id="_loading">
+              <img src="/images/loading.gif" style="display: block;margin: 0 auto;">
+              <div class="mtl text-center" style="font-size: 20px;line-height: 1;">正在生成长微博</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
-<div id="_bubble" style="width: 180px;position: fixed; top: 0; left: 50%; margin: 20px 20px 20px 260px; background-color: #eee; border-radius: 5px; padding: 20px;">
-  <p style="position: absolute; left: -8px; font-size: 30px; top: 10px; line-height: 1; color: #eee;">◆</p>
-  <!-- Baidu Button BEGIN -->
-  <div class="bdsharebuttonbox" style="position: absolute; top: 20px;"><a href="#" class="bds_more" data-cmd="more"></a><a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a><a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a><a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"></a><a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"></a><a href="#" class="bds_t163" data-cmd="t163" title="分享到网易微博"></a></div>
-  <!-- Baidu Button END -->
-  <p id="_src" style="margin: 40px 0 10px;"><a>图片地址</a></p>
-  <a id="_return" class="text-muted" href="./">返回总结</a>
-  <button id="_forceRender" style="margin-left: 36px;" class="btn btn-link text-muted">重新生成</button>
 </div>
 
 <% include ../_toTop.html %>
+
+<style>
+  .affix {position: static;}
+  @media (min-width: 992px){
+    .affix { position: fixed;top:20px;}
+  }
+</style>
 
 <script>
   (function () {
@@ -43,27 +45,21 @@
     $(function () {
       var $loading = $('#_loading');
       var $chang = $('#_chang');
-      var $bubble = $('#_bubble');
       var $src = $('#_src');
       var $src_a = $src.find('a');
       var $force = $('#_forceRender');
-      var $baidu = $('.bdsharebuttonbox');
       $chang.on('load abort error', function () {
-        $bubble.css('width', '180px');
         $loading.hide();
         $chang.show();
         $force.show();
       });
       $chang.on('load', function () {
         $src.show();
-        $baidu.show();
       });
       function create(forceRender) {
         $loading.show();
 
-        $bubble.css('width', '90px');
         $src.hide();
-        $baidu.hide();
         $force.hide();
 
         $src_a.attr('href', '/chang/' + id);
@@ -77,5 +73,3 @@
     });
   })();
 </script>
-</body>
-</html>

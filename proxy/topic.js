@@ -12,8 +12,6 @@ var TopicModel = models.TopicModel;
 var Item = require('./item');
 var User = require('./user');
 
-var NewTopic = require('./newTopics');
-
 /**
  * 新建总结
  * @param userId
@@ -70,12 +68,33 @@ function increasePVCountBy(topic, increment, callback) {
 }
 
 /**
- * 获取人气总结
+ * 获取所有总结
  */
 function getAllTopics(callback) {
   TopicModel.find({ publishDate: { $exists: true } })
     //.sort('-_id')
     .exec(callback);
+}
+
+/**
+ * 获取最新总结
+ */
+function updateNewTopics(callback) {
+  callback = callback || function () {
+  };
+
+  TopicModel.find({ publishDate: { $exists: true } })
+    .sort('-update_at')
+    .limit(240)
+    .exec(function (err, topics) {
+      if (err) {
+        return callback(err);
+      }
+
+      global.recentUpdatedTopicsData = topics;
+
+      callback(topics);
+    });
 }
 
 /**
@@ -100,7 +119,7 @@ function saveTopic(topic, title, coverUrl, description, callback) {
       return callback(err);
     }
     callback(null, topic);
-    NewTopic.saveNewTopic(topic);
+    updateNewTopics();
   });
 }
 
@@ -118,7 +137,7 @@ function publishTopic(topic, callback) {
       return callback(err);
     }
     callback(null, topic);
-    NewTopic.saveNewTopic(topic);
+    updateNewTopics();
   });
 }
 
@@ -139,7 +158,7 @@ function deleteTopic(topic, callback) {
     callback(null, topic);
     Item.deleteItemList(topic.void_item_id, callback);
     User.deleteTopic(topic.author_id, topic._id);
-    NewTopic.deleteNewTopic(topic._id);
+    updateNewTopics();
   });
 }
 
@@ -169,6 +188,7 @@ exports.getContents = getContents;//查
 exports.increaseItemCountBy = increaseItemCountBy;
 exports.increasePVCountBy = increasePVCountBy;
 exports.getAllTopics = getAllTopics;
+exports.updateNewTopics = updateNewTopics;
 exports.saveTopic = saveTopic;//改
 exports.publishTopic = publishTopic;
 exports.deleteTopic = deleteTopic;//删

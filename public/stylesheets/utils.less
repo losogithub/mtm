@@ -3,3 +3,8 @@
   &:before, &:after { display: table; content: " "; }
   &:after { clear: both; }
 }
+
+.noTransition * {
+  -webkit-transition: none !important;
+  transition: none !important;
+}

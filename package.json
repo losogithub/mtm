@@ -11,6 +11,7 @@
     "express": "*",
     "ejs": "*",
     "express-partials": "*",
+    "express-session": "*",
     "extend": "*",
     "iconv": "*",
     "mongoose": "*",

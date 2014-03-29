@@ -110,6 +110,10 @@ var getUserById = function (id, callback) {
   UserModel.findById(id, callback);
 };
 
+var getUserByIds = function (ids, callback) {
+  UserModel.find({ _id: { $in: ids } }, callback);
+};
+
 var appendTopic = function (id, topicId, callback) {
   var ep = new EventProxy().fail(callback);
   UserModel.findById(id, ep.done(function (user) {
@@ -157,6 +161,7 @@ function deleteTopic(authorId, topicId, callback) {
 }
 
 exports.getUserById = getUserById;
+exports.getUserByIds = getUserByIds;
 exports.getUserByLoginName = getUserByLoginName;
 exports.getUserByName = getUserByName;
 exports.getUserByMail = getUserByMail;
