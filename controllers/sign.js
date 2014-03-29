@@ -357,7 +357,7 @@ function login(req, res, next) {
 
   console.log("---login post-------");
   console.log("name: %s", loginname);
-  console.log("pass: %s", pass);
+  console.log("pass: *********");
   console.log("autoLogin: %s", autoLogin);
 
   var errMsg = '';
