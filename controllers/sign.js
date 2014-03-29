@@ -351,7 +351,7 @@ var notJumpForLogin = [
  * @param {Function} next
  */
 function login(req, res, next) {
-  var loginname = sanitize(req.body.email).trim();
+  var loginname = sanitize(req.body.username).trim();
   var pass = sanitize(req.body.password).trim();
   var autoLogin = sanitize(req.body.autoLogin).trim();
 
