@@ -1,7 +1,7 @@
 <div class="clearfix">
   <h5 class="pull-left">设置</h5>
 
-  <a href="/account" class="pull-right btn btn-inverse mtm">更多个人信息</a>
+  <a href="/account" class="pull-right btn btn-default mtm">更多个人信息</a>
 </div>
 
 <hr>
@@ -12,9 +12,11 @@
 
     <div class="col-sm-10" id="_thumbEdit">
 
-      <div class="pull-left mrl img-circle-border-default"
-           style="height: 120px; width: 120px;
-            background-image: url(<%= locals.imageUrl || '/images/no_img/user_120x120.png' %>);">
+      <div class="pull-left mrl img-circle-border-clouds"
+           style="width: 130px; height: 130px;">
+        <img class="img-circle" width="120" height="120" id="_thumb"
+             onerror="shizier.errorImage(this, 'image_95x95')"
+             src="<%= locals.imageUrl || '/images/no_img/user_120x120.png' %>">
       </div>
 
       <div class="pull-left">
@@ -25,8 +27,8 @@
           由于受版权保护，有些图片可能无法引用
         </div>
         <div class="BtnSet">
-          <button name="preview" class="btn btn-small btn-inverse" type="button">预览</button>
-          <button name="reset" class="btn btn-small" type="button">取消</button>
+          <button name="preview" class="btn btn-inverse" type="button">预览</button>
+          <button name="reset" class="btn btn-default" type="button">取消</button>
         </div>
       </div>
     </div>

@@ -47,6 +47,9 @@
 .text-info:hover {
   color: #2a7aaf;
 }
+#_topWidget {
+  background-color: #34495e;
+}
 /*li*/
 .WidgetItemList.WidgetItemList-Sorting > li {
   box-shadow: 0 0 0 2px #669966;

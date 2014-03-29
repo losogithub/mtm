@@ -75,13 +75,15 @@
         </div>
       </div>
       <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-4 col-lg-5 mvl">
-        <div class="pal" style="background-color: #2c3e50;color:white;border-radius: 6px;">
+        <div class="pal" style="background-color: #34495e;color:white;border-radius: 6px;">
           <div class="clearfix">
             <a class="pull-left mrl img-circle-border" title="<%= topic.author %>" target="_blank"
                href="/u/<%= topic.author %>"
                title="<%= topic.author %>"
-               style="display: block; width: 80px; height: 80px;
-               background-image: url(<%= authorInfo.imgUrl || '/images/no_img/user_80x80.png' %>);">
+               style="display: block; width: 80px; height: 80px;">
+              <img class="img-circle" width="70" height="70" id="_thumb"
+                   onerror="shizier.errorImage(this, 'image_95x95')"
+                   src="<%= authorInfo.imgUrl || '/images/no_img/user_80x80.png' %>">
             </a>
 
             <h6 style="margin-top: 0;">

@@ -1,4 +1,4 @@
-<div class="Band text-inverse" style="background-color: #2c3e50;"
+<div class="Band text-inverse" style="background-color: #34495e;"
      data-spy="affix" data-offset-top="72">
   <div class="container">
     <div class="Band_Btn">
@@ -58,10 +58,11 @@
               </div>
             </div>
           </div>
-          <form id="_topWidget" class="phl" style="display: none; background-color: #2c3e50;">
+          <form id="_topWidget" class="phl" style="display: none;">
             <div class="pvl">
               <div class="form-group">
-                <input name="url" class="form-control flat" placeholder="图片URL" type="text">
+                <input name="url" class="form-control flat" placeholder="图片URL" id="_top_url" type="text">
+                <label class="input-icon fa fa-link" for="_top_url"></label>
                 <div class="InfoHint text-muted">
                   由于受版权保护，有些图片可能无法引用
                 </div>
@@ -104,7 +105,8 @@
               <div class='Content LINK_CREATE'>
                 <div class="form-group">
                   <div class="Required"></div>
-                  <input name="url" class="form-control flat AUTO_FOCUS" placeholder="链接URL" type="text">
+                  <input name="url" class="form-control flat AUTO_FOCUS" placeholder="链接URL" id="_link_url" type="text">
+                  <label class="input-icon fa fa-link" for="_link_url"></label>
                 </div>
                 <button name="preview" class="btn btn-info pull-left mrs" type="button" disabled='disabled'
                         data-loading-text="预览 &lt;i class='fa fa-spinner fa-spin'&gt;&lt;/i&gt;">预览
@@ -154,7 +156,8 @@
                   </label>
 
                   <div class="form-group">
-                    <input class="form-control flat Url" placeholder="自定义图片URL（可选）" type="text">
+                    <input class="form-control flat Url" placeholder="自定义图片URL（可选）" id="_link_thumb_url" type="text">
+                    <label class="input-icon fa fa-link" for="_link_thumb_url"></label>
                     <button name="customize" class="btn btn-default mtx" type="button">确定</button>
                   </div>
                 </div>
@@ -176,7 +179,8 @@
                 <div>
                   <div class="form-group">
                     <div class="Required"></div>
-                    <input name="url" class="form-control flat AUTO_FOCUS" placeholder="图片URL" type="text">
+                    <input name="url" class="form-control flat AUTO_FOCUS" placeholder="图片URL" id="_image_url" type="text">
+                    <label class="input-icon fa fa-link" for="_image_url"></label>
                   </div>
                   <button name="preview" class="btn btn-info pull-left mrs" type="button" disabled='disabled'
                           data-loading-text="预览 &lt;i class='fa fa-spinner fa-spin'&gt;&lt;/i&gt;">预览
@@ -231,7 +235,8 @@
                 </div>
                 <div class="form-group">
                   <div class="Required"></div>
-                  <input name="url" class="form-control flat AUTO_FOCUS" placeholder="视频URL" type="text">
+                  <input name="url" class="form-control flat AUTO_FOCUS" placeholder="视频URL" id="_video_url" type="text">
+                  <label class="input-icon fa fa-link" for="_video_url"></label>
                 </div>
                 <button name="preview" class="btn btn-info pull-left mrs" type="button" disabled='disabled'
                         data-loading-text="预览 &lt;i class='fa fa-spinner fa-spin'&gt;&lt;/i&gt;">预览
@@ -268,7 +273,8 @@
                   <textarea class="form-control flat AUTO_FOCUS" name="cite" placeholder="引文"></textarea>
                 </div>
                 <div class="form-group">
-                  <input class="form-control flat" name="url" placeholder="引文来源网页URL" type="text">
+                  <input class="form-control flat" name="url" placeholder="引文来源网页URL" id="_cite_url" type="text">
+                  <label class="input-icon fa fa-link" for="_cite_url"></label>
                 </div>
                 <div class="form-group">
                   <input class="form-control flat" name="title" placeholder="引文来源网页标题" type="text">
@@ -293,7 +299,8 @@
                   </div>
                   <div class="form-group">
                     <div class="Required" style="float: left;"></div>
-                    <input name="url" class="form-control flat AUTO_FOCUS" placeholder="新浪微博URL" type="text">
+                    <input name="url" class="form-control flat AUTO_FOCUS" placeholder="新浪微博URL" id="_weibo_url" type="text">
+                    <label class="input-icon fa fa-link" for="_weibo_url"></label>
                   </div>
                   <button name="preview" class="btn btn-info pull-left mrs" type="button" disabled='disabled'
                           data-loading-text="预览 &lt;i class='fa fa-spinner fa-spin'&gt;&lt;/i&gt;">预览

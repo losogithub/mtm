@@ -53,7 +53,7 @@
 <script>
   (function () {
     sng.controller('Username', function ($scope) {
-      $scope.error = '<%= locals.usernameMsg || "" %>';
+      $scope.error = '<%= locals.errMsg || "" %>';
 
       $scope.getTooltip = function () {
         return !$scope.username && $scope.error || '用户名或邮箱';

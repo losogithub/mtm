@@ -197,7 +197,7 @@
 
       this.widget()
         .data('options', this.options.options)
-        .css('background-color', '#2c3e50')
+        .css('background-color', '#34495e')
         .prepend($templates.find('.Widget:first').clone(true))
         .find('.Widget')
         .prepend($templates.find('.Widget .' + this.type).clone(true))
@@ -270,6 +270,10 @@
      * 保存修改验证表格通过后的发送新文本到服务器
      */
     commit: function () {
+      if (xhr) {
+        console.log('abort');
+        xhr.abort();
+      }
       var self = this;
       if (this.widget().find('form').data('submitType') == 'preview') {
         this.widget().find('button[name="preview"]').button('loading');
