@@ -93,6 +93,18 @@ table {
   max-width: 400px;
   position: relative;
 }
+.img-circle-border {
+  background: none no-repeat center #ffffff;
+  background-size: 100% 100%;
+  border: 5px solid white;
+  border-radius: 50%;
+}
+.img-circle-border-default {
+  background: none no-repeat center #ffffff;
+  background-size: 100% 100%;
+  border: 5px solid #2c3e50;
+  border-radius: 50%;
+}
 .btn-link:hover,
 .btn-link:focus {
   text-decoration: none;

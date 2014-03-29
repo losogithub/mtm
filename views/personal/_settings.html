@@ -12,11 +12,9 @@
 
     <div class="col-sm-10" id="_thumbEdit">
 
-      <div class="pull-left mrl">
-        <img class="img-circle" width="120" height="120" id="_thumb"
-             style="border: 5px solid #2c3e50;"
-             onerror="shizier.errorImage(this, 'image_95x95')"
-             src="<%= locals.imageUrl || '/images/no_img/user_120x120.png' %>">
+      <div class="pull-left mrl img-circle-border-default"
+           style="height: 120px; width: 120px;
+            background-image: url(<%= locals.imageUrl || '/images/no_img/user_120x120.png' %>);">
       </div>
 
       <div class="pull-left">

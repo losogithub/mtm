@@ -1,35 +1,28 @@
 <div class="row">
   <% for (i in topics) { %>
   <% var topic = topics[i]; %>
-  <div class="col-xs-12 mtl <%= i > 7 ? 'hidden-lg' : '' %> <%= i > 10 ? 'hidden-md' : '' %>"
-       style="max-width: 200px;">
-    <div class="Tile" style="background-color: white; border-radius: 6px;">
+  <div class="col-xs-12 mtl <%= i > 7 ? 'hidden-lg' : '' %> <%= i > 10 ? 'hidden-md' : '' %>">
+    <a class="Tile-Sub" target="_blank" href="/topic/<%= topic._id %>"
+         style="display: block; border-radius: 6px; max-width: 170px; margin: 0 auto;
+          background: url('<%= topic.cover_url %>') no-repeat center white; background-size: cover;">
       <style>
-        .Cover:hover { opacity: 0.8;}
-        .Share { display: none; }
-        .Tile:hover .Share { display: inline; }
+        .Tile-Inner { opacity: 0; -webkit-transition: all 0.25s; transition: all 0.25s;}
+        .Tile-Sub:hover .Tile-Inner { opacity: 0.9; }
       </style>
-      <a target="_blank" class="Cover" href="/topic/<%= topic._id %>" title="<%= topic.title %>"
-         style="border-radius: 6px 6px 0 0; display: block; height: 100px; background: url('<%= topic.cover_url %>') no-repeat center; background-size: cover;">
-      </a>
 
-      <div class="mhm">
-        <div class="mtm mbs" style="height:38px; overflow: hidden;">
-          <a class="h6" style="font-weight: normal; font-size: 14px; line-height: 18px; display: block;"
-             target="_blank" href="/topic/<%= topic._id %>" title="<%= topic.title %>"><%= topic.title %></a>
-        </div>
-        <div class="clearfix pbx" style="font-size: 12px;">
+      <div class="Tile-Inner pam" style="border-radius: 6px; background-color: white;">
+        <div style="font-size: 14px; line-height: 18px;"><%= topic.title %></div>
+        <div class="mts clearfix text-muted" style="font-size: 12px;line-height: 1.2;">
           <div class="pull-right">
-            <a class="text-muted mrs Share" target="_blank" href="/topic/<%= topic._id %>/share_chang" title="分享"><i class="fa fa-share"></i></a>
-            <span class="text-muted mrs"><i class="fa fa-star"></i> <%= topic.FVCount %></span>
-            <span class="text-muted"><i class="fa fa-eye"></i> <%= topic.PV_count %></span>
+            <span class="mrs"><i class="fa fa-star"></i> <%= topic.FVCount %></span>
+            <span><i class="fa fa-eye"></i> <%= topic.PV_count %></span>
           </div>
           <div class="prs" style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
-            <a target="_blank" href="/u/<%= topic.author_name %>" title="<%= topic.author_name %>"><%= topic.author_name %></a>
+            <%= topic.author_name %>
           </div>
         </div>
       </div>
-    </div>
+    </a>
   </div>
   <% } %>
 </div>

@@ -71,24 +71,21 @@
           </div>
         </div>
         <style>
-          .Authors img {
-            border: 5px solid #fff; background-color: white;
+          .Authors a {
+            display: inline-block; height: 60px; width: 60px;
             -webkit-filter: grayscale(75%); -webkit-transition: all 0.25s; transition: all 0.25s;
           }
-          .Authors:hover img { -webkit-filter: blur(1px); opacity: 0.5; }
-          .Authors a:hover img { -webkit-filter: blur(0) grayscale(0%); opacity: 1;}
+          .Authors:hover a { -webkit-filter: blur(1px); opacity: 0.5; }
+          .Authors a:hover { -webkit-filter: blur(0) grayscale(0%); opacity: 1;}
         </style>
         <div class="row mts">
           <div class="col-xs-12 Authors" style="max-height: 60px; overflow: hidden;">
             <% for (i in authors) { %>
             <% var author = authors[i]; %>
-            <a class="mrs" title="<%= author.loginName %>" target="_blank"
-               href="/u/<%= author.loginName %>">
-              <img src="<%= author.url || '/images/no_img/user_80x80.png' %>"
-                 title="<%= author.loginName %>"
-                 style=""
-                 width="60" height="60"
-                 class="img-circle">
+            <a class="mrs img-circle-border" title="<%= author.loginName %>" target="_blank"
+               href="/u/<%= author.loginName %>"
+               title="<%= author.loginName %>"
+               style="background-image: url(<%= author.url || '/images/no_img/user_80x80.png' %>);">
             </a>
             <% } %>
           </div>

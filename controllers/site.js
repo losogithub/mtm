@@ -10,7 +10,7 @@ var math = require('mathjs')();
 
 var topicsPerPage = 24;
 var topicsInIndex = 24;
-var newTopicsPerPage = 17;
+var newTopicsPerPage = 19;
 
 function index(req, res) {
   var recentHotTopicsDataPage = global.recentHotTopicsData.slice(0, topicsInIndex);

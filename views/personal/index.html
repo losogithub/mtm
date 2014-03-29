@@ -5,10 +5,9 @@
       <div class="col-md-4 col-lg-3">
         <div class="clearfix pal mbl" data-spy="affix" data-offset-top="72"
              style="background-color: #2c3e50;color:white;border-radius: 6px;">
-          <img width="120" height="120" class="img-circle pull-left mrl"
-               style="border: 5px solid #fff; background-color: white;"
-               src="<%= (locals.personalType == 'PERSONAL' ? locals.authorImage : locals.imageUrl) || '/images/no_img/user_120x120.png' %>"
-               onerror="shizier.errorImage(this, 'user_120x120');">
+          <div class="img-circle-border pull-left mrl" style="height: 120px; width: 120px;
+            background-image: url(<%= (locals.personalType == 'PERSONAL' ? locals.authorImage : locals.imageUrl) || '/images/no_img/user_120x120.png' %>);">
+          </div>
           <ul style="list-style: none;padding: 0;overflow: hidden;">
             <li>
               <p>
