@@ -1,6 +1,6 @@
 <!--SIGNUP##这是layout要用的参数，不能删！-->
 <div class="container">
-  <div class="mal text-muted" style="position: absolute; left: 0; top: 0;">
+  <div class="mal" style="position: absolute; left: 0; top: 0;">
     注册
   </div>
   <div class="navbar" style="position: absolute; right: 0; top: 0;">
@@ -8,6 +8,11 @@
       <li><a href="/login">登录 <i class="fa fa-arrow-circle-right"></i></a></li>
     </ul>
   </div>
+  <style>
+    .navbar .nav > li > a {
+      color: #BDC3C7;
+    }
+  </style>
   <a href="/" class="palette palette-turquoise Logo">
     <img src="/images/logo_white.png">
 
@@ -59,7 +64,7 @@
       </label>
     </div>
 
-    <button ng-class="{disabled: !rules}" type="submit" name="signup" class="btn btn-primary btn-block">注册</button>
+    <button ng-class="{disabled: !rules}" ng-disabled="!rules" type="submit" name="signup" class="btn btn-primary btn-block">注册</button>
   </form>
 </div>
 

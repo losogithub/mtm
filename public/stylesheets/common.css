@@ -5,6 +5,9 @@
 .StarIconFull {
   color: #ffdd11;
 }
+.text-theme {
+  color: #669966;
+}
 .text-default {
   color: #34495e;
 }
@@ -86,6 +89,31 @@ h6,
 }
 table {
   word-break: break-all;
+}
+.carousel-caption a {
+  font-size: 40px;
+}
+@media (max-width: 768px) {
+  .carousel-caption h3 {
+    font-size: 24px !important;
+  }
+  .carousel-caption a {
+    font-size: 24px !important;
+  }
+}
+.carousel-control {
+  background-image: none !important;
+  cursor: pointer;
+}
+.carousel-inner .item {
+  height: 250px;
+}
+.carousel {
+  background-color: #95a5a6;
+}
+.icon-prev,
+.icon-next {
+  display: none !important;
 }
 .SIGNUP .container,
 .LOGIN .container,

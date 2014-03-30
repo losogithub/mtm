@@ -1,136 +1,119 @@
 <% if (!locals.username) { %>
-<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-  <ol class="carousel-indicators">
-    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-    <li data-target="#carousel-example-generic" data-slide-to="1"></li>
-    <li data-target="#carousel-example-generic" data-slide-to="2"></li>
-    <li data-target="#carousel-example-generic" data-slide-to="3"></li>
-    <li data-target="#carousel-example-generic" data-slide-to="4"></li>
-    <li data-target="#carousel-example-generic" data-slide-to="5"></li>
-  </ol>
-  <div class="carousel-inner">
-    <div class="item active">
+<!--[if IE]>
+  <style>
+    #_carousel { display: none; }
+  </style>
+<![endif]-->
+<div id="_carousel">
+  <carousel interval="5000">
+    <slide class="item active">
       <div class="carousel-caption">
         <h3>你是否也对“搜索引擎”杂乱的结果感到无奈？</h3>
         <p>日益庞大的互联网使搜索引擎力不从心</p>
       </div>
-    </div>
-    <div class="item">
+    </slide>
+    <slide class="item">
       <div class="carousel-caption">
         <h3>你是否也对越刷越多的“微博”感到困扰？</h3>
         <p>社交网络资讯的井喷向人们的阅读能力发出了新的挑战</p>
       </div>
-    </div>
-    <div class="item">
+    </slide>
+    <slide class="item">
       <div class="carousel-caption">
         <h3>你是否也热衷于在各“小众网站”关注各种奇葩话题？</h3>
         <p>累觉不爱后只想找个一网打尽的好网站嫁了</p>
       </div>
-    </div>
-    <div class="item">
+    </slide>
+    <slide class="item">
       <div class="carousel-caption">
-        <h3>让互联网更简洁、有序已经势在必行</h3>
-        <p>“聚类”已经为互联网做好了目录</p>
+        <h3>让互联网更简洁、有序势在必行</h3>
+        <p>时下火热的“聚类”为互联网做好了目录</p>
       </div>
-    </div>
-    <div class="item">
+    </slide>
+    <slide class="item">
       <div class="carousel-caption">
         <p>但如果你也已经察觉到“聚类”的捉襟见肘</p>
-        <h3>欢迎加入石子儿的互联网“策展”大潮</h3>
+        <h3>欢迎加入<span class="text-theme">石子儿</span>的互联网“策展”大潮</h3>
       </div>
-    </div>
-    <div class="item" style="background-color: #34495e;">
+    </slide>
+    <slide class="item" style="background-color: #34495e;">
       <div class="carousel-caption">
         <h3><a class="text-inverse btn btn-hg btn-primary"
                href="/topic/5337986887a4d07730f2c4c9">
           “策展”是什么？<i class="fa fa-chevron-circle-right"></i></a></h3>
         <p>&nbsp;</p>
       </div>
-    </div>
-  </div>
-  <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
-  </a>
-  <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
-  </a>
+    </slide>
+  </carousel>
 </div>
-
-<style>
-  .carousel-caption a { font-size: 40px; }
-  @media (max-width: 768px) {
-    .carousel-caption h3 { font-size: 24px !important; }
-    .carousel-caption a { font-size: 24px !important; }
-  }
-  .carousel-control { background-image: none !important; cursor: pointer; }
-  .carousel-inner .item { height: 250px; background-color: #95a5a6; }
-</style>
 <% } %>
 
 <div style="background-color: #ecf0f1;">
-  <div class="container">
-    <div class="row" style="background-color: #bdc3c7;">
-      <div class="col-sm-9 col-md-10 pbl" style="background-color: #ecf0f1;">
-        <div class="row ptl">
-          <div class="col-xs-12">
-            <i class="fa fa-thumbs-o-up" style="color: #c0392b;"></i> 人气策展人
-          </div>
-        </div>
-        <style>
-          .Authors a {
-            display: inline-block; height: 60px; width: 60px;
-            -webkit-filter: grayscale(75%); -webkit-transition: all 0.25s; transition: all 0.25s;
-          }
-          .Authors:hover a { -webkit-filter: blur(1px); opacity: 0.5; }
-          .Authors a:hover { -webkit-filter: blur(0) grayscale(0%); opacity: 1;}
-        </style>
-        <div class="row mts">
-          <div class="col-xs-12 Authors" style="max-height: 60px; overflow: hidden;">
-            <% for (i in authors) { %>
-            <% var author = authors[i]; %>
-            <a class="mrs img-circle-border" title="<%= author.loginName %>" target="_blank"
-               href="/u/<%= author.loginName %>"
-               title="<%= author.loginName %>">
-              <img class="img-circle" width="50" height="50" id="_thumb"
-                   onerror="shizier.errorImage(this, 'image_95x95')"
-                   src="<%= author.url || '/images/no_img/user_80x80.png' %>">
-            </a>
-            <% } %>
-          </div>
-        </div>
-        <div class="row mtl">
-          <div class="col-xs-12">
-            <a class="h6" href="/hot"><i class="fa fa-fire" style="color: #e67e22;"></i> 热门总结</a>
-          </div>
-        </div>
-
-        <% var topics = hot; %>
-        <% include _topics_main.html %>
-
-        <div class="row mtl">
-          <div class="col-xs-12">
-            <a class="btn btn-primary btn-wide pull-right" href="/hot">更多</a>
-          </div>
+<div class="container">
+  <div class="row" style="background-color: #bdc3c7;">
+    <div class="col-sm-9 col-md-10 pbl" style="background-color: #ecf0f1;">
+      <div class="row ptl">
+        <div class="col-xs-12">
+          <i class="fa fa-thumbs-o-up" style="color: #c0392b;"></i> 人气策展人
         </div>
       </div>
-      <div class="col-sm-3 col-md-2 pvl">
-        <div class="row">
-          <div class="col-xs-12">
-            <a class="h6 text-inverse" style="font-size: 16px; display: block;"
-               href="/new"><i class="fa fa-clock-o"></i> 最近更新</a>
-          </div>
+      <style>
+        .Authors a {
+          display: inline-block; height: 60px; width: 60px;
+          -webkit-filter: grayscale(75%); -webkit-transition: all 0.25s; transition: all 0.25s;
+        }
+        .Authors:hover a { -webkit-filter: blur(1px); opacity: 0.5; }
+        .Authors a:hover { -webkit-filter: blur(0) grayscale(0%); opacity: 1;}
+      </style>
+      <div class="row mts">
+        <div class="col-xs-12 Authors" style="max-height: 60px; overflow: hidden;">
+          <% for (i in authors) { %>
+          <% var author = authors[i]; %>
+          <a class="mrs img-circle-border" title="<%= author.loginName %>" target="_blank"
+             href="/u/<%= author.loginName %>"
+             title="<%= author.loginName %>">
+            <img class="img-circle" width="50" height="50" id="_thumb"
+                 onerror="shizier.errorImage(this, 'image_95x95')"
+                 src="<%= author.url || '/images/no_img/user_80x80.png' %>">
+          </a>
+          <% } %>
         </div>
+      </div>
+      <div class="row mtl">
+        <div class="col-xs-12">
+          <a class="h6" href="/hot"><i class="fa fa-fire" style="color: #e67e22;"></i> 热门总结</a>
+        </div>
+      </div>
 
-        <% var topics = newTopics; %>
-        <% include _topics_sub.html %>
+      <% var topics = hot; %>
+      <% include _topics_main.html %>
 
-        <div class="row mtl">
-          <div class="col-xs-12">
-            <a class="btn btn-sm btn-primary pull-right" href="/new">更多</a>
-          </div>
+      <div class="row mtl">
+        <div class="col-xs-12">
+          <a class="btn btn-primary btn-wide pull-right" href="/hot">更多</a>
         </div>
       </div>
     </div>
+    <div class="col-sm-3 col-md-2 pvl">
+      <div class="row">
+        <div class="col-xs-12">
+          <a class="h6 text-inverse" style="font-size: 16px; display: block;"
+             href="/new"><i class="fa fa-clock-o"></i> 最近更新</a>
+        </div>
+      </div>
 
-    <!--<div class="row" style="margin-top: 40px;">-->
+      <% var topics = newTopics; %>
+      <% include _topics_sub.html %>
+
+      <div class="row mtl">
+        <div class="col-xs-12">
+          <a class="btn btn-sm btn-primary pull-right" href="/new">更多</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--<div class="row" style="margin-top: 40px;">-->
       <!--<div class="col-xs-12">-->
         <!--<h4 class="mvn pull-left"><a href="/classic">经典总结</a></h4>-->
         <!--<a class="btn btn-primary btn-wide pull-right" href="/classic">更多</a>-->

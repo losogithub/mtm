@@ -26,8 +26,11 @@
   <link type='text/css' rel='stylesheet' href='<%= css[i] %>'/>
   <% } %>
 
-  <script src="http://cdn.bootcss.com/html5shiv/r29/html5.min.js"></script>
-  <script src="http://cdn.bootcss.com/respond.js/1.3.0/respond.min.js"></script><!--更高版本的cdn上404,貌似确实是有bug的-->
+  <!--更高版本的cdn上404,貌似确实是有bug的-->
+  <!--[if IE]>
+  <script src="http://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.min.js"></script>
+  <script src="http://cdn.bootcss.com/respond.js/1.3.0/respond.min.js"></script>
+  <![endif]-->
   <script src="http://cdn.bootcss.com/angular.js/1.2.10/angular.min.js"></script>
   <script src="http://libs.baidu.com/jquery/1.10.2/jquery.min.js"></script>
   <!--<script type="text/javascript" src="http://cdn.bootcss.com/jquery/1.10.2/jquery.min.js"></script>-->
