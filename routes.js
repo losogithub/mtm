@@ -28,7 +28,7 @@ module.exports = function (app) {
   app.post('/loginDialogCheck', auth.loginDialog, auth.loginDialogCheck);
   app.post('/topic/favorite', auth.loginDialog, topic.AddorRemoveLikes);
 
-  //总结
+  //策展
   app.get('/topic/create', auth.loginRequired, topic.createTopic);
   app.get('/topic/link_detail', topic.getLinkDetail);
   app.get('/topic/video_detail', topic.getVideoDetail);

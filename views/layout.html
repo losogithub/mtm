@@ -4,12 +4,12 @@
 <% locals.pageType = locals.pageType || temp; %>
 <html lang="zh-cn" ng-app="sng">
 <head>
-  <title><%= locals.title ? title + ' - 石子儿' : '石子儿 - 让互联网讲故事' %></title>
+  <title><%= locals.title ? title + ' - 石子儿' : '石子儿 - 互联网策展' %></title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge;charset=UTF-8">
   <meta name="description" content="<%= locals.description
-    || '把各种各样的信息，自由地搭配组合，总结成一个页面保存起来，展示给感兴趣的人。我们的致力于让任何人都可以设计信息，让其他人和信息相遇、相会。' %>">
+    || '把各种各样的信息，自由地搭配组合，策展成一个页面保存起来，展示给感兴趣的人。我们的致力于让任何人都可以策展信息，让其他人和信息相遇、相会。' %>">
   <meta name="keyword" content="石子儿网，石子儿，石子微集，策展">
 
   <link href="/stylesheets/bootstrap.min.css" rel="stylesheet">
@@ -73,15 +73,15 @@
       <li>
         <a class="Logo" href="/" title="让互联网讲故事"><img src="/images/logo_full_160x64.png"></a>
       </li>
-      <li class="<%= pageType == 'HOT' && 'active' || '' %>"><a href="/hot" title="热门总结"><i class="fa fa-fire"></i> 热门</a></li>
-      <!--<li class="<%= pageType == 'CLASSIC' && 'active' || '' %>"><a href="/classic" title="经典总结"><i class="fa fa-book"></i> 经典</a></li>-->
-      <li class="<%= pageType == 'NEW' && 'active' || '' %>" style="border-radius: 0;"><a href="/new" title="最新总结"><i class="fa fa-clock-o"></i> 最新</a></li>
+      <li class="<%= pageType == 'HOT' && 'active' || '' %>"><a href="/hot" title="热门策展"><i class="fa fa-fire"></i> 热门</a></li>
+      <!--<li class="<%= pageType == 'CLASSIC' && 'active' || '' %>"><a href="/classic" title="经典策展"><i class="fa fa-book"></i> 经典</a></li>-->
+      <li class="<%= pageType == 'NEW' && 'active' || '' %>" style="border-radius: 0;"><a href="/new" title="最新策展"><i class="fa fa-clock-o"></i> 最新</a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
       <% if (!locals.username) { %>
       <li><a href="/signup">注册</a></li>
       <li><a href="/login">登录</a></li>
-      <li><a href="/topic/create">创建总结</a></li>
+      <li><a href="/topic/create">开始策展</a></li>
       <% } else { %>
       <li>
         <a href="/works">
@@ -114,7 +114,7 @@
           </li>
         </ul>
       </li>
-      <li><a href="/topic/create">创建总结</a></li>
+      <li><a href="/topic/create">开始策展</a></li>
       <% } %>
     </ul>
   </div>
@@ -127,13 +127,13 @@
       </li>
       <li><a href="##"><i class="fa fa-caret-down"></i> 菜单</a>
         <ul style="z-index: 1002; width: 100px;">
-          <li class="<%= pageType == 'HOT' && 'active' || '' %>"><a href="/hot" title="热门总结"><i class="fa fa-fire"></i> 热门</a></li>
-          <li class="<%= pageType == 'CLASSIC' && 'active' || '' %>"><a href="/classic" title="经典总结"><i class="fa fa-book"></i> 经典</a></li>
-          <li class="<%= pageType == 'NEW' && 'active' || '' %>" style="border-radius: 0;"><a href="/new" title="最新总结"><i class="fa fa-clock-o"></i> 最新</a></li>
+          <li class="<%= pageType == 'HOT' && 'active' || '' %>"><a href="/hot" title="热门策展"><i class="fa fa-fire"></i> 热门</a></li>
+          <li class="<%= pageType == 'CLASSIC' && 'active' || '' %>"><a href="/classic" title="经典策展"><i class="fa fa-book"></i> 经典</a></li>
+          <li class="<%= pageType == 'NEW' && 'active' || '' %>" style="border-radius: 0;"><a href="/new" title="最新策展"><i class="fa fa-clock-o"></i> 最新</a></li>
           <% if (!locals.username) { %>
           <li><a href="/signup">注册</a></li>
           <li><a href="/login">登录</a></li>
-          <li><a href="/topic/create">创建总结</a></li>
+          <li><a href="/topic/create">开始策展</a></li>
           <% } else { %>
           <li>
             <a href="/works" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
@@ -143,7 +143,7 @@
               <%= username %>
             </a>
           </li>
-          <li><a href="/topic/create">创建总结</a></li>
+          <li><a href="/topic/create">开始策展</a></li>
           <li>
             <form action="/logout" method="post">
               <button class="btn btn-link btn-block" type="submit">

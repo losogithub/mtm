@@ -102,7 +102,7 @@ var renderWorks = function (res, user, topicsInfos, currentPage, totalPage, mt, 
     css: [
       '/stylesheets/personal.css'
     ],
-    title: '我的总结',
+    title: '我的策展',
     personalType: 'WORKS',
     username: user.loginName,
     favourite: user.favourite,
@@ -631,7 +631,7 @@ function showPersonal(req, res, next) {
 
 
           res.render('personal/index', {
-            title: authorName + ' 的总结',
+            title: authorName + ' 的策展',
             personalType: 'PERSONAL',
             css: ['/stylesheets/personal.css'],
             authorName: authorName,

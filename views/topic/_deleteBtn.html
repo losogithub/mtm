@@ -1,7 +1,7 @@
 <script>
   window.shizier = window.shizier || {};
   shizier.deleteTopic = function (button) {
-    if (!confirm('总结删除后将不能恢复！您确定要删除该总结吗？')) {
+    if (!confirm('策展删除后将不能恢复！您确定要删除该策展吗？')) {
       return;
     }
     $(button).button('loading');
@@ -12,7 +12,7 @@
         location.href = '/works';
       })
       .fail(function (jqXHR) {
-        alert('未能删除该总结！\n' + jqXHR.responseText);
+        alert('未能删除该策展！\n' + jqXHR.responseText);
         $(button).button('reset');
       })
   };

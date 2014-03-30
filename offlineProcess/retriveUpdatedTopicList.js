@@ -43,7 +43,7 @@ function extractRecentHotTopics() {
       topics[i].score = traditionalScore(topics[i].PV_count, topics[i].FVCount);
     }
 
-    console.log("更新热门总结");
+    console.log("更新热门策展");
     global.realGoodTopicsData = topics.sort(scoreCompare).slice(0, 240);
 
     var authorMap = {};

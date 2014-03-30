@@ -99,7 +99,7 @@ function showEdit(req, res, next) {
     res.set('Expire', '-1');
     res.set('Pragma', 'no-cache');
     res.render('topic/edit', {
-      title: '编辑总结',
+      title: '策展中',
       css: [
         'http://cdn.bootcss.com/messenger/1.4.0/css/messenger.css',
         'http://cdn.bootcss.com/messenger/1.4.0/css/messenger-theme-flat.css',
@@ -197,7 +197,7 @@ function showChang(req, res, next) {
   Topic.getTopicById(topicId, ep.done(function (topic) {
     if (!topic || !topic.publishDate) {
       ep.unbind();
-      res.send(404, '您要查看的总结不存在');
+      res.send(404, '您要查看的策展不存在');
       return;
     }
 
@@ -474,7 +474,7 @@ function showIndex(req, res, next) {
   Topic.getTopicById(topicId, ep.done(function (topic) {
     if (!topic || !topic.publishDate) {
       ep.unbind();
-      res.send(404, '您要查看的总结不存在');
+      res.send(404, '您要查看的策展不存在');
       return;
     }
 

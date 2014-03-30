@@ -43,7 +43,7 @@ function createVoidItem(topic, callback) {
       voidItem.topic_id = topic._id;
       voidItem.save(ep.done('voidItem'));
 
-      //总结指向条目链表头
+      //策展指向条目链表头
       topic.void_item_id = voidItem._id;
       topic.save(ep.done('topic'));
     }))
@@ -207,7 +207,7 @@ function _deleteItemList(itemType, itemId, callback) {
 }
 
 /**
- * 获取一个总结的所有条目
+ * 获取一个策展的所有条目
  * @param voidItemId
  * @param itemCount
  * @param callback
@@ -227,7 +227,7 @@ function getItems(voidItemId, itemCount, callback) {
 }
 
 /**
- * 递归获取同一总结的条目
+ * 递归获取同一策展的条目
  * @param remain_count
  * @param type
  * @param itemId

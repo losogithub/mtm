@@ -82,7 +82,7 @@ app.use(function (err, req, res, next) {
   if (~accept.indexOf('html')) {
     switch (err.message) {
       case '403':
-        res.send(403, '您无权修改他人的总结');
+        res.send(403, '您无权修改他人的策展');
         break;
       case '404':
         res.status(404).render('error');
@@ -94,7 +94,7 @@ app.use(function (err, req, res, next) {
   } else {
     switch (err.message) {
       case '403':
-        res.send(403, '您无权修改他人的总结');
+        res.send(403, '您无权修改他人的策展');
         break;
       case '404':
         res.send(404, '您请求的资源不存在');

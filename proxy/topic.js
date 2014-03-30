@@ -13,7 +13,7 @@ var Item = require('./item');
 var User = require('./user');
 
 /**
- * 新建总结
+ * 新建策展
  * @param userId
  * @param callback
  */
@@ -41,7 +41,7 @@ function createTopic(authorId, callback) {
 }
 
 /**
- * 获取一个总结的所有条目
+ * 获取一个策展的所有条目
  * @param topic
  * @param callback
  */
@@ -68,7 +68,7 @@ function increasePVCountBy(topic, increment, callback) {
 }
 
 /**
- * 获取所有总结
+ * 获取所有策展
  */
 function getAllTopics(callback) {
   TopicModel.find({ publishDate: { $exists: true } })
@@ -77,7 +77,7 @@ function getAllTopics(callback) {
 }
 
 /**
- * 获取最新总结
+ * 获取最新策展
  */
 function updateNewTopics(callback) {
   callback = callback || function () {
@@ -98,7 +98,7 @@ function updateNewTopics(callback) {
 }
 
 /**
- * 保存总结
+ * 保存策展
  * @param authorId
  * @param topicId
  * @param title
@@ -142,7 +142,7 @@ function publishTopic(topic, callback) {
 }
 
 /**
- * 删除总结
+ * 删除策展
  * @param authorId
  * @param topicId
  * @param callback
@@ -163,7 +163,7 @@ function deleteTopic(topic, callback) {
 }
 
 /**
- * 查找总结
+ * 查找策展
  * @param topicId
  * @param callback
  */

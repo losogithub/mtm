@@ -14,7 +14,7 @@
       </a>
     </div>
     <h6 class="Band_Ttl" style="font-size: 18px;">
-      <b>编辑总结<%= topic.publishDate ? '' : '（草稿）' %></b>
+      <b>策展中<%= topic.publishDate ? '' : '（草稿）' %></b>
       <span id="_asterisk" style="display: none;">*</span>
       <span id="_saved" style="display: none;" class="text-muted">- 所有修改都已保存，可以直接离开本页面</span>
       <span id="_error" style="display: none;" class="text-danger">- 操作失败，请刷新页面撤销刚才的修改</span>
@@ -75,11 +75,11 @@
               <div id="_topWidget_title" class="form-group">
                 <div class="Required Required-4px"></div>
                 <input name="title" type="text" class="form-control flat"
-                       placeholder="总结标题（5~50字）"/>
+                       placeholder="策展标题（5~50字）"/>
               </div>
               <div id="_topWidget_description" class="form-group">
                 <textarea style='overflow: hidden;' name="description" class="form-control flat HeightAnimation"
-                          placeholder="总结描述（150字以内，换行符无效）"></textarea>
+                          placeholder="策展描述（150字以内，换行符无效）"></textarea>
               </div>
 
               <% include _widget_BtnSet.html %>

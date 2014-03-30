@@ -1222,7 +1222,7 @@
 
   });
 
-  //数据库中该总结id
+  //数据库中该策展id
   var topicId;
   var state = 'default';
   var topState = 'default';
@@ -1649,7 +1649,7 @@
   }
 
   /**
-   * 总结菜单栏固定窗口顶部、监听按钮点击事件
+   * 监听按钮点击事件
    * @private
    */
   function _initBand() {
@@ -1726,7 +1726,7 @@
   }
 
   /**
-   * 初始化总结标题，总结描述
+   * 初始化策展标题，策展描述
    * @private
    */
 
@@ -1856,12 +1856,12 @@
       },
       messages: {
         title: {
-          required: "请输入5～50字的总结标题。",
-          minlength: "总结标题太短，请控制在5～50字之间。",
-          maxlength: "总结标题太长，请控制在5～50字之间。"
+          required: "请输入5～50字的策展标题。",
+          minlength: "策展标题太短，请控制在5～50字之间。",
+          maxlength: "策展标题太长，请控制在5～50字之间。"
         },
         description: {
-          maxlength: "总结描述太长，请缩写到150字以内。"
+          maxlength: "策展描述太长，请缩写到150字以内。"
         }
       }
     });
