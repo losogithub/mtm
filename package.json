@@ -13,6 +13,7 @@
     "express-partials": "*",
     "express-session": "*",
     "extend": "*",
+    "graceful-fs": "*",
     "iconv": "*",
     "mongoose": "*",
     "validator": "1.5.1",

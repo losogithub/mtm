@@ -5,7 +5,8 @@
 var express = require('express');
 var ejs = require('ejs');
 var partials = require('express-partials');
-var fs = require('graceful-fs');
+var fs = require('fs');
+require('graceful-fs');//调用一次就会修改fs模块
 
 //using redis to store session data
 var session = require('express-session');
@@ -34,6 +35,7 @@ var accessLogFile = fs.createWriteStream('access.log', {flags: 'a'});
 var errorLogFile = fs.createWriteStream('error.log', {flags: 'a'});
 
 var app = express();
+console.log(app.settings.env);
 
 process.on('uncaughtException', function (err) {
   console.error('process.on Caught exception: ' + err.stack);
