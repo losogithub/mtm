@@ -1,22 +1,24 @@
+<% if (totalPage > 1) { %>
 <div class="row">
   <div class="text-center">
     <div class="pagination">
       <ul>
         <% locals.query = '?' + (locals.query || '') + 'page=' %>
         <li class="previous">
-          <a href="<%= locals.query + (currentPage > 1 && (currentPage - 1) || '1') %>" class="fui-arrow-left"></a>
+          <a <%- currentPage == 1 ? '' : 'href="' + locals.query + (currentPage - 1) + '"' %> class="fui-arrow-left"></a>
         </li>
         <% for (var i = 1 ; i <= totalPage; i++ ) { %>
-        <% if ( i == currentPage) { %>
-        <li class="active"><a href="<%= locals.query + i %>"><%= i %></a></li>
+        <% if (i == currentPage) { %>
+        <li class="active"><a><%= i %></a></li>
         <% } else { %>
         <li><a href="<%= locals.query + i %>"><%= i %></a></li>
         <% } %>
         <% } %>
         <li class="next">
-          <a href="<%= locals.query + (currentPage < totalPage && (currentPage + 1) || totalPage) %>" class="fui-arrow-right"></a>
+          <a <%- currentPage == totalPage ? '' : 'href="' + locals.query + (currentPage + 1) + '"' %> class="fui-arrow-right"></a>
         </li>
       </ul>
     </div>
   </div>
 </div>
+<% } %>

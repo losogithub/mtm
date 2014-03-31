@@ -118,6 +118,22 @@ table {
   display: block;
   margin: -10px 0 0 -6px;
 }
+.Authors:hover a {
+  -webkit-filter: blur(1px);
+  opacity: 0.5;
+}
+.Authors a {
+  display: inline-block;
+  height: 60px;
+  width: 60px;
+  -webkit-filter: grayscale(75%);
+  -webkit-transition: all 0.25s;
+  transition: all 0.25s;
+}
+.Authors a:hover {
+  -webkit-filter: blur(0) grayscale(0%);
+  opacity: 1;
+}
 .SIGNUP .container,
 .LOGIN .container,
 .VERIFY .container {
@@ -240,6 +256,10 @@ table {
 }
 .Footer p {
   margin: 10px 0 0;
+}
+.pagination .previous a:not([href]),
+.pagination .next a:not([href]) {
+  background-color: transparent !important;
 }
 .LoginDialog .modal-body {
   background-color: #ecf0f1;
