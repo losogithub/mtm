@@ -4,47 +4,67 @@
     #_carousel { display: none; }
   </style>
 <![endif]-->
-<div id="_carousel" style="overflow: hidden;">
-  <carousel interval="5000">
-    <slide class="item active">
+
+<div ng-non-bindable id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+  <!-- Indicators -->
+  <ol class="carousel-indicators">
+    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+    <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+    <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+    <li data-target="#carousel-example-generic" data-slide-to="3"></li>
+    <li data-target="#carousel-example-generic" data-slide-to="4"></li>
+    <li data-target="#carousel-example-generic" data-slide-to="5"></li>
+  </ol>
+
+  <!-- Wrapper for slides -->
+  <div class="carousel-inner">
+    <div class="item active">
       <div class="carousel-caption">
         <h3>你是否也对“搜索引擎”杂乱的结果感到无奈？</h3>
         <p>日益庞大的互联网使搜索引擎力不从心</p>
       </div>
-    </slide>
-    <slide class="item">
+    </div>
+    <div class="item">
       <div class="carousel-caption">
         <h3>你是否也对越刷越多的“微博”感到困扰？</h3>
         <p>社交网络资讯的井喷向人们的阅读能力发出了新的挑战</p>
       </div>
-    </slide>
-    <slide class="item">
+    </div>
+    <div class="item">
       <div class="carousel-caption">
         <h3>你是否也热衷于在各“小众网站”关注各种奇葩话题？</h3>
         <p>累觉不爱后只想找个一网打尽的好网站嫁了</p>
       </div>
-    </slide>
-    <slide class="item">
+    </div>
+    <div class="item">
       <div class="carousel-caption">
         <h3>让互联网更简洁、有序势在必行</h3>
         <p>时下火热的“聚类”为互联网做好了目录</p>
       </div>
-    </slide>
-    <slide class="item">
+    </div>
+    <div class="item">
       <div class="carousel-caption">
         <p>但如果你也已经察觉到“聚类”的捉襟见肘</p>
         <h3>欢迎加入<span class="text-theme">石子儿</span>的互联网“策展”大潮</h3>
       </div>
-    </slide>
-    <slide class="item" style="background-color: #34495e;">
+    </div>
+    <div class="item" style="background-color: #34495e;">
       <div class="carousel-caption">
         <h3><a class="text-inverse btn btn-hg btn-primary"
                href="/topic/5337986887a4d07730f2c4c9">
           “策展”是什么？<i class="fa fa-chevron-circle-right"></i></a></h3>
         <p>&nbsp;</p>
       </div>
-    </slide>
-  </carousel>
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+    <i class="fa fa-chevron-left" style="left: 50%;top: 50%;position: absolute;"></i>
+  </a>
+  <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+    <i class="fa fa-chevron-right"></i>
+  </a>
 </div>
 <% } %>
 

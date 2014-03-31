@@ -111,9 +111,11 @@ table {
 .carousel {
   background-color: #95a5a6;
 }
-.icon-prev,
-.icon-next {
-  display: none !important;
+.carousel-control i {
+  top: 50%;
+  position: relative;
+  display: block;
+  margin: -10px 0 0 -6px;
 }
 .SIGNUP .container,
 .LOGIN .container,
