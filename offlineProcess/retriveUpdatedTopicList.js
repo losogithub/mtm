@@ -17,7 +17,7 @@ function traditionalScore(pv, likes) {
  * This is for the left one, plus the time yinzi
  * */
 function newHotScore(score, updateDate) {
-  var diff = (1000 * 60 * 60) / ((Date.now() - updateDate) || 1);
+  var diff = (1000 * 60 * 60 * 24) / ((Date.now() - updateDate) || 1);
   //console.log(diff);
   if (diff > 1) {
     diff = 1;
