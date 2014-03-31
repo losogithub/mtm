@@ -22,7 +22,7 @@ function newHotScore(score, updateDate) {
   if (diff > 1) {
     diff = 1;
   }
-  return score + 10 * diff;
+  return score + 100 * diff;
 }
 
 function scoreCompare(top1, top2) {
