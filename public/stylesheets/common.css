@@ -113,7 +113,8 @@ table {
 }
 .carousel-control i {
   top: 50%;
-  position: relative;
+  left: 50%;
+  position: absolute;
   display: block;
   margin: -10px 0 0 -6px;
 }
