@@ -5,7 +5,7 @@
 var express = require('express');
 var ejs = require('ejs');
 var partials = require('express-partials');
-var fs = require('fs');
+var fs = require('graceful-fs');
 
 //using redis to store session data
 var session = require('express-session');
