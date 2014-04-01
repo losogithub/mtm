@@ -77,8 +77,17 @@ function getAllTopics(callback) {
 }
 
 function getCategoryTopics(category, callback) {
-  TopicModel.find({ publishDate: { $exists: true }, category: category })
-    .exec(callback);
+  if (category == '未分类') {
+    TopicModel.find({ publishDate: { $exists: true },
+      $or: [
+        { category: category },
+        { category: { $exists: false }}
+      ]})
+      .exec(callback);
+  } else {
+    TopicModel.find({ publishDate: { $exists: true }, category: category })
+      .exec(callback);
+  }
 }
 
 /**
