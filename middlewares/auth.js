@@ -12,8 +12,9 @@
 var User = require('../proxy').User;
 var LoginToken = require('../proxy').LoginToken;
 
-var check = require('validator').check,
-  sanitize = require('validator').sanitize;
+var check = require('validator').check;
+var sanitize = require('validator').sanitize;
+var config = require('../config');
 var encryp = require('../helper/encryp');
 var helper = require('../helper/helper');
 
@@ -48,7 +49,7 @@ function loadUser(req, res, next) {
       if (user) {
         req.currentUser = user; //check whether currentUser is the same with this Id.
         res.locals.username = user.loginName; // used in html template to judefy and display uername
-        console.log(res.locals.username);
+        res.locals.isAdmin = config.admins[user.loginName];
         //added 10.11 2013
         res.locals.imageUrl = user.url;
         return next();

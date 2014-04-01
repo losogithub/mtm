@@ -23,6 +23,12 @@ module.exports = function (app) {
   app.get('/hot', site.showHot);
   app.get('/classic', site.showClassic);
   app.get('/new', site.showNew);
+  app.get('/entertainment', site.showEntertainment);
+  app.get('/tech', site.showTech);
+  app.get('/news', site.showNews);
+  app.get('/fashion', site.showFashion);
+  app.get('/unclassified', site.showUnclassified);
+  app.get('/new', site.showNew);
 
   //console.log("router start");
   app.post('/loginDialogCheck', auth.loginDialog, auth.loginDialogCheck);
@@ -41,6 +47,7 @@ module.exports = function (app) {
   app.put('/topic/item', auth.userRequired, topic.editItem);
   app.put('/topic/sort', auth.userRequired, topic.sortItem);
   app.put('/topic/save', auth.userRequired, topic.saveTopic);
+  app.put('/topic/category', auth.userRequired, topic.saveCategory);
   app.put('/topic/publish', auth.userRequired, topic.publishTopic);
   app.delete('/topic/item', auth.userRequired, topic.deleteItem);
   app.delete('/topic/:topicId', auth.userRequired, topic.deleteTopic);

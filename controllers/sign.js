@@ -609,13 +609,16 @@ var showResetPassword = function (req, res, next) {
   var key = req.query.key;
   var email = req.query.email;
   User.getUserByEmail(email, key, function (err, user) {
+    if (err) {
+      return next(err);
+    }
     if (!user) {
-      return res.render('sign/errLink');
+      return next(new Error(403));
     }
     var now = new Date().getTime();
     var oneHour = 1000 * 60 * 60;
     if (!user.retrieve_time || now - user.retrieve_time > oneHour) {
-      return res.render('sign/errLink');
+      return next(new Error(403));
     }
     //finally correct
     return res.render('sign/resetPassword', {
@@ -668,7 +671,7 @@ function resetPassword(req, res, next) {
       return next(err);
     }
     if (!user) {
-      return res.render('sign/errLink');
+      return next(new Error(403));
     }
     //console.log(encryp.md5(psw));
     //bug fixed: 10.11.2013. user.pass
@@ -700,14 +703,10 @@ var activeAccount = function (req, res, next) {
 
   User.getUserByMail(email, function (err, user) {
     if (err) {
-      console.log("error: ", err);
       return next(err);
     }
-
-    if(!user)
-    {
-      console.log("user not exists!");
-      return res.render('sign/errLink');
+    if (!user) {
+      return next(new Error(403));
     }
     else if(user.active){
 
@@ -756,7 +755,7 @@ var activeAccount = function (req, res, next) {
     }
     else if (encryp.md5(user.email + config.session_secret) !== key) {
       console.log("check not equal");
-      return res.render('sign/errLink');
+      return next(new Error(403));
     }
 
     //2013.12.02 Before active, first check whether ther is an login user and logout it.

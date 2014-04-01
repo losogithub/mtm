@@ -15,7 +15,7 @@ var newTopicsPerPage = 19;
 function index(req, res) {
   var recentHotTopicsDataPage = global.recentHotTopicsData.slice(0, topicsInIndex);
   var goodTopicsDataPage = global.realGoodTopicsData.slice(0, topicsInIndex);
-  var recentUpdatedTopicsData = global.recentUpdatedTopicsData.slice(0, newTopicsPerPage);
+  var recentUpdatedTopicsData = global.newTopics.slice(0, newTopicsPerPage);
   var authors = global.hotAuthors;
 
   res.render('index', {
@@ -61,14 +61,51 @@ function showClassic(req, res) {
 function showNew(req, res) {
   var currentPage = parseInt(req.query.page) || 1;
 
-  var recentUpdatedTopicsDataPage = global.recentUpdatedTopicsData.slice((currentPage - 1) * topicsPerPage, currentPage * topicsPerPage);
-  var totalPages = math.ceil(global.recentUpdatedTopicsData.length / topicsPerPage);
+  var newTopicsPage = global.newTopics.slice((currentPage - 1) * topicsPerPage, currentPage * topicsPerPage);
+  var totalPages = math.ceil(global.newTopics.length / topicsPerPage);
 
   res.render('category', {
-    pageType: 'NEW',
-    topics: recentUpdatedTopicsDataPage,
+    pageType: '最新',
+    topics: newTopicsPage,
     totalPage: totalPages,
     currentPage: currentPage
+  });
+}
+
+function showEntertainment(req, res) {
+  _showCategory(req, res, '娱乐');
+}
+
+function showTech(req, res) {
+  _showCategory(req, res, '科技');
+}
+
+function showNews(req, res) {
+  _showCategory(req, res, '新闻');
+}
+
+function showFashion(req, res) {
+  _showCategory(req, res, '时尚');
+}
+
+function showUnclassified(req, res) {
+  _showCategory(req, res, '未分类');
+}
+
+function _showCategory(req, res, catogory) {
+  var currentPage = parseInt(req.query.page) || 1;
+
+  console.log(global.categoryTopics);
+  var categoryTopicsPage = global.categoryTopics[catogory].slice((currentPage - 1) * topicsPerPage, currentPage * topicsPerPage);
+  var totalPages = math.ceil(global.categoryTopics[catogory].length / topicsPerPage);
+  var authors = global.categoryAuthors[catogory];
+
+  res.render('category', {
+    pageType: catogory,
+    topics: categoryTopicsPage,
+    totalPage: totalPages,
+    currentPage: currentPage,
+    authors: authors
   });
 }
 
@@ -76,3 +113,8 @@ exports.index = index;
 exports.showHot = showHot;
 exports.showClassic = showClassic;
 exports.showNew = showNew;
+exports.showEntertainment = showEntertainment;
+exports.showTech = showTech;
+exports.showNews = showNews;
+exports.showFashion = showFashion;
+exports.showUnclassified = showUnclassified;

@@ -1,8 +1,78 @@
 <!--内容-->
 <div style="background-color: #ecf0f1;">
   <div class="container">
-    <div class="row">
-      <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-8 col-lg-7 mvl">
+    <% if (locals.isAdmin) { %>
+    <div class="row ptl">
+      <div class="col-xs-12">
+        <div class="btn-group">
+          <a class="btn btn-primary" href="/">综合</a>
+          <a class="btn btn-primary <%- topic.category == '娱乐' ? 'active' : '' %>"
+             href="/entertainment">娱乐</a>
+          <a class="btn btn-primary <%- topic.category == '科技' ? 'active' : '' %>"
+             href="/tech">科技</a>
+          <a class="btn btn-primary <%- topic.category == '新闻' ? 'active' : '' %>"
+             href="/news">新闻</a>
+          <a class="btn btn-primary <%- topic.category == '时尚' ? 'active' : '' %>"
+             href="/fashion">时尚</a>
+          <a class="btn btn-primary <%- topic.category == '未分类' ? 'active' : '' %>"
+             href="/unclassified">未分类</a>
+          <a class="btn btn-primary"
+             href="/new">最新</a>
+        </div>
+      </div>
+    </div>
+    <% } %>
+    <div class="row pbl">
+      <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-8 col-lg-7 mtl">
+        <% if (locals.isAdmin) { %>
+        <div class="row">
+          <div class="col-sm-3 mbl">
+            <div class="Category dropdown" ng-controller="CategoryCtrl">
+              <button class="btn btn-primary dropdown-toggle btn-block" data-toggle="dropdown"
+                      type="button"><span class="Current">{{current}}</span><span class="caret"></span></button>
+              <span class="dropdown-arrow dropdown-arrow-inverse"></span>
+              <ul class="dropdown-menu dropdown-inverse">
+                <li ng-repeat="item in items">
+                  <a ng-class="{ highlighted: current == item }" href="##"
+                    ng-click="saveCategory(item)">{{item}}</a>
+                </li>
+
+                <script>
+                  function CategoryCtrl($scope, $timeout) {
+                    $scope.current = '<%= topic.category %>';
+                    $scope.items = [
+                      '娱乐',
+                      '科技',
+                      '新闻',
+                      '时尚',
+                      '未分类'
+                    ];
+                    $scope.saveCategory = function (category) {
+                      var xhr = $scope.xhr;
+                      if (xhr) {
+                        xhr.abort();
+                      }
+                      console.log(location);
+                      $scope.xhr = $.ajax('/topic/category', {
+                        type: 'PUT',
+                        data: {
+                          topicId: '<%= topic._id %>',
+                          category: category
+                        }
+                      })
+                        .done(function () {
+                          $timeout(function() {
+                            $scope.current = category;
+                          });
+                        });
+                    };
+                  }
+                </script>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <% } %>
         <div style="background-color: white; border-radius: 6px;">
           <div style="position: relative; min-height: 140px; border-radius: 6px 6px 0 0;">
             <a class="fancybox" rel="gallery" href="<%= topic.coverUrl %>" title="<%= topic.title %>">
@@ -74,7 +144,7 @@
 
         </div>
       </div>
-      <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-4 col-lg-5 mvl">
+      <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-4 col-lg-5 mtl">
         <div class="pal" style="background-color: #34495e;color:white;border-radius: 6px;">
           <div class="clearfix">
             <a class="pull-left mrl img-circle-border" title="<%= topic.author %>" target="_blank"
@@ -108,7 +178,7 @@
           <% } %>
         </div>
       </div>
-      <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-8 col-lg-7 mbl">
+      <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-8 col-lg-7 mtl">
         <a class="btn btn-primary btn-block btn-hg" href="/" title="石子儿首页">回首页，更多精彩“策展”</a>
       </div>
     </div>

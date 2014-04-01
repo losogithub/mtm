@@ -72,7 +72,28 @@
 <div class="container">
   <div class="row" style="background-color: #bdc3c7;">
     <div class="col-sm-9 col-md-10 pbl" style="background-color: #ecf0f1;">
+      <% if (locals.isAdmin) { %>
       <div class="row ptl">
+        <div class="col-xs-12">
+          <div class="btn-group">
+            <a class="btn btn-primary active" href="/">综合</a>
+            <a class="btn btn-primary"
+               href="/entertainment">娱乐</a>
+            <a class="btn btn-primary"
+               href="/tech">科技</a>
+            <a class="btn btn-primary"
+               href="/news">新闻</a>
+            <a class="btn btn-primary"
+               href="/fashion">时尚</a>
+            <a class="btn btn-primary"
+               href="/unclassified">未分类</a>
+            <a class="btn btn-primary"
+               href="/new">最新</a>
+          </div>
+        </div>
+      </div>
+      <% } %>
+      <div class="row ptm">
         <div class="col-xs-12">
           <i class="fa fa-thumbs-o-up" style="color: #c0392b;"></i> 人气策展人
         </div>

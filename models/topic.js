@@ -21,8 +21,9 @@ var TopicSchema = new Schema({
   create_at: { type: Date, default: Date.now },
   update_at: { type: Date, default: Date.now },
   publishDate: Date,
-  FVCount: {type: Number, default: 0},
-  FVList: [ObjectId ]
+  FVCount: { type: Number, default: 0 },
+  FVList: [ObjectId],
+  category: { type: String, default: '未分类' }
 });
 
 

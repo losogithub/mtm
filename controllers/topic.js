@@ -33,7 +33,6 @@ var User = require('../proxy').User;
 
 var utils = require('../public/javascripts/utils');
 
-
 function createTopic(req, res, next) {
   var userId = req.session.userId;
 
@@ -88,7 +87,8 @@ function showEdit(req, res, next) {
       title: topic.title,
       coverUrl: topic.cover_url,
       description: topic.description,
-      publishDate: topic.publishDate
+      publishDate: topic.publishDate,
+      category: topic.category
     };
     var itemsData = [];
     items.forEach(function (item) {
@@ -409,7 +409,8 @@ function showIndex(req, res, next) {
       updateAt: updateDate,
       author: topic.author_name,
       PVCount: topic.PV_count,
-      FVCount: topic.FVCount
+      FVCount: topic.FVCount,
+      category: topic.category
     };
     var itemsData = [];
     items.forEach(function (item) {
@@ -723,7 +724,7 @@ function _getItemData(item) {
   return itemData;
 }
 
-function _getTopicWithAuth(callback, topicId, userId) {
+function _getTopicWithAuth(callback, topicId, userId, isAdmin) {
   Topic.getTopicById(topicId, function (err, topic) {
     if (err) {
       callback(err);
@@ -735,7 +736,7 @@ function _getTopicWithAuth(callback, topicId, userId) {
       return;
     }
 
-    if (topic.author_id != userId) {
+    if (topic.author_id != userId && !isAdmin) {
       callback(new Error(403));
       return;
     }
@@ -1083,6 +1084,33 @@ function saveTopic(req, res, next) {
       console.log('saveTopic done');
     });
   }, topicId, authorId);
+}
+
+function saveCategory(req, res, next) {
+  console.log('saveCategory=====');
+  var authorId = req.session.userId;
+  var topicId = req.body.topicId;
+  var category = sanitize(req.body.category).trim();
+  var valid = global.CATEGORIES[category];
+
+  if (!valid) {
+    return next(new Error(403));
+  }
+
+  _getTopicWithAuth(function (err, topic) {
+    if (err) {
+      return next(err);
+    }
+    Topic.saveCategory(topic, category, function (err, topic) {
+      if (err) {
+        return next(err);
+      }
+      res.json({
+        category: topic.category
+      });
+      console.log('saveCategory done');
+    });
+  }, topicId, authorId, res.locals.isAdmin);
 }
 
 function publishTopic(req, res, next) {
@@ -1721,6 +1749,7 @@ exports.sortItem = sortItem;
 exports.deleteItem = deleteItem;
 exports.deleteTopic = deleteTopic;
 exports.saveTopic = saveTopic;
+exports.saveCategory = saveCategory;
 exports.publishTopic = publishTopic;
 exports.getLinkDetail = getLinkDetail;
 exports.getVideoDetail = getVideoDetail;

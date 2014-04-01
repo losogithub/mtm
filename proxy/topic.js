@@ -76,6 +76,11 @@ function getAllTopics(callback) {
     .exec(callback);
 }
 
+function getCategoryTopics(category, callback) {
+  TopicModel.find({ publishDate: { $exists: true }, category: category })
+    .exec(callback);
+}
+
 /**
  * 获取最新策展
  */
@@ -91,7 +96,7 @@ function updateNewTopics(callback) {
         return callback(err);
       }
 
-      global.recentUpdatedTopicsData = topics;
+      global.newTopics = topics;
 
       callback(topics);
     });
@@ -113,6 +118,21 @@ function saveTopic(topic, title, coverUrl, description, callback) {
   topic.title = title;
   topic.cover_url = coverUrl;
   topic.description = description;
+  topic.update_at = Date.now();
+  topic.save(function (err) {
+    if (err) {
+      return callback(err);
+    }
+    callback(null, topic);
+    updateNewTopics();
+  });
+}
+
+function saveCategory(topic, category, callback) {
+  callback = callback || function () {
+  };
+
+  topic.category = category;
   topic.update_at = Date.now();
   topic.save(function (err) {
     if (err) {
@@ -188,8 +208,10 @@ exports.getContents = getContents;//查
 exports.increaseItemCountBy = increaseItemCountBy;
 exports.increasePVCountBy = increasePVCountBy;
 exports.getAllTopics = getAllTopics;
+exports.getCategoryTopics = getCategoryTopics;
 exports.updateNewTopics = updateNewTopics;
 exports.saveTopic = saveTopic;//改
+exports.saveCategory = saveCategory;//改
 exports.publishTopic = publishTopic;
 exports.deleteTopic = deleteTopic;//删
 exports.getTopicById = getTopicById;//查

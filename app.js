@@ -35,7 +35,6 @@ var accessLogFile = fs.createWriteStream('access.log', {flags: 'a'});
 var errorLogFile = fs.createWriteStream('error.log', {flags: 'a'});
 
 var app = express();
-console.log(app.settings.env);
 
 process.on('uncaughtException', function (err) {
   console.error('process.on Caught exception: ' + err.stack);

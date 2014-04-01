@@ -31,15 +31,6 @@ table {
   margin: -10px 0 0 -6px;
 }
 
-.Authors {
-  &:hover a { -webkit-filter: blur(1px); opacity: 0.5; }
-  a {
-    display: inline-block; height: 60px; width: 60px;
-    -webkit-filter: grayscale(75%); -webkit-transition: all 0.25s; transition: all 0.25s;
-    &:hover { -webkit-filter: blur(0) grayscale(0%); opacity: 1;}
-  }
-}
-
 .SIGNUP, .LOGIN, .VERIFY {
   .container { max-width: 400px; position: relative; }
 }
@@ -111,6 +102,15 @@ table {
 
 .navbar-nav > li { float: none; }
 
+.Authors {
+  &:hover a { -webkit-filter: blur(1px); opacity: 0.5; }
+  a {
+    display: inline-block; height: 60px; width: 60px;
+    -webkit-filter: grayscale(75%); -webkit-transition: all 0.25s; transition: all 0.25s;
+    &:hover { -webkit-filter: blur(0) grayscale(0%); opacity: 1;}
+  }
+}
+
 /*页脚*/
 .Footer {
   padding: 25px; background-color: #fff; text-align: center;
@@ -119,7 +119,17 @@ table {
   p {margin: 10px 0 0}
 }
 
+.dropdown-toggle { text-align: left; }
+.dropdown-menu { min-width: 100%; }
+.dropdown .caret {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  margin-top: -3px;
+}
+
 .pagination {
+  margin-bottom: 0;
   .previous, .next {
     a:not([href]) {background-color: transparent !important;}
   }

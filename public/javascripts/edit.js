@@ -1729,7 +1729,6 @@
    * 初始化策展标题，策展描述
    * @private
    */
-
   function _initTop() {
     var defaultImgSrc = '';//'/images/no_img/photo_95x95.png';
     var noImgSrc = '/images/no_img/default_120x120.png';

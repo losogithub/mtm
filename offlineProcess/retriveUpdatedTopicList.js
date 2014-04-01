@@ -80,9 +80,70 @@ function extractRecentHotTopics() {
   });
 }
 
+function getCategoryTopics() {
+  for (var category in global.CATEGORIES) {
+    (function (category) {
+      Topic.getCategoryTopics(category, function (err, topics) {
+        if (err) {
+          console.log(err);
+          return;
+        }
+        if (!topics) {
+          return;
+        }
+        console.log(category);
+
+        for (var i = 0; i < topics.length; i++) {
+          topics[i].score = traditionalScore(topics[i].PV_count, topics[i].FVCount);
+        }
+
+        var authorMap = {};
+        for (var i = 0; i < topics.length; i++) {
+          topics[i].score = newHotScore(topics[i].score, topics[i].update_at);
+          if (!authorMap[topics[i].author_id]) {
+            authorMap[topics[i].author_id] = { score: 0 };
+          }
+          authorMap[topics[i].author_id].score += topics[i].score ;
+        }
+        global.categoryTopics[category] = topics.sort(scoreCompare).slice(0, 240);
+
+        var authorScore = [];
+        for (var id in authorMap) {
+          authorScore.push({ id: id, score: authorMap[id].score });
+        }
+        authorScore.sort(function (a, b) {
+          return (b.score - a.score);
+        });
+        var authorIds = [];
+        var hotAuthorScore = authorScore.slice(0, 14);
+        for (var i in hotAuthorScore) {
+          authorIds.push(hotAuthorScore[i].id);
+        }
+        User.getUserByIds(authorIds, function (err, authors) {
+          for (var i in authors) {
+            authors[i].score = authorMap[authors[i]._id].score;
+          }
+          authors.sort(function (a, b) {
+            return (b.score - a.score);
+          });
+          global.categoryAuthors[category] = authors;
+        });
+      });
+    })(category);
+  }
+}
+
+function routine() {
+  extractRecentHotTopics();
+  getCategoryTopics();
+}
+
 module.exports = function () {
   Topic.updateNewTopics();
 
-  extractRecentHotTopics();
-  setInterval(extractRecentHotTopics, 60 * 1000);
+  global.CATEGORIES = { '未分类': 1, '娱乐': 1, '科技': 1, '新闻': 1, '时尚': 1 };
+  global.categoryAuthors = {};
+  global.categoryTopics = {};
+  routine();
+  setInterval(routine, 60 * 1000);
 };
