@@ -16,13 +16,16 @@ function traditionalScore(pv, likes) {
 /*
  * This is for the left one, plus the time yinzi
  * */
-function newHotScore(score, updateDate) {
-  var diff = (1000 * 60 * 60 * 24) / ((Date.now() - updateDate) || 1);
-  //console.log(diff);
-  if (diff > 1) {
-    diff = 1;
+function newHotScore(score, updateDate, createDate) {
+  var createDate = (1000 * 60 * 60 * 24) / ((Date.now() - createDate) || 1);
+  if (createDate > 1) {
+    createDate = 1;
   }
-  return score + 100 * diff;
+  var update = (1000 * 60 * 60 * 24) / ((Date.now() - updateDate) || 1);
+  if (update > 1) {
+    update = 1;
+  }
+  return score + 100 * createDate + 10 * update;
 }
 
 function scoreCompare(top1, top2) {
@@ -48,7 +51,7 @@ function extractRecentHotTopics() {
 
     var authorMap = {};
     for (var i = 0; i < topics.length; i++) {
-      topics[i].score = newHotScore(topics[i].score, topics[i].update_at);
+      topics[i].score = newHotScore(topics[i].score, topics[i].create_at, topics[i].update_at);
       if (!authorMap[topics[i].author_id]) {
         authorMap[topics[i].author_id] = { score: 0 };
       }
@@ -98,7 +101,7 @@ function getCategoryTopics() {
 
         var authorMap = {};
         for (var i = 0; i < topics.length; i++) {
-          topics[i].score = newHotScore(topics[i].score, topics[i].update_at);
+          topics[i].score = newHotScore(topics[i].score, topics[i].create_at, topics[i].update_at);
           if (!authorMap[topics[i].author_id]) {
             authorMap[topics[i].author_id] = { score: 0 };
           }
