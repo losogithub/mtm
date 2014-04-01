@@ -95,7 +95,6 @@ function showUnclassified(req, res) {
 function _showCategory(req, res, catogory) {
   var currentPage = parseInt(req.query.page) || 1;
 
-  console.log(global.categoryTopics);
   var categoryTopicsPage = global.categoryTopics[catogory].slice((currentPage - 1) * topicsPerPage, currentPage * topicsPerPage);
   var totalPages = math.ceil(global.categoryTopics[catogory].length / topicsPerPage);
   var authors = global.categoryAuthors[catogory];

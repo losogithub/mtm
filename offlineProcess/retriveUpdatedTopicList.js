@@ -91,7 +91,6 @@ function getCategoryTopics() {
         if (!topics) {
           return;
         }
-        console.log(category);
 
         for (var i = 0; i < topics.length; i++) {
           topics[i].score = traditionalScore(topics[i].PV_count, topics[i].FVCount);
