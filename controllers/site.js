@@ -13,17 +13,12 @@ var topicsInIndex = 24;
 var newTopicsPerPage = 19;
 
 function index(req, res) {
-  var recentHotTopicsDataPage = global.recentHotTopicsData.slice(0, topicsInIndex);
-  var goodTopicsDataPage = global.realGoodTopicsData.slice(0, topicsInIndex);
-  var recentUpdatedTopicsData = global.newTopics.slice(0, newTopicsPerPage);
-  var authors = global.hotAuthors;
-
   res.render('index', {
     pageType: 'INDEX',
-    hot: recentHotTopicsDataPage,
-    realGood: goodTopicsDataPage,
-    newTopics: recentUpdatedTopicsData,
-    authors: authors
+    hot: global.recentHotTopicsData.slice(0, topicsInIndex),
+    realGood: global.realGoodTopicsData.slice(0, topicsInIndex),
+    newTopics: global.newTopics.slice(0, newTopicsPerPage),
+    authors: global.hotAuthors
   });
 }
 
@@ -36,10 +31,11 @@ function showHot(req, res) {
   var totalPages = math.ceil(global.recentHotTopicsData.length / topicsPerPage);
 
   res.render('category', {
-    pageType: 'HOT',
+    pageType: '综合',
     topics: recentHotTopicsDataPage,
     totalPage: totalPages,
-    currentPage: currentPage
+    currentPage: currentPage,
+    authors: global.hotAuthors
   });
 }
 

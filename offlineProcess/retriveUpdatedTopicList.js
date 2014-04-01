@@ -64,7 +64,7 @@ function extractRecentHotTopics() {
       return (b.score - a.score);
     });
     var authorIds = [];
-    var hotAuthorScore = authorScore.slice(0, 14);
+    var hotAuthorScore = authorScore.slice(0, 17);
     for (var i in hotAuthorScore) {
       authorIds.push(hotAuthorScore[i].id);
     }

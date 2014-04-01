@@ -223,6 +223,11 @@ table {
 .VERIFY .Logo:hover img {
   margin-top: 58px;
 }
+.Baidu {
+  transition: 0.25s;
+  -webkit-transition: 0.25s;
+  width: 130px !important;
+}
 .navbar-nav > li {
   float: none;
 }
