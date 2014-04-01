@@ -264,17 +264,17 @@ table {
   -webkit-filter: blur(0) grayscale(0%);
   opacity: 1;
 }
-.Share {
+.Tile .Share {
   display: none;
 }
 .Tile:hover .Share {
   display: inline;
 }
-.Title {
+.Tile .Title {
   background-color: rgba(0, 0, 0, 0.6);
   filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=1, StartColorStr='#99000000', EndColorStr='#99000000');
 }
-.Cover:hover .Title {
+.Tile .Cover:hover .Title {
   background-color: #000000;
   filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=1, StartColorStr='#ff000000', EndColorStr='#ff000000');
 }

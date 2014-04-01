@@ -129,15 +129,19 @@ table {
   }
 }
 
-.Share { display: none; }
-.Tile:hover .Share { display: inline; }
-.Title {
-  background-color: rgba(0, 0, 0, 0.6);
-  filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=1, StartColorStr='#99000000', EndColorStr='#99000000');
-}
-.Cover:hover .Title {
-  background-color: rgba(0, 0, 0, 1);
-  filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=1, StartColorStr='#ff000000', EndColorStr='#ff000000');
+.Tile {
+  .Share {
+    display: none;
+  }
+  &:hover .Share { display: inline; }
+  .Title {
+    background-color: rgba(0, 0, 0, 0.6);
+    filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=1, StartColorStr='#99000000', EndColorStr='#99000000');
+  }
+  .Cover:hover .Title {
+    background-color: rgba(0, 0, 0, 1);
+    filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=1, StartColorStr='#ff000000', EndColorStr='#ff000000');
+  }
 }
 
 .Tile-Inner { opacity: 0; -webkit-transition: 0.25s; transition: 0.25s;
