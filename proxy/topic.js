@@ -148,7 +148,7 @@ function saveCategory(topic, category, callback) {
       return callback(err);
     }
     callback(null, topic);
-    updateNewTopics();
+//    updateNewTopics();
   });
 }
 
