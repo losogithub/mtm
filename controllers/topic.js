@@ -1091,10 +1091,10 @@ function saveCategory(req, res, next) {
   var authorId = req.session.userId;
   var topicId = req.body.topicId;
   var category = sanitize(req.body.category).trim();
-  var valid = global.CATEGORIES[category];
+  var valid = Topic.topList.CATEGORIES[category];
 
   if (!valid) {
-    return next(new Error(403));
+    return next(new Error(400));
   }
 
   _getTopicWithAuth(function (err, topic) {

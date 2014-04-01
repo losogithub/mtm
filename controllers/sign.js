@@ -613,7 +613,7 @@ var showResetPassword = function (req, res, next) {
       return next(err);
     }
     if (!user) {
-      return next(new Error(403));
+      return next(new Error(400));
     }
     var now = new Date().getTime();
     var oneHour = 1000 * 60 * 60;
@@ -671,7 +671,7 @@ function resetPassword(req, res, next) {
       return next(err);
     }
     if (!user) {
-      return next(new Error(403));
+      return next(new Error(400));
     }
     //console.log(encryp.md5(psw));
     //bug fixed: 10.11.2013. user.pass
@@ -706,7 +706,7 @@ var activeAccount = function (req, res, next) {
       return next(err);
     }
     if (!user) {
-      return next(new Error(403));
+      return next(new Error(400));
     }
     else if(user.active){
 

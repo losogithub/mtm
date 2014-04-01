@@ -78,11 +78,10 @@ function getAllTopics(callback) {
 
 function getCategoryTopics(category, callback) {
   if (category == '未分类') {
-    TopicModel.find({ publishDate: { $exists: true },
-      $or: [
-        { category: category },
-        { category: { $exists: false }}
-      ]})
+    TopicModel.find({
+      publishDate: { $exists: true },
+      category: { $not: { $in: topList.CATEGORIES_ARRAY } }
+    })
       .exec(callback);
   } else {
     TopicModel.find({ publishDate: { $exists: true }, category: category })
@@ -105,7 +104,7 @@ function updateNewTopics(callback) {
         return callback(err);
       }
 
-      global.newTopics = topics;
+      topList.newTopics = topics;
 
       callback(topics);
     });
@@ -148,7 +147,7 @@ function saveCategory(topic, category, callback) {
       return callback(err);
     }
     callback(null, topic);
-//    updateNewTopics();
+    updateCategoryTopics();
   });
 }
 
@@ -212,6 +211,136 @@ function getPublishedTopics(topicIds, opt, callback) {
     .exec(callback);
 }
 
+/**
+ * 下面是更新top列表的方法
+ */
+
+exports.topList = topList = {
+  CATEGORIES: { '未分类': 1, '娱乐': 1, '科技': 1, '新闻': 1, '时尚': 1 },
+  CATEGORIES_ARRAY: ['娱乐', '科技', '新闻', '时尚'],//不能有“未分类”！！！
+  categoryAuthors: {},
+  categoryTopics: {}
+};
+
+function _traditionalScore(pv, likes) {
+  return pv / 100 + likes;
+}
+
+function _newHotScore(score, publishDate, updateDate) {
+  var publish = (1000 * 60 * 60 * 24) / ((Date.now() - publishDate) || 1);
+  Math.min(publish, 1);
+  var update = (1000 * 60 * 60) / ((Date.now() - updateDate) || 1);
+  Math.min(update, 1);
+  return score + 100 * publish + 100 * update;
+}
+
+function _scoreCompare(top1, top2) {
+  return (top2.score - top1.score);
+}
+
+function updateHotTopics() {
+  getAllTopics(function (err, topics) {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    if (!topics) {
+      return;
+    }
+
+    for (var i = 0; i < topics.length; i++) {
+      topics[i].score = _traditionalScore(topics[i].PV_count, topics[i].FVCount);
+    }
+
+    console.log("更新热门策展");
+    topList.classicTopics = topics.sort(_scoreCompare).slice(0, 240);
+
+    var authorMap = {};
+    for (var i = 0; i < topics.length; i++) {
+      topics[i].score = _newHotScore(topics[i].score, topics[i].publishDate, topics[i].update_at);
+      if (!authorMap[topics[i].author_id]) {
+        authorMap[topics[i].author_id] = { score: 0 };
+      }
+      authorMap[topics[i].author_id].score += topics[i].score;
+    }
+    topList.hotTopics = topics.sort(_scoreCompare).slice(0, 240);
+
+    var authorScore = [];
+    for (var id in authorMap) {
+      authorScore.push({ id: id, score: authorMap[id].score });
+    }
+    authorScore.sort(function (a, b) {
+      return (b.score - a.score);
+    });
+    var authorIds = [];
+    var hotAuthorScore = authorScore.slice(0, 17);
+    for (var i in hotAuthorScore) {
+      authorIds.push(hotAuthorScore[i].id);
+    }
+    User.getUserByIds(authorIds, function (err, authors) {
+      for (var i in authors) {
+        authors[i].score = authorMap[authors[i]._id].score;
+      }
+      authors.sort(function (a, b) {
+        return (b.score - a.score);
+      });
+      topList.hotAuthors = authors;
+    });
+  });
+}
+
+function updateCategoryTopics() {
+  for (var category in topList.CATEGORIES) {
+    (function (category) {
+      getCategoryTopics(category, function (err, topics) {
+        if (err) {
+          console.log(err);
+          return;
+        }
+        if (!topics) {
+          return;
+        }
+
+        for (var i = 0; i < topics.length; i++) {
+          topics[i].score = _traditionalScore(topics[i].PV_count, topics[i].FVCount);
+        }
+
+        var authorMap = {};
+        for (var i = 0; i < topics.length; i++) {
+          topics[i].score = _newHotScore(topics[i].score, topics[i].publishDate, topics[i].update_at);
+          if (!authorMap[topics[i].author_id]) {
+            authorMap[topics[i].author_id] = { score: 0 };
+          }
+          authorMap[topics[i].author_id].score += topics[i].score;
+        }
+        topList.categoryTopics[category] = topics.sort(_scoreCompare).slice(0, 240);
+
+        var authorScore = [];
+        for (var id in authorMap) {
+          authorScore.push({ id: id, score: authorMap[id].score });
+        }
+        authorScore.sort(function (a, b) {
+          return (b.score - a.score);
+        });
+        var authorIds = [];
+        var hotAuthorScore = authorScore.slice(0, 17);
+        for (var i in hotAuthorScore) {
+          authorIds.push(hotAuthorScore[i].id);
+        }
+        User.getUserByIds(authorIds, function (err, authors) {
+          for (var i in authors) {
+            authors[i].score = authorMap[authors[i]._id].score;
+          }
+          authors.sort(function (a, b) {
+            return (b.score - a.score);
+          });
+          topList.categoryAuthors[category] = authors;
+        });
+      });
+    })(category);
+  }
+}
+
 exports.createTopic = createTopic;//增
 exports.getContents = getContents;//查
 exports.increaseItemCountBy = increaseItemCountBy;
@@ -226,3 +355,6 @@ exports.deleteTopic = deleteTopic;//删
 exports.getTopicById = getTopicById;//查
 exports.getTopicsByIdsSorted = getTopicsByIdsSorted;
 exports.getPublishedTopics = getPublishedTopics;
+
+exports.updateHotTopics = updateHotTopics;
+exports.updateCategoryTopics = updateCategoryTopics;

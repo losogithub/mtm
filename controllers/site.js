@@ -6,45 +6,49 @@
  * To change this template use File | Settings | File Templates.
  */
 
-var math = require('mathjs')();
+var Topic = require('../proxy/topic');
+var topList = Topic.topList;
 
-var topicsPerPage = 24;
-var topicsInIndex = 24;
-var newTopicsPerPage = 19;
+//var topicsPerPage = 24;
+//var topicsInIndex = 24;
+//var newTopicsPerPage = 19;
+var topicsPerPage = 12;
+var topicsInIndex = 12;
+var newTopicsPerPage = 10;
 
 function index(req, res) {
   res.render('index', {
     pageType: 'INDEX',
-    hot: global.recentHotTopicsData.slice(0, topicsInIndex),
-    realGood: global.realGoodTopicsData.slice(0, topicsInIndex),
-    newTopics: global.newTopics.slice(0, newTopicsPerPage),
-    authors: global.hotAuthors
+    hot: topList.hotTopics.slice(0, topicsInIndex),
+    realGood: topList.classicTopics.slice(0, topicsInIndex),
+    newTopics: topList.newTopics.slice(0, newTopicsPerPage),
+    authors: topList.hotAuthors
   });
 }
 
 function showHot(req, res) {
   var currentPage = parseInt(req.query.page) || 1;
 
-  var recentHotTopicsDataPage = global.recentHotTopicsData.slice((currentPage - 1) * topicsPerPage, currentPage * topicsPerPage);
+  var recentHotTopicsDataPage = topList.hotTopics.slice((currentPage - 1) * topicsPerPage, currentPage * topicsPerPage);
 
   //since I have already restricted recent hot topics to 700. so will never cross 50page.
-  var totalPages = math.ceil(global.recentHotTopicsData.length / topicsPerPage);
+  var totalPages = Math.ceil(topList.hotTopics.length / topicsPerPage);
 
   res.render('category', {
     pageType: '综合',
     topics: recentHotTopicsDataPage,
     totalPage: totalPages,
     currentPage: currentPage,
-    authors: global.hotAuthors
+    authors: topList.hotAuthors
   });
 }
 
 function showClassic(req, res) {
   var currentPage = parseInt(req.query.page) || 1;
 
-  var goodTopicsDataPage = global.realGoodTopicsData.slice((currentPage - 1) * topicsPerPage, currentPage * topicsPerPage);
+  var goodTopicsDataPage = topList.classicTopics.slice((currentPage - 1) * topicsPerPage, currentPage * topicsPerPage);
   //since I have already restricted recent hot topics to 700. so will never cross 50page.
-  var totalPages = math.ceil(global.realGoodTopicsData.length / topicsPerPage);
+  var totalPages = Math.ceil(topList.classicTopics.length / topicsPerPage);
 
   res.render('category', {
     pageType: 'CLASSIC',
@@ -57,8 +61,8 @@ function showClassic(req, res) {
 function showNew(req, res) {
   var currentPage = parseInt(req.query.page) || 1;
 
-  var newTopicsPage = global.newTopics.slice((currentPage - 1) * topicsPerPage, currentPage * topicsPerPage);
-  var totalPages = math.ceil(global.newTopics.length / topicsPerPage);
+  var newTopicsPage = topList.newTopics.slice((currentPage - 1) * topicsPerPage, currentPage * topicsPerPage);
+  var totalPages = Math.ceil(topList.newTopics.length / topicsPerPage);
 
   res.render('category', {
     pageType: '最新',
@@ -91,9 +95,9 @@ function showUnclassified(req, res) {
 function _showCategory(req, res, catogory) {
   var currentPage = parseInt(req.query.page) || 1;
 
-  var categoryTopicsPage = global.categoryTopics[catogory].slice((currentPage - 1) * topicsPerPage, currentPage * topicsPerPage);
-  var totalPages = math.ceil(global.categoryTopics[catogory].length / topicsPerPage);
-  var authors = global.categoryAuthors[catogory];
+  var categoryTopicsPage = topList.categoryTopics[catogory].slice((currentPage - 1) * topicsPerPage, currentPage * topicsPerPage);
+  var totalPages = Math.ceil(topList.categoryTopics[catogory].length / topicsPerPage);
+  var authors = topList.categoryAuthors[catogory];
 
   res.render('category', {
     pageType: catogory,

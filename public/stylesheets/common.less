@@ -100,12 +100,25 @@ table {
   }
 }
 
+.navbar-nav {margin-top: 0; margin-bottom: 0;}
+.navbar-nav > li { float: none; }
+.navbar .nav ul .btn {
+  border-radius: 2px;
+  color: #ffffff;
+  display: block;
+  font-size: 14px;
+  padding: 6px 9px;
+  text-decoration: none;
+  line-height: 1.7222; text-align: left;
+}
+.navbar .nav ul .btn:hover {
+  background-color: #1abc9c;
+}
+
 .Baidu {
   transition: 0.25s; -webkit-transition: 0.25s;
   width: 130px !important;
 }
-
-.navbar-nav > li { float: none; }
 
 .Authors {
   &:hover a { -webkit-filter: blur(1px); opacity: 0.5; }
@@ -115,6 +128,22 @@ table {
     &:hover { -webkit-filter: blur(0) grayscale(0%); opacity: 1;}
   }
 }
+
+.Share { display: none; }
+.Tile:hover .Share { display: inline; }
+.Title {
+  background-color: rgba(0, 0, 0, 0.6);
+  filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=1, StartColorStr='#99000000', EndColorStr='#99000000');
+}
+.Cover:hover .Title {
+  background-color: rgba(0, 0, 0, 1);
+  filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=1, StartColorStr='#ff000000', EndColorStr='#ff000000');
+}
+
+.Tile-Inner { opacity: 0; -webkit-transition: 0.25s; transition: 0.25s;
+  filter: progid:DXImageTransform.Microsoft.Alpha(opacity=0);}
+.Tile-Sub:hover .Tile-Inner { opacity: 0.9;
+  filter: progid:DXImageTransform.Microsoft.Alpha(opacity=90);}
 
 /*页脚*/
 .Footer {
