@@ -1,27 +1,10 @@
 <!--内容-->
 <div style="background-color: #ecf0f1;">
   <div class="container">
-    <% if (locals.isAdmin) { %>
-    <div class="row ptl">
-      <div class="col-xs-12">
-        <div class="btn-group">
-          <a class="btn btn-primary" href="/">综合</a>
-          <a class="btn btn-primary <%- topic.category == '娱乐' ? 'active' : '' %>"
-             href="/entertainment">娱乐</a>
-          <a class="btn btn-primary <%- topic.category == '科技' ? 'active' : '' %>"
-             href="/tech">科技</a>
-          <a class="btn btn-primary <%- topic.category == '新闻' ? 'active' : '' %>"
-             href="/news">新闻</a>
-          <a class="btn btn-primary <%- topic.category == '时尚' ? 'active' : '' %>"
-             href="/fashion">时尚</a>
-          <a class="btn btn-primary <%- topic.category == '未分类' ? 'active' : '' %>"
-             href="/unclassified">未分类</a>
-          <a class="btn btn-primary"
-             href="/new">最新</a>
-        </div>
-      </div>
-    </div>
-    <% } %>
+
+    <% locals.pageType_pre = topic.category; %>
+    <% include ../_category_toolbar.html %>
+
     <div class="row pbl">
       <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-8 col-lg-7 mtl">
         <% if (locals.isAdmin) { %>
@@ -45,6 +28,11 @@
                       '科技',
                       '新闻',
                       '时尚',
+                      '生活',
+                      '幽默',
+                      '文化',
+                      '商业',
+                      '体育',
                       '未分类'
                     ];
                     $scope.saveCategory = function (category) {

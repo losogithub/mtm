@@ -88,6 +88,26 @@ function showFashion(req, res) {
   _showCategory(req, res, '时尚');
 }
 
+function showLife(req, res) {
+  _showCategory(req, res, '生活');
+}
+
+function showHumor(req, res) {
+  _showCategory(req, res, '幽默');
+}
+
+function showCulture(req, res) {
+  _showCategory(req, res, '文化');
+}
+
+function showBusiness(req, res) {
+  _showCategory(req, res, '商业');
+}
+
+function showSport(req, res) {
+  _showCategory(req, res, '体育');
+}
+
 function showUnclassified(req, res) {
   _showCategory(req, res, '未分类');
 }
@@ -116,4 +136,9 @@ exports.showEntertainment = showEntertainment;
 exports.showTech = showTech;
 exports.showNews = showNews;
 exports.showFashion = showFashion;
+exports.showLife = showLife;
+exports.showHumor = showHumor;
+exports.showCulture = showCulture;
+exports.showBusiness = showBusiness;
+exports.showSport = showSport;
 exports.showUnclassified = showUnclassified;

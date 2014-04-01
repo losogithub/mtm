@@ -1,27 +1,7 @@
 <div style="background-color: #ecf0f1;">
   <div class="container pbl">
-    <% if (locals.isAdmin) { %>
-    <div class="row ptl">
-      <div class="col-xs-12">
-        <div class="btn-group">
-          <a class="btn btn-primary <%- locals.pageType == '综合' ? 'active' : '' %>"
-             href="/hot">综合</a>
-          <a class="btn btn-primary <%- locals.pageType == '娱乐' ? 'active' : '' %>"
-             href="/entertainment">娱乐</a>
-          <a class="btn btn-primary <%- locals.pageType == '科技' ? 'active' : '' %>"
-             href="/tech">科技</a>
-          <a class="btn btn-primary <%- locals.pageType == '新闻' ? 'active' : '' %>"
-             href="/news">新闻</a>
-          <a class="btn btn-primary <%- locals.pageType == '时尚' ? 'active' : '' %>"
-             href="/fashion">时尚</a>
-          <a class="btn btn-primary <%- locals.pageType == '未分类' ? 'active' : '' %>"
-             href="/unclassified">未分类</a>
-          <a class="btn btn-primary <%- locals.pageType == '最新' ? 'active' : '' %>"
-             href="/new">最新</a>
-        </div>
-      </div>
-    </div>
-    <% } %>
+
+    <% include _category_toolbar.html %>
 
     <% if (locals.pageType != '最新') { %>
     <div class="row mtl">

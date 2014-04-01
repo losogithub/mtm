@@ -27,8 +27,12 @@ module.exports = function (app) {
   app.get('/tech', site.showTech);
   app.get('/news', site.showNews);
   app.get('/fashion', site.showFashion);
+  app.get('/life', site.showLife);
+  app.get('/humor', site.showHumor);
+  app.get('/culture', site.showCulture);
+  app.get('/business', site.showBusiness);
+  app.get('/sport', site.showSport);
   app.get('/unclassified', site.showUnclassified);
-  app.get('/new', site.showNew);
 
   //console.log("router start");
   app.post('/loginDialogCheck', auth.loginDialog, auth.loginDialogCheck);
