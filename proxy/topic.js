@@ -141,7 +141,6 @@ function saveCategory(topic, category, callback) {
   };
 
   topic.category = category;
-  topic.update_at = Date.now();
   topic.save(function (err) {
     if (err) {
       return callback(err);
