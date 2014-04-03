@@ -257,8 +257,8 @@ table {
   height: 60px;
   width: 60px;
   -webkit-filter: grayscale(75%);
-  -webkit-transition: all 0.25s;
-  transition: all 0.25s;
+  -webkit-transition: 0.25s;
+  transition: 0.25s;
 }
 .Authors a:hover {
   -webkit-filter: blur(0) grayscale(0%);
@@ -275,6 +275,18 @@ table {
   filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=1, StartColorStr='#99000000', EndColorStr='#99000000');
 }
 .Tile .Cover:hover .Title {
+  background-color: #000000;
+  filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=1, StartColorStr='#ff000000', EndColorStr='#ff000000');
+}
+.TopicHead .Title {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=1, StartColorStr='#99000000', EndColorStr='#99000000');
+}
+.TopicHead .Title:hover {
   background-color: #000000;
   filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=1, StartColorStr='#ff000000', EndColorStr='#ff000000');
 }

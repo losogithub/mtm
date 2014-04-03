@@ -35,6 +35,7 @@ function showHot(req, res) {
   var totalPages = Math.ceil(topList.hotTopics.length / topicsPerPage);
 
   res.render('category', {
+    title: '综合 - 石子儿',
     pageType: '综合',
     topics: recentHotTopicsDataPage,
     totalPage: totalPages,
@@ -65,6 +66,7 @@ function showNew(req, res) {
   var totalPages = Math.ceil(topList.newTopics.length / topicsPerPage);
 
   res.render('category', {
+    title: '最新 - 石子儿',
     pageType: '最新',
     topics: newTopicsPage,
     totalPage: totalPages,
@@ -120,6 +122,7 @@ function _showCategory(req, res, catogory) {
   var authors = topList.categoryAuthors[catogory];
 
   res.render('category', {
+    title: catogory + ' - 石子儿',
     pageType: catogory,
     topics: categoryTopicsPage,
     totalPage: totalPages,

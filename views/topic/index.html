@@ -62,14 +62,14 @@
         </div>
         <% } %>
         <div style="background-color: white; border-radius: 6px;">
-          <div style="position: relative; min-height: 140px; border-radius: 6px 6px 0 0;">
+          <div class="TopicHead" style="position: relative; min-height: 140px; border-radius: 6px 6px 0 0;">
             <a class="fancybox" rel="gallery" href="<%= topic.coverUrl %>" title="<%= topic.title %>">
               <img onerror="$(this).hide();" src="<%= topic.coverUrl %>"
                    style="width: 100%; border-radius: 6px 6px 0 0; <%= topic.coverUrl ? '' : 'display: none;' %>">
             </a>
-            <h5 class="mbn pal hidden-xs" style="position: absolute; bottom: 0; left: 0; right: 0; background-color: rgba(0, 0, 0, 0.6);">
-              <a class="text-inverse" href="/topic/<%= topic._id %>"><%= topic.title %></a>
-            </h5>
+            <h1 class="Title mbn hidden-xs" >
+              <a class="text-inverse pal h5" style="display: block;" href="/topic/<%= topic._id %>"><%= topic.title %></a>
+            </h1>
           </div>
 
           <div class="phl">

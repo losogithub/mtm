@@ -124,7 +124,8 @@ table {
   &:hover a { -webkit-filter: blur(1px); opacity: 0.5; }
   a {
     display: inline-block; height: 60px; width: 60px;
-    -webkit-filter: grayscale(75%); -webkit-transition: all 0.25s; transition: all 0.25s;
+    -webkit-filter: grayscale(75%);
+    -webkit-transition: 0.25s; transition: 0.25s;
     &:hover { -webkit-filter: blur(0) grayscale(0%); opacity: 1;}
   }
 }
@@ -139,6 +140,16 @@ table {
     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=1, StartColorStr='#99000000', EndColorStr='#99000000');
   }
   .Cover:hover .Title {
+    background-color: rgba(0, 0, 0, 1);
+    filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=1, StartColorStr='#ff000000', EndColorStr='#ff000000');
+  }
+}
+
+.TopicHead .Title {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=1, StartColorStr='#99000000', EndColorStr='#99000000');
+  &:hover {
     background-color: rgba(0, 0, 0, 1);
     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=1, StartColorStr='#ff000000', EndColorStr='#ff000000');
   }
