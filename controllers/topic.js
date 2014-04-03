@@ -396,6 +396,7 @@ function showIndex(req, res, next) {
   var userId = req.session.userId;
   var topicId = req.params.topicId;
 
+  //ep的error没处理
   var ep = EventProxy.create('topic', 'items', 'author', function (topic, items, author) {
     var updateDate = topic.update_at.getFullYear() + '年'
       + (topic.update_at.getMonth() + 1) + '月'

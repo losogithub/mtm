@@ -73,7 +73,7 @@
           </div>
 
           <div class="phl">
-            <h5 class="visible-xs"><a href="/topic/<%= topic._id %>"><%= topic.title %></a></h5>
+            <h1 class="h5 mtl visible-xs"><a href="/topic/<%= topic._id %>"><%= topic.title %></a></h1>
 
             <div class="clearfix mtm mbm">
               <div class="pull-left">
@@ -144,11 +144,11 @@
                    src="<%= authorInfo.imgUrl || '/images/no_img/user_80x80.png' %>">
             </a>
 
-            <h6 style="margin-top: 0;">
+            <h1 class="h6 mvn">
               <a href="/u/<%= topic.author %>" title="<%= topic.author %>">
                 <%= topic.author %>
               </a>
-            </h6>
+            </h1>
             <% if (authorInfo.personalSite) { %>
             <% var site = authorInfo.personalSite || ''; %>
             <p class="mtm">

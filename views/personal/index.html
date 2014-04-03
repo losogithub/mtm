@@ -27,7 +27,7 @@
             </li>
           </ul>
 
-          <h6><%= (locals.personalType == 'PERSONAL' ? locals.authorName : locals.username) || '' %></h6>
+          <h1 class="h6"><%= locals.personalType == 'PERSONAL' ? locals.authorName : locals.username %></h1>
 
           <% if (locals.personalType != 'PERSONAL') { %>
           <div class="mtm">

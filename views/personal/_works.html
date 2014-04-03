@@ -62,7 +62,7 @@
   <% var topic = topics[i] %>
   <tr class="<%= !topic.publishDate && 'warning' || '' %>">
     <td width="70%">
-      <h6>
+      <h2 class="h6">
         <a target="<%= topic.publishDate ? '_blank' : '' %>" title="<%= topic.title || '未命名' %>"
            class="<%= topic.title ? '' : 'text-muted' %>"
         <% if (topic.publishDate) { %>
@@ -74,7 +74,7 @@
         <% if (!topic.publishDate) { %>
         <span class="text-muted">（草稿）</span>
         <% } %>
-      </h6>
+      </h2>
 
       <p class="text-muted"><%= mt == 'u' ? ('更新：' + topic.update_date) : ('创建：' + topic.create_date)%></p>
     </td>
