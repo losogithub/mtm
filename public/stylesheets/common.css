@@ -240,6 +240,9 @@ table {
 .navbar-nav.hidden-xs .btn:hover {
   background-color: #1abc9c;
 }
+.navbar-toggle {
+  margin-top: 19px;
+}
 .navbar-nav.visible-xs {
   width: 100%;
 }
@@ -250,9 +253,6 @@ table {
 .navbar-nav.visible-xs li a {
   display: block;
   width: 100%;
-}
-.navbar-toggle {
-  margin-top: 19px;
 }
 .navbar-nav.visible-xs .btn,
 .navbar-nav.visible-xs a {

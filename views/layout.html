@@ -113,46 +113,48 @@
       <li><a href="/topic/create">开始策展</a></li>
       <% } %>
     </ul>
+  </div>
+  <div class="container">
     <div class="row">
-    <div class="collapse" id="bs-example-navbar-collapse-1">
-      <ul class="navbar-nav man pan pbl visible-xs">
-        <li style="padding: 10px 15px;">
-          <form class="Baidu navbar-left visible-xs" style="width: 100% !important;"
-                ng-non-bindable name="f1" action="http://www.baidu.com/baidu" target="_blank">
-            <div class="form-group mbn">
-              <input class="form-control" id="_word2" name=word maxlength="100"
-                     placeholder="互联网策展">
-              <label class="input-icon fa fa-search" for="_word2"></label>
-            </div>
-            <input name=ct type=hidden value="2097152">
-            <input name=si type=hidden value="shizier.com">
-          </form>
-        </li>
-        <% if (!locals.username) { %>
-        <li><a href="/signup">注册</a></li>
-        <li><a href="/login">登录</a></li>
-        <li><a href="/topic/create">开始策展</a></li>
-        <% } else { %>
-        <li>
-          <a href="/works" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
-            <img class="img-circle" width="20" height="20"
-                 src="<%= locals.imageUrl || '/images/no_img/user_80x80.png' %>"
-                 onerror="shizier.errorImage(this,'user_80x80');">
-            <%= username %>
-          </a>
-        </li>
-        <li><a href="/topic/create">开始策展</a></li>
-        <li>
-          <form action="/logout" method="post">
-            <button class="btn btn-link btn-block" type="submit">
-              <i class="fa fa-sign-out"></i>
-              登出
-            </button>
-          </form>
-        </li>
-        <% } %>
-      </ul>
-    </div>
+      <div class="collapse" id="bs-example-navbar-collapse-1">
+        <ul class="navbar-nav man pan pbl visible-xs">
+          <li style="padding: 10px 15px;">
+            <form class="Baidu navbar-left visible-xs" style="width: 100% !important;"
+                  ng-non-bindable name="f1" action="http://www.baidu.com/baidu" target="_blank">
+              <div class="form-group mbn">
+                <input class="form-control" id="_word2" name=word maxlength="100"
+                       placeholder="互联网策展">
+                <label class="input-icon fa fa-search" for="_word2"></label>
+              </div>
+              <input name=ct type=hidden value="2097152">
+              <input name=si type=hidden value="shizier.com">
+            </form>
+          </li>
+          <% if (!locals.username) { %>
+          <li><a href="/signup">注册</a></li>
+          <li><a href="/login">登录</a></li>
+          <li><a href="/topic/create">开始策展</a></li>
+          <% } else { %>
+          <li>
+            <a href="/works" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
+              <img class="img-circle" width="20" height="20"
+                   src="<%= locals.imageUrl || '/images/no_img/user_80x80.png' %>"
+                   onerror="shizier.errorImage(this,'user_80x80');">
+              <%= username %>
+            </a>
+          </li>
+          <li><a href="/topic/create">开始策展</a></li>
+          <li>
+            <form action="/logout" method="post">
+              <button class="btn btn-link btn-block" type="submit">
+                <i class="fa fa-sign-out"></i>
+                登出
+              </button>
+            </form>
+          </li>
+          <% } %>
+        </ul>
+      </div>
     </div>
   </div>
 </header>
