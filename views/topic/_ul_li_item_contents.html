@@ -12,7 +12,7 @@
     escape(item.snippet).replace(/\n/g, "<br>") : '' %></div>
   <div class="Thumb mts" style="display: <%= (item.type != 'ALL') && !item.src ? 'none' : 'block' %>;">
     <a class="fancybox" rel="gallery" href='<%= item.src || "" %>' title="<%= item.title || '' %>">
-      <img src="<%= item.src || '' %>">
+      <img src="<%= item.src || '' %>" alt="<%= item.title || '' %>">
     </a>
   </div>
   <div class="Description mts small" style="display: <%= (item.type != 'ALL') && !item.description ? 'none' : 'block' %>;"><%- item.description ?
@@ -24,7 +24,8 @@
   <div class="Image text-center">
     <a class="IMAGE_LINK fancybox" rel="gallery" href='<%= item.url || "" %>'
        title="<%= (item.title || '') + (item.title && item.description ? ' -- ' : '') + (item.description || '') %>">
-      <img onerror="shizier.errorImage(this,'default_120x120');" src='<%= item.url || "" %>'>
+      <img onerror="shizier.errorImage(this,'default_120x120');"
+           src="<%= item.url || '' %>" alt="<%= item.title || '' %>">
     </a>
   </div>
 
@@ -75,7 +76,9 @@
 
   <div class="clearfix">
     <a target="_blank"  class="Avatar AuthorUrl" href="<%= (item.user && 'http://weibo.com/' + item.user.profile_url) || '' %>">
-      <img class="img-circle" src="<%= item.user && item.user.profile_image_url || '' %>">
+      <img class="img-circle"
+           src="<%= item.user && item.user.profile_image_url || '' %>"
+           alt="<%= item.user && item.user.screen_name || '' %>">
     </a>
 
     <div style="overflow: hidden;">
@@ -90,11 +93,15 @@
   <div class="Pic clearfix" style="<%= item.pic_urls && item.pic_urls.length && 'display: block;' || '' %><%= item.pic_urls && item.pic_urls.length == 4 && 'width: 170px;' || '' %>">
     <% if (item.pic_urls) { %>
     <% if (item.pic_urls.length == 1 && item.pic_urls[0]) { %>
-    <a class="WeiboImage fancybox" rel="gallery" href="<%= item.pic_urls[0].thumbnail_pic.replace('/thumbnail/', '/large/') %>"><img src="<%= item.pic_urls[0].thumbnail_pic %>"></a>
+    <a class="WeiboImage fancybox" rel="gallery"
+       href="<%= item.pic_urls[0].thumbnail_pic.replace('/thumbnail/', '/large/') %>"><img
+      src="<%= item.pic_urls[0].thumbnail_pic %>"></a>
     <% } else { %>
     <% for (var i = 0; i < item.pic_urls.length; i++) { %>
     <% if (item.pic_urls[i]) { %>
-    <a class="WeiboImage fancybox" rel="gallery" href="<%= item.pic_urls[i].thumbnail_pic.replace('/thumbnail/', '/large/') %>"><img src="<%= item.pic_urls[i].thumbnail_pic.replace('/thumbnail/', '/square/') %>"></a>
+    <a class="WeiboImage fancybox" rel="gallery"
+       href="<%= item.pic_urls[i].thumbnail_pic.replace('/thumbnail/', '/large/') %>"><img
+      src="<%= item.pic_urls[i].thumbnail_pic.replace('/thumbnail/', '/square/') %>"></a>
     <% } %>
     <% } %>
     <% } %>
@@ -111,11 +118,15 @@
     <div class="Pic clearfix" style="<%= retweetedItem.pic_urls && retweetedItem.pic_urls.length && 'display: block;' || '' %><%= retweetedItem.pic_urls && retweetedItem.pic_urls.length == 4 && 'width: 170px;' || '' %>">
       <% if (retweetedItem.pic_urls) { %>
       <% if (retweetedItem.pic_urls.length == 1 && retweetedItem.pic_urls[0]) { %>
-      <a class="WeiboImage fancybox" rel="gallery" href="<%= retweetedItem.pic_urls[0].thumbnail_pic.replace('/thumbnail/', '/large/') %>"><img src="<%= retweetedItem.pic_urls[0].thumbnail_pic %>"></a>
+      <a class="WeiboImage fancybox" rel="gallery"
+         href="<%= retweetedItem.pic_urls[0].thumbnail_pic.replace('/thumbnail/', '/large/') %>"><img
+        src="<%= retweetedItem.pic_urls[0].thumbnail_pic %>"></a>
       <% } else { %>
       <% for (var i = 0; i < retweetedItem.pic_urls.length; i++) { %>
       <% if (retweetedItem.pic_urls[i]) { %>
-      <a class="WeiboImage fancybox" rel="gallery" href="<%= retweetedItem.pic_urls[i].thumbnail_pic.replace('/thumbnail/', '/large/') %>"><img src="<%= retweetedItem.pic_urls[i].thumbnail_pic.replace('/thumbnail/', '/square/') %>"></a>
+      <a class="WeiboImage fancybox" rel="gallery"
+         href="<%= retweetedItem.pic_urls[i].thumbnail_pic.replace('/thumbnail/', '/large/') %>"><img
+        src="<%= retweetedItem.pic_urls[i].thumbnail_pic.replace('/thumbnail/', '/square/') %>"></a>
       <% } %>
       <% } %>
       <% } %>

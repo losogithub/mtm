@@ -64,7 +64,7 @@
         <div style="background-color: white; border-radius: 6px;">
           <div class="TopicHead" style="position: relative; min-height: 140px; border-radius: 6px 6px 0 0;">
             <a class="fancybox" rel="gallery" href="<%= topic.coverUrl %>" title="<%= topic.title %>">
-              <img onerror="$(this).hide();" src="<%= topic.coverUrl %>"
+              <img onerror="$(this).hide();" src="<%= topic.coverUrl %>" alt="<%= topic.title %>"
                    style="width: 100%; border-radius: 6px 6px 0 0; <%= topic.coverUrl ? '' : 'display: none;' %>">
             </a>
             <h1 class="Title mbn hidden-xs" >
@@ -81,6 +81,7 @@
                   <span class="mrs" style="display: inline-block; width: 30px; height: 30px;">
                     <img width="30" height="30" class="img-circle"
                        src="<%= authorInfo.imgUrl || '/images/no_img/user_80x80.png' %>"
+                       alt="<%= topic.author %>"
                        onerror="shizier.errorImage(this,'user_80x80');">
                   </span><span><%= topic.author %></span>
                 </a>
@@ -141,7 +142,8 @@
                style="display: block; width: 80px; height: 80px;">
               <img class="img-circle" width="70" height="70" id="_thumb"
                    onerror="shizier.errorImage(this, 'image_95x95')"
-                   src="<%= authorInfo.imgUrl || '/images/no_img/user_80x80.png' %>">
+                   src="<%= authorInfo.imgUrl || '/images/no_img/user_80x80.png' %>"
+                   alt="<%= topic.author %>">
             </a>
 
             <h1 class="h6 mvn">
