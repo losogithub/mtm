@@ -50,17 +50,19 @@
 </head>
 <body class="<%= locals.pageType || '' %>">
 <% if (locals.pageType != 'SIGNUP' && locals.pageType != 'LOGIN' && locals.pageType != 'VERIFY') { %>
-<header class="navbar Header hidden-xs mbn">
+<header class="navbar navbar-default Header mbn">
   <div class="container">
     <ul class="nav navbar-nav" style="margin-left: -15px;">
       <li>
         <a class="Logo" href="/" title="互联网策展"><img src="/images/logo_full_160x64.png"></a>
       </li>
-      <li style="vertical-align: middle;">
-        <form class="Baidu" ng-non-bindable name="f1" action="http://www.baidu.com/baidu" target="_blank">
+      <li>
+        <form class="Baidu hidden-xs" ng-non-bindable name="f1" action="http://www.baidu.com/baidu" target="_blank">
+          <div class="form-group mbn">
             <input class="form-control flat" id="_word" name=word maxlength="100"
-              placeholder="互联网策展">
+                   placeholder="互联网策展">
             <label class="input-icon fa fa-search" for="_word"></label>
+          </div>
           <input name=ct type=hidden value="2097152">
           <input name=si type=hidden value="shizier.com">
         </form>
@@ -69,7 +71,15 @@
         <a>&nbsp;</a>
       </li>
     </ul>
-    <ul class="nav navbar-nav navbar-right">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <ul class="nav navbar-nav navbar-right hidden-xs">
       <% if (!locals.username) { %>
       <li><a href="/signup">注册</a></li>
       <li><a href="/login">登录</a></li>
@@ -91,12 +101,6 @@
             </a>
           </li>
           <li>
-            <a href="/help">
-              <i class="fa fa-question-circle"></i>
-              帮助
-            </a>
-          </li>
-          <li>
             <form action="/logout" method="post">
               <button class="btn btn-link btn-block" type="submit">
                 <i class="fa fa-sign-out"></i>
@@ -109,44 +113,85 @@
       <li><a href="/topic/create">开始策展</a></li>
       <% } %>
     </ul>
+    <div class="row">
+    <div class="collapse" id="bs-example-navbar-collapse-1">
+      <ul class="navbar-nav man pan pbl visible-xs">
+        <li style="padding: 10px 15px;">
+          <form class="Baidu navbar-left visible-xs" style="width: 100% !important;"
+                ng-non-bindable name="f1" action="http://www.baidu.com/baidu" target="_blank">
+            <div class="form-group mbn">
+              <input class="form-control" id="_word2" name=word maxlength="100"
+                     placeholder="互联网策展">
+              <label class="input-icon fa fa-search" for="_word2"></label>
+            </div>
+            <input name=ct type=hidden value="2097152">
+            <input name=si type=hidden value="shizier.com">
+          </form>
+        </li>
+        <% if (!locals.username) { %>
+        <li><a href="/signup">注册</a></li>
+        <li><a href="/login">登录</a></li>
+        <li><a href="/topic/create">开始策展</a></li>
+        <% } else { %>
+        <li>
+          <a href="/works" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
+            <img class="img-circle" width="20" height="20"
+                 src="<%= locals.imageUrl || '/images/no_img/user_80x80.png' %>"
+                 onerror="shizier.errorImage(this,'user_80x80');">
+            <%= username %>
+          </a>
+        </li>
+        <li><a href="/topic/create">开始策展</a></li>
+        <li>
+          <form action="/logout" method="post">
+            <button class="btn btn-link btn-block" type="submit">
+              <i class="fa fa-sign-out"></i>
+              登出
+            </button>
+          </form>
+        </li>
+        <% } %>
+      </ul>
+    </div>
+    </div>
   </div>
 </header>
-<header class="navbar Header visible-xs mbn">
-  <div class="container">
-    <ul class="nav navbar-nav">
-      <li>
-        <a class="Logo" href="/" title="互联网策展"><img src="/images/logo_full_160x64.png"></a>
-      </li>
-      <li><a href="##"><i class="fa fa-caret-down"></i> 菜单</a>
-        <ul style="z-index: 1002; width: 100px;">
-          <% if (!locals.username) { %>
-          <li><a href="/signup">注册</a></li>
-          <li><a href="/login">登录</a></li>
-          <li><a href="/topic/create">开始策展</a></li>
-          <% } else { %>
-          <li>
-            <a href="/works" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
-              <img class="img-circle" width="20" height="20"
-                   src="<%= locals.imageUrl || '/images/no_img/user_80x80.png' %>"
-                   onerror="shizier.errorImage(this,'user_80x80');">
-              <%= username %>
-            </a>
-          </li>
-          <li><a href="/topic/create">开始策展</a></li>
-          <li>
-            <form action="/logout" method="post">
-              <button class="btn btn-link btn-block" type="submit">
-                <i class="fa fa-sign-out"></i>
-                登出
-              </button>
-            </form>
-          </li>
-          <% } %>
-        </ul>
-      </li>
-    </ul>
-  </div>
-</header>
+<!--<header class="navbar Header visible-xs mbn">-->
+  <!--<div class="container">-->
+    <!--<ul class="nav navbar-nav">-->
+      <!--<li>-->
+        <!--<a class="Logo" href="/" title="互联网策展"><img src="/images/logo_full_160x64.png"></a>-->
+      <!--</li>-->
+      <!--<li><a href="##"><i class="fa fa-caret-down"></i> 菜单</a>-->
+        <!--<ul style="z-index: 1002; width: 100px;">-->
+          <!--<% if (!locals.username) { %>-->
+          <!--<li><a href="/signup">注册</a></li>-->
+          <!--<li><a href="/login">登录</a></li>-->
+          <!--<li><a href="/topic/create">开始策展</a></li>-->
+          <!--<% } else { %>-->
+          <!--<li>-->
+            <!--<a href="/works" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">-->
+              <!--<img class="img-circle" width="20" height="20"-->
+                   <!--src="<%= locals.imageUrl || '/images/no_img/user_80x80.png' %>"-->
+                   <!--onerror="shizier.errorImage(this,'user_80x80');">-->
+              <!--<%= username %>-->
+            <!--</a>-->
+          <!--</li>-->
+          <!--<li><a href="/topic/create">开始策展</a></li>-->
+          <!--<li>-->
+            <!--<form action="/logout" method="post">-->
+              <!--<button class="btn btn-link btn-block" type="submit">-->
+                <!--<i class="fa fa-sign-out"></i>-->
+                <!--登出-->
+              <!--</button>-->
+            <!--</form>-->
+          <!--</li>-->
+          <!--<% } %>-->
+        <!--</ul>-->
+      <!--</li>-->
+    <!--</ul>-->
+  <!--</div>-->
+<!--</header>-->
 <% } %>
 
 <div class="Contents">

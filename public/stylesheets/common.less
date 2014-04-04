@@ -103,9 +103,10 @@ table {
   }
 }
 
+.navbar { background-color: white; }
 .navbar-nav {margin-top: 0; margin-bottom: 0;}
 .navbar-nav > li { float: none; }
-.navbar .nav ul .btn {
+.navbar-nav.hidden-xs .btn {
   border-radius: 2px;
   color: #ffffff;
   display: block;
@@ -114,8 +115,29 @@ table {
   text-decoration: none;
   line-height: 1.7222; text-align: left;
 }
-.navbar .nav ul .btn:hover {
+.navbar-nav.hidden-xs .btn:hover {
   background-color: @color-primary;
+}
+.navbar-nav.visible-xs {
+  width: 100%;
+  li {
+    display: block; width: 100%;
+    a { display: block; width: 100%; }
+  }
+}
+
+.navbar-toggle { margin-top: 19px; }
+.navbar-nav.visible-xs {
+  .btn,a {
+    line-height: 28px;
+    font-weight: bold;
+    font-size: 15px;
+    padding: 10px 15px;
+    text-decoration: none;
+    text-align: left;
+    color: @color-default !important;
+    &:hover { color: @color-primary !important; }
+  }
 }
 
 .Baidu {

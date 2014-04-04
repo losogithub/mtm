@@ -217,6 +217,9 @@ table {
   text-align: center;
   margin-top: 109px;
 }
+.navbar {
+  background-color: white;
+}
 .navbar-nav {
   margin-top: 0;
   margin-bottom: 0;
@@ -224,7 +227,7 @@ table {
 .navbar-nav > li {
   float: none;
 }
-.navbar .nav ul .btn {
+.navbar-nav.hidden-xs .btn {
   border-radius: 2px;
   color: #ffffff;
   display: block;
@@ -234,8 +237,36 @@ table {
   line-height: 1.7222;
   text-align: left;
 }
-.navbar .nav ul .btn:hover {
+.navbar-nav.hidden-xs .btn:hover {
   background-color: #1abc9c;
+}
+.navbar-nav.visible-xs {
+  width: 100%;
+}
+.navbar-nav.visible-xs li {
+  display: block;
+  width: 100%;
+}
+.navbar-nav.visible-xs li a {
+  display: block;
+  width: 100%;
+}
+.navbar-toggle {
+  margin-top: 19px;
+}
+.navbar-nav.visible-xs .btn,
+.navbar-nav.visible-xs a {
+  line-height: 28px;
+  font-weight: bold;
+  font-size: 15px;
+  padding: 10px 15px;
+  text-decoration: none;
+  text-align: left;
+  color: #34495e !important;
+}
+.navbar-nav.visible-xs .btn:hover,
+.navbar-nav.visible-xs a:hover {
+  color: #1abc9c !important;
 }
 .Baidu {
   width: 130px !important;
