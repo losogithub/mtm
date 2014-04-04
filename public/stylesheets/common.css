@@ -179,24 +179,18 @@ table {
 }
 /*徽标*/
 .Logo {
-  padding: 10px 20px !important;
+  padding: 15px !important;
 }
 .Logo img {
   width: 100px;
   height: 40px;
 }
-.LOGIN .Logo img,
-.SIGNUP .Logo img,
-.VERIFY .Logo img {
-  width: 160px;
-  height: 64px;
-}
 .Logo:hover {
   opacity: 0.8;
 }
-.LOGIN .Logo,
-.SIGNUP .Logo,
-.VERIFY .Logo {
+.Logo-Circle {
+  padding: 10px 20px;
+  color: white;
   position: relative;
   display: block;
   border-radius: 50%;
@@ -205,23 +199,23 @@ table {
   height: 200px;
   margin: 40px auto;
 }
-.LOGIN .Logo img,
-.SIGNUP .Logo img,
-.VERIFY .Logo img {
+.Logo-Circle:hover {
+  color: #1abc9c;
+  opacity: 0.8;
+}
+.Logo-Circle:hover img {
+  margin-top: 58px;
+}
+.Logo-Circle img {
+  width: 160px;
+  height: 64px;
   position: absolute;
   margin-top: 25px;
-  transition: all 0.25s ease 0s;
+  transition: 0.25s;
 }
-.LOGIN .Logo p,
-.SIGNUP .Logo p,
-.VERIFY .Logo p {
+.Logo-Circle p {
   text-align: center;
   margin-top: 109px;
-}
-.LOGIN .Logo:hover img,
-.SIGNUP .Logo:hover img,
-.VERIFY .Logo:hover img {
-  margin-top: 58px;
 }
 .navbar-nav {
   margin-top: 0;
