@@ -422,9 +422,9 @@ function showIndex(req, res, next) {
     var authorData = {
       author: author.loginName,
       imgUrl: author.url,
-      //description: balinkify.linkify(escape(user.description), {target: " "}),
       description: helper.linkify(escape(author.description)),
-      personalSite: author.personalSite
+      personalSite: author.personalSite,
+      favourite: author.favourite
     };
 
     var liked = false; //default, not login user.
@@ -1636,107 +1636,81 @@ function getWeiboDetail(req, res, next) {
   });
 }
 
-function AddorRemoveLikes(req, res) {
+function favorite(req, res, next) {
   console.log("add or remove likes for topic");
   var topicId = req.body.topicId;
-  var toLike = req.body.toLike || "true";
-  console.log(topicId);
-  console.log(toLike);//string
+  var toLike = sanitize(req.body.toLike).toBoolean();
 
   //what need to do is.
   //1. add/remove likes in topic
   //2. add/remove topicId in likeList for the current user.
 
-  //get current viewer info according to userId
-  if (req.session && req.session.userId) {
-    User.getUserById(req.session.userId, function (err, user) {
+  User.getUserById(req.session.userId, function (err, user) {
+    if (err) {
+      console.log(err);
+      return next(err);
+    }
+    if (!user) {
+      console.log("cannot find user by id");
+      return next(new Error(400));
+    }
+    //found the user
+    if (toLike) {
+      //if does not in the array, push.
+      if (user.FVTopicList.indexOf(topicId) == -1) {
+        user.FVTopicList.push(topicId);
+      }
+      //otherwise do nothing.
+    } else {
+      //toLike "false"
+      var index = user.FVTopicList.indexOf(topicId);
+      if (index > -1) {
+        user.FVTopicList.splice(index, 1);
+      }
+    }
+
+    user.save(function (err) {
       if (err) {
-        console.log(err);
-        return;
+        console.log("user save err ");
+        return next(err);
       }
-      else if (!user) {
-        console.log("cannot find user by id");
-        return;
-      }
-      else {
-        //found the user
-        if (toLike == "true") {
-          //if does not in the array, push.
-          if (user.FVTopicList.indexOf(topicId) == -1) {
-            user.FVTopicList.push(topicId);
+
+      //update topic info
+      Topic.getTopicById(topicId, function (err, topic) {
+        if (err) {
+          console.log(err);
+          return next(err);
+        }
+        if (!topic) {
+          console.log("cannot find topic");
+          return next(new Error(400));
+        }
+        var userId = user._id;
+        if (toLike) {
+          if (topic.FVList.indexOf(userId) == -1) {
+            //not exist
+            topic.FVList.push(userId);
+            topic.FVCount += 1;
           }
-          //otherwise do nothing.
         } else {
-          //toLike "false"
-          var index = user.FVTopicList.indexOf(topicId);
+          //toLike == "false"
+          var index = topic.FVList.indexOf(userId);
           if (index > -1) {
-            user.FVTopicList.splice(index, 1);
+            topic.FVList.splice(index, 1);
+            topic.FVCount -= 1;
           }
         }
 
-        user.save(function (err) {
+        topic.save(function (err) {
           if (err) {
-            console.log("user save err ");
-            return;
+            console.log("topic save err");
+            return next(err);
           }
-        })
-
-        //update topic info
-        Topic.getTopicById(topicId, function (err, topic) {
-          if (err) {
-            console.log(err);
-            return;
-          }
-          else if (!topic) {
-            console.log("cannot find topic");
-            return;
-          }
-          else {
-            //found the topic according to id.
-            var userId = user._id;
-            console.log("----------------------")
-            console.log(typeof toLike);
-            if (toLike == "true") {
-              if (topic.FVList.indexOf(userId) == -1) {
-                //not exist
-                topic.FVList.push(userId);
-                topic.FVCount += 1;
-              }
-              //otherwise already found. do nothing
-            }
-            else {
-              //toLike == "false"
-              var index = topic.FVList.indexOf(userId);
-              if (index > -1) {
-                topic.FVList.splice(index, 1);
-                topic.FVCount -= 1;
-              }
-              //otherwise do nothing
-            }
-
-            topic.save(function (err) {
-              if (err) {
-                console.log("topic save err");
-              }
-            });
-            console.log("-------------------------------");
-            //console.log(user);
-            console.log("-------------------------------");
-            //console.log(topic);
-            //now successfully update info for both author and viewer.
-            //send information back
-            res.contentType('json');
-            //res.writeHead(200);
-            //if need login, then in auth.js, loginDialog : true,
-            //correct attribute is used for login Dialog success situation.
-            res.send({FVCount: topic.FVCount, correct: true, userName: user.loginName, toLike: toLike });
-
-          }
-        })
-      }
-    })
-  }
-
+          res.send({FVCount: topic.FVCount });
+        });
+      });
+    });
+  });
 }
 
 exports.createTopic = createTopic;
@@ -1755,5 +1729,5 @@ exports.publishTopic = publishTopic;
 exports.getLinkDetail = getLinkDetail;
 exports.getVideoDetail = getVideoDetail;
 exports.getWeiboDetail = getWeiboDetail;
-exports.AddorRemoveLikes = AddorRemoveLikes;
+exports.favorite = favorite;
 exports.sendChang = sendChang;

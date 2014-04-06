@@ -41,6 +41,28 @@
   }
 
   $(function ($) {
+    shizier.loginCheck = function () {
+      var username = document.getElementById('uName').value;
+      var password = document.getElementById('uPas').value;
+      var rememberMe = $('#idSaveCheck').is(":checked");
+      //primary check: i.e. non empty.
+      //either empty
+      if (!username || !password) {
+        $('.LoginDialog .ErrorHint').text('用户名和密码不能为空。');
+        return false;
+      }
+      //using an ajax send to server to check for login.
+      $.post('/login_dialog', {
+        userName: username,
+        password: password,
+        rememberMe: rememberMe
+      })
+        .done(function () {
+          location.reload();
+        });
+      return false;
+    };
+
     $(document).ajaxError(function (event, jqXHR) {
       if (jqXHR.status == 401) {
         var $model = $('#myModal');
@@ -81,59 +103,6 @@
     });
 
 
-    $('button[name="favorite"]').click(function () {
-      var $this = $(this);
-      var topicId = $this.data('favorite').topicId;
-      var authorName = $this.data('favorite').authorName;
-      var toLike = !$this.is('.ExSelected');
-      $.ajax({
-        type: 'POST',
-        url: topicId ? '/topic/favorite' : authorName ? '/u/favorite' : '',
-        xhrFields: { withCredentials: true },
-        data: {topicId: topicId, authorName: authorName, toLike: toLike}
-      })
-        .done(function (data) {
-          console.log('done');
-          if (toLike) {
-            $this.addClass('ExSelected');
-          } else {
-            $this.removeClass('ExSelected');
-          }
-          $('.mdFVCount01Num').text(data.favourite);
-          $this.find('.FVCount').text(data.FVCount);
-        });
-    });
-
-    shizier.loginCheck = function () {
-      var username = document.getElementById('uName').value;
-      var password = document.getElementById('uPas').value;
-      var rememberMe = $('#idSaveCheck').is(":checked");
-      //primary check: i.e. non empty.
-      //either empty
-      if (!username || !password) {
-        $('.LoginDialog .ErrorHint').text('用户名和密码不能为空。');
-        return false;
-      }
-      //: post topicId and toLike again
-      var $button = $('button[name="favorite"]');
-      var favorite = $button.data('favorite');
-      var topicId = !favorite ? null : favorite.topicId;
-      var authorName = !favorite ? null : favorite.authorName;
-      var toLike = !$button.is('.ExSelected');
-      //using an ajax send to server to check for login.
-      $.post(topicId ? '/topic/favorite' : authorName ? '/u/favorite' : '/loginDialogCheck', {
-        userName: username,
-        password: password,
-        rememberMe: rememberMe,
-        topicId: topicId,
-        authorName: authorName,
-        toLike: toLike
-      })
-        .done(function () {
-          location.reload();
-        });
-      return false;
-    };
   });
 
   var VIDEO_MAP = {

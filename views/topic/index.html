@@ -100,11 +100,33 @@
                 <a class="mls text-info mls" target="_blank"
                    href="/topic/<%= topic._id %>/share_chang" title="分享"><i
                   class="fa fa-share"></i></a>
-                <button name="favorite" class="<%- locals.liked ? 'ExSelected' : '' %> btn btn-default mls"
+                <button name="favoriteTopic" class="<%- locals.liked ? 'ExSelected' : '' %> btn btn-default mls"
                         style="padding: 0 5px;vertical-align: baseline;font-size: 18px;"
                         data-favorite='{"topicId":"<%= topic._id %>"}' title="喜欢">
                   <i class="fa fa-star StarIcon"></i> <span class="FVCount"><%= topic.FVCount %></span>
                 </button>
+                <script>
+                  $(function () {
+                    $('button[name="favoriteTopic"]').click(function () {
+                      var $this = $(this);
+                      var topicId = $this.data('favorite').topicId;
+                      var toLike = !$this.is('.ExSelected');
+                      $.post('/topic/favorite', {
+                        topicId: topicId,
+                        toLike: toLike
+                      })
+                        .done(function (data) {
+                          console.log('done');
+                          if (toLike) {
+                            $this.addClass('ExSelected');
+                          } else {
+                            $this.removeClass('ExSelected');
+                          }
+                          $this.find('.FVCount').text(data.FVCount);
+                        });
+                    });
+                  });
+                </script>
                 <span class="text-muted mls"><i class="fa fa-eye"></i> <%= topic.PVCount %></span>
               </div>
             </div>
@@ -166,6 +188,16 @@
           <% if (authorInfo.description) { %>
           <div class="mtm"><%- authorInfo.description || '' %></div>
           <% } %>
+          <div class="mtm">
+            <button name="favoriteUser" class="<%= locals.likedBefore ? 'ExSelected' : '' %> btn btn-default"
+                    data-favorite='{"authorName":"<%= authorInfo.author %>"}' title="喜欢">
+              <i class="fa fa-star StarIcon"></i>
+              <span class="FVCount"><%= authorInfo.favourite || '0' %></span>
+            </button>
+
+            <% include ../_favoriteUser.html %>
+
+          </div>
         </div>
       </div>
       <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-8 col-lg-7 mtl">

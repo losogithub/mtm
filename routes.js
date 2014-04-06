@@ -35,8 +35,8 @@ module.exports = function (app) {
   app.get('/unclassified', site.showUnclassified);
 
   //console.log("router start");
-  app.post('/loginDialogCheck', auth.loginDialog, auth.loginDialogCheck);
-  app.post('/topic/favorite', auth.loginDialog, topic.AddorRemoveLikes);
+  app.post('/login_dialog', auth.loginDialogCheck);
+  app.post('/topic/favorite', auth.userRequired, topic.favorite);
 
   //策展
   app.get('/topic/create', auth.loginRequired, topic.createTopic);
@@ -90,10 +90,9 @@ module.exports = function (app) {
   //todo
   //app.get('/notifications', personal)
 
-
   //show personal page
   app.get('/u/:authorName', personal.showPersonal);
-  app.post('/u/favorite', auth.loginDialog, personal.AddorRemoveLikes);
+  app.post('/u/favorite', auth.userRequired, personal.favorite);
 
   /*
    app.get('/active_account', sign.active_account);

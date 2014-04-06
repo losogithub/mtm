@@ -1,0 +1,22 @@
+<script>
+  $(function () {
+    $('button[name="favoriteUser"]').click(function () {
+      var $this = $(this);
+      var authorName = $this.data('favorite').authorName;
+      var toLike = !$this.is('.ExSelected');
+      $.post('/u/favorite', {
+        authorName: authorName,
+        toLike: toLike
+      })
+        .done(function (data) {
+          console.log('done');
+          if (toLike) {
+            $this.addClass('ExSelected');
+          } else {
+            $this.removeClass('ExSelected');
+          }
+          $this.find('.FVCount').text(data.favourite);
+        });
+    });
+  });
+</script>

@@ -44,11 +44,14 @@
           </div>
           <% } %>
           <div class="mtm">
-            <button name="favorite" class="<%= locals.likedBefore ? 'ExSelected' : '' %> btn btn-default"
+            <button name="favoriteUser" class="<%= locals.likedBefore ? 'ExSelected' : '' %> btn btn-default"
                     data-favorite='{"authorName":"<%= authorName %>"}' title="喜欢">
               <i class="fa fa-star StarIcon"></i>
-              <span class="mdFVCount01Num"><%= locals.favourite || '0' %></span>
+              <span class="FVCount"><%= locals.favourite || '0' %></span>
             </button>
+
+            <% include ../_favoriteUser.html %>
+
           </div>
           <% } %>
 
