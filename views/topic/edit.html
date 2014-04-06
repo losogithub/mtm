@@ -48,6 +48,11 @@
                       '科技',
                       '新闻',
                       '时尚',
+                      '生活',
+                      '幽默',
+                      '文化',
+                      '商业',
+                      '体育',
                       '未分类'
                     ];
                     $scope.saveCategory = function (category) {
@@ -55,7 +60,6 @@
                       if (xhr) {
                         xhr.abort();
                       }
-                      console.log(location);
                       $scope.xhr = $.ajax('/topic/category', {
                         type: 'PUT',
                         data: {
