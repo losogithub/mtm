@@ -44,8 +44,10 @@
          href="/new">最新</a>
 
       <div class="btn-group">
-        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-          分类
+        <button type="button" data-toggle="dropdown"
+                class="btn btn-primary dropdown-toggle
+                <%- (pageType != 'INDEX') && (pageType != '综合') && (pageType != '最新') ? 'active' : '' %>">
+          <%- (pageType != 'INDEX') && (pageType != '综合') && (pageType != '最新') ? pageType : '分类' %>
           <span class="caret"></span>
         </button>
         <span class="dropdown-arrow dropdown-arrow-inverse"></span>

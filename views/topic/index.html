@@ -169,7 +169,7 @@
             </a>
 
             <h1 class="h6 mvn">
-              <a href="/u/<%= topic.author %>" title="<%= topic.author %>">
+              <a class="text-inverse" href="/u/<%= topic.author %>" title="<%= topic.author %>">
                 <%= topic.author %>
               </a>
             </h1>
@@ -188,7 +188,7 @@
           <% if (authorInfo.description) { %>
           <div class="mtm"><%- authorInfo.description || '' %></div>
           <% } %>
-          <div class="mtm">
+          <div class="mtl">
             <button name="favoriteUser" class="<%= locals.likedBefore ? 'ExSelected' : '' %> btn btn-default"
                     data-favorite='{"authorName":"<%= authorInfo.author %>"}' title="喜欢">
               <i class="fa fa-star StarIcon"></i>
