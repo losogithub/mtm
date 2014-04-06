@@ -281,6 +281,7 @@ table {
 }
 .Authors a {
   display: inline-block;
+  vertical-align: bottom;
   width: 60px;
   -webkit-filter: grayscale(75%);
   -webkit-transition: 0.25s;
