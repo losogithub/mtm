@@ -179,7 +179,7 @@ table {
 }
 /*徽标*/
 .Logo {
-  padding: 15px 15px !important;
+  padding: 16px 15px !important;
 }
 .Logo img {
   width: 100px;
@@ -219,6 +219,9 @@ table {
 }
 .navbar {
   background-color: white;
+}
+.navbar .nav > li {
+  display: block;
 }
 .navbar-nav {
   margin-top: 0;
