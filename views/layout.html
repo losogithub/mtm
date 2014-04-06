@@ -56,7 +56,7 @@
       <li>
         <a class="Logo" href="/" title="互联网策展"><img src="/images/logo_full_160x64.png"></a>
       </li>
-      <li>
+      <li style="padding-top: 15px;">
         <form class="Baidu hidden-xs" ng-non-bindable name="f1" action="http://www.baidu.com/baidu" target="_blank">
           <div class="form-group mbn">
             <input class="form-control flat" id="_word" name=word maxlength="100"
@@ -66,9 +66,6 @@
           <input name=ct type=hidden value="2097152">
           <input name=si type=hidden value="shizier.com">
         </form>
-      </li>
-      <li>
-        <a>&nbsp;</a>
       </li>
     </ul>
     <div class="navbar-header">
@@ -158,42 +155,6 @@
     </div>
   </div>
 </header>
-<!--<header class="navbar Header visible-xs mbn">-->
-  <!--<div class="container">-->
-    <!--<ul class="nav navbar-nav">-->
-      <!--<li>-->
-        <!--<a class="Logo" href="/" title="互联网策展"><img src="/images/logo_full_160x64.png"></a>-->
-      <!--</li>-->
-      <!--<li><a href="##"><i class="fa fa-caret-down"></i> 菜单</a>-->
-        <!--<ul style="z-index: 1002; width: 100px;">-->
-          <!--<% if (!locals.username) { %>-->
-          <!--<li><a href="/signup">注册</a></li>-->
-          <!--<li><a href="/login">登录</a></li>-->
-          <!--<li><a href="/topic/create">开始策展</a></li>-->
-          <!--<% } else { %>-->
-          <!--<li>-->
-            <!--<a href="/works" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">-->
-              <!--<img class="img-circle" width="20" height="20"-->
-                   <!--src="<%= locals.imageUrl || '/images/no_img/user_80x80.png' %>"-->
-                   <!--onerror="shizier.errorImage(this,'user_80x80');">-->
-              <!--<%= username %>-->
-            <!--</a>-->
-          <!--</li>-->
-          <!--<li><a href="/topic/create">开始策展</a></li>-->
-          <!--<li>-->
-            <!--<form action="/logout" method="post">-->
-              <!--<button class="btn btn-link btn-block" type="submit">-->
-                <!--<i class="fa fa-sign-out"></i>-->
-                <!--登出-->
-              <!--</button>-->
-            <!--</form>-->
-          <!--</li>-->
-          <!--<% } %>-->
-        <!--</ul>-->
-      <!--</li>-->
-    <!--</ul>-->
-  <!--</div>-->
-<!--</header>-->
 <% } %>
 
 <div class="Contents">
