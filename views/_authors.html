@@ -1,0 +1,14 @@
+<div class="col-xs-12 Authors">
+  <% for (i in authors) { %>
+  <% var author = authors[i]; %>
+  <a class="mrs text-muted" target="_blank"
+     href="/u/<%= author.loginName %>">
+    <div class="img-circle-border">
+      <img class="img-circle"
+           onerror="shizier.errorImage(this, 'image_95x95')"
+           src="<%= author.url || '/images/no_img/user_80x80.png' %>">
+    </div>
+    <small class="Authors_Name text-center" title="<%= author.loginName %>"><%= author.loginName %></small>
+  </a>
+  <% } %>
+</div>

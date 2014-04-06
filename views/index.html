@@ -81,18 +81,9 @@
         </div>
       </div>
       <div class="row mts">
-        <div class="col-xs-12 Authors" style="max-height: 60px; overflow: hidden;">
-          <% for (i in authors) { %>
-          <% var author = authors[i]; %>
-          <a class="mrs img-circle-border" title="<%= author.loginName %>" target="_blank"
-             href="/u/<%= author.loginName %>"
-             title="<%= author.loginName %>">
-            <img class="img-circle" width="50" height="50" id="_thumb"
-                 onerror="shizier.errorImage(this, 'image_95x95')"
-                 src="<%= author.url || '/images/no_img/user_80x80.png' %>">
-          </a>
-          <% } %>
-        </div>
+
+        <% include _authors.html %>
+
       </div>
       <div class="row mtl">
         <h1 class="col-xs-12 h6 mvn">
