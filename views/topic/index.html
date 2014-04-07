@@ -8,57 +8,7 @@
     <div class="row pbl">
       <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-8 col-lg-7 mtl">
         <% if (locals.isAdmin) { %>
-        <div class="row">
-          <div class="col-sm-3 mbl">
-            <div class="Category dropdown" ng-controller="CategoryCtrl">
-              <button class="btn btn-primary dropdown-toggle btn-block" data-toggle="dropdown"
-                      type="button"><span class="Current">{{current}}</span><span class="caret"></span></button>
-              <span class="dropdown-arrow dropdown-arrow-inverse"></span>
-              <ul class="dropdown-menu dropdown-inverse">
-                <li ng-repeat="item in items">
-                  <a ng-class="{ highlighted: current == item }" href="##"
-                    ng-click="saveCategory(item)">{{item}}</a>
-                </li>
-
-                <script>
-                  function CategoryCtrl($scope, $timeout) {
-                    $scope.current = '<%= topic.category %>';
-                    $scope.items = [
-                      '娱乐',
-                      '科技',
-                      '新闻',
-                      '时尚',
-                      '生活',
-                      '幽默',
-                      '文化',
-                      '商业',
-                      '体育',
-                      '未分类'
-                    ];
-                    $scope.saveCategory = function (category) {
-                      var xhr = $scope.xhr;
-                      if (xhr) {
-                        xhr.abort();
-                      }
-                      $scope.xhr = $.ajax('/topic/category', {
-                        type: 'PUT',
-                        data: {
-                          topicId: '<%= topic._id %>',
-                          category: category
-                        }
-                      })
-                        .done(function () {
-                          $timeout(function() {
-                            $scope.current = category;
-                          });
-                        });
-                    };
-                  }
-                </script>
-              </ul>
-            </div>
-          </div>
-        </div>
+        <% include _category_selector.html %>
         <% } %>
         <div style="background-color: white; border-radius: 6px;">
           <div class="TopicHead" style="position: relative; min-height: 140px; border-radius: 6px 6px 0 0;">
