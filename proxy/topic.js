@@ -215,6 +215,10 @@ function addTag(topic, tagText, callback) {
   callback = callback || function () {
   };
 
+  if (topic.tags.length == 5) {
+    return callback(new Error(400));
+  }
+
   for (var i = 0; i < topic.tags.length; i++) {
     if (tagText == topic.tags[i]) {
       return callback(new Error(400));

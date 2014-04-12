@@ -399,7 +399,8 @@
           <% } %>
           <tags-input ng-model="tags" ng-controller="TagsInputCtrl"
                       ng-init='tags = <%- JSON.stringify(tags) %>;'
-                      min-length="1" max-length="10" min-tags="1" placeholder="标签" add-on-space="true"
+                      min-length="1" max-length="10" min-tags="1" max-tags="5"
+                      placeholder="标签" add-on-space="true"
                       on-tag-added="onAdded($tag)" on-tag-removed="onRemoved($tag)"></tags-input>
         </div>
       </div>
