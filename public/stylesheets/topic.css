@@ -91,19 +91,11 @@
   color: #1abc9c;
 }
 .AddUtil {
-  background-color: rgba(22, 160, 133, 0.8);
-  border-radius: 6px;
   display: none;
-  line-height: 1;
   position: absolute;
   bottom: -18px;
-  left: 15px;
+  left: 20px;
   z-index: 1000;
-}
-.AddUtil .btn {
-  vertical-align: baseline;
-  padding: 0;
-  font-size: 18px;
 }
 .EditUtil {
   background-color: #f8f9fa;

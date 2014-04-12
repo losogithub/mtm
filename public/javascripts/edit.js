@@ -8,6 +8,18 @@
 
 (function ($) {
 
+  window.sng =
+    angular.module('sng', ['ui.bootstrap', 'ngTagsInput'])
+      .controller('TagsInputCtrl', TagsInputCtrl);
+  function TagsInputCtrl($scope, $http) {
+    $scope.onAdded = function ($tag) {
+      $http.put('/tag', angular.extend({ topicId: topicId }, $tag));
+    };
+    $scope.onRemoved = function ($tag) {
+      $http.post('/tag', angular.extend({ topicId: topicId }, $tag));
+    };
+  }
+
   var console = window.console || {log: $.noop, error: $.noop};
 
   var INPUT_EVENTS = 'input blur mousedown mouseup keydown keypress keyup';

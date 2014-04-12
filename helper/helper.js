@@ -53,6 +53,16 @@ function escape(html) {
     .replace(/>/g, '&gt;');
 }
 
+function concatNoDup(a, b) {
+  for(var i=0,j=0,ci,r={},c=[];ci=a[i++]||b[j++];){
+    if(r[ci])continue;
+    r[ci]=1;
+    c.push(ci);
+  }
+  return c;
+}
+
 exports.linkify = linkify;
 exports.validateEmail = validateEmail;
 exports.escape = escape;
+exports.concatNoDup = concatNoDup;

@@ -271,6 +271,18 @@ table {
 .Baidu {
   width: 130px !important;
 }
+.Band {
+  height: 41px;
+  background-color: #34495e;
+}
+.Band .caret {
+  border-top-color: white;
+}
+.Band .tags {
+  line-height: 41px;
+  white-space: nowrap;
+  overflow: hidden;
+}
 .Authors {
   max-height: 100px;
   overflow: hidden;

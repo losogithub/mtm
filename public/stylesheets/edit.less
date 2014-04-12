@@ -38,17 +38,13 @@
   }
   .AddUtil {
     display: block;
-    opacity: 0;
-    -webkit-transition: 0.2s linear;
-    transition: 0.2s linear;
-    &:hover { opacity: 1 !important; }
     .Menu {
-      span { color: white; }
-      button { color: white; }
+      opacity: 0;
+      background-color: fade(@color-primary, 80%);
     }
   }
   li:last-child {
-    .AddUtil {
+    .Menu {
       opacity: 0.1;
     }
   }
@@ -56,21 +52,27 @@
 
 /*悬浮菜单栏*/
 .Band {
-  height: 36px;
   top:72px; left: 0; right: 0;z-index: 1001;position: absolute;
   &.affix{ top:0; position: fixed; }
   .Band_Ttl {
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0; line-height: 36px;
+    font-size: 18px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0; line-height: 41px;
   }
-  .Band_Btn { float: right;
-    .btn { margin-top: 4px; }
+  .Band_Btn {
+    float: right;
+    line-height: 41px;
   }
 }
 
 /*菜单*/
 .Menu {
-  display: inline-block;
-  span { cursor: default; font-weight: bold; }
+  -webkit-transition: 0.2s linear;
+  transition: 0.2s linear;
+  line-height: 1;
+  border-radius: 6px;
+  background-color: @color-primary;
+  span { cursor: default; font-weight: bold; color: white; }
+  button { color: white !important; }
   ul {
     display: inline;
     padding: 0 20px;
@@ -83,6 +85,8 @@
     padding: 0;
     font-size: 18px;
   }
+  .StaticMenu & { opacity: 0.1; }
+  &:hover { opacity: 1 !important; }
 }
 
 /*微件*/
@@ -118,4 +122,87 @@
 
 .WEIBO {
   .Handle { visibility: hidden !important; }
+}
+
+tags-input {
+  .host {
+    outline: none;
+  }
+  .tags {
+    overflow: hidden;
+    word-wrap: break-word;
+    cursor: text;
+    background-color: white;
+    border: 2px solid @color-muted;
+    border-radius: 6px;
+    padding: 6px 1px 1px 6px;
+    .tag-list {
+      margin: 0;
+      padding: 0;
+      list-style-type: none;
+    }
+    .tag-item {
+      border-radius: 4px;
+      background-color: @color-muted;
+      color: #ffffff;
+      font-size: 14px;
+      cursor: pointer;
+      float: left;
+      margin: 0 5px 5px 0;
+      overflow: hidden;
+      line-height: 15px;
+      padding: 5px 15px 5px 15px;
+      position: relative;
+      vertical-align: middle;
+      -webkit-transition: 0.25s;
+      transition: 0.25s;
+      .remove-button {
+        color: #ffffff;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+        opacity: 0;
+        padding: 5px 7px 5px 0;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        text-align: right;
+        text-decoration: none;
+        width: 100%;
+        z-index: 2;
+        display: none\9;
+      }
+      &:hover {
+        background-color: @color-concrete;
+        padding-left: 10px;
+        padding-right: 20px;
+        .remove-button {
+          opacity: 1;
+          display: block\9;
+        }
+      }
+      &.selected {
+        background: @color-danger;
+        &:hover { background: #c0392b; }
+      }
+    }
+    .input {
+      min-width: 31px;
+      float: left;
+      height: 24px;
+      font-size: 14px;
+      border: none;
+      color: @color-default;
+      margin: 0 5px 5px 0;
+      outline: none !important;
+      vertical-align: baseline;
+      &.invalid-tag {
+        color: @color-danger;
+      }
+    }
+  }
+  &.ng-invalid .tags {
+    border: 2px solid @color-danger;
+  }
 }

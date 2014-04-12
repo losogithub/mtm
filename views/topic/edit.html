@@ -13,7 +13,7 @@
         完成<%= topic.publishDate ? '' : '草稿' %>
       </a>
     </div>
-    <h1 class="Band_Ttl" style="font-size: 18px;">
+    <h1 class="Band_Ttl">
       <b>策展中<%= topic.publishDate ? '' : '（草稿）' %></b>
       <span id="_asterisk" style="display: none;">*</span>
       <span id="_saved" style="display: none;" class="text-muted">- 所有修改都已保存，可以直接离开本页面</span>
@@ -24,21 +24,18 @@
 </div>
 
 <!--内容-->
-<div style="background-color: #ecf0f1; padding-top: 32px;">
+<div style="background-color: #ecf0f1; padding-top: 41px;">
   <div class="container">
-    <div class="row">
-      <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-8 col-lg-7 mvl">
-
-        <% include _category_selector.html %>
-
+    <div class="row pbl">
+      <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-8 col-lg-7 mtl">
         <div style="background-color: white; border-radius: 6px;">
           <div style="position: relative; min-height: 140px; border-radius: 6px 6px 0 0;">
-            <img class="HeadThumb" onerror="shizier.errorImage(this, 'default_120x120', true);" src="<%= topic.coverUrl || '' %>"
+            <img class="HeadThumb" onerror="shizier.errorImage(this, 'default_120x120', true);" src="<%= topic.cover_url || '' %>"
                  style="border-radius: 6px 6px 0 0;width: 100%;">
             <h1 class="h5 HeadTtl mbn pal hidden-xs text-inverse"
                 style="position: absolute; bottom: 0; left: 0; right: 0; background-color: rgba(0, 0, 0, 0.6);"><%= topic.title %></h1>
           </div>
-          <div id="_topItem" class="phl pbm">
+          <div id="_topItem" class="phl pbl">
             <h1 class="h5 mtl HeadTtl visible-xs"><%= topic.title %></h1>
 
             <p class="HeadDesc mtm"><%= topic.description || '' %></p>
@@ -391,7 +388,21 @@
           </div>
         </div>
       </div>
-      <div class="col-md-3 col-lg-4 mvl"></div>
+      <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-4 col-lg-5 mtl">
+
+        <% include _category_selector.html %>
+
+        <div class="mtl">
+          <% var tags = []; %>
+          <% for (var i = 0; i < topic.tags.length; i++) { %>
+          <%   tags.push({ text: topic.tags[i] }); %>
+          <% } %>
+          <tags-input ng-model="tags" ng-controller="TagsInputCtrl"
+                      ng-init='tags = <%- JSON.stringify(tags) %>;'
+                      min-length="1" max-length="10" min-tags="1" placeholder="标签" add-on-space="true"
+                      on-tag-added="onAdded($tag)" on-tag-removed="onRemoved($tag)"></tags-input>
+        </div>
+      </div>
     </div>
   </div>
 </div>

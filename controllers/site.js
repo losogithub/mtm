@@ -22,7 +22,8 @@ function index(req, res) {
     hot: topList.hotTopics.slice(0, topicsInIndex),
     realGood: topList.classicTopics.slice(0, topicsInIndex),
     newTopics: topList.newTopics.slice(0, newTopicsPerPage),
-    authors: topList.hotAuthors
+    authors: topList.hotAuthors,
+    tags: topList.hotTags
   });
 }
 
@@ -35,12 +36,13 @@ function showHot(req, res) {
   var totalPages = Math.ceil(topList.hotTopics.length / topicsPerPage);
 
   res.render('category', {
-    title: '综合 - 石子儿',
+    title: '综合',
     pageType: '综合',
     topics: recentHotTopicsDataPage,
     totalPage: totalPages,
     currentPage: currentPage,
-    authors: topList.hotAuthors
+    authors: topList.hotAuthors,
+    tags: topList.hotTags
   });
 }
 
@@ -66,7 +68,7 @@ function showNew(req, res) {
   var totalPages = Math.ceil(topList.newTopics.length / topicsPerPage);
 
   res.render('category', {
-    title: '最新 - 石子儿',
+    title: '最新',
     pageType: '最新',
     topics: newTopicsPage,
     totalPage: totalPages,
@@ -119,15 +121,15 @@ function _showCategory(req, res, catogory) {
 
   var categoryTopicsPage = topList.categoryTopics[catogory].slice((currentPage - 1) * topicsPerPage, currentPage * topicsPerPage);
   var totalPages = Math.ceil(topList.categoryTopics[catogory].length / topicsPerPage);
-  var authors = topList.categoryAuthors[catogory];
 
   res.render('category', {
-    title: catogory + ' - 石子儿',
+    title: catogory,
     pageType: catogory,
     topics: categoryTopicsPage,
     totalPage: totalPages,
     currentPage: currentPage,
-    authors: authors
+    authors: topList.categoryAuthors[catogory],
+    tags: topList.categoryTags[catogory]
   });
 }
 

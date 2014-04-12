@@ -18,7 +18,7 @@ var LoginToken = require('../proxy').LoginToken;
 var mail = require('../services/mail');
 
 
-var showSignUp = function (req, res) {
+function showSignUp(req, res) {
   console.log("render register page");
   //console.log("login Referer: ", req.session._loginReferer);
   //2013.12.16 revise _loginReferer to loginOrSignup
@@ -47,7 +47,7 @@ var showSignUp = function (req, res) {
 };
 
 
-var signup = function (req, res, next) {
+function signUp(req, res, next) {
   console.log("----- Register -------");
   //console.log("login Referer: ", req.session._loginReferer);
   console.log("header referer: ", req.headers.referer);
@@ -167,7 +167,7 @@ var signup = function (req, res, next) {
             // md5 the pass
             pass = encryp.md5(pass);
 
-            User.newAndSave(name, loginname, pass, email, false, function (err) {
+            User.newAndSave(name, loginname, pass, email, function (err) {
               if (err) {
                 return next(err);
               }
@@ -226,7 +226,7 @@ var signup = function (req, res, next) {
             // success
             // md5 the pass
             pass = encryp.md5(pass);
-            User.newAndSave(name, loginname, pass, email, false, function (err) {
+            User.newAndSave(name, loginname, pass, email, function (err) {
               if (err) {
                 return next(err);
               }
@@ -286,7 +286,7 @@ var signup = function (req, res, next) {
  * @param  {HttpRequest} req
  * @param  {HttpResponse} res
  */
-var showLogin = function (req, res) {
+function showLogin(req, res) {
   console.log("----- Show login page ----");
   //console.log("session: ", req.session);
   console.log("referer: ", req.headers.referer);
@@ -390,7 +390,7 @@ function login(req, res, next) {
         return;
       }
 
-      checkOnlyPassword(emailIDFlag, pass, autoLogin, user, req, res);
+      _checkOnlyPassword(emailIDFlag, pass, autoLogin, user, req, res);
 
     })
   } else {
@@ -406,7 +406,7 @@ function login(req, res, next) {
         });
         return;
       } // user if
-      checkOnlyPassword(emailIDFlag, pass, autoLogin, user, req, res);
+      _checkOnlyPassword(emailIDFlag, pass, autoLogin, user, req, res);
     })
 
   }
@@ -414,7 +414,7 @@ function login(req, res, next) {
 
 
 //suppose the username id, or email address exists, now check the password:
-function checkOnlyPassword(emailIDFlag, pass, autoLogin, user, req, res) {
+function _checkOnlyPassword(emailIDFlag, pass, autoLogin, user, req, res) {
   console.log("----login: check user password.------");
   pass = encryp.md5(pass);
   var email = user.email;
@@ -488,7 +488,7 @@ var notJump = [
 // sign out
 // need test how this function is worked. especially clearCookie, destroy, redirect
 // taozan 9.22.2013
-var signout = function (req, res, next) {
+function signOut(req, res, next) {
   if (req.session) {
     //console.log("signout: currentUser: %s" , req.currentUser);
     console.log("-----logout------");
@@ -541,7 +541,7 @@ var signout = function (req, res, next) {
 };
 
 
-var showForgetPassword = function (req, res) {
+function showForgetPassword(req, res) {
   console.log("------ show forget password page -----");
   res.render('sign/forgetPassword', {
     errMsg: ''
@@ -549,7 +549,7 @@ var showForgetPassword = function (req, res) {
 };
 
 
-var forgetPassword = function (req, res, next) {
+function forgetPassword(req, res, next) {
   console.log("-----forget password check email ------");
   var email = sanitize(req.body.email).trim();
   console.log(email);
@@ -605,7 +605,7 @@ var forgetPassword = function (req, res, next) {
   });
 };
 
-var showResetPassword = function (req, res, next) {
+function showResetPassword(req, res, next) {
   var key = req.query.key;
   var email = req.query.email;
   User.getUserByEmail(email, key, function (err, user) {
@@ -692,7 +692,7 @@ function resetPassword(req, res, next) {
 }
 
 
-var activeAccount = function (req, res, next) {
+function activeAccount(req, res, next) {
   console.log(req.query);
   var key = req.query.key;
   var email = req.query.email;
@@ -815,10 +815,10 @@ function gen_session(user, res) {
 
 
 exports.showSignUp = showSignUp;
-exports.signup = signup;
+exports.signup = signUp;
 exports.showLogin = showLogin;
 exports.login = login;
-exports.signout = signout;
+exports.signout = signOut;
 exports.showForgetPassword = showForgetPassword;
 exports.forgetPassword = forgetPassword;
 exports.showResetPassword = showResetPassword;

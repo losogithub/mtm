@@ -5,6 +5,7 @@
  * Time: 3:04 PM
  * To change this template use File | Settings | File Templates.
  */
+var async = require('async');
 var EventProxy = require('eventproxy');
 
 var models = require('../models');
@@ -71,9 +72,7 @@ function increasePVCountBy(topic, increment, callback) {
  * 获取所有策展
  */
 function getAllTopics(callback) {
-  TopicModel.find({ publishDate: { $exists: true } })
-    //.sort('-_id')
-    .exec(callback);
+  TopicModel.find({ publishDate: { $exists: true } }, callback);
 }
 
 function getCategoryTopics(category, callback) {
@@ -81,12 +80,14 @@ function getCategoryTopics(category, callback) {
     TopicModel.find({
       publishDate: { $exists: true },
       category: { $not: { $in: topList.CATEGORIES_ARRAY } }
-    })
-      .exec(callback);
+    }, callback);
   } else {
-    TopicModel.find({ publishDate: { $exists: true }, category: category })
-      .exec(callback);
+    TopicModel.find({ publishDate: { $exists: true }, category: category }, callback);
   }
+}
+
+function getTagTopics(tagText, callback) {
+  TopicModel.find({ publishDate: { $exists: true }, tags: tagText }, callback);
 }
 
 /**
@@ -210,6 +211,42 @@ function getPublishedTopics(topicIds, opt, callback) {
     .exec(callback);
 }
 
+function addTag(topic, tagText, callback) {
+  callback = callback || function () {
+  };
+
+  for (var i = 0; i < topic.tags.length; i++) {
+    if (tagText == topic.tags[i]) {
+      return callback(new Error(400));
+    }
+  }
+  topic.tags.push(tagText);
+  topic.save(function (err) {
+    if (err) {
+      return callback(err);
+    }
+    callback(null);
+  });
+}
+
+function removeTag(topic, tagText, callback) {
+  callback = callback || function () {
+  };
+
+  for (var i = 0; i < topic.tags.length; i++) {
+    if (tagText == topic.tags[i]) {
+      topic.tags.splice(i, 1);
+      break;
+    }
+  }
+  topic.save(function (err) {
+    if (err) {
+      return callback(err);
+    }
+    callback(null);
+  });
+}
+
 /**
  * 下面是更新top列表的方法
  */
@@ -233,14 +270,13 @@ function _scoreCompare(top1, top2) {
 function updateHotTopics() {
   getAllTopics(function (err, topics) {
     if (err) {
-      console.log(err);
-      return;
+      return console.error(err.stack);
     }
     if (!topics) {
       return;
     }
 
-    for (var i = 0; i < topics.length; i++) {
+    for (var i in topics) {
       topics[i].score = _traditionalScore(topics[i].PV_count, topics[i].FVCount);
     }
 
@@ -248,36 +284,41 @@ function updateHotTopics() {
     topList.classicTopics = topics.sort(_scoreCompare).slice(0, 240);
 
     var authorMap = {};
-    for (var i = 0; i < topics.length; i++) {
+    var tagMap = {};
+    for (var i in topics) {
       topics[i].score = _newHotScore(topics[i].score, topics[i].publishDate, topics[i].update_at);
-      if (!authorMap[topics[i].author_id]) {
-        authorMap[topics[i].author_id] = { score: 0 };
-      }
+      authorMap[topics[i].author_id] = authorMap[topics[i].author_id] || { score: 0 };
       authorMap[topics[i].author_id].score += topics[i].score;
+      for (var j = 0; j < topics[i].tags.length; j++) {
+        tagMap[topics[i].tags[j]] = tagMap[topics[i].tags[j]] || { score: 0 };
+        tagMap[topics[i].tags[j]].score += topics[i].score;
+      }
     }
     topList.hotTopics = topics.sort(_scoreCompare).slice(0, 240);
 
-    var authorScore = [];
-    for (var id in authorMap) {
-      authorScore.push({ id: id, score: authorMap[id].score });
-    }
-    authorScore.sort(function (a, b) {
-      return (b.score - a.score);
-    });
     var authorIds = [];
-    var hotAuthorScore = authorScore.slice(0, 17);
-    for (var i in hotAuthorScore) {
-      authorIds.push(hotAuthorScore[i].id);
+    for (var id in authorMap) {
+      authorIds.push(id);
     }
-    User.getUserByIds(authorIds, function (err, authors) {
-      for (var i in authors) {
-        authors[i].score = authorMap[authors[i]._id].score;
-      }
+    authorIds.sort(function (a, b) {
+      return (authorMap[b].score - authorMap[a].score);
+    });
+    var hotAuthorIds = authorIds.slice(0, 17);
+    User.getUserByIds(hotAuthorIds, function (err, authors) {
       authors.sort(function (a, b) {
-        return (b.score - a.score);
+        return (authorMap[b._id].score - authorMap[a._id].score);
       });
       topList.hotAuthors = authors;
     });
+
+    var tagTexts = [];
+    for (var text in tagMap) {
+      tagTexts.push(text);
+    }
+    tagTexts.sort(function (a, b) {
+      return (tagMap[b].score - tagMap[a].score);
+    });
+    topList.hotTags = tagTexts.slice(0, 7);
   });
 }
 
@@ -286,48 +327,52 @@ function updateCategoryTopics() {
     (function (category) {
       getCategoryTopics(category, function (err, topics) {
         if (err) {
-          console.log(err);
-          return;
+          return console.error(err.stack);
         }
         if (!topics) {
           return;
         }
 
-        for (var i = 0; i < topics.length; i++) {
+        for (var i in topics) {
           topics[i].score = _traditionalScore(topics[i].PV_count, topics[i].FVCount);
         }
 
         var authorMap = {};
-        for (var i = 0; i < topics.length; i++) {
+        var tagMap = {};
+        for (var i in topics) {
           topics[i].score = _newHotScore(topics[i].score, topics[i].publishDate, topics[i].update_at);
-          if (!authorMap[topics[i].author_id]) {
-            authorMap[topics[i].author_id] = { score: 0 };
-          }
+          authorMap[topics[i].author_id] = authorMap[topics[i].author_id] || { score: 0 };
           authorMap[topics[i].author_id].score += topics[i].score;
+          for (var j = 0; j < topics[i].tags.length; j++) {
+            tagMap[topics[i].tags[j]] = tagMap[topics[i].tags[j]] || { score: 0 };
+            tagMap[topics[i].tags[j]].score += topics[i].score;
+          }
         }
         topList.categoryTopics[category] = topics.sort(_scoreCompare).slice(0, 240);
 
-        var authorScore = [];
-        for (var id in authorMap) {
-          authorScore.push({ id: id, score: authorMap[id].score });
-        }
-        authorScore.sort(function (a, b) {
-          return (b.score - a.score);
-        });
         var authorIds = [];
-        var hotAuthorScore = authorScore.slice(0, 17);
-        for (var i in hotAuthorScore) {
-          authorIds.push(hotAuthorScore[i].id);
+        for (var id in authorMap) {
+          authorIds.push(id);
         }
-        User.getUserByIds(authorIds, function (err, authors) {
-          for (var i in authors) {
-            authors[i].score = authorMap[authors[i]._id].score;
-          }
+        authorIds.sort(function (a, b) {
+          return (authorMap[b].score - authorMap[a].score);
+        });
+        var hotAuthorIds = authorIds.slice(0, 17);
+        User.getUserByIds(hotAuthorIds, function (err, authors) {
           authors.sort(function (a, b) {
-            return (b.score - a.score);
+            return (authorMap[b._id].score - authorMap[a._id].score);
           });
           topList.categoryAuthors[category] = authors;
         });
+
+        var tagTexts = [];
+        for (var text in tagMap) {
+          tagTexts.push(text);
+        }
+        tagTexts.sort(function (a, b) {
+          return (tagMap[b].score - tagMap[a].score);
+        });
+        topList.categoryTags[category] = tagTexts.slice(0, 7);
       });
     })(category);
   }
@@ -339,6 +384,7 @@ exports.increaseItemCountBy = increaseItemCountBy;
 exports.increasePVCountBy = increasePVCountBy;
 exports.getAllTopics = getAllTopics;
 exports.getCategoryTopics = getCategoryTopics;
+exports.getTagTopics = getTagTopics;
 exports.updateNewTopics = updateNewTopics;
 exports.saveTopic = saveTopic;//改
 exports.saveCategory = saveCategory;//改
@@ -347,6 +393,8 @@ exports.deleteTopic = deleteTopic;//删
 exports.getTopicById = getTopicById;//查
 exports.getTopicsByIdsSorted = getTopicsByIdsSorted;
 exports.getPublishedTopics = getPublishedTopics;
+exports.addTag = addTag;
+exports.removeTag = removeTag;
 
 
 exports.topList = topList = {
@@ -373,6 +421,7 @@ exports.topList = topList = {
     '商业',
     '体育'
   ],//不能有“未分类”！！！
+  categoryTags: {},
   categoryAuthors: {},
   categoryTopics: {}
 };

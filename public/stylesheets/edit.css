@@ -108,25 +108,16 @@
 }
 .WidgetItemList .AddUtil {
   display: block;
+}
+.WidgetItemList .AddUtil .Menu {
   opacity: 0;
-  -webkit-transition: 0.2s linear;
-  transition: 0.2s linear;
+  background-color: rgba(26, 188, 156, 0.8);
 }
-.WidgetItemList .AddUtil:hover {
-  opacity: 1 !important;
-}
-.WidgetItemList .AddUtil .Menu span {
-  color: white;
-}
-.WidgetItemList .AddUtil .Menu button {
-  color: white;
-}
-.WidgetItemList li:last-child .AddUtil {
+.WidgetItemList li:last-child .Menu {
   opacity: 0.1;
 }
 /*悬浮菜单栏*/
 .Band {
-  height: 36px;
   top: 72px;
   left: 0;
   right: 0;
@@ -138,25 +129,32 @@
   position: fixed;
 }
 .Band .Band_Ttl {
+  font-size: 18px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   margin: 0;
-  line-height: 36px;
+  line-height: 41px;
 }
 .Band .Band_Btn {
   float: right;
-}
-.Band .Band_Btn .btn {
-  margin-top: 4px;
+  line-height: 41px;
 }
 /*菜单*/
 .Menu {
-  display: inline-block;
+  -webkit-transition: 0.2s linear;
+  transition: 0.2s linear;
+  line-height: 1;
+  border-radius: 6px;
+  background-color: #1abc9c;
 }
 .Menu span {
   cursor: default;
   font-weight: bold;
+  color: white;
+}
+.Menu button {
+  color: white !important;
 }
 .Menu ul {
   display: inline;
@@ -170,6 +168,12 @@
   vertical-align: baseline;
   padding: 0;
   font-size: 18px;
+}
+.StaticMenu .Menu {
+  opacity: 0.1;
+}
+.Menu:hover {
+  opacity: 1 !important;
 }
 /*微件*/
 .LINK .Thumb .Image {
@@ -212,4 +216,86 @@
 }
 .WEIBO .Handle {
   visibility: hidden !important;
+}
+tags-input .host {
+  outline: none;
+}
+tags-input .tags {
+  overflow: hidden;
+  word-wrap: break-word;
+  cursor: text;
+  background-color: white;
+  border: 2px solid #bdc3c7;
+  border-radius: 6px;
+  padding: 6px 1px 1px 6px;
+}
+tags-input .tags .tag-list {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+tags-input .tags .tag-item {
+  border-radius: 4px;
+  background-color: #bdc3c7;
+  color: #ffffff;
+  font-size: 14px;
+  cursor: pointer;
+  float: left;
+  margin: 0 5px 5px 0;
+  overflow: hidden;
+  line-height: 15px;
+  padding: 5px 15px 5px 15px;
+  position: relative;
+  vertical-align: middle;
+  -webkit-transition: 0.25s;
+  transition: 0.25s;
+}
+tags-input .tags .tag-item .remove-button {
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  opacity: 0;
+  padding: 5px 7px 5px 0;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  text-align: right;
+  text-decoration: none;
+  width: 100%;
+  z-index: 2;
+  display: none\9;
+}
+tags-input .tags .tag-item:hover {
+  background-color: #95a5a6;
+  padding-left: 10px;
+  padding-right: 20px;
+}
+tags-input .tags .tag-item:hover .remove-button {
+  opacity: 1;
+  display: block\9;
+}
+tags-input .tags .tag-item.selected {
+  background: #e74c3c;
+}
+tags-input .tags .tag-item.selected:hover {
+  background: #c0392b;
+}
+tags-input .tags .input {
+  min-width: 31px;
+  float: left;
+  height: 24px;
+  font-size: 14px;
+  border: none;
+  color: #34495e;
+  margin: 0 5px 5px 0;
+  outline: none !important;
+  vertical-align: baseline;
+}
+tags-input .tags .input.invalid-tag {
+  color: #e74c3c;
+}
+tags-input.ng-invalid .tags {
+  border: 2px solid #e74c3c;
 }

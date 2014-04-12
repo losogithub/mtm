@@ -23,8 +23,8 @@ var TopicSchema = new Schema({
   publishDate: Date,
   FVCount: { type: Number, default: 0 },
   FVList: [ObjectId],
-  category: { type: String, default: '未分类' }
+  category: { type: String, default: '未分类' },
+  tags: [String]
 });
-
 
 exports.TopicModel = mongoose.model('Topic', TopicSchema);

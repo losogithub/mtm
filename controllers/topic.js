@@ -82,18 +82,6 @@ function showEdit(req, res, next) {
 
     var topic = results.topic;
     var items = results.items;
-    var topicData = {
-      _id: topic._id,
-      title: topic.title,
-      coverUrl: topic.cover_url,
-      description: topic.description,
-      publishDate: topic.publishDate,
-      category: topic.category
-    };
-    var itemsData = [];
-    items.forEach(function (item) {
-      itemsData.push(_getItemData(item));
-    });
     res.set('Cache-Control', 'private, no-cache, no-store, must-revalidate, post-check=0, pre-check=0');
     res.set('Connection', 'close');
     res.set('Expire', '-1');
@@ -110,6 +98,7 @@ function showEdit(req, res, next) {
         '/stylesheets/edit.css'
       ],
       js: [
+        '/javascripts/ng-tags-input.js',
         'http://cdn.bootcss.com/messenger/1.4.0/js/messenger.js',
         'http://cdn.bootcss.com/messenger/1.4.0/js/messenger-theme-flat.js',
         'http://cdn.bootcss.com/jquery-mousewheel/3.1.6/jquery.mousewheel.min.js',
@@ -124,8 +113,8 @@ function showEdit(req, res, next) {
         '/javascripts/edit.js'
       ],
       escape: escape,
-      topic: topicData,
-      items: itemsData
+      topic: topic,
+      items: items
     });
     console.log('showEdit done');
   });
@@ -190,8 +179,7 @@ function showChang(req, res, next) {
     console.log('showChang done');
   })
     .fail(function (err) {
-      console.error(err.stack);
-      res.send(500, err);
+      return next(err);
     });
 
   Topic.getTopicById(topicId, ep.done(function (topic) {
@@ -398,27 +386,6 @@ function showIndex(req, res, next) {
 
   //ep的error没处理
   var ep = EventProxy.create('topic', 'items', 'author', function (topic, items, author) {
-    var updateDate = topic.update_at.getFullYear() + '年'
-      + (topic.update_at.getMonth() + 1) + '月'
-      + topic.update_at.getDate() + '日';
-
-    var topicData = {
-      _id: topic._id,
-      title: topic.title,
-      coverUrl: topic.cover_url,
-      description: topic.description,
-      updateAt: updateDate,
-      author: topic.author_name,
-      PVCount: topic.PV_count,
-      FVCount: topic.FVCount,
-      category: topic.category
-    };
-    var itemsData = [];
-    items.forEach(function (item) {
-      itemsData.push(_getItemData(item));
-    });
-
-
     var authorData = {
       author: author.loginName,
       imgUrl: author.url,
@@ -444,8 +411,8 @@ function showIndex(req, res, next) {
     res.set('Expire', '-1');
     res.set('Pragma', 'no-cache');
     res.render('topic/index', {
-      title: topicData.title,
-      description: topicData.description,
+      title: topic.title,
+      description: topic.description,
       css: [
         'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.css',
         'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-buttons.css',
@@ -461,16 +428,16 @@ function showIndex(req, res, next) {
       ],
       escape: escape,
       isAuthor: topic.author_id == userId,
-      topic: topicData,
-      items: itemsData,
+      topic: topic,
+      tags: topic.tags,
+      items: items,
       authorInfo: authorData,
       liked: liked
     });
     console.log('showIndex done');
   })
     .fail(function (err) {
-      console.error(err.stack);
-      res.send(500, err);
+      return next(err);
     });
 
   Topic.getTopicById(topicId, ep.done(function (topic) {
@@ -632,7 +599,7 @@ function _getData(req) {
     case 'TITLE':
       var title = sanitize(req.body.title).trim();
 
-      check(title).len(0, 100);
+      check(title).len(1, 100);
 
       data = {
         title: title
@@ -957,9 +924,7 @@ function editItem(req, res, next) {
       try {
         var data = _getData(req);
       } catch (err) {
-        console.error(err.stack);
-        callback(err);
-        return;
+        return callback(err);
       }
       item.update(data, function (err) {
         if (err) {
@@ -1713,6 +1678,54 @@ function favorite(req, res, next) {
   });
 }
 
+function addTag(req, res, next) {
+  var tagText = sanitize(req.body.text).trim();
+  var userId = req.session.userId;
+  var topicId = req.body.topicId;
+
+  try {
+    check(tagText).len(0, 10);
+  } catch (err) {
+    return next(err);
+  }
+
+  async.auto({
+    topic: function (callback) {
+      _getTopicWithAuth(callback, topicId, userId);
+    },
+    tag: ['topic', function (callback, results) {
+      Topic.addTag(results.topic, tagText, callback);
+    }]
+  }, function (err) {
+    if (err) {
+      return next(err);
+    }
+
+    res.send(200);
+  });
+}
+
+function removeTag(req, res, next) {
+  var tagText = sanitize(req.body.text).trim();
+  var userId = req.session.userId;
+  var topicId = req.body.topicId;
+
+  async.auto({
+    topic: function (callback) {
+      _getTopicWithAuth(callback, topicId, userId);
+    },
+    tag: ['topic', function (callback, results) {
+      Topic.removeTag(results.topic, tagText, callback);
+    }]
+  }, function (err) {
+    if (err) {
+      return next(err);
+    }
+
+    res.send(200);
+  });
+}
+
 exports.createTopic = createTopic;
 exports.showEdit = showEdit;
 exports.showChang = showChang;
@@ -1731,3 +1744,5 @@ exports.getVideoDetail = getVideoDetail;
 exports.getWeiboDetail = getWeiboDetail;
 exports.favorite = favorite;
 exports.sendChang = sendChang;
+exports.addTag = addTag;
+exports.removeTag = removeTag;

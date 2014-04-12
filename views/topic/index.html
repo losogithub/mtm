@@ -1,20 +1,22 @@
+
+<% locals.categoryType_pre = topic.category; %>
+<% include ../_band.html %>
+
 <!--内容-->
 <div style="background-color: #ecf0f1;">
   <div class="container">
-
-    <% locals.pageType_pre = topic.category; %>
-    <% include ../_category_toolbar.html %>
-
     <div class="row pbl">
       <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-8 col-lg-7 mtl">
         <% if (locals.isAdmin) { %>
-        <% include _category_selector.html %>
+        <div class="mbl">
+          <% include _category_selector.html %>
+        </div>
         <% } %>
         <div style="background-color: white; border-radius: 6px;">
           <div class="TopicHead" style="position: relative; min-height: 140px; border-radius: 6px 6px 0 0;">
-            <a class="fancybox" rel="gallery" href="<%= topic.coverUrl %>" title="<%= topic.title %>">
-              <img onerror="$(this).hide();" src="<%= topic.coverUrl %>" alt="<%= topic.title %>"
-                   style="width: 100%; border-radius: 6px 6px 0 0; <%= topic.coverUrl ? '' : 'display: none;' %>">
+            <a class="fancybox" rel="gallery" href="<%= topic.cover_url %>" title="<%= topic.title %>">
+              <img onerror="$(this).hide();" src="<%= topic.cover_url %>" alt="<%= topic.title %>"
+                   style="width: 100%; border-radius: 6px 6px 0 0; <%= topic.cover_url ? '' : 'display: none;' %>">
             </a>
             <h1 class="Title mbn hidden-xs" >
               <a class="text-inverse pal h5" style="display: block;" href="/topic/<%= topic._id %>"><%= topic.title %></a>
@@ -26,17 +28,19 @@
 
             <div class="clearfix mtm mbm">
               <div class="pull-left">
-                <a href="/u/<%= topic.author %>" title="<%= topic.author %>">
+                <a href="/u/<%= topic.author_name %>" title="<%= topic.author_name %>">
                   <span class="mrs" style="display: inline-block; width: 30px; height: 30px;">
                     <img width="30" height="30" class="img-circle"
                        src="<%= authorInfo.imgUrl || '/images/no_img/user_80x80.png' %>"
-                       alt="<%= topic.author %>"
+                       alt="<%= topic.author_name %>"
                        onerror="shizier.errorImage(this,'user_80x80');">
-                  </span><span><%= topic.author %></span>
+                  </span><span><%= topic.author_name %></span>
                 </a>
                 <span class="text-muted small mls">
                   <i class="fa fa-edit"></i>
-                  <%= topic.updateAt %>
+                  <%= topic.update_at.getFullYear() + '-'
+                        + (topic.update_at.getMonth() + 1) + '-'
+                        + topic.update_at.getDate() %>
                 </span>
               </div>
               <div class="pull-right">
@@ -76,7 +80,7 @@
                     });
                   });
                 </script>
-                <span class="text-muted mls"><i class="fa fa-eye"></i> <%= topic.PVCount %></span>
+                <span class="text-muted mls"><i class="fa fa-eye"></i> <%= topic.PV_count %></span>
               </div>
             </div>
 
@@ -107,19 +111,19 @@
       <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-4 col-lg-5 mtl">
         <div class="pal" style="background-color: #34495e;color:white;border-radius: 6px;">
           <div class="clearfix">
-            <a class="pull-left mrl img-circle-border" title="<%= topic.author %>" target="_blank"
-               href="/u/<%= topic.author %>"
-               title="<%= topic.author %>"
+            <a class="pull-left mrl img-circle-border" title="<%= topic.author_name %>" target="_blank"
+               href="/u/<%= topic.author_name %>"
+               title="<%= topic.author_name %>"
                style="display: block; width: 80px; height: 80px;">
               <img class="img-circle" width="70" height="70" id="_thumb"
                    onerror="shizier.errorImage(this, 'image_95x95')"
                    src="<%= authorInfo.imgUrl || '/images/no_img/user_80x80.png' %>"
-                   alt="<%= topic.author %>">
+                   alt="<%= topic.author_name %>">
             </a>
 
             <h1 class="h6 mvn">
-              <a class="text-inverse" href="/u/<%= topic.author %>" title="<%= topic.author %>">
-                <%= topic.author %>
+              <a class="text-inverse" href="/u/<%= topic.author_name %>" title="<%= topic.author_name %>">
+                <%= topic.author_name %>
               </a>
             </h1>
             <% if (authorInfo.personalSite) { %>

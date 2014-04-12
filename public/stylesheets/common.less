@@ -142,6 +142,16 @@ table {
   width: 130px !important;
 }
 
+.Band {
+  height: 41px; background-color: @color-default;
+  .caret { border-top-color: white; }
+  .tags {
+    line-height: 41px;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+}
+
 .Authors {
   max-height: 100px; overflow: hidden;
   &:hover a { -webkit-filter: blur(1px); opacity: 0.5; }

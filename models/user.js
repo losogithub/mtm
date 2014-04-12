@@ -5,20 +5,20 @@ var ObjectId = mongoose.Schema.ObjectId;
 //todo: image
 var UserSchema = new Schema({
   loginName: {type: String, unique: true},
-  birthday: {type: String},
-  gender: {type: String},
-  password: {type: String},
+  birthday: String,
+  gender: String,
+  password: String,
   email: {type: String, unique: true},
-  url: {type: String},
-  description: {type: String},
-  personalSite: {type: String},
-  active: {type: Boolean, default: true},
+  url: String,
+  description: String,
+  personalSite: String,
+  active: Boolean,
 
-  retrieve_time: {type: Number},
-  retrieve_key: {type: String},
+  retrieve_time: Number,
+  retrieve_key: String,
 
   //topics array
-  topics: [ObjectId ],
+  topics: [ObjectId],
   topicCount: {type: Number, default: 0},
   PVCount: {type: Number, default: 0},
 

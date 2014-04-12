@@ -5,11 +5,12 @@
  * Time: 12:43 AM
  * To change this template use File | Settings | File Templates.
  */
-var site = require('./controllers/site');
-var topic = require('./controllers/topic');
-var sign = require('./controllers/sign');
-var personal = require('./controllers/personal');
 var auth = require('./middlewares/auth');
+var site = require('./controllers/site');
+var sign = require('./controllers/sign');
+var topic = require('./controllers/topic');
+var tag = require('./controllers/tag');
+var personal = require('./controllers/personal');
 var support = require('./controllers/support');
 
 var about = require('./controllers/about');
@@ -56,6 +57,9 @@ module.exports = function (app) {
   app.delete('/topic/item', auth.userRequired, topic.deleteItem);
   app.delete('/topic/:topicId', auth.userRequired, topic.deleteTopic);
 
+  app.put('/tag', auth.userRequired, topic.addTag);
+  app.post('/tag', auth.userRequired, topic.removeTag);//因为angular的delete不支持附加data。。。
+  app.get('/tag/:tagText', tag.showTag);
 
 
   app.get('/chang/:topicId', topic.sendChang);

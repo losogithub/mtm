@@ -88,13 +88,12 @@ var getUserByEmail = function (email, key, callback) {
   UserModel.findOne({email: email, retrieve_key: key}, callback);
 }
 
-var newAndSave = function (name, loginName, password, email, active, callback) {
+var newAndSave = function (name, loginName, password, email, callback) {
   var user = new UserModel();
   user.name = name;
   user.loginName = loginName;
   user.password = password;
   user.email = email;
-  user.active = active;
   user.save(callback);
 };
 
