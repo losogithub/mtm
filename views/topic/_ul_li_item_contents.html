@@ -1,7 +1,8 @@
 <% if (item.type == 'LINK' || item.type == 'ALL') { %>
 <div class='Content LINK'>
-  <div class="Title" style="display: <%= (item.type != 'ALL') && !item.title ? 'none' : 'block' %>;">
-    <img class="Fav" src="<%= item.fav %>">
+  <div class="Title">
+    <img class="Fav" src="<%= item.fav %>"
+         onerror="shizier.errorFavImage(this, '<%= item.url %>');">
     <a target="_blank" class="LINK_URL" href='<%= item.url %>'><%= item.title || '' %></a>
   </div>
   <div class="Quote">

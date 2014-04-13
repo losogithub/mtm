@@ -38,7 +38,18 @@
     if (url != $img.attr('src')) {
       $img.attr('src', url);
     }
-  }
+  };
+
+  shizier.errorFavImage = shizier.errorFavImage || function (img, oriUrl, ignoreNull) {
+    var $img = $(img);
+    if (ignoreNull && !$img.attr('src')) {
+      return;
+    }
+    var url = oriUrl + '/favicon.ico';
+    if (url != $img.attr('src')) {
+      $img.attr('src', url);
+    }
+  };
 
   $(function ($) {
     shizier.loginCheck = function () {
