@@ -8,6 +8,8 @@
 
 var async = require('async');
 
+var Common = require('../common');
+var Tags = Common.tags;
 var Topic = require('../proxy').Topic;
 var User = require('../proxy').User;
 
@@ -16,9 +18,9 @@ var topicsPerPage = 12;
 function showTag(req, res, next) {
   var tagText = req.params.tagText;
   var tag;
-  for (var i in tags) {
-    if (tagText == tags[i].text) {
-      tag = tags[i];
+  for (var i in Tags) {
+    if (tagText == Tags[i].text) {
+      tag = Tags[i];
       break;
     }
   }
@@ -71,7 +73,4 @@ function showTag(req, res, next) {
   });
 }
 
-var tags = [];
-
-exports.tags = tags;
 exports.showTag = showTag;

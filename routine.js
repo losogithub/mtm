@@ -7,8 +7,9 @@
  */
 var async = require('async');
 
-var Topic = require('../proxy').Topic;
-var Tag = require('../controllers/tag');
+var Common = require('./common');
+var Tags = Common.tags;
+var Topic = require('./proxy').Topic;
 
 function _updateTags() {
   async.auto({
@@ -57,7 +58,6 @@ function _updateTags() {
       var categories = results.tags.categories;
       var authorIds = results.tags.authorIds;
       var relatives = results.tags.relatives;
-      var tags = Tag.tags;
       for (var tagText in categories) {
         var tempWeight = 0;
         var tempCategory = '未分类';
@@ -84,7 +84,7 @@ function _updateTags() {
           return relatives[tagText][b] - relatives[tagText][a];
         });
 
-        tags.push({
+        Tags.push({
           text: tagText,
           category: tempCategory,
           authorWeights: authorIds[tagText],

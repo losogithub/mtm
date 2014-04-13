@@ -8,6 +8,8 @@
 var async = require('async');
 var EventProxy = require('eventproxy');
 
+var Common = require('../common');
+var TopList = Common.topList;
 var models = require('../models');
 var TopicModel = models.TopicModel;
 var Item = require('./item');
@@ -79,7 +81,7 @@ function getCategoryTopics(category, callback) {
   if (category == '未分类') {
     TopicModel.find({
       publishDate: { $exists: true },
-      category: { $not: { $in: topList.CATEGORIES_ARRAY } }
+      category: { $not: { $in: TopList.CATEGORIES_ARRAY } }
     }, callback);
   } else {
     TopicModel.find({ publishDate: { $exists: true }, category: category }, callback);
@@ -105,7 +107,7 @@ function updateNewTopics(callback) {
         return callback(err);
       }
 
-      topList.newTopics = topics;
+      TopList.newTopics = topics;
 
       callback(topics);
     });
@@ -285,7 +287,7 @@ function updateHotTopics() {
     }
 
     console.log("更新热门策展");
-    topList.classicTopics = topics.sort(_scoreCompare).slice(0, 240);
+    TopList.classicTopics = topics.sort(_scoreCompare).slice(0, 240);
 
     var authorMap = {};
     var tagMap = {};
@@ -298,8 +300,8 @@ function updateHotTopics() {
         tagMap[topics[i].tags[j]].score += topics[i].score;
       }
     }
-    topList.hotTopics = topics.sort(_scoreCompare).slice(0, 240);
-    topList.totalTopicCount = topics.length;
+    TopList.hotTopics = topics.sort(_scoreCompare).slice(0, 240);
+    TopList.totalTopicCount = topics.length;
 
     var authorIds = [];
     for (var id in authorMap) {
@@ -313,7 +315,7 @@ function updateHotTopics() {
       authors.sort(function (a, b) {
         return (authorMap[b._id].score - authorMap[a._id].score);
       });
-      topList.hotAuthors = authors;
+      TopList.hotAuthors = authors;
     });
 
     var tagTexts = [];
@@ -323,12 +325,12 @@ function updateHotTopics() {
     tagTexts.sort(function (a, b) {
       return (tagMap[b].score - tagMap[a].score);
     });
-    topList.hotTags = tagTexts.slice(0, 7);
+    TopList.hotTags = tagTexts.slice(0, 7);
   });
 }
 
 function updateCategoryTopics() {
-  for (var category in topList.CATEGORIES) {
+  for (var category in TopList.CATEGORIES) {
     (function (category) {
       getCategoryTopics(category, function (err, topics) {
         if (err) {
@@ -353,8 +355,8 @@ function updateCategoryTopics() {
             tagMap[topics[i].tags[j]].score += topics[i].score;
           }
         }
-        topList.categoryTopics[category] = topics.sort(_scoreCompare).slice(0, 240);
-        topList.categoryTopicCount[category] = topics.length;
+        TopList.categoryTopics[category] = topics.sort(_scoreCompare).slice(0, 240);
+        TopList.categoryTopicCount[category] = topics.length;
 
         var authorIds = [];
         for (var id in authorMap) {
@@ -368,7 +370,7 @@ function updateCategoryTopics() {
           authors.sort(function (a, b) {
             return (authorMap[b._id].score - authorMap[a._id].score);
           });
-          topList.categoryAuthors[category] = authors;
+          TopList.categoryAuthors[category] = authors;
         });
 
         var tagTexts = [];
@@ -378,7 +380,7 @@ function updateCategoryTopics() {
         tagTexts.sort(function (a, b) {
           return (tagMap[b].score - tagMap[a].score);
         });
-        topList.categoryTags[category] = tagTexts.slice(0, 7);
+        TopList.categoryTags[category] = tagTexts.slice(0, 7);
       });
     })(category);
   }
@@ -391,7 +393,6 @@ exports.increasePVCountBy = increasePVCountBy;
 exports.getAllTopics = getAllTopics;
 exports.getCategoryTopics = getCategoryTopics;
 exports.getTagTopics = getTagTopics;
-exports.updateNewTopics = updateNewTopics;
 exports.saveTopic = saveTopic;//改
 exports.saveCategory = saveCategory;//改
 exports.publishTopic = publishTopic;
@@ -402,35 +403,6 @@ exports.getPublishedTopics = getPublishedTopics;
 exports.addTag = addTag;
 exports.removeTag = removeTag;
 
-
-exports.topList = topList = {
-  CATEGORIES: {
-    '未分类': 1,
-    '娱乐': 1,
-    '科技': 1,
-    '新闻': 1,
-    '时尚': 1,
-    '生活': 1,
-    '幽默': 1,
-    '文化': 1,
-    '商业': 1,
-    '体育': 1
-  },
-  CATEGORIES_ARRAY: [
-    '娱乐',
-    '科技',
-    '新闻',
-    '时尚',
-    '生活',
-    '幽默',
-    '文化',
-    '商业',
-    '体育'
-  ],//不能有“未分类”！！！
-  categoryTags: {},
-  categoryAuthors: {},
-  categoryTopics: {},
-  categoryTopicCount: {}
-};
+exports.updateNewTopics = updateNewTopics;
 exports.updateHotTopics = updateHotTopics;
 exports.updateCategoryTopics = updateCategoryTopics;

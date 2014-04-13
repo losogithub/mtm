@@ -6,8 +6,8 @@
  * To change this template use File | Settings | File Templates.
  */
 
-var Topic = require('../proxy/topic');
-var topList = Topic.topList;
+var Common = require('../common');
+var topList = Common.topList;
 
 //var topicsPerPage = 24;
 //var topicsInIndex = 24;

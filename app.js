@@ -25,7 +25,7 @@ config.hostname = urlinfo.hostname || config.host;
 
 //global variables instaitate.
 //e.g. hotopicsData, updateTopicsData
-require('./routine/routine').start();
+require('./routine').start();
 
 //deleted outdated images
 //require('./offlineProcess/changPictureUpdate')();
