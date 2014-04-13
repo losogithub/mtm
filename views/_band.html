@@ -1,6 +1,7 @@
 <div class="Band">
   <% var categoryType = locals.categoryType_pre || locals.pageType; %>
   <div class="container">
+    <div class="row">
     <div class="btn-group pull-left">
       <div class="btn-group">
         <button type="button" data-toggle="dropdown"
@@ -53,9 +54,8 @@
       <small class="text-inverse" style="font-size: 14px;"><i class="fa fa-tags"></i>：</small>
       <% for (var i = 0; i < tags.length; i++) { %>
       <a target="_blank" href="/tag/<%- encodeURIComponent(tags[i]) %>"
-         class="btn btn-default btn-xs"
-         style="padding-left: 15px; padding-right: 15px;"><%= tags[i] %></a>
+         class="tag btn btn-default btn-xs"><%= tags[i] %></a>
       <% } %>
-    </div>
+    </div></div>
   </div>
 </div>

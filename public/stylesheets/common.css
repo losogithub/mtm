@@ -283,6 +283,10 @@ table {
   white-space: nowrap;
   overflow: hidden;
 }
+.Band .tags .tag {
+  padding-left: 15px;
+  padding-right: 15px;
+}
 .Authors {
   max-height: 100px;
   overflow: hidden;
@@ -367,8 +371,7 @@ table {
 }
 /*页脚*/
 .Footer {
-  padding: 25px;
-  background-color: #fff;
+  background-color: white;
   text-align: center;
 }
 .Footer li {
@@ -376,9 +379,6 @@ table {
 }
 .Footer li + li {
   margin-left: 20px;
-}
-.Footer p {
-  margin: 10px 0 0;
 }
 .dropdown-toggle {
   text-align: left;
