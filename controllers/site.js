@@ -19,6 +19,9 @@ var newTopicsPerPage = 10;
 function index(req, res) {
   res.render('index', {
     pageType: 'INDEX',
+    topicCount: topList.totalTopicCount,
+    totalTopicCount: topList.totalTopicCount,
+    categoryTopicCount: topList.categoryTopicCount,
     hot: topList.hotTopics.slice(0, topicsInIndex),
     realGood: topList.classicTopics.slice(0, topicsInIndex),
     newTopics: topList.newTopics.slice(0, newTopicsPerPage),
@@ -38,6 +41,9 @@ function showHot(req, res) {
   res.render('category', {
     title: '综合',
     pageType: '综合',
+    topicCount: topList.totalTopicCount,
+    totalTopicCount: topList.totalTopicCount,
+    categoryTopicCount: topList.categoryTopicCount,
     topics: recentHotTopicsDataPage,
     totalPage: totalPages,
     currentPage: currentPage,
@@ -70,6 +76,9 @@ function showNew(req, res) {
   res.render('category', {
     title: '最新',
     pageType: '最新',
+    topicCount: topList.totalTopicCount,
+    totalTopicCount: topList.totalTopicCount,
+    categoryTopicCount: topList.categoryTopicCount,
     topics: newTopicsPage,
     totalPage: totalPages,
     currentPage: currentPage
@@ -116,20 +125,23 @@ function showUnclassified(req, res) {
   _showCategory(req, res, '未分类');
 }
 
-function _showCategory(req, res, catogory) {
+function _showCategory(req, res, category) {
   var currentPage = parseInt(req.query.page) || 1;
 
-  var categoryTopicsPage = topList.categoryTopics[catogory].slice((currentPage - 1) * topicsPerPage, currentPage * topicsPerPage);
-  var totalPages = Math.ceil(topList.categoryTopics[catogory].length / topicsPerPage);
+  var categoryTopicsPage = topList.categoryTopics[category].slice((currentPage - 1) * topicsPerPage, currentPage * topicsPerPage);
+  var totalPages = Math.ceil(topList.categoryTopics[category].length / topicsPerPage);
 
   res.render('category', {
-    title: catogory,
-    pageType: catogory,
+    title: category,
+    pageType: category,
+    topicCount: topList.categoryTopicCount[category],
+    totalTopicCount: topList.totalTopicCount,
+    categoryTopicCount: topList.categoryTopicCount,
     topics: categoryTopicsPage,
     totalPage: totalPages,
     currentPage: currentPage,
-    authors: topList.categoryAuthors[catogory],
-    tags: topList.categoryTags[catogory]
+    authors: topList.categoryAuthors[category],
+    tags: topList.categoryTags[category]
   });
 }
 

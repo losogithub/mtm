@@ -299,6 +299,7 @@ function updateHotTopics() {
       }
     }
     topList.hotTopics = topics.sort(_scoreCompare).slice(0, 240);
+    topList.totalTopicCount = topics.length;
 
     var authorIds = [];
     for (var id in authorMap) {
@@ -353,6 +354,7 @@ function updateCategoryTopics() {
           }
         }
         topList.categoryTopics[category] = topics.sort(_scoreCompare).slice(0, 240);
+        topList.categoryTopicCount[category] = topics.length;
 
         var authorIds = [];
         for (var id in authorMap) {
@@ -427,7 +429,8 @@ exports.topList = topList = {
   ],//不能有“未分类”！！！
   categoryTags: {},
   categoryAuthors: {},
-  categoryTopics: {}
+  categoryTopics: {},
+  categoryTopicCount: {}
 };
 exports.updateHotTopics = updateHotTopics;
 exports.updateCategoryTopics = updateCategoryTopics;
