@@ -313,6 +313,9 @@ table {
 .Authors a:hover .Authors_Name {
   text-overflow: clip;
 }
+.Authors a:hover .Authors_Category {
+  color: #34495e;
+}
 .Authors a:first-child,
 .Authors a:first-child + a,
 .Authors a:first-child + a + a {
