@@ -82,6 +82,10 @@ function showEdit(req, res, next) {
 
     var topic = results.topic;
     var items = results.items;
+    var itemsData = [];
+    items.forEach(function (item) {
+      itemsData.push(_getItemData(item));
+    });
     res.set('Cache-Control', 'private, no-cache, no-store, must-revalidate, post-check=0, pre-check=0');
     res.set('Connection', 'close');
     res.set('Expire', '-1');
@@ -114,7 +118,7 @@ function showEdit(req, res, next) {
       ],
       escape: escape,
       topic: topic,
-      items: items
+      items: itemsData
     });
     console.log('showEdit done');
   });
@@ -386,6 +390,10 @@ function showIndex(req, res, next) {
 
   //ep的error没处理
   var ep = EventProxy.create('topic', 'items', 'author', function (topic, items, author) {
+    var itemsData = [];
+    items.forEach(function (item) {
+      itemsData.push(_getItemData(item));
+    });
     var authorData = {
       author: author.loginName,
       imgUrl: author.url,
@@ -430,7 +438,7 @@ function showIndex(req, res, next) {
       isAuthor: topic.author_id == userId,
       topic: topic,
       tags: topic.tags,
-      items: items,
+      items: itemsData,
       authorInfo: authorData,
       liked: liked
     });
