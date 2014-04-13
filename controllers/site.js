@@ -50,6 +50,7 @@ function showHot(req, res) {
     totalPage: totalPages,
     currentPage: currentPage,
     authors: topList.hotAuthors,
+    authorCategories: AuthorCategories,
     tags: topList.hotTags
   });
 }
@@ -143,6 +144,7 @@ function _showCategory(req, res, category) {
     totalPage: totalPages,
     currentPage: currentPage,
     authors: topList.categoryAuthors[category],
+    authorCategories: AuthorCategories,
     tags: topList.categoryTags[category]
   });
 }

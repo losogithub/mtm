@@ -10,6 +10,8 @@ var async = require('async');
 
 var Common = require('../common');
 var Tags = Common.tags;
+var TopList = Common.topList;
+var AuthorCategories = Common.authorCategories;
 var Topic = require('../proxy').Topic;
 var User = require('../proxy').User;
 
@@ -61,13 +63,14 @@ function showTag(req, res, next) {
       title: tag.text,
       tag: tag.text,
       category: tag.category,
-      topicCount: Topic.topList.categoryTopicCount[tag.category],
-      totalTopicCount: Topic.topList.totalTopicCount,
-      categoryTopicCount: Topic.topList.categoryTopicCount,
+      topicCount: TopList.categoryTopicCount[tag.category],
+      totalTopicCount: TopList.totalTopicCount,
+      categoryTopicCount: TopList.categoryTopicCount,
       tags: tag.tags,
       totalPage: totalPages,
       currentPage: currentPage,
       authors: authors,
+      authorCategories: AuthorCategories,
       topics: tagTopicsPage
     });
   });
