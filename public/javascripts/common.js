@@ -45,7 +45,7 @@
     if (ignoreNull && !$img.attr('src')) {
       return;
     }
-    var url = oriUrl + '/favicon.ico';
+    var url = 'http://www.google.com/s2/favicons?domain=' + oriUrl;
     if (url != $img.attr('src')) {
       $img.attr('src', url);
     }
