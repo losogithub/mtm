@@ -9,6 +9,13 @@
            src="<%= author.url || '/images/no_img/user_80x80.png' %>">
     </div>
     <small class="Authors_Name text-center" title="<%= author.loginName %>"><%= author.loginName %></small>
+    <small class="Authors_Category text-center">
+      <small>
+        <i class="fa fa-bookmark-o"></i>
+        <%= authorCategories[author.loginName]['categories'][0] %>
+      </small>
+    </small>
+
   </a>
   <% } %>
 </div>

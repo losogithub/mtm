@@ -8,6 +8,7 @@
 
 var Common = require('../common');
 var topList = Common.topList;
+var AuthorCategories = Common.authorCategories;
 
 //var topicsPerPage = 24;
 //var topicsInIndex = 24;
@@ -26,6 +27,7 @@ function index(req, res) {
     realGood: topList.classicTopics.slice(0, topicsInIndex),
     newTopics: topList.newTopics.slice(0, newTopicsPerPage),
     authors: topList.hotAuthors,
+    authorCategories: AuthorCategories,
     tags: topList.hotTags
   });
 }

@@ -27,6 +27,8 @@ var helper = require('../helper/helper');
 var WeiboHelper = require('../helper/weibo');
 var escape = helper.escape;
 
+var Common = require('../common');
+var TopList = Common.topList;
 var Topic = require('../proxy').Topic;
 var Item = require('../proxy').Item;
 var User = require('../proxy').User;
@@ -436,9 +438,9 @@ function showIndex(req, res, next) {
       ],
       escape: escape,
       isAuthor: topic.author_id == userId,
-      topicCount: Topic.topList.categoryTopicCount[topic.category],
-      totalTopicCount: Topic.topList.totalTopicCount,
-      categoryTopicCount: Topic.topList.categoryTopicCount,
+      topicCount: TopList.categoryTopicCount[topic.category],
+      totalTopicCount: TopList.totalTopicCount,
+      categoryTopicCount: TopList.categoryTopicCount,
       topic: topic,
       tags: topic.tags,
       items: itemsData,
@@ -1068,7 +1070,7 @@ function saveCategory(req, res, next) {
   var authorId = req.session.userId;
   var topicId = req.body.topicId;
   var category = sanitize(req.body.category).trim();
-  var valid = Topic.topList.CATEGORIES[category];
+  var valid = TopList.CATEGORIES[category];
 
   if (!valid) {
     return next(new Error(400));

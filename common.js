@@ -8,6 +8,7 @@
 
 module.exports = {
   tags: [],
+  authorCategories: {},
   topList: {
     CATEGORIES: {
       '未分类': 1,
