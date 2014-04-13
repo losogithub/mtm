@@ -26,6 +26,13 @@
       return quote;
     },
 
+    getFav: function (url) {
+      var temp;
+      var fav = 'http://' + ((temp = this.REGEXP_URL.exec(url)) && temp[2]) + '/favicon.ico';
+
+      return fav;
+    },
+
     suffixImage: function (src) {
       if (!src) {
         return src;

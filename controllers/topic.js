@@ -633,6 +633,7 @@ function _getItemData(item) {
     case 'LINK':
       itemData = {
         url: item.url,
+        fav: utils.getFav(item.url),
         title: item.title,
         snippet: item.snippet,
         src: item.src,
@@ -941,8 +942,7 @@ function editItem(req, res, next) {
       }
       item.update(data, function (err) {
         if (err) {
-          callback(err);
-          return;
+          return callback(err);
         }
 
         callback();
@@ -950,11 +950,10 @@ function editItem(req, res, next) {
       topic.update_at = Date.now();
       topic.save();
     }],
-    newItem: ['update', function (callback, results) {
+    newItem: ['update', function (callback) {
       Item.getItemById(type, itemId, function (err, item) {
         if (err) {
-          callback(err);
-          return;
+          return callback(err);
         }
 
         callback(null, item);

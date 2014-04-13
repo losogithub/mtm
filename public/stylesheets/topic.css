@@ -125,6 +125,13 @@
   line-height: 1.1;
   font-weight: bold;
 }
+.Content.LINK .Title img {
+  width: 16px;
+  height: 16px;
+}
+.Content.LINK .Title a {
+  vertical-align: middle;
+}
 .Content.LINK .Snippet {
   line-height: 1.2;
 }

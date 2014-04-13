@@ -694,7 +694,7 @@
       return {
         title: this.widget().find('input[name="title"]').val(),
         snippet: this.widget().find('textarea[name="snippet"]').val(),
-        src: (src == this.defaultImgSrc || src == this.noImgSrc) ? undefined : src,
+        src: (src == this.defaultImgSrc || src == this.noImgSrc) ? '' : src,
         description: this.widget().find('textarea[name="description"]').val()
       }
     }
@@ -1411,6 +1411,9 @@
         $item
           .find('.LINK_URL')
           .attr('href', url)
+          .end()
+          .find('.Fav')
+          .attr('src', shizier.utils.getFav(url))
           .end()
           .find('.Title a')
           .text(title)
