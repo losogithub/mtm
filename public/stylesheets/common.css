@@ -272,7 +272,6 @@ table {
   width: 130px !important;
 }
 .Band {
-  height: 41px;
   background-color: #34495e;
 }
 .Band .caret {
@@ -293,7 +292,7 @@ table {
   }
 }
 .Authors {
-  max-height: 120px;
+  max-height: 113px;
   overflow: hidden;
 }
 .Authors:hover a {
@@ -337,6 +336,11 @@ table {
   display: block;
   height: 20px;
   line-height: 20px;
+}
+.Authors .Authors_Category {
+  height: 13px;
+  line-height: 13px;
+  font-size: 13px;
 }
 .Tile .Share {
   display: none;

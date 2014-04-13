@@ -3,16 +3,20 @@
   <div class="container">
     <div class="btn-group pull-left">
       <div class="btn-group">
+        <a class="btn <%- categoryType == 'INDEX' ? 'btn-primary' : 'btn-inverse' %>"
+           href="/">首页(<%- locals.totalTopicCount || '0' %>)</a>
+      </div>
+    </div>
+    <i class="fa fa-angle-right pull-left text-inverse mls" style="line-height: 41px;"></i>
+    <div class="btn-group pull-left">
+      <div class="btn-group">
         <button type="button" data-toggle="dropdown"
-                class="btn dropdown-toggle <%- locals.tag ? 'btn-inverse' : 'btn-primary' %>">
-          <%- categoryType == 'INDEX' ? '首页' : categoryType %>
-          (<%- locals.topicCount ? locals.topicCount : '0' %>)
-          <i class="fa fa-bars mlm"></i>
+                class="btn dropdown-toggle <%- locals.tag || categoryType == 'INDEX' ? 'btn-inverse' : 'btn-primary' %>">
+          <%= categoryType == 'INDEX' ? '分类' : (categoryType + '(' + (locals.topicCount || '0') + ')') %>
+          <i class="fa fa-bars mls"></i>
         </button>
         <span class="dropdown-arrow dropdown-arrow-inverse"></span>
         <ul class="dropdown-menu dropdown-inverse">
-          <li class="<%- categoryType == 'INDEX' ? 'selected' : '' %>">
-            <a href="/">首页(<%- locals.totalTopicCount || '0' %>)</a></li>
           <li class="<%- categoryType == '综合' ? 'selected' : '' %>">
             <a href="/hot">综合(<%- locals.totalTopicCount || '0' %>)</a></li>
           <li class="<%- categoryType == '最新' ? 'selected' : '' %>">
@@ -41,6 +45,7 @@
         </ul>
       </div>
     </div>
+    <i class="fa fa-angle-right pull-left text-inverse mls" style="line-height: 41px;"></i>
     <% if (locals.tag) { %>
     <div class="btn-group pull-left">
       <div class="btn-group">
@@ -49,7 +54,7 @@
       </div>
     </div>
     <% } %>
-    <div class="tags plm">
+    <div class="tags plm pull-left">
       <small class="text-inverse" style="font-size: 14px;"><i class="fa fa-tags"></i>：</small>
       <% for (var i = 0; i < tags.length; i++) { %>
       <a target="_blank" href="/tag/<%- encodeURIComponent(tags[i]) %>"
