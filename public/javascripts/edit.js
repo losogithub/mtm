@@ -1825,7 +1825,7 @@
         data: {
           topicId: topicId,
           title: $titleInput.val(),
-          coverUrl: (coverUrl == noImgSrc || coverUrl == defaultImgSrc) ? undefined : coverUrl,
+          coverUrl: (coverUrl == noImgSrc || coverUrl == defaultImgSrc) ? '' : coverUrl,
           description: $description.val()
         }
       })
