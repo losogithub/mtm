@@ -67,15 +67,21 @@ function showWorks(req, res, next) {
       var topicsForShow = [];
       for (var i = (currentPage - 1) * 10; i < topicDetails.length && i < currentPage * 10; i++) {
         var temp = topicDetails[i];
-        temp.create_date = topicDetails[i].create_at.getFullYear() + '年'
-          + (topicDetails[i].create_at.getMonth() + 1) + '月'
-          + topicDetails[i].create_at.getDate() + '日';
-        temp.update_date = topicDetails[i].update_at.getFullYear() + '年'
-          + (topicDetails[i].update_at.getMonth() + 1) + '月'
-          + topicDetails[i].update_at.getDate() + '日';
+        temp.create_date = topicDetails[i].create_at.getFullYear() + '-'
+          + (topicDetails[i].create_at.getMonth() + 1) + '-'
+          + topicDetails[i].create_at.getDate();
+        temp.update_date = topicDetails[i].update_at.getFullYear() + '-'
+          + (topicDetails[i].update_at.getMonth() + 1) + '-'
+          + topicDetails[i].update_at.getDate();
         topicsForShow.push(temp);
       }
-      return renderWorks(res, user, topicsForShow, currentPage, totalPage, mt, mo, topicDetails.length);
+
+      var topicsPageView = 0;
+      topicDetails.forEach(function (topic) {
+        topicsPageView += topic.PV_count;
+      });
+
+      return renderWorks(res, user, topicsForShow, currentPage, totalPage, mt, mo, topicDetails.length, topicsPageView);
     });
   });
 }
@@ -97,7 +103,7 @@ var getAndSortTopics = function (mt, mo, topics, callback) {
   return Topic.getTopicsByIdsSorted(topics, order, callback);
 }
 
-var renderWorks = function (res, user, topicsInfos, currentPage, totalPage, mt, mo, length) {
+var renderWorks = function (res, user, topicsInfos, currentPage, totalPage, mt, mo, length, topicsPageView) {
   res.render('personal/index', {
     css: [
       '/stylesheets/personal.css'
@@ -107,7 +113,7 @@ var renderWorks = function (res, user, topicsInfos, currentPage, totalPage, mt, 
     username: user.loginName,
     favourite: user.favourite,
     imageUrl: user.url,
-    topicsPageView: user.pageviewCount,
+    topicsPageView: topicsPageView,
     topicCount: length,
     topics: topicsInfos,
     currentPage: currentPage,
@@ -599,58 +605,58 @@ function showPersonal(req, res, next) {
       //1. Personal work
       getandSortTopicsforShow(sortOrder, user.topics, function (err, topicsInfo) {
         if (err) {
-          console.log("err");
+          return next(err);
         }
         /*
          //null topics has no problem
          else if(!topicsInfo){
          console.log("err: null topics");
          }*/
-        else {
-          //sorted topics
-          console.log("topics length: ", topicsInfo.length);
 
-          //here according to TotalTopic decide totalPage and currentPage topics
-          var totalPage = Math.ceil(topicsInfo.length / 9);
+        //sorted topics
+        console.log("topics length: ", topicsInfo.length);
 
-
-          //console.log(topicsInfo);
-          //create a template arrary,
-          //then push all the topics into this arrary for show.
-          var topicsForShow = [];
-          for (var i = (currentPage - 1) * 9; i < topicsInfo.length && i < currentPage * 9; i++) {
-            var temp = topicsInfo[i];
-            topicsInfo[i].create_date = topicsInfo[i].create_at.getFullYear() + '年'
-              + (topicsInfo[i].create_at.getMonth() + 1) + '月'
-              + topicsInfo[i].create_at.getDate() + '日';
-            topicsForShow.push(temp);
-          }
+        //here according to TotalTopic decide totalPage and currentPage topics
+        var totalPage = Math.ceil(topicsInfo.length / 9);
 
 
-          //before render: deal with more than one page.
-
-
-          res.render('personal/index', {
-            title: authorName + ' 的策展',
-            personalType: 'PERSONAL',
-            css: ['/stylesheets/personal.css'],
-            authorName: authorName,
-            authorImage: user.url,
-            authorDescription: description,
-            authorPersonalUrl: user.personalSite,
-            topicCount: topicsInfo.length,
-            topicsPageView: user.pageviewCount,
-            favourite: user.favourite,
-            topics: topicsForShow,
-            sortOrder: sortOrder,
-            totalPage: totalPage,
-            currentPage: currentPage,
-            likedBefore: likedBefore
-          });
-          return;
-
+        //console.log(topicsInfo);
+        //create a template arrary,
+        //then push all the topics into this arrary for show.
+        var topicsForShow = [];
+        for (var i = (currentPage - 1) * 9; i < topicsInfo.length && i < currentPage * 9; i++) {
+          var temp = topicsInfo[i];
+          topicsInfo[i].create_date = topicsInfo[i].create_at.getFullYear() + '-'
+            + (topicsInfo[i].create_at.getMonth() + 1) + '-'
+            + topicsInfo[i].create_at.getDate();
+          topicsForShow.push(temp);
         }
 
+        var topicsPageView = 0;
+        topicsInfo.forEach(function (topic) {
+          topicsPageView += topic.PV_count;
+        });
+
+        //before render: deal with more than one page.
+
+
+        res.render('personal/index', {
+          title: authorName + ' 的策展',
+          personalType: 'PERSONAL',
+          css: ['/stylesheets/personal.css'],
+          authorName: authorName,
+          authorImage: user.url,
+          authorDescription: description,
+          authorPersonalUrl: user.personalSite,
+          topicCount: topicsInfo.length,
+          topicsPageView: topicsPageView,
+          favourite: user.favourite,
+          topics: topicsForShow,
+          sortOrder: sortOrder,
+          totalPage: totalPage,
+          currentPage: currentPage,
+          likedBefore: likedBefore
+        });
       });
     }
 
