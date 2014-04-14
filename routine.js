@@ -10,6 +10,7 @@ var async = require('async');
 var Common = require('./common');
 var Tags = Common.tags;
 var AuthorCategories = Common.authorCategories;
+var AuthorCategoryList = Common.authorCategoryList;
 var Topic = require('./proxy').Topic;
 
 function _updateTags() {
@@ -121,11 +122,11 @@ function _countAuthors(callback, results) {
 
 function _calcAuthors(callback) {
   for (var author in AuthorCategories) {
-    var categories = AuthorCategories[author]['categories'] = [];
+    var categoryList = AuthorCategoryList[author] = [];
     for (var category in AuthorCategories[author]) {
-      categories.push(category);
+      categoryList.push(category);
     }
-    categories.sort(function (a, b) {
+    categoryList.sort(function (a, b) {
       return AuthorCategories[author][b] - AuthorCategories[author][a];
     });
   }

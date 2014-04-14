@@ -52,6 +52,7 @@
   };
 
   $(function ($) {
+
     shizier.loginCheck = function () {
       var username = document.getElementById('uName').value;
       var password = document.getElementById('uPas').value;

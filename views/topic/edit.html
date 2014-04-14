@@ -1,4 +1,4 @@
-<div class="Band text-inverse" style="background-color: #34495e;"
+<div class="Band text-inverse"
      data-spy="affix" data-offset-top="72">
   <div class="container">
     <div class="Band_Btn">
@@ -16,15 +16,17 @@
     <h1 class="Band_Ttl">
       <b>策展中<%= topic.publishDate ? '' : '（草稿）' %></b>
       <span id="_asterisk" style="display: none;">*</span>
-      <span id="_saved" style="display: none;" class="text-muted">- 所有修改都已保存，可以直接离开本页面</span>
-      <span id="_error" style="display: none;" class="text-danger">- 操作失败，请刷新页面撤销刚才的修改</span>
-      <span id="_loading" style="display: none;" class="text-muted">- 请稍候 <i class='fa fa-spinner fa-spin'></i></span>
+      <small>
+        <span id="_saved" style="display: none;">- 所有修改都已保存，您可以直接离开本页面</span>
+        <span id="_error" style="display: none;" class="text-danger">- 操作失败，请刷新页面</span>
+        <span id="_loading" style="display: none;">- 请稍候 <i class='fa fa-spinner fa-spin'></i></span>
+      </small>
     </h1>
   </div>
 </div>
 
 <!--内容-->
-<div style="background-color: #ecf0f1; padding-top: 41px;">
+<div class="background-clouds" style="padding-top: 41px;">
   <div class="container">
     <div class="row pbl">
       <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-8 col-lg-7 mtl">

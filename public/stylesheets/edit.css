@@ -3,12 +3,43 @@
 }
 .ExSelected .StarIcon,
 .StarIconFull {
-  color: #ffdd11;
+  color: #f1f742;
+}
+.background-white {
+  background-color: white;
+}
+.background-clouds {
+  background-color: #ecf0f1;
+}
+.background-muted {
+  background-color: #bdc3c7;
+}
+.background-concrete {
+  background-color: #95a5a6;
+}
+.background-primary {
+  background-color: #1abc9c;
+}
+.background-warning {
+  background-color: #f1c40f;
+}
+.background-danger {
+  background-color: #e74c3c;
+}
+.background-success {
+  background-color: #2ecc71;
+}
+.background-info {
+  background-color: #3498db;
+}
+.background-default {
+  background-color: #34495e;
 }
 .text-theme {
   color: #669966;
 }
-.text-default {
+.text-default,
+.text-default-a {
   color: #34495e;
 }
 .text-default:hover {

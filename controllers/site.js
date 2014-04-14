@@ -8,7 +8,7 @@
 
 var Common = require('../common');
 var topList = Common.topList;
-var AuthorCategories = Common.authorCategories;
+var AuthorCategoryList = Common.authorCategoryList;
 
 //var topicsPerPage = 24;
 //var topicsInIndex = 24;
@@ -27,7 +27,7 @@ function index(req, res) {
     realGood: topList.classicTopics.slice(0, topicsInIndex),
     newTopics: topList.newTopics.slice(0, newTopicsPerPage),
     authors: topList.hotAuthors,
-    authorCategories: AuthorCategories,
+    authorCategoryList: AuthorCategoryList,
     tags: topList.hotTags
   });
 }
@@ -50,7 +50,7 @@ function showHot(req, res) {
     totalPage: totalPages,
     currentPage: currentPage,
     authors: topList.hotAuthors,
-    authorCategories: AuthorCategories,
+    authorCategoryList: AuthorCategoryList,
     tags: topList.hotTags
   });
 }
@@ -144,7 +144,7 @@ function _showCategory(req, res, category) {
     totalPage: totalPages,
     currentPage: currentPage,
     authors: topList.categoryAuthors[category],
-    authorCategories: AuthorCategories,
+    authorCategoryList: AuthorCategoryList,
     tags: topList.categoryTags[category]
   });
 }

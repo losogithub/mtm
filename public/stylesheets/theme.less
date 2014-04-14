@@ -1,8 +1,4 @@
 @theme-color: #696;
-@FV-color: #fd1;
-@FV-shadow-color: darken(@FV-color, 40%);
-@FV-empty-color: #ddd;
-@FV-empty-shadow-color: darken(@FV-empty-color, 40%);
 
 @color-clouds: #ecf0f1;
 @color-muted: #bdc3c7;
@@ -18,13 +14,45 @@
   color: white;
 }
 .ExSelected .StarIcon, .StarIconFull {
-  color: #ffdd11;
+  color: @color-warning + #033;
 }
+
 //added
+.background-white {
+  background-color: white;
+}
+.background-clouds {
+  background-color: @color-clouds;
+}
+.background-muted {
+  background-color: @color-muted;
+}
+.background-concrete {
+  background-color: @color-concrete;
+}
+.background-primary {
+  background-color: @color-primary;
+}
+.background-warning {
+  background-color: @color-warning;
+}
+.background-danger {
+  background-color: @color-danger;
+}
+.background-success {
+  background-color: @color-success;
+}
+.background-info {
+  background-color: @color-info;
+}
+.background-default {
+  background-color: @color-default;
+}
+
 .text-theme {
   color: @theme-color;
 }
-.text-default {
+.text-default, .text-default-a {
   color: #34495e;
 }
 .text-default:hover {

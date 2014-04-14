@@ -11,7 +11,7 @@ var async = require('async');
 var Common = require('../common');
 var Tags = Common.tags;
 var TopList = Common.topList;
-var AuthorCategories = Common.authorCategories;
+var AuthorCategoryList = Common.authorCategoryList;
 var Topic = require('../proxy').Topic;
 var User = require('../proxy').User;
 
@@ -70,7 +70,7 @@ function showTag(req, res, next) {
       totalPage: totalPages,
       currentPage: currentPage,
       authors: authors,
-      authorCategories: AuthorCategories,
+      authorCategoryList: AuthorCategoryList,
       topics: tagTopicsPage
     });
   });

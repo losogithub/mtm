@@ -9,6 +9,19 @@
 module.exports = {
   tags: [],
   authorCategories: {},
+  authorCategoryList: {},
+  CATEGORIES2ENG: {
+    '未分类': 'unclassified',
+    '娱乐': 'entertainment',
+    '科技': 'tech',
+    '新闻': 'news',
+    '时尚': 'fashion',
+    '生活': 'life',
+    '幽默': 'humor',
+    '文化': 'culture',
+    '商业': 'business',
+    '体育': 'sport'
+  },
   topList: {
     CATEGORIES: {
       '未分类': 1,

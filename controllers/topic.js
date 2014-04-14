@@ -29,6 +29,8 @@ var escape = helper.escape;
 
 var Common = require('../common');
 var TopList = Common.topList;
+var AuthorCategoryList = Common.authorCategoryList;
+var CATEGORIES2ENG = Common.CATEGORIES2ENG;
 var Topic = require('../proxy').Topic;
 var Item = require('../proxy').Item;
 var User = require('../proxy').User;
@@ -445,6 +447,8 @@ function showIndex(req, res, next) {
       tags: topic.tags,
       items: itemsData,
       authorInfo: authorData,
+      authorCategoryList: AuthorCategoryList,
+      CATEGORIES2ENG: CATEGORIES2ENG,
       liked: liked
     });
     console.log('showIndex done');

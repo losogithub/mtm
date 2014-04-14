@@ -3,7 +3,7 @@
 <% include ../_band.html %>
 
 <!--内容-->
-<div style="background-color: #ecf0f1;">
+<div class="background-clouds">
   <div class="container">
     <div class="row pbl">
       <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-8 col-lg-7 mtl">
@@ -109,9 +109,9 @@
         </div>
       </div>
       <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-4 col-lg-5 mtl">
-        <div class="pal" style="background-color: #34495e;color:white;border-radius: 6px;">
+        <div class="pal background-white" style="border-radius: 6px;">
           <div class="clearfix">
-            <a class="pull-left mrl img-circle-border" title="<%= topic.author_name %>" target="_blank"
+            <a class="pull-left mrl img-circle-border-clouds" title="<%= topic.author_name %>" target="_blank"
                href="/u/<%= topic.author_name %>"
                title="<%= topic.author_name %>"
                style="display: block; width: 80px; height: 80px;">
@@ -122,16 +122,26 @@
             </a>
 
             <h1 class="h6 mvn">
-              <a class="text-inverse" href="/u/<%= topic.author_name %>" title="<%= topic.author_name %>">
+              <a class="text-default-a" href="/u/<%= topic.author_name %>" title="<%= topic.author_name %>">
                 <%= topic.author_name %>
               </a>
             </h1>
+            <p class="mtm mbn text-muted small" style="line-height: 1;">
+              <% for (var i = 0; i < 3; i++) { %>
+              <% var tempCategory = authorCategoryList[topic.author_name][i]; %>
+              <% if (!tempCategory) { break; } %>
+              <i class="fa fa-bookmark-o"></i>
+              <a target="_blank" class="text-muted mrs"
+                 href="/<%= CATEGORIES2ENG[tempCategory] %>">
+                <%= tempCategory %>
+              </a>
+              <% } %>
+            </p>
             <% if (authorInfo.personalSite) { %>
             <% var site = authorInfo.personalSite || ''; %>
-            <p class="mtm">
+            <p class="mtm mbn" style="line-height: 1; font-size: 12px;">
               <a target="_blank" href="<%= site %>"
-                 title="<%= site %>"
-                 style="word-break: break-all;">
+                 title="<%= site %>" class="text-muted">
                 <i class="fa fa-home"></i>
                 <%= site %>
               </a>
@@ -139,9 +149,9 @@
             <% } %>
           </div>
           <% if (authorInfo.description) { %>
-          <div class="mtm"><%- authorInfo.description || '' %></div>
+          <p class="mtm mbn text-muted small" style="line-height: 1.2;"><%- authorInfo.description || '' %></p>
           <% } %>
-          <div class="mtl">
+          <div class="mtm">
             <button name="favoriteUser" class="<%= locals.likedBefore ? 'ExSelected' : '' %> btn btn-default"
                     data-favorite='{"authorName":"<%= authorInfo.author %>"}' title="喜欢">
               <i class="fa fa-star StarIcon"></i>

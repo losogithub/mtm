@@ -3,7 +3,7 @@
   <div class="container">
     <div class="btn-group pull-left">
       <div class="btn-group">
-        <a class="btn <%- categoryType == 'INDEX' ? 'btn-primary' : 'btn-inverse' %>"
+        <a class="btn <%- categoryType == 'INDEX' ? 'btn-primary' : 'btn-default' %>"
            href="/">首页(<%- locals.totalTopicCount || '0' %>)</a>
       </div>
     </div>
@@ -11,7 +11,7 @@
     <div class="btn-group pull-left">
       <div class="btn-group">
         <button type="button" data-toggle="dropdown"
-                class="btn dropdown-toggle <%- locals.tag || categoryType == 'INDEX' ? 'btn-inverse' : 'btn-primary' %>">
+                class="btn dropdown-toggle <%- locals.tag || categoryType == 'INDEX' ? 'btn-default' : 'btn-primary' %>">
           <%= categoryType == 'INDEX' ? '分类' : (categoryType + '(' + (locals.topicCount || '0') + ')') %>
           <i class="fa fa-bars mls"></i>
         </button>
