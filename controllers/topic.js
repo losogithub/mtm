@@ -111,7 +111,7 @@ function showEdit(req, res, next) {
         'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.js',
         'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-buttons.js',
         'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-thumbs.js',
-        'http://cdn.bootcss.com/autosize.js/1.17.1/autosize-min.js',
+        'http://cdn.bootcss.com/autosize.js/1.18.1/jquery.autosize.min.js',
         '/javascripts/jquery-ui-1.10.3.custom.min.js',
         'http://cdn.bootcss.com/jquery-validate/1.11.1/jquery.validate.min.js',
         '/javascripts/utils.js',

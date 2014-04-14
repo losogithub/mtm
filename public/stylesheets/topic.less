@@ -4,13 +4,11 @@
 /*条目*/
 .WidgetItemList {
   list-style: none; padding: 0 0 40px; margin-bottom: 0;
-  >li {
-      &:hover { background-color: lighten(@color-clouds, 4%); }
-  }
-  .Quote {
-    &, * { color: #bdc3c7; }
-    font-size: 12px; line-height: 13px; margin-top: 3px;
-  }
+}
+
+.Quote {
+  &, * { color: @color-muted; }
+  font-size: 12px; line-height: 13px; margin-top: 3px;
 }
 
 /*工具栏*/
@@ -30,13 +28,13 @@
 .EditUtil {
   background-color: lighten(@color-clouds, 4%); border-radius: 6px;
   .btn {
-    color: #bdc3c7;
+    color: @color-muted;
   }
-  .EDIT:hover {
-    color: #1abc9c;
+  .EDIT:hover,.EDIT:focus {
+    color: @color-primary;
   }
-  .DELETE:hover {
-    color: #e74c3c;
+  .DELETE:hover,.DELETE:focus {
+    color: @color-danger;
   }
   display: none; line-height: 1;
   position: absolute; bottom: 0; right: 15px;
@@ -47,87 +45,110 @@
   }
 }
 
-.Content.LINK {
-  .Title {
-    font-size: 20px; line-height: 1.1;font-weight: bold;
-    img { width: 16px; height: 16px; }
-    a { vertical-align: middle; }
-  }
-  .Snippet { line-height: 1.2; }
-  .Thumb {
-    img { max-width: 150px; max-height: 150px; }
-  }
-  .Description { padding-left: 6px; border-left: 2px solid @color-muted; line-height: 1.4; }
-}
+.WidgetItemList>li {
+  &:hover { background-color: lighten(@color-clouds, 4%); }
 
-.Item .IMAGE {
-  border-radius: 6px; background-color: @color-clouds;
-  width: 500px; max-width: 100%; margin: auto;
-  img { max-width: 100%; max-height: 500px; }
-  .Title { line-height: 1.1; font-weight: bold; }
-  .Description { line-height: 1.4; }
-}
+  .IMAGE,
+  .IMAGE_CREATE,
+  .VIDEO,
+  .VIDEO_CREATE,
+  .WEIBO,
+  .WEIBO_CREATE {
+    border-radius: 6px; background-color: @color-clouds;
+    width: 500px; max-width: 100%; margin: auto;
+  }
 
-.VIDEO {
-  .Cover {
-    text-align: center; width: 120px; height: 90px; display: block;
-    background-color: #7f8c8d; background-repeat: no-repeat; background-size: cover;
-    border-radius: 0; padding: 0;
-    .Background { width: 120px; height: 90px; }
-    i {
-      line-height: 95px; font-size: 60px;
-      color: rgba(255, 255, 255, 0.6);
+  .LINK {
+    .Title {
+      font-size: 20px; line-height: 1.1;font-weight: bold;
+      img { width: 16px; height: 16px; }
+      a { vertical-align: middle; }
     }
-    &:hover, &:focus, &:active {
-      .Background { background-color: rgba(0, 0, 0, 0.6); }
+    .Snippet { line-height: 1.2; }
+    .Thumb {
+      img { max-width: 150px; max-height: 150px; }
+    }
+    .Description { padding-left: 6px; border-left: 2px solid @color-muted; line-height: 1.4; }
+  }
+
+  .IMAGE {
+    img { max-width: 100%; max-height: 500px; }
+    .Title { line-height: 1.1; font-weight: bold; }
+    .Description { line-height: 1.4; }
+  }
+
+  .VIDEO {
+    embed { background-color: white; }
+    .Cover {
+      transition: none; -webkit-transition: none;
+      border-radius: 0; padding: 0;
+      text-align: center; width: 120px; height: 90px; display: block;
+      background: @color-concrete no-repeat center; background-size: cover;
+      .Background {
+        width: 120px; height: 90px;
+        transition: 0.25s; -webkit-transition: 0.25s;
+      }
       i {
-        color: #eee;
+        line-height: 90px; font-size: 60px;
+        color: rgba(255, 255, 255, 0.6);
+      }
+      &:hover, &:focus, &:active {
+        .Background { background-color: rgba(0, 0, 0, 0.6); }
+        i {
+          color: #eee;
+        }
       }
     }
+    .Title { font-weight: bold; line-height: 1.1; }
+    .Description { padding-left: 6px; border-left: 2px solid @color-muted;line-height: 1.4; }
   }
-  .Title { font-weight: bold; line-height: 1.1; }
-  .Description { padding-left: 6px; border-left: 2px solid @color-muted;line-height: 1.4; }
-}
 
-.CITE {
-  .Cite {
-    line-height: 1.4; font-weight: bold; font-size: 20px;
-    q { quotes: none; }
-  }
-  .Description { padding-left: 6px; border-left: 2px solid @color-muted; line-height: 1.4; }
-}
-
-.WEIBO, .WEIBO_CREATE {
-  .Avatar {
-    float: left; margin-right: 10px;
-    img { width: 50px; height: 50px; background-color: #7f8c8d; }
-  }
-  .Author { font-weight: bold; }
-  .Text { margin-top: 5px; }
-  .Verify {
-    display: none;
-    &.PERSONAL {
-      display: inline; text-decoration: none; color: #fb0;
-    }
-    &.ORG {
-      display: inline; text-decoration: none; color: #07e;
+  &:hover {
+    .WEIBO, .WEIBO_CREATE {
+      .Handle { visibility: visible; }
     }
   }
-  .Pic { width: 255px; margin-bottom: 15px; display: none;
-    a { float: left; margin: 5px 5px 0 0; }
+
+  .WEIBO,.WEIBO_CREATE {
+    .Retweeted {
+      background-color: darken(@color-clouds, 4%); border-radius: 6px;
+      padding: 5px 10px; margin: 10px 0; font-size: 80%;
+    }
+    .Avatar {
+      width: 50px; height: 50px; float: left; margin-right: 10px; background-color: white;
+      img { width: 50px; height: 50px; }
+      i { font-size: 30px; line-height: 50px; }
+    }
+    .Author { font-weight: bold; }
+    .Text { margin-top: 5px; }
+    .Verify {
+      display: none;
+      &.PERSONAL {
+        display: inline; text-decoration: none; color: #fb0;
+      }
+      &.ORG {
+        display: inline; text-decoration: none; color: #07e;
+      }
+    }
+    .Pic { width: 255px; margin-bottom: 15px; display: none;
+      a { float: left; margin: 5px 5px 0 0; }
+    }
+    .Handle { float: right; visibility: hidden; }
+    .Description { padding-left: 6px; border-left: 2px solid @color-muted; line-height: 1.4; }
   }
-  .Retweeted {
-    background-color: #ecf0f1; border-radius: 6px;
-    padding: 10px 20px; margin: 10px 0; font-size: 80%;
+
+  .CITE {
+    .Cite {
+      line-height: 1.4; font-weight: bold; font-size: 20px;
+      q { quotes: none; }
+    }
+    .Description { padding-left: 6px; border-left: 2px solid @color-muted; line-height: 1.4; }
   }
-  .Handle { float: right; visibility: hidden; }
-  .Description { padding-left: 6px; border-left: 2px solid @color-muted; line-height: 1.4; }
 }
 
-.WidgetItemList>li:hover {
-  .WEIBO, .WEIBO_CREATE {
-    .Handle { visibility: visible; }
-  }
-}
+.Item .TITLE { padding-bottom: 5px; border-bottom: 2px solid @color-muted; margin-bottom: 0; }
 
-.Item .TITLE { padding-bottom: 5px; border-bottom: 2px solid @color-muted; }
+.DeleteTopic {
+  padding: 0 !important; font-size: 18px; vertical-align: baseline;
+  &:hover,&:focus { color: @color-danger !important; }
+}

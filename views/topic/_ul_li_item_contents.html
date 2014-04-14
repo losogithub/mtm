@@ -43,7 +43,7 @@
 </div>
 <% } %>
 <% if (item.type == 'VIDEO' || item.type == 'ALL') { %>
-<div class='Content VIDEO' data-vid="<%= item.vid %>">
+<div class="Content VIDEO pam" data-vid="<%= item.vid %>">
 
   <% include _video_cover.html %>
 
@@ -75,10 +75,10 @@
 </div>
 <% } %>
 <% if (item.type == 'WEIBO' || item.type == 'ALL') { %>
-<div class='Content WEIBO'>
+<div class="Content WEIBO pam">
 
   <div class="clearfix">
-    <a target="_blank"  class="Avatar AuthorUrl" href="<%= (item.user && 'http://weibo.com/' + item.user.profile_url) || '' %>">
+    <a target="_blank"  class="Avatar AuthorUrl img-circle" href="<%= (item.user && 'http://weibo.com/' + item.user.profile_url) || '' %>">
       <img class="img-circle"
            src="<%= item.user && item.user.profile_image_url || '' %>"
            alt="<%= item.user && item.user.screen_name || '' %>">

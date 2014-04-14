@@ -103,7 +103,7 @@
   }
 
   $.fn.extend({
-    fadeSlideDown: function (callback) {
+    fadeSlideDown: function (callback, widget) {
       return this
         //防止slideDown动画期间获取焦点时的滚动
         .on('scroll.slide', function () {
@@ -114,7 +114,11 @@
         .animate({
           'opacity': 0.5,
           height: 'toggle'
-        }, 100)
+        }, 100, function () {
+          if (widget) {
+            widget.autoFocus();
+          }
+        })
         .fadeTo(100, 1, function () {
           $(this).off('scroll.slide');
           if ($.isFunction(callback)) {
@@ -209,7 +213,7 @@
 
       this.widget()
         .data('options', this.options.options)
-        .css('background-color', '#34495e')
+        .addClass('Editing')
         .prepend($templates.find('.Widget:first').clone(true))
         .find('.Widget')
         .prepend($templates.find('.Widget .' + this.type).clone(true))
@@ -221,9 +225,7 @@
         //textarea自适应高度
         .find('textarea')
         .css('resize', 'none')
-        .autosize({
-          append: '\n'
-        })
+        .autosize()
         .end();
 
       this.__create();
@@ -233,9 +235,7 @@
         .find('textarea')
         .trigger('autosize.resize')
         .end()
-        .fadeSlideDown();
-
-      this.autoFocus();//！！！必须在resize后面设置焦点，因为获取焦点后输入框具有了高度动画属性，否则会导致抖动！！！
+        .fadeSlideDown(null, this);
 
       this.__initFormValidation();
     },
@@ -269,6 +269,7 @@
         $(this).remove();
       });
       if (this.options._id) {
+        this.widget().removeClass('Editing');
         createItem(this.widget().prev(), this._getOriginalData());
       }
       setState('default');
@@ -1771,9 +1772,9 @@
       .find('button[name="save"]')
       .attr('type', 'submit')
       .end()
-      .find('textarea').autosize({
-        append: '\n'
-      });
+      .find('textarea')
+      .css('resize', 'none')
+      .autosize();
 
     $_topItem.find('button[name="edit"]').click(function () {
       if (!_checkRemoveWidget()) {
@@ -1783,11 +1784,12 @@
       coverUrl = $cover.attr('src');
       description = $_topItem.find('.HeadDesc').text();
 
+      $_topWidget.after($_topItem).show();
+
       $titleInput.val(title);
       $cover.attr('src', coverUrl || defaultImgSrc);
       $description.val(description);
 
-      $_topWidget.after($_topItem);
       $_topItem.hiddenSlideUp();
       $_topWidget
         .find('textarea')

@@ -61,7 +61,7 @@
           <form id="_topWidget" class="phl" style="display: none;">
             <div class="pvl">
               <div class="form-group">
-                <input name="url" class="form-control flat" placeholder="图片URL" id="_top_url" type="text">
+                <input name="url" class="form-control flat mbs" placeholder="图片URL" id="_top_url" type="text">
                 <label class="input-icon fa fa-link" for="_top_url"></label>
                 <div class="InfoHint text-muted">
                   由于受版权保护，有些图片可能无法引用
@@ -78,7 +78,7 @@
                        placeholder="策展标题（5~50字）"/>
               </div>
               <div id="_topWidget_description" class="form-group">
-                <textarea style='overflow: hidden;' name="description" class="form-control flat HeightAnimation"
+                <textarea name="description" class="form-control flat"
                           placeholder="策展描述（150字以内，换行符无效）"></textarea>
               </div>
 
@@ -170,7 +170,7 @@
 
               </div>
 
-              <div class='Content IMAGE_CREATE'>
+              <div class="Content IMAGE_CREATE pam">
                 <div class="Image">
                   <i class="fa fa-picture-o text-muted"></i>
                 </div>
@@ -192,26 +192,26 @@
                 </div>
               </div>
 
-              <div class='Content IMAGE'>
-                <div class="Image text-center">
+              <div class="Content IMAGE pam">
+                <div class="Image text-center mbl">
                   <img onerror="shizier.errorImage(this, 'default_120x120', true);">
                 </div>
 
                 <div class="form-group">
-                  <input name="title" class="form-control flat Bold AUTO_FOCUS" placeholder="图片标题" type="text">
+                  <input name="title" class="form-control flat text-center Bold AUTO_FOCUS" placeholder="图片标题" type="text">
                 </div>
                 <div class="form-group">
                   <input name="quote" class="form-control flat Url" placeholder="图片来源网页URL" type="text">
                 </div>
                 <div class="form-group">
-                  <textarea name="description" class="form-control flat" placeholder="图片介绍、评论"></textarea>
+                  <textarea name="description" class="form-control flat text-center" placeholder="图片介绍、评论"></textarea>
                 </div>
 
                 <% include _widget_BtnSet.html %>
 
               </div>
 
-              <div class='Content VIDEO_CREATE'>
+              <div class="Content VIDEO_CREATE pam">
                 <div class="Thumb">
                   <i class="fa fa-film text-muted"></i>
                 </div>
@@ -247,7 +247,7 @@
 
               </div>
 
-              <div class='Content VIDEO'>
+              <div class="Content VIDEO pam">
 
                 <% var item = {}; %>
                 <% include _video_cover.html %>
@@ -288,11 +288,9 @@
 
               </div>
 
-              <div class='Content WEIBO_CREATE'>
-                <div class="Avatar img-circle text-center"
-                     style="background-color: white; width: 50px; height: 50px;">
-                  <i class="fa fa-weibo"
-                     style="font-size: 30px; line-height: 1.7;"></i>
+              <div class="Content WEIBO_CREATE pam">
+                <div class="Avatar img-circle text-center">
+                  <i class="fa fa-weibo text-muted"></i>
                 </div>
                 <div style="overflow: hidden;">
                   <div class="InfoHint text-muted">
@@ -312,7 +310,7 @@
                 </div>
               </div>
 
-              <div class='Content WEIBO'>
+              <div class="Content WEIBO pam">
 
                 <div class="clearfix">
                   <a target="_blank"  class="Avatar AuthorUrl">

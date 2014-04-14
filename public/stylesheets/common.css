@@ -50,12 +50,6 @@
 .text-info:hover {
   color: #2a7aaf;
 }
-textarea {
-  font-family: arial, sans-serif;
-  min-height: 85px;
-  padding-bottom: 0;
-  resize: vertical;
-}
 body {
   word-wrap: break-word;
   font-family: "微软雅黑", arial, sans-serif;
@@ -175,7 +169,9 @@ table {
 }
 /*按钮*/
 .InfoHint {
-  font-size: 14px;
+  font-size: 12px;
+  line-height: 1.2;
+  margin-bottom: 5px;
 }
 /*徽标*/
 .Logo {
@@ -287,7 +283,7 @@ table {
   padding-right: 15px;
 }
 @media (max-width: 768px) {
-  .Band .container {
+  .Band.Band-Nav .container {
     padding: 0;
   }
 }
