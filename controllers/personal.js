@@ -67,12 +67,12 @@ function showWorks(req, res, next) {
       var topicsForShow = [];
       for (var i = (currentPage - 1) * 10; i < topicDetails.length && i < currentPage * 10; i++) {
         var temp = topicDetails[i];
-        temp.create_date = topicDetails[i].create_at.getFullYear() + '-'
-          + (topicDetails[i].create_at.getMonth() + 1) + '-'
-          + topicDetails[i].create_at.getDate();
-        temp.update_date = topicDetails[i].update_at.getFullYear() + '-'
-          + (topicDetails[i].update_at.getMonth() + 1) + '-'
-          + topicDetails[i].update_at.getDate();
+        temp.create_date = topicDetails[i].create_at.getFullYear() + '年'
+          + (topicDetails[i].create_at.getMonth() + 1) + '月'
+          + topicDetails[i].create_at.getDate() + '日';
+        temp.update_date = topicDetails[i].update_at.getFullYear() + '年'
+          + (topicDetails[i].update_at.getMonth() + 1) + '月'
+          + topicDetails[i].update_at.getDate() + '日';
         topicsForShow.push(temp);
       }
 
@@ -103,7 +103,7 @@ var getAndSortTopics = function (mt, mo, topics, callback) {
   return Topic.getTopicsByIdsSorted(topics, order, callback);
 }
 
-var renderWorks = function (res, user, topicsInfos, currentPage, totalPage, mt, mo, length, topicsPageView) {
+var renderWorks = function (res, user, topicsInfos, currentPage, totalPage, mt, mo, length) {
   res.render('personal/index', {
     css: [
       '/stylesheets/personal.css'
@@ -113,7 +113,7 @@ var renderWorks = function (res, user, topicsInfos, currentPage, totalPage, mt, 
     username: user.loginName,
     favourite: user.favourite,
     imageUrl: user.url,
-    topicsPageView: topicsPageView,
+    topicsPageView: user.pageviewCount,
     topicCount: length,
     topics: topicsInfos,
     currentPage: currentPage,
@@ -626,9 +626,12 @@ function showPersonal(req, res, next) {
         var topicsForShow = [];
         for (var i = (currentPage - 1) * 9; i < topicsInfo.length && i < currentPage * 9; i++) {
           var temp = topicsInfo[i];
-          topicsInfo[i].create_date = topicsInfo[i].create_at.getFullYear() + '-'
+          temp.create_date = topicsInfo[i].create_at.getFullYear() + '-'
             + (topicsInfo[i].create_at.getMonth() + 1) + '-'
             + topicsInfo[i].create_at.getDate();
+          temp.update_date = topicsInfo[i].update_at.getFullYear() + '-'
+            + (topicsInfo[i].update_at.getMonth() + 1) + '-'
+            + topicsInfo[i].update_at.getDate();
           topicsForShow.push(temp);
         }
 
