@@ -48,6 +48,8 @@
 .WidgetItemList>li {
   &:hover { background-color: lighten(@color-clouds, 4%); }
 
+  .LINK,
+  .LINK_CREATE,
   .IMAGE,
   .IMAGE_CREATE,
   .VIDEO,
@@ -64,9 +66,10 @@
       img { width: 16px; height: 16px; }
       a { vertical-align: middle; }
     }
+    .Quote { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .Snippet { line-height: 1.2; }
     .Thumb {
-      img { max-width: 150px; max-height: 150px; }
+      img { max-width: 100px; max-height: 100px; }
     }
     .Description { padding-left: 6px; border-left: 2px solid @color-muted; line-height: 1.4; }
   }

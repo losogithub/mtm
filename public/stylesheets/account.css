@@ -14,6 +14,9 @@
 .text-default:hover {
   color: #2c3e50;
 }
+.text-asbestos {
+  color: #7f8c8d;
+}
 .text-muted {
   color: #bdc3c7;
 }

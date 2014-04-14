@@ -102,7 +102,7 @@
 
             <div class="Widget">
 
-              <div class='Content LINK_CREATE'>
+              <div class="Content LINK_CREATE pam">
                 <div class="form-group">
                   <div class="Required"></div>
                   <input name="url" class="form-control flat AUTO_FOCUS" placeholder="链接URL" id="_link_url" type="text">
@@ -116,13 +116,13 @@
 
               </div>
 
-              <div class='Content LINK'>
-                <div class="form-group">
+              <div class="Content LINK pam">
+                <div class="form-group mbx">
                   <input name="title" class="form-control flat" placeholder="链接标题" type="text">
 
                   <div class="Quote">
                     <i class="fa fa-globe"></i>
-                    <a class="LINK_URL"></a>
+                    <a target="_blank" class="LINK_URL"></a>
                   </div>
                 </div>
 
@@ -130,8 +130,8 @@
                   <textarea name="snippet" class="form-control flat" placeholder="链接摘要"></textarea>
                 </div>
 
-                <div class="Thumb">
-                  <div class="Image">
+                <div class="Thumb clearfix">
+                  <div class="Image pull-left">
                     <div style="position: relative;display: inline-block;">
                       <img onerror="shizier.errorImage(this, 'default_120x120', true);">
 
@@ -145,21 +145,26 @@
                       </div>
                     </div>
                   </div>
-                  <div class="btn-group">
-                    <button class="btn btn-xs btn-default" type="button"><i class="fui-arrow-left"></i></button>
-                    <button class="btn btn-xs btn-default" type="button"><i class="fui-arrow-right"></i></button>
-                  </div>
-                  <span class="text-muted" name="pagination"></span>
+                  <div class="plm" style="overflow: hidden;">
+                    <div class="pull-left">
+                      <div class="btn-group">
+                        <button class="btn btn-xs btn-default" type="button"><i class="fui-arrow-left"></i></button>
+                        <button class="btn btn-xs btn-default" type="button"><i class="fui-arrow-right"></i></button>
+                      </div>
+                      <span class="text-muted" name="pagination"></span>
+                    </div>
 
-                  <label class="checkbox text-inverse">
-                    <input type="checkbox" id="noImg">
-                    无图片
-                  </label>
+                    <label class="checkbox text-muted pull-left mts mlm">
+                      <input type="checkbox" id="noImg">
+                      无图片
+                    </label>
+                    <div class="clearfix"></div>
 
-                  <div class="form-group">
-                    <input class="form-control flat Url" placeholder="自定义图片URL（可选）" id="_link_thumb_url" type="text">
-                    <label class="input-icon fa fa-link" for="_link_thumb_url"></label>
-                    <button name="customize" class="btn btn-default mtx" type="button">确定</button>
+                    <div class="form-group">
+                      <input class="form-control flat mbs Url" placeholder="自定义图片URL（可选）" id="_link_thumb_url" type="text">
+                      <label class="input-icon fa fa-link" for="_link_thumb_url"></label>
+                      <button name="customize" class="btn btn-default mtx" type="button">确定</button>
+                    </div>
                   </div>
                 </div>
                 <div class="form-group">
@@ -254,7 +259,7 @@
 
                 <div class="Quote">
                   <i class="fa fa-globe"></i>
-                  <a class="VIDEO_URL"></a>
+                  <a target="_blank" class="VIDEO_URL"></a>
                 </div>
 
                 <div class="form-group mtx">

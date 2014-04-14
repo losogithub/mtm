@@ -1,5 +1,10 @@
 <% if (item.type == 'LINK' || item.type == 'ALL') { %>
-<div class='Content LINK'>
+<div class="Content LINK pam">
+  <div class="Thumb mls mbs pull-right" style="display: <%= (item.type != 'ALL') && !item.src ? 'none' : 'block' %>;">
+    <a class="fancybox" rel="gallery" href='<%= item.src || "" %>' title="<%= item.title || '' %>">
+      <img src="<%= item.src || '' %>" alt="<%= item.title || '' %>">
+    </a>
+  </div>
   <div class="Title">
     <img class="Fav" src="<%= item.fav %>"
          onerror="shizier.errorFavImage(this, '<%= item.url %>');">
@@ -7,19 +12,15 @@
   </div>
   <div class="Quote">
     <i class="fa fa-globe"></i>
-    <a target="_blank" class="LINK_URL" style="color: #7f8c8d;" href="<%= item.url || '' %>">
+    <a target="_blank" class="LINK_URL" href="<%= item.url || '' %>">
       <%= item.url || '' %>
     </a>
   </div>
   <div class="Snippet text-muted small mtx" style="display: <%= (item.type != 'ALL') && !item.snippet ? 'none' : 'block' %>;"><%- item.snippet ?
     escape(item.snippet).replace(/\n/g, "<br>") : '' %></div>
-  <div class="Thumb mts" style="display: <%= (item.type != 'ALL') && !item.src ? 'none' : 'block' %>;">
-    <a class="fancybox" rel="gallery" href='<%= item.src || "" %>' title="<%= item.title || '' %>">
-      <img src="<%= item.src || '' %>" alt="<%= item.title || '' %>">
-    </a>
-  </div>
-  <div class="Description mts small" style="display: <%= (item.type != 'ALL') && !item.description ? 'none' : 'block' %>;"><%- item.description ?
+  <div class="Description text-asbestos mts small" style="display: <%= (item.type != 'ALL') && !item.description ? 'none' : 'block' %>;"><%- item.description ?
     escape(item.description).replace(/\n/g, "<br>") : '' %></div>
+  <div class="clearfix"></div>
 </div>
 <% } %>
 <% if (item.type == 'IMAGE' || item.type == 'ALL') { %>
@@ -33,7 +34,7 @@
   </div>
 
   <div class="Title text-center mts"><%= item.title || '' %></div>
-  <div class="Description text-center small mtx"><%- item.description ? escape(item.description).replace(/\n/g, "<br>") : '' %></div>
+  <div class="Description text-asbestos text-center small mtx"><%- item.description ? escape(item.description).replace(/\n/g, "<br>") : '' %></div>
   <div class="Quote" style="<%- (item.type != 'ALL') && !item.quote ? 'display:none' : '' %>">
     <i class="fa fa-globe"></i>
     <a target="_blank" href="<%= item.quote || '' %>">
@@ -54,12 +55,12 @@
   <div class="Title mtx" style="display: <%= (item.type != 'ALL') && !item.title ? 'none' : 'block' %>;">
     <a target="_blank" class="VIDEO_URL" href='<%= item.url ? item.url : "" %>'><%= item.title ? item.title : '' %></a>
   </div>
-  <div class="Description small mtx" style="display: <%= (item.type != 'ALL') && !item.description ? 'none' : 'block' %>;"><%- item.description ?
+  <div class="Description text-asbestos small mtx" style="display: <%= (item.type != 'ALL') && !item.description ? 'none' : 'block' %>;"><%- item.description ?
     escape(item.description).replace(/\n/g, "<br>") : '' %></div>
 </div>
 <% } %>
 <% if (item.type == 'CITE' || item.type == 'ALL') { %>
-<div class='Content CITE'>
+<div class="Content CITE">
   <div class="Cite">
     <i class="fa fa-quote-left text-muted"></i>
     <q><%- item.cite ? escape(item.cite).replace(/\n/g, "<br>") : '' %></q>
@@ -70,7 +71,7 @@
     <a target="_blank" href="<%= !item.url ? '' : item.url %>"><%= !item.url ? '' : !item.title ? item.url : item.title %></a>
     <span ><%= item.url ? '' : !item.title ? '' : item.title %></span>
   </div>
-  <div class="Description small mtx" style="display: <%= (item.type != 'ALL') && !item.description ? 'none' : 'block' %>;"><%- item.description ?
+  <div class="Description text-asbestos small mtx" style="display: <%= (item.type != 'ALL') && !item.description ? 'none' : 'block' %>;"><%- item.description ?
     escape(item.description).replace(/\n/g, "<br>") : '' %></div>
 </div>
 <% } %>
@@ -149,7 +150,7 @@
     <a target="_blank" class="Comment text-muted" href="<%= item.user && 'http://weibo.com/' + item.user.idstr + '/' + item.mid62 || '' %>"><i class="fa fa-comment-o"></i> 评论</a>
   </div>
   <div class="clearfix"></div>
-  <div class="Description small mtx" style="display: <%= (item.type != 'ALL') && !item.description ? 'none' : 'block' %>;"><%- item.description ?
+  <div class="Description text-asbestos small mtx" style="display: <%= (item.type != 'ALL') && !item.description ? 'none' : 'block' %>;"><%- item.description ?
     escape(item.description).replace(/\n/g, "<br>") : '' %></div>
 </div>
 <% } %>
