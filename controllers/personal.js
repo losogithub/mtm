@@ -620,9 +620,12 @@ function showPersonal(req, res, next) {
           var topicsForShow = [];
           for (var i = (currentPage - 1) * 9; i < topicsInfo.length && i < currentPage * 9; i++) {
             var temp = topicsInfo[i];
-            topicsInfo[i].create_date = topicsInfo[i].create_at.getFullYear() + '年'
+            temp.create_date = topicsInfo[i].create_at.getFullYear() + '年'
               + (topicsInfo[i].create_at.getMonth() + 1) + '月'
               + topicsInfo[i].create_at.getDate() + '日';
+            temp.update_date = topicsInfo[i].update_at.getFullYear() + '年'
+              + (topicsInfo[i].update_at.getMonth() + 1) + '月'
+              + topicsInfo[i].update_at.getDate() + '日';
             topicsForShow.push(temp);
           }
 
