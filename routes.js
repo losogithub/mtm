@@ -10,7 +10,7 @@ var site = require('./controllers/site');
 var sign = require('./controllers/sign');
 var topic = require('./controllers/topic');
 var tag = require('./controllers/tag');
-var personal = require('./controllers/personal');
+var user = require('./controllers/user');
 var support = require('./controllers/support');
 
 var about = require('./controllers/about');
@@ -77,26 +77,25 @@ module.exports = function (app) {
   app.get('/activeAccount', sign.activeAccount);
 
 
-  //personal management
-
-  app.get('/works', auth.loginRequired, personal.showWorks);
-  app.get('/settings', auth.loginRequired, personal.showSettings);
-  app.post('/settings', auth.userRequired, personal.updateSettings); //yes, otherwise update whose info
-  app.get('/account', auth.loginRequired, personal.showConfirmPassword);
-  app.post('/account', auth.userRequired, personal.passwordVerify);
+  //user management
+  app.get('/works', auth.loginRequired, user.showWorks);
+  app.get('/settings', auth.loginRequired, user.showSettings);
+  app.post('/settings', auth.userRequired, user.updateSettings); //yes, otherwise update whose info
+  app.get('/account', auth.loginRequired, user.showConfirmPassword);
+  app.post('/account', auth.userRequired, user.passwordVerify);
 
   //eventhough logged in, still check
   //at the same time, get username from db.
-  app.get('/accountModify', auth.loginRequired, personal.showAccountModify);
+  app.get('/accountModify', auth.loginRequired, user.showAccountModify);
   //think more later.
-  app.post('/accountModify', auth.loginRequired, personal.accountModify);
+  app.post('/accountModify', auth.loginRequired, user.accountModify);
 
   //todo
-  //app.get('/notifications', personal)
+  //app.get('/notifications', user)
 
-  //show personal page
-  app.get('/u/:authorName', personal.showPersonal);
-  app.post('/u/favorite', auth.userRequired, personal.favorite);
+  //show user page
+  app.get('/u/:authorName', user.showPersonal);
+  app.post('/u/favorite', auth.userRequired, user.favorite);
 
   /*
    app.get('/active_account', sign.active_account);

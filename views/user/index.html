@@ -27,7 +27,7 @@
             </li>
           </ul>
 
-          <h1 class="h6"><%= locals.personalType == 'PERSONAL' ? locals.authorName : locals.username %></h1>
+          <h1 class="h6 mtn"><%= locals.personalType == 'PERSONAL' ? locals.authorName : locals.username %></h1>
 
           <% if (locals.personalType != 'PERSONAL') { %>
           <div class="mtm">
@@ -75,7 +75,7 @@
           <% } else if (locals.personalType == 'SETTINGS') { %>
           <% include _settings.html %>
           <% } else if (locals.personalType == 'PERSONAL') { %>
-          <% include _personal.html %>
+          <% include _user.html %>
           <% } %>
         </div>
       </div>

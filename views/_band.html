@@ -22,7 +22,6 @@
           <li class="<%- categoryType == '最新' ? 'selected' : '' %>">
             <a href="/new">最新(<%- locals.totalTopicCount || '0' %>)</a></li>
           <li class="<%- categoryType == '娱乐' ? 'selected' : '' %>">
-            <div class="divider" style="margin-left: 0; margin-right: 0;"></div>
             <a href="/entertainment">娱乐(<%- locals.categoryTopicCount['娱乐'] || '0' %>)</a></li>
           <li class="<%- categoryType == '科技' ? 'selected' : '' %>">
             <a href="/tech">科技(<%- locals.categoryTopicCount['科技'] || '0' %>)</a></li>

@@ -10,6 +10,10 @@ var EventProxy = require('eventproxy');
 var models = require('../models');
 var UserModel = models.User;
 
+var getActivedAuthors = function (callback) {
+  UserModel.find({'active': true}, callback);
+};
+
 /**
  * 根据登录名查找用户
  * Callback:
@@ -159,6 +163,7 @@ function deleteTopic(authorId, topicId, callback) {
   });
 }
 
+exports.getActivedAuthors = getActivedAuthors;
 exports.getUserById = getUserById;
 exports.getUserByIds = getUserByIds;
 exports.getUserByLoginName = getUserByLoginName;

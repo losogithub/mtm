@@ -8,12 +8,10 @@
 var async = require('async');
 
 var Common = require('./common');
-var Tags = Common.tags;
-var AuthorCategories = Common.authorCategories;
-var AuthorCategoryList = Common.authorCategoryList;
+var User = require('./proxy').User;
 var Topic = require('./proxy').Topic;
 
-function _updateTags() {
+function _update() {
   async.auto({
     topics: function (callback) {
       Topic.getAllTopics(function (err, topics) {
@@ -72,6 +70,7 @@ function _calcTags(callback, results) {
   var categories = results.countTags.categories;
   var authorIds = results.countTags.authorIds;
   var relatives = results.countTags.relatives;
+  var tempCommonTags = [];
   for (var tagText in categories) {
     var tempWeight = 0;
     var tempCategory = '未分类';
@@ -98,7 +97,7 @@ function _calcTags(callback, results) {
       return relatives[tagText][b] - relatives[tagText][a];
     });
 
-    Tags.push({
+    tempCommonTags.push({
       text: tagText,
       category: tempCategory,
       authorWeights: authorIds[tagText],
@@ -106,37 +105,46 @@ function _calcTags(callback, results) {
       tags: tempTags.slice(0, 7)
     });
   }
+  Common.Tags = tempCommonTags;
   callback(null);
 }
 
 function _countAuthors(callback, results) {
-  for (var i in results.topics) {
-    var topic = results.topics[i];
+  var tempAuthorPVCount = {};
+  var tempAuthorCategories = {};
+  results.topics.forEach(function (topic) {
+    tempAuthorPVCount[topic.author_name] = tempAuthorPVCount[topic.author_name] || 0;
+    tempAuthorPVCount[topic.author_name] += topic.PV_count;
 
-    AuthorCategories[topic.author_name] = AuthorCategories[topic.author_name] || {};
-    AuthorCategories[topic.author_name][topic.category] = AuthorCategories[topic.author_name][topic.category] || 0;
-    AuthorCategories[topic.author_name][topic.category]++;
-  }
+    var categories = tempAuthorCategories[topic.author_name]
+      = tempAuthorCategories[topic.author_name] || {};
+    categories[topic.category] = categories[topic.category] || 0;
+    categories[topic.category]++;
+  });
+  Common.AuthorPVCount = tempAuthorPVCount;
+  Common.AuthorCategories = tempAuthorCategories;
   callback(null);
 }
 
 function _calcAuthors(callback) {
-  for (var author in AuthorCategories) {
-    var categoryList = AuthorCategoryList[author] = [];
-    for (var category in AuthorCategories[author]) {
+  var tempAuthorCategoryList = {};
+  for (var author in Common.AuthorCategories) {
+    var categoryList = tempAuthorCategoryList[author] = [];
+    for (var category in Common.AuthorCategories[author]) {
       categoryList.push(category);
     }
     categoryList.sort(function (a, b) {
-      return AuthorCategories[author][b] - AuthorCategories[author][a];
+      return Common.AuthorCategories[author][b] - Common.AuthorCategories[author][a];
     });
   }
+  Common.AuthorCategoryList = tempAuthorCategoryList;
   callback(null);
 }
 
 function _routine() {
   Topic.updateHotTopics();
   Topic.updateCategoryTopics();
-  _updateTags();
+  _update();
 }
 
 function start() {

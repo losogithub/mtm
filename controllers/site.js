@@ -7,8 +7,6 @@
  */
 
 var Common = require('../common');
-var topList = Common.topList;
-var AuthorCategoryList = Common.authorCategoryList;
 
 //var topicsPerPage = 24;
 //var topicsInIndex = 24;
@@ -20,47 +18,47 @@ var newTopicsPerPage = 10;
 function index(req, res) {
   res.render('index', {
     pageType: 'INDEX',
-    topicCount: topList.totalTopicCount,
-    totalTopicCount: topList.totalTopicCount,
-    categoryTopicCount: topList.categoryTopicCount,
-    hot: topList.hotTopics.slice(0, topicsInIndex),
-    realGood: topList.classicTopics.slice(0, topicsInIndex),
-    newTopics: topList.newTopics.slice(0, newTopicsPerPage),
-    authors: topList.hotAuthors,
-    authorCategoryList: AuthorCategoryList,
-    tags: topList.hotTags
+    topicCount: Common.TopList.totalTopicCount,
+    totalTopicCount: Common.TopList.totalTopicCount,
+    categoryTopicCount: Common.TopList.categoryTopicCount,
+    hot: Common.TopList.hotTopics.slice(0, topicsInIndex),
+    realGood: Common.TopList.classicTopics.slice(0, topicsInIndex),
+    newTopics: Common.TopList.newTopics.slice(0, newTopicsPerPage),
+    authors: Common.TopList.hotAuthors,
+    authorCategoryList: Common.AuthorCategoryList,
+    tags: Common.TopList.hotTags
   });
 }
 
 function showHot(req, res) {
   var currentPage = parseInt(req.query.page) || 1;
 
-  var recentHotTopicsDataPage = topList.hotTopics.slice((currentPage - 1) * topicsPerPage, currentPage * topicsPerPage);
+  var recentHotTopicsDataPage = Common.TopList.hotTopics.slice((currentPage - 1) * topicsPerPage, currentPage * topicsPerPage);
 
   //since I have already restricted recent hot topics to 700. so will never cross 50page.
-  var totalPages = Math.ceil(topList.hotTopics.length / topicsPerPage);
+  var totalPages = Math.ceil(Common.TopList.hotTopics.length / topicsPerPage);
 
   res.render('category', {
     title: '综合',
     pageType: '综合',
-    topicCount: topList.totalTopicCount,
-    totalTopicCount: topList.totalTopicCount,
-    categoryTopicCount: topList.categoryTopicCount,
+    topicCount: Common.TopList.totalTopicCount,
+    totalTopicCount: Common.TopList.totalTopicCount,
+    categoryTopicCount: Common.TopList.categoryTopicCount,
     topics: recentHotTopicsDataPage,
     totalPage: totalPages,
     currentPage: currentPage,
-    authors: topList.hotAuthors,
-    authorCategoryList: AuthorCategoryList,
-    tags: topList.hotTags
+    authors: Common.TopList.hotAuthors,
+    authorCategoryList: Common.AuthorCategoryList,
+    tags: Common.TopList.hotTags
   });
 }
 
 function showClassic(req, res) {
   var currentPage = parseInt(req.query.page) || 1;
 
-  var goodTopicsDataPage = topList.classicTopics.slice((currentPage - 1) * topicsPerPage, currentPage * topicsPerPage);
+  var goodTopicsDataPage = Common.TopList.classicTopics.slice((currentPage - 1) * topicsPerPage, currentPage * topicsPerPage);
   //since I have already restricted recent hot topics to 700. so will never cross 50page.
-  var totalPages = Math.ceil(topList.classicTopics.length / topicsPerPage);
+  var totalPages = Math.ceil(Common.TopList.classicTopics.length / topicsPerPage);
 
   res.render('category', {
     pageType: 'CLASSIC',
@@ -73,15 +71,15 @@ function showClassic(req, res) {
 function showNew(req, res) {
   var currentPage = parseInt(req.query.page) || 1;
 
-  var newTopicsPage = topList.newTopics.slice((currentPage - 1) * topicsPerPage, currentPage * topicsPerPage);
-  var totalPages = Math.ceil(topList.newTopics.length / topicsPerPage);
+  var newTopicsPage = Common.TopList.newTopics.slice((currentPage - 1) * topicsPerPage, currentPage * topicsPerPage);
+  var totalPages = Math.ceil(Common.TopList.newTopics.length / topicsPerPage);
 
   res.render('category', {
     title: '最新',
     pageType: '最新',
-    topicCount: topList.totalTopicCount,
-    totalTopicCount: topList.totalTopicCount,
-    categoryTopicCount: topList.categoryTopicCount,
+    topicCount: Common.TopList.totalTopicCount,
+    totalTopicCount: Common.TopList.totalTopicCount,
+    categoryTopicCount: Common.TopList.categoryTopicCount,
     topics: newTopicsPage,
     totalPage: totalPages,
     currentPage: currentPage
@@ -131,21 +129,21 @@ function showUnclassified(req, res) {
 function _showCategory(req, res, category) {
   var currentPage = parseInt(req.query.page) || 1;
 
-  var categoryTopicsPage = topList.categoryTopics[category].slice((currentPage - 1) * topicsPerPage, currentPage * topicsPerPage);
-  var totalPages = Math.ceil(topList.categoryTopics[category].length / topicsPerPage);
+  var categoryTopicsPage = Common.TopList.categoryTopics[category].slice((currentPage - 1) * topicsPerPage, currentPage * topicsPerPage);
+  var totalPages = Math.ceil(Common.TopList.categoryTopics[category].length / topicsPerPage);
 
   res.render('category', {
     title: category,
     pageType: category,
-    topicCount: topList.categoryTopicCount[category],
-    totalTopicCount: topList.totalTopicCount,
-    categoryTopicCount: topList.categoryTopicCount,
+    topicCount: Common.TopList.categoryTopicCount[category],
+    totalTopicCount: Common.TopList.totalTopicCount,
+    categoryTopicCount: Common.TopList.categoryTopicCount,
     topics: categoryTopicsPage,
     totalPage: totalPages,
     currentPage: currentPage,
-    authors: topList.categoryAuthors[category],
-    authorCategoryList: AuthorCategoryList,
-    tags: topList.categoryTags[category]
+    authors: Common.TopList.categoryAuthors[category],
+    authorCategoryList: Common.AuthorCategoryList,
+    tags: Common.TopList.categoryTags[category]
   });
 }
 
