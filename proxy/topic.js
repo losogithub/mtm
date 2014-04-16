@@ -308,6 +308,22 @@ function updateHotTopics() {
     }
     Common.TopList.hotTopics = topics.sort(_scoreCompare).slice(0, 240);
     Common.TopList.totalTopicCount = topics.length;
+    Common.FeaturedTopics = topics.slice(0,3);
+    async.forEachSeries(Common.FeaturedTopics, function (topic, callback) {
+      User.getUserById(topic.author_id, function (err, user) {
+        if (err) {
+          return callback(err);
+        }
+        if (!user) {
+          return callback(new Error());
+        }
+        topic.author_url = user.url;
+      });
+    }, function (err) {
+      if (err) {
+        console.error(err.stack);
+      }
+    });
 
     var authorIds = [];
     for (var id in authorMap) {

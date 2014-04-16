@@ -1043,7 +1043,7 @@ function saveTopic(req, res, next) {
 
   try {
     check(title).len(5, 50);
-    check(description).len(0, 150);
+    check(description).len(0, 140);
   } catch (err) {
     return next(err);
   }

@@ -1918,7 +1918,7 @@
         },
         description: {
           required: false,
-          maxlength: 150
+          maxlength: 140
         }
       },
       messages: {
@@ -1928,7 +1928,7 @@
           maxlength: "策展标题太长，请控制在5～50字之间。"
         },
         description: {
-          maxlength: "策展描述太长，请缩写到150字以内。"
+          maxlength: "策展描述太长，请缩写到140字以内。"
         }
       }
     });

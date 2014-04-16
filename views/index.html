@@ -1,124 +1,87 @@
 
 <% include _band.html %>
 
-<% if (!locals.username) { %>
-<!--[if IE]>
-  <style>
-    #_carousel { display: none; }
-  </style>
-<![endif]-->
-
-<div ng-non-bindable id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+<% if (featuredTopics.length > 2) { %>
+<div ng-non-bindable id="featuredTopics" class="carousel slide" data-ride="carousel">
   <!-- Indicators -->
   <ol class="carousel-indicators">
-    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-    <li data-target="#carousel-example-generic" data-slide-to="1"></li>
-    <li data-target="#carousel-example-generic" data-slide-to="2"></li>
-    <li data-target="#carousel-example-generic" data-slide-to="3"></li>
-    <li data-target="#carousel-example-generic" data-slide-to="4"></li>
-    <li data-target="#carousel-example-generic" data-slide-to="5"></li>
+    <li data-target="#featuredTopics" data-slide-to="0" class="active"></li>
+    <li data-target="#featuredTopics" data-slide-to="1"></li>
+    <li data-target="#featuredTopics" data-slide-to="2"></li>
   </ol>
 
   <!-- Wrapper for slides -->
   <div class="carousel-inner">
-    <div class="item active">
-      <div class="carousel-caption">
-        <h3>你是否也对“搜索引擎”杂乱的结果感到无奈？</h3>
-        <p>日益庞大的互联网使搜索引擎力不从心</p>
+    <% for (var i = 0; i < 3; i++) { %>
+    <div class="item <%= i == 0 ? 'active' : '' %>"
+         style="background: url(<%= featuredTopics[i].cover_url %>) no-repeat top; background-size: cover;">
+      <div>
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-8 col-md-7 col-lg-6 hidden-xs">
+              <a class="Cover pull-right" href="/topic/<%= featuredTopics[i]._id %>">
+                <img class="pull-right" src="<%= featuredTopics[i].cover_url %>" alt="<%= featuredTopics[i].title %>" title="<%= featuredTopics[i].title %>">
+              </a>
+            </div>
+            <div class="col-sm-4 col-md-5 col-lg-6 Text">
+              <div style="vertical-align: bottom; position: relative;">
+                  <h2 class="h6" style="position: absolute;bottom: 0; width: 100%;">
+                    <a class="text-inverse" href="/topic/<%= featuredTopics[i]._id %>"><%= featuredTopics[i].title %></a></h2>
+              </div>
+              <div>
+                <a class="text-inverse" href="/u/<%= featuredTopics[i].author_name %>" title="<%= featuredTopics[i].author_name %>">
+                  <img width="30" height="30" class="img-circle" style="display: inline-block; width: 30px; height: 30px;"
+                       src="<%= featuredTopics[i].author_url || '/images/no_img/user_80x80.png' %>"
+                       alt="<%= featuredTopics[i].author_name %>"
+                       onerror="shizier.errorImage(this,'user_80x80');">
+                  <%= featuredTopics[i].author_name %>
+                </a>
+                <p class="hidden-xs mtm text-muted"><%= featuredTopics[i].description %></p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="item">
-      <div class="carousel-caption">
-        <h3>你是否也对越刷越多的“微博”感到困扰？</h3>
-        <p>社交网络资讯的井喷向人们的阅读能力发出了新的挑战</p>
-      </div>
-    </div>
-    <div class="item">
-      <div class="carousel-caption">
-        <h3>你是否也热衷于在各“小众网站”关注各种奇葩话题？</h3>
-        <p>累觉不爱后只想找个一网打尽的好网站嫁了</p>
-      </div>
-    </div>
-    <div class="item">
-      <div class="carousel-caption">
-        <h3>让互联网更简洁、有序势在必行</h3>
-        <p>时下火热的“聚类”为互联网做好了目录</p>
-      </div>
-    </div>
-    <div class="item">
-      <div class="carousel-caption">
-        <p>但如果你也已经察觉到“聚类”的捉襟见肘</p>
-        <h3>欢迎加入<span class="text-theme">石子儿</span>的互联网“策展”大潮</h3>
-      </div>
-    </div>
-    <div class="item" style="background-color: #34495e;">
-      <div class="carousel-caption">
-        <h3><a class="text-inverse btn btn-hg btn-primary"
-               href="/topic/5337986887a4d07730f2c4c9">
-          “策展”是什么？<i class="fa fa-chevron-circle-right"></i></a></h3>
-        <p>&nbsp;</p>
-      </div>
-    </div>
+    <% } %>
   </div>
 
   <!-- Controls -->
-  <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+  <a class="left carousel-control" href="#featuredTopics" data-slide="prev">
     <i class="fa fa-chevron-left"></i>
   </a>
-  <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+  <a class="right carousel-control" href="#featuredTopics" data-slide="next">
     <i class="fa fa-chevron-right"></i>
   </a>
 </div>
 <% } %>
 
 <div style="background-color: #ecf0f1;">
-<div class="container">
-  <div class="row" style="background-color: #bdc3c7;">
-    <div class="col-sm-9 col-md-10 pbl" style="background-color: #ecf0f1;">
-      <div class="row ptm">
-        <div class="col-xs-12">
-          <i class="fa fa-thumbs-o-up" style="color: #c0392b;"></i> 人气策展人
-        </div>
-      </div>
-      <div class="row mts">
-
-        <% include _authors.html %>
-
-      </div>
-      <div class="row mtl">
-        <h1 class="col-xs-12 h6 mvn">
-          <a class="h6" href="/hot"><i class="fa fa-fire" style="color: #e67e22;"></i> 热门策展</a>
-        </h1>
-      </div>
-
-      <% var topics = hot; %>
-      <% include _topics_main.html %>
-
-      <div class="row mtl">
-        <div class="col-xs-12">
-          <a class="btn btn-primary btn-wide pull-right" href="/hot">更多</a>
-        </div>
+  <div class="container pbl">
+    <div class="row ptm">
+      <div class="col-xs-12">
+        <i class="fa fa-thumbs-o-up" style="color: #c0392b;"></i> 人气策展人
       </div>
     </div>
-    <div class="col-sm-3 col-md-2 pvl">
-      <div class="row">
-        <h1 class="col-xs-12 h6 mvn">
-          <a class="h6 text-inverse" style="font-size: 16px; display: block;"
-             href="/new"><i class="fa fa-clock-o"></i> 最近更新</a>
-        </h1>
-      </div>
+    <div class="row mts">
 
-      <% var topics = newTopics; %>
-      <% include _topics_sub.html %>
+      <% include _authors.html %>
 
-      <div class="row mtl">
-        <div class="col-xs-12">
-          <a class="btn btn-sm btn-primary pull-right" href="/new">更多</a>
-        </div>
+    </div>
+    <div class="row mtl">
+      <h1 class="col-xs-12 h6 mvn">
+        <a class="h6" href="/hot"><i class="fa fa-fire" style="color: #e67e22;"></i> 热门策展</a>
+      </h1>
+    </div>
+
+    <% var topics = hot; %>
+    <% include _topics.html %>
+
+    <div class="row mtl">
+      <div class="col-xs-12">
+        <a class="btn btn-primary btn-wide pull-right" href="/hot">更多</a>
       </div>
     </div>
-  </div>
-
   </div>
 </div>
 

@@ -29,12 +29,12 @@
             <div class="clearfix mtm mbm">
               <div class="pull-left">
                 <a href="/u/<%= topic.author_name %>" title="<%= topic.author_name %>">
-                  <span class="mrs" style="display: inline-block; width: 30px; height: 30px;">
-                    <img width="30" height="30" class="img-circle"
+                  <img width="30" height="30" class="img-circle"
+                       style="display: inline-block; width: 30px; height: 30px;"
                        src="<%= authorInfo.imgUrl || '/images/no_img/user_80x80.png' %>"
                        alt="<%= topic.author_name %>"
                        onerror="shizier.errorImage(this,'user_80x80');">
-                  </span><span><%= topic.author_name %></span>
+                  <%= topic.author_name %>
                 </a>
                 <span class="text-muted small mls">
                   <i class="fa fa-edit"></i>

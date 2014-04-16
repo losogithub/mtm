@@ -17,12 +17,12 @@
         </button>
         <span class="dropdown-arrow dropdown-arrow-inverse"></span>
         <ul class="dropdown-menu dropdown-inverse">
-          <li class="<%- categoryType == '最新' ? 'selected' : '' %>">
-            <a href="/new">最新 <small style="line-height: 1;"> ( <%- locals.totalTopicCount || '0' %> ) </small></a></li>
           <% for (var key in CATEGORIES2ENG) { %>
           <li class="<%- categoryType == key ? 'selected' : '' %>">
             <a href="/<%= CATEGORIES2ENG[key] %>"><%= key %> <small style="line-height: 1;"> ( <%- locals.categoryTopicCount[key] || '0' %> ) </small></a></li>
           <% } %>
+          <li class="<%- categoryType == '最新' ? 'selected' : '' %>">
+            <a href="/new">最新 <small style="line-height: 1;"> ( <%- locals.totalTopicCount || '0' %> ) </small></a></li>
         </ul>
       </div>
     </div>

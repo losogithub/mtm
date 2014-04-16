@@ -19,6 +19,8 @@ module.exports = {
     categoryTopics: {},
     categoryTopicCount: {}
   },
+  FeaturedTopics: {},
+  CategoryFeaturedTopics: {},
   CATEGORIES2ENG: utils.CATEGORIES2ENG,
   CATEGORIES2CHN: (function () {
     var temp = {};

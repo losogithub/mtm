@@ -21,6 +21,7 @@ function index(req, res) {
     topicCount: Common.TopList.totalTopicCount,
     totalTopicCount: Common.TopList.totalTopicCount,
     categoryTopicCount: Common.TopList.categoryTopicCount,
+    featuredTopics: Common.FeaturedTopics,
     hot: Common.TopList.hotTopics.slice(0, topicsInIndex),
     realGood: Common.TopList.classicTopics.slice(0, topicsInIndex),
     newTopics: Common.TopList.newTopics.slice(0, newTopicsPerPage),

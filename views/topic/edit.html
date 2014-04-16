@@ -84,10 +84,10 @@
                      class="LetterCounter">{{input.length || 0}}/{{limit}}</div>
               </div>
               <div id="_topWidget_description" class="form-group"
-                   ng-controller="$.noop" ng-init="limit = 150;"
+                   ng-controller="$.noop" ng-init="limit = 140;"
                    ng-class="{ 'has-error' : input.length > limit }">
                 <textarea name="description" class="form-control flat" ng-model="input"
-                          placeholder="策展描述（150字以内，换行符无效）"></textarea>
+                          placeholder="策展描述（140字以内，换行符无效）"></textarea>
                 <div ng-class="input.length > limit ? 'text-danger' : 'text-muted'"
                      class="LetterCounter">{{input.length || 0}}/{{limit}}</div>
               </div>
