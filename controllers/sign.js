@@ -27,20 +27,20 @@ function showSignUp(req, res) {
   //var refer = req.session._loginReferer || '/';
 
   //for already logged in user
-    console.log("referer: ", req.headers.referer);
+  console.log("referer: ", req.headers.referer);
   //var  refer = req.headers.referer || '/';
 
-  if(req.session && req.session.userId){
-      /*
-      If it is a logged in user, jump to its refer or home.
-      shall we consider a black list ?
-      //todo:
-       */
+  if (req.session && req.session.userId) {
+    /*
+     If it is a logged in user, jump to its refer or home.
+     shall we consider a black list ?
+     //todo:
+     */
     // for signup, seems no need of req.query.fromUrl
     var refer = req.headers.referer || '/';
     return res.redirect(refer);
   }
-  else{
+  else {
     res.render('sign/signup');
   }
 
@@ -99,7 +99,7 @@ function signUp(req, res, next) {
     //韩语，日语，中文
     var nameOK = name.match(/^[\x3130-\x318F\xAC00-\xD7A3\u0800-\u4e00\u0391-\uFFE5\w]+$/);
     // var nameOK = name.match(/^[\u0391-\uFFE5\w]+$/);
-    if (nameOK == null){
+    if (nameOK == null) {
       nMsg = "用户名只能使用中文，英文，日文，韩文和下划线的组合";
       nFlag = false;
     }
@@ -287,19 +287,15 @@ function signUp(req, res, next) {
  * @param  {HttpResponse} res
  */
 function showLogin(req, res) {
-  console.log("----- Show login page ----");
-  //console.log("session: ", req.session);
-  console.log("referer: ", req.headers.referer);
-
   //if it is null, then assign to this.
   //otherwise it was assigned by some middleware.
   //No, 2013.11.30 if it is not null, it must be assigned before not equal to /login. So you  cannot revise it.
   //even it equals to /singup. it is ok. later in login function will check this.
   /*
-  if (!req.session._loginReferer) {
-    req.session._loginReferer =  req.headers.referer || '/';
-  }
-  */
+   if (!req.session._loginReferer) {
+   req.session._loginReferer =  req.headers.referer || '/';
+   }
+   */
 
   //var refer = req.session._loginReferer || '/';
 
@@ -313,35 +309,32 @@ function showLogin(req, res) {
 
 
   // suppose an already logged in user, you shall jump to home.
-  if (req.session && req.session.userId && req.session.userId !== 'undefined') {
-   //if logged in, jump to refer page.
-   //note: not all page jump to loginReferer.
-   //add: 2013.11.23: it seems impossible for this situation. So I commented it.
-   // 2013.11.26. No, maybe not.
-   /*for (var i = 0, len = notJump.length; i !== len; ++i) {
-   if (refer.indexOf(notJump[i]) >= 0) {
-   refer = '/';
-   break;
-   }
-   } */
+  if (req.session && req.session.userId && req.session.userId) {
+    //if logged in, jump to refer page.
+    //note: not all page jump to loginReferer.
+    //add: 2013.11.23: it seems impossible for this situation. So I commented it.
+    // 2013.11.26. No, maybe not.
+    /*for (var i = 0, len = notJump.length; i !== len; ++i) {
+     if (refer.indexOf(notJump[i]) >= 0) {
+     refer = '/';
+     break;
+     }
+     } */
 
-    console.log("already logged in user.");
-    var refer = req.query.fromUrl || req.headers.referer || '/';
+    var refer = req.headers.referer || '/';
     return res.redirect(refer);
   }
 
-  else {
-    return res.render('sign/login');
-  }
+  res.render('sign/login', {
+    fromUrl: req.query.fromUrl || req.headers.referer
+  });
 }
-
 
 var notJumpForLogin = [
   '/signup',
   '/forgetPassword',
   '/login'
 ];
-
 
 /**
  * Handle user login.
@@ -355,10 +348,7 @@ function login(req, res, next) {
   var pass = sanitize(req.body.password).trim();
   var remember = sanitize(req.body.remember).trim();
 
-  console.log("---login post-------");
-  console.log("name: %s", loginname);
-  console.log("pass: *********");
-  console.log("remember: %s", remember);
+  res.locals.fromUrl = req.query.fromUrl;
 
   var errMsg = '';
   if (!loginname) {
@@ -410,6 +400,65 @@ function login(req, res, next) {
     })
 
   }
+}
+
+//suppose the username id, or email address exists, now check the password:
+function _checkOnlyPassword(emailIDFlag, pass, remember, user, req, res) {
+  console.log("----login: check user password.------");
+  pass = encryp.md5(pass);
+  var email = user.email;
+  if (!emailIDFlag) {
+    email = user.loginName;
+  }
+  if (pass !== user.password) {
+    res.render('sign/login', {
+      errMsg: '您输入的密码不正确。',
+      email: email
+    });
+    return;
+  }
+  if (!user.active) {
+    // 从新发送激活邮件
+    mail.sendActiveMail(user.email, encryp.md5(user.email + config.session_secret), user.loginName, user.email);
+    return res.render('sign/activeAccount', {
+      emailAddress: user.email
+    });
+  }
+
+  req.session.userId = user._id;
+  req.currentUser = user;
+  //console.log("currentUser: %s", req.currentUser);
+  if (remember) {
+    // Remember me
+    //var loginToken = new LoginToken({ email: user.email });
+    LoginToken.save(user.email, function (loginToken) {
+      //console.log("logintoken: %s", loginToken.cookieValue);
+      res.cookie('logintoken', loginToken.cookieValue, { expires: new Date(Date.now() + 2 * 604800000), path: '/' });
+    });
+  }
+
+  /*
+   login successfully !
+   not jump to which page.
+   */
+  // console.log("req.session._loginReferr: ", req.session._loginReferer);
+  console.log("header referer: ", req.headers.referer);
+  //var refer = req.session._loginReferer || '/';
+  var refer = req.query.fromUrl || req.headers.referer || '/';
+  //console.log("loginReferer");
+  //console.log(req.session._loginReferer);
+
+  /* e.g; you want to go to create page, then first jump to login page. after you login, then jump back to previous page.
+   */
+  // 2013.11.26 need check the refer not equal to signup, loginin, forgetpassword
+  for (var i = 0, len = notJumpForLogin.length; i !== len; ++i) {
+    if (refer.indexOf(notJumpForLogin[i]) >= 0) {
+      refer = '/';
+      break;
+    }
+  }
+  console.log("After login, jump to: ", refer);
+  res.redirect(refer);
 }
 
 function loginDialog(req, res, next) {
@@ -470,66 +519,6 @@ function loginDialog(req, res, next) {
   }
 }
 
-//suppose the username id, or email address exists, now check the password:
-function _checkOnlyPassword(emailIDFlag, pass, remember, user, req, res) {
-  console.log("----login: check user password.------");
-  pass = encryp.md5(pass);
-  var email = user.email;
-  if (!emailIDFlag) {
-    email = user.loginName;
-  }
-  if (pass !== user.password) {
-    res.render('sign/login', {
-      errMsg: '您输入的密码不正确。',
-      email: email
-    });
-    return;
-  }
-  if (!user.active) {
-    // 从新发送激活邮件
-    mail.sendActiveMail(user.email, encryp.md5(user.email + config.session_secret), user.loginName, user.email);
-    return res.render('sign/activeAccount', {
-      emailAddress: user.email
-    });
-  }
-
-  req.session.userId = user._id;
-  req.currentUser = user;
-  //console.log("currentUser: %s", req.currentUser);
-  if (remember) {
-    // Remember me
-    //var loginToken = new LoginToken({ email: user.email });
-    LoginToken.save(user.email, function (loginToken) {
-      //console.log("logintoken: %s", loginToken.cookieValue);
-      res.cookie('logintoken', loginToken.cookieValue, { expires: new Date(Date.now() + 2 * 604800000), path: '/' });
-    });
-  }
-
-  /*
-  login successfully !
-  not jump to which page.
-   */
- // console.log("req.session._loginReferr: ", req.session._loginReferer);
-  console.log("header referer: ", req.headers.referer);
-  //var refer = req.session._loginReferer || '/';
-  var refer = req.query.fromUrl || req.headers.referer || '/';
-  //console.log("loginReferer");
-  //console.log(req.session._loginReferer);
-
-  /* e.g; you want to go to create page, then first jump to login page. after you login, then jump back to previous page.
-   */
-  // 2013.11.26 need check the refer not equal to signup, loginin, forgetpassword
-  for (var i = 0, len = notJumpForLogin.length; i !== len; ++i) {
-    if (refer.indexOf(notJumpForLogin[i]) >= 0) {
-      refer = '/';
-      break;
-    }
-  }
-  console.log("After login, jump to: ", refer);
-  res.redirect(refer);
-};
-
-
 /**
  * define some page when login just jump to the home page
  * @type {Array}
@@ -559,7 +548,7 @@ function signOut(req, res, next) {
   //console.log("curent user;")
   //console.log(req.currentUser);
   //I see, currentUser only passed between middleware and the final call.
-  if(req.cookies.logintoken){
+  if (req.cookies.logintoken) {
     var cookie = JSON.parse(req.cookies.logintoken);
 
     console.log("cookie: ", cookie);
@@ -592,9 +581,7 @@ function signOut(req, res, next) {
   }
   //console.log("render logout");
   //console.log(res);
-  return res.render('sign/logout', {
-    refer: refer
-  })
+  res.redirect(refer);
 };
 
 
@@ -765,7 +752,7 @@ function activeAccount(req, res, next) {
     if (!user) {
       return next(new Error(400));
     }
-    else if(user.active){
+    else if (user.active) {
 
       //duplicated code
       //start
@@ -775,7 +762,7 @@ function activeAccount(req, res, next) {
         req.session.destroy(function () {
         });
       }
-      if(req.cookies.logintoken){
+      if (req.cookies.logintoken) {
         var cookie = JSON.parse(req.cookies.logintoken);
         console.log("cookie: ", cookie);
         if (cookie.email && cookie.series) {
@@ -786,8 +773,6 @@ function activeAccount(req, res, next) {
       }
       res.locals.username = "";
       res.locals.imageUrl = "";
-
-
 
 
       //active the user and make him/her a logged in user.
@@ -823,7 +808,7 @@ function activeAccount(req, res, next) {
       req.session.destroy(function () {
       });
     }
-    if(req.cookies.logintoken){
+    if (req.cookies.logintoken) {
       var cookie = JSON.parse(req.cookies.logintoken);
       console.log("cookie: ", cookie);
       if (cookie.email && cookie.series) {
@@ -834,7 +819,6 @@ function activeAccount(req, res, next) {
     }
     res.locals.username = "";
     res.locals.imageUrl = "";
-
 
 
     //active the user and make him/her a logged in user.

@@ -200,10 +200,10 @@ textarea {
   left: 3px;
   top: 4px;
   color: red;
-  font-size: 14px;
+  font-size: 18px;
 }
 .Required.Required-4px:before {
-  left: 4px;
+  left: 5px;
 }
 /*按钮*/
 .InfoHint {

@@ -28,9 +28,6 @@ var path = require('path');
  at same time, req.currentUser is assigned user for next middleware or function.
  */
 function loadUser(req, res, next) {
-  console.log("loadUser");
-  console.log("from Url: %s", req.query.fromUrl);
- // console.log("before the logineReferer: %s", req.session._loginReferer);
   // the first priority is req.query.fromUrl, then referer, finally home
   //note: some req.headers.referer cannot be rendered !!!
   //e.g. if it is login, you shall not jump back to login page.
@@ -53,14 +50,13 @@ function loadUser(req, res, next) {
         //added 10.11 2013
         res.locals.imageUrl = user.url;
         return next();
-      } else {
-        //check fail: not login. user cookie contain session id, but not correct.
-        //in this case, no corresponding user in the db.
-        // if it is showlogin, jump to login.
-        console.err("wrong userId, not matched");
-        req.session.userId = null;
-        return next();
       }
+      //check fail: not login. user cookie contain session id, but not correct.
+      //in this case, no corresponding user in the db.
+      // if it is showlogin, jump to login.
+      console.err("wrong userId, not matched");
+      req.session.userId = null;
+      return next();
     });
   } else if (req.cookies.logintoken) {
     //persistent login
@@ -78,7 +74,6 @@ function loadUser(req, res, next) {
 }
 
 function _authenticateFromLoginToken(req, res, next) {
-  console.log("loginToken: ", req.cookies.logintoken);
   var cookie = JSON.parse(req.cookies.logintoken);
   LoginToken.findByEmailAndSeries(cookie.email, cookie.series, function (err, token) {
     if (err) {
@@ -162,19 +157,15 @@ function _authenticateFromLoginToken(req, res, next) {
  which was stored at _loginReferer.
  */
 function loginRequired(req, res, next) {
-  console.log("LoginRequired");
-  //console.log("loginReferer: %s", req.session._loginReferer);
-    console.log("header referer : ", req.headers.referer);
   //if not login, then redirect to login page.
-  if ((!req.session) || (!req.session.userId)) {
-    return res.redirect('/login?fromUrl=' + req.url);
-  } else {
-    return next();
+  if (!req.session || !req.session.userId) {
+    return res.redirect('/login?fromUrl=' + encodeURIComponent(req.url));
   }
+  next();
 }
 
 function userRequired(req, res, next) {
-  if ((!req.session) || (!req.session.userId)) {
+  if (!req.session || !req.session.userId) {
     return res.send(401, 'unauthorized');
   } else {
     return next();

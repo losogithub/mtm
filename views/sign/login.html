@@ -9,7 +9,7 @@
     <p>互联网策展</p>
   </a>
 
-  <form class="tile center-block pal" style="text-align: left;" action="/login" method="post"
+  <form class="tile center-block pal" style="text-align: left;" action="/login?fromUrl=<%- encodeURIComponent(fromUrl) %>" method="post"
         ng-controller="Form" name="form">
     <div class="form-group" ng-controller="Username"
          ng-class="{ 'has-error': error || (!form.username.$valid && !focused) }">
