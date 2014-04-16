@@ -10,33 +10,20 @@
     </li>
 
     <script>
-      function CategoryCtrl($scope, $timeout) {
+      function CategoryCtrl($scope, $timeout, $http) {
         $scope.current = '<%= topic.category %>';
-        $scope.items = [
-          '娱乐',
-          '科技',
-          '新闻',
-          '时尚',
-          '生活',
-          '幽默',
-          '文化',
-          '商业',
-          '体育',
-          '未分类'
-        ];
+
+        $scope.items = [];
+        for (var key in shizier.utils.CATEGORIES2ENG) {
+          $scope.items.push(key);
+        }
+
         $scope.saveCategory = function (category) {
-          var xhr = $scope.xhr;
-          if (xhr) {
-            xhr.abort();
-          }
-          $scope.xhr = $.ajax('/topic/category', {
-            type: 'PUT',
-            data: {
-              topicId: '<%= topic._id %>',
-              category: category
-            }
+          $http.put('/topic/category', {
+            topicId: '<%= topic._id %>',
+            category: category
           })
-            .done(function () {
+            .success(function () {
               $timeout(function() {
                 $scope.current = category;
               });

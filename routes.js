@@ -5,14 +5,16 @@
  * Time: 12:43 AM
  * To change this template use File | Settings | File Templates.
  */
+
+var Common = require('./common');
 var auth = require('./middlewares/auth');
+var widget = require('./middlewares/widget');
 var site = require('./controllers/site');
 var sign = require('./controllers/sign');
 var topic = require('./controllers/topic');
 var tag = require('./controllers/tag');
 var user = require('./controllers/user');
 var support = require('./controllers/support');
-
 var about = require('./controllers/about');
 
 module.exports = function (app) {
@@ -20,23 +22,17 @@ module.exports = function (app) {
     res.render('sign/resetPassword');
   });
   // home page
-  app.get('/', site.index);
-  app.get('/hot', site.showHot);
-  app.get('/classic', site.showClassic);
-  app.get('/new', site.showNew);
-  app.get('/entertainment', site.showEntertainment);
-  app.get('/tech', site.showTech);
-  app.get('/news', site.showNews);
-  app.get('/fashion', site.showFashion);
-  app.get('/life', site.showLife);
-  app.get('/humor', site.showHumor);
-  app.get('/culture', site.showCulture);
-  app.get('/business', site.showBusiness);
-  app.get('/sport', site.showSport);
-  app.get('/unclassified', site.showUnclassified);
+  app.get('/', widget.band, site.index);
+  app.get('/new', widget.band, site.showNew);
+  app.get('/:category', function (req, res, next) {
+    res.locals.categoryType = req.params.category;
+    next();
+  });
+  for (var key in Common.CATEGORIES2ENG) {
+    var value = Common.CATEGORIES2ENG[key];
+    app.get('/' + value, widget.band, site.showCategory);
+  }
 
-  //console.log("router start");
-  app.post('/login_dialog', auth.loginDialogCheck);
   app.post('/topic/favorite', auth.userRequired, topic.favorite);
 
   //策展
@@ -44,7 +40,7 @@ module.exports = function (app) {
   app.get('/topic/link_detail', topic.getLinkDetail);
   app.get('/topic/video_detail', topic.getVideoDetail);
   app.get('/topic/weibo_detail', topic.getWeiboDetail);
-  app.get('/topic/:topicId', topic.showIndex);
+  app.get('/topic/:topicId', widget.band, topic.showIndex);
   app.get('/topic/:topicId/edit', auth.loginRequired, topic.showEdit);
   app.get('/topic/:topicId/chang', topic.showChang);
   app.get('/topic/:topicId/share_chang', topic.showShareChang);
@@ -57,9 +53,9 @@ module.exports = function (app) {
   app.delete('/topic/item', auth.userRequired, topic.deleteItem);
   app.delete('/topic/:topicId', auth.userRequired, topic.deleteTopic);
 
+  app.get('/tag/:tagText', widget.band, tag.showTag);
   app.put('/tag', auth.userRequired, topic.addTag);
   app.post('/tag', auth.userRequired, topic.removeTag);//因为angular的delete不支持附加data。。。
-  app.get('/tag/:tagText', tag.showTag);
 
 
   app.get('/chang/:topicId', topic.sendChang);
@@ -69,6 +65,7 @@ module.exports = function (app) {
   app.post('/signup', sign.signup);
   app.get('/login', sign.showLogin);
   app.post('/login', sign.login);
+  app.post('/login_dialog', sign.loginDialog);
   app.post('/logout', sign.signout);
   app.get('/forgetPassword', sign.showForgetPassword);
   app.post('/forgetPassword', sign.forgetPassword);
@@ -89,10 +86,8 @@ module.exports = function (app) {
   app.get('/accountModify', auth.loginRequired, user.showAccountModify);
   //think more later.
   app.post('/accountModify', auth.loginRequired, user.accountModify);
-
   //todo
   //app.get('/notifications', user)
-
   //show user page
   app.get('/u/:authorName', user.showPersonal);
   app.post('/u/favorite', auth.userRequired, user.favorite);

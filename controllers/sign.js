@@ -353,12 +353,12 @@ var notJumpForLogin = [
 function login(req, res, next) {
   var loginname = sanitize(req.body.username).trim();
   var pass = sanitize(req.body.password).trim();
-  var autoLogin = sanitize(req.body.autoLogin).trim();
+  var remember = sanitize(req.body.remember).trim();
 
   console.log("---login post-------");
   console.log("name: %s", loginname);
   console.log("pass: *********");
-  console.log("autoLogin: %s", autoLogin);
+  console.log("remember: %s", remember);
 
   var errMsg = '';
   if (!loginname) {
@@ -390,7 +390,7 @@ function login(req, res, next) {
         return;
       }
 
-      _checkOnlyPassword(emailIDFlag, pass, autoLogin, user, req, res);
+      _checkOnlyPassword(emailIDFlag, pass, remember, user, req, res);
 
     })
   } else {
@@ -406,15 +406,72 @@ function login(req, res, next) {
         });
         return;
       } // user if
-      _checkOnlyPassword(emailIDFlag, pass, autoLogin, user, req, res);
+      _checkOnlyPassword(emailIDFlag, pass, remember, user, req, res);
     })
 
   }
-};
+}
 
+function loginDialog(req, res, next) {
+  if (req.session && req.session.userId) {
+    return res.send(200);
+  }
+
+  //now login the user.
+  //if not correct, post back
+  //else next()
+  var loginName = req.body.userName;
+  var pass = req.body.password;
+  var remember = req.body.remember;
+
+  if (helper.validateEmail(loginName)) {
+    User.getUserByEmailPass(loginName, encryp.md5(pass), function (err, user) {
+      if (err) {
+        console.log("find err: %s", err);
+        return next(err);
+      }
+      if (!user) {
+        console.log("cannot find user by email&pass: %s, %s", loginName, pass);
+        return res.send(401);
+      }
+      //found user by email and password
+      req.session.userId = user._id;
+      if (remember) {
+        //persistent cookie
+        //var loginToken = new LoginToken({ email: user.email });
+        LoginToken.save(user.email, function (loginToken) {
+          res.cookie('logintoken', loginToken.cookieValue, { expires: new Date(Date.now() + 2 * 604800000), path: '/' });
+        });
+      }
+      res.send(200);
+    });
+  } else {
+    //not email, so username
+    User.getUserByNamePass(loginName, encryp.md5(pass), function (err, user) {
+      if (err) {
+        console.log("find err: %s", err);
+        return next(err);
+      }
+      if (!user) {
+        console.log("cannot find user by name&pass: %s, %s", loginName, pass);
+        return res.send(401);
+      }
+      //found user by name and password
+      req.session.userId = user._id;
+      if (remember) {
+        //persistent cookie
+        //var loginToken = new LoginToken({ email: user.email });
+        LoginToken.save(user.email, function (loginToken) {
+          res.cookie('logintoken', loginToken.cookieValue, { expires: new Date(Date.now() + 2 * 604800000), path: '/' });
+        });
+      }
+      res.send(200);
+    })
+  }
+}
 
 //suppose the username id, or email address exists, now check the password:
-function _checkOnlyPassword(emailIDFlag, pass, autoLogin, user, req, res) {
+function _checkOnlyPassword(emailIDFlag, pass, remember, user, req, res) {
   console.log("----login: check user password.------");
   pass = encryp.md5(pass);
   var email = user.email;
@@ -439,7 +496,7 @@ function _checkOnlyPassword(emailIDFlag, pass, autoLogin, user, req, res) {
   req.session.userId = user._id;
   req.currentUser = user;
   //console.log("currentUser: %s", req.currentUser);
-  if (autoLogin == 'Y') {
+  if (remember) {
     // Remember me
     //var loginToken = new LoginToken({ email: user.email });
     LoginToken.save(user.email, function (loginToken) {
@@ -818,6 +875,7 @@ exports.showSignUp = showSignUp;
 exports.signup = signUp;
 exports.showLogin = showLogin;
 exports.login = login;
+exports.loginDialog = loginDialog;
 exports.signout = signOut;
 exports.showForgetPassword = showForgetPassword;
 exports.forgetPassword = forgetPassword;

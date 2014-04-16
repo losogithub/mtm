@@ -17,30 +17,12 @@
         </button>
         <span class="dropdown-arrow dropdown-arrow-inverse"></span>
         <ul class="dropdown-menu dropdown-inverse">
-          <li class="<%- categoryType == '综合' ? 'selected' : '' %>">
-            <a href="/hot">综合(<%- locals.totalTopicCount || '0' %>)</a></li>
           <li class="<%- categoryType == '最新' ? 'selected' : '' %>">
             <a href="/new">最新(<%- locals.totalTopicCount || '0' %>)</a></li>
-          <li class="<%- categoryType == '娱乐' ? 'selected' : '' %>">
-            <a href="/entertainment">娱乐(<%- locals.categoryTopicCount['娱乐'] || '0' %>)</a></li>
-          <li class="<%- categoryType == '科技' ? 'selected' : '' %>">
-            <a href="/tech">科技(<%- locals.categoryTopicCount['科技'] || '0' %>)</a></li>
-          <li class="<%- categoryType == '新闻' ? 'selected' : '' %>">
-            <a href="/news">新闻(<%- locals.categoryTopicCount['新闻'] || '0' %>)</a></li>
-          <li class="<%- categoryType == '时尚' ? 'selected' : '' %>">
-            <a href="/fashion">时尚(<%- locals.categoryTopicCount['时尚'] || '0' %>)</a></li>
-          <li class="<%- categoryType == '生活' ? 'selected' : '' %>">
-            <a href="/life">生活(<%- locals.categoryTopicCount['生活'] || '0' %>)</a></li>
-          <li class="<%- categoryType == '幽默' ? 'selected' : '' %>">
-            <a href="/humor">幽默(<%- locals.categoryTopicCount['幽默'] || '0' %>)</a></li>
-          <li class="<%- categoryType == '文化' ? 'selected' : '' %>">
-            <a href="/culture">文化(<%- locals.categoryTopicCount['文化'] || '0' %>)</a></li>
-          <li class="<%- categoryType == '商业' ? 'selected' : '' %>">
-            <a href="/business">商业(<%- locals.categoryTopicCount['商业'] || '0' %>)</a></li>
-          <li class="<%- categoryType == '体育' ? 'selected' : '' %>">
-            <a href="/sport">体育(<%- locals.categoryTopicCount['体育'] || '0' %>)</a></li>
-          <li class="<%- categoryType == '未分类' ? 'selected' : '' %>">
-            <a href="/unclassified">未分类(<%- locals.categoryTopicCount['未分类'] || '0' %>)</a></li>
+          <% for (var key in CATEGORIES2ENG) { %>
+          <li class="<%- categoryType == key ? 'selected' : '' %>">
+            <a href="/<%= CATEGORIES2ENG[key] %>"><%= key %>(<%- locals.categoryTopicCount[key] || '0' %>)</a></li>
+          <% } %>
         </ul>
       </div>
     </div>

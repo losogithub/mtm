@@ -181,69 +181,6 @@ function userRequired(req, res, next) {
   }
 }
 
-/*
-This is a post request.
-But still use if-else to check for sure.
- */
-function loginDialogCheck(req, res, next) {
-  if (req.session && req.session.userId) {
-    return res.send(200);
-  }
-
-  //now login the user.
-  //if not correct, post back
-  //else next()
-  var loginName = req.body.userName;
-  var pass = req.body.password;
-  var rememberMe = sanitize(req.body.rememberMe).toBoolean();
-
-  if (helper.validateEmail(loginName)) {
-    User.getUserByEmailPass(loginName, encryp.md5(pass), function (err, user) {
-      if (err) {
-        console.log("find err: %s", err);
-        return next(err);
-      }
-      if (!user) {
-        console.log("cannot find user by email&pass: %s, %s", loginName, pass);
-        return res.send(401);
-      }
-      //found user by email and password
-      req.session.userId = user._id;
-      if (rememberMe) {
-        //persistent cookie
-        //var loginToken = new LoginToken({ email: user.email });
-        LoginToken.save(user.email, function (loginToken) {
-          res.cookie('logintoken', loginToken.cookieValue, { expires: new Date(Date.now() + 2 * 604800000), path: '/' });
-        });
-      }
-      res.send(200);
-    });
-  } else {
-    //not email, so username
-    User.getUserByNamePass(loginName, encryp.md5(pass), function (err, user) {
-      if (err) {
-        console.log("find err: %s", err);
-        return next(err);
-      }
-      if (!user) {
-        console.log("cannot find user by name&pass: %s, %s", loginName, pass);
-        return res.send(401);
-      }
-      //found user by name and password
-      req.session.userId = user._id;
-      if (rememberMe) {
-        //persistent cookie
-        //var loginToken = new LoginToken({ email: user.email });
-        LoginToken.save(user.email, function (loginToken) {
-          res.cookie('logintoken', loginToken.cookieValue, { expires: new Date(Date.now() + 2 * 604800000), path: '/' });
-        });
-      }
-      res.send(200);
-    })
-  }
-}
-
 exports.loginRequired = loginRequired;
 exports.userRequired = userRequired;
 exports.loadUser = loadUser;
-exports.loginDialogCheck = loginDialogCheck;

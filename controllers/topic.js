@@ -433,6 +433,7 @@ function showIndex(req, res, next) {
         'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.js',
         'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-buttons.js',
         'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-thumbs.js',
+        '/javascripts/utils.js',
         '/javascripts/topic.js'
       ],
       escape: escape,
@@ -1070,7 +1071,7 @@ function saveCategory(req, res, next) {
   var authorId = req.session.userId;
   var topicId = req.body.topicId;
   var category = sanitize(req.body.category).trim();
-  var valid = Common.CATEGORIES[category];
+  var valid = Common.CATEGORIES2ENG[category];
 
   if (!valid) {
     return next(new Error(400));

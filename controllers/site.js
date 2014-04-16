@@ -30,44 +30,6 @@ function index(req, res) {
   });
 }
 
-function showHot(req, res) {
-  var currentPage = parseInt(req.query.page) || 1;
-
-  var recentHotTopicsDataPage = Common.TopList.hotTopics.slice((currentPage - 1) * topicsPerPage, currentPage * topicsPerPage);
-
-  //since I have already restricted recent hot topics to 700. so will never cross 50page.
-  var totalPages = Math.ceil(Common.TopList.hotTopics.length / topicsPerPage);
-
-  res.render('category', {
-    title: '综合',
-    pageType: '综合',
-    topicCount: Common.TopList.totalTopicCount,
-    totalTopicCount: Common.TopList.totalTopicCount,
-    categoryTopicCount: Common.TopList.categoryTopicCount,
-    topics: recentHotTopicsDataPage,
-    totalPage: totalPages,
-    currentPage: currentPage,
-    authors: Common.TopList.hotAuthors,
-    authorCategoryList: Common.AuthorCategoryList,
-    tags: Common.TopList.hotTags
-  });
-}
-
-function showClassic(req, res) {
-  var currentPage = parseInt(req.query.page) || 1;
-
-  var goodTopicsDataPage = Common.TopList.classicTopics.slice((currentPage - 1) * topicsPerPage, currentPage * topicsPerPage);
-  //since I have already restricted recent hot topics to 700. so will never cross 50page.
-  var totalPages = Math.ceil(Common.TopList.classicTopics.length / topicsPerPage);
-
-  res.render('category', {
-    pageType: 'CLASSIC',
-    topics: goodTopicsDataPage,
-    totalPage: totalPages,
-    currentPage: currentPage
-  });
-}
-
 function showNew(req, res) {
   var currentPage = parseInt(req.query.page) || 1;
 
@@ -86,48 +48,11 @@ function showNew(req, res) {
   });
 }
 
-function showEntertainment(req, res) {
-  _showCategory(req, res, '娱乐');
-}
-
-function showTech(req, res) {
-  _showCategory(req, res, '科技');
-}
-
-function showNews(req, res) {
-  _showCategory(req, res, '新闻');
-}
-
-function showFashion(req, res) {
-  _showCategory(req, res, '时尚');
-}
-
-function showLife(req, res) {
-  _showCategory(req, res, '生活');
-}
-
-function showHumor(req, res) {
-  _showCategory(req, res, '幽默');
-}
-
-function showCulture(req, res) {
-  _showCategory(req, res, '文化');
-}
-
-function showBusiness(req, res) {
-  _showCategory(req, res, '商业');
-}
-
-function showSport(req, res) {
-  _showCategory(req, res, '体育');
-}
-
-function showUnclassified(req, res) {
-  _showCategory(req, res, '未分类');
-}
-
-function _showCategory(req, res, category) {
+function showCategory(req, res) {
   var currentPage = parseInt(req.query.page) || 1;
+  var category = Common.CATEGORIES2CHN[res.locals.categoryType];
+  console.log(Common.CATEGORIES2CHN);
+  console.log(res.locals.categoryType);
 
   var categoryTopicsPage = Common.TopList.categoryTopics[category].slice((currentPage - 1) * topicsPerPage, currentPage * topicsPerPage);
   var totalPages = Math.ceil(Common.TopList.categoryTopics[category].length / topicsPerPage);
@@ -148,16 +73,5 @@ function _showCategory(req, res, category) {
 }
 
 exports.index = index;
-exports.showHot = showHot;
-exports.showClassic = showClassic;
 exports.showNew = showNew;
-exports.showEntertainment = showEntertainment;
-exports.showTech = showTech;
-exports.showNews = showNews;
-exports.showFashion = showFashion;
-exports.showLife = showLife;
-exports.showHumor = showHumor;
-exports.showCulture = showCulture;
-exports.showBusiness = showBusiness;
-exports.showSport = showSport;
-exports.showUnclassified = showUnclassified;
+exports.showCategory = showCategory;

@@ -6,6 +6,8 @@
  * To change this template use File | Settings | File Templates.
  */
 
+var utils = require('./public/javascripts/utils');
+
 module.exports = {
   Tags: [],
   AuthorPVCount: {},
@@ -17,39 +19,12 @@ module.exports = {
     categoryTopics: {},
     categoryTopicCount: {}
   },
-  CATEGORIES2ENG: {
-    '未分类': 'unclassified',
-    '娱乐': 'entertainment',
-    '科技': 'tech',
-    '新闻': 'news',
-    '时尚': 'fashion',
-    '生活': 'life',
-    '幽默': 'humor',
-    '文化': 'culture',
-    '商业': 'business',
-    '体育': 'sport'
-  },
-  CATEGORIES: {
-    '未分类': 1,
-    '娱乐': 1,
-    '科技': 1,
-    '新闻': 1,
-    '时尚': 1,
-    '生活': 1,
-    '幽默': 1,
-    '文化': 1,
-    '商业': 1,
-    '体育': 1
-  },
-  CATEGORY_LIST: [
-    '娱乐',
-    '科技',
-    '新闻',
-    '时尚',
-    '生活',
-    '幽默',
-    '文化',
-    '商业',
-    '体育'
-  ]//不能有“未分类”！！！
+  CATEGORIES2ENG: utils.CATEGORIES2ENG,
+  CATEGORIES2CHN: (function () {
+    var temp = {};
+    for (var key in utils.CATEGORIES2ENG) {
+      temp[utils.CATEGORIES2ENG[key]] = key;
+    }
+    return temp;
+  })()
 }

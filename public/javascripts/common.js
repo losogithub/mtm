@@ -51,39 +51,44 @@
     }
   };
 
+  window.sng.controller('LoginDialogCtrl', function LoginDialogCtrl($scope, $http) {
+    $scope.submit = function () {
+      console.log($scope.username);
+      console.log($scope.password);
+      console.log($scope.remember);
+      if (!$scope.username || !$scope.password) {
+        $scope.error = '用户名和密码不能为空';
+        return;
+      }
+      $http.post('/login_dialog', {
+        userName: $scope.username,
+        password: $scope.password,
+        remember: $scope.remember
+      })
+        .success(function () {
+          location.reload();
+        })
+        .error(function () {
+          $scope.error = '用户名或密码不正确';
+        });
+    };
+  });
+
   $(function ($) {
 
-    shizier.loginCheck = function () {
-      var username = document.getElementById('uName').value;
-      var password = document.getElementById('uPas').value;
-      var rememberMe = $('#idSaveCheck').is(":checked");
-      //primary check: i.e. non empty.
-      //either empty
-      if (!username || !password) {
-        $('.LoginDialog .ErrorHint').text('用户名和密码不能为空。');
-        return false;
-      }
-      //using an ajax send to server to check for login.
-      $.post('/login_dialog', {
-        userName: username,
-        password: password,
-        rememberMe: rememberMe
-      })
-        .done(function () {
-          location.reload();
-        });
-      return false;
-    };
-
+    var $model = $('#myModal');
     $(document).ajaxError(function (event, jqXHR) {
       if (jqXHR.status == 401) {
-        var $model = $('#myModal');
-        if ($model.is(':visible')) {
-          $('.LoginDialog .ErrorHint').text('用户名或密码不正确。');
-        } else {
-          $model.modal('show');
-        }
+        $model.modal('show');
       }
+    });
+
+    $('.ShowLogin').click(function () {
+      $model.modal('show');
+    });
+
+    $model.on('shown.bs.modal', function () {
+      $('.LoginFocus').focus();
     });
 
     var URL_INPUT_SELECTOR = 'input[name="url"], input.Url';

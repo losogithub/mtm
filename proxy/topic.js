@@ -78,9 +78,16 @@ function getAllTopics(callback) {
 
 function getCategoryTopics(category, callback) {
   if (category == '未分类') {
+    var classedList = [];
+    for (var key in Common.CATEGORIES2ENG) {
+      if (key == '未分类') {
+        continue;
+      }
+      classedList.push(key);
+    }
     TopicModel.find({
       publishDate: { $exists: true },
-      category: { $not: { $in: Common.CATEGORY_LIST } }
+      category: { $not: { $in: classedList } }
     }, callback);
   } else {
     TopicModel.find({ publishDate: { $exists: true }, category: category }, callback);
@@ -329,7 +336,7 @@ function updateHotTopics() {
 }
 
 function updateCategoryTopics() {
-  for (var category in Common.CATEGORIES) {
+  for (var category in Common.CATEGORIES2ENG) {
     (function (category) {
       getCategoryTopics(category, function (err, topics) {
         if (err) {
