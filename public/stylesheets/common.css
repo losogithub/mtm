@@ -308,6 +308,7 @@ textarea {
   border-top-color: white;
 }
 .Band .tags {
+  max-width: 100%;
   max-height: 41px;
   line-height: 41px;
   overflow: hidden;

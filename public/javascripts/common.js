@@ -7,7 +7,6 @@
  */
 //使用全局变量应避免污染命名空间
 (function ($) {
-  window.sng = angular.module('sng', ['ui.bootstrap']);
 
   window.shizier = window.shizier || {};
 
@@ -53,9 +52,6 @@
 
   window.sng.controller('LoginDialogCtrl', function LoginDialogCtrl($scope, $http) {
     $scope.submit = function () {
-      console.log($scope.username);
-      console.log($scope.password);
-      console.log($scope.remember);
       if (!$scope.username || !$scope.password) {
         $scope.error = '用户名和密码不能为空';
         return;
@@ -138,6 +134,7 @@
     'baomihua.com': ['http://resources.pomoho.com/swf/out_player.swf?flvid=#vid#', ''],
     'yinyuetai.com': ['http://player.yinyuetai.com/video/swf/#vid#/1/a.swf', 'playMovie=true'],
     'acfun.tv': ['http://static.acfun.tv/player/ACFlashPlayerX.out.20130927.swf?type=page&url=ac#vid#', ''],
+    'acfun.com': ['http://static.acfun.tv/player/ACFlashPlayerX.out.20130927.swf?type=page&url=ac#vid#', ''],
     'bilibili.tv': ['http://static.hdslb.com/miniloader.swf?aid=#vid#', ''],
     'bilibili.kankanews.com': ['http://static.hdslb.com/miniloader.swf?aid=#vid#', '']
   };

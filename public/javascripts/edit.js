@@ -8,9 +8,7 @@
 
 (function ($) {
 
-  window.sng =
-    angular.module('sng', ['ui.bootstrap', 'ngTagsInput'])
-      .controller('TagsInputCtrl', TagsInputCtrl);
+  window.sng.controller('TagsInputCtrl', TagsInputCtrl);
   function TagsInputCtrl($scope, $http) {
     $scope.onAdded = function ($tag) {
       $http.put('/tag', angular.extend({ topicId: topicId }, $tag));
@@ -30,7 +28,11 @@
 
     //填充视频
     $li
+      .find('.Player')
+      .remove()
+      .end()
       .find('.Cover')
+      .show()
       .css('background-image', !cover ? '' : 'url(' + cover + ')')
       .end()
       .find('.Quote a')
@@ -67,6 +69,7 @@
       .end();
 
     var $pic = $li.find('.Pic');
+    $pic.html('');
     var $image = $templates.find('>.WeiboImage');
     if (options.pic_urls && options.pic_urls.length) {
       $pic.show();
@@ -77,26 +80,26 @@
         if (options.pic_urls[0]) {
           $image
             .clone(true)
-            .prependTo($pic)
-            .attr('href', options.pic_urls[0].thumbnail_pic)
+            .appendTo($pic)
+            .attr('href', options.pic_urls[0].thumbnail_pic.replace('/thumbnail/', '/large/'))
             .find('img')
             .attr('src', options.pic_urls[0].thumbnail_pic);
         }
       } else {
         for (var i = 0; i < options.pic_urls.length; i++) {
-          var src = options.pic_urls[i].thumbnail_pic.replace('/thumbnail/', '/square/');
           if (options.pic_urls[i]) {
             $image
               .clone(true)
-              .prependTo($pic)
-              .attr('href', src)
+              .appendTo($pic)
+              .attr('href', options.pic_urls[i].thumbnail_pic.replace('/thumbnail/', '/large/'))
               .find('img')
-              .attr('src', src);
+              .attr('src', options.pic_urls[i].thumbnail_pic.replace('/thumbnail/', '/square/'));
           }
         }
       }
     }
 
+    $li.find('>.Retweeted').remove();
     if (options.retweeted_status && options.retweeted_status.idstr) {
       fillWeibo($templates.find('>.Retweeted').clone(true).insertAfter($li.find('.Pic')), options.retweeted_status);
     }
@@ -216,7 +219,7 @@
         .addClass('Editing')
         .prepend($templates.find('.Widget:first').clone(true))
         .find('.Widget')
-        .prepend($templates.find('.Widget .' + this.type).clone(true))
+        .prepend($templates.find('.Widget .' + this.type))
         .end()
         //更改保存按钮类型以实现回车提交表单的功能
         .find('button[name="save"]')
@@ -227,6 +230,9 @@
         .css('resize', 'none')
         .autosize()
         .end();
+
+      this.widget().find('button').button('reset');
+      this.widget().find('input').val('');
 
       this.__create();
 
@@ -258,6 +264,7 @@
      */
     remove: function () {
       console.log('remove');
+      var self = this;
 
       if (this.xhr) {
         console.log('abort');
@@ -266,6 +273,10 @@
       this.disable();
       //如果是新建的就删除dom元素，否则是修改就新建条目dom元素
       this.widget().hiddenSlideUp(function () {
+        $(this)
+          .find('.Widget .' + self.type)
+          .prependTo($templates.find('div.Widget'))
+          .end();
         $(this).remove();
       });
       if (this.options._id) {
@@ -314,6 +325,10 @@
         savedOnce = true;
         self.disable();
         self.widget().hiddenSlideUp(function () {
+          $(this)
+            .find('.Widget .' + self.type)
+            .prependTo($templates.find('div.Widget'))
+            .end();
           $(this).remove();
         });
         createItem(self.widget().prev(), data);
@@ -584,6 +599,16 @@
       _increaseIndex(0);
 
       //填充文本
+      var scope;
+      scope = angular.element(this.widget().find('input[name="title"]').closest('.form-group')).scope();
+      scope.input = this.options.title;
+      scope.$apply();
+      scope = angular.element(this.widget().find('textarea[name="snippet"]').closest('.form-group')).scope();
+      scope.input = this.options.snippet;
+      scope.$apply();
+      scope = angular.element(this.widget().find('textarea[name="description"]').closest('.form-group')).scope();
+      scope.input = this.options.description;
+      scope.$apply();
       this.widget()
         .find('.LINK_URL')
         .attr('href', this.options.url)
@@ -592,13 +617,11 @@
         .text(this.options.url)
         .end()
         .find('input[name="title"]')
-        .val(this.options.title)
         .on(INPUT_EVENTS, function () {
           self.checkState();
         })
         .end()
         .find('textarea[name="snippet"]')
-        .val(this.options.snippet)
         .on(INPUT_EVENTS, function () {
           self.checkState();
         })
@@ -636,7 +659,6 @@
         })
         .end()
         .find('textarea[name="description"]')
-        .val(this.options.description)
         .on(INPUT_EVENTS, function () {
           self.checkState();
         })
@@ -660,27 +682,27 @@
         },
         rules: {
           title: {
-            maxlength: 100,
+            maxlength: 50,
             required: false
           },
           snippet: {
-            maxlength: 200,
+            maxlength: 140,
             required: false
           },
           description: {
-            maxlength: 300,
+            maxlength: 140,
             required: false
           }
         },
         messages: {
           title: {
-            maxlength: '标题太长，请缩写到100字以内。'
+            maxlength: '标题太长，请缩写到50字以内。'
           },
           snippet: {
-            maxlength: '摘要太长，请缩写到200字以内。'
+            maxlength: '摘要太长，请缩写到140字以内。'
           },
           description: {
-            maxlength: '评论太长，请缩写到300字以内。'
+            maxlength: '评论太长，请缩写到140字以内。'
           }
         }
       });
@@ -726,24 +748,31 @@
       var self = this;
 
       //填充图片、填充文本
+      var scope;
+      scope = angular.element(this.widget().find('input[name="title"]').closest('.form-group')).scope();
+      scope.input = this.options.title;
+      scope.$apply();
+      scope = angular.element(this.widget().find('input[name="quote"]').closest('.form-group')).scope();
+      scope.input = this.options.quote;
+      scope.$apply();
+      scope = angular.element(this.widget().find('textarea[name="description"]').closest('.form-group')).scope();
+      scope.input = this.options.description;
+      scope.$apply();
       this.widget()
         .find('img')
         .attr('src', this.options.url)
         .end()
         .find('input[name="title"]')
-        .val(this.options.title)
         .on(INPUT_EVENTS, function () {
           self.checkState();
         })
         .end()
         .find('input[name="quote"]')
-        .val(this.options.quote)
         .on(INPUT_EVENTS, function () {
           self.checkState();
         })
         .end()
         .find('textarea[name="description"]')
-        .val(this.options.description)
         .on(INPUT_EVENTS, function () {
           self.checkState();
         })
@@ -767,7 +796,7 @@
         },
         rules: {
           title: {
-            maxlength: 100,
+            maxlength: 50,
             required: false
           },
           quote: {
@@ -775,19 +804,19 @@
             required: false
           },
           description: {
-            maxlength: 300,
+            maxlength: 140,
             required: false
           }
         },
         messages: {
           title: {
-            maxlength: '标题太长，请缩写到100字以内。'
+            maxlength: '标题太长，请缩写到50字以内。'
           },
           quote: {
             url: 'URL格式错误。'
           },
           description: {
-            maxlength: '介绍、评论太长，请缩写到300字以内。'
+            maxlength: '介绍、评论太长，请缩写到140字以内。'
           }
         }
       });
@@ -847,18 +876,23 @@
       fillVideo(this.widget(), this.options.url, this.options.cover);
 
       //填充文本
+      var scope;
+      scope = angular.element(this.widget().find('input[name="title"]').closest('.form-group')).scope();
+      scope.input = this.options.title;
+      scope.$apply();
+      scope = angular.element(this.widget().find('textarea[name="description"]').closest('.form-group')).scope();
+      scope.input = this.options.description;
+      scope.$apply();
       this.widget()
         .find('.VIDEO_URL')
         .attr('href', this.options.url)
         .end()
         .find('input[name="title"]')
-        .val(this.options.title)
         .on(INPUT_EVENTS, function () {
           self.checkState();
         })
         .end()
         .find('textarea[name="description"]')
-        .val(this.options.description)
         .on(INPUT_EVENTS, function () {
           self.checkState();
         })
@@ -882,20 +916,20 @@
         },
         rules: {
           title: {
-            maxlength: 100,
+            maxlength: 50,
             required: false
           },
           description: {
-            maxlength: 300,
+            maxlength: 140,
             required: false
           }
         },
         messages: {
           title: {
-            maxlength: '标题太长，请缩写到100字以内。'
+            maxlength: '标题太长，请缩写到50字以内。'
           },
           description: {
-            maxlength: '介绍、评论太长，请缩写到300字以内。'
+            maxlength: '介绍、评论太长，请缩写到140字以内。'
           }
         }
       });
@@ -938,9 +972,18 @@
       var self = this;
 
       //填充文本
+      var scope;
+      scope = angular.element(this.widget().find('textarea[name="cite"]').closest('.form-group')).scope();
+      scope.input = this.options.cite;
+      scope.$apply();
+      scope = angular.element(this.widget().find('input[name="title"]').closest('.form-group')).scope();
+      scope.input = this.options.title;
+      scope.$apply();
+      scope = angular.element(this.widget().find('textarea[name="description"]').closest('.form-group')).scope();
+      scope.input = this.options.description;
+      scope.$apply();
       this.widget()
         .find('textarea[name="cite"]')
-        .val(this.options.cite)
         .on(INPUT_EVENTS, function () {
           self.checkState();
         })
@@ -952,13 +995,11 @@
         })
         .end()
         .find('input[name="title"]')
-        .val(this.options.title)
         .on(INPUT_EVENTS, function () {
           self.checkState();
         })
         .end()
         .find('textarea[name="description"]')
-        .val(this.options.description)
         .on(INPUT_EVENTS, function () {
           self.checkState();
         })
@@ -983,7 +1024,7 @@
         rules: {
           cite: {
             required: true,
-            maxlength: 500
+            maxlength: 140
           },
           url: {
             required: false,
@@ -991,26 +1032,26 @@
           },
           title: {
             required: false,
-            maxlength: 100
+            maxlength: 50
           },
           description: {
             required: false,
-            maxlength: 300
+            maxlength: 140
           }
         },
         messages: {
           cite: {
             required: "尚未输入引文。",
-            maxlength: "引文太长，请缩写到500字以内。"
+            maxlength: "引文太长，请缩写到140字以内。"
           },
           url: {
             url: 'URL格式错误。'
           },
           title: {
-            maxlength: "网页标题太长，请缩写到100字以内。"
+            maxlength: "网页标题太长，请缩写到50字以内。"
           },
           description: {
-            maxlength: "介绍、评论太长，请缩写到300字以内。"
+            maxlength: "介绍、评论太长，请缩写到140字以内。"
           }
         }
       });
@@ -1057,9 +1098,12 @@
       fillWeibo(this.widget().find('.Content'), this.options);
 
       //填充文本
+      var scope;
+      scope = angular.element(this.widget().find('textarea[name="description"]').closest('.form-group')).scope();
+      scope.input = this.options.description;
+      scope.$apply();
       this.widget()
         .find('textarea[name="description"]')
-        .val(this.options.description)
         .on(INPUT_EVENTS, function () {
           self.checkState();
         })
@@ -1083,13 +1127,13 @@
         },
         rules: {
           description: {
-            maxlength: 300,
+            maxlength: 140,
             required: false
           }
         },
         messages: {
           description: {
-            maxlength: '介绍、评论太长，请缩写到300字以内。'
+            maxlength: '介绍、评论太长，请缩写到140字以内。'
           }
         }
       });
@@ -1120,8 +1164,12 @@
       var self = this;
 
       //填充文本、监听文本改变事件
+      var scope;
+      scope = angular.element(this.widget().find('textarea[name="text"]').closest('.form-group')).scope();
+      scope.input = this.options.text;
+      scope.$apply();
       this.widget()
-        .find('textarea')
+        .find('textarea[name="text"]')
         .val(this.options.text)
         .on(INPUT_EVENTS, function () {
           self.checkState();
@@ -1147,13 +1195,13 @@
         rules: {
           text: {
             required: true,
-            maxlength: 2000
+            maxlength: 140
           }
         },
         messages: {
           text: {
             required: "尚未输入文本。",
-            maxlength: "文本太长，请缩写到2000字以内。"
+            maxlength: "文本太长，请缩写到140字以内。"
           }
         }
       });
@@ -1185,9 +1233,12 @@
       var self = this;
 
       //填充文本、监听文本改变事件
+      var scope;
+      scope = angular.element(this.widget().find('input[name="title"]').closest('.form-group')).scope();
+      scope.input = this.options.title;
+      scope.$apply();
       this.widget()
-        .find('input')
-        .val(this.options.title)
+        .find('input[name="title"]')
         .on(INPUT_EVENTS, function () {
           self.checkState();
         })
@@ -1212,13 +1263,13 @@
         rules: {
           title: {
             required: true,
-            maxlength: 100
+            maxlength: 50
           }
         },
         messages: {
           title: {
             required: "尚未输入标题。",
-            maxlength: "标题太长，请缩写到100字以内。"
+            maxlength: "标题太长，请缩写到50字以内。"
           }
         }
       });
@@ -1717,7 +1768,7 @@
           window.location = '/topic/' + topicId;
         })
         .fail(function (jqXHR, textStatus) {
-          $publish.button('reset');//成功的话跳转可能要几秒时间，所以不能reset
+          $publish.button('reset');//成功的话跳转可能要几秒时间，所以只有失败才reset
           console.error(jqXHR.responseText);
           console.error(textStatus);
           if (textStatus != 'abort') {

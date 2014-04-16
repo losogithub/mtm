@@ -128,8 +128,13 @@
               </div>
 
               <div class="Content LINK pam">
-                <div class="form-group mbx">
-                  <input name="title" class="form-control flat" placeholder="链接标题" type="text">
+                <div class="form-group mbx"
+                     ng-controller="$.noop" ng-init="limit = 50;"
+                     ng-class="{ 'has-error' : input.length > limit }">
+                  <input name="title" class="form-control flat" ng-model="input"
+                         placeholder="链接标题" type="text">
+                  <div ng-class="input.length > limit ? 'text-danger' : 'text-muted'"
+                       class="LetterCounter">{{input.length || 0}}/{{limit}}</div>
 
                   <div class="Quote">
                     <i class="fa fa-globe"></i>
@@ -137,8 +142,13 @@
                   </div>
                 </div>
 
-                <div class="form-group">
-                  <textarea name="snippet" class="form-control flat" placeholder="链接摘要"></textarea>
+                <div class="form-group"
+                     ng-controller="$.noop" ng-init="limit = 140;"
+                     ng-class="{ 'has-error' : input.length > limit }">
+                  <textarea name="snippet" class="form-control flat" ng-model="input"
+                            placeholder="链接摘要"></textarea>
+                  <div ng-class="input.length > limit ? 'text-danger' : 'text-muted'"
+                       class="LetterCounter">{{input.length || 0}}/{{limit}}</div>
                 </div>
 
                 <div class="Thumb clearfix">
@@ -178,8 +188,13 @@
                     </div>
                   </div>
                 </div>
-                <div class="form-group">
-                  <textarea name="description" class="form-control flat AUTO_FOCUS" placeholder="链接评论"></textarea>
+                <div class="form-group"
+                     ng-controller="$.noop" ng-init="limit = 140;"
+                     ng-class="{ 'has-error' : input.length > limit }">
+                  <textarea name="description" class="form-control flat AUTO_FOCUS" ng-model="input"
+                            placeholder="链接评论"></textarea>
+                  <div ng-class="input.length > limit ? 'text-danger' : 'text-muted'"
+                       class="LetterCounter">{{input.length || 0}}/{{limit}}</div>
                 </div>
 
                 <% include _widget_BtnSet.html %>
@@ -213,14 +228,25 @@
                   <img onerror="shizier.errorImage(this, 'default_120x120', true);">
                 </div>
 
-                <div class="form-group">
-                  <input name="title" class="form-control flat text-center Bold AUTO_FOCUS" placeholder="图片标题" type="text">
+                <div class="form-group"
+                     ng-controller="$.noop" ng-init="limit = 50;"
+                     ng-class="{ 'has-error' : input.length > limit }">
+                  <input name="title" class="form-control flat text-center Bold AUTO_FOCUS" ng-model="input"
+                         placeholder="图片标题" type="text">
+                  <div ng-class="input.length > limit ? 'text-danger' : 'text-muted'"
+                       class="LetterCounter">{{input.length || 0}}/{{limit}}</div>
                 </div>
                 <div class="form-group">
-                  <input name="quote" class="form-control flat Url" placeholder="图片来源网页URL" type="text">
+                  <input name="quote" class="form-control flat Url"
+                         placeholder="图片来源网页URL" type="text">
                 </div>
-                <div class="form-group">
-                  <textarea name="description" class="form-control flat text-center" placeholder="图片介绍、评论"></textarea>
+                <div class="form-group"
+                     ng-controller="$.noop" ng-init="limit = 140;"
+                     ng-class="{ 'has-error' : input.length > limit }">
+                  <textarea name="description" class="form-control flat text-center" ng-model="input"
+                            placeholder="图片介绍、评论"></textarea>
+                  <div ng-class="input.length > limit ? 'text-danger' : 'text-muted'"
+                       class="LetterCounter">{{input.length || 0}}/{{limit}}</div>
                 </div>
 
                 <% include _widget_BtnSet.html %>
@@ -247,7 +273,7 @@
                   target="_blank" class="text-primary" href="http://www.56.com/">56</a>、<a
                   target="_blank" class="text-primary" href="http://www.baomihua.com/">爆米花</a>、<a
                   target="_blank" class="text-primary" href="http://www.yinyuetai.com/">音悦台</a>、<a
-                  target="_blank" class="text-primary" href="http://www.acfun.tv/">AcFun</a>、<a
+                  target="_blank" class="text-primary" href="http://www.acfun.com/">AcFun</a>、<a
                   target="_blank" class="text-primary" href="http://www.bilibili.tv/">bilibili</a>等视频网站的视频播放页链接。
                 </div>
                 <div class="form-group">
@@ -273,11 +299,21 @@
                   <a target="_blank" class="VIDEO_URL"></a>
                 </div>
 
-                <div class="form-group mtx">
-                  <input name="title" class="form-control flat Bold" placeholder="视频标题" type="text">
+                <div class="form-group mtx"
+                     ng-controller="$.noop" ng-init="limit = 50;"
+                     ng-class="{ 'has-error' : input.length > limit }">
+                  <input name="title" class="form-control flat Bold" ng-model="input"
+                         placeholder="视频标题" type="text">
+                  <div ng-class="input.length > limit ? 'text-danger' : 'text-muted'"
+                       class="LetterCounter">{{input.length || 0}}/{{limit}}</div>
                 </div>
-                <div class="form-group">
-                  <textarea class="form-control flat AUTO_FOCUS" name="description" placeholder="视频介绍、评论"></textarea>
+                <div class="form-group"
+                     ng-controller="$.noop" ng-init="limit = 140;"
+                     ng-class="{ 'has-error' : input.length > limit }">
+                  <textarea class="form-control flat AUTO_FOCUS" name="description" ng-model="input"
+                            placeholder="视频介绍、评论"></textarea>
+                  <div ng-class="input.length > limit ? 'text-danger' : 'text-muted'"
+                       class="LetterCounter">{{input.length || 0}}/{{limit}}</div>
                 </div>
 
                 <% include _widget_BtnSet.html %>
@@ -285,19 +321,34 @@
               </div>
 
               <div class='Content CITE'>
-                <div class="form-group">
+                <div class="form-group"
+                     ng-controller="$.noop" ng-init="limit = 140;"
+                     ng-class="{ 'has-error' : input.length > limit }">
                   <div class="Required"></div>
-                  <textarea class="form-control flat AUTO_FOCUS" name="cite" placeholder="引文"></textarea>
+                  <textarea class="form-control flat AUTO_FOCUS" name="cite" ng-model="input"
+                            placeholder="引文"></textarea>
+                  <div ng-class="input.length > limit ? 'text-danger' : 'text-muted'"
+                       class="LetterCounter">{{input.length || 0}}/{{limit}}</div>
                 </div>
                 <div class="form-group">
                   <input class="form-control flat" name="url" placeholder="引文来源网页URL" id="_cite_url" type="text">
                   <label class="input-icon fa fa-link" for="_cite_url"></label>
                 </div>
-                <div class="form-group">
-                  <input class="form-control flat" name="title" placeholder="引文来源网页标题" type="text">
+                <div class="form-group"
+                     ng-controller="$.noop" ng-init="limit = 50;"
+                     ng-class="{ 'has-error' : input.length > limit }">
+                  <input class="form-control flat" name="title" ng-model="input"
+                         placeholder="引文来源网页标题" type="text">
+                  <div ng-class="input.length > limit ? 'text-danger' : 'text-muted'"
+                       class="LetterCounter">{{input.length || 0}}/{{limit}}</div>
                 </div>
-                <div class="form-group">
-                  <textarea class="form-control flat" name="description" placeholder="引文介绍、评论"></textarea>
+                <div class="form-group"
+                     ng-controller="$.noop" ng-init="limit = 140;"
+                     ng-class="{ 'has-error' : input.length > limit }">
+                  <textarea class="form-control flat" name="description" ng-model="input"
+                            placeholder="引文介绍、评论"></textarea>
+                  <div ng-class="input.length > limit ? 'text-danger' : 'text-muted'"
+                       class="LetterCounter">{{input.length || 0}}/{{limit}}</div>
                 </div>
 
                 <% include _widget_BtnSet.html %>
@@ -341,23 +392,33 @@
                   </div>
                 </div>
 
-                <div class="Text" style="color: white;"></div>
+                <div class="Text"></div>
                 <div class="Pic clearfix"></div>
                 <a target="_blank" class="Time text-muted pull-left"></a>
                 <div class="clearfix"></div>
 
-                <div class="form-group">
-                  <textarea name="description" class="form-control flat AUTO_FOCUS" placeholder="微博介绍、评论"></textarea>
+                <div class="form-group"
+                     ng-controller="$.noop" ng-init="limit = 140;"
+                     ng-class="{ 'has-error' : input.length > limit }">
+                  <textarea name="description" class="form-control flat AUTO_FOCUS" ng-model="input"
+                            placeholder="微博介绍、评论"></textarea>
+                  <div ng-class="input.length > limit ? 'text-danger' : 'text-muted'"
+                       class="LetterCounter">{{input.length || 0}}/{{limit}}</div>
                 </div>
 
                 <% include _widget_BtnSet.html %>
 
               </div>
 
-              <div class='Content TEXT'>
-                <div class="form-group">
+              <div class="Content TEXT">
+                <div class="form-group"
+                     ng-controller="$.noop" ng-init="limit = 140;"
+                     ng-class="{ 'has-error' : input.length > limit }">
                   <div class="Required"></div>
-                  <textarea name="text" class="form-control flat AUTO_FOCUS" placeholder="文本"></textarea>
+                  <textarea name="text" class="form-control flat AUTO_FOCUS" ng-model="input"
+                            placeholder="文本"></textarea>
+                  <div ng-class="input.length > limit ? 'text-danger' : 'text-muted'"
+                       class="LetterCounter">{{input.length || 0}}/{{limit}}</div>
                 </div>
 
                 <% include _widget_BtnSet.html %>
@@ -365,9 +426,14 @@
               </div>
 
               <div class='Content TITLE'>
-                <div class="form-group">
+                <div class="form-group"
+                     ng-controller="$.noop" ng-init="limit = 50;"
+                     ng-class="{ 'has-error' : input.length > limit }">
                   <div class="Required"></div>
-                  <input name="title" class="form-control flat Bold AUTO_FOCUS" placeholder="标题" type="text">
+                  <input name="title" class="form-control flat Bold AUTO_FOCUS" ng-model="input"
+                         placeholder="标题" type="text">
+                  <div ng-class="input.length > limit ? 'text-danger' : 'text-muted'"
+                       class="LetterCounter">{{input.length || 0}}/{{limit}}</div>
                 </div>
 
                 <% include _widget_BtnSet.html %>
@@ -411,11 +477,13 @@
           <% for (var i = 0; i < topic.tags.length; i++) { %>
           <%   tags.push({ text: topic.tags[i] }); %>
           <% } %>
-          <tags-input ng-model="tags" ng-controller="TagsInputCtrl"
-                      ng-init='tags = <%- JSON.stringify(tags) %>;'
-                      min-length="1" max-length="10" min-tags="1" max-tags="5"
-                      placeholder="标签" add-on-space="true"
-                      on-tag-added="onAdded($tag)" on-tag-removed="onRemoved($tag)"></tags-input>
+          <div class="TagsInput">
+            <tags-input ng-model="tags" ng-controller="TagsInputCtrl"
+                        ng-init='tags = <%- JSON.stringify(tags) %>;'
+                        min-length="1" max-length="20" min-tags="1" max-tags="5"
+                        placeholder="标签" add-on-space="true"
+                        on-tag-added="onAdded($tag)" on-tag-removed="onRemoved($tag)"></tags-input>
+          </div>
         </div>
       </div>
     </div>

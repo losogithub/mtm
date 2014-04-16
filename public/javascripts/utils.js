@@ -22,7 +22,7 @@
     REGEXP_URL: /^(https?|ftp):\/\/(([\w\-]+\.)+[\w\-]+)(:|\/|\?|$)/i,
     REGEXP_PROTOCOL: /^(https?|ftp):\/\//i,
     REGEXP_QUOTE: {
-      VIDEO: /youku\.com|tudou\.com|iqiyi\.com|pps\.tv|sohu\.com|qq\.com|sina\.com\.cn|ifeng\.com|letv\.com|pptv\.com|ku6\.com|56\.com|baomihua\.com|yinyuetai\.com|acfun\.tv|bilibili\.tv|bilibili\.kankanews\.com$/i,
+      VIDEO: /youku\.com|tudou\.com|iqiyi\.com|pps\.tv|sohu\.com|qq\.com|sina\.com\.cn|ifeng\.com|letv\.com|pptv\.com|ku6\.com|56\.com|baomihua\.com|yinyuetai\.com|acfun\.tv|acfun\.com|bilibili\.tv|bilibili\.kankanews\.com$/i,
       WEIBO: /weibo\.com$/i
     },
 

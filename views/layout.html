@@ -32,6 +32,9 @@
   <script src="http://cdn.bootcss.com/respond.js/1.3.0/respond.min.js"></script>
   <![endif]-->
   <script src="http://cdn.bootcss.com/angular.js/1.2.15/angular.min.js"></script>
+  <script>
+    window.sng = angular.module('sng', ['ui.bootstrap'<%- locals.pageType == 'EDIT' ? ", 'ngTagsInput'" : "" %>]);
+  </script>
   <script type="text/javascript" src="http://cdn.bootcss.com/jquery/1.11.0/jquery.min.js"></script>
   <!--<script type="text/javascript" src="/javascripts/bootstrap.js"></script>-->
   <!--<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>-->

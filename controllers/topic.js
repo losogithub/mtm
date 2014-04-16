@@ -92,6 +92,7 @@ function showEdit(req, res, next) {
     res.set('Expire', '-1');
     res.set('Pragma', 'no-cache');
     res.render('topic/edit', {
+      pageType: 'EDIT',
       title: '策展中',
       css: [
         'http://cdn.bootcss.com/messenger/1.4.0/css/messenger.css',
@@ -500,10 +501,10 @@ function _getData(req) {
       var description = sanitize(req.body.description).trim();
 
       check(url).notNull().isUrl();
-      check(title).len(0, 100);
-      check(snippet).len(0, 200);
+      check(title).len(0, 50);
+      check(snippet).len(0, 140);
       if (src.length) check(src).isUrl();
-      check(description).len(0, 300);
+      check(description).len(0, 140);
 
       data = {
         url: url,
@@ -521,9 +522,9 @@ function _getData(req) {
       var description = sanitize(req.body.description).trim();
 
       check(url).notNull().isUrl();
-      check(title).len(0, 100);
+      check(title).len(0, 50);
       if (quote.length) check(quote).isUrl();
-      check(description).len(0, 300);
+      check(description).len(0, 140);
 
       data = {
         url: url,
@@ -542,8 +543,8 @@ function _getData(req) {
 
       check(url).notNull().isUrl();
       if (cover.length) check(cover).isUrl();
-      check(title).len(0, 100);
-      check(description).len(0, 300);
+      check(title).len(0, 50);
+      check(description).len(0, 140);
 
       data = {
         url: url,
@@ -559,10 +560,10 @@ function _getData(req) {
       var title = sanitize(req.body.title).trim();
       var description = sanitize(req.body.description).trim();
 
-      check(cite).len(1, 500);
+      check(cite).len(1, 140);
       if (url.length) check(url).isUrl();
-      check(title).len(0, 100);
-      check(description).len(0, 300);
+      check(title).len(0, 50);
+      check(description).len(0, 140);
 
       data = {
         cite: cite,
@@ -586,7 +587,7 @@ function _getData(req) {
       var retweeted_status = req.body.retweeted_status;
 
       check(url).notNull().isUrl();
-      check(description).len(0, 300);
+      check(description).len(0, 140);
 
       data = {
         url: url,
@@ -605,7 +606,7 @@ function _getData(req) {
     case 'TEXT':
       var text = sanitize(req.body.text).trim();
 
-      check(text).len(1, 2000);
+      check(text).len(1, 140);
 
       data = {
         text: text
@@ -614,7 +615,7 @@ function _getData(req) {
     case 'TITLE':
       var title = sanitize(req.body.title).trim();
 
-      check(title).len(1, 100);
+      check(title).len(1, 50);
 
       data = {
         title: title
@@ -1205,8 +1206,8 @@ function _getLinkDetail(url, callback) {
       .replace(/<[^>]*>/g, ' ')
       .replace(/\s+/g, ' ')
       .trim();
-    if (snippet.length > 200) {
-      snippet = snippet.substr(0, 199) + '…';
+    if (snippet.length > 140) {
+      snippet = snippet.substr(0, 139) + '…';
     }
     snippet = sanitize(snippet).entityDecode();
     snippet = sanitize(snippet).trim();
@@ -1459,6 +1460,7 @@ function _getVideoDetail(url, callback) {
         cover = !(temp = html.match(/<meta property="og:image"[^<>]*content="([^">]*)/i)) ? null : !temp[1] ? null : temp[1];
         break;
       case 'acfun.tv':
+      case 'acfun.com':
         //plan A
         //<h1 id="title-article" class="title" title="视频标题">日产GT-R Nismo</h1>
         title = !(temp = html.match(/<h1 id="title-article" class="title" title="视频标题">([^<>]*)<\/h1>/i)) ? null : !temp[1] ? null : temp[1];
