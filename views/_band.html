@@ -4,7 +4,7 @@
     <div class="btn-group pull-left">
       <div class="btn-group">
         <a class="btn <%- categoryType == 'INDEX' ? 'btn-primary' : 'btn-default' %>"
-           href="/">首页(<%- locals.totalTopicCount || '0' %>)</a>
+           href="/">首页 <small style="line-height: 1;"> ( <%- locals.totalTopicCount || '0' %> ) </small></a>
       </div>
     </div>
     <i class="fa fa-angle-right pull-left text-inverse mls" style="line-height: 41px;"></i>
@@ -12,16 +12,16 @@
       <div class="btn-group">
         <button type="button" data-toggle="dropdown"
                 class="btn dropdown-toggle <%- locals.tag || categoryType == 'INDEX' ? 'btn-default' : 'btn-primary' %>">
-          <%= categoryType == 'INDEX' ? '分类' : (categoryType + '(' + (locals.topicCount || '0') + ')') %>
+          <%- categoryType == 'INDEX' ? '<i class="fa fa-bookmark-o"></i> 分类' : (categoryType + ' <small style="line-height: 1;"> ( ' + (locals.topicCount || '0') + ' ) </small>') %>
           <i class="fa fa-bars mls"></i>
         </button>
         <span class="dropdown-arrow dropdown-arrow-inverse"></span>
         <ul class="dropdown-menu dropdown-inverse">
           <li class="<%- categoryType == '最新' ? 'selected' : '' %>">
-            <a href="/new">最新(<%- locals.totalTopicCount || '0' %>)</a></li>
+            <a href="/new">最新 <small style="line-height: 1;"> ( <%- locals.totalTopicCount || '0' %> ) </small></a></li>
           <% for (var key in CATEGORIES2ENG) { %>
           <li class="<%- categoryType == key ? 'selected' : '' %>">
-            <a href="/<%= CATEGORIES2ENG[key] %>"><%= key %>(<%- locals.categoryTopicCount[key] || '0' %>)</a></li>
+            <a href="/<%= CATEGORIES2ENG[key] %>"><%= key %> <small style="line-height: 1;"> ( <%- locals.categoryTopicCount[key] || '0' %> ) </small></a></li>
           <% } %>
         </ul>
       </div>
@@ -36,7 +36,7 @@
     </div>
     <% } %>
     <% if (locals.tags) { %>
-    <div class="tags plm pull-left">
+    <div class="tags plm pull-left" style="max-width: 100%;">
       <small class="text-inverse" style="font-size: 14px;"><i class="fa fa-tags"></i>：</small>
       <% for (var i = 0; i < tags.length; i++) { %>
       <a target="_blank" href="/tag/<%- encodeURIComponent(tags[i]) %>"

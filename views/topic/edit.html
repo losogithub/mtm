@@ -60,10 +60,10 @@
               </div>
             </div>
           </div>
-          <form id="_topWidget" class="phl" style="display: none;">
+          <form id="_topWidget" class="phl" name="form" style="display: none;">
             <div class="pvl">
               <div class="form-group">
-                <input name="url" class="form-control flat mbs" placeholder="封面URL" id="_top_url" type="text">
+                <input name="url" class="form-control flat mbs" placeholder="策展封面URL" id="_top_url" type="text">
                 <label class="input-icon fa fa-link" for="_top_url"></label>
                 <div class="InfoHint text-muted">
                   由于受版权保护，有些图片可能无法引用
@@ -74,14 +74,22 @@
                 </div>
               </div>
 
-              <div id="_topWidget_title" class="form-group">
+              <div id="_topWidget_title" class="form-group"
+                   ng-controller="$.noop" ng-init="limit = 50;"
+                   ng-class="{ 'has-error' : input.length > limit }">
                 <div class="Required"></div>
-                <input name="title" type="text" class="form-control flat"
+                <input name="title" type="text" class="form-control flat" ng-model="input"
                        placeholder="策展标题（5~50字）"/>
+                <div ng-class="input.length > limit ? 'text-danger' : 'text-muted'"
+                     class="LetterCounter">{{input.length || 0}}/{{limit}}</div>
               </div>
-              <div id="_topWidget_description" class="form-group">
-                <textarea name="description" class="form-control flat"
+              <div id="_topWidget_description" class="form-group"
+                   ng-controller="$.noop" ng-init="limit = 150;"
+                   ng-class="{ 'has-error' : input.length > limit }">
+                <textarea name="description" class="form-control flat" ng-model="input"
                           placeholder="策展描述（150字以内，换行符无效）"></textarea>
+                <div ng-class="input.length > limit ? 'text-danger' : 'text-muted'"
+                     class="LetterCounter">{{input.length || 0}}/{{limit}}</div>
               </div>
 
               <% include _widget_BtnSet.html %>
@@ -107,7 +115,8 @@
               <div class="Content LINK_CREATE pam">
                 <div class="form-group">
                   <div class="Required"></div>
-                  <input name="url" class="form-control flat AUTO_FOCUS" placeholder="链接URL" id="_link_url" type="text">
+                  <input name="url" class="form-control flat AUTO_FOCUS"
+                         placeholder="链接URL" id="_link_url" type="text">
                   <label class="input-icon fa fa-link" for="_link_url"></label>
                 </div>
                 <button name="preview" class="btn btn-info pull-left mrs" type="button" disabled='disabled'
