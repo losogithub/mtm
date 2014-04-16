@@ -318,6 +318,7 @@ function updateHotTopics() {
           return callback(new Error());
         }
         topic.author_url = user.url;
+        callback(null);
       });
     }, function (err) {
       if (err) {
