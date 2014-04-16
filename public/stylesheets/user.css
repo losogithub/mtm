@@ -1,0 +1,101 @@
+.StarIcon {
+  color: white;
+}
+.ExSelected .StarIcon,
+.StarIconFull {
+  color: #f1f742;
+}
+.background-white {
+  background-color: white;
+}
+.background-clouds {
+  background-color: #ecf0f1;
+}
+.background-muted {
+  background-color: #bdc3c7;
+}
+.background-concrete {
+  background-color: #95a5a6;
+}
+.background-primary {
+  background-color: #1abc9c;
+}
+.background-warning {
+  background-color: #f1c40f;
+}
+.background-danger {
+  background-color: #e74c3c;
+}
+.background-success {
+  background-color: #2ecc71;
+}
+.background-info {
+  background-color: #3498db;
+}
+.background-default {
+  background-color: #34495e;
+}
+.text-theme {
+  color: #669966;
+}
+.text-default,
+.text-default-a {
+  color: #34495e;
+}
+.text-default:hover {
+  color: #2c3e50;
+}
+.text-asbestos {
+  color: #7f8c8d;
+}
+.text-muted {
+  color: #bdc3c7;
+}
+.text-inverse {
+  color: #ffffff;
+}
+.text-primary {
+  color: #1abc9c;
+}
+.text-primary:hover {
+  color: #15967d;
+}
+.text-warning {
+  color: #f1c40f;
+}
+.text-warning:hover {
+  color: #c19d0c;
+}
+.text-danger {
+  color: #e74c3c;
+}
+.text-danger:hover {
+  color: #b93d30;
+}
+.text-success {
+  color: #2ecc71;
+}
+.text-success:hover {
+  color: #25a35a;
+}
+.text-info {
+  color: #3498db;
+}
+.text-info:hover {
+  color: #2a7aaf;
+}
+.affix {
+  position: static;
+}
+@media (min-width: 992px) {
+  .affix {
+    position: fixed;
+    width: 293px;
+    top: 20px;
+  }
+}
+@media (min-width: 1200px) {
+  .affix {
+    width: 263px;
+  }
+}
