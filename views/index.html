@@ -25,18 +25,24 @@
             </div>
             <div class="col-sm-4 col-md-5 col-lg-6 Text">
               <div style="vertical-align: bottom; position: relative;">
-                  <h2 class="h6" style="position: absolute;bottom: 0; width: 100%;">
-                    <a class="text-inverse" href="/topic/<%= featuredTopics[i]._id %>"><%= featuredTopics[i].title %></a></h2>
+                <h2 class="h6" style="position: absolute;bottom: 0; width: 100%;">
+                  <a class="text-inverse" href="/topic/<%= featuredTopics[i]._id %>"><%= featuredTopics[i].title %></a></h2>
               </div>
               <div>
-                <a class="text-inverse" href="/u/<%= featuredTopics[i].author_name %>" title="<%= featuredTopics[i].author_name %>">
+                <p><a class="text-inverse" href="/u/<%= featuredTopics[i].author_name %>" title="<%= featuredTopics[i].author_name %>">
                   <img width="30" height="30" class="img-circle" style="display: inline-block; width: 30px; height: 30px;"
                        src="<%= featuredTopics[i].author_url || '/images/no_img/user_80x80.png' %>"
                        alt="<%= featuredTopics[i].author_name %>"
                        onerror="shizier.errorImage(this,'user_80x80');">
                   <%= featuredTopics[i].author_name %>
-                </a>
+                </a></p>
                 <p class="hidden-xs mtm text-muted"><%= featuredTopics[i].description %></p>
+                <p class="text-muted text-right" style="font-size: 14px;">
+                  <i class="fa fa-puzzle-piece"></i> 策展了来自
+                  <b class="text-inverse"><%= featuredTopics[i].quoteCount %></b>
+                  个网站
+                  <span class="text-inverse"><%= featuredTopics[i].urlCount %></span>
+                  条碎片信息</p>
               </div>
             </div>
           </div>

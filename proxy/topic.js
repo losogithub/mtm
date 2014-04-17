@@ -8,6 +8,7 @@
 var async = require('async');
 var EventProxy = require('eventproxy');
 
+var utils = require('../public/javascripts/utils');
 var Common = require('../common');
 var models = require('../models');
 var TopicModel = models.TopicModel;
@@ -308,16 +309,46 @@ function updateHotTopics() {
     }
     Common.TopList.hotTopics = topics.sort(_scoreCompare).slice(0, 240);
     Common.TopList.totalTopicCount = topics.length;
-    Common.FeaturedTopics = topics.slice(0,3);
+    Common.FeaturedTopics = topics.slice(0, 3);
     async.forEachSeries(Common.FeaturedTopics, function (topic, callback) {
-      User.getUserById(topic.author_id, function (err, user) {
+      async.auto([
+        function (callback) {
+          User.getUserById(topic.author_id, function (err, user) {
+            if (err) {
+              return callback(err);
+            }
+            if (!user) {
+              return callback(new Error());
+            }
+            topic.author_url = user.url;
+            callback(null);
+          });
+        }, function (callback) {
+          getContents(topic, function (err, items) {
+            if (err) {
+              return callback(err);
+            }
+            var urlCount = 0;
+            var quoteList = [];
+            items.forEach(function (item) {
+              if (item.url) {
+                urlCount++;
+                quoteList.push(utils.getQuote(item.type == 'IMAGE' && item.quote || item.url));
+              }
+            });
+            topic.urlCount = urlCount;
+            var quotes = {};
+            quoteList.forEach(function (quote) {
+              quotes[quote] = 1;
+            });
+            topic.quoteCount = Object.keys(quotes).length;
+
+            callback(null);
+          });
+        }], function (err) {
         if (err) {
           return callback(err);
         }
-        if (!user) {
-          return callback(new Error());
-        }
-        topic.author_url = user.url;
         callback(null);
       });
     }, function (err) {
