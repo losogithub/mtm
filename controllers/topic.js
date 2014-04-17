@@ -421,6 +421,7 @@ function showIndex(req, res, next) {
     res.set('Expire', '-1');
     res.set('Pragma', 'no-cache');
     res.render('topic/index', {
+      pageType: 'TOPIC',
       title: topic.title,
       description: topic.description,
       css: [
@@ -1700,7 +1701,7 @@ function addTag(req, res, next) {
   var topicId = req.body.topicId;
 
   try {
-    check(tagText).len(0, 10);
+    check(tagText).len(0, 20);
   } catch (err) {
     return next(err);
   }

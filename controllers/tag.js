@@ -57,6 +57,7 @@ function showTag(req, res, next) {
     var tagTopicsPage = topics.slice((currentPage - 1) * topicsPerPage, currentPage * topicsPerPage);
     var totalPages = Math.ceil(topics.length / topicsPerPage);
     res.render('tag/tag', {
+      pageType: 'TAG',
       title: tag.text,
       tag: tag.text,
       category: tag.category,

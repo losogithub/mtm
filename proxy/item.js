@@ -240,7 +240,6 @@ function _getItems(remain_count, type, itemId, items, callback) {
   //计数器是为了防止链表出错导致死循环！！！
   if (remain_count <= 0
     || type == 'VOID') {
-    console.log('no more items, remain_count:' + remain_count);
 
     if (typeof callback === 'function') {
       callback(null, items);

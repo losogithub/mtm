@@ -18,6 +18,10 @@ textarea {
   min-height: 62px;
 }
 
+.btn-square {
+  border-radius: 0;
+}
+
 .carousel-caption a { font-size: 40px; }
 @media (max-width: 768px) {
   .carousel-caption h3 { font-size: 24px !important; }
@@ -202,18 +206,21 @@ textarea {
   width: 130px !important;
 }
 
-.Band {
-  background-color: @color-muted;
-  .caret { border-top-color: white; }
-  .tags {
+.Tags {
+  .tag {
+    padding-left: 15px; padding-right: 15px;
+  }
+  .Band & {
     max-width: 100%;
     max-height: 41px;
     line-height: 41px;
     overflow: hidden;
-    .tag {
-      padding-left: 15px; padding-right: 15px;
-    }
   }
+}
+
+.Band {
+  background-color: @color-muted;
+  .caret { border-top-color: white; }
   @media (max-width: 768px) {
     &.Band-Nav .container {
       padding: 0;

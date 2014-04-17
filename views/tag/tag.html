@@ -4,6 +4,14 @@
 
 <div style="background-color: #ecf0f1;">
   <div class="container pbl">
+    <% if (tags.length) { %>
+    <div class="pts pls background-white Tags clearfix mtl" style="border-radius: 6px;">
+      <% for (var i = 0; i < tags.length; i++) { %>
+      <a target="_blank" href="/tag/<%- encodeURIComponent(tags[i]) %>"
+         class="tag btn btn-default btn-xs pull-left mrs mbs"><%= tags[i] %></a>
+      <% } %>
+    </div>
+    <% } %>
     <div class="row mtl">
 
       <% include ../_authors.html %>

@@ -1,42 +1,42 @@
 <div class="Band Band-Nav">
   <% var categoryType = locals.categoryType_pre || locals.pageType; %>
   <div class="container">
-    <div class="btn-group pull-left">
-      <div class="btn-group">
-        <a class="btn <%- categoryType == 'INDEX' ? 'btn-primary' : 'btn-default' %>"
-           href="/">首页 <small style="line-height: 1;"> ( <%- locals.totalTopicCount || '0' %> ) </small></a>
-      </div>
+    <a class="btn btn-square pull-left <%- categoryType == 'INDEX' ? 'btn-primary' : 'btn-default' %>"
+       href="/">首页 <small style="line-height: 1;"> ( <%- locals.totalTopicCount || '0' %> ) </small></a>
+    <div class="dropdown pull-left">
+      <button type="button" data-toggle="dropdown"
+              class="btn btn-square dropdown-toggle <%- locals.pageType == 'TAG' || locals.pageType == 'TOPIC' || categoryType == 'INDEX' ? 'btn-default' : 'btn-primary' %>">
+        <%- categoryType == 'INDEX' ? '<i class="fa fa-bookmark-o"></i> 分类' : (categoryType + ' <small style="line-height: 1;"> ( ' + (locals.topicCount || '0') + ' ) </small>') %>
+        <i class="fa fa-bars mls"></i>
+      </button>
+      <span class="dropdown-arrow dropdown-arrow-inverse"></span>
+      <ul class="dropdown-menu dropdown-inverse">
+        <% for (var key in CATEGORIES2ENG) { %>
+        <li class="<%- categoryType == key ? 'selected' : '' %>">
+          <a href="/<%= CATEGORIES2ENG[key] %>"><%= key %> <small style="line-height: 1;"> ( <%- locals.categoryTopicCount[key] || '0' %> ) </small></a></li>
+        <% } %>
+        <li class="<%- categoryType == '最新' ? 'selected' : '' %>">
+          <a href="/new">最新 <small style="line-height: 1;"> ( <%- locals.totalTopicCount || '0' %> ) </small></a></li>
+      </ul>
     </div>
-    <div class="btn-group pull-left">
-      <div class="btn-group">
-        <button type="button" data-toggle="dropdown"
-                class="btn dropdown-toggle <%- locals.tag || categoryType == 'INDEX' ? 'btn-default' : 'btn-primary' %>">
-          <%- categoryType == 'INDEX' ? '<i class="fa fa-bookmark-o"></i> 分类' : (categoryType + ' <small style="line-height: 1;"> ( ' + (locals.topicCount || '0') + ' ) </small>') %>
-          <i class="fa fa-bars mls"></i>
-        </button>
-        <span class="dropdown-arrow dropdown-arrow-inverse"></span>
-        <ul class="dropdown-menu dropdown-inverse">
-          <% for (var key in CATEGORIES2ENG) { %>
-          <li class="<%- categoryType == key ? 'selected' : '' %>">
-            <a href="/<%= CATEGORIES2ENG[key] %>"><%= key %> <small style="line-height: 1;"> ( <%- locals.categoryTopicCount[key] || '0' %> ) </small></a></li>
-          <% } %>
-          <li class="<%- categoryType == '最新' ? 'selected' : '' %>">
-            <a href="/new">最新 <small style="line-height: 1;"> ( <%- locals.totalTopicCount || '0' %> ) </small></a></li>
-        </ul>
-      </div>
+    <% if (locals.pageType == 'TAG') { %>
+    <div style="overflow: hidden;">
+      <a href="/tag/<%- encodeURIComponent(tag) %>"
+         class="btn btn-primary btn-square pull-left">
+        <i class="fa fa-tag" style="font-size: 14px;"></i> <%= tag %>
+      </a>
     </div>
-    <% if (locals.tag) { %>
-    <div class="btn-group pull-left">
-      <div class="btn-group">
-        <a href="/tag/<%- encodeURIComponent(tag) %>"
-           class="btn btn-primary"><i class="fa fa-tag" style="font-size: 14px;"></i> <%= tag %></a>
-      </div>
+    <% } else if (locals.pageType == 'TOPIC') { %>
+    <div style="overflow: hidden;">
+      <a href="/topic/<%- locals.topic._id %>"
+         class="btn btn-primary btn-square pull-left"
+         style="max-width: 100%; text-overflow: ellipsis; overflow: hidden;">
+        <%= locals.topic.title %>
+      </a>
     </div>
-    <% } %>
-    <% if (locals.tags) { %>
-    <div class="tags plm pull-left">
-      <small class="text-inverse" style="font-size: 14px;"><i class="fa fa-tags"></i>：</small>
-      <% for (var i = 0; i < tags.length; i++) { %>
+    <% } else if (locals.tags) { %>
+    <div class="Tags plm pull-right hidden-xs">
+      <% for (var i = 0; i < Math.min(tags.length, 2); i++) { %>
       <a target="_blank" href="/tag/<%- encodeURIComponent(tags[i]) %>"
          class="tag btn btn-default btn-xs"><%= tags[i] %></a>
       <% } %>

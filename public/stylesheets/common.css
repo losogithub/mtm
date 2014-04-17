@@ -122,6 +122,9 @@ a {
 textarea {
   min-height: 62px;
 }
+.btn-square {
+  border-radius: 0;
+}
 .carousel-caption a {
   font-size: 40px;
 }
@@ -359,21 +362,21 @@ textarea {
 .Baidu {
   width: 130px !important;
 }
-.Band {
-  background-color: #bdc3c7;
+.Tags .tag {
+  padding-left: 15px;
+  padding-right: 15px;
 }
-.Band .caret {
-  border-top-color: white;
-}
-.Band .tags {
+.Band .Tags {
   max-width: 100%;
   max-height: 41px;
   line-height: 41px;
   overflow: hidden;
 }
-.Band .tags .tag {
-  padding-left: 15px;
-  padding-right: 15px;
+.Band {
+  background-color: #bdc3c7;
+}
+.Band .caret {
+  border-top-color: white;
 }
 @media (max-width: 768px) {
   .Band.Band-Nav .container {
