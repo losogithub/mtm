@@ -473,6 +473,21 @@ function showIndex(req, res, next) {
         return;
       }
 
+      var urlCount = 0;
+      var quoteList = [];
+      items.forEach(function (item) {
+        if (item.url) {
+          urlCount++;
+          quoteList.push(utils.getQuote(item.type == 'IMAGE' && item.quote || item.url));
+        }
+      });
+      topic.urlCount = urlCount;
+      var quotes = {};
+      quoteList.forEach(function (quote) {
+        quotes[quote] = 1;
+      });
+      topic.quoteCount = Object.keys(quotes).length;
+
       ep.emit('items', items);
     }));
     //author information: website url, description, images.

@@ -84,8 +84,16 @@
               </div>
             </div>
 
-            <p style="<%= !topic.description ? 'display: none;' : '' %>">
+            <p class="mbn" style="<%= !topic.description ? 'display: none;' : '' %>">
               <%= topic.description || '' %>
+            </p>
+
+            <p class="text-muted text-right" style="font-size: 14px;">
+              <i class="fa fa-puzzle-piece"></i> 策展了来自
+              <b class="text-default"><%= topic.quoteCount %></b>
+              个网站的
+              <span class="text-default"><%= topic.urlCount %></span>
+              条碎片信息
             </p>
 
             <% if (!locals.items || !items.length) { %>
