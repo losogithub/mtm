@@ -1837,9 +1837,14 @@
 
       $_topWidget.after($_topItem).show();
 
-      $titleInput.val(title);
+      var scope;
+      scope = angular.element($titleInput.closest('.form-group')).scope();
+      scope.input = title;
+      scope.$apply();
+      scope = angular.element($description.closest('.form-group')).scope();
+      scope.input = description;
+      scope.$apply();
       $cover.attr('src', coverUrl || defaultImgSrc);
-      $description.val(description);
 
       $_topItem.hiddenSlideUp();
       $_topWidget
