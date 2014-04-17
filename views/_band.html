@@ -2,18 +2,23 @@
   <% var categoryType = locals.categoryType_pre || locals.pageType; %>
   <div class="container">
     <a class="btn btn-square pull-left <%- categoryType == 'INDEX' ? 'btn-primary' : 'btn-default' %>"
-       href="/">首页 <small style="line-height: 1;"> ( <%- locals.totalTopicCount || '0' %> ) </small></a>
+       href="/">首页</a>
     <div class="dropdown pull-left">
       <button type="button" data-toggle="dropdown"
               class="btn btn-square dropdown-toggle <%- locals.pageType == 'TAG' || locals.pageType == 'TOPIC' || categoryType == 'INDEX' ? 'btn-default' : 'btn-primary' %>">
-        <%- categoryType == 'INDEX' ? '<i class="fa fa-bookmark-o"></i> 分类' : (categoryType + ' <small style="line-height: 1;"> ( ' + (locals.topicCount || '0') + ' ) </small>') %>
+        <%- categoryType == 'INDEX' ? '<i class="fa fa-bookmark-o"></i> 分类 <small style="line-height: 1;"> (' + (locals.totalTopicCount || "0") + ') </small>' : (categoryType + ' <small style="line-height: 1;"> ( ' + (locals.topicCount || '0') + ' ) </small>') %>
         <i class="fa fa-bars mls"></i>
       </button>
       <span class="dropdown-arrow dropdown-arrow-inverse"></span>
       <ul class="dropdown-menu dropdown-inverse">
+        <% var temp = {'生活':'cutlery','娱乐':'music','新闻':'globe','科技':'rocket'}; %>
+        <% var temp3 = {'生活':'muted','娱乐':'warning','新闻':'info','科技':'danger'}; %>
         <% for (var key in CATEGORIES2ENG) { %>
         <li class="<%- categoryType == key ? 'selected' : '' %>">
-          <a href="/<%= CATEGORIES2ENG[key] %>"><%= key %> <small style="line-height: 1;"> ( <%- locals.categoryTopicCount[key] || '0' %> ) </small></a></li>
+          <a href="/<%= CATEGORIES2ENG[key] %>">
+            <%if(temp[key]){%><i class="fa fa-<%= temp[key] %> text-<%= temp3[key] %>"></i><%}%> <%= key %> <small style="line-height: 1;"> ( <%- locals.categoryTopicCount[key] || '0' %> ) </small>
+          </a>
+        </li>
         <% } %>
         <li class="<%- categoryType == '最新' ? 'selected' : '' %>">
           <a href="/new">最新 <small style="line-height: 1;"> ( <%- locals.totalTopicCount || '0' %> ) </small></a></li>

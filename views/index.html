@@ -75,20 +75,24 @@
       <% include _authors.html %>
 
     </div>
-    <div class="row mtl">
-      <h1 class="col-xs-12 h6 mvn">
-        <a class="h6" href="/hot"><i class="fa fa-fire" style="color: #e67e22;"></i> 热门策展</a>
+
+    <% var temp = {'生活':'life','娱乐':'entertainment','新闻':'news','科技':'tech'}; %>
+    <% var temp2 = {'生活':'cutlery','娱乐':'music','新闻':'globe','科技':'rocket'}; %>
+    <% var temp3 = {'生活':'muted','娱乐':'warning','新闻':'info','科技':'danger'}; %>
+    <% for (var key in temp) { %>
+    <div class="clearfix mtl">
+      <h1 class="h6 mvn pull-left">
+        <a class="h6" href="/<%= temp[key] %>">
+          <i class="fa fa-<%= temp2[key] %> text-<%= temp3[key] %>"></i> <%= key %>
+        </a>
       </h1>
+      <a class="btn btn-link pull-right pan text-muted mts" href="/<%= temp[key] %>">更多></a>
     </div>
 
-    <% var topics = hot; %>
+    <% var topics = categoryTopics[key].slice(0, 4); %>
     <% include _topics.html %>
+    <% } %>
 
-    <div class="row mtl">
-      <div class="col-xs-12">
-        <a class="btn btn-primary btn-wide pull-right" href="/hot">更多</a>
-      </div>
-    </div>
   </div>
 </div>
 
