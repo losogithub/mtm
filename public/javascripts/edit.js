@@ -232,7 +232,7 @@
         .end();
 
       this.widget().find('button').button('reset');
-      this.widget().find('input').val('');
+      this.widget().find('input[name="url"], input[name="quote"]').val('');
 
       this.__create();
 
@@ -752,9 +752,6 @@
       scope = angular.element(this.widget().find('input[name="title"]').closest('.form-group')).scope();
       scope.input = this.options.title;
       scope.$apply();
-      scope = angular.element(this.widget().find('input[name="quote"]').closest('.form-group')).scope();
-      scope.input = this.options.quote;
-      scope.$apply();
       scope = angular.element(this.widget().find('textarea[name="description"]').closest('.form-group')).scope();
       scope.input = this.options.description;
       scope.$apply();
@@ -768,6 +765,7 @@
         })
         .end()
         .find('input[name="quote"]')
+        .val(this.options.quote)
         .on(INPUT_EVENTS, function () {
           self.checkState();
         })
