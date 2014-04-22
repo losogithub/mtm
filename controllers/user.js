@@ -776,30 +776,6 @@ function collectItem(req, res, next) {
   });
 }
 
-function _getUserAndIndexWithAuth(userId, _id, callback) {
-  callback = callback || function () {
-  };
-
-  User.getUserById(userId, function (err, user) {
-    if (err) {
-      return callback(err);
-    }
-    if (!user) {
-      return callback(new Error(400));
-    }
-
-    var index = user.items.indexOf(_id);
-    if (index < 0) {
-      return callback(new Error(403));
-    }
-
-    callback(null, {
-      user: user,
-      index: index
-    });
-  });
-}
-
 function deleteItem(req, res, next) {
   var userId = req.session.userId;
   var type = req.body.type;
@@ -807,12 +783,15 @@ function deleteItem(req, res, next) {
 
   async.auto({
     user: function (callback) {
-      _getUserAndIndexWithAuth(userId, _id, function (err, data) {
+      User.getUserById(userId, function (err, user) {
         if (err) {
           return callback(err);
         }
+        if (!user) {
+          return callback(new Error(400));
+        }
 
-        User.deleteItem(data.user, data.index, callback);
+        User.deleteItem(user, _id, callback);
       });
     },
     item: ['user', function (callback) {
@@ -836,6 +815,27 @@ function deleteItem(req, res, next) {
   });
 }
 
+function _getUserAndAuthId(userId, _id, callback) {
+  callback = callback || function () {
+  };
+
+  User.getUserById(userId, function (err, user) {
+    if (err) {
+      return callback(err);
+    }
+    if (!user) {
+      return callback(new Error(400));
+    }
+
+    var index = user.items.indexOf(_id);
+    if (index < 0) {
+      return callback(new Error(403));
+    }
+
+    callback(null, user);
+  });
+}
+
 function editItem(req, res, next) {
   var userId = req.session.userId;
   var _id = req.body._id;
@@ -843,7 +843,7 @@ function editItem(req, res, next) {
 
   async.auto({
     user: function (callback) {
-      _getUserAndIndexWithAuth(userId, _id, callback);
+      _getUserAndAuthId(userId, _id, callback);
     },
     update: ['user', function (callback) {
       try {

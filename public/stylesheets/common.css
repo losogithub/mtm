@@ -96,6 +96,7 @@
 body {
   word-wrap: break-word;
   font-family: "微软雅黑", arial, sans-serif;
+  position: relative;
 }
 h1,
 h2,
@@ -371,6 +372,12 @@ textarea {
 }
 .Baidu {
   width: 130px !important;
+}
+.Tags {
+  min-height: 34px;
+}
+.Tags button {
+  padding: 1px 5px;
 }
 .Tags .tag {
   padding-left: 15px;

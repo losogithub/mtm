@@ -1,7 +1,7 @@
 @import "theme";
 
 body {
-  word-wrap: break-word; font-family: "微软雅黑", arial, sans-serif;
+  word-wrap: break-word; font-family: "微软雅黑", arial, sans-serif; position: relative;//affix必须用这个配置
 }
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 { font-family: "微软雅黑", arial, sans-serif; }
 .navbar-unread, .navbar-new { font-family: "微软雅黑", arial, sans-serif; }
@@ -207,6 +207,10 @@ textarea {
 }
 
 .Tags {
+  min-height: 34px;
+  button {
+    padding: 1px 5px;
+  }
   .tag {
     padding-left: 15px; padding-right: 15px;
   }

@@ -156,7 +156,7 @@
 }
 .EditUtil {
   background-color: #f8f9fa;
-  border-radius: 6px;
+  border-top-left-radius: 6px;
   display: none;
   line-height: 1;
   position: absolute;
@@ -385,4 +385,86 @@
 .DeleteTopic:hover,
 .DeleteTopic:focus {
   color: #e74c3c !important;
+}
+tags-input .host {
+  outline: none;
+}
+tags-input .tags {
+  overflow: hidden;
+  word-wrap: break-word;
+  cursor: text;
+  background-color: white;
+  border: 2px solid #bdc3c7;
+  border-radius: 6px;
+  padding: 6px 1px 1px 6px;
+}
+tags-input .tags .tag-list {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+tags-input .tags .tag-item {
+  border-radius: 4px;
+  background-color: #bdc3c7;
+  color: #ffffff;
+  font-size: 14px;
+  cursor: pointer;
+  float: left;
+  margin: 0 5px 5px 0;
+  overflow: hidden;
+  line-height: 15px;
+  padding: 5px 15px 5px 15px;
+  position: relative;
+  vertical-align: middle;
+  -webkit-transition: 0.25s;
+  transition: 0.25s;
+}
+tags-input .tags .tag-item .remove-button {
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  opacity: 0;
+  padding: 5px 7px 5px 0;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  text-align: right;
+  text-decoration: none;
+  width: 100%;
+  z-index: 2;
+  display: none\9;
+}
+tags-input .tags .tag-item:hover {
+  background-color: #95a5a6;
+  padding-left: 10px;
+  padding-right: 20px;
+}
+tags-input .tags .tag-item:hover .remove-button {
+  opacity: 1;
+  display: block\9;
+}
+tags-input .tags .tag-item.selected {
+  background: #e74c3c;
+}
+tags-input .tags .tag-item.selected:hover {
+  background: #c0392b;
+}
+tags-input .tags .input {
+  min-width: 31px;
+  float: left;
+  height: 25px;
+  font-size: 14px;
+  border: none;
+  color: #34495e;
+  margin: 0 5px 5px 0;
+  outline: none !important;
+  vertical-align: baseline;
+}
+tags-input .tags .input.invalid-tag {
+  color: #e74c3c;
+}
+tags-input.ng-invalid .tags {
+  border: 2px solid #e74c3c;
 }

@@ -9,7 +9,12 @@
 (function ($) {
   window.sng = angular.module(
     'sng',
-    ['ui.bootstrap'].concat(shizier.pageType == 'EDIT' ? ['ngTagsInput', 'ui.utils', 'monospaced.elastic', 'ui.sortable'] : [])
+    ['ui.bootstrap'].concat(
+      shizier.pageType == 'EDIT'
+        ? ['ui.utils', 'monospaced.elastic', 'ui.sortable']
+        : shizier.pageType == 'TOPIC'
+        ? ['ngTagsInput']
+        : [])
   );
 
   $._messengerDefaults = {

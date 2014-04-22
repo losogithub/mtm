@@ -190,10 +190,15 @@ function collectItem(_id, itemId, callback) {
   })
 }
 
-function deleteItem(user, index, callback) {
+function deleteItem(user, _id, callback) {
   callback = callback || function () {
   };
 
+
+  var index = user.items.indexOf(_id);
+  if (index < 0) {
+    return callback(new Error(403));
+  }
   user.items.splice(index, 1);
   user.save(function (err, user) {
     if (err) {

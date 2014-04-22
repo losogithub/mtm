@@ -10,7 +10,7 @@
     </li>
 
     <script>
-      function CategoryCtrl($scope, $http) {
+      function CategoryCtrl($scope) {
         $scope.current = '<%= topic.category %>';
 
         $scope.items = [];
@@ -28,6 +28,7 @@
           })
             .success(function () {
               $scope.current = category;
+              $scope.$apply();
             });
         };
       }

@@ -37,7 +37,7 @@
   z-index: 1000;
 }
 .EditUtil {
-  background-color: lighten(@color-clouds, 4%); border-radius: 6px;
+  background-color: lighten(@color-clouds, 4%); border-top-left-radius: 6px;
   .btn {
     color: @color-muted;
   }
@@ -167,4 +167,87 @@
 .DeleteTopic {
   padding: 0 !important; font-size: 18px; vertical-align: baseline;
   &:hover,&:focus { color: @color-danger !important; }
+}
+
+tags-input {
+  .host {
+    outline: none;
+  }
+  .tags {
+    overflow: hidden;
+    word-wrap: break-word;
+    cursor: text;
+    background-color: white;
+    border: 2px solid @color-muted;
+    border-radius: 6px;
+    padding: 6px 1px 1px 6px;
+    .tag-list {
+      margin: 0;
+      padding: 0;
+      list-style-type: none;
+    }
+    .tag-item {
+      border-radius: 4px;
+      background-color: @color-muted;
+      color: #ffffff;
+      font-size: 14px;
+      cursor: pointer;
+      float: left;
+      margin: 0 5px 5px 0;
+      overflow: hidden;
+      line-height: 15px;
+      padding: 5px 15px 5px 15px;
+      position: relative;
+      vertical-align: middle;
+      -webkit-transition: 0.25s;
+      transition: 0.25s;
+      .remove-button {
+        color: #ffffff;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+        opacity: 0;
+        padding: 5px 7px 5px 0;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        text-align: right;
+        text-decoration: none;
+        width: 100%;
+        z-index: 2;
+        display: none\9;
+      }
+      &:hover {
+        background-color: @color-concrete;
+        padding-left: 10px;
+        padding-right: 20px;
+        .remove-button {
+          opacity: 1;
+          display: block\9;
+        }
+      }
+      &.selected {
+        background: @color-danger;
+        &:hover { background: #c0392b; }
+      }
+    }
+    .input {
+      min-width: 31px;
+      float: left;
+      height: 25px;
+      font-size: 14px;
+      border: none;
+      color: @color-default;
+      margin: 0 5px 5px 0;
+      outline: none !important;
+      vertical-align: baseline;
+      &.invalid-tag {
+        color: @color-danger;
+      }
+    }
+  }
+  &.ng-invalid .tags {
+    border: 2px solid @color-danger;
+  }
 }

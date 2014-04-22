@@ -7,11 +7,6 @@
   <div class="container">
     <div class="row pbl">
       <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-8 col-lg-7 mtl">
-        <% if (locals.isAdmin) { %>
-        <div class="mbl">
-          <% include _category_selector.html %>
-        </div>
-        <% } %>
         <div style="background-color: white; border-radius: 6px;">
           <div class="TopicHead" style="position: relative; min-height: 140px; border-radius: 6px 6px 0 0;">
             <a class="fancybox" rel="gallery" href="<%= topic.cover_url %>" title="<%= topic.title %>">
@@ -117,6 +112,35 @@
         </div>
       </div>
       <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-4 col-lg-5 mtl">
+        <% if (locals.isAdmin || locals.isAuthor) { %>
+        <div class="mbl">
+          <% include _category_selector.html %>
+        </div>
+        <% } %>
+        <% if (locals.isAuthor) { %>
+        <div ng-controller="TagsInputCtrl" style="position: relative;"
+             ng-init='tags = <%- JSON.stringify(tags) %>;'>
+          <div class="pts pls background-white Tags clearfix mbl"
+               ng-show="!editing"
+               style="border-radius: 6px;">
+            <button class="btn btn-link pull-right mrs mbs text-muted"
+                    ng-click="editTag()"
+                    type="button"><i class="fa fa-pencil"></i></button>
+            <a target="_blank" href="/tag/{{encodeURIComponent(tag.text)}}"
+               ng-repeat="tag in tags"
+               class="tag btn btn-default btn-xs pull-left mrs mbs">{{tag.text}}</a>
+          </div>
+          <div class="TagsInput mbl" ng-show="editing">
+            <tags-input ng-model="tags"
+                        min-length="1" max-length="20" min-tags="1" max-tags="5"
+                        placeholder="标签" add-on-space="true"
+                        on-tag-added="onAdded($tag)" on-tag-removed="onRemoved($tag)"></tags-input>
+          </div>
+          <button class="btn btn-link" style="position: absolute; right: 0; top: 0; z-index: 3; padding: 10px;"
+                  ng-click="editing = false;" ng-show="editing"
+                  type="button"><i class="fa fa-check"></i></button>
+        </div>
+        <% } else { %>
         <% if (tags.length) { %>
         <div class="pts pls background-white Tags clearfix mbl" style="border-radius: 6px;">
           <% for (var i = 0; i < tags.length; i++) { %>
@@ -124,6 +148,7 @@
              class="tag btn btn-default btn-xs pull-left mrs mbs"><%= tags[i] %></a>
           <% } %>
         </div>
+        <% } %>
         <% } %>
         <div class="pal background-white" style="border-radius: 6px;">
           <div class="clearfix">

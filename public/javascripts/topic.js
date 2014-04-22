@@ -5,6 +5,29 @@
  * Time: 10:13 AM
  * To change this template use File | Settings | File Templates.
  */
+
+window.sng.controller('TagsInputCtrl', function ($scope, $timeout, $element) {
+  var topicId = location.pathname.match(/^\/topic\/([0-9a-f]{24})/)[1];
+  $scope.editTag = function () {
+    $scope.editing = true;
+    $timeout(function () {
+      $($element).find('input[placeholder="标签"]').focus();
+    })
+  };
+  $scope.encodeURIComponent = function (text) {
+    return encodeURIComponent(text);
+  };
+  $scope.onAdded = function ($tag) {
+    $.post('/tag', angular.extend({ topicId: topicId }, $tag));
+  };
+  $scope.onRemoved = function ($tag) {
+    $.ajax('/tag', {
+      type: 'DELETE',
+      data: angular.extend({ topicId: topicId }, $tag)
+    });
+  };
+});
+
 $(function () {
 
   var $player = $('.TEMPLATES>.Player');

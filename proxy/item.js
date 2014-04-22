@@ -363,6 +363,10 @@ function getItemsById(ids, callback) {
     if (err) {
       return callback(err);
     }
+
+    allItems.sort(function (a, b) {
+      return parseInt(b._id, 16) - parseInt(a._id, 16);
+    });
     callback(null, allItems);
   })
 }

@@ -50,18 +50,6 @@
     }
   }
 
-  window.sng.controller('TagsInputCtrl', function ($scope) {
-    $scope.onAdded = function ($tag) {
-      $.post('/tag', angular.extend({ topicId: $scope.topic._id }, $tag));
-    };
-    $scope.onRemoved = function ($tag) {
-      $.ajax('/tag', {
-        type: 'DELETE',
-        data: angular.extend({ topicId: $scope.topic._id }, $tag)
-      });
-    };
-  });
-
   function _commonListCtrl($scope, $sce, $timeout) {
     $scope.SuffixImage = function (url) {
       return shizier.utils.suffixImage(url);
@@ -249,6 +237,7 @@
           Messenger().post({
             message: '已成功采集'
           });
+          $scope.$broadcast('addCollectionItem', item);
         })
         .fail(function (jqXHR, textStatus) {
           if (jqXHR.status != 401 && textStatus != 'abort') {
@@ -324,7 +313,7 @@
       }
     };
 
-    function _updateList(index) {
+    function _updateList(index, moved) {
       var type = $scope.items[index].type;
       var _id = $scope.items[index]._id;
       //拖动的item是editWidget，不用重排
@@ -342,8 +331,13 @@
         prevItemType = $scope.items[index - 2].type;
         prevItemId = $scope.items[index - 2]._id;
       }
-      //拖动改变了列表顺序，通知服务器将item插入他前一个item的后面
-      $.ajax('/topic/sort', {
+      var url;
+      if (moved) {
+        url = '/topic/insert';
+      } else {
+        url = '/topic/sort';
+      }//拖动改变了列表顺序，通知服务器将item插入他前一个item的后面
+      $.ajax(url, {
         type: 'PUT',
         data: {
           topicId: $scope.topic._id,
@@ -362,40 +356,39 @@
       //防止拖动开始时高度减小导致的抖动
       .mousedown(function () {
         $(this).css('min-height', $(this).outerHeight());
-      })
-      .mouseup(function () {
+      });
+    $(document).mouseup(function () {
         $(this).removeAttr('style');
-      })
-    var needUpdate;
+      });
     $scope.sortableOptions = {
       //sortable微件的标准参数
-      placeholder: 'WidgetDragPlaceholder',
       opacity: 0.4,
       cursor: 'move',
       handle: '.MoveUtil',
       helper: "clone",//加这个是为了解决拖动后添加条目util的index问题
       scrollSensitivity: 100,
-      scrollSpeed: 10,
+      scrollSpeed: 50,
       axis: 'y',
       containment: 'body',
 
       start: function () {
-        needUpdate = false;
         $($element).find('.WidgetItemList-Main')
           .addClass('WidgetItemList-Sorting')
           .sortable('refreshPositions');//因为item缩小了，所以要清除缓存大小
       },
 
-      //列表顺序改变后的回调函数
-      update: function () {
-        needUpdate = true;
+      update: function (e, ui) {
+        if (ui.item.sortable.moved) {
+          _updateList(ui.item.sortable.dropindex, true);
+        }
       },
 
       stop: function (e, ui) {
         $($element).find('.WidgetItemList-Main')
           .removeClass('WidgetItemList-Sorting');
-        if (needUpdate) {
-          _updateList(ui.item.scope().$index);
+        if (ui.item.sortable.dropindex !== undefined
+          && !ui.item.sortable.moved) {//这一个条件是多余的，只是为了规避升级sortable后的风险
+          _updateList(ui.item.sortable.dropindex);
         }
       }
     };
@@ -458,7 +451,7 @@
       $timeout(function () {
         $($element).find('.AUTO_FOCUS').focus();
         moveSelection2End($element.find('.AUTO_FOCUS')[0]);
-      })
+      });
       $($element)
         .on('submit', function () {
           if ($scope.url) {
@@ -556,8 +549,15 @@
   };
 
   window.sng.controller('CollectionCtrl', CollectionCtrl);
-  function CollectionCtrl($scope, $sce, $timeout) {
+  function CollectionCtrl($scope, $sce, $timeout, $element) {
     _commonListCtrl($scope, $sce, $timeout);
+    $scope.$on('addCollectionItem', function (e, item) {
+      $scope.items.splice(0, 0, item);
+    });
+    $scope.setType = function (type) {
+      $scope.type = type;
+      $scope.typeFilter = type == 'ALL' ? null : {type: type};
+    }
     $scope.playVideo = function (item) {
       item.playing = true;
       $timeout(function () {
@@ -594,22 +594,28 @@
           $scope.$apply();
         });
     };
+
     $scope.sortableOptions = {
-      placeholder: 'WidgetDragPlaceholder',
+      appendTo: '.WidgetItemList-Main',
       opacity: 0.4,
       cursor: 'move',
-      handle: '.MoveUtil',
+      cursorAt: { top: 30 },
       helper: 'clone',
       scrollSensitivity: 100,
-      scrollSpeed: 10,
+      scrollSpeed: 50,
       containment: 'body',
       connectWith: '.WidgetItemList-Main',
-      start: function (e, ui) {
-        console.log($scope.items[ui.item.index()].type);
+
+      start: function () {
+        $($element).find('.WidgetItemList-Sub')
+          .addClass('WidgetItemList-Sorting')
+          .sortable('refreshPositions');//因为item缩小了，所以要清除缓存大小
       },
-      update: function (e, ui) {
-      },
-      stop: function (e, ui) {
+
+      //列表顺序改变后的回调函数
+      stop: function () {
+        $($element).find('.WidgetItemList-Sub')
+          .removeClass('WidgetItemList-Sorting');
       }
     };
   };
@@ -973,5 +979,22 @@
       });
     };
   };
+
+  $(function () {
+    $('.Collection').affix({
+      offset: {
+        top: function () {
+          return (this.top = $('.Header').outerHeight(true))
+        },
+        bottom: function () {
+          return ($('.Footer').outerHeight(true) + 20)
+        }
+      }
+    })
+    $('.Collection .Scrollable').css('height', $(window).height() - 142);
+    $(window).on('scroll resize', function () {
+      $('.Collection .Scrollable').css('height', $(window).height() - 142);
+    })
+  });
 
 })(jQuery);
