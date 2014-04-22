@@ -10,7 +10,7 @@
     </li>
 
     <script>
-      function CategoryCtrl($scope, $timeout, $http) {
+      function CategoryCtrl($scope, $http) {
         $scope.current = '<%= topic.category %>';
 
         $scope.items = [];
@@ -19,14 +19,15 @@
         }
 
         $scope.saveCategory = function (category) {
-          $http.put('/topic/category', {
-            topicId: '<%= topic._id %>',
-            category: category
+          $.ajax('/topic/category', {
+            type: 'PUT',
+            data: {
+              topicId: '<%= topic._id %>',
+              category: category
+            }
           })
             .success(function () {
-              $timeout(function() {
-                $scope.current = category;
-              });
+              $scope.current = category;
             });
         };
       }

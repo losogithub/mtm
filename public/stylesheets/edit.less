@@ -1,12 +1,17 @@
 @import "theme";
 
-#_topWidget { background-color: darken(@color-clouds, 4%); }
+.Cover {
+  &:hover, &:focus {
+    background-color: lighten(@color-clouds, 4%);
+    img { opacity: 0.9; }
+  }
+}
 
 /*li*/
 .WidgetItemList {
   &.WidgetItemList-Sorting>li {
-    box-shadow: 0 0 0 2px @theme-color;
     background-color: white !important;
+    button.COLLECT { display: none !important; }
     .AddUtil { display: none !important; }
     .EditUtil { display: none !important; }
   }
@@ -20,33 +25,30 @@
     &:first-child .SortUtil>div:first-of-type { visibility: hidden; }
     &:last-child .SortUtil>div:last-of-type { visibility: hidden; }
 
-    &.Editing { background-color: darken(@color-clouds, 4%) !important; }
+    .Widget {
+      background-color: darken(@color-clouds, 4%) !important;
+    }
 
     &.WidgetDragPlaceholder {
-      height: 70px;
+      height: 65px;
       background: url(/images/bg_WidgetDragPlaceholder.png) repeat;
-      box-shadow: none !important;
     }
 
     &.ui-sortable-helper {
-      .Item, .Widget { overflow: hidden; max-height: 100px !important; }
-      max-height: 140px !important;
-      box-shadow: none !important;
-
+      max-height: 65px !important; overflow: hidden;
       background-color: fade(@theme-color, 20%) !important;
-      .SortUtil>div, .AddUtil, .EditUtil { visibility: hidden !important; }
+      .SortUtil>div, button.COLLECT, .AddUtil, .EditUtil { visibility: hidden !important; }
       .MoveUtil { visibility: visible !important; }
     }
   }
   .AddUtil {
     display: block;
     .Menu {
-      opacity: 0;
       background-color: fade(@color-primary, 80%);
     }
   }
   li:last-child {
-    .Menu {
+    .Menu.OpacityMenu {
       opacity: 0.1;
     }
   }
@@ -66,8 +68,14 @@
   }
 }
 
+.StaticMenu {
+  position: absolute; bottom: -18px; left: 20px;
+  z-index: 1000;
+}
+
 /*菜单*/
 .Menu {
+  opacity: 0;
   -webkit-transition: 0.2s linear;
   transition: 0.2s linear;
   line-height: 1;
@@ -87,19 +95,8 @@
     padding: 0;
     font-size: 18px;
   }
-  .StaticMenu & { opacity: 0.1; }
+  .StaticMenu &.OpacityMenu { opacity: 0.1; }
   &:hover { opacity: 1 !important; }
-}
-
-/*微件*/
-.LINK {
-  .Thumb {
-    .Image { width: 100px; }
-    .btn-group {
-      margin-right: 5px;
-    }
-    span[name="pagination"] { font-weight: bold; vertical-align: middle; }
-  }
 }
 
 .IMAGE_CREATE {

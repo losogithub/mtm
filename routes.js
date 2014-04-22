@@ -47,15 +47,20 @@ module.exports = function (app) {
   app.post('/topic/item', auth.userRequired, topic.createItem);
   app.put('/topic/item', auth.userRequired, topic.editItem);
   app.put('/topic/sort', auth.userRequired, topic.sortItem);
-  app.put('/topic/save', auth.userRequired, topic.saveTopic);
+  app.put('/topic/cover', auth.userRequired, topic.saveCover);
+  app.put('/topic/title', auth.userRequired, topic.saveTitle);
   app.put('/topic/category', auth.userRequired, topic.saveCategory);
   app.put('/topic/publish', auth.userRequired, topic.publishTopic);
   app.delete('/topic/item', auth.userRequired, topic.deleteItem);
   app.delete('/topic/:topicId', auth.userRequired, topic.deleteTopic);
 
+  app.post('/item', auth.userRequired, user.collectItem);
+  app.put('/item', auth.userRequired, user.editItem);
+  app.delete('/item', auth.userRequired, user.deleteItem);
+
   app.get('/tag/:tagText', widget.band, tag.showTag);
-  app.put('/tag', auth.userRequired, topic.addTag);
-  app.post('/tag', auth.userRequired, topic.removeTag);//因为angular的delete不支持附加data。。。
+  app.post('/tag', auth.userRequired, topic.addTag);
+  app.delete('/tag', auth.userRequired, topic.removeTag);
 
 
   app.get('/chang/:topicId', topic.sendChang);
@@ -120,5 +125,5 @@ module.exports = function (app) {
 
   app.get('*', function (req, res, next) {
     next(new Error(404));
-  })
+  });
 }

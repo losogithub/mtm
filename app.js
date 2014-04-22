@@ -82,6 +82,9 @@ app.use(function (err, req, res, next) {
   var accept = req.headers.accept || '';
   if (~accept.indexOf('html')) {
     switch (err.message) {
+      case '400':
+        res.send(400, '请求参数错误');
+        break;
       case '403':
         res.send(403, '您无权修改他人的策展');
         break;
@@ -94,6 +97,9 @@ app.use(function (err, req, res, next) {
     }
   } else {
     switch (err.message) {
+      case '400':
+        res.send(400, '请求参数错误');
+        break;
       case '403':
         res.send(403, '您无权修改他人的策展');
         break;

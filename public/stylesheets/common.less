@@ -15,7 +15,7 @@ a {
 }
 
 textarea {
-  min-height: 62px;
+  min-height: 62px; resize: none;
 }
 
 .btn-square {
@@ -312,7 +312,10 @@ textarea {
 }
 
 .LetterCounter {
-  font-size: 12px; line-height: 20px; float: right; padding-right: 6px;
+  font-size: 12px; line-height: 20px; float: right; padding-right: 6px; color: @color-muted;
+  .has-error & {
+    color: @color-danger;
+  }
 }
 
 //登录框

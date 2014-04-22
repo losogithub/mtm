@@ -1,488 +1,1446 @@
-<div class="Band text-inverse"
-     data-spy="affix" data-offset-top="72">
-  <div class="container">
-    <div class="Band_Btn">
-      <% if (!topic.publishDate) { %>
-      <button name="publish" class='btn btn-xs btn-primary'
-              data-loading-text="发布 &lt;i class='fa fa-spinner fa-spin'&gt;&lt;/i&gt;" type="button">发布
-      </button>
-      <% } %>
-      <a name="done"
-         class='btn btn-xs btn-default'
-         href="<%= topic.publishDate ? '/topic/' + topic._id : '/works' %>">
-        完成<%= topic.publishDate ? '' : '草稿' %>
-      </a>
+<div ng-controller="TopicCtrl" ng-init="topic = <%= JSON.stringify(locals.topic) %>;init();">
+  <div class="Band text-inverse" ng-class="{'background-danger': fail}"
+       data-spy="affix" data-offset-top="72">
+    <div class="container">
+      <div class="Band_Btn">
+        <% if (!topic.publishDate) { %>
+        <button name="publish" class="btn btn-xs btn-primary"
+                ng-click="publishTopic()" ng-disabled="publishingTopic"
+                type="button">发布 <i class='fa fa-spinner fa-spin' ng-show="publishingTopic"></i>
+        </button>
+        <% } %>
+        <a name="done"
+           class='btn btn-xs btn-default'
+           href="<%= topic.publishDate ? '/topic/' + topic._id : '/works' %>">
+          完成<%= topic.publishDate ? '' : '草稿' %>
+        </a>
+      </div>
+      <h1 class="Band_Ttl">
+        <b>策展中<%= topic.publishDate ? '' : '（草稿）' %></b>
+        <span ng-show="isDirty()">*</span>
+        <span ng-show="isXHR()">- 正在通信，请稍候 <i class='fa fa-spinner fa-spin'></i></span>
+        <span ng-show="fail">- 操作失败，请刷新页面 <i class="fa fa-exclamation-circle"></i></span>
+        <small ng-show="!isDirty() && !isXHR() && !fail">- 已自动保存 <i class="fa fa-check"></i></small>
+      </h1>
     </div>
-    <h1 class="Band_Ttl">
-      <b>策展中<%= topic.publishDate ? '' : '（草稿）' %></b>
-      <span id="_asterisk" style="display: none;">*</span>
-      <small>
-        <span id="_saved" style="display: none;">- 所有修改都已保存，您可以直接离开本页面</span>
-        <span id="_error" style="display: none;" class="text-danger">- 操作失败，请刷新页面</span>
-        <span id="_loading" style="display: none;">- 请稍候 <i class='fa fa-spinner fa-spin'></i></span>
-      </small>
-    </h1>
   </div>
-</div>
 
-<!--内容-->
-<div class="background-clouds" style="padding-top: 41px;">
-  <div class="container">
-    <div class="row pbl">
-      <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-8 col-lg-7 mtl">
-        <div style="background-color: white; border-radius: 6px;">
-          <div style="position: relative; min-height: 140px; border-radius: 6px 6px 0 0;">
-            <img class="HeadThumb" onerror="shizier.errorImage(this, 'default_120x120', true);" src="<%= topic.cover_url || '' %>"
-                 style="border-radius: 6px 6px 0 0;width: 100%;">
-            <h1 class="h5 HeadTtl mbn pal hidden-xs text-inverse"
-                style="position: absolute; bottom: 0; left: 0; right: 0; background-color: rgba(0, 0, 0, 0.6);"><%= topic.title %></h1>
-          </div>
-          <div id="_topItem" class="phl pbl">
-            <h1 class="h5 mtl HeadTtl visible-xs"><%= topic.title %></h1>
-
-            <p class="HeadDesc mtm"><%= topic.description || '' %></p>
-            <div class="clearfix">
-              <div class="pull-right">
-                <button name="edit" class="btn btn-link text-muted mrs" type="button"
-                        style="vertical-align: baseline;padding: 0;font-size: 18px;"
-                        title="编辑封面、标题、简介"><i
-                  class="fa fa-pencil"></i></button>
-
-                <% include _deleteBtn.html %>
-
+  <!--内容-->
+  <div class="background-clouds" style="padding-top: 41px;">
+    <div class="container">
+      <div class="row pbl">
+        <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-8 col-lg-7 mtl">
+          <div class="background-white" style="border-radius: 6px;">
+            <div style="position: relative; border-radius: 6px 6px 0 0;"
+                 ng-show="!coverEditing">
+              <div class="Cover" style="border-radius: 6px 6px 0 0; min-height: 280px; cursor: pointer;"
+                   ng-click="editCover()">
+                <img onerror="shizier.errorImage(this, 'default_120x120', true);"
+                     ng-src="{{topic.cover_url}}" ng-show="topic.cover_url"
+                     style="border-radius: 6px 6px 0 0; width: 100%;">
               </div>
-              <div class="pull-left">
-                <div class="StaticMenu">
+              <h1 class="h5 HeadTtl mbn pal hidden-xs text-inverse"
+                  style="{{titleEditing ? 'display: none !important;' : ''}}position: absolute; bottom: 0; left: 0; right: 0; background-color: rgba(0, 0, 0, 0.6);">
+                {{topic.title}}
+              </h1>
+            </div>
+            <div ng-if="coverEditing">
+              <div class="Cover" style="border-radius: 6px 6px 0 0; min-height: 280px; cursor: pointer;"
+                   ng-click="cancelEdit()">
+                <img onerror="shizier.errorImage(this, 'default_120x120', true);"
+                     ng-src="{{SuffixImage(cover_url)}}" ng-show="cover_url"
+                     style="border-radius: 6px 6px 0 0; width: 100%;">
+              </div>
+              <form name="form" class="pal background-clouds-darken"
+                    ng-init="init()" ng-controller="CoverCtrl">
+                <div class="form-group mbn">
+                  <input name="url" class="form-control flat mbs AUTO_FOCUS"
+                         ng-model="$parent.cover_url" ng-init="$parent.cover_url = topic.cover_url;"
+                         placeholder="策展封面URL" id="_top_url" type="text">
+                  <label class="input-icon fa fa-link" for="_top_url"></label>
+                  <div class="InfoHint text-muted">
+                    由于受版权保护，有些图片可能无法引用
+                  </div>
+                  <div class="BtnSet">
+                    <button name="save" class="btn btn-primary"
+                            type="submit">保存</button>
+                    <button name="reset" class="btn btn-default"
+                            ng-click="cancelEdit()"
+                            type="button">取消</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="phl pbm" ng-show="!titleEditing" style="position: relative;">
+              <h1 class="h5 mtl HeadTtl visible-xs">{{topic.title}}</h1>
 
-                  <% include _menu.html %>
+              <p class="HeadDesc mtm mbn">{{topic.description || ''}}</p>
+              <div class="clearfix">
+                <div class="pull-right">
+                  <button name="edit" class="btn btn-link text-muted mrs" type="button"
+                          ng-click="editTitle()"
+                          style="vertical-align: baseline;padding: 0;font-size: 18px;"
+                          title="编辑封面、标题、简介"><i
+                    class="fa fa-pencil"></i></button>
+
+                  <% include _deleteBtn.html %>
 
                 </div>
+
+              </div>
+              <div class="StaticMenu">
+
+                <div class="Menu pas"
+                     ng-class="{OpacityMenu: !items.length}">
+                  <span>添加条目</span>
+                  <ul>
+                    <li>
+                      <button class="btn btn-link" type="button"
+                              ng-click="createItem(null, 'LINK_CREATE')"
+                              data-type="LINK_CREATE" title="链接">
+                        <i class="fa fa-link"></i>
+                      </button>
+                    </li>
+                    <li>
+                      <button class="btn btn-link" type="button"
+                              ng-click="createItem(null, 'IMAGE_CREATE')"
+                              data-type="IMAGE_CREATE" title="图片">
+                        <i class="fa fa-picture-o"></i>
+                      </button>
+                    </li>
+                    <li>
+                      <button class="btn btn-link" type="button"
+                              ng-click="createItem(null, 'VIDEO_CREATE')"
+                              data-type="VIDEO_CREATE" title="视频">
+                        <i class="fa fa-film"></i>
+                      </button>
+                    </li>
+                    <li>
+                      <button class="btn btn-link" type="button"
+                              ng-click="createItem(null, 'CITE')"
+                              data-type="CITE" title="引用">
+                        <i class="fa fa-quote-left"></i>
+                      </button>
+                    </li>
+                    <li>
+                      <button class="btn btn-link" type="button"
+                              ng-click="createItem(null, 'WEIBO_CREATE')"
+                              data-type="WEIBO_CREATE" title="weibo">
+                        <i class="fa fa-weibo"></i>
+                      </button>
+                    </li>
+                    <li>
+                      <button class="btn btn-link" type="button"
+                              ng-click="createItem(null, 'TEXT')"
+                              data-type="TEXT" title="文本">
+                        <i class="fa fa-align-left"></i>
+                      </button>
+                    </li>
+                    <li>
+                      <button class="btn btn-link" type="button"
+                              ng-click="createItem(null, 'TITLE')"
+                              data-type="TITLE" title="标题">
+                        <i class="fa fa-text-width"></i>
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+
               </div>
             </div>
-          </div>
-          <form id="_topWidget" class="phl" name="form" style="display: none;">
-            <div class="pvl">
-              <div class="form-group">
-                <input name="url" class="form-control flat mbs" placeholder="策展封面URL" id="_top_url" type="text">
-                <label class="input-icon fa fa-link" for="_top_url"></label>
-                <div class="InfoHint text-muted">
-                  由于受版权保护，有些图片可能无法引用
+            <form name="form" class="phl background-clouds-darken"
+                  ng-if="titleEditing" ng-init="init()"
+                  ng-controller="TopicTitleCtrl">
+              <div class="pvl">
+                <div class="form-group"
+                     ng-init="titleLimit = 50;"
+                     ng-class="{ 'has-error' : title.length > titleLimit }">
+                  <div class="Required"></div>
+                  <input name="title" type="text" class="form-control flat AUTO_FOCUS"
+                         ng-model="title"
+                         ng-init="title = topic.title;"
+                         placeholder="策展标题（5~50字）"/>
+                  <div class="LetterCounter">{{title.length || 0}}/{{titleLimit}}</div>
                 </div>
+                <div class="form-group"
+                     ng-init="descriptionLimit = 140;"
+                     ng-class="{ 'has-error' : description.length > descriptionLimit }">
+                  <textarea msd-elastic name="description" class="form-control flat"
+                            ng-model="description"
+                            ng-init="description = topic.description;"
+                            placeholder="策展描述（140字以内，换行符无效）"></textarea>
+                  <div class="LetterCounter">{{description.length || 0}}/{{descriptionLimit}}</div>
+                </div>
+
                 <div class="BtnSet">
-                  <button name="preview" class="btn btn-primary" type="button">预览</button>
-                  <button name="reset" class="btn btn-default" type="button">取消</button>
+                  <button name="save" class="btn btn-primary"
+                          type="submit">保存</button>
+                  <button name="reset" class="btn btn-default"
+                          ng-click="cancelEdit()"
+                          type="button">取消</button>
                 </div>
+
               </div>
-
-              <div id="_topWidget_title" class="form-group"
-                   ng-controller="$.noop" ng-init="limit = 50;"
-                   ng-class="{ 'has-error' : input.length > limit }">
-                <div class="Required"></div>
-                <input name="title" type="text" class="form-control flat" ng-model="input"
-                       placeholder="策展标题（5~50字）"/>
-                <div ng-class="input.length > limit ? 'text-danger' : 'text-muted'"
-                     class="LetterCounter">{{input.length || 0}}/{{limit}}</div>
-              </div>
-              <div id="_topWidget_description" class="form-group"
-                   ng-controller="$.noop" ng-init="limit = 140;"
-                   ng-class="{ 'has-error' : input.length > limit }">
-                <textarea name="description" class="form-control flat" ng-model="input"
-                          placeholder="策展描述（140字以内，换行符无效）"></textarea>
-                <div ng-class="input.length > limit ? 'text-danger' : 'text-muted'"
-                     class="LetterCounter">{{input.length || 0}}/{{limit}}</div>
-              </div>
-
-              <% include _widget_BtnSet.html %>
-
-            </div>
-          </form>
-
-          <% include _ul.html %>
-
-          <!--模板-->
-          <div class="TEMPLATES" style="display:none;">
-            <ul>
-              <% var item = null; %>
-              <% include _ul_li.html %>
-            </ul>
-
-            <form class="Widget">
-              <!--插入内容-->
             </form>
 
-            <div class="Widget">
+            <ul class="WidgetItemList WidgetItemList-Main" ui-sortable="sortableOptions"
+                ng-model="items"
+                ng-init="items = <%= JSON.stringify(locals.items) %>">
+              <li ng-repeat="item in items">
 
-              <div class="Content LINK_CREATE pam">
-                <div class="form-group">
-                  <div class="Required"></div>
-                  <input name="url" class="form-control flat AUTO_FOCUS"
-                         placeholder="链接URL" id="_link_url" type="text">
-                  <label class="input-icon fa fa-link" for="_link_url"></label>
-                </div>
-                <button name="preview" class="btn btn-info pull-left mrs" type="button" disabled='disabled'
-                        data-loading-text="预览 &lt;i class='fa fa-spinner fa-spin'&gt;&lt;/i&gt;">预览
-                </button>
+                <div class="Item pal"
+                     ng-switch="item.type" ng-if="editingId != item._id">
 
-                <% include _widget_BtnSet.html %>
+                  <div class="Content LINK pam"
+                       ng-switch-when="LINK">
+                    <div class="Thumb mls mbs pull-right" ng-if="item.src">
+                      <a class="fancybox" rel="gallery" href="{{item.src}}" title="{{item.title || ''}}">
+                        <img ng-src="{{item.src}}" alt="{{item.title || ''}}">
+                      </a>
+                    </div>
+                    <div class="Title">
+                      <img class="Fav" ng-src="{{item.fav}}"
+                           ui-event="{ error : 'onFavError(item)' }">
+                      <a target="_blank" class="LINK_URL" href='{{item.url}}'>{{item.title || ''}}</a>
+                    </div>
+                    <div class="Quote">
+                      <i class="fa fa-globe"></i>
+                      <a target="_blank" class="LINK_URL" href="{{item.url}}">
+                        {{item.url}}
+                      </a>
+                    </div>
+                    <div class="Snippet text-muted small mtx" ng-if="item.snippet">{{item.snippet}}</div>
+                    <div class="Description text-asbestos mts small"
+                         ng-if="item.description" ng-bind-html="getHtml(item.description)"></div>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="Content IMAGE pam"
+                       ng-switch-when="IMAGE">
+                    <div class="Image text-center">
+                      <a class="IMAGE_LINK fancybox" rel="gallery" href="{{item.url}}"
+                         title="{{(item.title || '') + (item.title && item.description ? ' -- ' : '') + (item.description || '')}}">
+                        <img onerror="shizier.errorImage(this,'default_120x120');"
+                             ng-src="{{item.url}}" alt="{{item.title || ''}}">
+                      </a>
+                    </div>
 
-              </div>
+                    <div class="Title text-center mts">{{item.title || ''}}</div>
+                    <div class="Description text-asbestos text-center small mtx"
+                         ng-bind-html="getHtml(item.description)"></div>
+                    <div class="Quote" ng-if="item.quote">
+                      <i class="fa fa-globe"></i>
+                      <a target="_blank" href="{{item.quote}}">
+                        {{item.quoteDomain || ''}}
+                      </a>
+                    </div>
+                  </div>
+                  <div class="Content VIDEO pam"
+                       ng-switch-when="VIDEO">
 
-              <div class="Content LINK pam">
-                <div class="form-group mbx"
-                     ng-controller="$.noop" ng-init="limit = 50;"
-                     ng-class="{ 'has-error' : input.length > limit }">
-                  <input name="title" class="form-control flat" ng-model="input"
-                         placeholder="链接标题" type="text">
-                  <div ng-class="input.length > limit ? 'text-danger' : 'text-muted'"
-                       class="LetterCounter">{{input.length || 0}}/{{limit}}</div>
+                    <button class="Cover btn btn-link" type="button"
+                            ng-if="!item.playing" ng-click="playVideo(item)"
+                            ng-style="item.cover && {'background-image':'url({{item.cover}})'}">
+                      <div class="Background">
+                        <i class="fa fa-play-circle"></i>
+                      </div>
+                    </button>
+                    <div class="Player" ng-if="item.playing" ng-show="item.show">
+                      <button name="close" class="btn btn-link mbx pan"
+                              ng-click="item.playing = false;item.show = false;"
+                              type="button"><i class="fa fa-caret-up"></i> 收起</button>
+                      <!--src为空会导致ie一直等待，localhost响应最快-->
+                      <embed style="display: block;"
+                             src="http://localhost"
+                             ng-src="{{getVideoSrc(item)}}"
+                             flashvars="{{getVideoVars(item)}}"
+                             width="{{item.width}}"
+                             height="{{item.height}}"
+                             type="application/x-shockwave-flash"
+                             allowscriptaccess="always"
+                             allowfullscreen="true"
+                             wmode="opaque"
+                             quality="high"></embed>
+                    </div>
 
-                  <div class="Quote">
-                    <i class="fa fa-globe"></i>
-                    <a target="_blank" class="LINK_URL"></a>
+                    <div class="Quote">
+                      <i class="fa fa-globe"></i>
+                      <a target="_blank" class="VIDEO_URL" href="{{item.url}}">
+                        {{ item.quote || item.url }}
+                      </a>
+                    </div>
+                    <div class="Title mtx" ng-if="item.title">
+                      <a target="_blank" class="VIDEO_URL" href="{{item.url}}">
+                        {{item.title || ''}}
+                      </a>
+                    </div>
+                    <div class="Description text-asbestos small mtx"
+                         ng-if="item.description" ng-bind-html="getHtml(item.description)"></div>
+                  </div>
+                  <div class="Content CITE"
+                       ng-switch-when="CITE">
+                    <div class="Cite">
+                      <i class="fa fa-quote-left text-muted"></i>
+                      <q ng-bind-html="getHtml(item.cite)"></q>
+                    </div>
+
+                    <div class="Quote" ng-if="item.url">
+                      <i class="fa fa-globe"></i>
+                      <a target="_blank" href="{{item.url}}">{{item.title || item.url}}</a>
+                    </div>
+                    <div class="Description text-asbestos small mtx"
+                         ng-if="item.description" ng-bind-html="getHtml(item.description)"></div>
+                  </div>
+                  <div class="Content WEIBO pam"
+                       ng-switch-when="WEIBO">
+
+                    <div class="clearfix">
+                      <a target="_blank"  class="Avatar AuthorUrl img-circle"
+                         href="http://weibo.com/{{item.user.profile_url}}">
+                        <img class="img-circle"
+                             ng-src="{{item.user.profile_image_url}}"
+                             alt="{{item.user.screen_name}}">
+                      </a>
+
+                      <div style="overflow: hidden;">
+                        <a target="_blank" class="ScreenName AuthorUrl"
+                           href="http://weibo.com/{{item.user.profile_url}}">
+                          <span class="ScreenName">{{item.user.screen_name}}</span>
+                        </a>
+                        <a target="_blank" class="Verify"
+                           ng-class="!item.user.verified ? '' : item.user.verified_type ? 'ORG' : 'PERSONAL'"
+                           href="http://verified.weibo.com/verify"><b>V</b></a>
+                      </div>
+                    </div>
+
+                    <div class="Text" ng-bind-html="getWeiboHtml(item.parsed_text)"></div>
+                    <div class="Pic clearfix" ng-if="item.pic_urls && item.pic_urls.length"
+                         style="{{item.pic_urls && item.pic_urls.length == 4 ? 'width: 170px;' : ''}}">
+                      <a class="WeiboImage fancybox" rel="gallery"
+                         ng-if="item.pic_urls.length == 1 && item.pic_urls[0]"
+                         href="{{item.pic_urls[0].thumbnail_pic.replace('/thumbnail/', '/large/')}}"><img
+                        ng-src="{{item.pic_urls[0].thumbnail_pic}}"></a>
+                      <a class="WeiboImage fancybox" rel="gallery"
+                         ng-if="item.pic_urls.length > 1 && pic"
+                         ng-repeat="pic in item.pic_urls"
+                         href="{{pic.thumbnail_pic.replace('/thumbnail/', '/large/')}}"><img
+                        ng-src="{{pic.thumbnail_pic.replace('/thumbnail/', '/square/')}}"></a>
+                    </div>
+                    <div class="Retweeted clearfix" ng-init="reItem = item.retweeted_status;"
+                         ng-if="item.retweeted_status && item.retweeted_status.idstr">
+                      <a target="_blank" class="Author AuthorUrl"
+                         href="http://weibo.com/{{reItem.user.profile_url}}">
+                        @<span class="ScreenName">{{reItem.user.screen_name}}</span>
+                      </a>
+                      <a target="_blank" class="Verify"
+                         ng-class="!reItem.user.verified ? '' : reItem.user.verified_type ? 'ORG' : 'PERSONAL'"
+                         href="http://verified.weibo.com/verify"><b>V</b></a>
+                      <div class="Text" ng-bind-html="getWeiboHtml(reItem.parsed_text)"></div>
+                      <div class="Pic clearfix" ng-if="reItem.pic_urls && reItem.pic_urls.length"
+                           style="{{reItem.pic_urls && reItem.pic_urls.length == 4 ? 'width: 170px;' : ''}}">
+                        <a class="WeiboImage fancybox" rel="gallery"
+                           ng-if="reItem.pic_urls.length == 1 && reItem.pic_urls[0]"
+                           href="{{reItem.pic_urls[0].thumbnail_pic.replace('/thumbnail/', '/large/')}}"><img
+                          ng-src="{{reItem.pic_urls[0].thumbnail_pic}}"></a>
+                        <a class="WeiboImage fancybox" rel="gallery"
+                           ng-if="reItem.pic_urls.length > 1 && pic"
+                           ng-repeat="pic in reItem.pic_urls"
+                           href="{{pic.thumbnail_pic.replace('/thumbnail/', '/large/')}}"><img
+                          ng-src="{{pic.thumbnail_pic.replace('/thumbnail/', '/square/')}}"></a>
+                      </div>
+                      <a target="_blank" class="Time text-muted pull-left"
+                         href="http://weibo.com/{{reItem.user.idstr}}/{{reItem.mid62}}"
+                        >{{reItem.time}}</a>
+                      <div class="Handle">
+                        <a target="_blank" class="Forward text-muted mrs"
+                           href="http://weibo.com/{{reItem.user.idstr}}/{{reItem.mid62}}?type=repost"
+                          ><i class="fa fa-share"></i> 转发</a>
+                        <a target="_blank" class="Comment text-muted"
+                           href="http://weibo.com/{{reItem.user.idstr}}/{{reItem.mid62}}"
+                          ><i class="fa fa-comment-o"></i> 评论</a>
+                      </div>
+                      <div class="clearfix"></div>
+                    </div>
+                    <a target="_blank" class="Time text-muted pull-left"
+                       href="http://weibo.com/{{item.user.idstr}}/{{item.mid62}}">{{item.time}}</a>
+                    <div class="Handle">
+                      <a target="_blank" class="Forward text-muted mrs"
+                         href="http://weibo.com/{{item.user.idstr}}/{{item.mid62}}?type=repost"
+                        ><i class="fa fa-share"></i> 转发</a>
+                      <a target="_blank" class="Comment text-muted"
+                         href="http://weibo.com/{{item.user.idstr}}/{{item.mid62}}"
+                        ><i class="fa fa-comment-o"></i> 评论</a>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="Description text-asbestos small mtx"
+                         ng-if="item.description" ng-bind-html="getHtml(item.description)"></div>
+                  </div>
+                  <div class="Content TEXT"
+                       ng-switch-when="TEXT" ng-bind-html="getHtml(item.text)">
+                  </div>
+                  <h2 class="Content TITLE h6"
+                      ng-switch-when="TITLE">
+                    {{item.title}}
+                  </h2>
+
+                  <button class="COLLECT btn btn-default btn-xs"
+                          ng-click="collectItem(item)"
+                          type="button">采集</button>
+                  <div class="AddUtil pull-left">
+
+                    <div class="Menu pas"
+                         ng-class="{OpacityMenu: !editingScope}">
+                      <span>添加条目</span>
+                      <ul>
+                        <li>
+                          <button class="btn btn-link" type="button"
+                                  ng-click="createItem(item, 'LINK_CREATE')"
+                                  data-type="LINK_CREATE" title="链接">
+                            <i class="fa fa-link"></i>
+                          </button>
+                        </li>
+                        <li>
+                          <button class="btn btn-link" type="button"
+                                  ng-click="createItem(item, 'IMAGE_CREATE')"
+                                  data-type="IMAGE_CREATE" title="图片">
+                            <i class="fa fa-picture-o"></i>
+                          </button>
+                        </li>
+                        <li>
+                          <button class="btn btn-link" type="button"
+                                  ng-click="createItem(item, 'VIDEO_CREATE')"
+                                  data-type="VIDEO_CREATE" title="视频">
+                            <i class="fa fa-film"></i>
+                          </button>
+                        </li>
+                        <li>
+                          <button class="btn btn-link" type="button"
+                                  ng-click="createItem(item, 'CITE')"
+                                  data-type="CITE" title="引用">
+                            <i class="fa fa-quote-left"></i>
+                          </button>
+                        </li>
+                        <li>
+                          <button class="btn btn-link" type="button"
+                                  ng-click="createItem(item, 'WEIBO_CREATE')"
+                                  data-type="WEIBO_CREATE" title="weibo">
+                            <i class="fa fa-weibo"></i>
+                          </button>
+                        </li>
+                        <li>
+                          <button class="btn btn-link" type="button"
+                                  ng-click="createItem(item, 'TEXT')"
+                                  data-type="TEXT" title="文本">
+                            <i class="fa fa-align-left"></i>
+                          </button>
+                        </li>
+                        <li>
+                          <button class="btn btn-link" type="button"
+                                  ng-click="createItem(item, 'TITLE')"
+                                  data-type="TITLE" title="标题">
+                            <i class="fa fa-text-width"></i>
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+
+                  </div>
+                  <div class="EditUtil pull-right pas plm">
+                    <button class="EDIT btn btn-link mrx" type="button" title="修改"
+                            ng-click="editItem(item._id)"><i class="fa fa-pencil"></i> 修改</button>
+                    <button class="DELETE btn btn-link" type="button" title="删除"
+                            ng-click="deleteItem(item)"><i class="fa fa-trash-o"></i> 删除</button>
                   </div>
                 </div>
 
-                <div class="form-group"
-                     ng-controller="$.noop" ng-init="limit = 140;"
-                     ng-class="{ 'has-error' : input.length > limit }">
-                  <textarea name="snippet" class="form-control flat" ng-model="input"
-                            placeholder="链接摘要"></textarea>
-                  <div ng-class="input.length > limit ? 'text-danger' : 'text-muted'"
-                       class="LetterCounter">{{input.length || 0}}/{{limit}}</div>
-                </div>
+                <form class="Widget pal" name="form"
+                      ng-switch="item.type" ng-if="editingId == item._id">
 
-                <div class="Thumb clearfix">
-                  <div class="Image pull-left">
-                    <div style="position: relative;display: inline-block;">
-                      <img onerror="shizier.errorImage(this, 'default_120x120', true);">
+                  <div class="Content LINK_CREATE pam"
+                       ng-switch-when="LINK_CREATE" ng-controller="LinkCreateCtrl" ng-init="init()">
+                    <div class="form-group">
+                      <div class="Required"></div>
+                      <input name="url" class="form-control flat AUTO_FOCUS"
+                             ng-model="url"
+                             placeholder="链接URL" id="_link_url" type="text">
+                      <label class="input-icon fa fa-link" for="_link_url"></label>
+                    </div>
 
-                      <div class="Loading"
-                           style="position: absolute;top: 0;left: 0;bottom: 0;right: 0;background-color: rgba(0,0,0,0.2);">
-                        <table style="margin: 0 auto;height: 100%;">
-                          <td>
-                            <i class="fa fa-spinner fa-spin" style="color: white"></i>
-                          </td>
-                        </table>
+                    <% include _widget_BtnSet.html %>
+
+                  </div>
+
+                  <div class="Content LINK pam"
+                       ng-switch-when="LINK" ng-controller="LinkCtrl" ng-init="init()">
+                    <div class="form-group mbx"
+                         ng-class="{ 'has-error' : title.length > titleMaxLength }">
+                      <input name="title" class="form-control flat"
+                             ng-model="title" ng-init="title = item.title"
+                             placeholder="链接标题" type="text">
+                      <div class="LetterCounter">{{title.length || 0}}/{{titleMaxLength}}</div>
+
+                      <div class="Quote">
+                        <i class="fa fa-globe"></i>
+                        <a target="_blank" class="LINK_URL" href="{{item.url}}">{{item.url}}</a>
                       </div>
+                    </div>
+
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : snippet.length > snippetMaxLength }">
+                      <textarea msd-elastic name="snippet" class="form-control flat"
+                                ng-model="snippet" ng-init="snippet = item.snippet"
+                                placeholder="链接摘要"></textarea>
+                      <div class="LetterCounter">{{snippet.length || 0}}/{{snippetMaxLength}}</div>
+                    </div>
+
+                    <div class="Thumb clearfix mbl">
+                      <div class="Image pull-right">
+                        <div style="position: relative;display: inline-block;">
+                          <img ng-src="{{SuffixImage(src) || defaultImgSrc}}"
+                               ng-init="src = item.src;"
+                               onerror="shizier.errorImage(this, 'default_120x120', true);"
+                               ui-event="{ error: 'stopLoading()', abort: 'stopLoading()', load: 'stopLoading()'}">
+
+                          <div class="Loading" ng-if="loading"
+                               style="position: absolute;top: 0;left: 0;bottom: 0;right: 0;background-color: rgba(0,0,0,0.2);">
+                            <table style="margin: 0 auto;height: 100%;">
+                              <td>
+                                <i class="fa fa-spinner fa-spin" style="color: white"></i>
+                              </td>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="prm" style="overflow: hidden;">
+                        <div class="form-group">
+                          <input class="form-control flat mbs Url" ng-model="src" ng-change="startLoading()"
+                                 placeholder="自定义图片URL" id="_linkThumbUrl" type="text">
+                          <label class="input-icon fa fa-link" for="_linkThumbUrl"></label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : description.length > descriptionMaxLength }">
+                      <textarea msd-elastic name="description" class="form-control flat AUTO_FOCUS"
+                                ng-model="description" ng-init="description = item.description"
+                                placeholder="链接评论"></textarea>
+                      <div class="LetterCounter">{{description.length || 0}}/{{descriptionMaxLength}}</div>
+                    </div>
+
+                    <% include _widget_BtnSet.html %>
+
+                  </div>
+
+                  <div class="Content IMAGE_CREATE pam"
+                       ng-switch-when="IMAGE_CREATE" ng-controller="ImageCreateCtrl" ng-init="init()">
+                    <div class="Image">
+                      <i class="fa fa-picture-o text-muted"></i>
+                    </div>
+                    <div class="InfoHint text-muted">
+                      由于受版权保护，有些图片可能无法引用
+                    </div>
+                    <div>
+                      <div class="form-group">
+                        <div class="Required"></div>
+                        <input name="url" class="form-control flat AUTO_FOCUS"
+                               ng-model="url"
+                               placeholder="图片URL" id="_image_url" type="text">
+                        <label class="input-icon fa fa-link" for="_image_url"></label>
+                      </div>
+
+                      <% include _widget_BtnSet.html %>
+
                     </div>
                   </div>
-                  <div class="plm" style="overflow: hidden;">
-                    <div class="pull-left">
-                      <div class="btn-group">
-                        <button class="btn btn-xs btn-default" type="button"><i class="fui-arrow-left"></i></button>
-                        <button class="btn btn-xs btn-default" type="button"><i class="fui-arrow-right"></i></button>
-                      </div>
-                      <span class="text-muted" name="pagination"></span>
+
+                  <div class="Content IMAGE pam"
+                       ng-switch-when="IMAGE" ng-controller="ImageCtrl" ng-init="init()">
+                    <div class="Image text-center mbl">
+                      <a class="fancybox" rel="gallery" href="{{item.url}}"
+                         title="{{(item.title || '') + (item.title && item.description ? ' -- ' : '') + (item.description || '')}}">
+                        <img onerror="shizier.errorImage(this,'default_120x120');"
+                             ng-src="{{item.url}}" alt="{{item.title || ''}}">
+                      </a>
                     </div>
 
-                    <label class="checkbox text-muted pull-left mts mlm">
-                      <input type="checkbox" id="noImg">
-                      无图片
-                    </label>
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : title.length > titleMaxLength }">
+                      <input name="title" class="form-control flat text-center Bold AUTO_FOCUS"
+                             ng-model="title" ng-init="title = item.title"
+                             placeholder="图片标题" type="text">
+                      <div class="LetterCounter">{{title.length || 0}}/{{titleMaxLength}}</div>
+                    </div>
+                    <div class="form-group">
+                      <input name="quote" class="form-control flat Url"
+                             ng-model="quote" ng-init="quote = item.quote"
+                             placeholder="图片来源网页URL" id="_QuoteUrl" type="text">
+                      <label class="input-icon fa fa-link" for="_QuoteUrl"></label>
+                    </div>
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : description.length > descriptionMaxLength }">
+                      <textarea msd-elastic name="description" class="form-control flat text-center"
+                                ng-model="description" ng-init="description = item.description"
+                                placeholder="图片介绍、评论"></textarea>
+                      <div class="LetterCounter">{{description.length || 0}}/{{descriptionMaxLength}}</div>
+                    </div>
+
+                    <% include _widget_BtnSet.html %>
+
+                  </div>
+
+                  <div class="Content VIDEO_CREATE pam"
+                       ng-switch-when="VIDEO_CREATE" ng-controller="VideoCreateCtrl" ng-init="init()">
+                    <div class="Thumb">
+                      <i class="fa fa-film text-muted"></i>
+                    </div>
+                    <div class="InfoHint text-muted">
+                      目前已支持<a
+                      target="_blank" class="text-primary" href="http://www.youku.com">优酷</a>、<a
+                      target="_blank" class="text-primary" href="http://www.tudou.com">土豆</a>、<a
+                      target="_blank" class="text-primary" href="http://www.iqiyi.com/">爱奇艺</a>、<a
+                      target="_blank" class="text-primary" href="http://www.pps.tv/">PPS</a>、<a
+                      target="_blank" class="text-primary" href="http://tv.sohu.com/">搜狐视频</a>、<a
+                      target="_blank" class="text-primary" href="http://v.qq.com/">腾讯视频</a>、<a
+                      target="_blank" class="text-primary" href="http://video.sina.com.cn">新浪视频</a>、<a
+                      target="_blank" class="text-primary" href="http://v.ifeng.com/">凤凰视频</a>、<a
+                      target="_blank" class="text-primary" href="http://www.letv.com/">乐视</a>、<a
+                      target="_blank" class="text-primary" href="http://www.pptv.com/">PPTV</a>、<a
+                      target="_blank" class="text-primary" href="http://www.ku6.com/">酷6</a>、<a
+                      target="_blank" class="text-primary" href="http://www.56.com/">56</a>、<a
+                      target="_blank" class="text-primary" href="http://www.baomihua.com/">爆米花</a>、<a
+                      target="_blank" class="text-primary" href="http://www.yinyuetai.com/">音悦台</a>、<a
+                      target="_blank" class="text-primary" href="http://www.acfun.com/">AcFun</a>、<a
+                      target="_blank" class="text-primary" href="http://www.bilibili.tv/">bilibili</a>等视频网站的视频播放页链接。
+                    </div>
+                    <div class="form-group">
+                      <div class="Required"></div>
+                      <input name="url" class="form-control flat AUTO_FOCUS"
+                             ng-model="url"
+                             placeholder="视频URL" id="_video_url" type="text">
+                      <label class="input-icon fa fa-link" for="_video_url"></label>
+                    </div>
+
+                    <% include _widget_BtnSet.html %>
+
+                  </div>
+
+                  <div class="Content VIDEO pam"
+                       ng-switch-when="VIDEO" ng-controller="VideoCtrl" ng-init="init()">
+
+                    <button class="Cover btn btn-link" type="button"
+                            ng-if="!item.playing" ng-click="playVideo(item)"
+                            ng-style="{'background-image':'url({{item.cover}})'}">
+                      <div class="Background">
+                        <i class="fa fa-play-circle"></i>
+                      </div>
+                    </button>
+                    <div class="Player" ng-if="item.playing" ng-show="item.show">
+                      <button name="close" class="btn btn-link mbx pan"
+                              ng-click="item.playing = false;item.show = false;"
+                              type="button"><i class="fa fa-caret-up"></i> 收起</button>
+                      <!--src为空会导致ie一直等待，localhost响应最快-->
+                      <embed style="display: block;"
+                             src="http://localhost"
+                             ng-src="{{getVideoSrc(item)}}"
+                             flashvars="{{getVideoVars(item)}}"
+                             width="{{item.width}}"
+                             height="{{item.height}}"
+                             type="application/x-shockwave-flash"
+                             allowscriptaccess="always"
+                             allowfullscreen="true"
+                             wmode="opaque"
+                             quality="high"></embed>
+                    </div>
+
+                    <div class="Quote">
+                      <i class="fa fa-globe"></i>
+                      <a target="_blank" class="VIDEO_URL" href="{{item.url}}">
+                        {{ item.quote || item.url }}
+                      </a>
+                    </div>
+
+                    <div class="form-group mtx"
+                         ng-class="{ 'has-error' : title.length > titleMaxLength }">
+                      <input name="title" class="form-control flat Bold"
+                             ng-model="title" ng-init="title = item.title"
+                             placeholder="视频标题" type="text">
+                      <div class="LetterCounter">{{title.length || 0}}/{{titleMaxLength}}</div>
+                    </div>
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : description.length > descriptionMaxLength }">
+                      <textarea msd-elastic class="form-control flat AUTO_FOCUS" name="description"
+                                ng-model="description" ng-init="description = item.description"
+                                placeholder="视频介绍、评论"></textarea>
+                      <div class="LetterCounter">{{description.length || 0}}/{{descriptionMaxLength}}</div>
+                    </div>
+
+                    <% include _widget_BtnSet.html %>
+
+                  </div>
+
+                  <div class="Content CITE"
+                       ng-switch-when="CITE" ng-controller="CiteCtrl" ng-init="init()">
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : cite.length > citeMaxLength }">
+                      <div class="Required"></div>
+                      <textarea msd-elastic class="form-control flat AUTO_FOCUS" name="cite"
+                                ng-model="cite" ng-init="cite = item.cite"
+                                placeholder="引文"></textarea>
+                      <div class="LetterCounter">{{cite.length || 0}}/{{citeMaxLength}}</div>
+                    </div>
+                    <div class="form-group">
+                      <input class="form-control flat" name="url" placeholder="引文来源网页URL"
+                             ng-model="url" ng-init="url = item.url"
+                             id="_citeUrl" type="text">
+                      <label class="input-icon fa fa-link" for="_citeUrl"></label>
+                    </div>
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : title.length > titleMaxLength }">
+                      <input class="form-control flat" name="title"
+                             ng-model="title" ng-init="title = item.title"
+                             placeholder="引文来源网页标题" type="text">
+                      <div class="LetterCounter">{{title.length || 0}}/{{titleMaxLength}}</div>
+                    </div>
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : description.length > descriptionMaxLength }">
+                      <textarea msd-elastic class="form-control flat" name="description"
+                                ng-model="description" ng-init="description = item.description"
+                                placeholder="引文介绍、评论"></textarea>
+                      <div class="LetterCounter">{{description.length || 0}}/{{descriptionMaxLength}}</div>
+                    </div>
+
+                    <% include _widget_BtnSet.html %>
+
+                  </div>
+
+                  <div class="Content WEIBO_CREATE pam"
+                       ng-switch-when="WEIBO_CREATE" ng-controller="WeiboCreateCtrl" ng-init="init()">
+                    <div class="Avatar img-circle text-center">
+                      <i class="fa fa-weibo text-muted"></i>
+                    </div>
+                    <div style="overflow: hidden;">
+                      <div class="InfoHint text-muted">
+                        由于受隐私设置保护，有些微博将无法引用
+                      </div>
+                      <div class="form-group">
+                        <div class="Required" style="float: left;"></div>
+                        <input name="url" class="form-control flat AUTO_FOCUS"
+                               ng-model="url"
+                               placeholder="新浪微博URL" id="_weibo_url" type="text">
+                        <label class="input-icon fa fa-link" for="_weibo_url"></label>
+                      </div>
+
+                      <% include _widget_BtnSet.html %>
+
+                    </div>
+                  </div>
+
+                  <div class="Content WEIBO pam"
+                       ng-switch-when="WEIBO" ng-controller="WeiboCtrl" ng-init="init()">
+
+                    <div class="clearfix">
+                      <a target="_blank"  class="Avatar AuthorUrl img-circle"
+                         href="http://weibo.com/{{item.user.profile_url}}">
+                        <img class="img-circle"
+                             ng-src="{{item.user.profile_image_url}}"
+                             alt="{{item.user.screen_name}}">
+                      </a>
+
+                      <div style="overflow: hidden;">
+                        <a target="_blank" class="ScreenName AuthorUrl"
+                           href="http://weibo.com/{{item.user.profile_url}}">
+                          <span class="ScreenName">{{item.user.screen_name}}</span>
+                        </a>
+                        <a target="_blank" class="Verify"
+                           ng-class="!item.user.verified ? '' : item.user.verified_type ? 'ORG' : 'PERSONAL'"
+                           href="http://verified.weibo.com/verify"><b>V</b></a>
+                      </div>
+                    </div>
+
+                    <div class="Text" ng-bind-html="getWeiboHtml(item.parsed_text)"></div>
+                    <div class="Pic clearfix" ng-if="item.pic_urls && item.pic_urls.length"
+                         style="{{item.pic_urls && item.pic_urls.length == 4 ? 'width: 170px;' : ''}}">
+                      <a class="WeiboImage fancybox" rel="gallery"
+                         ng-if="item.pic_urls.length == 1 && item.pic_urls[0]"
+                         href="{{item.pic_urls[0].thumbnail_pic.replace('/thumbnail/', '/large/')}}"><img
+                        ng-src="{{item.pic_urls[0].thumbnail_pic}}"></a>
+                      <a class="WeiboImage fancybox" rel="gallery"
+                         ng-if="item.pic_urls.length > 1 && pic"
+                         ng-repeat="pic in item.pic_urls"
+                         href="{{pic.thumbnail_pic.replace('/thumbnail/', '/large/')}}"><img
+                        ng-src="{{pic.thumbnail_pic.replace('/thumbnail/', '/square/')}}"></a>
+                    </div>
+                    <div class="Retweeted clearfix" ng-init="reItem = item.retweeted_status;"
+                         ng-if="item.retweeted_status && item.retweeted_status.idstr">
+                      <a target="_blank" class="Author AuthorUrl"
+                         href="http://weibo.com/{{reItem.user.profile_url}}">
+                        @<span class="ScreenName">{{reItem.user.screen_name}}</span>
+                      </a>
+                      <a target="_blank" class="Verify"
+                         ng-class="!reItem.user.verified ? '' : reItem.user.verified_type ? 'ORG' : 'PERSONAL'"
+                         href="http://verified.weibo.com/verify"><b>V</b></a>
+                      <div class="Text" ng-bind-html="getWeiboHtml(reItem.parsed_text)"></div>
+                      <div class="Pic clearfix" ng-if="reItem.pic_urls && reItem.pic_urls.length"
+                           style="{{reItem.pic_urls && reItem.pic_urls.length == 4 ? 'width: 170px;' : ''}}">
+                        <a class="WeiboImage fancybox" rel="gallery"
+                           ng-if="reItem.pic_urls.length == 1 && reItem.pic_urls[0]"
+                           href="{{reItem.pic_urls[0].thumbnail_pic.replace('/thumbnail/', '/large/')}}"><img
+                          ng-src="{{reItem.pic_urls[0].thumbnail_pic}}"></a>
+                        <a class="WeiboImage fancybox" rel="gallery"
+                           ng-if="reItem.pic_urls.length > 1 && pic"
+                           ng-repeat="pic in reItem.pic_urls"
+                           href="{{pic.thumbnail_pic.replace('/thumbnail/', '/large/')}}"><img
+                          ng-src="{{pic.thumbnail_pic.replace('/thumbnail/', '/square/')}}"></a>
+                      </div>
+                      <a target="_blank" class="Time text-muted pull-left"
+                         href="http://weibo.com/{{reItem.user.idstr}}/{{reItem.mid62}}"
+                        >{{reItem.time}}</a>
+                      <div class="Handle">
+                        <a target="_blank" class="Forward text-muted mrs"
+                           href="http://weibo.com/{{reItem.user.idstr}}/{{reItem.mid62}}?type=repost"
+                          ><i class="fa fa-share"></i> 转发</a>
+                        <a target="_blank" class="Comment text-muted"
+                           href="http://weibo.com/{{reItem.user.idstr}}/{{reItem.mid62}}"
+                          ><i class="fa fa-comment-o"></i> 评论</a>
+                      </div>
+                      <div class="clearfix"></div>
+                    </div>
+                    <a target="_blank" class="Time text-muted pull-left"
+                       href="http://weibo.com/{{item.user.idstr}}/{{item.mid62}}">{{item.time}}</a>
+                    <div class="Handle">
+                      <a target="_blank" class="Forward text-muted mrs"
+                         href="http://weibo.com/{{item.user.idstr}}/{{item.mid62}}?type=repost"
+                        ><i class="fa fa-share"></i> 转发</a>
+                      <a target="_blank" class="Comment text-muted"
+                         href="http://weibo.com/{{item.user.idstr}}/{{item.mid62}}"
+                        ><i class="fa fa-comment-o"></i> 评论</a>
+                    </div>
                     <div class="clearfix"></div>
 
-                    <div class="form-group">
-                      <input class="form-control flat mbs Url" placeholder="自定义图片URL（可选）" id="_link_thumb_url" type="text">
-                      <label class="input-icon fa fa-link" for="_link_thumb_url"></label>
-                      <button name="customize" class="btn btn-default mtx" type="button">确定</button>
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : description.length > descriptionMaxLength }">
+                      <textarea msd-elastic name="description" class="form-control flat AUTO_FOCUS"
+                                ng-model="description" ng-init="description = item.description"
+                                placeholder="微博介绍、评论"></textarea>
+                      <div class="LetterCounter">{{description.length || 0}}/{{descriptionMaxLength}}</div>
                     </div>
+
+                    <% include _widget_BtnSet.html %>
+
+                  </div>
+
+                  <div class="Content TEXT"
+                       ng-switch-when="TEXT" ng-controller="TextCtrl" ng-init="init()">
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : text.length > textMaxLength }">
+                      <div class="Required"></div>
+                      <textarea msd-elastic name="text" class="form-control flat AUTO_FOCUS"
+                                ng-model="text" ng-init="text = item.text"
+                                placeholder="文本"></textarea>
+                      <div class="LetterCounter">{{text.length || 0}}/{{textMaxLength}}</div>
+                    </div>
+
+                    <% include _widget_BtnSet.html %>
+
+                  </div>
+
+                  <div class="Content TITLE"
+                       ng-switch-when="TITLE" ng-controller="TitleCtrl" ng-init="init()">
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : title.length > titleMaxLength }">
+                      <div class="Required"></div>
+                      <input name="title" class="form-control flat Bold AUTO_FOCUS"
+                             ng-model="title" ng-init="title = item.title" ng-focus="true"
+                             placeholder="标题" type="text">
+                      <div class="LetterCounter">{{title.length || 0}}/{{titleMaxLength}}</div>
+                    </div>
+
+                    <% include _widget_BtnSet.html %>
+
+                  </div>
+
+                </form>
+
+                <div class="SortUtil text-muted">
+                  <i class="MoveUtil fa fa-arrows-v" title="移动"></i>
+
+                  <div>
+                    <i class="fa fa-angle-double-up"
+                       ng-click="sortItemTop($index)"
+                       title="移到顶部"></i>
+                    <i class="fa fa-angle-up"
+                       ng-click="sortItemUp($index)"
+                       title="上移一行"></i>
+                  </div>
+                  <div>
+                    <i class="fa fa-angle-down"
+                       ng-click="sortItemDown($index)"
+                       title="下移一行"></i>
+                    <i class="fa fa-angle-double-down"
+                       ng-click="sortItemBottom($index)"
+                       title="移到底部"></i>
                   </div>
                 </div>
-                <div class="form-group"
-                     ng-controller="$.noop" ng-init="limit = 140;"
-                     ng-class="{ 'has-error' : input.length > limit }">
-                  <textarea name="description" class="form-control flat AUTO_FOCUS" ng-model="input"
-                            placeholder="链接评论"></textarea>
-                  <div ng-class="input.length > limit ? 'text-danger' : 'text-muted'"
-                       class="LetterCounter">{{input.length || 0}}/{{limit}}</div>
-                </div>
-
-                <% include _widget_BtnSet.html %>
-
-              </div>
-
-              <div class="Content IMAGE_CREATE pam">
-                <div class="Image">
-                  <i class="fa fa-picture-o text-muted"></i>
-                </div>
-                <div class="InfoHint text-muted">
-                  由于受版权保护，有些图片可能无法引用
-                </div>
-                <div>
-                  <div class="form-group">
-                    <div class="Required"></div>
-                    <input name="url" class="form-control flat AUTO_FOCUS" placeholder="图片URL" id="_image_url" type="text">
-                    <label class="input-icon fa fa-link" for="_image_url"></label>
-                  </div>
-                  <button name="preview" class="btn btn-info pull-left mrs" type="button" disabled='disabled'
-                          data-loading-text="预览 &lt;i class='fa fa-spinner fa-spin'&gt;&lt;/i&gt;">预览
-                  </button>
-
-                  <% include _widget_BtnSet.html %>
-
-                </div>
-              </div>
-
-              <div class="Content IMAGE pam">
-                <div class="Image text-center mbl">
-                  <img onerror="shizier.errorImage(this, 'default_120x120', true);">
-                </div>
-
-                <div class="form-group"
-                     ng-controller="$.noop" ng-init="limit = 50;"
-                     ng-class="{ 'has-error' : input.length > limit }">
-                  <input name="title" class="form-control flat text-center Bold AUTO_FOCUS" ng-model="input"
-                         placeholder="图片标题" type="text">
-                  <div ng-class="input.length > limit ? 'text-danger' : 'text-muted'"
-                       class="LetterCounter">{{input.length || 0}}/{{limit}}</div>
-                </div>
-                <div class="form-group">
-                  <input name="quote" class="form-control flat Url"
-                         placeholder="图片来源网页URL" type="text">
-                </div>
-                <div class="form-group"
-                     ng-controller="$.noop" ng-init="limit = 140;"
-                     ng-class="{ 'has-error' : input.length > limit }">
-                  <textarea name="description" class="form-control flat text-center" ng-model="input"
-                            placeholder="图片介绍、评论"></textarea>
-                  <div ng-class="input.length > limit ? 'text-danger' : 'text-muted'"
-                       class="LetterCounter">{{input.length || 0}}/{{limit}}</div>
-                </div>
-
-                <% include _widget_BtnSet.html %>
-
-              </div>
-
-              <div class="Content VIDEO_CREATE pam">
-                <div class="Thumb">
-                  <i class="fa fa-film text-muted"></i>
-                </div>
-                <div class="InfoHint text-muted">
-                  目前已支持<a
-                  target="_blank" class="text-primary" href="http://www.youku.com">优酷</a>、<a
-                  target="_blank" class="text-primary" href="http://www.tudou.com">土豆</a>、<a
-                  target="_blank" class="text-primary" href="http://www.iqiyi.com/">爱奇艺</a>、<a
-                  target="_blank" class="text-primary" href="http://www.pps.tv/">PPS</a>、<a
-                  target="_blank" class="text-primary" href="http://tv.sohu.com/">搜狐视频</a>、<a
-                  target="_blank" class="text-primary" href="http://v.qq.com/">腾讯视频</a>、<a
-                  target="_blank" class="text-primary" href="http://video.sina.com.cn">新浪视频</a>、<a
-                  target="_blank" class="text-primary" href="http://v.ifeng.com/">凤凰视频</a>、<a
-                  target="_blank" class="text-primary" href="http://www.letv.com/">乐视</a>、<a
-                  target="_blank" class="text-primary" href="http://www.pptv.com/">PPTV</a>、<a
-                  target="_blank" class="text-primary" href="http://www.ku6.com/">酷6</a>、<a
-                  target="_blank" class="text-primary" href="http://www.56.com/">56</a>、<a
-                  target="_blank" class="text-primary" href="http://www.baomihua.com/">爆米花</a>、<a
-                  target="_blank" class="text-primary" href="http://www.yinyuetai.com/">音悦台</a>、<a
-                  target="_blank" class="text-primary" href="http://www.acfun.com/">AcFun</a>、<a
-                  target="_blank" class="text-primary" href="http://www.bilibili.tv/">bilibili</a>等视频网站的视频播放页链接。
-                </div>
-                <div class="form-group">
-                  <div class="Required"></div>
-                  <input name="url" class="form-control flat AUTO_FOCUS" placeholder="视频URL" id="_video_url" type="text">
-                  <label class="input-icon fa fa-link" for="_video_url"></label>
-                </div>
-                <button name="preview" class="btn btn-info pull-left mrs" type="button" disabled='disabled'
-                        data-loading-text="预览 &lt;i class='fa fa-spinner fa-spin'&gt;&lt;/i&gt;">预览
-                </button>
-
-                <% include _widget_BtnSet.html %>
-
-              </div>
-
-              <div class="Content VIDEO pam">
-
-                <% var item = {}; %>
-                <% include _video_cover.html %>
-
-                <div class="Quote">
-                  <i class="fa fa-globe"></i>
-                  <a target="_blank" class="VIDEO_URL"></a>
-                </div>
-
-                <div class="form-group mtx"
-                     ng-controller="$.noop" ng-init="limit = 50;"
-                     ng-class="{ 'has-error' : input.length > limit }">
-                  <input name="title" class="form-control flat Bold" ng-model="input"
-                         placeholder="视频标题" type="text">
-                  <div ng-class="input.length > limit ? 'text-danger' : 'text-muted'"
-                       class="LetterCounter">{{input.length || 0}}/{{limit}}</div>
-                </div>
-                <div class="form-group"
-                     ng-controller="$.noop" ng-init="limit = 140;"
-                     ng-class="{ 'has-error' : input.length > limit }">
-                  <textarea class="form-control flat AUTO_FOCUS" name="description" ng-model="input"
-                            placeholder="视频介绍、评论"></textarea>
-                  <div ng-class="input.length > limit ? 'text-danger' : 'text-muted'"
-                       class="LetterCounter">{{input.length || 0}}/{{limit}}</div>
-                </div>
-
-                <% include _widget_BtnSet.html %>
-
-              </div>
-
-              <div class='Content CITE'>
-                <div class="form-group"
-                     ng-controller="$.noop" ng-init="limit = 140;"
-                     ng-class="{ 'has-error' : input.length > limit }">
-                  <div class="Required"></div>
-                  <textarea class="form-control flat AUTO_FOCUS" name="cite" ng-model="input"
-                            placeholder="引文"></textarea>
-                  <div ng-class="input.length > limit ? 'text-danger' : 'text-muted'"
-                       class="LetterCounter">{{input.length || 0}}/{{limit}}</div>
-                </div>
-                <div class="form-group">
-                  <input class="form-control flat" name="url" placeholder="引文来源网页URL" id="_cite_url" type="text">
-                  <label class="input-icon fa fa-link" for="_cite_url"></label>
-                </div>
-                <div class="form-group"
-                     ng-controller="$.noop" ng-init="limit = 50;"
-                     ng-class="{ 'has-error' : input.length > limit }">
-                  <input class="form-control flat" name="title" ng-model="input"
-                         placeholder="引文来源网页标题" type="text">
-                  <div ng-class="input.length > limit ? 'text-danger' : 'text-muted'"
-                       class="LetterCounter">{{input.length || 0}}/{{limit}}</div>
-                </div>
-                <div class="form-group"
-                     ng-controller="$.noop" ng-init="limit = 140;"
-                     ng-class="{ 'has-error' : input.length > limit }">
-                  <textarea class="form-control flat" name="description" ng-model="input"
-                            placeholder="引文介绍、评论"></textarea>
-                  <div ng-class="input.length > limit ? 'text-danger' : 'text-muted'"
-                       class="LetterCounter">{{input.length || 0}}/{{limit}}</div>
-                </div>
-
-                <% include _widget_BtnSet.html %>
-
-              </div>
-
-              <div class="Content WEIBO_CREATE pam">
-                <div class="Avatar img-circle text-center">
-                  <i class="fa fa-weibo text-muted"></i>
-                </div>
-                <div style="overflow: hidden;">
-                  <div class="InfoHint text-muted">
-                    由于受隐私设置保护，有些微博将无法引用
-                  </div>
-                  <div class="form-group">
-                    <div class="Required" style="float: left;"></div>
-                    <input name="url" class="form-control flat AUTO_FOCUS" placeholder="新浪微博URL" id="_weibo_url" type="text">
-                    <label class="input-icon fa fa-link" for="_weibo_url"></label>
-                  </div>
-                  <button name="preview" class="btn btn-info pull-left mrs" type="button" disabled='disabled'
-                          data-loading-text="预览 &lt;i class='fa fa-spinner fa-spin'&gt;&lt;/i&gt;">预览
-                  </button>
-
-                  <% include _widget_BtnSet.html %>
-
-                </div>
-              </div>
-
-              <div class="Content WEIBO pam">
-
-                <div class="clearfix">
-                  <a target="_blank"  class="Avatar AuthorUrl">
-                    <img class="img-circle">
-                  </a>
-
-                  <div style="overflow: hidden;">
-                    <a target="_blank" class="Author AuthorUrl">
-                      <span class="ScreenName"></span>
-                    </a>
-                    <a target="_blank" class="Verify" href="http://verified.weibo.com/verify"><b>V</b></a>
-                  </div>
-                </div>
-
-                <div class="Text"></div>
-                <div class="Pic clearfix"></div>
-                <a target="_blank" class="Time text-muted pull-left"></a>
-                <div class="clearfix"></div>
-
-                <div class="form-group"
-                     ng-controller="$.noop" ng-init="limit = 140;"
-                     ng-class="{ 'has-error' : input.length > limit }">
-                  <textarea name="description" class="form-control flat AUTO_FOCUS" ng-model="input"
-                            placeholder="微博介绍、评论"></textarea>
-                  <div ng-class="input.length > limit ? 'text-danger' : 'text-muted'"
-                       class="LetterCounter">{{input.length || 0}}/{{limit}}</div>
-                </div>
-
-                <% include _widget_BtnSet.html %>
-
-              </div>
-
-              <div class="Content TEXT">
-                <div class="form-group"
-                     ng-controller="$.noop" ng-init="limit = 140;"
-                     ng-class="{ 'has-error' : input.length > limit }">
-                  <div class="Required"></div>
-                  <textarea name="text" class="form-control flat AUTO_FOCUS" ng-model="input"
-                            placeholder="文本"></textarea>
-                  <div ng-class="input.length > limit ? 'text-danger' : 'text-muted'"
-                       class="LetterCounter">{{input.length || 0}}/{{limit}}</div>
-                </div>
-
-                <% include _widget_BtnSet.html %>
-
-              </div>
-
-              <div class='Content TITLE'>
-                <div class="form-group"
-                     ng-controller="$.noop" ng-init="limit = 50;"
-                     ng-class="{ 'has-error' : input.length > limit }">
-                  <div class="Required"></div>
-                  <input name="title" class="form-control flat Bold AUTO_FOCUS" ng-model="input"
-                         placeholder="标题" type="text">
-                  <div ng-class="input.length > limit ? 'text-danger' : 'text-muted'"
-                       class="LetterCounter">{{input.length || 0}}/{{limit}}</div>
-                </div>
-
-                <% include _widget_BtnSet.html %>
-
-              </div>
-
-            </div>
-
-            <% var item = null; %>
-            <% include _ul_li_item.html %>
-
-            <div class="Item">
-
-              <% var item = { type: 'ALL' }; %>
-              <% include _ul_li_item_contents.html %>
-
-            </div>
-
-            <% include _video_player.html %>
-
-            <a class="WeiboImage fancybox" rel="gallery"><img></a>
-
-            <div class="Retweeted clearfix">
-              <a target="_blank" class="Author AuthorUrl">
-                @<span class="ScreenName"></span>
-              </a>
-              <a target="_blank" class="Verify" href="http://verified.weibo.com/verify"><b>V</b></a>
-              <div class="Text"></div>
-              <div class="Pic clearfix"></div>
-              <a target="_blank" class="Time text-muted pull-left"></a>
-            </div>
+              </li>
+            </ul>
           </div>
         </div>
-      </div>
-      <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-4 col-lg-5 mtl">
+        <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-4 col-lg-5 mtl">
 
-        <% include _category_selector.html %>
+          <% include _category_selector.html %>
 
-        <div class="mtl">
-          <% var tags = []; %>
-          <% for (var i = 0; i < topic.tags.length; i++) { %>
-          <%   tags.push({ text: topic.tags[i] }); %>
-          <% } %>
-          <div class="TagsInput">
-            <tags-input ng-model="tags" ng-controller="TagsInputCtrl"
-                        ng-init='tags = <%- JSON.stringify(tags) %>;'
-                        min-length="1" max-length="20" min-tags="1" max-tags="5"
-                        placeholder="标签" add-on-space="true"
-                        on-tag-added="onAdded($tag)" on-tag-removed="onRemoved($tag)"></tags-input>
+          <div class="mtl">
+            <% var tags = []; %>
+            <% for (var i = 0; i < topic.tags.length; i++) { %>
+            <%   tags.push({ text: topic.tags[i] }); %>
+            <% } %>
+            <div class="TagsInput">
+              <tags-input ng-model="tags" ng-controller="TagsInputCtrl"
+                          ng-init='tags = <%- JSON.stringify(tags) %>;'
+                          min-length="1" max-length="20" min-tags="1" max-tags="5"
+                          placeholder="标签" add-on-space="true"
+                          on-tag-added="onAdded($tag)" on-tag-removed="onRemoved($tag)"></tags-input>
+            </div>
+          </div>
+
+          <div class="background-white mtl" style="border-radius: 6px; display: none!important;">
+            <ul class="WidgetItemList WidgetItemList-Sub" ui-sortable="sortableOptions"
+                ng-model="items"
+                ng-controller="CollectionCtrl"
+                ng-init="items = <%= JSON.stringify(locals.collectionItems) %>">
+              <li ng-repeat="item in items">
+
+                <div class="Item pal"
+                     ng-switch="item.type" ng-if="editingId != item._id">
+
+                  <div class="Content LINK pam"
+                       ng-switch-when="LINK">
+                    <div class="Thumb mls mbs pull-right" ng-if="item.src">
+                      <a class="fancybox" rel="gallery" href="{{item.src}}" title="{{item.title || ''}}">
+                        <img ng-src="{{item.src}}" alt="{{item.title || ''}}">
+                      </a>
+                    </div>
+                    <div class="Title">
+                      <img class="Fav" ng-src="{{item.fav}}"
+                           ui-event="{ error : 'onFavError(item)' }">
+                      <a target="_blank" class="LINK_URL" href='{{item.url}}'>{{item.title || ''}}</a>
+                    </div>
+                    <div class="Quote">
+                      <i class="fa fa-globe"></i>
+                      <a target="_blank" class="LINK_URL" href="{{item.url}}">
+                        {{item.url}}
+                      </a>
+                    </div>
+                    <div class="Snippet text-muted small mtx" ng-if="item.snippet">{{item.snippet}}</div>
+                    <div class="Description text-asbestos mts small"
+                         ng-if="item.description" ng-bind-html="getHtml(item.description)"></div>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="Content IMAGE pam"
+                       ng-switch-when="IMAGE">
+                    <div class="Image text-center">
+                      <a class="IMAGE_LINK fancybox" rel="gallery" href="{{item.url}}"
+                         title="{{(item.title || '') + (item.title && item.description ? ' -- ' : '') + (item.description || '')}}">
+                        <img onerror="shizier.errorImage(this,'default_120x120');"
+                             ng-src="{{item.url}}" alt="{{item.title || ''}}">
+                      </a>
+                    </div>
+
+                    <div class="Title text-center mts">{{item.title || ''}}</div>
+                    <div class="Description text-asbestos text-center small mtx"
+                         ng-bind-html="getHtml(item.description)"></div>
+                    <div class="Quote" ng-if="item.quote">
+                      <i class="fa fa-globe"></i>
+                      <a target="_blank" href="{{item.quote}}">
+                        {{item.quoteDomain || ''}}
+                      </a>
+                    </div>
+                  </div>
+                  <div class="Content VIDEO pam"
+                       ng-switch-when="VIDEO">
+
+                    <button class="Cover btn btn-link" type="button" ng-if="!item.playing"
+                            ng-click="playVideo(item)"
+                            ng-style="{'background-image':'url({{item.cover}})'}">
+                      <div class="Background">
+                        <i class="fa fa-play-circle"></i>
+                      </div>
+                    </button>
+                    <div class="Player" ng-if="item.playing" ng-show="item.show">
+                      <button name="close" class="btn btn-link mbx pan"
+                              ng-click="item.playing = false;item.show = false;"
+                              type="button"><i class="fa fa-caret-up"></i> 收起</button>
+                      <!--src为空会导致ie一直等待，localhost响应最快-->
+                      <embed style="display: block;"
+                             src="http://localhost"
+                             ng-src="{{getVideoSrc(item)}}"
+                             flashvars="{{getVideoVars(item)}}"
+                             width="{{item.width}}"
+                             height="{{item.height}}"
+                             type="application/x-shockwave-flash"
+                             allowscriptaccess="always"
+                             allowfullscreen="true"
+                             wmode="opaque"
+                             quality="high"></embed>
+                    </div>
+
+                    <div class="Quote">
+                      <i class="fa fa-globe"></i>
+                      <a target="_blank" class="VIDEO_URL" href="{{item.url}}">
+                        {{ item.quote || item.url }}
+                      </a>
+                    </div>
+                    <div class="Title mtx" ng-if="item.title">
+                      <a target="_blank" class="VIDEO_URL" href="{{item.url}}">
+                        {{item.title || ''}}
+                      </a>
+                    </div>
+                    <div class="Description text-asbestos small mtx"
+                         ng-if="item.description" ng-bind-html="getHtml(item.description)"></div>
+                  </div>
+                  <div class="Content CITE"
+                       ng-switch-when="CITE">
+                    <div class="Cite">
+                      <i class="fa fa-quote-left text-muted"></i>
+                      <q ng-bind-html="getHtml(item.cite)"></q>
+                    </div>
+
+                    <div class="Quote" ng-if="item.url">
+                      <i class="fa fa-globe"></i>
+                      <a target="_blank" href="{{item.url}}">{{item.title || item.url}}</a>
+                    </div>
+                    <div class="Description text-asbestos small mtx"
+                         ng-if="item.description" ng-bind-html="getHtml(item.description)"></div>
+                  </div>
+                  <div class="Content WEIBO pam"
+                       ng-switch-when="WEIBO">
+
+                    <div class="clearfix">
+                      <a target="_blank"  class="Avatar AuthorUrl img-circle"
+                         href="http://weibo.com/{{item.user.profile_url}}">
+                        <img class="img-circle"
+                             ng-src="{{item.user.profile_image_url}}"
+                             alt="{{item.user.screen_name}}">
+                      </a>
+
+                      <div style="overflow: hidden;">
+                        <a target="_blank" class="ScreenName AuthorUrl"
+                           href="http://weibo.com/{{item.user.profile_url}}">
+                          <span class="ScreenName">{{item.user.screen_name}}</span>
+                        </a>
+                        <a target="_blank" class="Verify"
+                           ng-class="!item.user.verified ? '' : item.user.verified_type ? 'ORG' : 'PERSONAL'"
+                           href="http://verified.weibo.com/verify"><b>V</b></a>
+                      </div>
+                    </div>
+
+                    <div class="Text" ng-bind-html="getWeiboHtml(item.parsed_text)"></div>
+                    <div class="Pic clearfix" ng-if="item.pic_urls && item.pic_urls.length"
+                         style="{{item.pic_urls && item.pic_urls.length == 4 ? 'width: 170px;' : ''}}">
+                      <a class="WeiboImage fancybox" rel="gallery"
+                         ng-if="item.pic_urls.length == 1 && item.pic_urls[0]"
+                         href="{{item.pic_urls[0].thumbnail_pic.replace('/thumbnail/', '/large/')}}"><img
+                        ng-src="{{item.pic_urls[0].thumbnail_pic}}"></a>
+                      <a class="WeiboImage fancybox" rel="gallery"
+                         ng-if="item.pic_urls.length > 1 && pic"
+                         ng-repeat="pic in item.pic_urls"
+                         href="{{pic.thumbnail_pic.replace('/thumbnail/', '/large/')}}"><img
+                        ng-src="{{pic.thumbnail_pic.replace('/thumbnail/', '/square/')}}"></a>
+                    </div>
+                    <div class="Retweeted clearfix" ng-init="reItem = item.retweeted_status;"
+                         ng-if="item.retweeted_status && item.retweeted_status.idstr">
+                      <a target="_blank" class="Author AuthorUrl"
+                         href="http://weibo.com/{{reItem.user.profile_url}}">
+                        @<span class="ScreenName">{{reItem.user.screen_name}}</span>
+                      </a>
+                      <a target="_blank" class="Verify"
+                         ng-class="!reItem.user.verified ? '' : reItem.user.verified_type ? 'ORG' : 'PERSONAL'"
+                         href="http://verified.weibo.com/verify"><b>V</b></a>
+                      <div class="Text" ng-bind-html="getWeiboHtml(reItem.parsed_text)"></div>
+                      <div class="Pic clearfix" ng-if="reItem.pic_urls && reItem.pic_urls.length"
+                           style="{{reItem.pic_urls && reItem.pic_urls.length == 4 ? 'width: 170px;' : ''}}">
+                        <a class="WeiboImage fancybox" rel="gallery"
+                           ng-if="reItem.pic_urls.length == 1 && reItem.pic_urls[0]"
+                           href="{{reItem.pic_urls[0].thumbnail_pic.replace('/thumbnail/', '/large/')}}"><img
+                          ng-src="{{reItem.pic_urls[0].thumbnail_pic}}"></a>
+                        <a class="WeiboImage fancybox" rel="gallery"
+                           ng-if="reItem.pic_urls.length > 1 && pic"
+                           ng-repeat="pic in reItem.pic_urls"
+                           href="{{pic.thumbnail_pic.replace('/thumbnail/', '/large/')}}"><img
+                          ng-src="{{pic.thumbnail_pic.replace('/thumbnail/', '/square/')}}"></a>
+                      </div>
+                      <a target="_blank" class="Time text-muted pull-left"
+                         href="http://weibo.com/{{reItem.user.idstr}}/{{reItem.mid62}}"
+                        >{{reItem.time}}</a>
+                      <div class="Handle">
+                        <a target="_blank" class="Forward text-muted mrs"
+                           href="http://weibo.com/{{reItem.user.idstr}}/{{reItem.mid62}}?type=repost"
+                          ><i class="fa fa-share"></i> 转发</a>
+                        <a target="_blank" class="Comment text-muted"
+                           href="http://weibo.com/{{reItem.user.idstr}}/{{reItem.mid62}}"
+                          ><i class="fa fa-comment-o"></i> 评论</a>
+                      </div>
+                      <div class="clearfix"></div>
+                    </div>
+                    <a target="_blank" class="Time text-muted pull-left"
+                       href="http://weibo.com/{{item.user.idstr}}/{{item.mid62}}">{{item.time}}</a>
+                    <div class="Handle">
+                      <a target="_blank" class="Forward text-muted mrs"
+                         href="http://weibo.com/{{item.user.idstr}}/{{item.mid62}}?type=repost"
+                        ><i class="fa fa-share"></i> 转发</a>
+                      <a target="_blank" class="Comment text-muted"
+                         href="http://weibo.com/{{item.user.idstr}}/{{item.mid62}}"
+                        ><i class="fa fa-comment-o"></i> 评论</a>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="Description text-asbestos small mtx"
+                         ng-if="item.description" ng-bind-html="getHtml(item.description)"></div>
+                  </div>
+                  <div class="Content TEXT"
+                       ng-switch-when="TEXT" ng-bind-html="getHtml(item.text)">
+                  </div>
+                  <h2 class="Content TITLE h6"
+                      ng-switch-when="TITLE">
+                    {{item.title}}
+                  </h2>
+
+                  <div class="EditUtil pull-right pas plm">
+                    <button class="EDIT btn btn-link mrx" type="button" title="修改"
+                            ng-click="editItem(item._id)"><i class="fa fa-pencil"></i> 修改</button>
+                    <button class="DELETE btn btn-link" type="button" title="删除"
+                            ng-click="deleteItem(item)"><i class="fa fa-trash-o"></i> 删除</button>
+                  </div>
+                </div>
+
+                <form class="Widget pal" name="form"
+                      ng-switch="item.type" ng-if="editingId == item._id">
+
+                  <div class="Content LINK pam"
+                       ng-switch-when="LINK" ng-controller="LinkCtrl" ng-init="init()">
+                    <div class="form-group mbx"
+                         ng-class="{ 'has-error' : title.length > titleMaxLength }">
+                      <input name="title" class="form-control flat"
+                             ng-model="title" ng-init="title = item.title"
+                             placeholder="链接标题" type="text">
+                      <div class="LetterCounter">{{title.length || 0}}/{{titleMaxLength}}</div>
+
+                      <div class="Quote">
+                        <i class="fa fa-globe"></i>
+                        <a target="_blank" class="LINK_URL" href="{{item.url}}">{{item.url}}</a>
+                      </div>
+                    </div>
+
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : snippet.length > snippetMaxLength }">
+                      <textarea msd-elastic name="snippet" class="form-control flat"
+                                ng-model="snippet" ng-init="snippet = item.snippet"
+                                placeholder="链接摘要"></textarea>
+                      <div class="LetterCounter">{{snippet.length || 0}}/{{snippetMaxLength}}</div>
+                    </div>
+
+                    <div class="Thumb clearfix mbl">
+                      <div class="Image pull-right">
+                        <div style="position: relative;display: inline-block;">
+                          <img ng-src="{{SuffixImage(src) || defaultImgSrc}}"
+                               ng-init="src = item.src;"
+                               onerror="shizier.errorImage(this, 'default_120x120', true);"
+                               ui-event="{ error: 'stopLoading()', abort: 'stopLoading()', load: 'stopLoading()'}">
+
+                          <div class="Loading" ng-if="loading"
+                               style="position: absolute;top: 0;left: 0;bottom: 0;right: 0;background-color: rgba(0,0,0,0.2);">
+                            <table style="margin: 0 auto;height: 100%;">
+                              <td>
+                                <i class="fa fa-spinner fa-spin" style="color: white"></i>
+                              </td>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="prm" style="overflow: hidden;">
+                        <div class="form-group">
+                          <input class="form-control flat mbs Url" ng-model="src" ng-change="startLoading()"
+                                 placeholder="自定义图片URL" id="_linkThumbUrl" type="text">
+                          <label class="input-icon fa fa-link" for="_linkThumbUrl"></label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : description.length > descriptionMaxLength }">
+                      <textarea msd-elastic name="description" class="form-control flat AUTO_FOCUS"
+                                ng-model="description" ng-init="description = item.description"
+                                placeholder="链接评论"></textarea>
+                      <div class="LetterCounter">{{description.length || 0}}/{{descriptionMaxLength}}</div>
+                    </div>
+
+                    <% include _widget_BtnSet.html %>
+
+                  </div>
+
+                  <div class="Content IMAGE pam"
+                       ng-switch-when="IMAGE" ng-controller="ImageCtrl" ng-init="init()">
+                    <div class="Image text-center mbl">
+                      <a class="fancybox" rel="gallery" href="{{item.url}}"
+                         title="{{(item.title || '') + (item.title && item.description ? ' -- ' : '') + (item.description || '')}}">
+                        <img onerror="shizier.errorImage(this,'default_120x120');"
+                             ng-src="{{item.url}}" alt="{{item.title || ''}}">
+                      </a>
+                    </div>
+
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : title.length > titleMaxLength }">
+                      <input name="title" class="form-control flat text-center Bold AUTO_FOCUS"
+                             ng-model="title" ng-init="title = item.title"
+                             placeholder="图片标题" type="text">
+                      <div class="LetterCounter">{{title.length || 0}}/{{titleMaxLength}}</div>
+                    </div>
+                    <div class="form-group">
+                      <input name="quote" class="form-control flat Url"
+                             ng-model="quote" ng-init="quote = item.quote"
+                             placeholder="图片来源网页URL" id="_QuoteUrl" type="text">
+                      <label class="input-icon fa fa-link" for="_QuoteUrl"></label>
+                    </div>
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : description.length > descriptionMaxLength }">
+                      <textarea msd-elastic name="description" class="form-control flat text-center"
+                                ng-model="description" ng-init="description = item.description"
+                                placeholder="图片介绍、评论"></textarea>
+                      <div class="LetterCounter">{{description.length || 0}}/{{descriptionMaxLength}}</div>
+                    </div>
+
+                    <% include _widget_BtnSet.html %>
+
+                  </div>
+
+                  <div class="Content VIDEO pam"
+                       ng-switch-when="VIDEO" ng-controller="VideoCtrl" ng-init="init()">
+
+                    <button class="Cover btn btn-link" type="button"
+                            ng-if="!item.playing" ng-click="playVideo(item)"
+                            ng-style="{'background-image':'url({{item.cover}})'}">
+                      <div class="Background">
+                        <i class="fa fa-play-circle"></i>
+                      </div>
+                    </button>
+                    <div class="Player" ng-if="item.playing" ng-show="item.show">
+                      <button name="close" class="btn btn-link mbx pan"
+                              ng-click="item.playing = false;item.show = false;"
+                              type="button"><i class="fa fa-caret-up"></i> 收起</button>
+                      <!--src为空会导致ie一直等待，localhost响应最快-->
+                      <embed style="display: block;"
+                             src="http://localhost"
+                             ng-src="{{getVideoSrc(item)}}"
+                             flashvars="{{getVideoVars(item)}}"
+                             width="{{item.width}}"
+                             height="{{item.height}}"
+                             type="application/x-shockwave-flash"
+                             allowscriptaccess="always"
+                             allowfullscreen="true"
+                             wmode="opaque"
+                             quality="high"></embed>
+                    </div>
+
+                    <div class="Quote">
+                      <i class="fa fa-globe"></i>
+                      <a target="_blank" class="VIDEO_URL" href="{{item.url}}">
+                        {{ item.quote || item.url }}
+                      </a>
+                    </div>
+
+                    <div class="form-group mtx"
+                         ng-class="{ 'has-error' : title.length > titleMaxLength }">
+                      <input name="title" class="form-control flat Bold"
+                             ng-model="title" ng-init="title = item.title"
+                             placeholder="视频标题" type="text">
+                      <div class="LetterCounter">
+                        {{title.length || 0}}/{{titleMaxLength}}
+                      </div>
+                    </div>
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : description.length > descriptionMaxLength }">
+                      <textarea msd-elastic class="form-control flat AUTO_FOCUS" name="description"
+                                ng-model="description" ng-init="description = item.description"
+                                placeholder="视频介绍、评论"></textarea>
+                      <div class="LetterCounter">{{description.length || 0}}/{{descriptionMaxLength}}</div>
+                    </div>
+
+                    <% include _widget_BtnSet.html %>
+
+                  </div>
+
+                  <div class="Content CITE"
+                       ng-switch-when="CITE" ng-controller="CiteCtrl" ng-init="init()">
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : cite.length > citeMaxLength }">
+                      <div class="Required"></div>
+                      <textarea msd-elastic class="form-control flat AUTO_FOCUS" name="cite"
+                                ng-model="cite" ng-init="cite = item.cite"
+                                placeholder="引文"></textarea>
+                      <div class="LetterCounter">{{cite.length || 0}}/{{citeMaxLength}}</div>
+                    </div>
+                    <div class="form-group">
+                      <input class="form-control flat" name="url" placeholder="引文来源网页URL"
+                             ng-model="url" ng-init="url = item.url"
+                             id="_citeUrl" type="text">
+                      <label class="input-icon fa fa-link" for="_citeUrl"></label>
+                    </div>
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : title.length > titleMaxLength }">
+                      <input class="form-control flat" name="title"
+                             ng-model="title" ng-init="title = item.title"
+                             placeholder="引文来源网页标题" type="text">
+                      <div class="LetterCounter">{{title.length || 0}}/{{titleMaxLength}}</div>
+                    </div>
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : description.length > descriptionMaxLength }">
+                      <textarea msd-elastic class="form-control flat" name="description"
+                                ng-model="description" ng-init="description = item.description"
+                                placeholder="引文介绍、评论"></textarea>
+                      <div class="LetterCounter">{{description.length || 0}}/{{descriptionMaxLength}}</div>
+                    </div>
+
+                    <% include _widget_BtnSet.html %>
+
+                  </div>
+
+                  <div class="Content WEIBO pam"
+                       ng-switch-when="WEIBO" ng-controller="WeiboCtrl" ng-init="init()">
+
+                    <div class="clearfix">
+                      <a target="_blank"  class="Avatar AuthorUrl img-circle"
+                         href="http://weibo.com/{{item.user.profile_url}}">
+                        <img class="img-circle"
+                             ng-src="{{item.user.profile_image_url}}"
+                             alt="{{item.user.screen_name}}">
+                      </a>
+
+                      <div style="overflow: hidden;">
+                        <a target="_blank" class="ScreenName AuthorUrl"
+                           href="http://weibo.com/{{item.user.profile_url}}">
+                          <span class="ScreenName">{{item.user.screen_name}}</span>
+                        </a>
+                        <a target="_blank" class="Verify"
+                           ng-class="!item.user.verified ? '' : item.user.verified_type ? 'ORG' : 'PERSONAL'"
+                           href="http://verified.weibo.com/verify"><b>V</b></a>
+                      </div>
+                    </div>
+
+                    <div class="Text" ng-bind-html="getWeiboHtml(item.parsed_text)"></div>
+                    <div class="Pic clearfix" ng-if="item.pic_urls && item.pic_urls.length"
+                         style="{{item.pic_urls && item.pic_urls.length == 4 ? 'width: 170px;' : ''}}">
+                      <a class="WeiboImage fancybox" rel="gallery"
+                         ng-if="item.pic_urls.length == 1 && item.pic_urls[0]"
+                         href="{{item.pic_urls[0].thumbnail_pic.replace('/thumbnail/', '/large/')}}"><img
+                        ng-src="{{item.pic_urls[0].thumbnail_pic}}"></a>
+                      <a class="WeiboImage fancybox" rel="gallery"
+                         ng-if="item.pic_urls.length > 1 && pic"
+                         ng-repeat="pic in item.pic_urls"
+                         href="{{pic.thumbnail_pic.replace('/thumbnail/', '/large/')}}"><img
+                        ng-src="{{pic.thumbnail_pic.replace('/thumbnail/', '/square/')}}"></a>
+                    </div>
+                    <div class="Retweeted clearfix" ng-init="reItem = item.retweeted_status;"
+                         ng-if="item.retweeted_status && item.retweeted_status.idstr">
+                      <a target="_blank" class="Author AuthorUrl"
+                         href="http://weibo.com/{{reItem.user.profile_url}}">
+                        @<span class="ScreenName">{{reItem.user.screen_name}}</span>
+                      </a>
+                      <a target="_blank" class="Verify"
+                         ng-class="!reItem.user.verified ? '' : reItem.user.verified_type ? 'ORG' : 'PERSONAL'"
+                         href="http://verified.weibo.com/verify"><b>V</b></a>
+                      <div class="Text" ng-bind-html="getWeiboHtml(reItem.parsed_text)"></div>
+                      <div class="Pic clearfix" ng-if="reItem.pic_urls && reItem.pic_urls.length"
+                           style="{{reItem.pic_urls && reItem.pic_urls.length == 4 ? 'width: 170px;' : ''}}">
+                        <a class="WeiboImage fancybox" rel="gallery"
+                           ng-if="reItem.pic_urls.length == 1 && reItem.pic_urls[0]"
+                           href="{{reItem.pic_urls[0].thumbnail_pic.replace('/thumbnail/', '/large/')}}"><img
+                          ng-src="{{reItem.pic_urls[0].thumbnail_pic}}"></a>
+                        <a class="WeiboImage fancybox" rel="gallery"
+                           ng-if="reItem.pic_urls.length > 1 && pic"
+                           ng-repeat="pic in reItem.pic_urls"
+                           href="{{pic.thumbnail_pic.replace('/thumbnail/', '/large/')}}"><img
+                          ng-src="{{pic.thumbnail_pic.replace('/thumbnail/', '/square/')}}"></a>
+                      </div>
+                      <a target="_blank" class="Time text-muted pull-left"
+                         href="http://weibo.com/{{reItem.user.idstr}}/{{reItem.mid62}}"
+                        >{{reItem.time}}</a>
+                      <div class="Handle">
+                        <a target="_blank" class="Forward text-muted mrs"
+                           href="http://weibo.com/{{reItem.user.idstr}}/{{reItem.mid62}}?type=repost"
+                          ><i class="fa fa-share"></i> 转发</a>
+                        <a target="_blank" class="Comment text-muted"
+                           href="http://weibo.com/{{reItem.user.idstr}}/{{reItem.mid62}}"
+                          ><i class="fa fa-comment-o"></i> 评论</a>
+                      </div>
+                      <div class="clearfix"></div>
+                    </div>
+                    <a target="_blank" class="Time text-muted pull-left"
+                       href="http://weibo.com/{{item.user.idstr}}/{{item.mid62}}">{{item.time}}</a>
+                    <div class="Handle">
+                      <a target="_blank" class="Forward text-muted mrs"
+                         href="http://weibo.com/{{item.user.idstr}}/{{item.mid62}}?type=repost"
+                        ><i class="fa fa-share"></i> 转发</a>
+                      <a target="_blank" class="Comment text-muted"
+                         href="http://weibo.com/{{item.user.idstr}}/{{item.mid62}}"
+                        ><i class="fa fa-comment-o"></i> 评论</a>
+                    </div>
+                    <div class="clearfix"></div>
+
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : description.length > descriptionMaxLength }">
+                      <textarea msd-elastic name="description" class="form-control flat AUTO_FOCUS"
+                                ng-model="description" ng-init="description = item.description"
+                                placeholder="微博介绍、评论"></textarea>
+                      <div class="LetterCounter">{{description.length || 0}}/{{descriptionMaxLength}}</div>
+                    </div>
+
+                    <% include _widget_BtnSet.html %>
+
+                  </div>
+
+                  <div class="Content TEXT"
+                       ng-switch-when="TEXT" ng-controller="TextCtrl" ng-init="init()">
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : text.length > textMaxLength }">
+                      <div class="Required"></div>
+                      <textarea msd-elastic name="text" class="form-control flat AUTO_FOCUS"
+                                ng-model="text" ng-init="text = item.text"
+                                placeholder="文本"></textarea>
+                      <div class="LetterCounter">{{text.length || 0}}/{{textMaxLength}}</div>
+                    </div>
+
+                    <% include _widget_BtnSet.html %>
+
+                  </div>
+
+                  <div class="Content TITLE"
+                       ng-switch-when="TITLE" ng-controller="TitleCtrl" ng-init="init()">
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : title.length > titleMaxLength }">
+                      <div class="Required"></div>
+                      <input name="title" class="form-control flat Bold AUTO_FOCUS"
+                             ng-model="title" ng-init="title = item.title" ng-focus="true"
+                             placeholder="标题" type="text">
+                      <div class="LetterCounter">{{title.length || 0}}/{{titleMaxLength}}</div>
+                    </div>
+
+                    <% include _widget_BtnSet.html %>
+
+                  </div>
+
+                </form>
+
+                <div class="SortUtil text-muted">
+                  <i class="MoveUtil fa fa-arrows-v" title="移动"></i>
+
+                  <div>
+                    <i class="fa fa-angle-double-up" title="移到顶部"></i>
+                    <i class="fa fa-angle-up" title="上移一行"></i>
+                  </div>
+                  <div>
+                    <i class="fa fa-angle-down" title="下移一行"></i>
+                    <i class="fa fa-angle-double-down" title="移到底部"></i>
+                  </div>
+                </div>
+              </li>
+            </ul>
           </div>
         </div>
       </div>

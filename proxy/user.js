@@ -7,6 +7,7 @@
  */
 var EventProxy = require('eventproxy');
 
+var Item = require('./item');
 var models = require('../models');
 var UserModel = models.User;
 
@@ -163,6 +164,65 @@ function deleteTopic(authorId, topicId, callback) {
   });
 }
 
+function collectItem(_id, itemId, callback) {
+  callback = callback || function () {
+  };
+
+  getUserById(_id, function (err, user) {
+    if (err) {
+      return callback(err);
+    }
+    if (!user) {
+      return callback(new Error(400));
+    }
+
+    user.items.push(itemId);
+    user.save(function (err, user) {
+      if (err) {
+        return callback(err);
+      }
+      if (!user) {
+        return callback(new Error(500));
+      }
+
+      callback(null, user);
+    });
+  })
+}
+
+function deleteItem(user, index, callback) {
+  callback = callback || function () {
+  };
+
+  user.items.splice(index, 1);
+  user.save(function (err, user) {
+    if (err) {
+      return callback(err);
+    }
+    if (!user) {
+      return callback(new Error(500));
+    }
+
+    callback(null);
+  });
+}
+
+function getItems(_id, callback) {
+  callback = callback || function () {
+  };
+
+  getUserById(_id, function (err, user) {
+    if (err) {
+      return callback(err);
+    }
+    if (!user) {
+      return callback(new Error(400));
+    }
+
+    Item.getItemsById(user.items, callback);
+  });
+}
+
 exports.getActivedAuthors = getActivedAuthors;
 exports.getUserById = getUserById;
 exports.getUserByIds = getUserByIds;
@@ -177,3 +237,6 @@ exports.appendTopic = appendTopic;
 exports.deleteTopic = deleteTopic;
 exports.getUserByNamePass = getUserByNamePass;
 exports.getUserByEmailPass = getUserByEmailPass;
+exports.collectItem = collectItem;
+exports.deleteItem = deleteItem;
+exports.getItems = getItems;

@@ -11,6 +11,12 @@
 .background-clouds {
   background-color: #ecf0f1;
 }
+.background-clouds-darken {
+  background-color: #e0e7e8;
+}
+.background-clouds-lighten {
+  background-color: #f8f9fa;
+}
 .background-muted {
   background-color: #bdc3c7;
 }

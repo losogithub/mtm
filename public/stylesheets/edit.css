@@ -11,6 +11,12 @@
 .background-clouds {
   background-color: #ecf0f1;
 }
+.background-clouds-darken {
+  background-color: #e0e7e8;
+}
+.background-clouds-lighten {
+  background-color: #f8f9fa;
+}
 .background-muted {
   background-color: #bdc3c7;
 }
@@ -87,13 +93,20 @@
 .text-info:hover {
   color: #2a7aaf;
 }
-#_topWidget {
-  background-color: #e0e7e8;
+.Cover:hover,
+.Cover:focus {
+  background-color: #f8f9fa;
+}
+.Cover:hover img,
+.Cover:focus img {
+  opacity: 0.9;
 }
 /*li*/
 .WidgetItemList.WidgetItemList-Sorting > li {
-  box-shadow: 0 0 0 2px #669966;
   background-color: white !important;
+}
+.WidgetItemList.WidgetItemList-Sorting > li button.COLLECT {
+  display: none !important;
 }
 .WidgetItemList.WidgetItemList-Sorting > li .AddUtil {
   display: none !important;
@@ -120,25 +133,20 @@
 .WidgetItemList > li:last-child .SortUtil > div:last-of-type {
   visibility: hidden;
 }
-.WidgetItemList > li.Editing {
+.WidgetItemList > li .Widget {
   background-color: #e0e7e8 !important;
 }
 .WidgetItemList > li.WidgetDragPlaceholder {
-  height: 70px;
+  height: 65px;
   background: url(/images/bg_WidgetDragPlaceholder.png) repeat;
-  box-shadow: none !important;
 }
 .WidgetItemList > li.ui-sortable-helper {
-  max-height: 140px !important;
-  box-shadow: none !important;
+  max-height: 65px !important;
+  overflow: hidden;
   background-color: rgba(102, 153, 102, 0.2) !important;
 }
-.WidgetItemList > li.ui-sortable-helper .Item,
-.WidgetItemList > li.ui-sortable-helper .Widget {
-  overflow: hidden;
-  max-height: 100px !important;
-}
 .WidgetItemList > li.ui-sortable-helper .SortUtil > div,
+.WidgetItemList > li.ui-sortable-helper button.COLLECT,
 .WidgetItemList > li.ui-sortable-helper .AddUtil,
 .WidgetItemList > li.ui-sortable-helper .EditUtil {
   visibility: hidden !important;
@@ -150,10 +158,9 @@
   display: block;
 }
 .WidgetItemList .AddUtil .Menu {
-  opacity: 0;
   background-color: rgba(26, 188, 156, 0.8);
 }
-.WidgetItemList li:last-child .Menu {
+.WidgetItemList li:last-child .Menu.OpacityMenu {
   opacity: 0.1;
 }
 /*悬浮菜单栏*/
@@ -180,8 +187,15 @@
   float: right;
   line-height: 41px;
 }
+.StaticMenu {
+  position: absolute;
+  bottom: -18px;
+  left: 20px;
+  z-index: 1000;
+}
 /*菜单*/
 .Menu {
+  opacity: 0;
   -webkit-transition: 0.2s linear;
   transition: 0.2s linear;
   line-height: 1;
@@ -209,22 +223,11 @@
   padding: 0;
   font-size: 18px;
 }
-.StaticMenu .Menu {
+.StaticMenu .Menu.OpacityMenu {
   opacity: 0.1;
 }
 .Menu:hover {
   opacity: 1 !important;
-}
-/*微件*/
-.LINK .Thumb .Image {
-  width: 100px;
-}
-.LINK .Thumb .btn-group {
-  margin-right: 5px;
-}
-.LINK .Thumb span[name="pagination"] {
-  font-weight: bold;
-  vertical-align: middle;
 }
 .IMAGE_CREATE .Image {
   margin: 0 auto 5px;

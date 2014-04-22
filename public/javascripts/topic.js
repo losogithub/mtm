@@ -34,4 +34,27 @@ $(function () {
       $(this).remove();
     });
   });
+  $('.WidgetItemList').on('click', '.COLLECT', function () {
+    var $this = $(this);
+    $.post('/item', {
+      type: $this.data('item').type,
+      _id: $this.data('item')._id
+    })
+      .done(function () {
+        Messenger().post({
+          message: '已成功采集'
+        });
+      })
+      .fail(function () {
+        Messenger().post({
+          message: '采集失败，请重试',
+          type: 'error'
+        });
+      })
+      .always(function () {
+        $(document).one('mousedown keydown', function () {
+          Messenger().hideAll();
+        });
+      });
+  });
 });

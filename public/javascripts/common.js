@@ -7,8 +7,15 @@
  */
 //使用全局变量应避免污染命名空间
 (function ($) {
+  window.sng = angular.module(
+    'sng',
+    ['ui.bootstrap'].concat(shizier.pageType == 'EDIT' ? ['ngTagsInput', 'ui.utils', 'monospaced.elastic', 'ui.sortable'] : [])
+  );
 
-  window.shizier = window.shizier || {};
+  $._messengerDefaults = {
+    extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right',
+    theme: 'flat'
+  };
 
   shizier.fancyboxOptions = {
     openEffect: 'elastic',

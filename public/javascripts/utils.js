@@ -46,7 +46,7 @@
     },
 
     suffixImage: function (src) {
-      if (!src) {
+      if (!src || src.indexOf('?&') > -1) {
         return src;
       }
       if (src.indexOf('?') < 0) {
@@ -54,6 +54,18 @@
       } else {
         return src + '&';
       }
+    },
+
+    escape: function (html) {
+    if (!html) {
+      return html;
+    }
+    return String(html)
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
     }
   };
 

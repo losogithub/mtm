@@ -75,7 +75,10 @@ function showEdit(req, res, next) {
 
         callback(null, items);
       });
-    }]
+    }],
+    collectionItems: function (callback) {
+      User.getItems(userId, callback);
+    }
   }, function (err, results) {
     if (err) {
       return next(err);
@@ -85,7 +88,12 @@ function showEdit(req, res, next) {
     var items = results.items;
     var itemsData = [];
     items.forEach(function (item) {
-      itemsData.push(_getItemData(item));
+      itemsData.push(Item.getItemData(item));
+    });
+    var collectionItems = results.collectionItems;
+    var collectionItemsData = [];
+    collectionItems.forEach(function (item) {
+      collectionItemsData.push(Item.getItemData(item));
     });
     res.set('Cache-Control', 'private, no-cache, no-store, must-revalidate, post-check=0, pre-check=0');
     res.set('Connection', 'close');
@@ -104,6 +112,8 @@ function showEdit(req, res, next) {
         '/stylesheets/edit.css'
       ],
       js: [
+        '/bower_components/angular-elastic/elastic.js',
+        '/javascripts/ui-utils.min.js',
         '/javascripts/ng-tags-input.js',
         'http://cdn.bootcss.com/messenger/1.4.0/js/messenger.js',
         'http://cdn.bootcss.com/messenger/1.4.0/js/messenger-theme-flat.js',
@@ -113,14 +123,15 @@ function showEdit(req, res, next) {
         'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-thumbs.js',
         'http://cdn.bootcss.com/autosize.js/1.18.1/jquery.autosize.min.js',
         '/javascripts/jquery-ui-1.10.3.custom.min.js',
+        '/bower_components/angular-ui-sortable/sortable.js',
         'http://cdn.bootcss.com/jquery-validate/1.11.1/jquery.validate.min.js',
         '/javascripts/utils.js',
-        '/javascripts/topic.js',
         '/javascripts/edit.js'
       ],
       escape: escape,
       topic: topic,
-      items: itemsData
+      items: itemsData,
+      collectionItems: collectionItemsData
     });
     console.log('showEdit done');
   });
@@ -147,7 +158,7 @@ function showChang(req, res, next) {
     };
     var itemsData = [];
     items.forEach(function (item) {
-      itemsData.push(_getItemData(item));
+      itemsData.push(Item.getItemData(item));
     });
 
     var authorData = {
@@ -394,7 +405,7 @@ function showIndex(req, res, next) {
   var ep = EventProxy.create('topic', 'items', 'author', function (topic, items, author) {
     var itemsData = [];
     items.forEach(function (item) {
-      itemsData.push(_getItemData(item));
+      itemsData.push(Item.getItemData(item));
     });
     var authorData = {
       author: author.loginName,
@@ -425,12 +436,16 @@ function showIndex(req, res, next) {
       title: topic.title,
       description: topic.description,
       css: [
+        'http://cdn.bootcss.com/messenger/1.4.0/css/messenger.css',
+        'http://cdn.bootcss.com/messenger/1.4.0/css/messenger-theme-flat.css',
         'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.css',
         'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-buttons.css',
         'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-thumbs.css',
         '/stylesheets/topic.css'
       ],
       js: [
+        'http://cdn.bootcss.com/messenger/1.4.0/js/messenger.js',
+        'http://cdn.bootcss.com/messenger/1.4.0/js/messenger-theme-flat.js',
         'http://cdn.bootcss.com/jquery-mousewheel/3.1.6/jquery.mousewheel.min.js',
         'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.js',
         'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-buttons.js',
@@ -501,228 +516,6 @@ function showIndex(req, res, next) {
       ep.emit('author', author);
     }));
   }));
-}
-
-function _getData(req) {
-  var type = req.body.type;
-  var data;
-
-  switch (type) {
-    case 'LINK_CREATE':
-    case 'LINK':
-      var url = sanitize(req.body.url).trim();
-      var title = sanitize(req.body.title).trim();
-      var snippet = sanitize(req.body.snippet).trim();
-      var src = sanitize(req.body.src).trim();
-      var description = sanitize(req.body.description).trim();
-
-      check(url).notNull().isUrl();
-      check(title).len(0, 50);
-      check(snippet).len(0, 140);
-      if (src.length) check(src).isUrl();
-      check(description).len(0, 140);
-
-      data = {
-        url: url,
-        title: title,
-        snippet: snippet,
-        src: src,
-        description: description
-      }
-      break;
-    case 'IMAGE_CREATE':
-    case 'IMAGE':
-      var url = sanitize(req.body.url).trim();
-      var title = sanitize(req.body.title).trim();
-      var quote = sanitize(req.body.quote).trim();
-      var description = sanitize(req.body.description).trim();
-
-      check(url).notNull().isUrl();
-      check(title).len(0, 50);
-      if (quote.length) check(quote).isUrl();
-      check(description).len(0, 140);
-
-      data = {
-        url: url,
-        title: title,
-        quote: quote,
-        description: description
-      }
-      break;
-    case 'VIDEO_CREATE':
-    case 'VIDEO':
-      var url = sanitize(req.body.url).trim();
-      var vid = sanitize(req.body.vid).trim();
-      var cover = sanitize(req.body.cover).trim();
-      var title = sanitize(req.body.title).trim();
-      var description = sanitize(req.body.description).trim();
-
-      check(url).notNull().isUrl();
-      if (cover.length) check(cover).isUrl();
-      check(title).len(0, 50);
-      check(description).len(0, 140);
-
-      data = {
-        url: url,
-        vid: vid,
-        cover: cover,
-        title: title,
-        description: description
-      }
-      break;
-    case 'CITE':
-      var cite = sanitize(req.body.cite).trim();
-      var url = sanitize(req.body.url).trim();
-      var title = sanitize(req.body.title).trim();
-      var description = sanitize(req.body.description).trim();
-
-      check(cite).len(1, 140);
-      if (url.length) check(url).isUrl();
-      check(title).len(0, 50);
-      check(description).len(0, 140);
-
-      data = {
-        cite: cite,
-        url: url,
-        title: title,
-        description: description
-      }
-      break;
-    case 'WEIBO_CREATE':
-    case 'WEIBO':
-      var url = sanitize(req.body.url).trim();
-      var description = sanitize(req.body.description).trim();
-      var created_at = sanitize(req.body.created_at).trim();
-      var idstr = sanitize(req.body.idstr).trim();
-      var mid62 = sanitize(req.body.mid62).trim();
-      var text = sanitize(req.body.text).trim();
-      var parsed_text = sanitize(req.body.parsed_text).trim();
-      var source = sanitize(req.body.source).trim();
-      var pic_urls = req.body.pic_urls;
-      var user = req.body.user;
-      var retweeted_status = req.body.retweeted_status;
-
-      check(url).notNull().isUrl();
-      check(description).len(0, 140);
-
-      data = {
-        url: url,
-        description: description,
-        created_at: created_at,
-        idstr: idstr,
-        mid62: mid62,
-        text: text,
-        parsed_text: parsed_text,
-        source: source,
-        pic_urls: pic_urls,
-        user: user,
-        retweeted_status: retweeted_status
-      }
-      break;
-    case 'TEXT':
-      var text = sanitize(req.body.text).trim();
-
-      check(text).len(1, 140);
-
-      data = {
-        text: text
-      }
-      break;
-    case 'TITLE':
-      var title = sanitize(req.body.title).trim();
-
-      check(title).len(1, 50);
-
-      data = {
-        title: title
-      }
-      break;
-    default :
-      data = {};
-      break;
-  }
-  data.type = type;
-  return data;
-}
-
-function _getItemData(item) {
-  var itemData;
-
-  switch (item.type) {
-    case 'LINK':
-      itemData = {
-        url: item.url,
-        fav: utils.getFav(item.url),
-        title: item.title,
-        snippet: item.snippet,
-        src: item.src,
-        description: item.description
-      }
-      break;
-    case 'IMAGE':
-      itemData = {
-        url: item.url,
-        title: item.title,
-        quote: item.quote,
-        quoteDomain: utils.getQuote(item.quote),
-        description: item.description
-      }
-      break;
-    case 'VIDEO':
-      itemData = {
-        url: item.url,
-        quote: utils.getQuote(item.url, 'VIDEO'),
-        cover: item.cover,
-        vid: item.vid,
-        title: item.title,
-        description: item.description
-      }
-      break;
-    case 'CITE':
-      itemData = {
-        cite: item.cite,
-        url: item.url,
-        title: item.title,
-        description: item.description
-      }
-      break;
-    case 'WEIBO':
-      itemData = {
-        url: item.url,
-        description: item.description,
-        created_at: item.created_at,
-        time: _getWeiboTime(item.created_at),
-        idstr: item.idstr,
-        mid62: item.mid62,
-        text: item.text,
-        parsed_text: item.parsed_text,
-        source: item.source,
-        pic_urls: item.pic_urls,
-        user: item.user.toObject(),
-        retweeted_status: item.retweeted_status.toObject()
-      }
-
-      if (itemData.retweeted_status && itemData.retweeted_status.idstr) {
-        itemData.retweeted_status.time = _getWeiboTime(item.retweeted_status.created_at);
-      }
-      break;
-    case 'TEXT':
-      itemData = {
-        text: item.text
-      }
-      break;
-    case 'TITLE':
-      itemData = {
-        title: item.title
-      }
-      break;
-    default:
-      itemData = {};
-      break;
-  }
-  itemData._id = item._id;
-  itemData.type = item.type;
-  return itemData;
 }
 
 function _getTopicWithAuth(callback, topicId, userId, isAdmin) {
@@ -796,7 +589,7 @@ function createItem(req, res, next) {
   var prevItemId = req.body.prevItemId;
 
   try {
-    var data = _getData(req);
+    var data = Item.getData(req);
   } catch (err) {
     next(err);
     return;
@@ -811,6 +604,7 @@ function createItem(req, res, next) {
       if (data.type == 'LINK_CREATE') {
         _getLinkDetail(data.url, function (err, results) {
           if (err) return callback(err);
+          results.src = results.srcs && results.srcs[0];
           data = results;
           callback();
         });
@@ -868,7 +662,7 @@ function createItem(req, res, next) {
     }
 
     var item = results.item;
-    res.json(_getItemData(item));
+    res.json(Item.getItemData(item));
     Topic.updateNewTopics();
     console.log('createItem done');
   });
@@ -926,7 +720,7 @@ function sortItem(req, res, next) {
       topic.update_at = Date.now();
       topic.save();
     }]
-  }, function (err, results) {
+  }, function (err) {
     if (err) {
       return next(err);
     }
@@ -955,7 +749,7 @@ function editItem(req, res, next) {
       var topic = results.topic;
       var item = results.item;
       try {
-        var data = _getData(req);
+        var data = Item.getData(req);
       } catch (err) {
         return callback(err);
       }
@@ -964,7 +758,7 @@ function editItem(req, res, next) {
           return callback(err);
         }
 
-        callback();
+        callback(null);
       });
       topic.update_at = Date.now();
       topic.save();
@@ -973,6 +767,9 @@ function editItem(req, res, next) {
       Item.getItemById(type, itemId, function (err, item) {
         if (err) {
           return callback(err);
+        }
+        if (!item) {
+          return callback(new Error(500));
         }
 
         callback(null, item);
@@ -984,7 +781,7 @@ function editItem(req, res, next) {
     }
 
     var newItem = results.newItem;
-    res.json(_getItemData(newItem));
+    res.json(Item.getItemData(newItem));
     Topic.updateNewTopics();
     console.log('editItem done');
   });
@@ -1049,12 +846,34 @@ function deleteTopic(req, res, next) {
   }, topicId, authorId);
 }
 
-function saveTopic(req, res, next) {
-  console.log('saveTopic=====');
+function saveCover(req, res, next) {
+  console.log('saveCover=====');
   var authorId = req.session.userId;
-  var topicId = req.body.topicId;
+  var _id = req.body._id;
+  var cover_url = sanitize(req.body.cover_url).trim();
+
+  _getTopicWithAuth(function (err, topic) {
+    if (err) {
+      return next(err);
+    }
+    Topic.saveCover(topic, cover_url, function (err, topic) {
+      if (err) {
+        return next(err);
+      }
+      res.json({
+        _id: topic._id,
+        cover_url: topic.cover_url
+      });
+      console.log('saveCover done');
+    });
+  }, _id, authorId);
+}
+
+function saveTitle(req, res, next) {
+  console.log('saveTitle=====');
+  var authorId = req.session.userId;
+  var _id = req.body._id;
   var title = sanitize(req.body.title).trim();
-  var coverUrl = sanitize(req.body.coverUrl).trim();
   var description = sanitize(req.body.description).trim();
 
   try {
@@ -1068,19 +887,18 @@ function saveTopic(req, res, next) {
     if (err) {
       return next(err);
     }
-    Topic.saveTopic(topic, title, coverUrl, description, function (err, topic) {
+    Topic.saveTitle(topic, title, description, function (err, topic) {
       if (err) {
         return next(err);
       }
       res.json({
-        topicId: topic._id,
+        _id: topic._id,
         title: topic.title,
-        coverUrl: topic.cover_url,
         description: topic.description
       });
-      console.log('saveTopic done');
+      console.log('saveTitle done');
     });
-  }, topicId, authorId);
+  }, _id, authorId);
 }
 
 function saveCategory(req, res, next) {
@@ -1567,31 +1385,16 @@ function _getWeiboDetail(url, callback) {
         }
 
         if (data.retweeted_status && data.retweeted_status.idstr) {
-          data.retweeted_status.time = _getWeiboTime(data.retweeted_status.created_at);
+          data.retweeted_status.time = Item.getWeiboTime(data.retweeted_status.created_at);
         }
         callback(null, extend(data, {
           type: 'WEIBO',
           url: url,
-          time: _getWeiboTime(data.created_at)
+          time: Item.getWeiboTime(data.created_at)
         }));
       });
     });
   });
-}
-
-function _getWeiboTime(created_at) {
-  var date = new Date(created_at);
-  var _normalizeTime = function (time) {
-    if (time >= 10) {
-      return time;
-    }
-    return '0' + time;
-  }
-  return date.getFullYear() + '.'
-    + (date.getMonth() + 1) + '.'
-    + date.getDate() + ' '
-    + _normalizeTime(date.getHours()) + ':'
-    + _normalizeTime(date.getMinutes());
 }
 
 function getLinkDetail(req, res, next) {
@@ -1768,7 +1571,8 @@ exports.editItem = editItem;
 exports.sortItem = sortItem;
 exports.deleteItem = deleteItem;
 exports.deleteTopic = deleteTopic;
-exports.saveTopic = saveTopic;
+exports.saveCover = saveCover;
+exports.saveTitle = saveTitle;
 exports.saveCategory = saveCategory;
 exports.publishTopic = publishTopic;
 exports.getLinkDetail = getLinkDetail;

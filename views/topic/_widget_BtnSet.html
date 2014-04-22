@@ -1,6 +1,9 @@
 <div class="BtnSet">
   <button name="save" class='btn btn-primary'
-          data-loading-text="保存 &lt;i class='fa fa-spinner fa-spin'&gt;&lt;/i&gt;" type="button">保存
+          ng-disabled="savingItem"
+          type="submit">保存 <i class='fa fa-spinner fa-spin' ng-show="savingItem"></i>
   </button>
-  <button name="cancel" class="btn btn-default" type="button">放弃</button>
+  <button name="cancel" class="btn btn-default"
+          ng-click="cancelEdit()"
+          type="button">放弃</button>
 </div>

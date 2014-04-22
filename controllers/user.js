@@ -6,6 +6,7 @@
  * Time: 11:16 PM
  * To change this template use File | Settings | File Templates.
  */
+var async = require('async');
 var check = require('validator').check;
 var sanitize = require('validator').sanitize;
 
@@ -16,6 +17,7 @@ var escape = helper.escape;
 var Common = require('../common');
 var User = require('../proxy').User;
 var Topic = require('../proxy').Topic;
+var Item = require('../proxy').Item;
 var config = require('../config');
 var LoginToken = require('../proxy').LoginToken;
 
@@ -733,6 +735,146 @@ function favorite(req, res, next) {
   });
 }
 
+function collectItem(req, res, next) {
+  var userId = req.session.userId;
+  var type = req.body.type;
+  var _id = req.body._id;
+
+  async.auto({
+    item: function (callback) {
+      Item.cloneItem(type, _id, function (err, item) {
+        if (err) {
+          return callback(err);
+        }
+        if (!item) {
+          return callback(new Error(500));
+        }
+
+        callback(null, item);
+      });
+    },
+    user: ['item', function (callback, results) {
+      var item = results.item;
+
+      User.collectItem(userId, item._id, function (err, user) {
+        if (err) {
+          return callback(err);
+        }
+        if (!user) {
+          return callback(new Error(400));
+        }
+
+        callback(null, user);
+      });
+    }]
+  }, function (err) {
+    if (err) {
+      return next(err);
+    }
+
+    res.send(200);
+  });
+}
+
+function _getUserAndIndexWithAuth(userId, _id, callback) {
+  callback = callback || function () {
+  };
+
+  User.getUserById(userId, function (err, user) {
+    if (err) {
+      return callback(err);
+    }
+    if (!user) {
+      return callback(new Error(400));
+    }
+
+    var index = user.items.indexOf(_id);
+    if (index < 0) {
+      return callback(new Error(403));
+    }
+
+    callback(null, {
+      user: user,
+      index: index
+    });
+  });
+}
+
+function deleteItem(req, res, next) {
+  var userId = req.session.userId;
+  var type = req.body.type;
+  var _id = req.body._id;
+
+  async.auto({
+    user: function (callback) {
+      _getUserAndIndexWithAuth(userId, _id, function (err, data) {
+        if (err) {
+          return callback(err);
+        }
+
+        User.deleteItem(data.user, data.index, callback);
+      });
+    },
+    item: ['user', function (callback) {
+      Item.deleteCollectionItem(type, _id, function (err, item) {
+        if (err) {
+          return callback(err);
+        }
+        if (!item) {
+          return callback(new Error(500));
+        }
+
+        callback(null, item);
+      });
+    }]
+  }, function (err) {
+    if (err) {
+      return next(err);
+    }
+
+    res.send(200);
+  });
+}
+
+function editItem(req, res, next) {
+  var userId = req.session.userId;
+  var _id = req.body._id;
+  var type = req.body.type;
+
+  async.auto({
+    user: function (callback) {
+      _getUserAndIndexWithAuth(userId, _id, callback);
+    },
+    update: ['user', function (callback) {
+      try {
+        var data = Item.getData(req);
+      } catch (err) {
+        return callback(err);
+      }
+      Item.updateById(type, _id, data, callback);
+    }],
+    newItem: ['update', function (callback) {
+      Item.getItemById(type, _id, function (err, item) {
+        if (err) {
+          return callback(err);
+        }
+        if (!item) {
+          return callback(new Error(500));
+        }
+
+        callback(null, item);
+      });
+    }]
+  }, function (err, results) {
+    if (err) {
+      return next(err);
+    }
+
+    var newItem = results.newItem;
+    res.json(Item.getItemData(newItem));
+  });
+}
+
 exports.showWorks = showWorks;
 exports.showSettings = showSettings;
 exports.updateSettings = updateSettings;
@@ -742,3 +884,6 @@ exports.showAccountModify = showAccountModify;
 exports.accountModify = accountModify;
 exports.showPersonal = showPersonal;
 exports.favorite = favorite;
+exports.collectItem = collectItem;
+exports.deleteItem = deleteItem;
+exports.editItem = editItem;

@@ -11,6 +11,12 @@
 .background-clouds {
   background-color: #ecf0f1;
 }
+.background-clouds-darken {
+  background-color: #e0e7e8;
+}
+.background-clouds-lighten {
+  background-color: #f8f9fa;
+}
 .background-muted {
   background-color: #bdc3c7;
 }
@@ -97,6 +103,22 @@
   padding: 0 0 40px;
   margin-bottom: 0;
 }
+.WidgetItemList > li {
+  position: relative;
+}
+.WidgetItemList > li:hover button.COLLECT {
+  display: block;
+}
+.WidgetItemList > li button.COLLECT {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: none;
+  opacity: 0.3;
+}
+.WidgetItemList > li button.COLLECT:hover {
+  opacity: 1;
+}
 .Quote {
   font-size: 12px;
   line-height: 13px;
@@ -112,6 +134,7 @@
   top: 0px;
   right: -21px;
   display: none;
+  z-index: 1000;
 }
 .SortUtil i {
   display: block;
@@ -316,7 +339,6 @@
 .WidgetItemList > li .WEIBO_CREATE .Pic {
   width: 255px;
   margin-bottom: 15px;
-  display: none;
 }
 .WidgetItemList > li .WEIBO .Pic a,
 .WidgetItemList > li .WEIBO_CREATE .Pic a {
@@ -345,6 +367,9 @@
 .WidgetItemList > li .CITE .Description {
   padding-left: 6px;
   border-left: 2px solid #bdc3c7;
+  line-height: 1.4;
+}
+.WidgetItemList > li .TEXT {
   line-height: 1.4;
 }
 .Item .TITLE {

@@ -120,21 +120,26 @@ function updateNewTopics(callback) {
     });
 }
 
-/**
- * 保存策展
- * @param authorId
- * @param topicId
- * @param title
- * @param coverUrl
- * @param description
- * @param callback
- */
-function saveTopic(topic, title, coverUrl, description, callback) {
+function saveCover(topic, coverUrl, callback) {
+  callback = callback || function () {
+  };
+
+  topic.cover_url = coverUrl;
+  topic.update_at = Date.now();
+  topic.save(function (err) {
+    if (err) {
+      return callback(err);
+    }
+    callback(null, topic);
+    updateNewTopics();
+  });
+}
+
+function saveTitle(topic, title, description, callback) {
   callback = callback || function () {
   };
 
   topic.title = title;
-  topic.cover_url = coverUrl;
   topic.description = description;
   topic.update_at = Date.now();
   topic.save(function (err) {
@@ -447,7 +452,8 @@ exports.increasePVCountBy = increasePVCountBy;
 exports.getAllTopics = getAllTopics;
 exports.getCategoryTopics = getCategoryTopics;
 exports.getTagTopics = getTagTopics;
-exports.saveTopic = saveTopic;//改
+exports.saveCover = saveCover;//改
+exports.saveTitle = saveTitle;//改
 exports.saveCategory = saveCategory;//改
 exports.publishTopic = publishTopic;
 exports.deleteTopic = deleteTopic;//删

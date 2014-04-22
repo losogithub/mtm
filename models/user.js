@@ -22,6 +22,8 @@ var UserSchema = new Schema({
   topicCount: {type: Number, default: 0},
   PVCount: {type: Number, default: 0},
 
+  items: [ObjectId],
+
   //support user likes
   favourite: {type: Number, default: 0},
   favouriteList: [ObjectId], //liked by someone
