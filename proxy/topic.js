@@ -109,7 +109,7 @@ function updateNewTopics(callback) {
 
   TopicModel.find({ publishDate: { $exists: true } })
     .sort('-update_at')
-    .limit(240)
+    .limit(120)
     .exec(function (err, topics) {
       if (err) {
         return callback(err);
