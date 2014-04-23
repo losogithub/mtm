@@ -1289,7 +1289,7 @@ function _getVideoDetail(url, callback) {
         title = (!(temp = html.match(/\$SCOPE\['video'\]\s*=\s*\{[\s\S]*title\s*:\s*'([^'}]*)/i)) ? null : !temp[1] ? null : temp[1])
           || (!(temp = html.match(/<h1[^>]*>([^<>]*)<\/h1>/i)) ? null : !temp[1] ? null : temp[1]);
         //<script......vid:'120263847',......</script>
-        vid = !(temp = html.match(/<script((?!<\/script>)[\s\S])*vid:'(\d+)',/i)) ? null : !temp[2] ? null : temp[2];
+        vid = !(temp = html.match(/<script((?!<\/script>)[\s\S])*\s+vid:'(\d+)',/i)) ? null : !temp[2] ? null : temp[2];
         //$SCOPE['video'] = {...pic: 'http://p3.v.iask.com/271/848/50691086_2.jpg',......}
         //119x90
         //135x90
@@ -1323,7 +1323,8 @@ function _getVideoDetail(url, callback) {
         //<title>英超-1314赛季-联赛-第12轮-曼城6：0热刺-精华_PPTV网络电视</title>
         title = !(temp = html.match(/<title>([^<>]*)<\/title>/i)) ? null : !temp[1] ? null : temp[1].substr(0, temp[1].lastIndexOf('_PPTV网络电视'));
         //http://v.pptv.com/show/icwtr6HibzIFicCQKg.html#(无封面)
-        vid = !(temp = url) ? null : !(temp = temp.match(/(\w{18})\.html\/?([?&#]|$)/i)) ? null : !temp[1] ? null : temp[1];
+        //http://v.pptv.com/show/VvVW1T2jE1G0Mpo.html
+        vid = !(temp = url) ? null : !(temp = temp.match(/\/(\w+)\.html\/?([?&#]|$)/i)) ? null : !temp[1] ? null : temp[1];
         break;
       case 'ku6.com':
         //plan A
@@ -1405,8 +1406,8 @@ function _getVideoDetail(url, callback) {
     }
     console.log(title);
     console.log(cover);
-    if (title && title.length > 100) {
-      title = title.substr(0, 99) + '…';
+    if (title && title.length > 50) {
+      title = title.substr(0, 49) + '…';
     }
     title = sanitize(title).entityDecode();
     title = sanitize(title).trim();
