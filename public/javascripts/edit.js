@@ -993,26 +993,40 @@
   };
 
   $(function () {
-    $('.Band').affix({
+    var $window = $(window);
+    var $header = $('.Header');
+    var $band = $('.Band');
+    var $main = $('.Main');
+    var $cat = $('.Categories');
+    var $scroll = $('.Collection .Scrollable');
+    var $footer = $('.Footer');
+    $band.affix({
       offset: {
         top: function () {
-          return (this.top = $('.Header').outerHeight(true))
+          return (this.top = $header.outerHeight(true))
         }
       }
     });
     $('.Collection').affix({
       offset: {
         top: function () {
-          return (this.top = $('.Header').outerHeight(true))
-        },
-        bottom: function () {
-          return ($('.Footer').outerHeight(true) + 20)
+          return (this.top = $header.outerHeight(true))
         }
       }
     });
-    $('.Collection .Scrollable').css('height', $(window).height() - 142);
-    $(window).on('scroll resize', function () {
-      $('.Collection .Scrollable').css('height', $(window).height() - 142);
+    $scroll.css('height',
+      Math.min(
+        $main.height() - $cat.height() - 20,
+        $footer.offset().top - $band.offset().top - $band.height() - $cat.height() -60,
+        $window.height() + $window.scrollTop() - $band.height() - $band.offset().top - $cat.height() - 60
+      ));
+    $window.on('scroll resize', function () {
+      $scroll.css('height',
+        Math.min(
+          $main.height() - $cat.height() - 20,
+          $footer.offset().top - $band.offset().top - $band.height() - $cat.height() -60,
+          $window.height() + $window.scrollTop() - $band.height() - $band.offset().top - $cat.height() - 60
+        ));
     })
   });
 
