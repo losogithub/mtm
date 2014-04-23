@@ -70,11 +70,8 @@
     <% var temp2 = {'生活':'cutlery','娱乐':'music','新闻':'globe','科技':'rocket','文化':'book'}; %>
     <% var temp3 = {'生活':'muted','娱乐':'warning','新闻':'info','科技':'danger','文化':'black'}; %>
     <% for (var key in temp) { %>
-    <h1 class="h6 mvn text-default mtl" style="display: block;">
+    <h1 class="h6 mvn text-default mtl">
       <i class="fa fa-<%= temp2[key] %> text-<%= temp3[key] %>"></i> <%= key %>
-      <a class="text-muted" href="/<%= temp[key] %>">
-        <span style="font-size: 14px; font-weight: normal">/更多</span>
-      </a>
     </h1>
     <div class="row">
       <div class="col-md-5 col-lg-4">
@@ -92,6 +89,10 @@
         <% include _topics.html %>
       </div>
     </div>
+    <a class="text-muted pull-right mrm" href="/<%= temp[key] %>">
+      <span style="font-size: 14px; font-weight: normal">更多></span>
+    </a>
+    <div class="clearfix"></div>
     <% } %>
 
   </div>

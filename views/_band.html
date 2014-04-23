@@ -35,7 +35,7 @@
       <a href="/tag/<%- encodeURIComponent(tag) %>"
          class="btn btn-primary btn-square pull-left">
         <i class="fa fa-tag" style="font-size: 14px;"></i> <%= tag %>
-        <span class="Counter">(<%= Tags[tag].topicCount %>)</span>
+        <span class="Counter">(<%= Tags[tag] && Tags[tag].topicCount || 0 %>)</span>
       </a>
     </div>
     <% } else if (locals.pageType == 'TOPIC') { %>

@@ -1,6 +1,7 @@
 <% if (tags.length) { %>
 <div class="Authors background-white pll ptl prm pbm mtl" style="border-radius: 6px;">
   <% for (i in authors) { %>
+  <% if (i == 3 && pageType == 'INDEX') { break; } %>
   <% var author = authors[i]; %>
   <a class="mrs mbm text-muted" target="_blank"
      href="/u/<%= author.loginName %>"
