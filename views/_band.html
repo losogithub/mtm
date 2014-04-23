@@ -4,7 +4,8 @@
     <div class="dropdown pull-left">
       <button type="button" data-toggle="dropdown"
               class="btn btn-square dropdown-toggle btn-default">
-        <i class="fa fa-bookmark-o"></i> 所有分类 <small style="line-height: 1;"> ( <%= locals.totalTopicCount %> ) </small>
+        <i class="fa fa-bookmark-o"></i> 分类
+        <span class="Counter">(<%= locals.totalTopicCount %>)</span>
         <i class="fa fa-bars mls"></i>
       </button>
       <span class="dropdown-arrow dropdown-arrow-inverse"></span>
@@ -14,23 +15,27 @@
         <% for (var key in CATEGORIES2ENG) { %>
         <li class="<%- categoryType == key ? 'selected' : '' %>">
           <a href="/<%= CATEGORIES2ENG[key] %>">
-            <%if(temp[key]){%><i class="fa fa-<%= temp[key] %> text-<%= temp2[key] %>"></i><%}%> <%= key %> <small style="line-height: 1;"> ( <%- locals.categoryTopicCount[key] || '0' %> ) </small>
+            <%if(temp[key]){%><i class="fa fa-<%= temp[key] %> text-<%= temp2[key] %>"></i><%}%> <%= key %>
+            <span class="Counter">(<%- locals.categoryTopicCount[key] || '0' %>)</span>
           </a>
         </li>
         <% } %>
         <li class="<%- categoryType == '最新' ? 'selected' : '' %>">
-          <a href="/new">最新 <small style="line-height: 1;"> ( <%- locals.totalTopicCount || '0' %> ) </small></a></li>
+          <a href="/new">最新 <span class="Counter">(<%- locals.totalTopicCount || '0' %>)</span></a></li>
       </ul>
     </div>
     <% if (locals.pageType != 'INDEX') { %>
     <a class="btn btn-square pull-left <%- locals.pageType == 'TAG' || locals.pageType == 'TOPIC' ? 'btn-default' : 'btn-primary' %>"
-       href="/<%= CATEGORIES2ENG[categoryType] %>"><%= categoryType %> <small style="line-height: 1;"> ( <%= locals.topicCount %> )</small></a>
+       href="/<%= CATEGORIES2ENG[categoryType] %>"><%= categoryType %>
+      <span class="Counter">(<%= locals.topicCount %>)</span>
+    </a>
     <% } %>
     <% if (locals.pageType == 'TAG') { %>
     <div style="overflow: hidden;">
       <a href="/tag/<%- encodeURIComponent(tag) %>"
          class="btn btn-primary btn-square pull-left">
         <i class="fa fa-tag" style="font-size: 14px;"></i> <%= tag %>
+        <span class="Counter">(<%= Tags[tag].topicCount %>)</span>
       </a>
     </div>
     <% } else if (locals.pageType == 'TOPIC') { %>
@@ -40,13 +45,6 @@
          style="max-width: 100%; text-overflow: ellipsis; overflow: hidden;">
         <%= locals.topic.title %>
       </a>
-    </div>
-    <% } else if (locals.tags) { %>
-    <div class="Tags plm pull-right hidden-xs">
-      <% for (var i = 0; i < Math.min(tags.length, 2); i++) { %>
-      <a target="_blank" href="/tag/<%- encodeURIComponent(tags[i]) %>"
-         class="tag btn btn-default btn-xs"><%= tags[i] %></a>
-      <% } %>
     </div>
     <% } %>
   </div>

@@ -1,0 +1,10 @@
+<% if (tags.length) { %>
+<div class="pts pls background-white Tags clearfix mtl" style="border-radius: 6px;">
+  <% for (var i = 0; i < tags.length; i++) { %>
+  <a href="/tag/<%- encodeURIComponent(tags[i]) %>"
+     class="tag btn btn-default btn-xs pull-left mrs mbs"><%= tags[i] %>
+    <span class="Counter">(<%= Tags[tags[i]].topicCount %>)</span>
+  </a>
+  <% } %>
+</div>
+<% } %>

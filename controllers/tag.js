@@ -16,19 +16,13 @@ var topicsPerPage = 12;
 
 function showTag(req, res, next) {
   var tagText = req.params.tagText;
-  var tag;
-  for (var i in Common.Tags) {
-    if (tagText == Common.Tags[i].text) {
-      tag = Common.Tags[i];
-      break;
-    }
-  }
+  var tag = Common.Tags[tagText];
   if (!tag) {
     return next(new Error(404));
   }
   async.auto({
     topics: function (callback) {
-      Topic.getTagTopics(tag.text, function (err, topics) {
+      Topic.getTagTopics(tagText, function (err, topics) {
         if (err) {
           return callback(err);
         }
@@ -58,18 +52,20 @@ function showTag(req, res, next) {
     var totalPages = Math.ceil(topics.length / topicsPerPage);
     res.render('tag/tag', {
       pageType: 'TAG',
-      title: tag.text,
-      tag: tag.text,
+      title: tagText,
+      tag: tagText,
       category: tag.category,
       topicCount: Common.TopList.categoryTopicCount[tag.category],
       totalTopicCount: Common.TopList.totalTopicCount,
       categoryTopicCount: Common.TopList.categoryTopicCount,
       tags: tag.tags,
+      Tags: Common.Tags,
       totalPage: totalPages,
       currentPage: currentPage,
       authors: authors,
       authorCategoryList: Common.AuthorCategoryList,
-      topics: tagTopicsPage
+      topics: tagTopicsPage,
+      Topic: Common.Topic
     });
   });
 }

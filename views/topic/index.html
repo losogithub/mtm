@@ -6,8 +6,8 @@
 <div class="background-clouds">
   <div class="container">
     <div class="row pbl">
-      <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-8 col-lg-7 mtl">
-        <div style="background-color: white; border-radius: 6px;">
+      <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-8 col-lg-7">
+        <div class="background-white mtl" style="border-radius: 6px;">
           <div class="TopicHead" style="position: relative; min-height: 140px; border-radius: 6px 6px 0 0;">
             <a class="fancybox" rel="gallery" href="<%= topic.cover_url %>" title="<%= topic.title %>">
               <img onerror="$(this).hide();" src="<%= topic.cover_url %>" alt="<%= topic.title %>"
@@ -31,8 +31,7 @@
                        onerror="shizier.errorImage(this,'user_80x80');">
                   <%= topic.author_name %>
                 </a>
-                <span class="text-muted small mls">
-                  <i class="fa fa-edit"></i>
+                <span class="text-muted small mls" title="更新日期">
                   <%= topic.update_at.getFullYear() + '-'
                         + (topic.update_at.getMonth() + 1) + '-'
                         + topic.update_at.getDate() %>
@@ -75,7 +74,7 @@
                     });
                   });
                 </script>
-                <span class="text-muted mls"><i class="fa fa-eye"></i> <%= topic.PV_count %></span>
+                <span class="text-muted mls" title="浏览"><i class="fa fa-eye"></i> <%= topic.PV_count %></span>
               </div>
             </div>
 
@@ -85,9 +84,9 @@
 
             <p class="text-muted text-right mts" style="font-size: 14px;">
               <i class="fa fa-puzzle-piece"></i> 策展了来自
-              <b class="text-default"><%= topic.quoteCount %></b>
+              <b class="text-default"><%= Topic[topic._id].siteCount %></b>
               个网站的
-              <span class="text-default"><%= topic.urlCount %></span>
+              <span class="text-default"><%= Topic[topic._id].urlCount %></span>
               条碎片信息
             </p>
 
@@ -111,46 +110,31 @@
 
         </div>
       </div>
-      <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-4 col-lg-5 mtl">
+      <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-4 col-lg-5">
         <% if (locals.isAdmin || locals.isAuthor) { %>
-        <div class="mbl">
+        <div class="mtl">
           <% include _category_selector.html %>
         </div>
         <% } %>
-        <% if (locals.isAuthor) { %>
         <div ng-controller="TagsInputCtrl" style="position: relative;"
              ng-init='tags = <%- JSON.stringify(tags) %>;'>
-          <div class="pts pls background-white Tags clearfix mbl"
-               ng-show="!editing"
-               style="border-radius: 6px;">
-            <button class="btn btn-link pull-right mrs mbs text-muted"
-                    ng-click="editTag()"
-                    type="button"><i class="fa fa-pencil"></i></button>
-            <a target="_blank" href="/tag/{{encodeURIComponent(tag.text)}}"
-               ng-repeat="tag in tags"
-               class="tag btn btn-default btn-xs pull-left mrs mbs">{{tag.text}}</a>
+          <div ng-show="!editing">
+            <% include ../_tags.html %>
           </div>
-          <div class="TagsInput mbl" ng-show="editing">
+          <% if (locals.isAuthor) { %>
+          <button class="btn btn-link mrs mbs text-muted" ng-show="!editing"
+                  style="position: absolute; right: 0; top: 0; padding: 6px;"
+                  ng-click="editTag()"
+                  type="button"><i class="fa fa-pencil"></i></button>
+          <% } %>
+          <div class="TagsInput mtl" ng-show="editing">
             <tags-input ng-model="tags"
                         min-length="1" max-length="20" min-tags="1" max-tags="5"
                         placeholder="标签" add-on-space="true"
                         on-tag-added="onAdded($tag)" on-tag-removed="onRemoved($tag)"></tags-input>
           </div>
-          <button class="btn btn-link" style="position: absolute; right: 0; top: 0; z-index: 3; padding: 10px;"
-                  ng-click="editing = false;" ng-show="editing"
-                  type="button"><i class="fa fa-check"></i></button>
         </div>
-        <% } else { %>
-        <% if (tags.length) { %>
-        <div class="pts pls background-white Tags clearfix mbl" style="border-radius: 6px;">
-          <% for (var i = 0; i < tags.length; i++) { %>
-          <a target="_blank" href="/tag/<%- encodeURIComponent(tags[i]) %>"
-             class="tag btn btn-default btn-xs pull-left mrs mbs"><%= tags[i] %></a>
-          <% } %>
-        </div>
-        <% } %>
-        <% } %>
-        <div class="pal background-white" style="border-radius: 6px;">
+        <div class="pal background-white mtl" style="border-radius: 6px;">
           <div class="clearfix">
             <a class="pull-left mrl img-circle-border-clouds" title="<%= topic.author_name %>" target="_blank"
                href="/u/<%= topic.author_name %>"
@@ -210,5 +194,3 @@
     </div>
   </div>
 </div>
-
-<% include ../_toTop.html %>

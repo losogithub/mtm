@@ -96,7 +96,6 @@
 body {
   word-wrap: break-word;
   font-family: "微软雅黑", arial, sans-serif;
-  position: relative;
 }
 h1,
 h2,
@@ -135,6 +134,10 @@ textarea {
 }
 .btn-square {
   border-radius: 0;
+}
+.Counter {
+  line-height: 1;
+  font-size: 12px;
 }
 .carousel-caption a {
   font-size: 40px;
@@ -373,22 +376,6 @@ textarea {
 .Baidu {
   width: 130px !important;
 }
-.Tags {
-  min-height: 34px;
-}
-.Tags button {
-  padding: 1px 5px;
-}
-.Tags .tag {
-  padding-left: 15px;
-  padding-right: 15px;
-}
-.Band .Tags {
-  max-width: 100%;
-  max-height: 41px;
-  line-height: 41px;
-  overflow: hidden;
-}
 .Band {
   background-color: #bdc3c7;
 }
@@ -400,17 +387,13 @@ textarea {
     padding: 0;
   }
 }
-.Authors {
-  max-height: 113px;
-  overflow: hidden;
-}
 .Authors:hover a {
   opacity: 0.5;
 }
 .Authors a {
   display: inline-block;
   vertical-align: bottom;
-  width: 60px;
+  width: 70px;
   -webkit-filter: grayscale(75%);
   -webkit-transition: 0.25s;
   transition: 0.25s;
@@ -428,17 +411,17 @@ textarea {
 .Authors a:first-child,
 .Authors a:first-child + a,
 .Authors a:first-child + a + a {
-  width: 80px;
+  width: 100px;
 }
 .Authors a:first-child img,
 .Authors a:first-child + a img,
 .Authors a:first-child + a + a img {
-  width: 70px;
-  height: 70px;
+  width: 90px;
+  height: 90px;
 }
 .Authors img {
-  width: 50px;
-  height: 50px;
+  width: 60px;
+  height: 60px;
 }
 .Authors .Authors_Name,
 .Authors .Authors_Category {
@@ -459,14 +442,6 @@ textarea {
 }
 .Tile:hover .Share {
   display: inline;
-}
-.Tile .Title {
-  background-color: rgba(0, 0, 0, 0.6);
-  filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=1, StartColorStr='#99000000', EndColorStr='#99000000');
-}
-.Tile .Cover:hover .Title {
-  background-color: #000000;
-  filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=1, StartColorStr='#ff000000', EndColorStr='#ff000000');
 }
 .TopicHead .Title {
   position: absolute;
@@ -525,17 +500,21 @@ textarea {
 }
 #_toTop {
   position: fixed;
-  display: none;
-  right: 30px;
-  opacity: 0.5;
+  visibility: hidden;
+  bottom: 20px;
+  right: 15px;
+  opacity: 0;
   padding: 4px 12px;
-  background-color: #999;
+  background-color: #bdc3c7;
   color: white;
+}
+#_toTop.VISIBLE {
+  visibility: visible;
+  opacity: 0.5;
 }
 #_toTop:hover,
 #_toTop:active,
 #_toTop:focus {
   opacity: 1;
-  background-color: #eee;
-  color: black;
+  color: #34495e;
 }

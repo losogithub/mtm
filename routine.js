@@ -33,6 +33,7 @@ function _update() {
 }
 
 function _countTags(callback, results) {
+  var topicCounts = {};
   var categories = {};
   var authorIds = {};
   var relatives = {};
@@ -40,6 +41,9 @@ function _countTags(callback, results) {
     var topic = results.topics[i];
     for (var j = 0; j < topic.tags.length; j++) {
       var tagText = topic.tags[j];
+
+      topicCounts[tagText] = topicCounts[tagText] || 0;
+      topicCounts[tagText]++;
 
       categories[tagText] = categories[tagText] || {};
       categories[tagText][topic.category] = categories[tagText][topic.category] || 0;
@@ -60,6 +64,7 @@ function _countTags(callback, results) {
     }
   }
   callback(null, {
+    topicCounts: topicCounts,
     categories: categories,
     authorIds: authorIds,
     relatives: relatives
@@ -67,6 +72,7 @@ function _countTags(callback, results) {
 }
 
 function _calcTags(callback, results) {
+  var topicCounts = results.countTags.topicCounts;
   var categories = results.countTags.categories;
   var authorIds = results.countTags.authorIds;
   var relatives = results.countTags.relatives;
@@ -97,13 +103,13 @@ function _calcTags(callback, results) {
       return relatives[tagText][b] - relatives[tagText][a];
     });
 
-    tempCommonTags.push({
-      text: tagText,
+    tempCommonTags[tagText] = {
       category: tempCategory,
+      topicCount: topicCounts[tagText],
       authorWeights: authorIds[tagText],
-      authorIds: tempAuthorIds.slice(0, 17),
-      tags: tempTags.slice(0, 7)
-    });
+      authorIds: tempAuthorIds.slice(0, 7),
+      tags: tempTags.slice(0, 13)
+    };
   }
   Common.Tags = tempCommonTags;
   callback(null);
@@ -149,6 +155,7 @@ function _routine() {
 
 function start() {
   Topic.updateNewTopics();
+  Topic.updateTopicSiteCount();
   _routine();
 
   setInterval(_routine, 60 * 1000);

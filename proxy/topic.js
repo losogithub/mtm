@@ -58,7 +58,8 @@ function getContents(topic, callback) {
  * @param increment
  */
 function increaseItemCountBy(topic, increment, callback) {
-  return topic.update({$inc: {item_count: increment}}, callback);
+  topic.item_count += increment;
+  return topic.save(callback);
 }
 
 /**
@@ -201,6 +202,7 @@ function deleteTopic(topic, callback) {
     Item.deleteItemList(topic.void_item_id, callback);
     User.deleteTopic(topic.author_id, topic._id);
     updateNewTopics();
+    updateSingleTopicSiteCount(topic, true);
   });
 }
 
@@ -316,44 +318,14 @@ function updateHotTopics() {
     Common.TopList.totalTopicCount = topics.length;
     Common.FeaturedTopics = topics.slice(0, 3);
     async.forEachSeries(Common.FeaturedTopics, function (topic, callback) {
-      async.auto([
-        function (callback) {
-          User.getUserById(topic.author_id, function (err, user) {
-            if (err) {
-              return callback(err);
-            }
-            if (!user) {
-              return callback(new Error());
-            }
-            topic.author_url = user.url;
-            callback(null);
-          });
-        }, function (callback) {
-          getContents(topic, function (err, items) {
-            if (err) {
-              return callback(err);
-            }
-            var urlCount = 0;
-            var quoteList = [];
-            items.forEach(function (item) {
-              if (item.url) {
-                urlCount++;
-                quoteList.push(utils.getQuote(item.type == 'IMAGE' && item.quote || item.url));
-              }
-            });
-            topic.urlCount = urlCount;
-            var quotes = {};
-            quoteList.forEach(function (quote) {
-              quotes[quote] = 1;
-            });
-            topic.quoteCount = Object.keys(quotes).length;
-
-            callback(null);
-          });
-        }], function (err) {
+      User.getUserById(topic.author_id, function (err, user) {
         if (err) {
           return callback(err);
         }
+        if (!user) {
+          return callback(new Error());
+        }
+        topic.author_url = user.url;
         callback(null);
       });
     }, function (err) {
@@ -369,7 +341,7 @@ function updateHotTopics() {
     authorIds.sort(function (a, b) {
       return (authorMap[b].score - authorMap[a].score);
     });
-    var hotAuthorIds = authorIds.slice(0, 17);
+    var hotAuthorIds = authorIds.slice(0, 7);
     User.getUserByIds(hotAuthorIds, function (err, authors) {
       authors.sort(function (a, b) {
         return (authorMap[b._id].score - authorMap[a._id].score);
@@ -384,7 +356,7 @@ function updateHotTopics() {
     tagTexts.sort(function (a, b) {
       return (tagMap[b].score - tagMap[a].score);
     });
-    Common.TopList.hotTags = tagTexts.slice(0, 7);
+    Common.TopList.hotTags = tagTexts.slice(0, 13);
   });
 }
 
@@ -424,7 +396,7 @@ function updateCategoryTopics() {
         authorIds.sort(function (a, b) {
           return (authorMap[b].score - authorMap[a].score);
         });
-        var hotAuthorIds = authorIds.slice(0, 17);
+        var hotAuthorIds = authorIds.slice(0, 7);
         User.getUserByIds(hotAuthorIds, function (err, authors) {
           authors.sort(function (a, b) {
             return (authorMap[b._id].score - authorMap[a._id].score);
@@ -439,10 +411,53 @@ function updateCategoryTopics() {
         tagTexts.sort(function (a, b) {
           return (tagMap[b].score - tagMap[a].score);
         });
-        Common.TopList.categoryTags[category] = tagTexts.slice(0, 7);
+        Common.TopList.categoryTags[category] = tagTexts.slice(0, 13);
       });
     })(category);
   }
+}
+
+function updateSingleTopicSiteCount(topic, deleted) {
+  if (deleted) {
+    delete Common.Topic[topic._id];
+    return;
+  }
+  getContents(topic, function (err, items) {
+    if (err) {
+      return;
+    }
+    if (!items) {
+      return;
+    }
+
+    var urlCount = 0;
+    var siteList = [];
+    items.forEach(function (item) {
+      if (item.url) {
+        urlCount++;
+        siteList.push(utils.getQuote(item.type == 'IMAGE' && item.quote || item.url));
+      }
+    });
+    Common.Topic[topic._id] = Common.Topic[topic._id] || {};
+    Common.Topic[topic._id].urlCount = urlCount;
+    var sites = {};
+    siteList.forEach(function (site) {
+      sites[site] = 1;
+    });
+    Common.Topic[topic._id].siteCount = Object.keys(sites).length;
+  });
+}
+
+function updateTopicSiteCount() {
+  getAllTopics(function (err, topics) {
+    if (err) {
+      return;
+    }
+
+    topics.forEach(function (topic) {
+      updateSingleTopicSiteCount(topic);
+    });
+  });
 }
 
 exports.createTopic = createTopic;//增
@@ -466,3 +481,5 @@ exports.removeTag = removeTag;
 exports.updateNewTopics = updateNewTopics;
 exports.updateHotTopics = updateHotTopics;
 exports.updateCategoryTopics = updateCategoryTopics;
+exports.updateSingleTopicSiteCount = updateSingleTopicSiteCount;
+exports.updateTopicSiteCount = updateTopicSiteCount;

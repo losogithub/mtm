@@ -39,9 +39,9 @@
                 <p class="hidden-xs mtm text-muted" style="max-height: 120px; overflow: hidden;"><%= featuredTopics[i].description %></p>
                 <p class="text-muted text-right" style="font-size: 14px;">
                   <i class="fa fa-puzzle-piece"></i> 策展了来自
-                  <b class="text-inverse"><%= featuredTopics[i].quoteCount %></b>
+                  <b class="text-inverse"><%= Topic[featuredTopics[i]._id].siteCount %></b>
                   个网站的
-                  <span class="text-inverse"><%= featuredTopics[i].urlCount %></span>
+                  <span class="text-inverse"><%= Topic[featuredTopics[i]._id].urlCount %></span>
                   条碎片信息
                 </p>
               </div>
@@ -63,37 +63,36 @@
 </div>
 <% } %>
 
-<div style="background-color: #ecf0f1;">
+<div class="background-clouds">
   <div class="container pbl">
-    <div class="row ptm">
-      <div class="col-xs-12">
-        <i class="fa fa-thumbs-o-up" style="color: #c0392b;"></i> 人气策展人
-      </div>
-    </div>
-    <div class="row mts">
-
-      <% include _authors.html %>
-
-    </div>
 
     <% var temp = {'生活':'life','娱乐':'entertainment','新闻':'news','科技':'tech','文化':'culture'}; %>
     <% var temp2 = {'生活':'cutlery','娱乐':'music','新闻':'globe','科技':'rocket','文化':'book'}; %>
     <% var temp3 = {'生活':'muted','娱乐':'warning','新闻':'info','科技':'danger','文化':'black'}; %>
     <% for (var key in temp) { %>
-    <div class="clearfix mtl">
-      <h1 class="h6 mvn pull-left">
-        <a class="h6" href="/<%= temp[key] %>">
-          <i class="fa fa-<%= temp2[key] %> text-<%= temp3[key] %>"></i> <%= key %>
-        </a>
-      </h1>
-      <a class="btn btn-link pull-right pan text-muted mts" href="/<%= temp[key] %>">更多></a>
-    </div>
+    <h1 class="h6 mvn text-default mtl" style="display: block;">
+      <i class="fa fa-<%= temp2[key] %> text-<%= temp3[key] %>"></i> <%= key %>
+      <a class="text-muted" href="/<%= temp[key] %>">
+        <span style="font-size: 14px; font-weight: normal">/更多</span>
+      </a>
+    </h1>
+    <div class="row">
+      <div class="col-md-5 col-lg-4">
 
-    <% var topics = categoryTopics[key].slice(0, 4); %>
-    <% include _topics.html %>
+        <% var tags = categoryTags[key] %>
+        <% include _tags.html %>
+
+        <% var authors = categoryAuthors[key] %>
+        <% include _authors.html %>
+
+      </div>
+      <div class="col-md-7 col-lg-8">
+
+        <% var topics = categoryTopics[key].slice(0, 3); %>
+        <% include _topics.html %>
+      </div>
+    </div>
     <% } %>
 
   </div>
 </div>
-
-<% include _toTop.html %>

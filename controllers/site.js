@@ -26,9 +26,11 @@ function index(req, res) {
     categoryTopics : Common.TopList.categoryTopics,
     realGood: Common.TopList.classicTopics.slice(0, topicsInIndex),
     newTopics: Common.TopList.newTopics.slice(0, newTopicsPerPage),
-    authors: Common.TopList.hotAuthors,
     authorCategoryList: Common.AuthorCategoryList,
-    tags: Common.TopList.hotTags
+    Tags: Common.Tags,
+    Topic: Common.Topic,
+    categoryAuthors: Common.TopList.categoryAuthors,
+    categoryTags: Common.TopList.categoryTags
   });
 }
 
@@ -46,7 +48,8 @@ function showNew(req, res) {
     categoryTopicCount: Common.TopList.categoryTopicCount,
     topics: newTopicsPage,
     totalPage: totalPages,
-    currentPage: currentPage
+    currentPage: currentPage,
+    Topic: Common.Topic
   });
 }
 
@@ -70,7 +73,9 @@ function showCategory(req, res) {
     currentPage: currentPage,
     authors: Common.TopList.categoryAuthors[category],
     authorCategoryList: Common.AuthorCategoryList,
-    tags: Common.TopList.categoryTags[category]
+    tags: Common.TopList.categoryTags[category],
+    Tags: Common.Tags,
+    Topic: Common.Topic
   });
 }
 

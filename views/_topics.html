@@ -1,37 +1,61 @@
-<div class="row">
-  <% for (i in topics) { %>
-  <% var topic = topics[i]; %>
-  <div class="col-sm-6 col-md-4 col-lg-3 mtm">
-    <div class="Tile" style="background-color: white; border-radius: 6px; max-width: 350px; margin: 0 auto;">
-      <a class="Cover text-inverse"
-         style="display: block; position: relative; min-height: 140px; border-radius: 6px 6px 0 0;"
-         target="_blank" href="/topic/<%= topic._id %>" title="<%= topic.title %>">
-        <div style="border-radius: 6px 6px 0 0; height: 200px;
-            filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='<%= topic.cover_url %>',sizingMethod='scale');
-            -ms-filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='<%= topic.cover_url %>',sizingMethod='scale');
-            background: url('<%= topic.cover_url %>') no-repeat center; background-size: cover;">
-        </div>
-        <div class="mbn pam Title"
-             style="position: absolute; bottom: 0; left: 0; right: 0;">
-          <div style="line-height: 1.2;font-size: 18px;height: 42px;overflow: hidden; font-weight: bold;">
-            <%= topic.title %>
-          </div>
-        </div>
-      </a>
+<% for (i in topics) { %>
+<% var topic = topics[i]; %>
+  <div class="Tile clearfix background-white mtl"
+       style="border-radius: 6px;">
+    <a class="Cover pull-left"
+       style="display: block; height: 100px; width: 100px;
+       border-radius: 6px 0 0 6px;
+          filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='<%= topic.cover_url %>',sizingMethod='scale');
+          -ms-filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='<%= topic.cover_url %>',sizingMethod='scale');
+          background: url('<%= topic.cover_url %>') no-repeat center; background-size: cover;"
+       href="/topic/<%= topic._id %>" title="<%= topic.title %>">
+    </a>
 
-      <div class="mhm">
-        <div class="clearfix pbx text-muted" style="font-size: 14px;">
-          <div class="pull-right">
-            <a class="text-muted mrs Share" target="_blank" href="/topic/<%= topic._id %>/share_chang" title="分享"><i class="fa fa-share"></i></a>
-            <span class="mrs"><i class="fa fa-star"></i> <%= topic.FVCount %></span>
-            <span><i class="fa fa-eye"></i> <%= topic.PV_count %></span>
-          </div>
-          <div class="prs" style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
-            <a class="text-muted" target="_blank" href="/u/<%= topic.author_name %>" title="<%= topic.author_name %>"><%= topic.author_name %></a>
-          </div>
+    <div class="phm ptm pbs" style="overflow: hidden;line-height: 1.5;">
+      <h2 class="Title mvn hidden-xs" style="font-size: 18px;line-height: 1.5;
+         text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
+        <a href="/topic/<%= topic._id %>"
+           title="<%= topic.title %>">
+          <%= topic.title %>
+        </a>
+      </h2>
+      <h2 class="Title mvn visible-xs"
+          style="height: 66px;font-size: 14px;line-height: 1.5;overflow: hidden;">
+        <a href="/topic/<%= topic._id %>"
+           title="<%= topic.description || '' %>">
+          <%= topic.title %>
+        </a>
+      </h2>
+      <div class="prs" style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;font-size: 12px;">
+        <a class="text-muted hidden-xs" target="_blank" href="/u/<%= topic.author_name %>" title="<%= topic.author_name %>"><%= topic.author_name %></a>
+      </div>
+      <div class="text-muted hidden-xs"
+           style="font-size: 14px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"
+           title="<%= topic.description || '' %>">
+        <%= topic.description || '' %>&nbsp;
+      </div>
+      <div class="text-muted" style="font-size: 12px;">
+        <div class="pull-left">
+          <span class="mrs" title="关注"><i class="fa fa-star"></i> <%= topic.FVCount %></span>
+          <span class="mrs" title="浏览"><i class="fa fa-eye"></i> <%= topic.PV_count %></span>
+          <a class="text-muted mrs Share" target="_blank" href="/topic/<%= topic._id %>/share_chang" title="分享"><i class="fa fa-share"></i></a>
+        </div>
+        <div class="pull-right hidden-xs" style="font-size: 12px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
+          <i class="fa fa-puzzle-piece"></i> 策展了来自
+          <b class="text-asbestos"><%= Topic[topic._id].siteCount || 0 %></b>
+          个网站的
+          <span class="text-asbestos"><%= Topic[topic._id].urlCount || 0 %></span>
+          条碎片信息
+        </div>
+        <div class="pull-right visible-xs"
+             style="font-size: 12px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"
+          title="策展了来自 <%= Topic[topic._id].siteCount || 0 %> 个网站的 <%= Topic[topic._id].urlCount || 0 %> 条碎片信息">
+          <i class="fa fa-globe"></i>
+          <b class="text-asbestos"><%= Topic[topic._id].siteCount || 0 %></b>
+          <i class="fa fa-puzzle-piece mls"></i>
+          <span class="text-asbestos"><%= Topic[topic._id].urlCount || 0 %></span>
         </div>
       </div>
     </div>
   </div>
-  <% } %>
-</div>
+<% } %>

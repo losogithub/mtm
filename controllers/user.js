@@ -767,12 +767,13 @@ function collectItem(req, res, next) {
         callback(null, user);
       });
     }]
-  }, function (err) {
+  }, function (err, results) {
     if (err) {
       return next(err);
     }
 
-    res.send(200);
+    var item = results.item;
+    res.json(Item.getItemData(item));
   });
 }
 

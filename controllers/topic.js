@@ -458,7 +458,9 @@ function showIndex(req, res, next) {
       totalTopicCount: Common.TopList.totalTopicCount,
       categoryTopicCount: Common.TopList.categoryTopicCount,
       topic: topic,
+      Topic: Common.Topic,
       tags: topic.tags,
+      Tags: Common.Tags,
       items: itemsData,
       authorInfo: authorData,
       authorCategoryList: Common.AuthorCategoryList,
@@ -486,21 +488,6 @@ function showIndex(req, res, next) {
         res.send(404, '条目列表头不存在');
         return;
       }
-
-      var urlCount = 0;
-      var quoteList = [];
-      items.forEach(function (item) {
-        if (item.url) {
-          urlCount++;
-          quoteList.push(utils.getQuote(item.type == 'IMAGE' && item.quote || item.url));
-        }
-      });
-      topic.urlCount = urlCount;
-      var quotes = {};
-      quoteList.forEach(function (quote) {
-        quotes[quote] = 1;
-      });
-      topic.quoteCount = Object.keys(quotes).length;
 
       ep.emit('items', items);
     }));
@@ -649,7 +636,15 @@ function createItem(req, res, next) {
           return;
         }
 
-        Topic.increaseItemCountBy(topic, 1).exec();
+        Topic.increaseItemCountBy(topic, 1, function (err, topic) {
+          if (err) {
+            return callback(err);
+          }
+          if (!topic) {
+            return callback(new Error(500));
+          }
+          Topic.updateSingleTopicSiteCount(topic);
+        });
         callback(null, item);
       });
     }]
@@ -661,8 +656,7 @@ function createItem(req, res, next) {
     var item = results.item;
     res.json(Item.getItemData(item));
     var topic = results.topic;
-    topic.update_at = Date.now();
-    topic.save(function () {
+    topic.update({ update_at: Date.now() }, function () {
       Topic.updateNewTopics();
     });
     console.log('createItem done');
@@ -726,8 +720,7 @@ function sortItem(req, res, next) {
 
     res.send(200);
     var topic = results.topic;
-    topic.update_at = Date.now();
-    topic.save(function () {
+    topic.update({ update_at: Date.now() }, function () {
       Topic.updateNewTopics();
     });
     console.log('sort done');
@@ -789,7 +782,15 @@ function insertItem(req, res, next) {
           return callback(err);
         }
 
-        Topic.increaseItemCountBy(topic, 1).exec();
+        Topic.increaseItemCountBy(topic, 1, function (err, topic) {
+          if (err) {
+            return callback(err);
+          }
+          if (!topic) {
+            return callback(new Error(500));
+          }
+          Topic.updateSingleTopicSiteCount(topic);
+        });
         callback();
       });
     }]
@@ -800,8 +801,7 @@ function insertItem(req, res, next) {
 
     res.send(200);
     var topic = results.topic;
-    topic.update_at = Date.now();
-    topic.save(function () {
+    topic.update({ update_at: Date.now() }, function () {
       Topic.updateNewTopics();
     });
     console.log('insert done');
@@ -858,10 +858,10 @@ function editItem(req, res, next) {
     var newItem = results.newItem;
     res.json(Item.getItemData(newItem));
     var topic = results.topic;
-    topic.update_at = Date.now();
-    topic.save(function () {
+    topic.update({ update_at: Date.now() }, function () {
       Topic.updateNewTopics();
     });
+    Topic.updateSingleTopicSiteCount(topic);
     console.log('editItem done');
   });
 }
@@ -889,7 +889,15 @@ function deleteItem(req, res, next) {
           return;
         }
 
-        Topic.increaseItemCountBy(topic, -1).exec();
+        Topic.increaseItemCountBy(topic, -1, function (err, topic) {
+          if (err) {
+            return callback(err);
+          }
+          if (!topic) {
+            return callback(new Error(500));
+          }
+          Topic.updateSingleTopicSiteCount(topic);
+        });
         callback();
       });
     }]
@@ -900,8 +908,7 @@ function deleteItem(req, res, next) {
 
     res.send(200);
     var topic = results.topic;
-    topic.update_at = Date.now();
-    topic.save(function () {
+    topic.update({ update_at: Date.now() }, function () {
       Topic.updateNewTopics();
     });
     console.log('deleteItem done');
@@ -1404,8 +1411,6 @@ function _getVideoDetail(url, callback) {
       callback(new Error(400));
       return;
     }
-    console.log(title);
-    console.log(cover);
     if (title && title.length > 50) {
       title = title.substr(0, 49) + '…';
     }

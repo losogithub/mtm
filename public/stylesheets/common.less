@@ -1,7 +1,7 @@
 @import "theme";
 
 body {
-  word-wrap: break-word; font-family: "微软雅黑", arial, sans-serif; position: relative;//affix必须用这个配置
+  word-wrap: break-word; font-family: "微软雅黑", arial, sans-serif;
 }
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 { font-family: "微软雅黑", arial, sans-serif; }
 .navbar-unread, .navbar-new { font-family: "微软雅黑", arial, sans-serif; }
@@ -20,6 +20,10 @@ textarea {
 
 .btn-square {
   border-radius: 0;
+}
+
+.Counter {
+  line-height: 1; font-size: 12px;
 }
 
 .carousel-caption a { font-size: 40px; }
@@ -206,22 +210,6 @@ textarea {
   width: 130px !important;
 }
 
-.Tags {
-  min-height: 34px;
-  button {
-    padding: 1px 5px;
-  }
-  .tag {
-    padding-left: 15px; padding-right: 15px;
-  }
-  .Band & {
-    max-width: 100%;
-    max-height: 41px;
-    line-height: 41px;
-    overflow: hidden;
-  }
-}
-
 .Band {
   background-color: @color-muted;
   .caret { border-top-color: white; }
@@ -233,11 +221,10 @@ textarea {
 }
 
 .Authors {
-  max-height: 113px; overflow: hidden;
   &:hover a { opacity: 0.5; }
   a {
     display: inline-block; vertical-align: bottom;
-    width: 60px;
+    width: 70px;
     -webkit-filter: grayscale(75%);
     -webkit-transition: 0.25s; transition: 0.25s;
     &:hover { -webkit-filter: grayscale(0%); opacity: 1;
@@ -249,14 +236,14 @@ textarea {
       }
     }
     &:first-child, &:first-child + a, &:first-child + a + a {
-      width: 80px;
+      width: 100px;
       img {
-        width: 70px; height: 70px;
+        width: 90px; height: 90px;
       }
     }
   }
   img {
-    width: 50px; height: 50px;
+    width: 60px; height: 60px;
   }
   .Authors_Name,.Authors_Category {
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
@@ -272,14 +259,6 @@ textarea {
     display: none;
   }
   &:hover .Share { display: inline; }
-  .Title {
-    background-color: rgba(0, 0, 0, 0.6);
-    filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=1, StartColorStr='#99000000', EndColorStr='#99000000');
-  }
-  .Cover:hover .Title {
-    background-color: rgba(0, 0, 0, 1);
-    filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=1, StartColorStr='#ff000000', EndColorStr='#ff000000');
-  }
 }
 
 .TopicHead .Title {
@@ -328,7 +307,12 @@ textarea {
 }
 
 #_toTop {
-  position: fixed; display: none; right: 30px; opacity: 0.5; padding: 4px 12px;
-  background-color: #999; color: white;
-  &:hover, &:active, &:focus { opacity: 1;background-color: #eee; color: black;}
+  position: fixed; visibility: hidden;
+  bottom: 20px; right: 15px; opacity: 0; padding: 4px 12px;
+  background-color: @color-muted; color: white;
+  &.VISIBLE {
+    visibility: visible;
+    opacity: 0.5;
+  }
+  &:hover, &:active, &:focus { opacity: 1; color: @color-default;}
 }

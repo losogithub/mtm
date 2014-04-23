@@ -9,6 +9,7 @@
 var utils = require('./public/javascripts/utils');
 
 module.exports = {
+  Topic: {},
   Tags: [],
   AuthorPVCount: {},
   AuthorCategories: {},
