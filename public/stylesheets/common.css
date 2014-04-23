@@ -139,7 +139,7 @@ textarea {
 .carousel-caption a {
   font-size: 40px;
 }
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .carousel-caption h3 {
     font-size: 24px !important;
   }
@@ -196,7 +196,7 @@ textarea {
 #featuredTopics .Text > div {
   height: 50%;
 }
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   #featuredTopics .carousel-inner .item > div {
     background-color: rgba(0, 0, 0, 0.6);
     filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=1, StartColorStr='#99000000', EndColorStr='#99000000');
@@ -395,7 +395,7 @@ textarea {
 .Band .caret {
   border-top-color: white;
 }
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .Band.Band-Nav .container {
     padding: 0;
   }

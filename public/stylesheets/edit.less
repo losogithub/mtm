@@ -47,6 +47,11 @@
       }
     }
   }
+  .Scrollable {
+    @media (max-width: 991px){
+      height: 500px !important;
+    }
+  }
 }
 
 /*li*/
@@ -111,15 +116,19 @@
 }
 
 .Collection {
-  &.affix{ position: static; }
+  &.affix {
+    position: static;
+  }
   @media (min-width: 992px){
-    &.affix {width: 293px; top: 61px; position: fixed !important;}
+    & {width: 293px;}
+    &.affix-top { position: absolute; top: 0; }
+    &.affix {top: 61px; position: fixed !important;}
     &.affix-bottom {
       position: relative !important;
     }
   }
   @media (min-width: 1200px){
-    &.affix { width: 458px;}
+    & { width: 458px;}
   }
 }
 

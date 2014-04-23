@@ -143,6 +143,11 @@
   background-color: white;
   color: #34495e;
 }
+@media (max-width: 991px) {
+  .Collection .Scrollable {
+    height: 500px !important;
+  }
+}
 /*li*/
 .WidgetItemList.WidgetItemList-Sorting > li {
   background-color: white !important;
@@ -233,8 +238,14 @@
   position: static;
 }
 @media (min-width: 992px) {
-  .Collection.affix {
+  .Collection {
     width: 293px;
+  }
+  .Collection.affix-top {
+    position: absolute;
+    top: 0;
+  }
+  .Collection.affix {
     top: 61px;
     position: fixed !important;
   }
@@ -243,7 +254,7 @@
   }
 }
 @media (min-width: 1200px) {
-  .Collection.affix {
+  .Collection {
     width: 458px;
   }
 }

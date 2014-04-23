@@ -1023,7 +1023,6 @@
     $window.on('scroll resize', function () {
       $scroll.css('height',
         Math.min(
-          $main.height() - $cat.height() - 20,
           $footer.offset().top - $band.offset().top - $band.height() - $cat.height() -60,
           $window.height() + $window.scrollTop() - $band.height() - $band.offset().top - $cat.height() - 60
         ));

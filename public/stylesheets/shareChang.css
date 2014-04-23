@@ -99,7 +99,7 @@
 #_bubble {
   width: 180px;
 }
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   #_left {
     width: 100%;
   }
