@@ -107,8 +107,8 @@ function _calcTags(callback, results) {
       category: tempCategory,
       topicCount: topicCounts[tagText],
       authorWeights: authorIds[tagText],
-      authorIds: tempAuthorIds.slice(0, 7),
-      tags: tempTags.slice(0, 13)
+      authorIds: tempAuthorIds,//.slice(0, 7),
+      tags: tempTags//.slice(0, 13)
     };
   }
   Common.Tags = tempCommonTags;

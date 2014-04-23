@@ -396,7 +396,7 @@ function updateCategoryTopics() {
         authorIds.sort(function (a, b) {
           return (authorMap[b].score - authorMap[a].score);
         });
-        var hotAuthorIds = authorIds.slice(0, 7);
+        var hotAuthorIds = authorIds;//.slice(0, 7);
         User.getUserByIds(hotAuthorIds, function (err, authors) {
           authors.sort(function (a, b) {
             return (authorMap[b._id].score - authorMap[a._id].score);
@@ -411,7 +411,7 @@ function updateCategoryTopics() {
         tagTexts.sort(function (a, b) {
           return (tagMap[b].score - tagMap[a].score);
         });
-        Common.TopList.categoryTags[category] = tagTexts.slice(0, 13);
+        Common.TopList.categoryTags[category] = tagTexts;//.slice(0, 13);
       });
     })(category);
   }

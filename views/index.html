@@ -1,7 +1,7 @@
 
 <% include _band.html %>
 
-<% if (featuredTopics.length > 2) { %>
+<% if (featuredTopics && featuredTopics.length > 2) { %>
 <div ng-non-bindable id="featuredTopics" class="carousel slide" data-ride="carousel">
   <!-- Indicators -->
   <ol class="carousel-indicators">
@@ -39,9 +39,9 @@
                 <p class="hidden-xs mtm text-muted" style="max-height: 120px; overflow: hidden;"><%= featuredTopics[i].description %></p>
                 <p class="text-muted text-right" style="font-size: 14px;">
                   <i class="fa fa-puzzle-piece"></i> 策展了来自
-                  <b class="text-inverse"><%= Topic[featuredTopics[i]._id].siteCount %></b>
+                  <b class="text-inverse"><%= Topic[featuredTopics[i]._id] && Topic[featuredTopics[i]._id].siteCount || 0 %></b>
                   个网站的
-                  <span class="text-inverse"><%= Topic[featuredTopics[i]._id].urlCount %></span>
+                  <span class="text-inverse"><%= Topic[featuredTopics[i]._id] && Topic[featuredTopics[i]._id].urlCount || 0 %></span>
                   条碎片信息
                 </p>
               </div>
@@ -90,7 +90,7 @@
       </div>
     </div>
     <a class="text-muted pull-right mrm" href="/<%= temp[key] %>">
-      <span style="font-size: 14px; font-weight: normal">更多></span>
+      <span style="font-size: 14px;">更多<%=key%>策展></span>
     </a>
     <div class="clearfix"></div>
     <% } %>
