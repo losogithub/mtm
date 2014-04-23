@@ -358,7 +358,7 @@
         $(this).css('min-height', $(this).outerHeight());
       });
     $(document).mouseup(function () {
-        $(this).removeAttr('style');
+      $($element).find('.WidgetItemList-Main').removeAttr('style');
       });
     $scope.sortableOptions = {
       //sortable微件的标准参数
@@ -595,6 +595,18 @@
         });
     };
 
+    var $ul = $($element).find('.WidgetItemList-Sub');
+    $ul
+      //防止拖动开始时高度减小导致的抖动
+      .mousedown(function () {
+        $(this).css('min-height', $(this).outerHeight());
+      });
+    $(document).mouseup(function () {
+      $ul.removeAttr('style');
+    });
+    $(window).on('scroll', function () {
+      $ul.sortable('refreshPositions');//因为滚动后位置变了，所以要清除缓存大小
+    });
     $scope.sortableOptions = {
       appendTo: '.WidgetItemList-Main',
       opacity: 0.4,
@@ -607,14 +619,14 @@
       connectWith: '.WidgetItemList-Main',
 
       start: function () {
-        $($element).find('.WidgetItemList-Sub')
+        $ul
           .addClass('WidgetItemList-Sorting')
           .sortable('refreshPositions');//因为item缩小了，所以要清除缓存大小
       },
 
       //列表顺序改变后的回调函数
       stop: function () {
-        $($element).find('.WidgetItemList-Sub')
+        $ul
           .removeClass('WidgetItemList-Sorting');
       }
     };
