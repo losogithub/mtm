@@ -1,6 +1,5 @@
 <div ng-controller="TopicCtrl" ng-init="topic = <%= JSON.stringify(locals.topic) %>;init();">
-  <div class="Band text-inverse" ng-class="{'background-danger': fail}"
-       data-spy="affix" data-offset-top="72">
+  <div class="Band text-inverse" ng-class="{'background-danger': fail}">
     <div class="container">
       <div class="Band_Btn">
         <% if (!topic.publishDate) { %>

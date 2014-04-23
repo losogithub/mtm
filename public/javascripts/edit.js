@@ -993,6 +993,13 @@
   };
 
   $(function () {
+    $('.Band').affix({
+      offset: {
+        top: function () {
+          return (this.top = $('.Header').outerHeight(true))
+        }
+      }
+    });
     $('.Collection').affix({
       offset: {
         top: function () {
@@ -1002,7 +1009,7 @@
           return ($('.Footer').outerHeight(true) + 20)
         }
       }
-    })
+    });
     $('.Collection .Scrollable').css('height', $(window).height() - 142);
     $(window).on('scroll resize', function () {
       $('.Collection .Scrollable').css('height', $(window).height() - 142);
