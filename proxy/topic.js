@@ -301,7 +301,7 @@ function updateHotTopics() {
     }
 
     console.log("更新热门策展");
-    Common.TopList.classicTopics = topics.sort(_scoreCompare).slice(0, 240);
+    Common.TopList.classicTopics = topics.sort(_scoreCompare).slice(0, 120);
 
     var authorMap = {};
     var tagMap = {};
@@ -314,7 +314,7 @@ function updateHotTopics() {
         tagMap[topics[i].tags[j]].score += topics[i].score;
       }
     }
-    Common.TopList.hotTopics = topics.sort(_scoreCompare).slice(0, 240);
+    Common.TopList.hotTopics = topics.sort(_scoreCompare).slice(0, 120);
     Common.TopList.totalTopicCount = topics.length;
     Common.FeaturedTopics = topics.slice(0, 3);
     async.forEachSeries(Common.FeaturedTopics, function (topic, callback) {
@@ -386,7 +386,7 @@ function updateCategoryTopics() {
             tagMap[topics[i].tags[j]].score += topics[i].score;
           }
         }
-        Common.TopList.categoryTopics[category] = topics.sort(_scoreCompare).slice(0, 240);
+        Common.TopList.categoryTopics[category] = topics.sort(_scoreCompare).slice(0, 120);
         Common.TopList.categoryTopicCount[category] = topics.length;
 
         var authorIds = [];
