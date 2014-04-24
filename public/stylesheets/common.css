@@ -498,23 +498,30 @@ textarea {
 .LoginDialog .modal-body {
   background-color: #ecf0f1;
 }
-#_toTop {
+#_scrollUtil {
   position: fixed;
-  visibility: hidden;
   bottom: 20px;
   right: 15px;
+}
+#_toTop,
+#_toBottom {
+  visibility: hidden;
   opacity: 0;
   padding: 4px 12px;
   background-color: #bdc3c7;
   color: white;
 }
-#_toTop.VISIBLE {
+#_toTop.VISIBLE,
+#_toBottom.VISIBLE {
   visibility: visible;
   opacity: 0.5;
 }
 #_toTop:hover,
+#_toBottom:hover,
 #_toTop:active,
-#_toTop:focus {
+#_toBottom:active,
+#_toTop:focus,
+#_toBottom:focus {
   opacity: 1;
   color: #34495e;
 }

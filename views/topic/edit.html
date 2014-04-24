@@ -383,6 +383,7 @@
 
                   <button class="COLLECT btn btn-default btn-xs"
                           ng-click="collectItem(item)"
+                          title="采集素材"
                           type="button">采集</button>
                   <div class="AddUtil pull-left">
 
@@ -891,7 +892,7 @@
               <div class="Categories btn-group background-muted">
                 <button class="btn btn-default"
                         ng-click="setType('ALL')"
-                        ng-class="{active: type == 'ALL'}">采集的条目</button>
+                        ng-class="{active: type == 'ALL'}">所有素材</button>
                 <button class="btn btn-default"
                         ng-click="setType('LINK')"
                         ng-class="{active: type == 'LINK'}"><i class="fa fa-link"></i></button>

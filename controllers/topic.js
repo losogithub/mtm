@@ -1265,10 +1265,21 @@ function _getVideoDetail(url, callback) {
         title = !(temp = html.match(/<h2>\s*([^<>]*)\s*<\/h2>/i)) ? null : !temp[1] ? null : temp[1];
         //http://tv.sohu.com/20130712/n381487508.shtml
         //<script type="text/javascript">......var vid="1237900";......</script>
-        vid = !(temp = html.match(/<script type="text\/javascript">[^<>]*\svar vid="([^"<>;]+)";[^<>]*<\/script>/i)) ? null : !temp[1] ? null : temp[1];
+        vid = !(temp = html.match(/<script((?!<\/script>)[\s\S])*\svar vid\s*=\s*['"]([^"'<>;]+)['"];/i)) ? null : !temp[2] ? null : temp[2];
         //<script...var cover="http://photocdn.sohu.com/20130712/vrsb902245.jpg";...</script>
         //120x90
         cover = !(temp = html.match(/<script[\s\S]*var cover="([^">]*)";[\s\S]*<\/script>/i)) ? null : !temp[1] ? null : temp[1];
+        break;
+      case 'my.tv.sohu.com':
+        //plan A
+        //<script>......,title: '立邦漆广告之小屁股篇'......</script>
+        title = !(temp = html.match(/<script((?!<\/script>)[\s\S])*\s,title:\s*['"]([^"'<>;]+)['"]/i)) ? null : !temp[2] ? null : temp[2];
+        //http://my.tv.sohu.com/us/139695/445280.shtml
+        //<script>......var vid  ='445280';......</script>
+        vid = !(temp = html.match(/<script((?!<\/script>)[\s\S])*\svar vid\s*=\s*['"]([^"'<>;]+)['"];/i)) ? null : !temp[2] ? null : temp[2];
+        //<script...,bCover: 'http://220.img.pp.sohu.com.cn/p220/2012/10/21/4/8/6_13b449acc64g102_445280_1_1.jpg'...</script>
+        //120x90
+        cover = !(temp = html.match(/<script((?!<\/script>)[\s\S])*,bCover: '([^'>]*)'/i)) ? null : !temp[2] ? null : temp[2];
         break;
       case 'qq.com':
         //plan A

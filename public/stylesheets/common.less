@@ -306,9 +306,14 @@ textarea {
   background-color: @color-clouds;
 }
 
-#_toTop {
-  position: fixed; visibility: hidden;
-  bottom: 20px; right: 15px; opacity: 0; padding: 4px 12px;
+#_scrollUtil {
+  position: fixed;
+  bottom: 20px; right: 15px;
+}
+
+#_toTop, #_toBottom {
+  visibility: hidden;
+  opacity: 0; padding: 4px 12px;
   background-color: @color-muted; color: white;
   &.VISIBLE {
     visibility: visible;

@@ -136,6 +136,7 @@
     'iqiyi.com': ['http://www.iqiyi.com/player/20131119102234/Player.swf?vid=#vid#', 'playMovie=true'],
     'pps.tv': ['http://player.pps.tv/player/sid/#vid#/v.swf', 'auto=1'],
     'sohu.com': ['http://share.vrs.sohu.com/#vid#/v.swf', 'autoplay=true'],
+    'my.tv.sohu.com': ['http://share.vrs.sohu.com/my/v.swf&id=#vid#', 'autoplay=true'],
     'qq.com': ['http://static.video.qq.com/TPout.swf?vid=#vid#', 'auto=1'],
     'sina.com.cn': ['http://you.video.sina.com.cn/api/sinawebApi/outplayrefer.php/vid=#vid#&autoPlay=1/s.swf', ''],
     'ifeng.com': ['http://v.ifeng.com/include/exterior.swf?guid=#vid#&AutoPlay=true', ''],

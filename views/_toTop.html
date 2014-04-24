@@ -1,25 +1,43 @@
-
-<button id="_toTop" class="btn btn-link" title="返回顶部">
-  <i class="fa fa-angle-up"></i>
-</button>
+<div id="_scrollUtil" class="btn-group-vertical">
+  <button id="_toTop" class="btn btn-link" title="返回顶部">
+    <i class="fa fa-angle-up"></i>
+  </button>
+  <button id="_toBottom" class="btn btn-link" title="滚到底部">
+    <i class="fa fa-angle-down"></i>
+  </button>
+</div>
 
 <script>
   $(function () {
     //回顶部按钮
     var MIN_SCROLL = 100;
     var $window = $(window);
+    var $document = $(document);
     var $_toTop = $('#_toTop');
+    var $_toBottom = $('#_toBottom');
+    if ($document.height() - $window.height() > MIN_SCROLL) {
+      $_toTop.addClass('VISIBLE');
+      $_toBottom.addClass('VISIBLE');
+    } else {
+      $_toTop.removeClass('VISIBLE');
+      $_toBottom.removeClass('VISIBLE');
+    }
     $window.on('scroll resize', function () {
-      var scroll = $window.scrollTop();
-      if (scroll < MIN_SCROLL) {
-        $_toTop.removeClass('VISIBLE');
-      } else {
+      if ($document.height() - $window.height() > MIN_SCROLL) {
         $_toTop.addClass('VISIBLE');
+        $_toBottom.addClass('VISIBLE');
+      } else {
+        $_toTop.removeClass('VISIBLE');
+        $_toBottom.removeClass('VISIBLE');
       }
     });
     $_toTop.click(function () {
       $_toTop.blur();
       $('html, body').animate({scrollTop: 0}, 250);
+    });
+    $_toBottom.click(function () {
+      $_toBottom.blur();
+      $('html, body').animate({scrollTop: $document.height() - $window.height()}, 250);
     });
   })
 </script>

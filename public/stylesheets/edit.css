@@ -141,7 +141,7 @@
 }
 .Collection .Categories .btn.active {
   background-color: white;
-  color: #34495e;
+  color: #bdc3c7;
 }
 @media (max-width: 991px) {
   .Collection .Scrollable {
