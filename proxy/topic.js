@@ -175,12 +175,13 @@ function publishTopic(topic, callback) {
   }
   topic.update_at = Date.now();
   topic.publishDate = Date.now();
-  topic.save(function (err) {
+  topic.save(function (err, topic) {
     if (err) {
       return callback(err);
     }
     callback(null, topic);
     updateNewTopics();
+    updateSingleTopicSiteCount(topic);
   });
 }
 
