@@ -221,13 +221,10 @@ textarea {
 }
 
 .Authors {
-  &:hover a { opacity: 0.5; }
   a {
     display: inline-block; vertical-align: bottom;
-    width: 70px;
-    -webkit-filter: grayscale(75%);
-    -webkit-transition: 0.25s; transition: 0.25s;
-    &:hover { -webkit-filter: grayscale(0%); opacity: 1;
+    width: 50px; opacity: 0.8;
+    &:hover { opacity: 1;
       .Authors_Name {
         text-overflow: clip;
       }
@@ -235,15 +232,15 @@ textarea {
         color: @color-default;
       }
     }
-    &:first-child, &:first-child + a, &:first-child + a + a {
-      width: 100px;
+    &:first-child, &:first-child + a, &:first-child + a + a, &:first-child + a + a + a {
+      width: 70px;
       img {
-        width: 90px; height: 90px;
+        width: 60px; height: 60px;
       }
     }
   }
   img {
-    width: 60px; height: 60px;
+    width: 40px; height: 40px;
   }
   .Authors_Name,.Authors_Category {
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;

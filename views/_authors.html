@@ -1,9 +1,9 @@
 <% if (tags.length) { %>
-<div class="Authors background-white pll ptl prm pbm mtl" style="border-radius: 6px;">
+<div class="Authors background-white pll ptl mtl" style="border-radius: 6px;">
   <% for (i in authors) { %>
-  <% if (i == 3 && pageType == 'INDEX') { break; } %>
+  <% if (i == 4 && pageType == 'INDEX') { break; } %>
   <% var author = authors[i]; %>
-  <a class="mrs mbm text-muted" target="_blank"
+  <a class="mrm mbl text-muted" target="_blank"
      href="/u/<%= author.loginName %>"
      title="<%= author.loginName %>">
     <div class="img-circle-border-clouds">
@@ -11,7 +11,7 @@
            onerror="shizier.errorImage(this, 'image_95x95')"
            src="<%= author.url || '/images/no_img/user_80x80.png' %>">
     </div>
-    <% if (i < 3) { %>
+    <% if (i < 4 && pageType != 'INDEX') { %>
     <small class="Authors_Name text-center" title="<%= author.loginName %>"><%= author.loginName %></small>
     <small class="Authors_Category text-center">
       <i class="fa fa-bookmark-o"></i>
@@ -20,7 +20,7 @@
     <% } %>
 
   </a>
-  <% if (i == 2) { %>
+  <% if (i == 3) { %>
   <div class="clearfix"></div>
   <% } %>
   <% } %>

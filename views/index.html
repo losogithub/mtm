@@ -14,13 +14,13 @@
   <div class="carousel-inner">
     <% for (var i = 0; i < 3; i++) { %>
     <div class="item <%= i == 0 ? 'active' : '' %>"
-         style="background: url(<%= featuredTopics[i].cover_url %>) no-repeat top; background-size: cover;">
+         style="background: url(<%= featuredTopics[i].cover_url || '' %>) no-repeat top; background-size: cover;">
       <div>
         <div class="container">
           <div class="row">
             <div class="col-sm-7 col-lg-6 hidden-xs">
               <a class="Cover pull-right" href="/topic/<%= featuredTopics[i]._id %>">
-                <img class="pull-right" src="<%= featuredTopics[i].cover_url %>" alt="<%= featuredTopics[i].title %>" title="<%= featuredTopics[i].title %>">
+                <img class="pull-right" src="<%= featuredTopics[i].cover_url || '' %>" alt="<%= featuredTopics[i].title %>" title="<%= featuredTopics[i].title %>">
               </a>
             </div>
             <div class="col-sm-5 col-lg-6 Text">

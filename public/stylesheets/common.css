@@ -387,19 +387,13 @@ textarea {
     padding: 0;
   }
 }
-.Authors:hover a {
-  opacity: 0.5;
-}
 .Authors a {
   display: inline-block;
   vertical-align: bottom;
-  width: 70px;
-  -webkit-filter: grayscale(75%);
-  -webkit-transition: 0.25s;
-  transition: 0.25s;
+  width: 50px;
+  opacity: 0.8;
 }
 .Authors a:hover {
-  -webkit-filter: grayscale(0%);
   opacity: 1;
 }
 .Authors a:hover .Authors_Name {
@@ -410,18 +404,20 @@ textarea {
 }
 .Authors a:first-child,
 .Authors a:first-child + a,
-.Authors a:first-child + a + a {
-  width: 100px;
+.Authors a:first-child + a + a,
+.Authors a:first-child + a + a + a {
+  width: 70px;
 }
 .Authors a:first-child img,
 .Authors a:first-child + a img,
-.Authors a:first-child + a + a img {
-  width: 90px;
-  height: 90px;
-}
-.Authors img {
+.Authors a:first-child + a + a img,
+.Authors a:first-child + a + a + a img {
   width: 60px;
   height: 60px;
+}
+.Authors img {
+  width: 40px;
+  height: 40px;
 }
 .Authors .Authors_Name,
 .Authors .Authors_Category {
