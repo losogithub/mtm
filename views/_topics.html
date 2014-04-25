@@ -5,9 +5,9 @@
     <a class="Cover pull-left"
        style="display: block; height: 100px; width: 100px;
        border-radius: 6px 0 0 6px;
-          filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='<%= topic.cover_url %>',sizingMethod='scale');
-          -ms-filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='<%= topic.cover_url %>',sizingMethod='scale');
-          background: url('<%= topic.cover_url %>') no-repeat center; background-size: cover;"
+          filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='<%= topic.cover_url || '' %>',sizingMethod='scale');
+          -ms-filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='<%= topic.cover_url || '' %>',sizingMethod='scale');
+          background: url('<%= topic.cover_url || '' %>') no-repeat center; background-size: cover;"
        href="/topic/<%= topic._id %>" title="<%= topic.title %>">
     </a>
 

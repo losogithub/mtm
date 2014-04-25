@@ -25,10 +25,17 @@
       </ul>
     </div>
     <% if (locals.pageType != 'INDEX') { %>
+    <% if (locals.pageType == '最新') { %>
+    <a class="btn btn-square pull-left <%- locals.pageType == 'TAG' || locals.pageType == 'TOPIC' ? 'btn-default' : 'btn-primary' %>"
+       href="/new"><%= categoryType %>
+      <span class="Counter">(<%= locals.topicCount %>)</span>
+    </a>
+    <% } else { %>
     <a class="btn btn-square pull-left <%- locals.pageType == 'TAG' || locals.pageType == 'TOPIC' ? 'btn-default' : 'btn-primary' %>"
        href="/<%= CATEGORIES2ENG[categoryType] %>"><%= categoryType %>
       <span class="Counter">(<%= locals.topicCount %>)</span>
     </a>
+    <% } %>
     <% } %>
     <% if (locals.pageType == 'TAG') { %>
     <div style="overflow: hidden;">

@@ -7,6 +7,7 @@
     <% var temp2 = {'生活':'cutlery','娱乐':'music','新闻':'globe','科技':'rocket','文化':'book'}; %>
     <% var temp3 = {'生活':'muted','娱乐':'warning','新闻':'info','科技':'danger','文化':'black'}; %>
     <h1 class="h6 mvn text-default mtl" style="display: block;">
+      <!--下面一行会出现undefined，但是不影响-->
       <i class="fa fa-<%= temp2[pageType] %> text-<%= temp3[pageType] %>"></i> <%= pageType %>
     </h1>
     <div class="row">
