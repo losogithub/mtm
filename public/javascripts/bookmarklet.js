@@ -42,7 +42,7 @@ var shizier_postMessageListener;
 
     var iframe = document.createElement('IFRAME');
     iframe.id = '_shizier_overlay';
-    iframe.src = 'http://192.168.1.3:3000/bookmarklet?url='
+    iframe.src = 'http://shizier.com/bookmarklet?url='
       + encodeURIComponent(location.href)
       + '&title=' + encodeURIComponent(document.title)
       + '&description=' + encodeURIComponent(document.title)
