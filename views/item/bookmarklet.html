@@ -150,7 +150,7 @@
 <body style="height: 100%; background: none;">
   <!-- Modal -->
   <div class="LoginDialog modal fade" ng-controller="BookmarkletCtrl"
-       ng-init="item={};item.url='<%= locals.url %>';item.title='<%= locals.title %>';item.cite='<%= locals.cite %>';init();"
+       ng-init="item=<%= JSON.stringify({url:locals.url,title:locals.title,cite:locals.cite}) %>;init();"
        id="_bookmarklet_modal" tabindex="-1">
     <div class="modal-dialog container"
          ng-show="loaded && !showLogin">
