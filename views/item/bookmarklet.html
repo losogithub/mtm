@@ -42,6 +42,9 @@
     (function () {
       window.sng.controller('BookmarkletCtrl', function ($scope, $http, $sce, $timeout) {
         $scope.init = function () {
+          if ($scope.item.cite.length > 140) {
+            $scope.item.cite = $scope.item.cite.substr(0, 139) + '…';
+          }
           $http.get('/item/detail?url=' + (!$scope.item.cite ? encodeURIComponent($scope.item.url) : ''))
             .success(function (data) {
               $scope.loaded = true;
