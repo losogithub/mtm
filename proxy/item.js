@@ -12,6 +12,7 @@ var check = require('validator').check;
 
 var models = require('../models');
 var ItemModels = models.ItemModels;
+var helper = require('../helper/helper');
 var utils = require('../public/javascripts/utils');
 
 function updateById(type, _id, data, callback) {
@@ -25,6 +26,16 @@ function updateById(type, _id, data, callback) {
 
     callback(null);
   });
+}
+
+function createCollectionItem(data, callback) {
+  if (!ItemModels[data.type]) {
+    return callback(new Error('创建条目类型错误：' + data.type));
+  }
+
+  //创建条目
+  var item = new ItemModels[data.type](data);
+  item.save(callback);
 }
 
 function cloneItem(type, _id, callback) {
@@ -559,7 +570,7 @@ function getItemData(item) {
         url: item.url,
         description: item.description,
         created_at: item.created_at,
-        time: getWeiboTime(item.created_at),
+        time: helper.getWeiboTime(item.created_at),
         idstr: item.idstr,
         mid62: item.mid62,
         text: item.text,
@@ -571,7 +582,7 @@ function getItemData(item) {
       }
 
       if (itemData.retweeted_status && itemData.retweeted_status.idstr) {
-        itemData.retweeted_status.time = getWeiboTime(item.retweeted_status.created_at);
+        itemData.retweeted_status.time = helper.getWeiboTime(item.retweeted_status.created_at);
       }
       break;
     case 'TEXT':
@@ -593,23 +604,9 @@ function getItemData(item) {
   return itemData;
 }
 
-function getWeiboTime(created_at) {
-  var date = new Date(created_at);
-  var _normalizeTime = function (time) {
-    if (time >= 10) {
-      return time;
-    }
-    return '0' + time;
-  }
-  return date.getFullYear() + '.'
-    + (date.getMonth() + 1) + '.'
-    + date.getDate() + ' '
-    + _normalizeTime(date.getHours()) + ':'
-    + _normalizeTime(date.getMinutes());
-}
-
 exports.updateById = updateById;
 
+exports.createCollectionItem = createCollectionItem;//增
 exports.cloneItem = cloneItem;
 exports.deleteCollectionItem = deleteCollectionItem;
 exports.createVoidItem = createVoidItem;
@@ -624,4 +621,3 @@ exports.getItemsById = getItemsById;
 
 exports.getData = getData;
 exports.getItemData = getItemData;
-exports.getWeiboTime = getWeiboTime;

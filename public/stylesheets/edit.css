@@ -105,7 +105,7 @@
   visibility: visible !important;
   background: url(/images/bg_WidgetDragPlaceholder.png) repeat;
 }
-.WidgetItemList-Main .ui-sortable-placeholder {
+.WidgetItemList .ui-sortable-placeholder {
   height: 65px !important;
 }
 .WidgetItemList-Sub {
@@ -142,6 +142,9 @@
 .Collection .Categories .btn.active {
   background-color: white;
   color: #bdc3c7;
+}
+.Collection .Scrollable {
+  overflow-y: scroll;
 }
 @media (max-width: 991px) {
   .Collection .Scrollable {

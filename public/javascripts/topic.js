@@ -18,13 +18,45 @@ window.sng.controller('TagsInputCtrl', function ($scope, $timeout, $element) {
     return encodeURIComponent(text);
   };
   $scope.onAdded = function ($tag) {
-    $.post('/tag', angular.extend({ topicId: topicId }, $tag));
+    $.post('/tag', angular.extend({ topicId: topicId }, $tag))
+      .done(function () {
+        Messenger().post({
+          message: '成功添加标签 [ ' + $tag.text + ' ]'
+        });
+      })
+      .fail(function () {
+        Messenger().post({
+          message: '标签 [ ' + $tag.text + ' ] 添加失败',
+          type: 'error'
+        });
+      })
+      .always(function () {
+        $(document).one('mousedown keydown', function () {
+          Messenger().hideAll();
+        });
+      });
   };
   $scope.onRemoved = function ($tag) {
     $.ajax('/tag', {
       type: 'DELETE',
       data: angular.extend({ topicId: topicId }, $tag)
-    });
+    })
+      .done(function () {
+        Messenger().post({
+          message: '成功删除标签 [ ' + $tag.text + ' ]'
+        });
+      })
+      .fail(function () {
+        Messenger().post({
+          message: '标签 [ ' + $tag.text + ' ] 删除失败',
+          type: 'error'
+        });
+      })
+      .always(function () {
+        $(document).one('mousedown keydown', function () {
+          Messenger().hideAll();
+        });
+      });
   };
 });
 

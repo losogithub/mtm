@@ -116,17 +116,11 @@
           <% include _category_selector.html %>
         </div>
         <% } %>
-        <div ng-controller="TagsInputCtrl" style="position: relative;"
+        <div ng-controller="TagsInputCtrl"
              ng-init='tags = <%- JSON.stringify(tags) %>;'>
           <div ng-show="!editing">
             <% include ../_tags.html %>
           </div>
-          <% if (locals.isAuthor) { %>
-          <button class="btn btn-link mrs mbs text-muted" ng-show="!editing"
-                  style="position: absolute; right: 0; top: 0; padding: 6px;"
-                  ng-click="editTag()"
-                  type="button"><i class="fa fa-pencil"></i></button>
-          <% } %>
           <div class="TagsInput mtl" ng-show="editing">
             <tags-input ng-model="tags"
                         min-length="1" max-length="20" min-tags="1" max-tags="5"

@@ -8,7 +8,6 @@
 
 (function ($) {
 
-  var console = window.console || {log: $.noop, error: $.noop};
   $.validator.setDefaults({
     debug: false,
     ignore: "",
@@ -75,7 +74,7 @@
       return shizier.getVideoSrc(item.quote, item.vid).vars;
     };
     $scope.getHtml = function (text) {
-      return $sce.trustAsHtml(shizier.utils.escape(text).replace(/\n/g, "<br>") || '');
+      return $sce.trustAsHtml(text && shizier.utils.escape(text).replace(/\n/g, "<br>") || '');
     };
     $scope.getWeiboHtml = function (text) {
       return $sce.trustAsHtml(text);
@@ -104,7 +103,6 @@
       $scope.editingId = _id;
     };
     $scope.createItem = function (item, type) {
-      var index = $scope.items.indexOf(item);
       if ($scope.editingScope
         && $scope.editingScope.$index == $scope.items.indexOf(item) + 1
         && $scope.editingScope.item.type == type
@@ -333,6 +331,8 @@
       }
       var url;
       if (moved) {
+        $scope.editingId = $scope.collectionScope.editingId;
+        $scope.collectionScope.cancelEdit(true);
         url = '/topic/insert';
       } else {
         url = '/topic/sort';
@@ -426,6 +426,9 @@
     $scope.setTitleScope = function (scope) {
       $scope.titleScope = scope;
     };
+    $scope.$on('setCollectionScope', function (e, scope) {
+      $scope.collectionScope = scope;
+    });
   };
 
   window.sng.controller('CoverCtrl', CoverCtrl);
@@ -551,6 +554,7 @@
   window.sng.controller('CollectionCtrl', CollectionCtrl);
   function CollectionCtrl($scope, $sce, $timeout, $element) {
     _commonListCtrl($scope, $sce, $timeout);
+    $scope.$emit('setCollectionScope', $scope);
     $scope.$on('addCollectionItem', function (e, item) {
       $scope.items.splice(0, 0, item);
     });
@@ -610,6 +614,7 @@
     $scope.sortableOptions = {
       appendTo: '.WidgetItemList-Main',
       opacity: 0.4,
+      cancel: 'input,textarea',
       cursor: 'move',
       cursorAt: { top: 30 },
       helper: 'clone',

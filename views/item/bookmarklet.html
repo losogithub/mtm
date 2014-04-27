@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html ng-app="sng">
+<head>
+  <title>采集石子儿</title>
+  <link type='text/css' rel='stylesheet' href='/stylesheets/bootstrap.min.css'/>
+  <link type='text/css' rel='stylesheet' href="/stylesheets/flat-ui.css">
+  <link type='text/css' rel="stylesheet" href="/font-awesome-4.0.3/css/font-awesome.min.css">
+  <link type='text/css' rel='stylesheet' href='/stylesheets/common.css'/>
+  <link type='text/css' rel='stylesheet' href='/stylesheets/topic.css'/>
+  <link type='text/css' rel='stylesheet' href='/stylesheets/edit.css'/>
+  <style>
+    .modal {
+      overflow-y: auto;
+    }
+    .Collection, .WidgetItemList {
+      padding-bottom: 0;
+    }
+    .WidgetItemList>li:hover {
+      background-color: transparent;
+    }
+  </style>
+
+  <!--[if IE]>
+  <script src="http://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.min.js"></script>
+  <script src="http://cdn.bootcss.com/respond.js/1.3.0/respond.min.js"></script>
+  <![endif]-->
+  <script type="text/javascript" src="http://cdn.bootcss.com/jquery/1.11.0/jquery.min.js"></script>
+  <script src="http://cdn.bootcss.com/angular.js/1.2.15/angular.min.js"></script>
+  <script>
+    window.shizier = window.shizier || {};
+    shizier.pageType = '<%= locals.pageType %>';
+  </script>
+  <script src="http://cdn.bootcss.com/twitter-bootstrap/3.1.1/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="/javascripts/ui-bootstrap-tpls-0.10.0.js"></script>
+  <script type="text/javascript" src="/javascripts/bootstrap-select.js"></script>
+  <script type="text/javascript" src="/javascripts/flatui-checkbox.js"></script>
+  <script type="text/javascript" src="/javascripts/flatui-radio.js"></script>
+  <script type="text/javascript" src="/javascripts/common.js"></script>
+  <script type="text/javascript" src="/javascripts/utils.js"></script>
+  <script type="text/javascript" src="/javascripts/ui-utils.min.js"></script>
+  <script>
+    (function () {
+      window.sng.controller('BookmarkletCtrl', function ($scope, $http, $sce, $timeout) {
+        $scope.init = function () {
+          $http.get('/item/detail?url=' + (!$scope.item.cite ? encodeURIComponent($scope.item.url) : ''))
+            .success(function (data) {
+              $scope.loaded = true;
+              $.extend($scope.item, data);
+            })
+            .error(function (jqXHR) {
+              if (jqXHR.status == 401) {
+                $scope.showLogin = true;
+              }
+              $scope.loaded = true;
+            });
+          $scope.item.fav = shizier.utils.getFav($scope.item.url);
+        };
+        $scope.login = function () {
+          if (!$scope.username || !$scope.password) {
+            $scope.error = '用户名和密码不能为空';
+            return;
+          }
+          $http.post('/login_dialog', {
+            userName: $scope.username,
+            password: $scope.password,
+            remember: $scope.remember
+          })
+            .success(function () {
+              $scope.showLogin = false;
+            })
+            .error(function () {
+              $scope.error = '用户名或密码不正确';
+            });
+        };
+        $scope.submit = function () {
+          $http.post('/item/bookmarklet', $scope.item)
+            .success(function () {
+              $scope.cancel();
+            })
+            .error(function (jqXHR) {
+              if (jqXHR.status == 401) {
+                $scope.showLogin = true;
+              } else {
+                alert('采集失败，请重试');
+              }
+            });
+        }
+        $scope.cancel = function () {
+          $('#_bookmarklet_modal').modal('hide');
+        };
+        $scope.SuffixImage = function (url) {
+          return shizier.utils.suffixImage(url);
+        }
+        $scope.onFavError = function (item) {
+          var temp = 'http://www.google.com/s2/favicons?domain=' + item.url;
+          if (temp != item.fav) {
+            item.fav = temp;
+          }
+        };
+        $scope.playVideo = function (item) {
+          item.playing = true;
+          $timeout(function () {
+            item.show = true;
+          });
+          item.width = $('.WidgetItemList .Content.VIDEO').width();
+          item.height = item.width * 4 / 5;
+        };
+        $scope.getVideoSrc = function (item) {
+          var temp = shizier.getVideoSrc(item.quote, item.vid);
+          return $sce.trustAsResourceUrl(temp ? temp.src : '');
+        };
+        $scope.getVideoVars = function (item) {
+          var temp = shizier.getVideoSrc(item.quote, item.vid);
+          return temp ? temp.vars : '';
+        };
+        $scope.getHtml = function (text) {
+          return $sce.trustAsHtml(text && shizier.utils.escape(text).replace(/\n/g, "<br>") || '');
+        };
+        $scope.getWeiboHtml = function (text) {
+          return $sce.trustAsHtml(text);
+        };
+      });
+    })();
+
+    $(window).keyup(function(e) {
+      // Escape pressed
+      if (e.keyCode == 27) {
+        $('#_bookmarklet_modal').modal('hide');
+      }
+    });
+
+    $(function () {
+      parent.postMessage('show', '*');
+
+      var $modal = $('#_bookmarklet_modal');
+      $modal.on('hidden.bs.modal', function () {
+        parent.postMessage('close', '*');
+      });
+      $modal.on('shown.bs.modal', function () {
+        $('.AutoFocus').focus();
+      });
+      $modal.modal();
+
+    });
+  </script>
+</head>
+<body style="height: 100%; background: none;">
+  <!-- Modal -->
+  <div class="LoginDialog modal fade" ng-controller="BookmarkletCtrl"
+       ng-init="item={};item.url='<%= locals.url %>';item.title='<%= locals.title %>';item.cite='<%= locals.cite %>';init();"
+       id="_bookmarklet_modal" tabindex="-1">
+    <div class="modal-dialog container"
+         ng-show="loaded && !showLogin">
+      <div class="modal-content">
+        <div class="modal-header text-center"
+             style="border-radius: 6px 6px 0 0;">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <span class="modal-title">&nbsp;采集石子儿</span>
+        </div>
+        <form class="modal-body clearfix" ng-submit="submit()"
+              style="border-radius: 0 0 6px 6px;">
+          <div class="Collection pbl background-white form-group" style="border-radius: 6px; width: 100%;">
+            <div class="Categories background-muted" style="border-radius: 6px 6px 0 0;">
+              <div class="btn-group" style="width: 100%;">
+                <button class="btn btn-default" style="width: 20%;" type="button"
+                        ng-click="item.type = 'LINK'"
+                        ng-class="{active: item.type == 'LINK'}"><i class="fa fa-link"></i></button>
+                <button class="btn btn-default" style="width: 20%;" type="button"
+                        ng-click="item.type = 'IMAGE'"
+                        ng-class="{active: item.type == 'IMAGE'}"><i class="fa fa-picture-o"></i></button>
+                <button class="btn btn-default" style="width: 20%;" type="button"
+                        ng-click="item.type = 'VIDEO'"
+                        ng-class="{active: item.type == 'VIDEO'}"><i class="fa fa-film"></i></button>
+                <button class="btn btn-default" style="width: 20%;" type="button"
+                        ng-click="item.type = 'CITE'"
+                        ng-class="{active: item.type == 'CITE'}"><i class="fa fa-quote-left"></i></button>
+                <button class="btn btn-default" style="width: 20%; border-top-right-radius: 6px;" type="button"
+                        ng-click="item.type = 'WEIBO'"
+                        ng-class="{active: item.type == 'WEIBO'}"><i class="fa fa-weibo"></i></button>
+              </div>
+            </div>
+            <ul class="WidgetItemList">
+              <li>
+                <div class="Item pal"
+                     ng-switch="item.type">
+
+                  <div class="Content LINK pam"
+                       ng-switch-when="LINK">
+                    <div class="Thumb mls mbs pull-right" ng-if="item.src">
+                      <a target="_blank" class="fancybox" rel="gallery" href="{{item.src}}" title="{{item.title || ''}}">
+                        <img ng-src="{{item.src}}" alt="{{item.title || ''}}">
+                      </a>
+                    </div>
+                    <div class="Title">
+                      <img class="Fav" ng-src="{{item.fav}}"
+                           ui-event="{ error : 'onFavError(item)' }">
+                      <a target="_blank" class="LINK_URL" href='{{item.url}}'>{{item.title || ''}}</a>
+                    </div>
+                    <div class="Quote">
+                      <i class="fa fa-globe"></i>
+                      <a target="_blank" class="LINK_URL" href="{{item.url}}">
+                        {{item.url}}
+                      </a>
+                    </div>
+                    <div class="Snippet text-muted small mtx" ng-if="item.snippet">{{item.snippet}}</div>
+                    <div class="Description text-asbestos mts small"
+                         ng-if="item.description" ng-bind-html="getHtml(item.description)"></div>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="Content IMAGE pam"
+                       ng-switch-when="IMAGE">
+                    <div class="Image text-center">
+                      <a target="_blank" class="fancybox" rel="gallery" href="{{item.url}}"
+                         title="{{(item.title || '') + (item.title && item.description ? ' -- ' : '') + (item.description || '')}}">
+                        <img onerror="shizier.errorImage(this,'default_120x120');"
+                             ng-src="{{item.url}}" alt="{{item.title || ''}}">
+                      </a>
+                    </div>
+
+                    <div class="Title text-center mts">{{item.title || ''}}</div>
+                    <div class="Description text-asbestos text-center small mtx"
+                         ng-bind-html="getHtml(item.description)"></div>
+                    <div class="Quote" ng-if="item.quote">
+                      <i class="fa fa-globe"></i>
+                      <a target="_blank" href="{{item.quote}}">
+                        {{item.quoteDomain || ''}}
+                      </a>
+                    </div>
+                  </div>
+                  <div class="Content VIDEO pam"
+                       ng-switch-when="VIDEO">
+
+                    <button class="Cover btn btn-link" type="button" ng-if="!item.playing"
+                            ng-click="playVideo(item)"
+                            ng-style="{'background-image':'url({{item.cover}})'}">
+                      <div class="Background">
+                        <i class="fa fa-play-circle"></i>
+                      </div>
+                    </button>
+                    <div class="Player" ng-if="item.playing" ng-show="item.show">
+                      <button name="close" class="btn btn-link mbx pan"
+                              ng-click="item.playing = false;item.show = false;"
+                              type="button"><i class="fa fa-caret-up"></i> 收起</button>
+                      <!--src为空会导致ie一直等待，localhost响应最快-->
+                      <embed style="display: block;"
+                             src="http://localhost"
+                             ng-src="{{getVideoSrc(item)}}"
+                             flashvars="{{getVideoVars(item)}}"
+                             width="{{item.width}}"
+                             height="{{item.height}}"
+                             type="application/x-shockwave-flash"
+                             allowscriptaccess="always"
+                             allowfullscreen="true"
+                             wmode="opaque"
+                             quality="high"></embed>
+                    </div>
+
+                    <div class="Quote">
+                      <i class="fa fa-globe"></i>
+                      <a target="_blank" class="VIDEO_URL" href="{{item.url}}">
+                        {{ item.quote || item.url }}
+                      </a>
+                    </div>
+                    <div class="Title mtx" ng-if="item.title">
+                      <a target="_blank" class="VIDEO_URL" href="{{item.url}}">
+                        {{item.title || ''}}
+                      </a>
+                    </div>
+                    <div class="Description text-asbestos small mtx"
+                         ng-if="item.description" ng-bind-html="getHtml(item.description)"></div>
+                  </div>
+                  <div class="Content CITE"
+                       ng-switch-when="CITE">
+                    <div class="Cite">
+                      <i class="fa fa-quote-left text-muted"></i>
+                      <q ng-bind-html="getHtml(item.cite)"></q>
+                    </div>
+
+                    <div class="Quote" ng-if="item.url">
+                      <i class="fa fa-globe"></i>
+                      <a target="_blank" href="{{item.url}}">{{item.title || item.url}}</a>
+                    </div>
+                    <div class="Description text-asbestos small mtx"
+                         ng-if="item.description" ng-bind-html="getHtml(item.description)"></div>
+                  </div>
+                  <div class="Content WEIBO pam"
+                       ng-switch-when="WEIBO">
+
+                    <div class="clearfix">
+                      <a target="_blank"  class="Avatar AuthorUrl img-circle"
+                         href="http://weibo.com/{{item.user.profile_url}}">
+                        <img class="img-circle"
+                             ng-src="{{item.user.profile_image_url}}"
+                             alt="{{item.user.screen_name}}">
+                      </a>
+
+                      <div style="overflow: hidden;">
+                        <a target="_blank" class="ScreenName AuthorUrl"
+                           href="http://weibo.com/{{item.user.profile_url}}">
+                          <span class="ScreenName">{{item.user.screen_name}}</span>
+                        </a>
+                        <a target="_blank" class="Verify"
+                           ng-class="!item.user.verified ? '' : item.user.verified_type ? 'ORG' : 'PERSONAL'"
+                           href="http://verified.weibo.com/verify"><b>V</b></a>
+                      </div>
+                    </div>
+
+                    <div class="Text" ng-bind-html="getWeiboHtml(item.parsed_text)"></div>
+                    <div class="Pic clearfix" ng-if="item.pic_urls && item.pic_urls.length"
+                         style="{{item.pic_urls && item.pic_urls.length == 4 ? 'width: 170px;' : ''}}">
+                      <a target="_blank" class="WeiboImage fancybox" rel="gallery"
+                         ng-if="item.pic_urls.length == 1 && item.pic_urls[0]"
+                         href="{{item.pic_urls[0].thumbnail_pic.replace('/thumbnail/', '/large/')}}"><img
+                        ng-src="{{item.pic_urls[0].thumbnail_pic}}"></a>
+                      <a target="_blank" class="WeiboImage fancybox" rel="gallery"
+                         ng-if="item.pic_urls.length > 1 && pic"
+                         ng-repeat="pic in item.pic_urls"
+                         href="{{pic.thumbnail_pic.replace('/thumbnail/', '/large/')}}"><img
+                        ng-src="{{pic.thumbnail_pic.replace('/thumbnail/', '/square/')}}"></a>
+                    </div>
+                    <div class="Retweeted clearfix" ng-init="reItem = item.retweeted_status;"
+                         ng-if="item.retweeted_status && item.retweeted_status.idstr">
+                      <a target="_blank" class="Author AuthorUrl"
+                         href="http://weibo.com/{{reItem.user.profile_url}}">
+                        @<span class="ScreenName">{{reItem.user.screen_name}}</span>
+                      </a>
+                      <a target="_blank" class="Verify"
+                         ng-class="!reItem.user.verified ? '' : reItem.user.verified_type ? 'ORG' : 'PERSONAL'"
+                         href="http://verified.weibo.com/verify"><b>V</b></a>
+                      <div class="Text" ng-bind-html="getWeiboHtml(reItem.parsed_text)"></div>
+                      <div class="Pic clearfix" ng-if="reItem.pic_urls && reItem.pic_urls.length"
+                           style="{{reItem.pic_urls && reItem.pic_urls.length == 4 ? 'width: 170px;' : ''}}">
+                        <a target="_blank" class="WeiboImage fancybox" rel="gallery"
+                           ng-if="reItem.pic_urls.length == 1 && reItem.pic_urls[0]"
+                           href="{{reItem.pic_urls[0].thumbnail_pic.replace('/thumbnail/', '/large/')}}"><img
+                          ng-src="{{reItem.pic_urls[0].thumbnail_pic}}"></a>
+                        <a target="_blank" class="WeiboImage fancybox" rel="gallery"
+                           ng-if="reItem.pic_urls.length > 1 && pic"
+                           ng-repeat="pic in reItem.pic_urls"
+                           href="{{pic.thumbnail_pic.replace('/thumbnail/', '/large/')}}"><img
+                          ng-src="{{pic.thumbnail_pic.replace('/thumbnail/', '/square/')}}"></a>
+                      </div>
+                      <a target="_blank" class="Time text-muted pull-left"
+                         href="http://weibo.com/{{reItem.user.idstr}}/{{reItem.mid62}}"
+                        >{{reItem.time}}</a>
+                      <div class="Handle">
+                        <a target="_blank" class="Forward text-muted mrs"
+                           href="http://weibo.com/{{reItem.user.idstr}}/{{reItem.mid62}}?type=repost"
+                          ><i class="fa fa-share"></i> 转发</a>
+                        <a target="_blank" class="Comment text-muted"
+                           href="http://weibo.com/{{reItem.user.idstr}}/{{reItem.mid62}}"
+                          ><i class="fa fa-comment-o"></i> 评论</a>
+                      </div>
+                      <div class="clearfix"></div>
+                    </div>
+                    <a target="_blank" class="Time text-muted pull-left"
+                       href="http://weibo.com/{{item.user.idstr}}/{{item.mid62}}">{{item.time}}</a>
+                    <div class="Handle">
+                      <a target="_blank" class="Forward text-muted mrs"
+                         href="http://weibo.com/{{item.user.idstr}}/{{item.mid62}}?type=repost"
+                        ><i class="fa fa-share"></i> 转发</a>
+                      <a target="_blank" class="Comment text-muted"
+                         href="http://weibo.com/{{item.user.idstr}}/{{item.mid62}}"
+                        ><i class="fa fa-comment-o"></i> 评论</a>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="Description text-asbestos small mtx"
+                         ng-if="item.description" ng-bind-html="getHtml(item.description)"></div>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div class="BtnSet pull-right">
+            <button name="save" class='btn btn-primary'
+                    ng-disabled="saving"
+                    type="submit">保存 <i class='fa fa-spinner fa-spin' ng-show="saving"></i>
+            </button>
+            <button name="cancel" class="btn btn-default"
+                    ng-click="cancel()"
+                    type="button">放弃</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="modal-dialog container" style="max-width: 400px;"
+         ng-show="loaded && showLogin">
+      <div class="modal-content">
+        <div class="modal-header"
+             style="border-radius: 6px 6px 0 0;">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <span class="modal-title">登录石子儿</span>
+        </div>
+        <form class="modal-body clearfix" name="loginDialog" ng-submit="login()"
+              style="border-radius: 0 0 6px 6px;">
+          <p>{{error}}&nbsp;</p>
+
+          <div class="form-group">
+            <input type="text" value="<%= locals.email || '' %>" ng-model="username"
+                   class="form-control flat AutoFocus" id="uName" name="username"
+                   placeholder="用户名或邮箱">
+            <label class="input-icon fui-user" for="uName"></label>
+          </div>
+          <div class="form-group">
+            <input type="password" id="uPas" name="password" ng-model="password"
+                   class="form-control flat" maxlength="20"
+                   placeholder="密码">
+            <label class="input-icon fui-lock" for="uPas"></label>
+          </div>
+          <div class="form-group">
+            <label class="checkbox" ng-click="remember = !remember" ng-init="remember = true">
+              <input type="checkbox" checked name="autoLogin" data-toggle="checkbox"/>
+              <strong>自动登录</strong>
+            </label>
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block">登录</button>
+          </div>
+          <a target="_blank" class="text-muted" href="/forgetPassword">忘记密码?</a>
+          <a target="_blank" class="text-muted pull-right" href="/signup">注册</a>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

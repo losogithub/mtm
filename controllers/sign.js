@@ -469,9 +469,9 @@ function loginDialog(req, res, next) {
   //now login the user.
   //if not correct, post back
   //else next()
-  var loginName = req.body.userName;
-  var pass = req.body.password;
-  var remember = req.body.remember;
+  var loginName = req.body.userName || '';
+  var pass = req.body.password || '';
+  var remember = req.body.remember || '';
 
   if (helper.validateEmail(loginName)) {
     User.getUserByEmailPass(loginName, encryp.md5(pass), function (err, user) {

@@ -1,11 +1,17 @@
-<% if (tags.length) { %>
-<div class="pts pls background-white Tags clearfix mtl" style="border-radius: 6px;">
+<% if (tags.length || locals.isAuthor) { %>
+<div class="pts pls background-white Tags clearfix mtl" style="border-radius: 6px; min-height: 35px;">
   <% for (var i = 0; i < tags.length; i++) { %>
   <% if (i == 7 && pageType == 'INDEX') { break; } %>
   <a href="/tag/<%- encodeURIComponent(tags[i]) %>"
      class="tag btn btn-default btn-xs pull-left mrs mbs"><%= tags[i] %>
     <span class="Counter">(<%= Tags[tags[i]] && Tags[tags[i]].topicCount || 0 %>)</span>
   </a>
+  <% } %>
+  <% if (locals.isAuthor) { %>
+  <button class="btn btn-link mrs mbs text-muted pull-left" ng-show="!editing"
+          style="padding: 2px 6px;"
+          ng-click="editTag()"
+          type="button"><i class="fa fa-pencil"></i></button>
   <% } %>
 </div>
 <% } %>

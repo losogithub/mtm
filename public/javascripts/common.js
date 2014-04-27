@@ -7,6 +7,10 @@
  */
 //使用全局变量应避免污染命名空间
 (function ($) {
+
+  window.console = window.console || {log: $.noop, error: $.noop};
+  window.shizier =window.shizier || {};
+
   window.sng = angular.module(
     'sng',
     ['ui.bootstrap'].concat(
@@ -14,6 +18,8 @@
         ? ['ui.utils', 'monospaced.elastic', 'ui.sortable']
         : shizier.pageType == 'TOPIC'
         ? ['ngTagsInput']
+        : shizier.pageType == 'BOOKMARKLET'
+        ? ['ui.utils']
         : [])
   );
 
@@ -62,7 +68,7 @@
     }
   };
 
-  window.sng.controller('LoginDialogCtrl', function LoginDialogCtrl($scope, $http) {
+  window.sng.controller('LoginDialogCtrl', function ($scope, $http) {
     $scope.submit = function () {
       if (!$scope.username || !$scope.password) {
         $scope.error = '用户名和密码不能为空';
@@ -84,18 +90,18 @@
 
   $(function ($) {
 
-    var $model = $('#myModal');
+    var $modal = $('#myModal');
     $(document).ajaxError(function (event, jqXHR) {
       if (jqXHR.status == 401) {
-        $model.modal('show');
+        $modal.modal('show');
       }
     });
 
     $('.ShowLogin').click(function () {
-      $model.modal('show');
+      $modal.modal('show');
     });
 
-    $model.on('shown.bs.modal', function () {
+    $modal.on('shown.bs.modal', function () {
       $('.LoginFocus').focus();
     });
 
@@ -155,8 +161,8 @@
   shizier.getVideoSrc = function (quote, vid) {
     var temp = VIDEO_MAP[quote];
     return {
-      src: (temp[0] || '').replace('#vid#', vid),
-      vars: temp[1]
+      src: (temp && temp[0] || '').replace('#vid#', vid),
+      vars: temp && temp[1] || ''
     };
   };
 

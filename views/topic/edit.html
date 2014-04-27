@@ -117,7 +117,7 @@
                     <li>
                       <button class="btn btn-link" type="button"
                               ng-click="createItem(null, 'CITE')"
-                              data-type="CITE" title="引用">
+                              data-type="CITE" title="引文">
                         <i class="fa fa-quote-left"></i>
                       </button>
                     </li>
@@ -193,7 +193,7 @@
                   <div class="Content LINK pam"
                        ng-switch-when="LINK">
                     <div class="Thumb mls mbs pull-right" ng-if="item.src">
-                      <a class="fancybox" rel="gallery" href="{{item.src}}" title="{{item.title || ''}}">
+                      <a target="_blank" class="fancybox" rel="gallery" href="{{item.src}}" title="{{item.title || ''}}">
                         <img ng-src="{{item.src}}" alt="{{item.title || ''}}">
                       </a>
                     </div>
@@ -216,7 +216,7 @@
                   <div class="Content IMAGE pam"
                        ng-switch-when="IMAGE">
                     <div class="Image text-center">
-                      <a class="IMAGE_LINK fancybox" rel="gallery" href="{{item.url}}"
+                      <a target="_blank" class="fancybox" rel="gallery" href="{{item.url}}"
                          title="{{(item.title || '') + (item.title && item.description ? ' -- ' : '') + (item.description || '')}}">
                         <img onerror="shizier.errorImage(this,'default_120x120');"
                              ng-src="{{item.url}}" alt="{{item.title || ''}}">
@@ -314,11 +314,11 @@
                     <div class="Text" ng-bind-html="getWeiboHtml(item.parsed_text)"></div>
                     <div class="Pic clearfix" ng-if="item.pic_urls && item.pic_urls.length"
                          style="{{item.pic_urls && item.pic_urls.length == 4 ? 'width: 170px;' : ''}}">
-                      <a class="WeiboImage fancybox" rel="gallery"
+                      <a target="_blank" class="WeiboImage fancybox" rel="gallery"
                          ng-if="item.pic_urls.length == 1 && item.pic_urls[0]"
                          href="{{item.pic_urls[0].thumbnail_pic.replace('/thumbnail/', '/large/')}}"><img
                         ng-src="{{item.pic_urls[0].thumbnail_pic}}"></a>
-                      <a class="WeiboImage fancybox" rel="gallery"
+                      <a target="_blank" class="WeiboImage fancybox" rel="gallery"
                          ng-if="item.pic_urls.length > 1 && pic"
                          ng-repeat="pic in item.pic_urls"
                          href="{{pic.thumbnail_pic.replace('/thumbnail/', '/large/')}}"><img
@@ -336,11 +336,11 @@
                       <div class="Text" ng-bind-html="getWeiboHtml(reItem.parsed_text)"></div>
                       <div class="Pic clearfix" ng-if="reItem.pic_urls && reItem.pic_urls.length"
                            style="{{reItem.pic_urls && reItem.pic_urls.length == 4 ? 'width: 170px;' : ''}}">
-                        <a class="WeiboImage fancybox" rel="gallery"
+                        <a target="_blank" class="WeiboImage fancybox" rel="gallery"
                            ng-if="reItem.pic_urls.length == 1 && reItem.pic_urls[0]"
                            href="{{reItem.pic_urls[0].thumbnail_pic.replace('/thumbnail/', '/large/')}}"><img
                           ng-src="{{reItem.pic_urls[0].thumbnail_pic}}"></a>
-                        <a class="WeiboImage fancybox" rel="gallery"
+                        <a target="_blank" class="WeiboImage fancybox" rel="gallery"
                            ng-if="reItem.pic_urls.length > 1 && pic"
                            ng-repeat="pic in reItem.pic_urls"
                            href="{{pic.thumbnail_pic.replace('/thumbnail/', '/large/')}}"><img
@@ -415,7 +415,7 @@
                         <li>
                           <button class="btn btn-link" type="button"
                                   ng-click="createItem(item, 'CITE')"
-                                  data-type="CITE" title="引用">
+                                  data-type="CITE" title="引文">
                             <i class="fa fa-quote-left"></i>
                           </button>
                         </li>
@@ -555,7 +555,7 @@
                   <div class="Content IMAGE pam"
                        ng-switch-when="IMAGE" ng-controller="ImageCtrl" ng-init="init()">
                     <div class="Image text-center mbl">
-                      <a class="fancybox" rel="gallery" href="{{item.url}}"
+                      <a target="_blank" class="fancybox" rel="gallery" href="{{item.url}}"
                          title="{{(item.title || '') + (item.title && item.description ? ' -- ' : '') + (item.description || '')}}">
                         <img onerror="shizier.errorImage(this,'default_120x120');"
                              ng-src="{{item.url}}" alt="{{item.title || ''}}">
@@ -759,11 +759,11 @@
                     <div class="Text" ng-bind-html="getWeiboHtml(item.parsed_text)"></div>
                     <div class="Pic clearfix" ng-if="item.pic_urls && item.pic_urls.length"
                          style="{{item.pic_urls && item.pic_urls.length == 4 ? 'width: 170px;' : ''}}">
-                      <a class="WeiboImage fancybox" rel="gallery"
+                      <a target="_blank" class="WeiboImage fancybox" rel="gallery"
                          ng-if="item.pic_urls.length == 1 && item.pic_urls[0]"
                          href="{{item.pic_urls[0].thumbnail_pic.replace('/thumbnail/', '/large/')}}"><img
                         ng-src="{{item.pic_urls[0].thumbnail_pic}}"></a>
-                      <a class="WeiboImage fancybox" rel="gallery"
+                      <a target="_blank" class="WeiboImage fancybox" rel="gallery"
                          ng-if="item.pic_urls.length > 1 && pic"
                          ng-repeat="pic in item.pic_urls"
                          href="{{pic.thumbnail_pic.replace('/thumbnail/', '/large/')}}"><img
@@ -781,11 +781,11 @@
                       <div class="Text" ng-bind-html="getWeiboHtml(reItem.parsed_text)"></div>
                       <div class="Pic clearfix" ng-if="reItem.pic_urls && reItem.pic_urls.length"
                            style="{{reItem.pic_urls && reItem.pic_urls.length == 4 ? 'width: 170px;' : ''}}">
-                        <a class="WeiboImage fancybox" rel="gallery"
+                        <a target="_blank" class="WeiboImage fancybox" rel="gallery"
                            ng-if="reItem.pic_urls.length == 1 && reItem.pic_urls[0]"
                            href="{{reItem.pic_urls[0].thumbnail_pic.replace('/thumbnail/', '/large/')}}"><img
                           ng-src="{{reItem.pic_urls[0].thumbnail_pic}}"></a>
-                        <a class="WeiboImage fancybox" rel="gallery"
+                        <a target="_blank" class="WeiboImage fancybox" rel="gallery"
                            ng-if="reItem.pic_urls.length > 1 && pic"
                            ng-repeat="pic in reItem.pic_urls"
                            href="{{pic.thumbnail_pic.replace('/thumbnail/', '/large/')}}"><img
@@ -888,35 +888,58 @@
           <div class="Collection"
                ng-controller="CollectionCtrl"
                ng-init="items = <%= JSON.stringify(locals.collectionItems) %>; type = 'ALL'">
-            <div class="pbl background-white" style="border-radius: 6px;">
-              <div class="Categories btn-group background-muted">
-                <button class="btn btn-default"
+            <div class="pbl background-muted" style="border-radius: 6px;">
+              <div class="Categories btn-group btn-group-sm">
+                <button class="btn btn-default" type="button"
                         ng-click="setType('ALL')"
-                        ng-class="{active: type == 'ALL'}">所有素材</button>
-                <button class="btn btn-default"
+                        ng-class="{active: type == 'ALL'}">所有石子儿</button>
+                <button class="btn btn-default" type="button"
                         ng-click="setType('LINK')"
                         ng-class="{active: type == 'LINK'}"><i class="fa fa-link"></i></button>
-                <button class="btn btn-default"
+                <button class="btn btn-default" type="button"
                         ng-click="setType('IMAGE')"
                         ng-class="{active: type == 'IMAGE'}"><i class="fa fa-picture-o"></i></button>
-                <button class="btn btn-default"
+                <button class="btn btn-default" type="button"
                         ng-click="setType('VIDEO')"
                         ng-class="{active: type == 'VIDEO'}"><i class="fa fa-film"></i></button>
-                <button class="btn btn-default"
+                <button class="btn btn-default" type="button"
                         ng-click="setType('CITE')"
                         ng-class="{active: type == 'CITE'}"><i class="fa fa-quote-left"></i></button>
-                <button class="btn btn-default"
+                <button class="btn btn-default" type="button"
                         ng-click="setType('WEIBO')"
                         ng-class="{active: type == 'WEIBO'}"><i class="fa fa-weibo"></i></button>
-                <button class="btn btn-default"
+                <button class="btn btn-default" type="button"
                         ng-click="setType('TEXT')"
                         ng-class="{active: type == 'TEXT'}"><i class="fa fa-align-left"></i></button>
-                <button class="btn btn-default"
+                <button class="btn btn-default" type="button"
                         ng-click="setType('TITLE')"
                         ng-class="{active: type == 'TITLE'}"><i class="fa fa-text-width"></i></button>
+                <button class="btn btn-default" type="button"
+                        ng-click="setType('BOOKMARKLET')"
+                        ng-class="{active: type == 'BOOKMARKLET'}"><i class="fa fa-magic"></i></button>
               </div>
-              <div class="Scrollable" style="overflow-y: scroll;">
+              <div class="Scrollable background-white">
+                <div class="pal text-center text-muted" style="font-size: 14px;" ng-show="type == 'BOOKMARKLET'">
+                  我是石子儿站外采集助手<br>
+                  为方便您在浏览任意网页时<br>
+                  都能随心所欲地采集石子儿<br>
+                  您只需要：<br>
+                  1.首先将我
+                  <a href="javascript:(function () {var _my_script = document.createElement('SCRIPT');_my_script.type = 'text/javascript';
+                            _my_script.src = 'http://shizier.com/javascripts/bookmarklet.js';document.getElementsByTagName('head')[0].appendChild(_my_script);}());"
+                     style="cursor: move;"
+                     class="mvm btn btn-sm btn-primary">★采集石子儿</a>
+                  <i class="fa fa-external-link"></i> 拖放到书签栏<br>
+                  2.然后在任意网页点击我<br>
+                  就能便捷地采集：<br>
+                  <i class="fa fa-link"></i> 链接、
+                  <i class="fa fa-picture-o"></i> 图片、
+                  <i class="fa fa-film"></i> 视频、
+                  <i class="fa fa-quote-left"></i> 引文、
+                  <i class="fa fa-weibo"></i> 微博
+                </div>
                 <ul class="WidgetItemList WidgetItemList-Sub" ui-sortable="sortableOptions"
+                    ng-show="type != 'BOOKMARKLET'"
                     ng-model="items">
                   <li ng-repeat="item in items | filter:typeFilter">
 
@@ -926,7 +949,7 @@
                       <div class="Content LINK pam"
                            ng-switch-when="LINK">
                         <div class="Thumb mls mbs pull-right" ng-if="item.src">
-                          <a class="fancybox" rel="gallery" href="{{item.src}}" title="{{item.title || ''}}">
+                          <a target="_blank" class="fancybox" rel="gallery" href="{{item.src}}" title="{{item.title || ''}}">
                             <img ng-src="{{item.src}}" alt="{{item.title || ''}}">
                           </a>
                         </div>
@@ -949,7 +972,7 @@
                       <div class="Content IMAGE pam"
                            ng-switch-when="IMAGE">
                         <div class="Image text-center">
-                          <a class="IMAGE_LINK fancybox" rel="gallery" href="{{item.url}}"
+                          <a target="_blank" class="fancybox" rel="gallery" href="{{item.url}}"
                              title="{{(item.title || '') + (item.title && item.description ? ' -- ' : '') + (item.description || '')}}">
                             <img onerror="shizier.errorImage(this,'default_120x120');"
                                  ng-src="{{item.url}}" alt="{{item.title || ''}}">
@@ -1047,11 +1070,11 @@
                         <div class="Text" ng-bind-html="getWeiboHtml(item.parsed_text)"></div>
                         <div class="Pic clearfix" ng-if="item.pic_urls && item.pic_urls.length"
                              style="{{item.pic_urls && item.pic_urls.length == 4 ? 'width: 170px;' : ''}}">
-                          <a class="WeiboImage fancybox" rel="gallery"
+                          <a target="_blank" class="WeiboImage fancybox" rel="gallery"
                              ng-if="item.pic_urls.length == 1 && item.pic_urls[0]"
                              href="{{item.pic_urls[0].thumbnail_pic.replace('/thumbnail/', '/large/')}}"><img
                             ng-src="{{item.pic_urls[0].thumbnail_pic}}"></a>
-                          <a class="WeiboImage fancybox" rel="gallery"
+                          <a target="_blank" class="WeiboImage fancybox" rel="gallery"
                              ng-if="item.pic_urls.length > 1 && pic"
                              ng-repeat="pic in item.pic_urls"
                              href="{{pic.thumbnail_pic.replace('/thumbnail/', '/large/')}}"><img
@@ -1069,11 +1092,11 @@
                           <div class="Text" ng-bind-html="getWeiboHtml(reItem.parsed_text)"></div>
                           <div class="Pic clearfix" ng-if="reItem.pic_urls && reItem.pic_urls.length"
                                style="{{reItem.pic_urls && reItem.pic_urls.length == 4 ? 'width: 170px;' : ''}}">
-                            <a class="WeiboImage fancybox" rel="gallery"
+                            <a target="_blank" class="WeiboImage fancybox" rel="gallery"
                                ng-if="reItem.pic_urls.length == 1 && reItem.pic_urls[0]"
                                href="{{reItem.pic_urls[0].thumbnail_pic.replace('/thumbnail/', '/large/')}}"><img
                               ng-src="{{reItem.pic_urls[0].thumbnail_pic}}"></a>
-                            <a class="WeiboImage fancybox" rel="gallery"
+                            <a target="_blank" class="WeiboImage fancybox" rel="gallery"
                                ng-if="reItem.pic_urls.length > 1 && pic"
                                ng-repeat="pic in reItem.pic_urls"
                                href="{{pic.thumbnail_pic.replace('/thumbnail/', '/large/')}}"><img
@@ -1189,7 +1212,7 @@
                       <div class="Content IMAGE pam"
                            ng-switch-when="IMAGE" ng-controller="ImageCtrl" ng-init="init()">
                         <div class="Image text-center mbl">
-                          <a class="fancybox" rel="gallery" href="{{item.url}}"
+                          <a target="_blank" class="fancybox" rel="gallery" href="{{item.url}}"
                              title="{{(item.title || '') + (item.title && item.description ? ' -- ' : '') + (item.description || '')}}">
                             <img onerror="shizier.errorImage(this,'default_120x120');"
                                  ng-src="{{item.url}}" alt="{{item.title || ''}}">
@@ -1337,11 +1360,11 @@
                         <div class="Text" ng-bind-html="getWeiboHtml(item.parsed_text)"></div>
                         <div class="Pic clearfix" ng-if="item.pic_urls && item.pic_urls.length"
                              style="{{item.pic_urls && item.pic_urls.length == 4 ? 'width: 170px;' : ''}}">
-                          <a class="WeiboImage fancybox" rel="gallery"
+                          <a target="_blank" class="WeiboImage fancybox" rel="gallery"
                              ng-if="item.pic_urls.length == 1 && item.pic_urls[0]"
                              href="{{item.pic_urls[0].thumbnail_pic.replace('/thumbnail/', '/large/')}}"><img
                             ng-src="{{item.pic_urls[0].thumbnail_pic}}"></a>
-                          <a class="WeiboImage fancybox" rel="gallery"
+                          <a target="_blank" class="WeiboImage fancybox" rel="gallery"
                              ng-if="item.pic_urls.length > 1 && pic"
                              ng-repeat="pic in item.pic_urls"
                              href="{{pic.thumbnail_pic.replace('/thumbnail/', '/large/')}}"><img
@@ -1359,11 +1382,11 @@
                           <div class="Text" ng-bind-html="getWeiboHtml(reItem.parsed_text)"></div>
                           <div class="Pic clearfix" ng-if="reItem.pic_urls && reItem.pic_urls.length"
                                style="{{reItem.pic_urls && reItem.pic_urls.length == 4 ? 'width: 170px;' : ''}}">
-                            <a class="WeiboImage fancybox" rel="gallery"
+                            <a target="_blank" class="WeiboImage fancybox" rel="gallery"
                                ng-if="reItem.pic_urls.length == 1 && reItem.pic_urls[0]"
                                href="{{reItem.pic_urls[0].thumbnail_pic.replace('/thumbnail/', '/large/')}}"><img
                               ng-src="{{reItem.pic_urls[0].thumbnail_pic}}"></a>
-                            <a class="WeiboImage fancybox" rel="gallery"
+                            <a target="_blank" class="WeiboImage fancybox" rel="gallery"
                                ng-if="reItem.pic_urls.length > 1 && pic"
                                ng-repeat="pic in reItem.pic_urls"
                                href="{{pic.thumbnail_pic.replace('/thumbnail/', '/large/')}}"><img

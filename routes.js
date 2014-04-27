@@ -12,6 +12,7 @@ var widget = require('./middlewares/widget');
 var site = require('./controllers/site');
 var sign = require('./controllers/sign');
 var topic = require('./controllers/topic');
+var item = require('./controllers/item');
 var tag = require('./controllers/tag');
 var user = require('./controllers/user');
 var support = require('./controllers/support');
@@ -37,9 +38,6 @@ module.exports = function (app) {
 
   //策展
   app.get('/topic/create', auth.loginRequired, topic.createTopic);
-  app.get('/topic/link_detail', topic.getLinkDetail);
-  app.get('/topic/video_detail', topic.getVideoDetail);
-  app.get('/topic/weibo_detail', topic.getWeiboDetail);
   app.get('/topic/:topicId', widget.band, topic.showIndex);
   app.get('/topic/:topicId/edit', auth.loginRequired, topic.showEdit);
   app.get('/topic/:topicId/chang', topic.showChang);
@@ -55,10 +53,15 @@ module.exports = function (app) {
   app.delete('/topic/item', auth.userRequired, topic.deleteItem);
   app.delete('/topic/:topicId', auth.userRequired, topic.deleteTopic);
 
-  app.post('/item', auth.userRequired, user.collectItem);
-  app.put('/item', auth.userRequired, user.editItem);
-  app.delete('/item', auth.userRequired, user.deleteItem);
+  //item
+  app.get('/bookmarklet', item.showBookmarklet);
+  app.get('/item/detail', auth.userRequired, item.getDetail);
+  app.post('/item/bookmarklet', auth.userRequired, item.createCollectionItem);//topic下面有同名方法，重构的时候注意
+  app.post('/item', auth.userRequired, item.collectItem);
+  app.put('/item', auth.userRequired, item.editItem);
+  app.delete('/item', auth.userRequired, item.deleteItem);
 
+  //tag
   app.get('/tag/:tagText', widget.band, tag.showTag);
   app.post('/tag', auth.userRequired, topic.addTag);
   app.delete('/tag', auth.userRequired, topic.removeTag);
