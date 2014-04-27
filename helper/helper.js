@@ -160,6 +160,9 @@ function getLinkDetail(url, callback) {
     var title = !(temp = html.match(/<title[^>]*>([^<]*)<\/title[^>]*>/i)) ? null : temp[1];
     title = sanitize(title).entityDecode();
     title = sanitize(title).trim();
+    if (title.length > 50) {
+      title = title.substr(0, 49) + '…';
+    }
 
     temp = !(temp = html.match(/<meta([^>]*)name\s*=\s*("|')description("|')([^>]*)>/i)) ? null : temp[1] + temp[4];
     var snippet = (!temp ? null : !(temp = temp.match(/content\s*=\s*("|')([^"']*)("|')/i)) ? null : temp[2].trim())
