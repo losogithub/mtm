@@ -42,11 +42,7 @@ var shizier_postMessageListener;
 
     var iframe = document.createElement('IFRAME');
     iframe.id = '_shizier_overlay';
-    iframe.src = 'http://shizier.com/bookmarklet?url='
-      + encodeURIComponent(location.href)
-      + '&title=' + encodeURIComponent(document.title)
-      + '&description=' + encodeURIComponent(document.title)
-      + '&cite=' + encodeURIComponent(selection.toString());
+    iframe.src = 'http://shizier.com/bookmarklet';
     iframe.allowTransparency = 'true';
     iframe.style.visibility = 'hidden';
     document.getElementsByTagName('body')[0].appendChild(iframe);
@@ -54,6 +50,18 @@ var shizier_postMessageListener;
     shizier_postMessageListener = function (event) {
       if (event.data == 'show') {
         iframe.style.visibility = 'visible';
+        var imgs = document.getElementsByTagName('img');
+        var srcs = [];
+        console.log(typeof imgs)
+        for (var i in imgs) {
+          srcs.push(imgs[i].src);
+        }
+        iframe.contentWindow.postMessage({
+          url: location.href,
+          title: document.title,
+          cite: selection.toString(),
+          srcs: srcs
+        }, '*');
       } else if (event.data == 'close') {
         clean();
       }

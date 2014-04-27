@@ -14,15 +14,9 @@ var Item = require('../proxy').Item;
 var User = require('../proxy').User;
 
 function showBookmarklet(req, res) {
-  var url = req.query.url;
-  var title = req.query.title;
-  var cite = req.query.cite;
   res.render('item/bookmarklet', {
     layout: false,
-    pageType: 'BOOKMARKLET',
-    url: url,
-    title: title,
-    cite: cite
+    pageType: 'BOOKMARKLET'
   });
 }
 

@@ -123,6 +123,9 @@
   font-size: 12px;
   line-height: 13px;
   margin-top: 3px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .Quote,
 .Quote * {
@@ -207,11 +210,6 @@
 }
 .WidgetItemList > li .LINK .Title a {
   vertical-align: middle;
-}
-.WidgetItemList > li .LINK .Quote {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 .WidgetItemList > li .LINK .Snippet {
   line-height: 1.2;

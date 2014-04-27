@@ -18,6 +18,9 @@
     .WidgetItemList>li:hover {
       background-color: transparent;
     }
+    .Content.IMAGE {
+      width: 100% !important;
+    }
   </style>
 
   <!--[if IE]>
@@ -38,13 +41,33 @@
   <script type="text/javascript" src="/javascripts/common.js"></script>
   <script type="text/javascript" src="/javascripts/utils.js"></script>
   <script type="text/javascript" src="/javascripts/ui-utils.min.js"></script>
+  <script type="text/javascript" src="/bower_components/spin.js/spin.js"></script>
   <script>
     (function () {
       window.sng.controller('BookmarkletCtrl', function ($scope, $http, $sce, $timeout) {
-        $scope.init = function () {
+        var $dialog = $('.modal-dialog');
+        $scope.init = function (data) {
+          for (var i in data.srcs) {
+            data.srcs[i] = shizier.utils.suffixImage(data.srcs[i]);
+          }
+          $scope.item = {
+            url: data.url,
+            title: data.title,
+            cite: data.cite,
+            srcs: data.srcs
+          }
           if ($scope.item.cite.length > 140) {
             $scope.item.cite = $scope.item.cite.substr(0, 139) + '…';
           }
+          $scope.item.quote = $scope.item.url;
+          $scope.item.quoteDomain = shizier.utils.getQuote($scope.item.quote, $scope.item.type);
+          $scope.$watch('item.type', function () {
+            if ($scope.item.type == 'IMAGE') {
+              $dialog.css('min-width', '80%');
+            } else {
+              $dialog.css('min-width', '');
+            }
+          });
           $http.get('/item/detail?url=' + (!$scope.item.cite ? encodeURIComponent($scope.item.url) : ''))
             .success(function (data) {
               $scope.loaded = true;
@@ -76,7 +99,14 @@
             });
         };
         $scope.submit = function () {
-          $http.post('/item/bookmarklet', $scope.item)
+          var data = $scope.item;
+          if ($scope.item.type == 'IMAGE') {
+            data = $.extend({}, data, {
+              url: $scope.item.imageSrc,
+              quote: $scope.item.url
+            })
+          }
+          $http.post('/item/bookmarklet', data)
             .success(function () {
               $scope.cancel();
             })
@@ -123,16 +153,25 @@
           return $sce.trustAsHtml(text);
         };
       });
+
+      $(window).keyup(function(e) {
+        // Escape pressed
+        if (e.keyCode == 27) {
+          $('#_bookmarklet_modal').modal('hide');
+        }
+      });
+      var shizier_postMessageListener2 = function (event) {
+        angular.element('#_bookmarklet_modal').scope().init(event.data);
+      }
+      if (window.addEventListener) {
+        window.addEventListener('message', shizier_postMessageListener2, false);
+      } else {
+        window.attachEvent("onmessage", shizier_postMessageListener2);
+      }
     })();
 
-    $(window).keyup(function(e) {
-      // Escape pressed
-      if (e.keyCode == 27) {
-        $('#_bookmarklet_modal').modal('hide');
-      }
-    });
-
     $(function () {
+      new Spinner({ color: '#fff' }).spin($('.Spin')[0]);
       parent.postMessage('show', '*');
 
       var $modal = $('#_bookmarklet_modal');
@@ -150,8 +189,8 @@
 <body style="height: 100%; background: none;">
   <!-- Modal -->
   <div class="LoginDialog modal fade" ng-controller="BookmarkletCtrl"
-       ng-init="item=<%= JSON.stringify({url:locals.url,title:locals.title,cite:locals.cite}) %>;init();"
        id="_bookmarklet_modal" tabindex="-1">
+    <div class="modal-dialog Spin" style="height: 300px;" ng-show="!loaded"></div>
     <div class="modal-dialog container"
          ng-show="loaded && !showLogin">
       <div class="modal-content">
@@ -212,12 +251,18 @@
                   </div>
                   <div class="Content IMAGE pam"
                        ng-switch-when="IMAGE">
-                    <div class="Image text-center">
-                      <a target="_blank" class="fancybox" rel="gallery" href="{{item.url}}"
-                         title="{{(item.title || '') + (item.title && item.description ? ' -- ' : '') + (item.description || '')}}">
-                        <img onerror="shizier.errorImage(this,'default_120x120');"
-                             ng-src="{{item.url}}" alt="{{item.title || ''}}">
-                      </a>
+                    <div class="Image text-center" ng-show="item.imageSrc">
+                      <img onerror="shizier.errorImage(this,'default_120x120');"
+                           ng-src="{{item.imageSrc}}">
+                    </div>
+                    <div class="plm" ng-show="!item.imageSrc">
+                      <div class="prm mbm text-center text-muted">选择图片</div>
+                      <button class="btn btn-link mrm mbm" style="padding: 0;"
+                              ng-repeat="src in item.srcs track by $index"
+                              ng-click="item.imageSrc = src"
+                              type="button">
+                        <img ng-src="{{src}}">
+                      </button>
                     </div>
 
                     <div class="Title text-center mts">{{item.title || ''}}</div>
@@ -376,7 +421,7 @@
           </div>
           <div class="BtnSet pull-right">
             <button name="save" class='btn btn-primary'
-                    ng-disabled="saving"
+                    ng-disabled="saving || item.type == 'IMAGE' && !item.imageSrc"
                     type="submit">保存 <i class='fa fa-spinner fa-spin' ng-show="saving"></i>
             </button>
             <button name="cancel" class="btn btn-default"

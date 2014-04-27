@@ -21,6 +21,7 @@
 .Quote {
   &, * { color: @color-muted; }
   font-size: 12px; line-height: 13px; margin-top: 3px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 
 /*工具栏*/
@@ -77,7 +78,6 @@
       img { width: 16px; height: 16px; }
       a { vertical-align: middle; }
     }
-    .Quote { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .Snippet { line-height: 1.2; }
     .Thumb {
       img { max-width: 100px; max-height: 100px; }
