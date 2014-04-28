@@ -611,7 +611,9 @@
       $ul.removeAttr('style');
     });
     $(window).on('scroll', function () {
-      $ul.sortable('refreshPositions');//因为滚动后位置变了，所以要清除缓存大小
+      if ($ul.is(':visible')) {
+        $ul.sortable('refreshPositions');//因为滚动后位置变了，所以要清除缓存大小
+      }
     });
     $scope.sortableOptions = {
       appendTo: '.WidgetItemList-Main',
