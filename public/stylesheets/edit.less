@@ -12,23 +12,18 @@
   background: url(/images/bg_WidgetDragPlaceholder.png) repeat;
 }
 
-.WidgetItemList .ui-sortable-placeholder {
-  height: 65px !important;
+.WidgetItemList-Main .ui-sortable-placeholder {
+  max-height: 65px;
 }
 
 .WidgetItemList-Sub {
-  padding-bottom: 0; margin-bottom: 200px;
+  padding-bottom: 0;
   transition: margin-bottom 0.25s; -webkit-transition: margin-bottom 0.25s;
-  &:hover {
-    margin-bottom: 0;
-  }
   li {
     cursor: move;
-    .Item {
-      height: 65px; overflow: hidden; transition: height 0.25s; -webkit-transition: height 0.25s;
-      &:hover {
-        height: 265px;
-      }
+    .IMAGE img {
+      max-width: 100px;
+      max-height: 100px;
     }
   }
 }
@@ -75,11 +70,6 @@
 
     .Widget {
       background-color: darken(@color-clouds, 4%) !important;
-    }
-
-    &.WidgetDragPlaceholder {
-      height: 65px;
-      background: url(/images/bg_WidgetDragPlaceholder.png) repeat;
     }
 
     &.ui-sortable-helper {

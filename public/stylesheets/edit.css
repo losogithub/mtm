@@ -105,29 +105,20 @@
   visibility: visible !important;
   background: url(/images/bg_WidgetDragPlaceholder.png) repeat;
 }
-.WidgetItemList .ui-sortable-placeholder {
-  height: 65px !important;
+.WidgetItemList-Main .ui-sortable-placeholder {
+  max-height: 65px;
 }
 .WidgetItemList-Sub {
   padding-bottom: 0;
-  margin-bottom: 200px;
   transition: margin-bottom 0.25s;
   -webkit-transition: margin-bottom 0.25s;
-}
-.WidgetItemList-Sub:hover {
-  margin-bottom: 0;
 }
 .WidgetItemList-Sub li {
   cursor: move;
 }
-.WidgetItemList-Sub li .Item {
-  height: 65px;
-  overflow: hidden;
-  transition: height 0.25s;
-  -webkit-transition: height 0.25s;
-}
-.WidgetItemList-Sub li .Item:hover {
-  height: 265px;
+.WidgetItemList-Sub li .IMAGE img {
+  max-width: 100px;
+  max-height: 100px;
 }
 .Collection .Categories {
   width: 100%;
@@ -185,10 +176,6 @@
 }
 .WidgetItemList > li .Widget {
   background-color: #e0e7e8 !important;
-}
-.WidgetItemList > li.WidgetDragPlaceholder {
-  height: 65px;
-  background: url(/images/bg_WidgetDragPlaceholder.png) repeat;
 }
 .WidgetItemList > li.ui-sortable-helper {
   max-height: 65px !important;

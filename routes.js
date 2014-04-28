@@ -45,7 +45,6 @@ module.exports = function (app) {
   app.post('/topic/item', auth.userRequired, topic.createItem);
   app.put('/topic/item', auth.userRequired, topic.editItem);
   app.put('/topic/sort', auth.userRequired, topic.sortItem);
-  app.put('/topic/insert', auth.userRequired, topic.insertItem);
   app.put('/topic/cover', auth.userRequired, topic.saveCover);
   app.put('/topic/title', auth.userRequired, topic.saveTitle);
   app.put('/topic/category', auth.userRequired, topic.saveCategory);

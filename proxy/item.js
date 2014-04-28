@@ -437,6 +437,7 @@ function getData(req) {
       var description = sanitize(req.body.description).trim();
 
       check(url).notNull().isUrl();
+      if (type == 'VIDEO') check(vid).notNull();
       if (cover.length) check(cover).isUrl();
       check(title).len(0, 50);
       check(description).len(0, 140);

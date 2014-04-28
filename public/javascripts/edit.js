@@ -331,26 +331,24 @@
       }
       var url;
       if (moved) {
-        $scope.editingId = $scope.collectionScope.editingId;
         $scope.collectionScope.cancelEdit(true);
-        url = '/topic/insert';
+        $scope.cancelEdit(true);
+        $scope.items[index]._id = null;
       } else {
-        url = '/topic/sort';
-      }//拖动改变了列表顺序，通知服务器将item插入他前一个item的后面
-      $.ajax(url, {
-        type: 'PUT',
-        data: {
-          topicId: $scope.topic._id,
-          type: type,
-          _id: _id,
-          prevItemType: prevItemType,
-          prevItemId: prevItemId
-        }
-      })
-        .fail(function () {
-          $scope.fail = true;
-          $scope.$apply();
-        });
+        $.ajax('/topic/sort', {
+          type: 'PUT',
+          data: {
+            topicId: $scope.topic._id,
+            type: type,
+            _id: _id,
+            prevItemType: prevItemType,
+            prevItemId: prevItemId
+          }
+        }).fail(function () {
+            $scope.fail = true;
+            $scope.$apply();
+          });
+      }
     }
     $($element).find('.WidgetItemList-Main')
       //防止拖动开始时高度减小导致的抖动
@@ -598,8 +596,12 @@
           $scope.$apply();
         });
     };
+  };
 
-    var $ul = $($element).find('.WidgetItemList-Sub');
+  window.sng.controller('SortableCtrl', SortableCtrl);
+  function SortableCtrl($scope, $element) {
+    $scope.item2 = [$.extend({}, $scope.item)];
+    var $ul = $($element);
     $ul
       //防止拖动开始时高度减小导致的抖动
       .mousedown(function () {
@@ -633,9 +635,10 @@
       stop: function () {
         $ul
           .removeClass('WidgetItemList-Sorting');
+        $scope.item2 = [$.extend({}, $scope.item)];
       }
     };
-  };
+  }
   
   function _commonCtrl($scope, $element, $timeout) {
     $scope._init = function () {

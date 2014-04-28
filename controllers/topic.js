@@ -114,7 +114,7 @@ function showEdit(req, res, next) {
         'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.js',
         'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-buttons.js',
         'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-thumbs.js',
-        '/javascripts/jquery-ui-1.10.3.custom.min.js',
+        '/javascripts/jquery-ui-1.10.4.custom.min.js',
         '/bower_components/angular-ui-sortable/sortable.js',
         'http://cdn.bootcss.com/jquery-validate/1.11.1/jquery.validate.min.js',
         '/javascripts/utils.js',
@@ -510,6 +510,8 @@ function _getTopicWithAuth(callback, topicId, userId, isAdmin) {
       return;
     }
 
+    console.log(topic.author_id);
+    console.log(userId);
     if (topic.author_id != userId && !isAdmin) {
       callback(new Error(403));
       return;
@@ -718,87 +720,6 @@ function sortItem(req, res, next) {
       Topic.updateNewTopics();
     });
     console.log('sort done');
-  });
-}
-
-function insertItem(req, res, next) {
-  console.log('insert=====');
-  var userId = req.session.userId;
-  var topicId = req.body.topicId;
-  var type = req.body.type;
-  var _id = req.body._id;
-  var prevItemType = req.body.prevItemType;
-  var prevItemId = req.body.prevItemId;
-
-  async.auto({
-    topic: function (callback) {
-      _getTopicWithAuth(callback, topicId, userId);
-    },
-    prevItem: function (callback) {
-      _getPrevItemWithAuth(callback, prevItemType, prevItemId, topicId);
-    },
-    item: function (callback) {
-      Item.getItemById(type, _id, function (err, item) {
-        if (err) {
-          return callback(err);
-        }
-        if (!item) {
-          return callback(new Error(400));
-        }
-
-        callback(null, item);
-      });
-    },
-    detach: function (callback) {
-      User.getUserById(userId, function (err, user) {
-        if (err) {
-          return callback(err);
-        }
-        if (!user) {
-          return callback(new Error(400));
-        }
-
-        User.deleteItem(user, _id, callback);
-      });
-    },
-    insert: ['topic', 'prevItem', 'item', 'detach', function (callback, results) {
-      var topic = results.topic;
-      var prevItem = results.prevItem;
-      var item = results.item;
-      if (!prevItem) {
-        prevItem = {
-          type: 'VOID',
-          _id: topic.void_item_id
-        };
-      }
-      Item.insertItem(prevItem, item, function (err) {
-        if (err) {
-          return callback(err);
-        }
-
-        Topic.increaseItemCountBy(topic, 1, function (err, topic) {
-          if (err) {
-            return callback(err);
-          }
-          if (!topic) {
-            return callback(new Error(500));
-          }
-          Topic.updateSingleTopicSiteCount(topic);
-        });
-        callback();
-      });
-    }]
-  }, function (err, results) {
-    if (err) {
-      return next(err);
-    }
-
-    res.send(200);
-    var topic = results.topic;
-    topic.update({ update_at: Date.now() }, function () {
-      Topic.updateNewTopics();
-    });
-    console.log('insert done');
   });
 }
 
@@ -1162,7 +1083,6 @@ exports.showIndex = showIndex;
 exports.createItem = createItem;
 exports.editItem = editItem;
 exports.sortItem = sortItem;
-exports.insertItem = insertItem;
 exports.deleteItem = deleteItem;
 exports.deleteTopic = deleteTopic;
 exports.saveCover = saveCover;
