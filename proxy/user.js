@@ -8,6 +8,15 @@
 var Item = require('./item');
 var UserModel = require('../models').User;
 
+var createUser = function (name, loginName, password, email, callback) {
+  var user = new UserModel();
+  user.name = name;
+  user.loginName = loginName;
+  user.password = password;
+  user.email = email;
+  user.save(callback);
+};
+
 var getActivedAuthors = function (callback) {
   UserModel.find({'active': true}, callback);
 };
@@ -90,15 +99,6 @@ var getUserByEmail = function (email, key, callback) {
   UserModel.findOne({email: email, retrieve_key: key}, callback);
 }
 
-var newAndSave = function (name, loginName, password, email, callback) {
-  var user = new UserModel();
-  user.name = name;
-  user.loginName = loginName;
-  user.password = password;
-  user.email = email;
-  user.save(callback);
-};
-
 /**
  * 根据用户ID，查找用户
  * Callback:
@@ -114,48 +114,6 @@ var getUserById = function (id, callback) {
 var getUserByIds = function (ids, callback) {
   UserModel.find({ _id: { $in: ids } }, callback);
 };
-
-var appendTopic = function (id, topicId, callback) {
-  callback = callback || function () {
-  };
-
-  UserModel.findById(id, function (err, user) {
-    if (!user) {
-      callback(new Error(404));
-      return;
-    }
-
-    var topics = user.topics;
-    var length = topics.length;
-    for (var i = 0; i < length; i++) {
-      if (topics[i] == topicId) {
-          callback(null, user);
-          return;
-      }
-    }
-    user.topics.push(topicId);
-    user.topicCount++;
-    user.save(callback);
-  });
-}
-
-function deleteTopic(authorId, topicId, callback) {
-  callback = callback || function () {
-  };
-  UserModel.findById(authorId, function (err, author) {
-    if (err) {
-      callback(err)
-      return;
-    }
-    if (!author) {
-      callback(new Error(404))
-      return;
-    }
-    author.topics.pull(topicId);
-    author.topicCount = author.topics.length;
-    author.save(callback);
-  });
-}
 
 function collectItem(_id, itemId, callback) {
   callback = callback || function () {
@@ -221,6 +179,7 @@ function getItems(_id, callback) {
   });
 }
 
+exports.createUser = createUser;
 exports.getActivedAuthors = getActivedAuthors;
 exports.getUserById = getUserById;
 exports.getUserByIds = getUserByIds;
@@ -230,9 +189,6 @@ exports.getUserByMail = getUserByMail;
 exports.getUsersByQuery = getUsersByQuery;
 exports.getUserByQuery = getUserByQuery;
 exports.getUserByEmail = getUserByEmail;
-exports.newAndSave = newAndSave;
-exports.appendTopic = appendTopic;
-exports.deleteTopic = deleteTopic;
 exports.getUserByNamePass = getUserByNamePass;
 exports.getUserByEmailPass = getUserByEmailPass;
 exports.collectItem = collectItem;

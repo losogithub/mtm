@@ -702,7 +702,6 @@ function deleteTopic(req, res, next) {
       async.forEach(topic.items, function (item, callback) {
         deleteItem(item.type, item.id, callback);
       });
-      User.deleteTopic(topic.author_id, topic._id);
       res.send(200);
       updateNewTopics();
       _updateSingleTopicSiteCount(topic, true);

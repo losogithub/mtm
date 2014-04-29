@@ -21,20 +21,10 @@ function createTopic(authorId, callback) {
   };
 
   var topic = new TopicModel();
-
-  User.appendTopic(authorId, topic._id, function (err, author) {
-    if (err) {
-      return callback(err);
-    }
-    if (!author) {
-      return callback(new Error('作者不存在'))
-    }
-
-    topic.author_id = authorId;
-    topic.author_name = author.loginName;
-    topic.save(function (err, topic) {
-      callback(err, topic);
-    });
+  topic.author_id = authorId;
+  topic.author_name = author.loginName;
+  topic.save(function (err, topic) {
+    callback(err, topic);
   });
 }
 
@@ -145,14 +135,18 @@ function getPublishedTopicById(topicId, callback) {
   TopicModel.findOne({ _id: topicId, publishDate: { $exists: true } }, callback);
 }
 
-function getTopicsByIdsSorted(topicIds, opt, callback) {
-  TopicModel.find({'_id': {"$in": topicIds}})
+function getAllTopicsByAuthorId(authorId, callback) {
+  TopicModel.find({ author_id: authorId}, callback);
+}
+
+function getAllTopicsByAuthorIdSorted(authorId, opt, callback) {
+  TopicModel.find({ author_id: authorId})
     .sort(opt)
     .exec(callback);
 }
 
-function getPublishedTopics2(topicIds, opt, callback) {
-  TopicModel.find({'_id': {"$in": topicIds}, publishDate: {$exists: true}})
+function getPublishedTopicsByAuthorIdSorted(authorId, opt, callback) {
+  TopicModel.find({ author_id: authorId, publishDate: { $exists: true } })
     .sort(opt)
     .exec(callback);
 }
@@ -206,8 +200,9 @@ exports.deleteTopic = deleteTopic;//删
 
 exports.getTopicById = getTopicById;//查
 exports.getPublishedTopicById = getPublishedTopicById;//查
-exports.getTopicsByIdsSorted = getTopicsByIdsSorted;
-exports.getPublishedTopics2 = getPublishedTopics2;
+exports.getAllTopicsByAuthorId = getAllTopicsByAuthorId;
+exports.getAllTopicsByAuthorIdSorted = getAllTopicsByAuthorIdSorted;
+exports.getPublishedTopicsByAuthorIdSorted = getPublishedTopicsByAuthorIdSorted;
 
 exports.addTag = addTag;
 exports.removeTag = removeTag;
