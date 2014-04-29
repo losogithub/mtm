@@ -74,6 +74,10 @@ function getAllTopics(callback) {
   TopicModel.find({ publishDate: { $exists: true } }, callback);
 }
 
+function getAllTopics2(callback) {
+  TopicModel.find({ _id: { $exists: true } }, callback);
+}
+
 function getCategoryTopics(category, callback) {
   if (category == '未分类') {
     var classedList = [];
@@ -462,6 +466,7 @@ exports.getContents = getContents;//查
 exports.increaseItemCountBy = increaseItemCountBy;
 exports.increasePVCountBy = increasePVCountBy;
 exports.getAllTopics = getAllTopics;
+exports.getAllTopics2 = getAllTopics2;
 exports.getCategoryTopics = getCategoryTopics;
 exports.getTagTopics = getTagTopics;
 exports.saveCover = saveCover;//改

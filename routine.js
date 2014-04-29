@@ -155,11 +155,90 @@ function _routine() {
 }
 
 function start() {
+  async.auto({
+    topics: function (callback) {
+      Topic.getAllTopics2(function (err, topics) {
+        if (err) {
+          return callback(err);
+        }
+        callback(null, topics);
+      });
+    },
+    hehe: ['topics', function (callback, results) {
+      var topics = results.topics;
+      async.forEach(topics, function (topic, callback) {
+        Item.getItemById('VOID', topic.void_item_id, function (err, voidItem) {
+          if (err || !voidItem) {
+            if (typeof callback === 'function') {
+              callback(err, voidItem);
+            }
+            return;
+          }
+
+          var items = [];
+          _getItems(topic.item_count, voidItem.next_item.type, voidItem.next_item.id, items, function (err) {
+            if (err) {
+              return callback(err);
+            }
+            topic.items = [];
+            items.forEach(function (item) {
+              topic.items.push({type:item.type,id:item._id});
+            })
+            topic.save(function (err) {
+              if (err) {
+                return callback(err);
+              }
+              callback(null);
+            })
+          });
+        });
+      }, function (err) {
+        if (err) {
+          return callback(err);
+        }
+        callback(null);
+      });
+    }]
+  }, function (err) {
+    if (err) {
+      return console.error(err.stack);
+    }
+    console.log('ok')
+    var refactor = require('fs').createWriteStream('refactor.log', {flags: 'a'});
+    refactor.write('ok\n');
+  });
+
   Topic.updateNewTopics();
   Topic.updateTopicSiteCount();
 
   _routine();
   setInterval(_routine, 60 * 1000);
+}
+function _getItems(remain_count, type, itemId, items, callback) {
+  //通过计数器和条目链表头判断结束条件
+  //计数器是为了防止链表出错导致死循环！！！
+  if (remain_count <= 0
+    || type == 'VOID') {
+
+    if (typeof callback === 'function') {
+      callback(null, items);
+    }
+    return;
+  }
+
+  //查找条目
+  Item.getItemById(type, itemId, function (err, item) {
+    if (err || !item) {
+      if (typeof callback === 'function') {
+        callback(null, items);//不发送err，以使前面找到的条目能发回客户端
+      }
+      return;
+    }
+
+    //条目加入结果集，递归查找下一个条目
+    items.push(item);
+    _getItems(--remain_count, item.next_item.type, item.next_item.id, items, callback);
+  })
 }
 
 exports.start = start;

@@ -521,27 +521,6 @@ function _getTopicWithAuth(callback, topicId, userId, isAdmin) {
   });
 }
 
-function _getPrevItemWithAuth(callback, prevItemType, prevItemId, topicId) {
-  if (!prevItemType || !prevItemId) {
-    callback();
-    return;
-  }
-
-  Item.getItemById(prevItemType, prevItemId, function (err, prevItem) {
-    if (!prevItem) {
-      callback(new Error(404));
-      return;
-    }
-
-    if (prevItem.topic_id != topicId) {//todo refactor
-      callback(new Error(403));
-      return;
-    }
-
-    callback(null, prevItem);
-  });
-}
-
 function _getItemWithAuth(callback, type, itemId, topicId) {
   Item.getItemById(type, itemId, function (err, item) {
     if (err) {
@@ -723,21 +702,10 @@ function editItem(req, res, next) {
       } catch (err) {
         return callback(err);
       }
-      item.update(data, function (err) {
+      extend(item, data);
+      item.save(function (err, item) {
         if (err) {
           return callback(err);
-        }
-
-        callback(null);
-      });
-    }],
-    newItem: ['update', function (callback) {
-      Item.getItemById(type, itemId, function (err, item) {
-        if (err) {
-          return callback(err);
-        }
-        if (!item) {
-          return callback(new Error(500));
         }
 
         callback(null, item);
@@ -748,8 +716,8 @@ function editItem(req, res, next) {
       return next(err);
     }
 
-    var newItem = results.newItem;
-    res.json(Item.getItemData(newItem));
+    var update = results.update;
+    res.json(Item.getItemData(update));
     console.log('editItem done');
     var topic = results.topic;
     topic.update({ update_at: Date.now() }, function () {
