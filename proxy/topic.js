@@ -32,7 +32,9 @@ function createTopic(authorId, callback) {
 
     topic.author_id = authorId;
     topic.author_name = author.loginName;
-    topic.save(callback);
+    topic.save(function (err, topic) {
+      callback(err, topic);
+    });
   });
 }
 
@@ -88,19 +90,25 @@ function getTagTopics(tagText, callback) {
 function saveCover(topic, coverUrl, callback) {
   topic.cover_url = coverUrl;
   topic.update_at = Date.now();
-  topic.save(callback);
+  topic.save(function (err, topic) {
+    callback(err, topic);
+  });
 }
 
 function saveTitle(topic, title, description, callback) {
   topic.title = title;
   topic.description = description;
   topic.update_at = Date.now();
-  topic.save(callback);
+  topic.save(function (err, topic) {
+    callback(err, topic);
+  });
 }
 
 function saveCategory(topic, category, callback) {
   topic.category = category;
-  topic.save(callback);
+  topic.save(function (err, topic) {
+    callback(err, topic);
+  });
 }
 
 function publishTopic(topic, callback) {
@@ -109,7 +117,9 @@ function publishTopic(topic, callback) {
   }
   topic.update_at = Date.now();
   topic.publishDate = Date.now();
-  topic.save(callback);
+  topic.save(function (err, topic) {
+    callback(err, topic);
+  });
 }
 
 /**
@@ -161,7 +171,9 @@ function addTag(topic, tagText, callback) {
     }
   }
   topic.tags.push(tagText);
-  topic.save(callback);
+  topic.save(function (err, topic) {
+    callback(err, topic);
+  });
 }
 
 function removeTag(topic, tagText, callback) {
@@ -171,7 +183,9 @@ function removeTag(topic, tagText, callback) {
       break;
     }
   }
-  topic.save(callback);
+  topic.save(function (err, topic) {
+    callback(err, topic);
+  });
 }
 
 exports.createTopic = createTopic;//增

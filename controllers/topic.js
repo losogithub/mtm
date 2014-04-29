@@ -508,7 +508,7 @@ function createItem(req, res, next) {
     item: ['parse', function (callback) {
       Item.createItem(data, callback);
     }],
-    insert: ['topic', 'item', function (callback, results) {
+    newTopic: ['topic', 'item', function (callback, results) {
       var topic = results.topic;
       var item = results.item;
       var prevItemIndex = -1;

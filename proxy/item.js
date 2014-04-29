@@ -44,7 +44,9 @@ function cloneItem(type, _id, callback) {
 function createItem(data, callback) {
   data.type = data.type.replace('_CREATE', '');
   var item = new ItemModels[data.type](data);
-  item.save(callback)
+  item.save(function (err, item) {
+    callback(err, item)
+  })
 }
 
 function deleteItem(type, _id, callback) {
@@ -131,7 +133,9 @@ function editItem(type, _id, data, callback) {
     }
 
     extend(item, data);
-    item.save(callback);
+    item.save(function (err, item) {
+      callback(err, item)
+    });
   });
 }
 
