@@ -64,7 +64,7 @@ function getItems(topic, callback) {
 
   var items = [];
   async.forEachSeries(topic.items, function (item, callback) {
-    if (item.type && item.id) {
+    if (item && item.type && item.id) {
       getItemById(item.type, item.id, function (err, item) {
         if (err) {
           return callback(err);

@@ -52,7 +52,7 @@ function showIndex(req, res, next) {
     var items = results.items;
     var itemsData = [];
     items.forEach(function (item) {
-      if (item.type && item._id) {
+      if (item && item.type && item._id) {
         itemsData.push(helper.getItemData(item));
       }
     });
@@ -148,7 +148,7 @@ function showEdit(req, res, next) {
     var items = results.items;
     var itemsData = [];
     items.forEach(function (item) {
-      if (item.type && item._id) {
+      if (item && item.type && item._id) {
         itemsData.push(helper.getItemData(item));
       }
     });
@@ -237,7 +237,7 @@ function showChang(req, res, next) {
     };
     var itemsData = [];
     items.forEach(function (item) {
-      if (item.type && item._id) {
+      if (item && item.type && item._id) {
         itemsData.push(helper.getItemData(item));
       }
     });
@@ -1117,7 +1117,7 @@ function _updateSingleTopicSiteCount(topic, deleted) {
     var urlCount = 0;
     var siteList = [];
     items.forEach(function (item) {
-      if (item.url) {
+      if (item && item.url) {
         urlCount++;
         siteList.push(utils.getQuote(item.type == 'IMAGE' && item.quote || item.url));
       }
