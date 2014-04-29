@@ -44,8 +44,8 @@ function cloneItem(type, _id, callback) {
 function createItem(data, callback) {
   data.type = data.type.replace('_CREATE', '');
   var item = new ItemModels[data.type](data);
-  item.save(function (err, item) {
-    callback(err, item)
+  item.save(function (err, item, num) {
+    callback(err, item, num)
   })
 }
 
@@ -70,7 +70,8 @@ function getItems(topic, callback) {
           return callback(err);
         }
         if (!item) {
-          return callback(new Error(500));
+//          return callback(new Error(500));
+          callback();
         }
 
         items.push(item);
