@@ -44,8 +44,8 @@ function cloneItem(type, _id, callback) {
 function createItem(data, callback) {
   data.type = data.type.replace('_CREATE', '');
   var item = new ItemModels[data.type](data);
-  item.save(function (err, item, num) {
-    callback(err, item, num)
+  item.save(function (err, item) {
+    callback(err, item)
   })
 }
 
