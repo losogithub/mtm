@@ -6,7 +6,6 @@
  * To change this template use File | Settings | File Templates.
  */
 var async = require('async');
-var EventProxy = require('eventproxy');
 
 var utils = require('../public/javascripts/utils');
 var Common = require('../common');
@@ -23,24 +22,21 @@ var User = require('./user');
 function createTopic(authorId, callback) {
   callback = callback || function () {
   };
-  var ep = EventProxy.create('topic', 'voidItem', function (topic) {
-    callback(null, topic);
-  })
-    .fail(callback);
 
   var topic = new TopicModel();
 
-  Item.createVoidItem(topic, ep.done('voidItem'));
-
-  User.appendTopic(authorId, topic._id, ep.done(function (author) {
-    if (!author) {
-      ep.emit('error', new Error('作者不存在'))
-      return;
+  User.appendTopic(authorId, topic._id, function (err, author) {
+    if (err) {
+      return callback(err);
     }
+    if (!author) {
+      return callback(new Error('作者不存在'))
+    }
+
     topic.author_id = authorId;
     topic.author_name = author.loginName;
-    topic.save(ep.done('topic'));
-  }));
+    topic.save(callback);
+  });
 }
 
 /**
@@ -49,7 +45,7 @@ function createTopic(authorId, callback) {
  * @param callback
  */
 function getContents(topic, callback) {
-  Item.getItems(topic.void_item_id, topic.item_count, callback);
+  Item.getItems(topic, callback);
 }
 
 /**
@@ -200,7 +196,7 @@ function deleteTopic(topic, callback) {
       return callback(err);
     }
     callback(null, topic);
-    Item.deleteItemList(topic.void_item_id, callback);
+    Item.deleteItemList(topic.items, callback);
     User.deleteTopic(topic.author_id, topic._id);
     updateNewTopics();
     updateSingleTopicSiteCount(topic, true);

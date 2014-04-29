@@ -73,8 +73,8 @@
               $scope.loaded = true;
               $.extend($scope.item, data);
             })
-            .error(function (jqXHR) {
-              if (jqXHR.status == 401) {
+            .error(function (data, status) {
+              if (status == 401) {
                 $scope.showLogin = true;
               }
               $scope.loaded = true;

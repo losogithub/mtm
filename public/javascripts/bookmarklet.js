@@ -52,7 +52,6 @@ var shizier_postMessageListener;
         iframe.style.visibility = 'visible';
         var imgs = document.getElementsByTagName('img');
         var srcs = [];
-        console.log(typeof imgs)
         for (var i in imgs) {
           srcs.push(imgs[i].src);
         }

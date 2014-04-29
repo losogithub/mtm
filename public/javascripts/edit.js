@@ -781,7 +781,7 @@
         submitHandler: function () {
           $scope.$parent.saveItem($scope.item, {
             title: $scope.title,
-            snippet: $scope.snippet,
+            quote: $scope.quote,
             description: $scope.description
           });
         },

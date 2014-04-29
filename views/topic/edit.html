@@ -185,7 +185,7 @@
             <ul class="WidgetItemList WidgetItemList-Main" ui-sortable="sortableOptions"
                 ng-model="items"
                 ng-init="items = <%= JSON.stringify(locals.items) %>">
-              <li ng-repeat="item in items">
+              <li ng-repeat="item in items track by item._id">
 
                 <div class="Item pal"
                      ng-switch="item.type" ng-if="editingId != item._id">

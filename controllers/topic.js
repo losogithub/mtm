@@ -33,12 +33,10 @@ function createTopic(req, res, next) {
 
   Topic.createTopic(userId, function (err, topic) {
     if (err) {
-      next(err);
-      return;
+      return next(err);
     }
     if (!topic) {
-      next(new Error(404));
-      return;
+      return next(new Error(500));
     }
 
     console.log('createTopic done');
@@ -510,9 +508,11 @@ function _getTopicWithAuth(callback, topicId, userId, isAdmin) {
       return;
     }
 
-    console.log(topic.author_id);
-    console.log(userId);
     if (topic.author_id != userId && !isAdmin) {
+      console.log(topic.author_id);
+      console.log(userId);
+      console.log(topic.author_id != userId);
+      console.log(!isAdmin);
       callback(new Error(403));
       return;
     }
@@ -533,7 +533,7 @@ function _getPrevItemWithAuth(callback, prevItemType, prevItemId, topicId) {
       return;
     }
 
-    if (prevItem.topic_id != topicId) {
+    if (prevItem.topic_id != topicId) {//todo refactor
       callback(new Error(403));
       return;
     }
@@ -554,11 +554,6 @@ function _getItemWithAuth(callback, type, itemId, topicId) {
       return;
     }
 
-    if (item.topic_id != topicId) {
-      callback(new Error(403));
-      return;
-    }
-
     callback(null, item);
   });
 }
@@ -567,7 +562,6 @@ function createItem(req, res, next) {
   console.log('createItem=====');
   var userId = req.session.userId;
   var topicId = req.body.topicId;
-  var prevItemType = req.body.prevItemType;
   var prevItemId = req.body.prevItemId;
 
   try {
@@ -609,19 +603,8 @@ function createItem(req, res, next) {
     topic: function (callback) {
       _getTopicWithAuth(callback, topicId, userId);
     },
-    prevItem: function (callback) {
-      _getPrevItemWithAuth(callback, prevItemType, prevItemId, topicId);
-    },
-    item: ['parse', 'topic', 'prevItem', function (callback, results) {
-      var topic = results.topic;
-      var prevItem = results.prevItem;
-      if (!prevItem) {
-        prevItem = {
-          type: 'VOID',
-          _id: topic.void_item_id
-        };
-      }
-      Item.createItem(prevItem, data, function (err, item) {
+    item: ['parse', function (callback) {
+      Item.createItem(data, function (err, item) {
         if (err) {
           callback(err);
           return;
@@ -632,17 +615,32 @@ function createItem(req, res, next) {
           return;
         }
 
-        Topic.increaseItemCountBy(topic, 1, function (err, topic) {
-          if (err) {
-            return callback(err);
-          }
-          if (!topic) {
-            return callback(new Error(500));
-          }
-          Topic.updateSingleTopicSiteCount(topic);
-        });
         callback(null, item);
       });
+    }],
+    insert: ['topic', 'item', function (callback, results) {
+      var topic = results.topic;
+      var item = results.item;
+      var prevItemIndex = -1;
+      for (var i = 0; i < topic.items.length; i++) {
+        if (topic.items[i].id == prevItemId) {
+          prevItemIndex = i;
+          break;
+        }
+      }
+      topic.items.splice(prevItemIndex + 1, 0, {
+        type: item.type,
+        id: item._id
+      });
+      topic.update_at = Date.now();
+      topic.save(function (err) {
+        if (err) {
+          return callback(err);
+        }
+        callback();
+        Topic.updateNewTopics();
+        Topic.updateSingleTopicSiteCount(topic);
+      })
     }]
   }, function (err, results) {
     if (err) {
@@ -651,10 +649,6 @@ function createItem(req, res, next) {
 
     var item = results.item;
     res.json(Item.getItemData(item));
-    var topic = results.topic;
-    topic.update({ update_at: Date.now() }, function () {
-      Topic.updateNewTopics();
-    });
     console.log('createItem done');
   });
 }
@@ -663,62 +657,47 @@ function sortItem(req, res, next) {
   console.log('sort=====');
   var userId = req.session.userId;
   var topicId = req.body.topicId;
-  var type = req.body.type;
   var itemId = req.body._id;
-  var prevItemType = req.body.prevItemType;
   var prevItemId = req.body.prevItemId;
 
   async.auto({
     topic: function (callback) {
       _getTopicWithAuth(callback, topicId, userId);
     },
-    prevItem: function (callback) {
-      _getPrevItemWithAuth(callback, prevItemType, prevItemId, topicId);
-    },
-    item: function (callback) {
-      _getItemWithAuth(callback, type, itemId, topicId);
-    },
-    detach: ['topic', 'prevItem', 'item', function (callback, results) {
-      var item = results.item;
-
-      Item.detachItem(item, function (err) {
-        if (err) {
-          callback(err);
-          return;
-        }
-
-        callback();
-      });
-    }],
-    insert: ['detach', function (callback, results) {
+    insert: ['topic', function (callback, results) {
       var topic = results.topic;
-      var prevItem = results.prevItem;
-      var item = results.item;
-      if (!prevItem) {
-        prevItem = {
-          type: 'VOID',
-          _id: topic.void_item_id
-        };
-      }
-      Item.insertItem(prevItem, item, function (err) {
-        if (err) {
-          callback(err);
-          return;
-        }
 
+      var index = -1;
+      for (var i = 0; i < topic.items.length; i++) {
+        if (topic.items[i].id == itemId) {
+          index = i;
+          break;
+        }
+      }
+      var temp = topic.items.splice(index, 1)[0];
+      var prevItemIndex = -1;
+      for (var i = 0; i < topic.items.length; i++) {
+        if (topic.items[i].id == prevItemId) {
+          prevItemIndex = i;
+          break;
+        }
+      }
+      topic.items.splice(prevItemIndex + 1, 0, temp);
+      topic.update_at = Date.now();
+      topic.save(function (err) {
+        if (err) {
+          return callback(err);
+        }
         callback();
+        Topic.updateNewTopics();
       });
     }]
-  }, function (err, results) {
+  }, function (err) {
     if (err) {
       return next(err);
     }
 
     res.send(200);
-    var topic = results.topic;
-    topic.update({ update_at: Date.now() }, function () {
-      Topic.updateNewTopics();
-    });
     console.log('sort done');
   });
 }
@@ -738,7 +717,6 @@ function editItem(req, res, next) {
       _getItemWithAuth(callback, type, itemId, topicId);
     },
     update: ['topic', 'item', function (callback, results) {
-      var topic = results.topic;
       var item = results.item;
       try {
         var data = Item.getData(req);
@@ -772,12 +750,12 @@ function editItem(req, res, next) {
 
     var newItem = results.newItem;
     res.json(Item.getItemData(newItem));
+    console.log('editItem done');
     var topic = results.topic;
     topic.update({ update_at: Date.now() }, function () {
       Topic.updateNewTopics();
+      Topic.updateSingleTopicSiteCount(topic);
     });
-    Topic.updateSingleTopicSiteCount(topic);
-    console.log('editItem done');
   });
 }
 
@@ -798,34 +776,38 @@ function deleteItem(req, res, next) {
     deleteItem: ['topic', 'item', function (callback, results) {
       var topic = results.topic;
       var item = results.item;
-      Item.deleteItem(item, function (err, item) {
+      Item.deleteItem(item, function (err) {
         if (err) {
-          callback(err);
-          return;
+          return callback(err);
         }
-
-        Topic.increaseItemCountBy(topic, -1, function (err, topic) {
+        var index = -1;
+        for (var i = 0; i < topic.items.length; i++) {
+          if (topic.items[i].id.equals(item._id)) {
+            index = i;
+            break;
+          }
+        }
+        if (index == -1) {
+          return callback(new Error(400));
+        }
+        topic.items.splice(index, 1);
+        topic.update_at = Date.now();
+        topic.save(function (err) {
           if (err) {
             return callback(err);
           }
-          if (!topic) {
-            return callback(new Error(500));
-          }
+          callback();
+          Topic.updateNewTopics();
           Topic.updateSingleTopicSiteCount(topic);
-        });
-        callback();
+        })
       });
     }]
-  }, function (err, results) {
+  }, function (err) {
     if (err) {
       return next(err);
     }
 
     res.send(200);
-    var topic = results.topic;
-    topic.update({ update_at: Date.now() }, function () {
-      Topic.updateNewTopics();
-    });
     console.log('deleteItem done');
   });
 }
