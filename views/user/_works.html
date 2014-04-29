@@ -1,0 +1,93 @@
+<h5><%= username %> 的策展</h5>
+
+<table class="table table-hover">
+  <colgroup>
+    <col style="width:70%;">
+    <col style="width:15%;">
+    <col>
+  </colgroup>
+  <thead class="text-muted">
+  <tr>
+    <th>
+      <div>
+        标题
+        <span class="pull-right">
+          <a class="text-muted <%= (mt == 'c') ? 'text-primary' : '' %>"
+             href="?mt=c&amp;mo=<%= mt != 'c' || mo == 'a' ? 'd' : 'a' %>">创建日期
+          <% if (mt != 'c' || mo == 'd') { %>
+          <i class="fa fa-caret-down"></i>
+          <% } else { %>
+          <i class="fa fa-caret-up"></i>
+          <% } %>
+          </a>
+          <a class="text-muted <%= (mt == 'u') ? 'text-primary' : '' %>"
+             href="?mt=u&amp;mo=<%= mt != 'u' || mo == 'a' ? 'd' : 'a' %>">更新日期
+          <% if (mt != 'u' || mo == 'd') { %>
+          <i class="fa fa-caret-down"></i>
+          <% } else { %>
+          <i class="fa fa-caret-up"></i>
+          <% } %>
+          </a>
+        </span>
+      </div>
+    </th>
+    <th>
+      <div class="text-center">
+        <a class="text-muted <%= (mt == 'p') ? 'text-primary' : '' %>"
+           href="?mt=p&amp;mo=<%= mt != 'p' || mo == 'a' ? 'd' : 'a' %>">访问量
+        <% if (mt != 'p' || mo == 'd') { %>
+        <i class="fa fa-caret-down"></i>
+        <% } else { %>
+        <i class="fa fa-caret-up"></i>
+        <% } %>
+        </a>
+      </div>
+    </th>
+    <th>
+      <div class="text-center">
+        <a class="text-muted <%= (mt == 'r') ? 'text-primary' : '' %>"
+           href="?mt=r&amp;mo=<%= mt != 'r' || mo == 'a' ? 'd' : 'a' %>">上升率
+        <% if (mt != 'r' || mo == 'd') { %>
+        <i class="fa fa-caret-down"></i>
+        <% } else { %>
+        <i class="fa fa-caret-up"></i>
+        <% } %>
+        </a>
+      </div>
+    </th>
+  </tr>
+  </thead>
+  <tbody>
+  <% for (i in locals.topics) { %>
+  <% var topic = topics[i] %>
+  <tr class="<%= !topic.publishDate && 'warning' || '' %>">
+    <td width="70%">
+      <h2 class="h6">
+        <a target="<%= topic.publishDate ? '_blank' : '' %>" title="<%= topic.title || '未命名' %>"
+           class="<%= topic.title ? '' : 'text-muted' %>"
+        <% if (topic.publishDate) { %>
+        href="/topic/<%= topic._id %>"
+        <% } else { %>
+        href="/topic/<%= topic._id %>/edit"
+        <% } %>
+        ><%= topic.title || '未命名' %></a>
+        <% if (!topic.publishDate) { %>
+        <span class="text-muted">（草稿）</span>
+        <% } %>
+      </h2>
+
+      <p class="text-muted"><%= mt == 'u' ? ('更新：' + topic.update_date) : ('创建：' + topic.create_date)%></p>
+    </td>
+    <td class="text-center" style="vertical-align: middle;">
+      <%= topic.PV_count || '-' %>
+    </td>
+    <td class="text-center" style="vertical-align: middle;">
+      -
+    </td>
+  </tr>
+  <% } %>
+  </tbody>
+</table>
+
+<% locals.query = 'mt=' + mt + '&mo=' + mo + '&'; %>
+<% include ../_pagination.html %>

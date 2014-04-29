@@ -1,0 +1,84 @@
+<!--PERSONAL##这是layout要用的参数，不能删！-->
+<div class="pvl background-clouds">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4 col-lg-3">
+        <div class="clearfix pal mbl" data-spy="affix" data-offset-top="72"
+             style="background-color: #34495e;color:white;border-radius: 6px;">
+          <div class="pull-left mrl img-circle-border"
+               style="width: 130px; height: 130px;">
+            <img class="img-circle" width="120" height="120" id="_thumb"
+                 onerror="shizier.errorImage(this, 'image_95x95')"
+                 src="<%= (locals.personalType == 'PERSONAL' ? locals.authorImage : locals.imageUrl) || '/images/no_img/user_120x120.png' %>">
+          </div>
+          <ul style="list-style: none;padding: 0;overflow: hidden;">
+            <li>
+              <p>
+                <%= locals.topicCount || '0' %><br>
+                策展总数
+              </p>
+            </li>
+
+            <li>
+              <p>
+                <%= locals.topicsPageView || '0' %><br>
+                总浏览量
+              </p>
+            </li>
+          </ul>
+
+          <h1 class="h6 mtn"><%= locals.personalType == 'PERSONAL' ? locals.authorName : locals.username %></h1>
+
+          <% if (locals.personalType != 'PERSONAL') { %>
+          <div class="mtm">
+            <a href="/settings" class="btn btn-primary">设置</a>
+          </div>
+          <% } else { %>
+          <% if (locals.authorPersonalUrl) { %>
+          <div class="mtm">
+            <a target="_blank" href="<%= locals.authorPersonalUrl || '' %>"
+               title="<%= locals.authorPersonalUrl || '' %>">
+              <i class="fa fa-home"></i>
+              <%= locals.authorPersonalUrl || '' %>
+            </a>
+          </div>
+          <% } %>
+          <div class="mtm">
+            <button name="favoriteUser" class="<%= locals.likedBefore ? 'ExSelected' : '' %> btn btn-default"
+                    data-favorite='{"authorName":"<%= authorName %>"}' title="喜欢">
+              <i class="fa fa-star StarIcon"></i>
+              <span class="FVCount"><%= locals.favourite || '0' %></span>
+            </button>
+
+            <% include ../_followUser.html %>
+
+          </div>
+          <% } %>
+
+          <!--<% if (locals.personalType != 'PERSONAL') { %>-->
+          <!--<hr>-->
+
+          <!--<nav class="Nav Nav-Personal">-->
+          <!--<ul>-->
+          <!--&lt;!&ndash;<li><a href="/faq?groupNo=147">用户激励指南</a></li>&ndash;&gt;-->
+          <!--<li><a href="/bookmarklet">bookmarklet</a></li>-->
+          <!--</ul>-->
+          <!--</nav>-->
+          <!--<% } %>-->
+        </div>
+      </div>
+
+      <div class="col-md-8 col-lg-9">
+        <div class="pal" style="background-color: white;border-radius: 6px;">
+          <% if (locals.personalType == 'WORKS') { %>
+          <% include _works.html %>
+          <% } else if (locals.personalType == 'SETTINGS') { %>
+          <% include _settings.html %>
+          <% } else if (locals.personalType == 'PERSONAL') { %>
+          <% include _user.html %>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

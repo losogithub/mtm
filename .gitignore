@@ -1,4 +1,4 @@
-
+node_modules/*
 Document/.DS_Store
 
 Document/昝涛/.DS_Store
@@ -22,3 +22,7 @@ Document/昝涛/.DS_Store
 Document/昝涛/3月/话题/.DS_Store
 
 Document/昝涛/3月/话题/.DS_Store
+
+access.log
+
+error.log

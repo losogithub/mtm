@@ -1,164 +1,190 @@
-<div class="Band">
-  <div class="Inner">
-    <table>
-      <td>
-        <ol>
-          <li>
-            <a class="text-secondary" href="/">石子儿首页</a>
-            <i class="icon-angle-right"></i>
-          </li>
-        </ol>
-      </td>
-    </table>
-  </div>
-</div>
-<div class="Top">
-  <div class="Inner">
-    <div class="HeadMain clearfix">
-      <div class="HeadThumb" style="display: <%= !topic.coverUrl ? 'none' : 'block' %>;">
-        <img width="95" height="95" onerror="shizier.errorImage(this,'image_95x95');"
-             src="<%= topic.coverUrl || '' %>">
-      </div>
 
-      <div class="HeadTxt">
-        <div class="HeadTtlWrapper">
-          <h1 class="HeadTtl"><a class="text-default"
-                                 href="/topic/<%= topic._id %>"><%= topic.title %></a></h1>
-
-          <% if (locals.isAuthor) { %>
-          <div class='HeadUtil'>
-            <a href="/topic/<%= topic._id %>/edit?editTop=1"><i class="icon-pencil"></i> 修改</a>
-            <span class='VLine VLine-Util'></span>
-
-            <% include _deleteBtn.html %>
-
-          </div>
-          <% } %>
-        </div>
-
-        <p class="HeadDescWrapper">
-          <span style="<%= !topic.description ? 'display: none;' : '' %>"
-                class="HeadDesc text-secondary">
-            <%= topic.description || '' %>
-          </span>
-          <span class="text-muted" style="font-size: 10px;">
-            <i class="icon-edit" style="vertical-align: middle;"></i>
-            更新日期: <%= topic.updateAt %>
-          </span>
-        </p>
-
-        <div class="HeadOption clearfix">
-          <div class="HeadUser" style="float: left;">
-            <a class="text-default" href="/u/<%= topic.author %>" title="<%= topic.author %>">
-              <span class="HeadUserThumb"><img width="30" height="30"
-                                               src="<%= authorInfo.imgUrl || '/images/no_img/user_80x80.png' %>"
-                                               onerror="shizier.errorImage(this,'user_80x80');"></span><span
-              class="HeadUserName"><%= topic.author %></span>
-            </a>
-          </div>
-          <a target="_blank" style="float: left; margin-right: 10px;" class="btn btn-default" href="/topic/<%= topic._id %>/share_chang">生成长微博</a>
-          <!-- Baidu Button BEGIN -->
-          <div class="bdsharebuttonbox"><a href="#" class="bds_more" data-cmd="more"></a><a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a><a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a><a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"></a><a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"></a><a href="#" class="bds_t163" data-cmd="t163" title="分享到网易微博"></a></div>
-          <script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"2","bdSize":"16"},"share":{},"image":{"viewList":["tsina","qzone","tqq","renren","t163"],"viewText":"分享到：","viewSize":"16"},"slide":{"type":"slide","bdImg":"3","bdPos":"left","bdTop":"100"},"selectShare":{"bdContainerClass":null,"bdSelectMiniList":["tsina","qzone","tqq","renren","t163"]}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=86835285.js?cdnversion='+~(-new Date()/36e5)];</script>
-          <!-- Baidu Button END -->
-        </div>
-      </div>
-    </div>
-    <div class="HeadSub">
-      <div class="HeadCount">
-        <span class="HeadFVCount">
-          <span class="HeadFVCountNum"><i class="HeadFVIco icon-star" style="vertical-align: middle;"></i> <span><%= topic.FVCount %></span></span>
-          <span class="HeadFVCountLabel text-secondary">喜欢</span>
-        </span>
-        <span class="HeadPVCount">
-          <span class="HeadPVCountNum"><%= topic.PVCount %></span>
-          <span class="HeadPVCountLabel text-secondary">浏览</span>
-        </span>
-      </div>
-
-      <button name="favorite" class="<%- locals.liked ? 'ExSelected' : '' %> btn btn-large"
-              data-favorite='{"topicId":"<%= topic._id %>"}'>
-        <i class="HeadFVBtnIco icon-star StarIcon"></i>
-        <span class="HeadFVBtnTxt">喜欢</span>
-      </button>
-    </div>
-  </div>
-</div>
+<% locals.categoryType_pre = topic.category; %>
+<% include ../_band.html %>
 
 <!--内容-->
-<div class="TopicWrapper clearfix">
-  <div class="Main">
-    <% if (!locals.items || !items.length) { %>
-    <div class="NoItem">
-      <i class="icon-file-alt text-light" style="font-size: 50px;"></i>
+<div class="background-clouds">
+  <div class="container">
+    <div class="row pbl">
+      <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-8 col-lg-7">
+        <div class="background-white mtl" style="border-radius: 6px;">
+          <div class="TopicHead" style="position: relative; min-height: 140px; border-radius: 6px 6px 0 0;">
+            <a class="fancybox" rel="gallery" href="<%= topic.cover_url %>" title="<%= topic.title %>">
+              <img onerror="$(this).hide();" src="<%= topic.cover_url %>" alt="<%= topic.title %>"
+                   style="width: 100%; border-radius: 6px 6px 0 0; <%= topic.cover_url ? '' : 'display: none;' %>">
+            </a>
+            <h1 class="Title mbn hidden-xs" >
+              <a class="text-inverse pal h5" style="display: block;" href="/topic/<%= topic._id %>"><%= topic.title %></a>
+            </h1>
+          </div>
 
-      <p class="text-secondary">这个总结还没有内容。
-        <% if (locals.isAuthor) { %>
-        <br>要添加吗？
-        <% } %>
-      </p>
-      <% } %>
-      <% if (locals.isAuthor) { %>
-      <a name="add" class="btn btn-default text-success" href="/topic/<%= topic._id %>/edit" type="button">
-        <i class="icon-plus-sign"></i>
-        <span class="text-default">添加条目</span>
-      </a>
-      <% } %>
-      <% if (!locals.items || !items.length) { %>
-    </div>
-    <% } %>
+          <div class="phl">
+            <h1 class="h5 mtl visible-xs"><a href="/topic/<%= topic._id %>"><%= topic.title %></a></h1>
 
-    <% include _ul.html %>
-
-    <!--模板-->
-    <div class="TEMPLATES" style="display:none;">
-
-      <% include _video_player.html %>
-
-    </div>
-
-  </div>
-  <div class="Sub"><!--right side--->
-    <div class="SubInner">
-
-      <div class="SubAuthor">
-        <div class="SubAuthorProfile">
-          <div class="SubAuthorProfileUnit">
-            <h6 class="SubAuthorProfileUnitTitle">
-              <a href="/u/<%= topic.author %>" class="SubAuthorProfileUnitTitleUserName" title="<%= topic.author %>">
-                <img width="80" height="80"
-                     src="<%= authorInfo.imgUrl || '/images/no_img/user_80x80.png' %>"
-                     onerror="errorImage(this,'user80x80');"
-                     class="SubAuthorProfileUnitTitleUserNameThumb"> <%= topic.author %>
-              </a>
-            </h6>
-
-            <p class="SubAuthorProfileUnitLink">
-              <% if (authorInfo.personalSite) { %>
-              <span class="SubAuthorProfileUnitLinkSite">
-                <a href="<%= authorInfo.personalSite || '' %>" title="<%= authorInfo.personalSite || '' %>"
-                   class="btn btn-small btn-default" target="_blank">
-                  <i class="icon-home text-success"></i>
-                  个人网站
+            <div class="clearfix mtm mbm">
+              <div class="pull-left">
+                <a href="/u/<%= topic.author_name %>" title="<%= topic.author_name %>">
+                  <img width="30" height="30" class="img-circle"
+                       style="display: inline-block; width: 30px; height: 30px;"
+                       src="<%= authorInfo.imgUrl || '/images/no_img/user_80x80.png' %>"
+                       alt="<%= topic.author_name %>"
+                       onerror="shizier.errorImage(this,'user_80x80');">
+                  <%= topic.author_name %>
                 </a>
-              </span>
-              <% } else { %>
-              <span class="SubAuthorProfileUnitLinkSite ExDisabled">
-                <button disabled class="btn btn-small" type="button">个人网站</button>
-              </span>
+                <span class="text-muted small mls" title="更新日期">
+                  <%= topic.update_at.getFullYear() + '-'
+                        + (topic.update_at.getMonth() + 1) + '-'
+                        + topic.update_at.getDate() %>
+                </span>
+              </div>
+              <div class="pull-right">
+                <% if (locals.isAuthor) { %>
+                <a class="mrs btn btn-primary"
+                   style="padding: 0 5px; font-size: 18px; vertical-align: baseline;"
+                   href="/topic/<%= topic._id %>/edit" title="编辑"><i class="fa fa-pencil"></i></a>
+                <% include _deleteBtn.html %>
+                <% } %>
+                <a class="mls text-info mls" target="_blank"
+                   href="/topic/<%= topic._id %>/share_chang" title="分享"><i
+                  class="fa fa-share"></i></a>
+                <button name="favoriteTopic" class="<%- locals.liked ? 'ExSelected' : '' %> btn btn-default mls"
+                        style="padding: 0 5px;vertical-align: baseline;font-size: 18px;"
+                        data-favorite='{"topicId":"<%= topic._id %>"}' title="喜欢">
+                  <i class="fa fa-star StarIcon"></i> <span class="FVCount"><%= topic.FVCount %></span>
+                </button>
+                <script>
+                  $(function () {
+                    $('button[name="favoriteTopic"]').click(function () {
+                      var $this = $(this);
+                      var topicId = $this.data('favorite').topicId;
+                      var toLike = !$this.is('.ExSelected');
+                      $.post('/topic/favorite', {
+                        topicId: topicId,
+                        toLike: toLike
+                      })
+                        .done(function (data) {
+                          console.log('done');
+                          if (toLike) {
+                            $this.addClass('ExSelected');
+                          } else {
+                            $this.removeClass('ExSelected');
+                          }
+                          $this.find('.FVCount').text(data.FVCount);
+                        });
+                    });
+                  });
+                </script>
+                <span class="text-muted mls" title="浏览"><i class="fa fa-eye"></i> <%= topic.PV_count %></span>
+              </div>
+            </div>
+
+            <p class="mbn" style="<%= !topic.description ? 'display: none;' : '' %>">
+              <%= topic.description || '' %>
+            </p>
+
+            <p class="text-muted text-right mts" style="font-size: 14px;">
+              <i class="fa fa-puzzle-piece"></i> 策展了来自
+              <b class="text-default"><%= Topic[topic._id] && Topic[topic._id].siteCount %></b>
+              个网站的
+              <span class="text-default"><%= Topic[topic._id] && Topic[topic._id].urlCount %></span>
+              条碎片信息
+            </p>
+
+            <% if (!locals.items || !items.length) { %>
+            <div class="text-muted text-center" style="padding: 140px 0px;">
+              <i class="fa fa-file-o" style="font-size: 50px;"></i>
+
+              <div>此策展还没有内容</div>
+            </div>
+            <% } %>
+          </div>
+
+          <% include _ul.html %>
+
+          <!--模板-->
+          <div class="TEMPLATES" style="display:none;">
+
+            <% include _video_player.html %>
+
+          </div>
+
+        </div>
+      </div>
+      <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-4 col-lg-5">
+        <% if (locals.isAdmin || locals.isAuthor) { %>
+        <div class="mtl">
+          <% include _category_selector.html %>
+        </div>
+        <% } %>
+        <div ng-controller="TagsInputCtrl"
+             ng-init='tags = <%- JSON.stringify(tags) %>;'>
+          <div ng-show="!editing">
+            <% include ../_tags.html %>
+          </div>
+          <div class="TagsInput mtl" ng-show="editing">
+            <tags-input ng-model="tags"
+                        min-length="1" max-length="20" min-tags="1" max-tags="5"
+                        placeholder="标签" add-on-space="true"
+                        on-tag-added="onAdded($tag)" on-tag-removed="onRemoved($tag)"></tags-input>
+          </div>
+        </div>
+        <div class="pal background-white mtl" style="border-radius: 6px;">
+          <div class="clearfix">
+            <a class="pull-left mrl img-circle-border-clouds" title="<%= topic.author_name %>" target="_blank"
+               href="/u/<%= topic.author_name %>"
+               title="<%= topic.author_name %>"
+               style="display: block; width: 80px; height: 80px;">
+              <img class="img-circle" width="70" height="70" id="_thumb"
+                   onerror="shizier.errorImage(this, 'image_95x95')"
+                   src="<%= authorInfo.imgUrl || '/images/no_img/user_80x80.png' %>"
+                   alt="<%= topic.author_name %>">
+            </a>
+
+            <h1 class="h6 mvn">
+              <a class="text-default-a" href="/u/<%= topic.author_name %>" title="<%= topic.author_name %>">
+                <%= topic.author_name %>
+              </a>
+            </h1>
+            <p class="mtm mbn text-muted small" style="line-height: 1;">
+              <% for (var i = 0; i < 3; i++) { %>
+              <% var tempCategory = authorCategoryList[topic.author_name][i]; %>
+              <% if (!tempCategory) { break; } %>
+              <i class="fa fa-bookmark-o"></i>
+              <a target="_blank" class="text-muted mrs"
+                 href="/<%= CATEGORIES2ENG[tempCategory] %>">
+                <%= tempCategory %>
+              </a>
               <% } %>
             </p>
+            <% if (authorInfo.personalSite) { %>
+            <% var site = authorInfo.personalSite || ''; %>
+            <p class="mtm mbn" style="line-height: 1; font-size: 12px;">
+              <a target="_blank" href="<%= site %>"
+                 title="<%= site %>" class="text-muted">
+                <i class="fa fa-home"></i>
+                <%= site %>
+              </a>
+            </p>
+            <% } %>
           </div>
-          <p class="SubAuthorProfileTxt"><%- authorInfo.description || '' %></p>
+          <% if (authorInfo.description) { %>
+          <p class="mtm mbn text-muted small" style="line-height: 1.2;"><%- authorInfo.description || '' %></p>
+          <% } %>
+          <div class="mtm">
+            <button name="favoriteUser" class="<%= locals.likedBefore ? 'ExSelected' : '' %> btn btn-default"
+                    data-favorite='{"authorName":"<%= authorInfo.author %>"}' title="喜欢">
+              <i class="fa fa-star StarIcon"></i>
+              <span class="FVCount"><%= authorInfo.favourite || '0' %></span>
+            </button>
+
+            <% include ../_followUser.html %>
+
+          </div>
         </div>
-
       </div>
-      <div class="SubSeparator">
-        <hr>
+      <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-8 col-lg-7 mtl">
+        <a class="btn btn-primary btn-block btn-hg" href="/" title="石子儿首页">回首页，更多精彩“策展”</a>
       </div>
-
     </div>
   </div>
 </div>
-
-<% include ../_toTop.html %>

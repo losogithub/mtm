@@ -17,6 +17,13 @@ module.exports = {
   host: "shizier.com", //revise later
   port: '3000',
   db: 'mongodb://127.0.0.1:27017/mtm',
+  admins: {
+    admin: 1,
+    gossipxoxo: 1,
+    xiaoshitou: 1,
+    alibabamama: 1,
+    infinal: 1
+  },
 
   session_secret: 'shizier',
   auth_cookie_name: 'shizierCookie',

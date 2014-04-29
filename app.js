@@ -6,9 +6,11 @@ var express = require('express');
 var ejs = require('ejs');
 var partials = require('express-partials');
 var fs = require('fs');
+require('graceful-fs');//调用一次就会修改fs模块
 
 //using redis to store session data
-var RedisStore = require("connect-redis")(express);
+var session = require('express-session');
+var RedisStore = require("connect-redis")(session);
 var redis = require('redis').createClient();
 
 var config = require('./config');
@@ -23,7 +25,7 @@ config.hostname = urlinfo.hostname || config.host;
 
 //global variables instaitate.
 //e.g. hotopicsData, updateTopicsData
-require('./offlineProcess/retriveUpdatedTopicList')();
+require('./routine').start();
 
 //deleted outdated images
 //require('./offlineProcess/changPictureUpdate')();
@@ -80,11 +82,14 @@ app.use(function (err, req, res, next) {
   var accept = req.headers.accept || '';
   if (~accept.indexOf('html')) {
     switch (err.message) {
+      case '400':
+        res.send(400, '请求参数错误');
+        break;
       case '403':
-        res.send(403, '您无权修改他人的总结');
+        res.send(403, '您无权修改他人的策展');
         break;
       case '404':
-        res.status(404).render('sign/errLink');
+        res.status(404).render('error');
         break;
       default :
         res.send(500, '服务器出错：\n' + '\n' + err.stack);
@@ -92,8 +97,11 @@ app.use(function (err, req, res, next) {
     }
   } else {
     switch (err.message) {
+      case '400':
+        res.send(400, '请求参数错误');
+        break;
       case '403':
-        res.send(403, '您无权修改他人的总结');
+        res.send(403, '您无权修改他人的策展');
         break;
       case '404':
         res.send(404, '您请求的资源不存在');

@@ -7,8 +7,13 @@
  */
 var EventProxy = require('eventproxy');
 
+var Item = require('./item');
 var models = require('../models');
 var UserModel = models.User;
+
+var getActivedAuthors = function (callback) {
+  UserModel.find({'active': true}, callback);
+};
 
 /**
  * 根据登录名查找用户
@@ -88,13 +93,12 @@ var getUserByEmail = function (email, key, callback) {
   UserModel.findOne({email: email, retrieve_key: key}, callback);
 }
 
-var newAndSave = function (name, loginName, password, email, active, callback) {
+var newAndSave = function (name, loginName, password, email, callback) {
   var user = new UserModel();
   user.name = name;
   user.loginName = loginName;
   user.password = password;
   user.email = email;
-  user.active = active;
   user.save(callback);
 };
 
@@ -108,6 +112,10 @@ var newAndSave = function (name, loginName, password, email, active, callback) {
  */
 var getUserById = function (id, callback) {
   UserModel.findById(id, callback);
+};
+
+var getUserByIds = function (ids, callback) {
+  UserModel.find({ _id: { $in: ids } }, callback);
 };
 
 var appendTopic = function (id, topicId, callback) {
@@ -156,7 +164,73 @@ function deleteTopic(authorId, topicId, callback) {
   });
 }
 
+function collectItem(_id, itemId, callback) {
+  callback = callback || function () {
+  };
+
+  getUserById(_id, function (err, user) {
+    if (err) {
+      return callback(err);
+    }
+    if (!user) {
+      return callback(new Error(400));
+    }
+
+    user.items.push(itemId);
+    user.save(function (err, user) {
+      if (err) {
+        return callback(err);
+      }
+      if (!user) {
+        return callback(new Error(500));
+      }
+
+      callback(null, user);
+    });
+  })
+}
+
+function deleteItem(user, _id, callback) {
+  callback = callback || function () {
+  };
+
+
+  var index = user.items.indexOf(_id);
+  if (index < 0) {
+    return callback(new Error(403));
+  }
+  user.items.splice(index, 1);
+  user.save(function (err, user) {
+    if (err) {
+      return callback(err);
+    }
+    if (!user) {
+      return callback(new Error(500));
+    }
+
+    callback(null);
+  });
+}
+
+function getItems(_id, callback) {
+  callback = callback || function () {
+  };
+
+  getUserById(_id, function (err, user) {
+    if (err) {
+      return callback(err);
+    }
+    if (!user) {
+      return callback(new Error(400));
+    }
+
+    Item.getItemsById(user.items, callback);
+  });
+}
+
+exports.getActivedAuthors = getActivedAuthors;
 exports.getUserById = getUserById;
+exports.getUserByIds = getUserByIds;
 exports.getUserByLoginName = getUserByLoginName;
 exports.getUserByName = getUserByName;
 exports.getUserByMail = getUserByMail;
@@ -168,3 +242,6 @@ exports.appendTopic = appendTopic;
 exports.deleteTopic = deleteTopic;
 exports.getUserByNamePass = getUserByNamePass;
 exports.getUserByEmailPass = getUserByEmailPass;
+exports.collectItem = collectItem;
+exports.deleteItem = deleteItem;
+exports.getItems = getItems;

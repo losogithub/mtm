@@ -1,0 +1,58 @@
+<div class="Band Band-Nav">
+  <% var categoryType = locals.categoryType_pre || locals.pageType; %>
+  <div class="container">
+    <div class="dropdown pull-left">
+      <button type="button" data-toggle="dropdown"
+              class="btn btn-square dropdown-toggle btn-default">
+        <i class="fa fa-bookmark-o"></i> 分类
+        <span class="Counter">(<%= locals.totalTopicCount %>)</span>
+        <i class="fa fa-bars mls"></i>
+      </button>
+      <span class="dropdown-arrow dropdown-arrow-inverse"></span>
+      <ul class="dropdown-menu dropdown-inverse">
+        <% var temp = {'生活':'cutlery','娱乐':'music','新闻':'globe','科技':'rocket','文化':'book'}; %>
+        <% var temp2 = {'生活':'muted','娱乐':'warning','新闻':'info','科技':'danger','文化':'black'}; %>
+        <% for (var key in CATEGORIES2ENG) { %>
+        <li class="<%- categoryType == key ? 'selected' : '' %>">
+          <a href="/<%= CATEGORIES2ENG[key] %>">
+            <%if(temp[key]){%><i class="fa fa-<%= temp[key] %> text-<%= temp2[key] %>"></i><%}%> <%= key %>
+            <span class="Counter">(<%- locals.categoryTopicCount[key] || '0' %>)</span>
+          </a>
+        </li>
+        <% } %>
+        <li class="<%- categoryType == '最新' ? 'selected' : '' %>">
+          <a href="/new">最新 <span class="Counter">(<%- locals.totalTopicCount || '0' %>)</span></a></li>
+      </ul>
+    </div>
+    <% if (locals.pageType != 'INDEX') { %>
+    <% if (locals.pageType == '最新') { %>
+    <a class="btn btn-square pull-left <%- locals.pageType == 'TAG' || locals.pageType == 'TOPIC' ? 'btn-default' : 'btn-primary' %>"
+       href="/new"><%= categoryType %>
+      <span class="Counter">(<%= locals.topicCount %>)</span>
+    </a>
+    <% } else { %>
+    <a class="btn btn-square pull-left <%- locals.pageType == 'TAG' || locals.pageType == 'TOPIC' ? 'btn-default' : 'btn-primary' %>"
+       href="/<%= CATEGORIES2ENG[categoryType] %>"><%= categoryType %>
+      <span class="Counter">(<%= locals.topicCount %>)</span>
+    </a>
+    <% } %>
+    <% } %>
+    <% if (locals.pageType == 'TAG') { %>
+    <div style="overflow: hidden;">
+      <a href="/tag/<%- encodeURIComponent(tag) %>"
+         class="btn btn-primary btn-square pull-left">
+        <i class="fa fa-tag" style="font-size: 14px;"></i> <%= tag %>
+        <span class="Counter">(<%= Tags[tag] && Tags[tag].topicCount || 0 %>)</span>
+      </a>
+    </div>
+    <% } else if (locals.pageType == 'TOPIC') { %>
+    <div style="overflow: hidden;">
+      <a href="/topic/<%- locals.topic._id %>"
+         class="btn btn-primary btn-square pull-left"
+         style="max-width: 100%; text-overflow: ellipsis; overflow: hidden;">
+        <%= locals.topic.title %>
+      </a>
+    </div>
+    <% } %>
+  </div>
+</div>

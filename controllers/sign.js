@@ -18,7 +18,7 @@ var LoginToken = require('../proxy').LoginToken;
 var mail = require('../services/mail');
 
 
-var showSignUp = function (req, res) {
+function showSignUp(req, res) {
   console.log("render register page");
   //console.log("login Referer: ", req.session._loginReferer);
   //2013.12.16 revise _loginReferer to loginOrSignup
@@ -27,38 +27,38 @@ var showSignUp = function (req, res) {
   //var refer = req.session._loginReferer || '/';
 
   //for already logged in user
-    console.log("referer: ", req.headers.referer);
+  console.log("referer: ", req.headers.referer);
   //var  refer = req.headers.referer || '/';
 
-  if(req.session && req.session.userId){
-      /*
-      If it is a logged in user, jump to its refer or home.
-      shall we consider a black list ?
-      //todo:
-       */
+  if (req.session && req.session.userId) {
+    /*
+     If it is a logged in user, jump to its refer or home.
+     shall we consider a black list ?
+     //todo:
+     */
     // for signup, seems no need of req.query.fromUrl
     var refer = req.headers.referer || '/';
     return res.redirect(refer);
   }
-  else{
+  else {
     res.render('sign/signup');
   }
 
 };
 
 
-var signup = function (req, res, next) {
+function signUp(req, res, next) {
   console.log("----- Register -------");
   //console.log("login Referer: ", req.session._loginReferer);
   console.log("header referer: ", req.headers.referer);
 
   var name = sanitize(req.body.username).trim();
   name = sanitize(name).xss();
-  var loginname = name.toLowerCase();
+  var loginname = name;
   var pass = sanitize(req.body.password).trim();
   pass = sanitize(pass).xss();
   var email = sanitize(req.body.email).trim();
-  email = email.toLowerCase();
+  email = email;
   email = sanitize(email).xss();
 
   // 1. check name
@@ -82,31 +82,28 @@ var signup = function (req, res, next) {
     nMsg = '长度不能少于2.';
   }
   else {
-      /*
-       2014-3-20 20:30
-       in order to support underscore and chinese character, update to use regex
-       */
     /*
-      try {
-      //check(name, '用户名只能使用0-9，a-z，A-Z。').isAlphanumeric();
+     2014-3-20 20:30
+     in order to support underscore and chinese character, update to use regex
+     */
+    /*
+     try {
+     //check(name, '用户名只能使用0-9，a-z，A-Z。').isAlphanumeric();
 
 
-    } catch (e) {
-      nMsg = e.message;
+     } catch (e) {
+     nMsg = e.message;
+     nFlag = false;
+     }
+     */
+    //韩语，日语，中文
+    var nameOK = name.match(/^[\x3130-\x318F\xAC00-\xD7A3\u0800-\u4e00\u0391-\uFFE5\w]+$/);
+    // var nameOK = name.match(/^[\u0391-\uFFE5\w]+$/);
+    if (nameOK == null) {
+      nMsg = "用户名只能使用中文，英文，日文，韩文和下划线的组合";
       nFlag = false;
     }
-    */
-      //韩语，日语，中文
-      var nameOK = name.match(/^[\x3130-\x318F\xAC00-\xD7A3\u0800-\u4e00\u0391-\uFFE5\w]+$/);
-     // var nameOK = name.match(/^[\u0391-\uFFE5\w]+$/);
-      if (nameOK == null){
-       nMsg = "用户名只能使用中文，英文，日文，韩文和下划线的组合";
-       nFlag = false;
-        }
-
   }
-
-
 
 
   // 2. check email
@@ -170,7 +167,7 @@ var signup = function (req, res, next) {
             // md5 the pass
             pass = encryp.md5(pass);
 
-            User.newAndSave(name, loginname, pass, email, false, function (err) {
+            User.newAndSave(name, loginname, pass, email, function (err) {
               if (err) {
                 return next(err);
               }
@@ -229,7 +226,7 @@ var signup = function (req, res, next) {
             // success
             // md5 the pass
             pass = encryp.md5(pass);
-            User.newAndSave(name, loginname, pass, email, false, function (err) {
+            User.newAndSave(name, loginname, pass, email, function (err) {
               if (err) {
                 return next(err);
               }
@@ -289,20 +286,16 @@ var signup = function (req, res, next) {
  * @param  {HttpRequest} req
  * @param  {HttpResponse} res
  */
-var showLogin = function (req, res) {
-  console.log("----- Show login page ----");
-  //console.log("session: ", req.session);
-  console.log("referer: ", req.headers.referer);
-
+function showLogin(req, res) {
   //if it is null, then assign to this.
   //otherwise it was assigned by some middleware.
   //No, 2013.11.30 if it is not null, it must be assigned before not equal to /login. So you  cannot revise it.
   //even it equals to /singup. it is ok. later in login function will check this.
   /*
-  if (!req.session._loginReferer) {
-    req.session._loginReferer =  req.headers.referer || '/';
-  }
-  */
+   if (!req.session._loginReferer) {
+   req.session._loginReferer =  req.headers.referer || '/';
+   }
+   */
 
   //var refer = req.session._loginReferer || '/';
 
@@ -316,35 +309,32 @@ var showLogin = function (req, res) {
 
 
   // suppose an already logged in user, you shall jump to home.
-  if (req.session && req.session.userId && req.session.userId !== 'undefined') {
-   //if logged in, jump to refer page.
-   //note: not all page jump to loginReferer.
-   //add: 2013.11.23: it seems impossible for this situation. So I commented it.
-   // 2013.11.26. No, maybe not.
-   /*for (var i = 0, len = notJump.length; i !== len; ++i) {
-   if (refer.indexOf(notJump[i]) >= 0) {
-   refer = '/';
-   break;
-   }
-   } */
+  if (req.session && req.session.userId && req.session.userId) {
+    //if logged in, jump to refer page.
+    //note: not all page jump to loginReferer.
+    //add: 2013.11.23: it seems impossible for this situation. So I commented it.
+    // 2013.11.26. No, maybe not.
+    /*for (var i = 0, len = notJump.length; i !== len; ++i) {
+     if (refer.indexOf(notJump[i]) >= 0) {
+     refer = '/';
+     break;
+     }
+     } */
 
-    console.log("already logged in user.");
-    var refer = req.query.fromUrl || req.headers.referer || '/';
+    var refer = req.headers.referer || '/';
     return res.redirect(refer);
   }
 
-  else {
-    return res.render('sign/login');
-  }
+  res.render('sign/login', {
+    fromUrl: req.query.fromUrl || req.headers.referer
+  });
 }
-
 
 var notJumpForLogin = [
   '/signup',
   '/forgetPassword',
   '/login'
 ];
-
 
 /**
  * Handle user login.
@@ -353,15 +343,12 @@ var notJumpForLogin = [
  * @param {HttpResponse} res
  * @param {Function} next
  */
-var login = function (req, res, next) {
-  var loginname = sanitize(req.body.email).trim().toLowerCase();
+function login(req, res, next) {
+  var loginname = sanitize(req.body.username).trim();
   var pass = sanitize(req.body.password).trim();
-  var autoLogin = sanitize(req.body.autoLogin).trim();
+  var remember = sanitize(req.body.remember).trim();
 
-  console.log("---login post-------");
-  console.log("name: %s", loginname);
-  console.log("pass: %s", pass);
-  console.log("autoLogin: %s", autoLogin);
+  res.locals.fromUrl = req.query.fromUrl;
 
   var errMsg = '';
   if (!loginname) {
@@ -393,7 +380,7 @@ var login = function (req, res, next) {
         return;
       }
 
-      checkOnlyPassword(emailIDFlag, pass, autoLogin, user, req, res);
+      _checkOnlyPassword(emailIDFlag, pass, remember, user, req, res);
 
     })
   } else {
@@ -409,15 +396,14 @@ var login = function (req, res, next) {
         });
         return;
       } // user if
-      checkOnlyPassword(emailIDFlag, pass, autoLogin, user, req, res);
+      _checkOnlyPassword(emailIDFlag, pass, remember, user, req, res);
     })
 
   }
-};
-
+}
 
 //suppose the username id, or email address exists, now check the password:
-function checkOnlyPassword(emailIDFlag, pass, autoLogin, user, req, res) {
+function _checkOnlyPassword(emailIDFlag, pass, remember, user, req, res) {
   console.log("----login: check user password.------");
   pass = encryp.md5(pass);
   var email = user.email;
@@ -442,7 +428,7 @@ function checkOnlyPassword(emailIDFlag, pass, autoLogin, user, req, res) {
   req.session.userId = user._id;
   req.currentUser = user;
   //console.log("currentUser: %s", req.currentUser);
-  if (autoLogin == 'Y') {
+  if (remember) {
     // Remember me
     //var loginToken = new LoginToken({ email: user.email });
     LoginToken.save(user.email, function (loginToken) {
@@ -452,10 +438,10 @@ function checkOnlyPassword(emailIDFlag, pass, autoLogin, user, req, res) {
   }
 
   /*
-  login successfully !
-  not jump to which page.
+   login successfully !
+   not jump to which page.
    */
- // console.log("req.session._loginReferr: ", req.session._loginReferer);
+  // console.log("req.session._loginReferr: ", req.session._loginReferer);
   console.log("header referer: ", req.headers.referer);
   //var refer = req.session._loginReferer || '/';
   var refer = req.query.fromUrl || req.headers.referer || '/';
@@ -473,8 +459,65 @@ function checkOnlyPassword(emailIDFlag, pass, autoLogin, user, req, res) {
   }
   console.log("After login, jump to: ", refer);
   res.redirect(refer);
-};
+}
 
+function loginDialog(req, res, next) {
+  if (req.session && req.session.userId) {
+    return res.send(200);
+  }
+
+  //now login the user.
+  //if not correct, post back
+  //else next()
+  var loginName = req.body.userName || '';
+  var pass = req.body.password || '';
+  var remember = req.body.remember || '';
+
+  if (helper.validateEmail(loginName)) {
+    User.getUserByEmailPass(loginName, encryp.md5(pass), function (err, user) {
+      if (err) {
+        console.log("find err: %s", err);
+        return next(err);
+      }
+      if (!user) {
+        console.log("cannot find user by email&pass: %s, %s", loginName, pass);
+        return res.send(401);
+      }
+      //found user by email and password
+      req.session.userId = user._id;
+      if (remember) {
+        //persistent cookie
+        //var loginToken = new LoginToken({ email: user.email });
+        LoginToken.save(user.email, function (loginToken) {
+          res.cookie('logintoken', loginToken.cookieValue, { expires: new Date(Date.now() + 2 * 604800000), path: '/' });
+        });
+      }
+      res.send(200);
+    });
+  } else {
+    //not email, so username
+    User.getUserByNamePass(loginName, encryp.md5(pass), function (err, user) {
+      if (err) {
+        console.log("find err: %s", err);
+        return next(err);
+      }
+      if (!user) {
+        console.log("cannot find user by name&pass: %s, %s", loginName, pass);
+        return res.send(401);
+      }
+      //found user by name and password
+      req.session.userId = user._id;
+      if (remember) {
+        //persistent cookie
+        //var loginToken = new LoginToken({ email: user.email });
+        LoginToken.save(user.email, function (loginToken) {
+          res.cookie('logintoken', loginToken.cookieValue, { expires: new Date(Date.now() + 2 * 604800000), path: '/' });
+        });
+      }
+      res.send(200);
+    })
+  }
+}
 
 /**
  * define some page when login just jump to the home page
@@ -491,7 +534,7 @@ var notJump = [
 // sign out
 // need test how this function is worked. especially clearCookie, destroy, redirect
 // taozan 9.22.2013
-var signout = function (req, res, next) {
+function signOut(req, res, next) {
   if (req.session) {
     //console.log("signout: currentUser: %s" , req.currentUser);
     console.log("-----logout------");
@@ -505,7 +548,7 @@ var signout = function (req, res, next) {
   //console.log("curent user;")
   //console.log(req.currentUser);
   //I see, currentUser only passed between middleware and the final call.
-  if(req.cookies.logintoken){
+  if (req.cookies.logintoken) {
     var cookie = JSON.parse(req.cookies.logintoken);
 
     console.log("cookie: ", cookie);
@@ -538,13 +581,11 @@ var signout = function (req, res, next) {
   }
   //console.log("render logout");
   //console.log(res);
-  return res.render('sign/logout', {
-    refer: refer
-  })
+  res.redirect(refer);
 };
 
 
-var showForgetPassword = function (req, res) {
+function showForgetPassword(req, res) {
   console.log("------ show forget password page -----");
   res.render('sign/forgetPassword', {
     errMsg: ''
@@ -552,9 +593,9 @@ var showForgetPassword = function (req, res) {
 };
 
 
-var forgetPassword = function (req, res, next) {
+function forgetPassword(req, res, next) {
   console.log("-----forget password check email ------");
-  var email = sanitize(req.body.email).trim().toLowerCase();
+  var email = sanitize(req.body.email).trim();
   console.log(email);
   email = sanitize(email).xss();
 
@@ -608,17 +649,20 @@ var forgetPassword = function (req, res, next) {
   });
 };
 
-var showResetPassword = function (req, res, next) {
+function showResetPassword(req, res, next) {
   var key = req.query.key;
   var email = req.query.email;
   User.getUserByEmail(email, key, function (err, user) {
+    if (err) {
+      return next(err);
+    }
     if (!user) {
-      return res.render('sign/errLink');
+      return next(new Error(400));
     }
     var now = new Date().getTime();
     var oneHour = 1000 * 60 * 60;
     if (!user.retrieve_time || now - user.retrieve_time > oneHour) {
-      return res.render('sign/errLink');
+      return next(new Error(403));
     }
     //finally correct
     return res.render('sign/resetPassword', {
@@ -629,7 +673,7 @@ var showResetPassword = function (req, res, next) {
   });
 }
 
-var resetPassword = function (req, res, next) {
+function resetPassword(req, res, next) {
   var psw = req.body.newPassword || '';
   var repsw = req.body.newPasswordConfirm || '';
   var key = req.body.key || '';
@@ -671,7 +715,7 @@ var resetPassword = function (req, res, next) {
       return next(err);
     }
     if (!user) {
-      return res.render('sign/errLink');
+      return next(new Error(400));
     }
     //console.log(encryp.md5(psw));
     //bug fixed: 10.11.2013. user.pass
@@ -692,7 +736,7 @@ var resetPassword = function (req, res, next) {
 }
 
 
-var activeAccount = function (req, res, next) {
+function activeAccount(req, res, next) {
   console.log(req.query);
   var key = req.query.key;
   var email = req.query.email;
@@ -703,16 +747,12 @@ var activeAccount = function (req, res, next) {
 
   User.getUserByMail(email, function (err, user) {
     if (err) {
-      console.log("error: ", err);
       return next(err);
     }
-
-    if(!user)
-    {
-      console.log("user not exists!");
-      return res.render('sign/errLink');
+    if (!user) {
+      return next(new Error(400));
     }
-    else if(user.active){
+    else if (user.active) {
 
       //duplicated code
       //start
@@ -722,7 +762,7 @@ var activeAccount = function (req, res, next) {
         req.session.destroy(function () {
         });
       }
-      if(req.cookies.logintoken){
+      if (req.cookies.logintoken) {
         var cookie = JSON.parse(req.cookies.logintoken);
         console.log("cookie: ", cookie);
         if (cookie.email && cookie.series) {
@@ -733,8 +773,6 @@ var activeAccount = function (req, res, next) {
       }
       res.locals.username = "";
       res.locals.imageUrl = "";
-
-
 
 
       //active the user and make him/her a logged in user.
@@ -759,7 +797,7 @@ var activeAccount = function (req, res, next) {
     }
     else if (encryp.md5(user.email + config.session_secret) !== key) {
       console.log("check not equal");
-      return res.render('sign/errLink');
+      return next(new Error(403));
     }
 
     //2013.12.02 Before active, first check whether ther is an login user and logout it.
@@ -770,7 +808,7 @@ var activeAccount = function (req, res, next) {
       req.session.destroy(function () {
       });
     }
-    if(req.cookies.logintoken){
+    if (req.cookies.logintoken) {
       var cookie = JSON.parse(req.cookies.logintoken);
       console.log("cookie: ", cookie);
       if (cookie.email && cookie.series) {
@@ -781,7 +819,6 @@ var activeAccount = function (req, res, next) {
     }
     res.locals.username = "";
     res.locals.imageUrl = "";
-
 
 
     //active the user and make him/her a logged in user.
@@ -819,10 +856,11 @@ function gen_session(user, res) {
 
 
 exports.showSignUp = showSignUp;
-exports.signup = signup;
+exports.signup = signUp;
 exports.showLogin = showLogin;
 exports.login = login;
-exports.signout = signout;
+exports.loginDialog = loginDialog;
+exports.signout = signOut;
 exports.showForgetPassword = showForgetPassword;
 exports.forgetPassword = forgetPassword;
 exports.showResetPassword = showResetPassword;

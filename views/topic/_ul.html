@@ -1,8 +1,206 @@
-<ul class="WidgetItemList">
+<ul class="WidgetItemList WidgetItemList-Main">
   <% for (i in locals.items) { %>
   <% var item = items[i] %>
 
-  <% include _ul_li.html %>
+  <li class="<%= item && item.type || '' %>"
+      data-options="<%= item && JSON.stringify(item) || '' %>">
+
+    <div class="Item pal">
+
+      <% if (item.type == 'LINK') { %>
+      <div class="Content LINK pam">
+        <div class="Thumb mls mbs pull-right" style="display: <%= !item.src ? 'none' : 'block' %>;">
+          <a class="fancybox" rel="gallery" href='<%= item.src || "" %>' title="<%= item.title || '' %>">
+            <img src="<%= item.src || '' %>" alt="<%= item.title || '' %>">
+          </a>
+        </div>
+        <div class="Title">
+          <img class="Fav" src="<%= item.fav %>"
+               onerror="shizier.errorFavImage(this, '<%= item.url %>');">
+          <a target="_blank" class="LINK_URL" href='<%= item.url %>'><%= item.title || '' %></a>
+        </div>
+        <div class="Quote">
+          <i class="fa fa-globe"></i>
+          <a target="_blank" class="LINK_URL" href="<%= item.url || '' %>">
+            <%= item.url || '' %>
+          </a>
+        </div>
+        <div class="Snippet text-muted small mtx" style="display: <%= !item.snippet ? 'none' : 'block' %>;"><%- item.snippet ?
+          escape(item.snippet).replace(/\n/g, "<br>") : '' %></div>
+        <div class="Description text-asbestos mts small" style="display: <%= !item.description ? 'none' : 'block' %>;"><%- item.description ?
+          escape(item.description).replace(/\n/g, "<br>") : '' %></div>
+        <div class="clearfix"></div>
+      </div>
+      <% } %>
+      <% if (item.type == 'IMAGE') { %>
+      <div class="Content IMAGE pam">
+        <div class="Image text-center">
+          <a class="IMAGE_LINK fancybox" rel="gallery" href='<%= item.url || "" %>'
+             title="<%= (item.title || '') + (item.title && item.description ? ' -- ' : '') + (item.description || '') %>">
+            <img onerror="shizier.errorImage(this,'default_120x120');"
+                 src="<%= item.url || '' %>" alt="<%= item.title || '' %>">
+          </a>
+        </div>
+
+        <div class="Title text-center mts"><%= item.title || '' %></div>
+        <div class="Description text-asbestos text-center small mtx"><%- item.description ? escape(item.description).replace(/\n/g, "<br>") : '' %></div>
+        <div class="Quote" style="<%- !item.quote ? 'display:none' : '' %>">
+          <i class="fa fa-globe"></i>
+          <a target="_blank" href="<%= item.quote || '' %>">
+            <%= item.quoteDomain ? item.quoteDomain : '' %>
+          </a>
+        </div>
+      </div>
+      <% } %>
+      <% if (item.type == 'VIDEO') { %>
+      <div class="Content VIDEO pam">
+
+        <% include _video_cover.html %>
+
+        <div class="Quote">
+          <i class="fa fa-globe"></i>
+          <a target="_blank" class="VIDEO_URL" href="<%= item.url || '' %>"><%= item.quote || item.url || '' %></a>
+        </div>
+        <div class="Title mtx" style="display: <%= !item.title ? 'none' : 'block' %>;">
+          <a target="_blank" class="VIDEO_URL" href='<%= item.url ? item.url : "" %>'><%= item.title ? item.title : '' %></a>
+        </div>
+        <div class="Description text-asbestos small mtx" style="display: <%= !item.description ? 'none' : 'block' %>;"><%- item.description ?
+          escape(item.description).replace(/\n/g, "<br>") : '' %></div>
+      </div>
+      <% } %>
+      <% if (item.type == 'CITE') { %>
+      <div class="Content CITE">
+        <div class="Cite">
+          <i class="fa fa-quote-left text-muted"></i>
+          <q><%- item.cite ? escape(item.cite).replace(/\n/g, "<br>") : '' %></q>
+        </div>
+
+        <div class="Quote" style="<%- !item.url ? 'display:none' : '' %>">
+          <i class="fa fa-globe"></i>
+          <a target="_blank" href="<%= item.url %>"><%= item.title || item.url %></a>
+        </div>
+        <div class="Description text-asbestos small mtx" style="display: <%= !item.description ? 'none' : 'block' %>;"><%- item.description ?
+          escape(item.description).replace(/\n/g, "<br>") : '' %></div>
+      </div>
+      <% } %>
+      <% if (item.type == 'WEIBO') { %>
+      <div class="Content WEIBO pam">
+
+        <div class="clearfix">
+          <a target="_blank"  class="Avatar AuthorUrl img-circle" href="<%= (item.user && 'http://weibo.com/' + item.user.profile_url) || '' %>">
+            <img class="img-circle"
+                 src="<%= item.user && item.user.profile_image_url || '' %>"
+                 alt="<%= item.user && item.user.screen_name || '' %>">
+          </a>
+
+          <div style="overflow: hidden;">
+            <a target="_blank" class="ScreenName AuthorUrl" href="<%= (item.user && 'http://weibo.com/' + item.user.profile_url) || '' %>">
+              <span class="ScreenName"><%= item.user && item.user.screen_name || '' %></span>
+            </a>
+            <a target="_blank" class="Verify <%= !item.user ? '' : !item.user.verified ? '' : item.user.verified_type ? 'ORG' : 'PERSONAL' %>" href="http://verified.weibo.com/verify"><b>V</b></a>
+          </div>
+        </div>
+
+        <div class="Text"><%- item.parsed_text || '' %></div>
+        <div class="Pic clearfix" style="<%= item.pic_urls && item.pic_urls.length && 'display: block;' || 'display: none;' %><%= item.pic_urls && item.pic_urls.length == 4 && 'width: 170px;' || '' %>">
+          <% if (item.pic_urls) { %>
+          <% if (item.pic_urls.length == 1 && item.pic_urls[0]) { %>
+          <a class="WeiboImage fancybox" rel="gallery"
+             href="<%= item.pic_urls[0].thumbnail_pic.replace('/thumbnail/', '/large/') %>"><img
+            src="<%= item.pic_urls[0].thumbnail_pic %>"></a>
+          <% } else { %>
+          <% for (var i = 0; i < item.pic_urls.length; i++) { %>
+          <% if (item.pic_urls[i]) { %>
+          <a class="WeiboImage fancybox" rel="gallery"
+             href="<%= item.pic_urls[i].thumbnail_pic.replace('/thumbnail/', '/large/') %>"><img
+            src="<%= item.pic_urls[i].thumbnail_pic.replace('/thumbnail/', '/square/') %>"></a>
+          <% } %>
+          <% } %>
+          <% } %>
+          <% } %>
+        </div>
+        <% if (item.retweeted_status && item.retweeted_status.idstr) { %>
+        <% var retweetedItem = item.retweeted_status; %>
+        <div class="Retweeted clearfix">
+          <a target="_blank" class="Author AuthorUrl" href="<%= (retweetedItem.user && 'http://weibo.com/' + retweetedItem.user.profile_url) || '' %>">
+            @<span class="ScreenName"><%= retweetedItem.user && retweetedItem.user.screen_name || '' %></span>
+          </a>
+          <a target="_blank" class="Verify <%= !retweetedItem.user ? '' : !retweetedItem.user.verified ? '' : retweetedItem.user.verified_type ? 'ORG' : 'PERSONAL' %>" href="http://verified.weibo.com/verify"><b>V</b></a>
+          <div class="Text"><%- retweetedItem.parsed_text || '' %></div>
+          <div class="Pic clearfix" style="<%= retweetedItem.pic_urls && retweetedItem.pic_urls.length && 'display: block;' || 'display: none;' %><%= retweetedItem.pic_urls && retweetedItem.pic_urls.length == 4 && 'width: 170px;' || '' %>">
+            <% if (retweetedItem.pic_urls) { %>
+            <% if (retweetedItem.pic_urls.length == 1 && retweetedItem.pic_urls[0]) { %>
+            <a class="WeiboImage fancybox" rel="gallery"
+               href="<%= retweetedItem.pic_urls[0].thumbnail_pic.replace('/thumbnail/', '/large/') %>"><img
+              src="<%= retweetedItem.pic_urls[0].thumbnail_pic %>"></a>
+            <% } else { %>
+            <% for (var i = 0; i < retweetedItem.pic_urls.length; i++) { %>
+            <% if (retweetedItem.pic_urls[i]) { %>
+            <a class="WeiboImage fancybox" rel="gallery"
+               href="<%= retweetedItem.pic_urls[i].thumbnail_pic.replace('/thumbnail/', '/large/') %>"><img
+              src="<%= retweetedItem.pic_urls[i].thumbnail_pic.replace('/thumbnail/', '/square/') %>"></a>
+            <% } %>
+            <% } %>
+            <% } %>
+            <% } %>
+          </div>
+          <a target="_blank" class="Time text-muted" style="float: left;" href="<%= retweetedItem.user && 'http://weibo.com/' + retweetedItem.user.idstr + '/' + retweetedItem.mid62 || '' %>"><%= retweetedItem.time || '' %></a>
+          <div class="Handle">
+            <a target="_blank" class="Forward text-muted mrs" href="<%= retweetedItem.user && 'http://weibo.com/' + retweetedItem.user.idstr + '/' + retweetedItem.mid62 + '?type=repost' || '' %>"><i class="fa fa-share"></i> 转发</a>
+            <a target="_blank" class="Comment text-muted" href="<%= retweetedItem.user && 'http://weibo.com/' + retweetedItem.user.idstr + '/' + retweetedItem.mid62 || '' %>"><i class="fa fa-comment-o"></i> 评论</a>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+        <% } %>
+        <a target="_blank" class="Time text-muted" style="float: left;" href="<%= item.user && 'http://weibo.com/' + item.user.idstr + '/' + item.mid62 || '' %>"><%= item.time || '' %></a>
+        <div class="Handle">
+          <a target="_blank" class="Forward text-muted mrs" href="<%= item.user && 'http://weibo.com/' + item.user.idstr + '/' + item.mid62 + '?type=repost' || '' %>"><i class="fa fa-share"></i> 转发</a>
+          <a target="_blank" class="Comment text-muted" href="<%= item.user && 'http://weibo.com/' + item.user.idstr + '/' + item.mid62 || '' %>"><i class="fa fa-comment-o"></i> 评论</a>
+        </div>
+        <div class="clearfix"></div>
+        <div class="Description text-asbestos small mtx" style="display: <%= !item.description ? 'none' : 'block' %>;"><%- item.description ?
+          escape(item.description).replace(/\n/g, "<br>") : '' %></div>
+      </div>
+      <% } %>
+      <% if (item.type == 'TEXT') { %>
+      <div class='Content TEXT' style="line-height: 1.4;">
+        <%- item.text ? escape(item.text).replace(/\n/g, "<br>") : '' %>
+      </div>
+      <% } %>
+      <% if (item.type == 'TITLE') { %>
+      <h2 class='Content TITLE h6'>
+        <%= item.title ? item.title : '' %>
+      </h2>
+      <% } %>
+
+      <button class="COLLECT btn btn-default btn-xs"
+              data-item="<%= JSON.stringify({type: item.type, _id: item._id}) %>"
+              title="采集素材"
+              type="button">采集</button>
+      <div class="AddUtil pull-left">
+
+      <% include _menu.html %>
+
+      </div>
+      <div class="EditUtil pull-right pas plm">
+        <button class="EDIT btn btn-link mrx" type="button" title="修改"><i class="fa fa-pencil"></i> 修改</button>
+        <button class="DELETE btn btn-link" type="button" title="删除"><i class="fa fa-trash-o"></i> 删除</button>
+      </div>
+    </div>
+
+    <div class="SortUtil text-muted">
+      <i class="MoveUtil fa fa-arrows-v" title="移动"></i>
+
+      <div>
+        <i class="fa fa-angle-double-up" title="移到顶部"></i>
+        <i class="fa fa-angle-up" title="上移一行"></i>
+      </div>
+      <div>
+        <i class="fa fa-angle-down" title="下移一行"></i>
+        <i class="fa fa-angle-double-down" title="移到底部"></i>
+      </div>
+    </div>
+  </li>
 
   <% } %>
 </ul>

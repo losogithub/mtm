@@ -1,47 +1,172 @@
 .StarIcon {
-  color: #dddddd;
-  text-shadow: 0 0 1px #777777;
+  color: white;
 }
 .ExSelected .StarIcon,
 .StarIconFull {
-  color: #ffdd11;
-  text-shadow: 0 0 1px #443a00;
+  color: #f1f742;
 }
-input[type="text"],
-input[type="password"],
-textarea {
+.background-white {
+  background-color: white;
+}
+.background-clouds {
+  background-color: #ecf0f1;
+}
+.background-clouds-darken {
+  background-color: #e0e7e8;
+}
+.background-clouds-lighten {
+  background-color: #f8f9fa;
+}
+.background-muted {
+  background-color: #bdc3c7;
+}
+.background-concrete {
+  background-color: #95a5a6;
+}
+.background-primary {
+  background-color: #1abc9c;
+}
+.background-warning {
+  background-color: #f1c40f;
+}
+.background-danger {
+  background-color: #e74c3c;
+}
+.background-success {
+  background-color: #2ecc71;
+}
+.background-info {
+  background-color: #3498db;
+}
+.background-default {
+  background-color: #34495e;
+}
+.text-theme {
+  color: #669966;
+}
+.text-default,
+.text-default-a {
+  color: #34495e;
+}
+.text-default:hover {
+  color: #2c3e50;
+}
+.text-asbestos {
+  color: #7f8c8d;
+}
+.text-black {
+  color: black;
+}
+.text-muted {
+  color: #bdc3c7;
+}
+.text-inverse {
+  color: #ffffff;
+}
+.text-primary {
+  color: #1abc9c;
+}
+.text-primary:hover {
+  color: #15967d;
+}
+.text-warning {
+  color: #f1c40f;
+}
+.text-warning:hover {
+  color: #c19d0c;
+}
+.text-danger {
+  color: #e74c3c;
+}
+.text-danger:hover {
+  color: #b93d30;
+}
+.text-success {
+  color: #2ecc71;
+}
+.text-success:hover {
+  color: #25a35a;
+}
+.text-info {
+  color: #3498db;
+}
+.text-info:hover {
+  color: #2a7aaf;
+}
+.Cover:hover,
+.Cover:focus {
+  background-color: #f8f9fa;
+}
+.Cover:hover img,
+.Cover:focus img {
+  opacity: 0.9;
+}
+.ui-sortable-placeholder {
+  visibility: visible !important;
+  background: url(/images/bg_WidgetDragPlaceholder.png) repeat;
+}
+.WidgetItemList-Main .ui-sortable-placeholder {
+  max-height: 65px;
+}
+.WidgetItemList-Sub {
+  padding-bottom: 0;
+  transition: margin-bottom 0.25s;
+  -webkit-transition: margin-bottom 0.25s;
+}
+.WidgetItemList-Sub li {
+  cursor: move;
+}
+.WidgetItemList-Sub li .IMAGE img {
+  max-width: 100px;
+  max-height: 100px;
+}
+.Collection .Categories {
   width: 100%;
+  border-radius: 6px 6px 0 0;
+}
+.Collection .Categories .btn {
+  border-radius: 0;
+}
+.Collection .Categories .btn:first-child {
+  border-top-left-radius: 6px;
+}
+.Collection .Categories .btn.active {
+  background-color: white;
+  color: #bdc3c7;
+}
+.Collection .Scrollable {
+  overflow-y: scroll;
+}
+@media (max-width: 991px) {
+  .Collection .Scrollable {
+    height: 500px !important;
+  }
 }
 /*li*/
-.WidgetItemList button[name='preview'] {
-  float: left;
-  width: 62px;
-  padding-left: 0;
-  padding-right: 0;
-  margin-left: 5px;
+.WidgetItemList.WidgetItemList-Sorting > li {
+  background-color: white !important;
 }
-.WidgetItemList.WidgetItemList-Sorting > li > div {
-  box-shadow: 0 0 0 2px #669966;
+.WidgetItemList.WidgetItemList-Sorting > li button.COLLECT {
+  display: none !important;
 }
-.WidgetItemList.WidgetItemList-Sorting > li > div:hover {
-  background-color: white;
+.WidgetItemList.WidgetItemList-Sorting > li .AddUtil {
+  display: none !important;
+}
+.WidgetItemList.WidgetItemList-Sorting > li .EditUtil {
+  display: none !important;
 }
 .WidgetItemList > li .MoveUtil {
   cursor: move !important;
 }
-.WidgetItemList > li .BottomUtil {
+.WidgetItemList > li .SortUtil {
+  visibility: hidden;
   display: block;
-  margin-top: 2px;
 }
-.WidgetItemList > li .BottomUtil .ItemUtil1 {
-  float: left;
-}
-.WidgetItemList > li .BottomUtil .ItemUtil2 {
-  float: right;
-}
-.WidgetItemList > li:hover .SortUtil,
-.WidgetItemList > li:hover .BottomUtil {
+.WidgetItemList > li:hover .SortUtil {
   visibility: visible;
+}
+.WidgetItemList > li:hover .EditUtil {
+  display: block;
 }
 .WidgetItemList > li:first-child .SortUtil > div:first-of-type {
   visibility: hidden;
@@ -49,229 +174,169 @@ textarea {
 .WidgetItemList > li:last-child .SortUtil > div:last-of-type {
   visibility: hidden;
 }
-.WidgetItemList > li > div {
-  margin-bottom: 16px;
+.WidgetItemList > li .Widget {
+  background-color: #e0e7e8 !important;
 }
-.WidgetItemList > li.TITLE > div {
-  margin-bottom: 6px;
-}
-.WidgetItemList > li.WidgetDragPlaceholder {
-  margin-bottom: 18px;
-  height: 20px;
-  background: url(/images/bg_WidgetDragPlaceholder.png) repeat;
-  box-shadow: 0 0 0 0 !important;
-}
-.WidgetItemList > li.ui-sortable-helper > div {
-  background-color: transparent !important;
-  box-shadow: 0 0 0 0 !important;
-}
-.WidgetItemList > li.ui-sortable-helper > div > :first-child {
-  max-height: 100px !important;
-  margin-left: 200px !important;
+.WidgetItemList > li.ui-sortable-helper {
+  max-height: 65px !important;
+  overflow: hidden;
   background-color: rgba(102, 153, 102, 0.2) !important;
-  box-shadow: 0 0 0 3px rgba(102, 153, 102, 0.2) !important;
 }
 .WidgetItemList > li.ui-sortable-helper .SortUtil > div,
-.WidgetItemList > li.ui-sortable-helper .BottomUtil {
+.WidgetItemList > li.ui-sortable-helper button.COLLECT,
+.WidgetItemList > li.ui-sortable-helper .AddUtil,
+.WidgetItemList > li.ui-sortable-helper .EditUtil {
   visibility: hidden !important;
 }
 .WidgetItemList > li.ui-sortable-helper .MoveUtil {
   visibility: visible !important;
-  outline: none !important;
 }
-body {
-  position: relative;
+.WidgetItemList .AddUtil {
+  display: block;
+}
+.WidgetItemList .AddUtil .Menu {
+  background-color: rgba(26, 188, 156, 0.8);
+}
+.WidgetItemList li:last-child .Menu.OpacityMenu {
+  opacity: 0.1;
 }
 /*悬浮菜单栏*/
 .Band {
-  position: absolute;
-  top: 48px;
+  top: 72px;
   left: 0;
   right: 0;
-  height: 37px;
   z-index: 1001;
-  border-bottom: 1px solid #e7e7e7;
-  background-color: #f5f5f5;
+  position: absolute;
 }
-.Band .Inner {
-  max-width: 960px;
-  width: auto;
+.Band.affix {
+  top: 0;
+  position: fixed;
 }
 .Band .Band_Ttl {
+  font-size: 18px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   margin: 0;
-  line-height: 36px;
+  line-height: 41px;
 }
 .Band .Band_Btn {
   float: right;
+  line-height: 41px;
 }
-/*编辑标题、缩略图、简介*/
-.Top {
-  padding-top: 37px;
+.Collection.affix {
+  position: static;
 }
-.Top form #_coverWrapper {
-  float: left;
+@media (min-width: 992px) {
+  .Collection {
+    width: 293px;
+  }
+  .Collection.affix-top {
+    position: absolute;
+    top: 0;
+  }
+  .Collection.affix {
+    top: 61px;
+    position: fixed !important;
+  }
+  .Collection.affix-bottom {
+    position: relative !important;
+  }
 }
-.Top form #_coverWrapper button[name="cover"] {
-  margin-right: 15px;
-  position: relative;
-  width: 97px;
-  height: 97px;
+@media (min-width: 1200px) {
+  .Collection {
+    width: 458px;
+  }
 }
-.Top form #_coverWrapper button[name="cover"] img {
+.StaticMenu {
   position: absolute;
-  top: 0;
-  left: 0;
-}
-.Top form .Edit_Top_Thumb_Extra {
-  float: left;
-  width: 252px;
-  margin-right: 15px;
-  display: none;
-}
-.Top form #_topWidget_title {
-  height: 40px;
-}
-.Top form #_topWidget_title input[name="title"] {
-  display: inline-block;
-  padding: 0 10px;
-  height: 40px;
-  line-height: 38px;
-  font-size: 23px;
-  font-weight: bold;
-  background-color: #fffeee;
-}
-.Top form #_topWidget_description {
-  margin-top: 7px;
-}
-.Top form #_topWidget_description textarea {
-  min-height: 90px;
+  bottom: -18px;
+  left: 20px;
+  z-index: 1000;
 }
 /*菜单*/
 .Menu {
-  display: inline-block;
+  opacity: 0;
+  -webkit-transition: 0.2s linear;
+  transition: 0.2s linear;
+  line-height: 1;
+  border-radius: 6px;
+  background-color: #1abc9c;
 }
 .Menu span {
   cursor: default;
   font-weight: bold;
+  color: white;
+}
+.Menu button {
+  color: white !important;
 }
 .Menu ul {
   display: inline;
+  padding: 0 20px;
 }
 .Menu ul li {
   display: inline;
   margin-left: 15px;
 }
-.Menu ul li i {
-  vertical-align: middle;
-}
-.StaticMenu .Menu {
-  width: 100%;
-  height: 46px;
-  line-height: 43px;
-  margin-bottom: 10px;
-  border-top: 3px solid black;
-  padding-left: 5px;
-  background-image: -moz-linear-gradient(top, #ffffff, #fafafa);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#fafafa));
-  background-image: -webkit-linear-gradient(top, #ffffff, #fafafa);
-  background-image: -o-linear-gradient(top, #ffffff, #fafafa);
-  background-image: linear-gradient(to bottom, #ffffff, #fafafa);
-  border-bottom: 1px solid #f0f0f0;
-}
-.WidgetItemList .Menu span {
-  padding-right: 6px;
-  color: #999;
-}
-.WidgetItemList .Menu button {
-  color: #999;
-}
-.WidgetItemList .Menu img {
-  opacity: 0.5;
-}
-/*微件*/
-.LINK_CREATE input {
-  float: left;
-  width: 568px;
-}
-.LINK textarea[name='snippet'] {
-  margin-top: 3px;
-}
-.LINK .Thumb .Image {
-  width: 150px;
-  float: left;
-  margin-right: 20px;
-  min-height: 1px;
-}
-.LINK .Thumb .Thumb_Editor {
-  padding-top: 5px;
-}
-.LINK .Thumb .btn-group {
-  margin-right: 5px;
-}
-.LINK .Thumb .btn-group .btn {
+.Menu .btn {
+  vertical-align: baseline;
   padding: 0;
-  width: 21px;
-  height: 21px;
+  font-size: 18px;
 }
-.LINK .Thumb span[name="pagination"] {
-  font-weight: bold;
-  vertical-align: middle;
+.StaticMenu .Menu.OpacityMenu {
+  opacity: 0.1;
 }
-.LINK textarea[name='description'] {
-  margin-top: 10px;
-}
-.IMAGE_CREATE input {
-  float: left;
-  width: 258px;
+.Menu:hover {
+  opacity: 1 !important;
 }
 .IMAGE_CREATE .Image {
+  margin: 0 auto 5px;
   width: 300px;
+  max-width: 100%;
   height: 220px;
-  background-color: #f3f3f3;
+  background-color: white;
   text-align: center;
 }
 .IMAGE_CREATE .Image i {
   line-height: 220px;
   font-size: 30px;
 }
-.IMAGE input[name='title'] {
-  margin-bottom: 7px;
+.VIDEO_CREATE .Thumb {
+  margin: 0 auto 5px;
+  width: 300px;
+  max-width: 100%;
+  height: 220px;
+  background-color: white;
+  text-align: center;
 }
-.IMAGE input[name='quote'] {
-  margin-bottom: 10px;
+.VIDEO_CREATE .Thumb i {
+  line-height: 220px;
+  font-size: 30px;
 }
-.VIDEO_CREATE input {
-  float: left;
-  width: 568px;
+.WEIBO .Handle {
+  visibility: hidden !important;
 }
-.VIDEO input[name='title'] {
-  margin-top: 8px;
+.resize-triggers {
+  visibility: hidden;
 }
-.VIDEO textarea[name='description'] {
-  margin-top: 10px;
+.resize-triggers,
+.resize-triggers > div,
+.contract-trigger:before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
 }
-.CITE textarea[name='cite'] {
-  min-height: 95px;
-  font-size: 14px;
-  margin-bottom: 10px;
+.resize-triggers > div {
+  background: #eee;
+  overflow: auto;
 }
-.CITE input[name='url'] {
-  margin-bottom: 7px;
-}
-.CITE input[name='title'] {
-  height: 25px;
-  margin-bottom: 10px;
-}
-.CITE textarea[name='description'] {
-  min-height: 45px;
-}
-.WEIBO_CREATE input {
-  float: left;
-  width: 508px;
-}
-.TEXT textarea {
-  font-size: 14px;
+.contract-trigger:before {
+  width: 200%;
+  height: 200%;
 }

@@ -7,10 +7,22 @@
  */
 (function () {
   var utils = {
+    CATEGORIES2ENG: {
+      '生活': 'life',
+      '娱乐': 'entertainment',
+      '新闻': 'news',
+      '科技': 'tech',
+      '文化': 'culture',
+      '时尚': 'fashion',
+      '幽默': 'humor',
+      '商业': 'business',
+      '体育': 'sport',
+      '未分类': 'unclassified'
+    },
     REGEXP_URL: /^(https?|ftp):\/\/(([\w\-]+\.)+[\w\-]+)(:|\/|\?|$)/i,
     REGEXP_PROTOCOL: /^(https?|ftp):\/\//i,
     REGEXP_QUOTE: {
-      VIDEO: /youku\.com|tudou\.com|iqiyi\.com|pps\.tv|sohu\.com|qq\.com|sina\.com\.cn|ifeng\.com|letv\.com|pptv\.com|ku6\.com|56\.com|baomihua\.com|yinyuetai\.com|acfun\.tv|bilibili\.tv|bilibili\.kankanews\.com$/i,
+      VIDEO: /youku\.com|tudou\.com|iqiyi\.com|pps\.tv|sohu\.com|my\.tv\.sohu\.com|qq\.com|sina\.com\.cn|ifeng\.com|letv\.com|pptv\.com|ku6\.com|56\.com|baomihua\.com|yinyuetai\.com|acfun\.tv|acfun\.com|bilibili\.tv|bilibili\.kankanews\.com$/i,
       WEIBO: /weibo\.com$/i
     },
 
@@ -26,8 +38,15 @@
       return quote;
     },
 
+    getFav: function (url) {
+      var temp;
+      var fav = 'http://' + ((temp = this.REGEXP_URL.exec(url)) && temp[2]) + '/favicon.ico';
+
+      return fav;
+    },
+
     suffixImage: function (src) {
-      if (!src) {
+      if (!src || src.indexOf('?&') > -1) {
         return src;
       }
       if (src.indexOf('?') < 0) {
@@ -35,6 +54,18 @@
       } else {
         return src + '&';
       }
+    },
+
+    escape: function (html) {
+    if (!html) {
+      return html;
+    }
+    return String(html)
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
     }
   };
 

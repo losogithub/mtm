@@ -1,55 +1,24 @@
-<!--argument: totalPage, currentPage--->
-<% locals.query = '?' + (locals.query || '') + 'page=' %>
-<% if (totalPage > 1 ) { %>
-<div class="Pagination">
-  <!--display pages  take time 10.13 2013-->
-  <% if (totalPage < 10) { %>
-  <% for (var i = 1 ; i <= totalPage; i++ ) { %>
-  <% if ( i == currentPage) { %>
-  <strong><%= currentPage %></strong>
-  <% } else { %>
-  <a class="text-muted" href="<%= locals.query + i %>"><%= i %></a>
-  <% } %>
-  <% } %>
-  <% } else if ( currentPage < 7) { %>
-  <% console.log('haha0'); %>
-  <% for (var i = 1 ; i <= totalPage; i++ ) { %>
-  <% console.log('haha1'); %>
-  <% if ( i == currentPage) { %>
-  <strong><%= currentPage %></strong>
-  <% console.log('haha2'); %>
-  <% } else if ((i < 8)  || (i == totalPage) || (i == totalPage -1)) { %>
-  <a class="text-muted" href="<%= locals.query + i %>"><%= i %></a>
-  <% } else if (i  == 8) { %>
-  <strong>...</strong>
-  <% } else { %>
-  <% continue; %>
-  <% } %>
-  <% } %>
-  <% } else if (totalPage - currentPage < 7) { %>
-  <% for (var i = 1 ; i <= totalPage; i++ ) { %>
-  <% if ( i == currentPage) { %>
-  <strong><%= currentPage %></strong>
-  <% } else if ((totalPage -i < 8) || (i ==1) || (i == 2) ) { %>
-  <a class="text-muted" href="<%= locals.query + i %>"><%= i %></a>
-  <% } else if(totalPage - i == 8) { %>
-  <strong>...</strong>
-  <% } else { %>
-  <% continue; %>
-  <% } %>
-  <% } %>
-  <% } else { %>
-  <% for (var i = 1 ; i <= totalPage; i++ ) { %>
-  <% if ( i == currentPage) { %>
-  <strong><%= currentPage %></strong>
-  <% } else if ((i == 1) || (i == 2) || (i == totalPage) || (i == totalPage -1) || ((0 < currentPage -i)&& ( currentPage - i  < 3)) || ( (0 < i - currentPage) && ( i - currentPage < 3) ) ) { %>
-  <a class="text-muted" href="<%= locals.query + i %>"><%= i %></a>
-  <% } else if (( i -3 == currentPage) || (i + 3 == currentPage)) { %>
-  <strong>...</strong>
-  <% } else { %>
-  <% continue; %>
-  <% } %>
-  <% } %>
-  <% } %>
+<% if (totalPage > 1) { %>
+<div class="row">
+  <div class="text-center">
+    <div class="pagination">
+      <ul>
+        <% locals.query = '?' + (locals.query || '') + 'page=' %>
+        <li class="previous">
+          <a <%- currentPage == 1 ? '' : 'href="' + locals.query + (currentPage - 1) + '"' %> class="fui-arrow-left"></a>
+        </li>
+        <% for (var i = 1 ; i <= totalPage; i++ ) { %>
+        <% if (i == currentPage) { %>
+        <li class="active"><a><%= i %></a></li>
+        <% } else { %>
+        <li><a href="<%= locals.query + i %>"><%= i %></a></li>
+        <% } %>
+        <% } %>
+        <li class="next">
+          <a <%- currentPage == totalPage ? '' : 'href="' + locals.query + (currentPage + 1) + '"' %> class="fui-arrow-right"></a>
+        </li>
+      </ul>
+    </div>
+  </div>
 </div>
 <% } %>

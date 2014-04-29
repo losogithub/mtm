@@ -1,150 +1,101 @@
-<div class="Top">
-  <div class="TopInner">
-    <p class="TopInnerDate">
-      <time datetime="<%= today1 %>">
-        <em class="TopInnerDateToday"><%= today %></em>
-        <span class="TopInnerDateWeek">(<%= dayInChn %>)</span>
-      </time>
-    </p>
-  </div>
-</div>
 
-<div class="Inner clearfix">
-  <div class="Main">
-    <div class="ColWrapper clearfix">
-      <div class="Col01">
-        <ul>
-          <li class="SELECTED"><a href="/">综合</a></li>
-          <li><a href="/">精选</a></li>
-        </ul>
-      </div>
-      <div class="clearfix" style="overflow: hidden;">
-        <div class="Col02">
-          <h6>人气总结</h6>
-          <ul class="HotTopicList">
-            <% for (i in hot) { %>
-            <li>
-              <table style="width: 100%;">
-                <td class="TopicThumb">
-                  <a target="_blank" href="/topic/<%= hot[i].id %>" title="<%= hot[i].title %>">
-                    <img width="60" height="60"
-                         onerror="shizier.errorImage(this,'image_95x95');"
-                         src="<%= hot[i].coverUrl || '/images/no_img/image_95x95.png' %>">
-                  </a>
-                </td>
-                <td style="width: 100%;">
-                  <div class="">
-                    <a target="_blank" class="TopicTtl text-default" href="/topic/<%= hot[i].id %>" title="<%= hot[i].title %>">
-                      <%= hot[i].title %>
-                    </a>
-                    <a target="_blank" class="TopicAuthor text-muted" href="/u/<%= hot[i].author %>" title="<%= hot[i].author %>">
-                      <%= hot[i].author %>
-                    </a>
-                    <span class="PVCount text-muted">
-                      <b><%= hot[i].PVCount %></b> 浏览
-                    </span>
-                  </div>
-                </td>
-              </table>
-            </li>
-            <% } %>
-          </ul>
-        </div>
-        <div class="Col03">
-          <ul class="Col03HotContentList">
-            <% for (i in realGood) { %>
-            <li>
-              <a target="_blank" href="/topic/<%= realGood[i].id %>" title="<%= realGood[i].title %>" class="text-muted">
-                <p class="Col03HotContentListItemTtl text-default">
-                  <%= realGood[i].title %>
-                </p>
+<% include _band.html %>
 
-                <p class="Col03HotContentListItemDes">
-                  <%= realGood[i].des %>
-                </p>
+<% if (featuredTopics && featuredTopics.length > 2) { %>
+<div ng-non-bindable id="featuredTopics" class="carousel slide" data-ride="carousel">
+  <!-- Indicators -->
+  <ol class="carousel-indicators">
+    <li data-target="#featuredTopics" data-slide-to="0" class="active"></li>
+    <li data-target="#featuredTopics" data-slide-to="1"></li>
+    <li data-target="#featuredTopics" data-slide-to="2"></li>
+  </ol>
+
+  <!-- Wrapper for slides -->
+  <div class="carousel-inner">
+    <% for (var i = 0; i < 3; i++) { %>
+    <div class="item <%= i == 0 ? 'active' : '' %>"
+         style="background: url(<%= featuredTopics[i].cover_url || '' %>) no-repeat top; background-size: cover;">
+      <div>
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-7 col-lg-6 hidden-xs">
+              <a class="Cover pull-right" href="/topic/<%= featuredTopics[i]._id %>">
+                <img class="pull-right" src="<%= featuredTopics[i].cover_url || '' %>" alt="<%= featuredTopics[i].title %>" title="<%= featuredTopics[i].title %>">
               </a>
-
-              <div class="Col03HotContentListItemOption clearfix">
-                <a target="_blank" class="Col03HotContentListItemUserName text-muted"
-                   href="/u/<%= realGood[i].author %>"
-                   title="<%= realGood[i].author %>">
-                  <%= realGood[i].author %>
-                </a>
-
-                <p class="Col03HotContentListItemPVCount text-muted">
-                  <span class="Col03HotContentListItemPVCountNum"><%= realGood[i].PVCount %></span>
-                  <span class="Col03HotContentListItemPVCountUnit">浏览</span>
+            </div>
+            <div class="col-sm-5 col-lg-6 Text">
+              <div style="vertical-align: bottom; position: relative;">
+                <h2 class="h6" style="position: absolute;bottom: 0; width: 100%;">
+                  <a class="text-inverse" href="/topic/<%= featuredTopics[i]._id %>"><%= featuredTopics[i].title %></a></h2>
+              </div>
+              <div>
+                <p><a class="text-inverse" href="/u/<%= featuredTopics[i].author_name %>" title="<%= featuredTopics[i].author_name %>">
+                  <img width="30" height="30" class="img-circle" style="display: inline-block; width: 30px; height: 30px;"
+                       src="<%= featuredTopics[i].author_url || '/images/no_img/user_80x80.png' %>"
+                       alt="<%= featuredTopics[i].author_name %>"
+                       onerror="shizier.errorImage(this,'user_80x80');">
+                  <%= featuredTopics[i].author_name %>
+                </a></p>
+                <p class="hidden-xs mtm text-muted" style="max-height: 120px; overflow: hidden;"><%= featuredTopics[i].description %></p>
+                <p class="text-muted text-right" style="font-size: 14px;">
+                  <i class="fa fa-puzzle-piece"></i> 策展了来自
+                  <b class="text-inverse"><%= Topic[featuredTopics[i]._id] && Topic[featuredTopics[i]._id].siteCount || 0 %></b>
+                  个网站的
+                  <span class="text-inverse"><%= Topic[featuredTopics[i]._id] && Topic[featuredTopics[i]._id].urlCount || 0 %></span>
+                  条碎片信息
                 </p>
               </div>
-            </li>
-            <% } %>
-          </ul>
+            </div>
+          </div>
         </div>
-        <div class="clearfix"></div>
-        <hr style="margin: 15px 0 25px;">
-
-        <% include _pagination.html %>
-
       </div>
     </div>
+    <% } %>
   </div>
-  <div class="Sub">
-    <div class="SubSeparator">
-      <hr>
-    </div>
 
+  <!-- Controls -->
+  <a class="left carousel-control" href="#featuredTopics" data-slide="prev">
+    <i class="fa fa-chevron-left"></i>
+  </a>
+  <a class="right carousel-control" href="#featuredTopics" data-slide="next">
+    <i class="fa fa-chevron-right"></i>
+  </a>
+</div>
+<% } %>
 
-    <!---the guide of making --->
-    <div class="SubContent">
-      <ul class="GuideBanner">
-        <li>
-          <a href="">
-            <img src="/images/bnr_guide.png" alt="制作指导">
-          </a>
-        </li>
-      </ul>
-    </div>
-    <div class="SubSeparator">
-      <hr>
-    </div>
+<div class="background-clouds">
+  <div class="container pbl">
 
+    <% var temp = {'生活':'life','娱乐':'entertainment','新闻':'news','科技':'tech','文化':'culture'}; %>
+    <% var temp2 = {'生活':'cutlery','娱乐':'music','新闻':'globe','科技':'rocket','文化':'book'}; %>
+    <% var temp3 = {'生活':'muted','娱乐':'warning','新闻':'info','科技':'danger','文化':'black'}; %>
+    <% for (var key in temp) { %>
+    <h1 class="h6 mvn mtl">
+      <a target="_blank" class="text-default-a" href="/<%= temp[key] %>">
+        <i class="fa fa-<%= temp2[key] %> text-<%= temp3[key] %>"></i> <%= key %>
+      </a>
+    </h1>
+    <div class="row">
+      <div class="col-md-5 col-lg-4">
 
-    <!--the newest summarise-->
-    <div class="SubContent">
-      <div class="SubContentTopicListBox">
-        <h6 class="SubContentTopicListTtl">最新的总结</h6>
-        <ul class="SubContentTopicListList">
-          <% for (i in newTopics) { %>
-          <li class="SubContentTopicListListItem">
-            <div class="SubContentTopicListListItemThumb">
-              <a target="_blank" href="/topic/<%= newTopics[i].id %>" title="<%= newTopics[i].title %>">
-                <img width="45" height="45"
-                     onerror="shizier.errorImage(this,'image_95x95');"
-                     src="<%= newTopics[i].coverUrl || '/images/no_img/image_95x95.png' %>">
-              </a>
-            </div>
-            <div class="SubContentTopicListListItemTxt">
-              <p class="SubContentTopicListListItemTxtLink">
-                <a target="_blank" href="/topic/<%= newTopics[i].id %>"
-                   title="<%= newTopics[i].title %>" class="text-default">
-                  <%= newTopics[i].title %>
-                </a>
-              </p>
+        <% var tags = categoryTags[key] %>
+        <% include _tags.html %>
 
-              <p>
-                <a target="_blank" class="SubContentTopicListListItemUserName"
-                   href="/u/<%= newTopics[i].author %>"
-                   title="<%= newTopics[i].author %>">
-                  <%= newTopics[i].author %>
-                </a>
-              </p>
-            </div>
-          </li>
-          <% } %>
-        </ul>
+        <% var authors = categoryAuthors[key] %>
+        <% include _authors.html %>
+
+      </div>
+      <div class="col-md-7 col-lg-8">
+
+        <% var topics = categoryTopics[key].slice(0, 4); %>
+        <% include _topics.html %>
       </div>
     </div>
+    <a class="text-muted pull-right mrm" href="/<%= temp[key] %>">
+      <span style="font-size: 14px;">更多<%=key%>策展></span>
+    </a>
+    <div class="clearfix"></div>
+    <% } %>
+
   </div>
 </div>
-
-<% include _toTop.html %>

@@ -1,0 +1,56 @@
+<!--VERIFY##这是layout要用的参数，不能删！-->
+<div class="container mtl">
+  <a href="/" class="palette palette-turquoise Logo">
+    <img src="/images/logo_white.png">
+
+    <p>互联网策展</p>
+  </a>
+  <div class="text-center">
+    <h1 class="h6">密码确认</h1>
+
+    <p>为了您的账户安全，请再次登录。</p>
+  </div>
+  <form method="post" action="/account" class="pal"
+        style="background-color: #ecf0f1;border-radius: 6px;"
+        ng-controller="Form" name="form">
+    <div class="form-group">
+      <span class="ptm"><%= locals.username || '' %></span>
+    </div>
+    <div class="form-group"
+         ng-class="{ 'has-error': passwordTooltip || (!form.password.$valid && !focused) }">
+      <input class="form-control flat" type="password" id="_password" name="password"
+             maxlength="20" ng-model="password" placeholder="密码"
+             ng-init="$parent.focused = true; $parent.passwordTooltip = '<%= locals.errMsg || '' %>';"
+             ng-focus="$parent.focused = true;" ng-blur="$parent.focused = false;"
+             ng-minlength="6" required
+             ng-model="$parent.password" ng-change="$parent.passwordTooltip = '';"
+             tooltip="{{passwordTooltip}}"
+             tooltip-trigger="focus" tooltip-placement="{{placement}}" autofocus>
+      <label class="input-icon fui-lock" for="_password"></label>
+    </div>
+    <button class="btn btn-primary btn-block" type="submit">登录</button>
+  </form>
+</div>
+
+<script>
+  (function () {
+    sng.controller('Form', function ($scope) {
+      var refreshPlacement = function () {
+        if ($(window).width() < 769) {
+          $scope.placement = 'top';
+        } else {
+          $scope.placement = 'right';
+        }
+        var active = document.activeElement;
+        active.blur();
+        active.focus();
+      };
+      setTimeout(function () {
+        refreshPlacement();
+      }, 0);
+      $(window).resize(function () {
+        refreshPlacement();
+      });
+    });
+  })();
+</script>

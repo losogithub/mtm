@@ -12,8 +12,9 @@
 var User = require('../proxy').User;
 var LoginToken = require('../proxy').LoginToken;
 
-var check = require('validator').check,
-  sanitize = require('validator').sanitize;
+var check = require('validator').check;
+var sanitize = require('validator').sanitize;
+var config = require('../config');
 var encryp = require('../helper/encryp');
 var helper = require('../helper/helper');
 
@@ -27,9 +28,6 @@ var path = require('path');
  at same time, req.currentUser is assigned user for next middleware or function.
  */
 function loadUser(req, res, next) {
-  console.log("loadUser");
-  console.log("from Url: %s", req.query.fromUrl);
- // console.log("before the logineReferer: %s", req.session._loginReferer);
   // the first priority is req.query.fromUrl, then referer, finally home
   //note: some req.headers.referer cannot be rendered !!!
   //e.g. if it is login, you shall not jump back to login page.
@@ -48,17 +46,17 @@ function loadUser(req, res, next) {
       if (user) {
         req.currentUser = user; //check whether currentUser is the same with this Id.
         res.locals.username = user.loginName; // used in html template to judefy and display uername
+        res.locals.isAdmin = config.admins[user.loginName];
         //added 10.11 2013
         res.locals.imageUrl = user.url;
         return next();
-      } else {
-        //check fail: not login. user cookie contain session id, but not correct.
-        //in this case, no corresponding user in the db.
-        // if it is showlogin, jump to login.
-        console.err("wrong uerId, not matched");
-        req.session.userId = null;
-        return next();
       }
+      //check fail: not login. user cookie contain session id, but not correct.
+      //in this case, no corresponding user in the db.
+      // if it is showlogin, jump to login.
+      console.err("wrong userId, not matched");
+      req.session.userId = null;
+      return next();
     });
   } else if (req.cookies.logintoken) {
     //persistent login
@@ -76,7 +74,6 @@ function loadUser(req, res, next) {
 }
 
 function _authenticateFromLoginToken(req, res, next) {
-  console.log("loginToken: ", req.cookies.logintoken);
   var cookie = JSON.parse(req.cookies.logintoken);
   LoginToken.findByEmailAndSeries(cookie.email, cookie.series, function (err, token) {
     if (err) {
@@ -160,128 +157,21 @@ function _authenticateFromLoginToken(req, res, next) {
  which was stored at _loginReferer.
  */
 function loginRequired(req, res, next) {
-  console.log("LoginRequired");
-  //console.log("loginReferer: %s", req.session._loginReferer);
-    console.log("header referer : ", req.headers.referer);
   //if not login, then redirect to login page.
-  if ((!req.session) || (!req.session.userId)) {
-    return res.redirect('/login?fromUrl=' + req.url);
-  } else {
-    return next();
+  if (!req.session || !req.session.userId) {
+    return res.redirect('/login?fromUrl=' + encodeURIComponent(req.url));
   }
+  next();
 }
 
 function userRequired(req, res, next) {
-  console.log("userRequired");
-  //console.log("loginReferer: %s", req.session._loginReferer);
-    console.log("header referer: ", req.headers.referer);
-  //if not login, then redirect to login page.
-  if ((!req.session) || (!req.session.userId)) {
-      //todo: shall we send 401 ?
-    console.log("not login user! ");
+  if (!req.session || !req.session.userId) {
     return res.send(401, 'unauthorized');
   } else {
     return next();
   }
 }
 
-/*
-This is a post request.
-But still use if-else to check for sure.
- */
-function loginDialog(req, res, next) {
-  console.log("loginDialog");
- // console.log("loginReferer: %s", req.session._loginReferer);
-    console.log("header referer: ", req.headers.referer);
-
-  //if not login, then redirect to login page.
-  if (req.session && req.session.userId) {
-    next();
-  } else {
-
-     // req.body.url = req.session._loginReferer;
-      // what does req.body.url used for ?
-      req.body.url = req.query.fromUrl || req.headers.referer;
-
-
-    //now login the user.
-    //if not correct, post back
-    //else next()
-    var loginName = sanitize(req.body.userName).trim();
-    var pass = sanitize(req.body.password).trim();
-    var rememberMe = sanitize(req.body.rememberMe).trim();
-
-
-    //todo1: name can be either name or password
-    //todo2: password need encry
-    if (helper.validateEmail(loginName)) {
-      console.log("email address");
-      User.getUserByEmailPass(loginName, encryp.md5(pass), function (err, user) {
-        if (err) {
-          console.log("find err: %s", err);
-          next(err);
-        }
-        else if (!user) {
-          console.log("cannot find user by email&pass: %s, %s", loginName, pass);
-          res.header('Access-Control-Allow-Credentials', 'true')
-          return res.send(401);
-        }
-        else {
-          //found user by email and password
-          req.session.userId = user._id;
-          if (rememberMe) {
-            //persistent cookie
-            //var loginToken = new LoginToken({ email: user.email });
-            LoginToken.save(user.email, function (loginToken) {
-              console.log("logintoken: %s", loginToken.cookieValue);
-              res.cookie('logintoken', loginToken.cookieValue, { expires: new Date(Date.now() + 2 * 604800000), path: '/' });
-            });
-          }
-
-          //then next
-          next();
-        }
-      })
-    }
-
-    else {
-      //not email, so username
-      User.getUserByNamePass(loginName, encryp.md5(pass), function (err, user) {
-        if (err) {
-          console.log("find err: %s", err);
-          return;
-        }
-        else if (!user) {
-          console.log("cannot find user by name&pass: %s, %s", loginName, pass);
-          res.header('Access-Control-Allow-Credentials', 'true')
-          return res.send(401);
-        }
-        else {
-          //found user by name and password
-          req.session.userId = user._id;
-          if (rememberMe) {
-            //persistent cookie
-            //var loginToken = new LoginToken({ email: user.email });
-            LoginToken.save(user.email, function (loginToken) {
-              console.log("logintoken: %s", loginToken.cookieValue);
-              res.cookie('logintoken', loginToken.cookieValue, { expires: new Date(Date.now() + 2 * 604800000), path: '/' });
-            });
-          }
-
-          //then next
-          next();
-        }
-      })
-    }
-  }
-}
-
-function loginDialogCheck(req, res, next) {
-  res.send(200);
-}
-
 exports.loginRequired = loginRequired;
 exports.userRequired = userRequired;
 exports.loadUser = loadUser;
-exports.loginDialog = loginDialog;
-exports.loginDialogCheck = loginDialogCheck;

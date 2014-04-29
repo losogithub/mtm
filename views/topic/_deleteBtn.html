@@ -1,23 +1,25 @@
 <script>
-  window.shizier = window.shizier || {};
-  shizier.deleteTopic = function (button) {
-    if (!confirm('总结删除后将不能恢复！您确定要删除该总结吗？')) {
-      return;
-    }
-    $(button).button('loading');
-    $.ajax(location.href.replace('/edit', ''), {
-      type: 'DELETE'
-    })
-      .done(function () {
-        location.href = '/works';
+  $(function ($) {
+    window.shizier = window.shizier || {};
+    shizier.deleteTopic = function (button) {
+      if (!confirm('策展删除后将不能恢复！您确定要删除该策展吗？')) {
+        return;
+      }
+      $(button).button('loading');
+      $.ajax(location.href.replace('/edit', ''), {
+        type: 'DELETE'
       })
-      .fail(function (jqXHR) {
-        alert('未能删除该总结！\n' + jqXHR.responseText);
-        $(button).button('reset');
-      })
-  };
+        .done(function () {
+          location.href = '/works';
+        })
+        .fail(function (jqXHR) {
+          alert('未能删除该策展！\n' + jqXHR.responseText);
+          $(button).button('reset');
+        });
+    };
+  });
 </script>
-<button data-loading-text="&lt;i class='icon-trash'&gt;&lt;/i&gt; 删除 &lt;i class='icon-spinner icon-spin'&gt;&lt;/i&gt;"
-        onclick="shizier.deleteTopic(this);" class="btn btn-link text-muted" style="vertical-align: baseline;"
-        type="button"><i class="icon-trash"></i> 删除
+<button data-loading-text="&lt;i class='fa fa-trash-o'&gt;&lt;/i&gt; 删除 &lt;i class='fa fa-spinner fa-spin'&gt;&lt;/i&gt;"
+        onclick="shizier.deleteTopic(this);" class="DeleteTopic btn btn-link text-muted"
+        type="button" title="删除"><i class="fa fa-trash-o"></i>
 </button>

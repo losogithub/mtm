@@ -1,14 +1,110 @@
 @theme-color: #696;
-@FV-color: #fd1;
-@FV-shadow-color: darken(@FV-color, 40%);
-@FV-empty-color: #ddd;
-@FV-empty-shadow-color: darken(@FV-empty-color, 40%);
+
+@color-clouds: #ecf0f1;
+@color-muted: #bdc3c7;
+@color-concrete: #95a5a6;
+@color-primary: #1abc9c;
+@color-warning: #f1c40f;
+@color-danger: #e74c3c;
+@color-success: #2ecc71;
+@color-info: #3498db;
+@color-default: #34495e;
 
 .StarIcon {
-  color: #dddddd;
-  text-shadow: 0 0 1px #777777;
+  color: white;
 }
 .ExSelected .StarIcon, .StarIconFull {
-  color: #ffdd11;
-  text-shadow: 0 0 1px #443a00;
+  color: @color-warning + #033;
 }
+
+//added
+.background-white {
+  background-color: white;
+}
+.background-clouds {
+  background-color: @color-clouds;
+}
+.background-clouds-darken {
+  background-color: darken(@color-clouds, 4%);
+}
+.background-clouds-lighten {
+  background-color: lighten(@color-clouds, 4%);
+}
+.background-muted {
+  background-color: @color-muted;
+}
+.background-concrete {
+  background-color: @color-concrete;
+}
+.background-primary {
+  background-color: @color-primary;
+}
+.background-warning {
+  background-color: @color-warning;
+}
+.background-danger {
+  background-color: @color-danger;
+}
+.background-success {
+  background-color: @color-success;
+}
+.background-info {
+  background-color: @color-info;
+}
+.background-default {
+  background-color: @color-default;
+}
+
+.text-theme {
+  color: @theme-color;
+}
+.text-default, .text-default-a {
+  color: #34495e;
+}
+.text-default:hover {
+  color: #2c3e50;
+}
+.text-asbestos {
+  color: #7f8c8d;
+}
+.text-black {
+  color: black;
+}
+//moved--start
+.text-muted {
+  color: #bdc3c7;
+}
+.text-inverse {
+  color: #ffffff;
+}
+.text-primary {
+  color: #1abc9c;
+}
+.text-primary:hover {
+  color: #15967d;
+}
+.text-warning {
+  color: #f1c40f;
+}
+.text-warning:hover {
+  color: #c19d0c;
+}
+.text-danger {
+  color: #e74c3c;
+}
+.text-danger:hover {
+  color: #b93d30;
+}
+.text-success {
+  color: #2ecc71;
+}
+.text-success:hover {
+  color: #25a35a;
+}
+.text-info {
+  color: #3498db;
+}
+.text-info:hover {
+  color: #2a7aaf;
+}
+//moved--end

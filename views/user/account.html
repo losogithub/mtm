@@ -1,0 +1,134 @@
+<!--ACCOUNT##这是layout要用的参数，不能删！-->
+<div class="container">
+  <h1 class="h6 text-center">个人信息更新</h1>
+  <form method="post" action="/accountModify" class="pal form-horizontal center-block"
+        name="form" ng-controller="Form"
+        style="background-color: #ecf0f1;border-radius: 6px;max-width: 600px;">
+    <input type="hidden" name="auth" value=<%= locals.auth || '' %>>
+    <div class="ErrorInfo" style="display: <%= locals.infoMsg ? 'block' : 'none' %>">
+      <span><%= locals.infoMsg || '' %></span>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-xs-4">用户名</label>
+
+      <div class="col-xs-8 ptm"><%= locals.username || '' %></div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-xs-4">性别</label>
+
+      <div class="col-xs-8" style="padding-top: 12px;">
+        <style>
+          label.radio { margin-top: 0 !important; padding-top: 0 !important; }
+        </style>
+        <label class="radio-inline radio">
+          <input type="radio" data-toggle="radio" name="genderTypeCd" value="M" <%= locals.mChecked || '' %>> 男性
+        </label>
+        <label class="radio-inline radio">
+          <input type="radio" data-toggle="radio" name="genderTypeCd" value="F" <%= locals.fChecked || '' %>> 女性
+        </label>
+        <label class="radio-inline radio">
+          <input type="radio" data-toggle="radio" name="genderTypeCd" value="U" <%= locals.uChecked || '' %>> 保密
+        </label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-xs-4">出生年份</label>
+
+      <div class="col-xs-8 pts">
+        <style>
+          .dropdown-menu { max-height: 200px; overflow-y: auto; }
+        </style>
+        <select name="birthYear" class="select-block">
+          <option value=""
+          <%= !locals.birthday && 'selected' || '' %>>选择</option>
+          <% for (var year = 1920; year <= 2013; year++) { %>
+          <option value="<%= year %>"
+          <%= (locals.birthday == year) && 'selected' || '' %>><%= year %>年</option>
+          <% } %>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-xs-4">新密码</label>
+
+      <div class="col-xs-8 pts">
+        <div style="position: relative;" ng-controller="Password"
+             ng-class="{ 'has-error': passwordTooltip || (!form.newPassword.$valid && !focused) }">
+          <input class="form-control flat" type="password" name="newPassword" maxlength="20"
+                 id="_newPassword"
+                 ng-init="$parent.focused = true; $parent.passwordTooltip = '<%= locals.passwordMsg || '' %>';"
+                 ng-focus="$parent.focused = true;" ng-blur="$parent.focused = false;"
+                 ng-minlength="6"
+                 ng-model="$parent.password" ng-change="$parent.passwordTooltip = '';"
+                 tooltip="{{passwordTooltip}}"
+                 tooltip-trigger="focus" tooltip-placement="{{placement}}"/>
+          <label class="input-icon fui-lock" for="_newPassword"></label>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-xs-4">确认密码</label>
+
+      <div class="col-xs-8 pts">
+        <div style="position: relative;" ng-controller="Password"
+             ng-class="{ 'has-error': passwordTooltip || (!form.newPasswordConfirm.$valid && !focused) }">
+          <input class="form-control flat" type="password" name="newPasswordConfirm" maxlength="20"
+                 id="_newPasswordConfirm"
+                 ng-init="$parent.focused = true; $parent.passwordTooltip = '<%= locals.confirmMsg || '' %>';"
+                 ng-focus="$parent.focused = true;" ng-blur="$parent.focused = false;"
+                 ng-minlength="6"
+                 ng-model="$parent.password" ng-change="$parent.passwordTooltip = '';"
+                 tooltip="{{passwordTooltip}}"
+                 tooltip-trigger="focus" tooltip-placement="{{placement}}"/>
+          <label class="input-icon fui-lock" for="_newPasswordConfirm"></label>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-xs-4">新闻订阅</label>
+
+      <div class="col-xs-8" style="padding-top: 15px;">
+        <label for="ipt_newsletter01" class="checkbox" style="padding-top: 0;">
+          <input type="checkbox" name="newsletterflg" data-toggle="checkbox"
+                 id="ipt_newsletter01">
+          通过注册邮箱接收
+        </label>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-xs-12">
+        <button class="btn btn-hg btn-primary btn-block" type="submit">保存</button>
+      </div>
+    </div>
+    <a class="btn btn-default btn-block" href="/settings">返回</a>
+  </form>
+</div>
+
+<script>
+  (function () {
+    sng.controller('Form', function ($scope) {
+      var refreshPlacement = function () {
+        if ($(window).width() < 769) {
+          $scope.placement = 'top';
+        } else {
+          $scope.placement = 'right';
+        }
+        var active = document.activeElement;
+        active.blur();
+        active.focus();
+      };
+      setTimeout(function () {
+        refreshPlacement();
+      }, 0);
+      $(window).resize(function () {
+        refreshPlacement();
+      });
+    });
+    sng.controller('Password', function ($scope) {
+    });
+  })();
+  $(function () {
+    $("select").selectpicker({style: 'btn-primary', menuStyle: 'dropdown-inverse'});
+    new shizier.account.initAccountInfoChangeForm();
+  });
+</script>
