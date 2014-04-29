@@ -6,8 +6,10 @@
 
   "dependencies": {
     "async": "*",
+    "body-parser": "*",
     "bufferhelper": "*",
     "connect-redis": "*",
+    "cookie-parser": "*",
     "ejs": "*",
     "express": "*",
     "express-partials": "*",
@@ -16,6 +18,7 @@
     "fibers": "*",
     "graceful-fs": "*",
     "iconv": "*",
+    "logger": "*",
     "mathjs": "*" ,
     "mongodb": "*",
     "mongoose": "*",
