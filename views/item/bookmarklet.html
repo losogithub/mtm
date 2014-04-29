@@ -46,31 +46,36 @@
     (function () {
       window.sng.controller('BookmarkletCtrl', function ($scope, $http, $sce, $timeout) {
         var $dialog = $('.modal-dialog');
-        $scope.init = function (data) {
-          for (var i in data.srcs) {
-            data.srcs[i] = shizier.utils.suffixImage(data.srcs[i]);
+        var InitData;
+        $scope.init = function (initData) {
+          if (initData) {
+            InitData = initData;
           }
-          $scope.item = {
-            url: data.url,
-            title: data.title,
-            cite: data.cite,
-            srcs: data.srcs
-          }
-          if ($scope.item.cite.length > 140) {
-            $scope.item.cite = $scope.item.cite.substr(0, 139) + '…';
-          }
-          $scope.item.quote = $scope.item.url;
-          $scope.item.quoteDomain = shizier.utils.getQuote($scope.item.quote, $scope.item.type);
-          $scope.$watch('item.type', function () {
-            if ($scope.item.type == 'IMAGE') {
-              $dialog.css('min-width', '80%');
-            } else {
-              $dialog.css('min-width', '');
-            }
-          });
-          $http.get('/item/detail?url=' + (!$scope.item.cite ? encodeURIComponent($scope.item.url) : ''))
+          $http.get('/item/detail?url=' + (!InitData.cite ? encodeURIComponent(InitData.url) : ''))
             .success(function (data) {
               $scope.loaded = true;
+              for (var i in InitData.srcs) {
+                InitData.srcs[i] = shizier.utils.suffixImage(InitData.srcs[i]);
+              }
+              $scope.item = {
+                url: InitData.url,
+                title: InitData.title,
+                cite: InitData.cite,
+                srcs: InitData.srcs
+              }
+              if ($scope.item.cite.length > 140) {
+                $scope.item.cite = $scope.item.cite.substr(0, 139) + '…';
+              }
+              $scope.item.quote = $scope.item.url;
+              $scope.item.quoteDomain = shizier.utils.getQuote($scope.item.quote, $scope.item.type);
+              $scope.$watch('item.type', function () {
+                if ($scope.item.type == 'IMAGE') {
+                  $dialog.css('min-width', '80%');
+                } else {
+                  $dialog.css('min-width', '');
+                }
+              });
+              $scope.item.fav = shizier.utils.getFav($scope.item.url);
               $.extend($scope.item, data);
             })
             .error(function (data, status) {
@@ -79,7 +84,6 @@
               }
               $scope.loaded = true;
             });
-          $scope.item.fav = shizier.utils.getFav($scope.item.url);
         };
         $scope.login = function () {
           if (!$scope.username || !$scope.password) {
@@ -93,6 +97,7 @@
           })
             .success(function () {
               $scope.showLogin = false;
+              $scope.init();
             })
             .error(function () {
               $scope.error = '用户名或密码不正确';
