@@ -6,16 +6,13 @@
  * To change this template use File | Settings | File Templates.
  */
 var async = require('async');
-var EventProxy = require('eventproxy');
 var sanitize = require('validator').sanitize;
 var check = require('validator').check;
-var request = require('request');
 var domain = require('domain');
 var phantom = require('phantom');
 var fs = require('fs');
 var portfinder = require('portfinder');
 var mongodb = require('mongodb');
-var extend = require('extend');
 var config = require('../config');
 
 var helper = require('../helper/helper');
@@ -28,19 +25,99 @@ var User = require('../proxy').User;
 
 var utils = require('../public/javascripts/utils');
 
-function createTopic(req, res, next) {
+function showIndex(req, res, next) {
+  console.log('showIndex=====');
   var userId = req.session.userId;
+  var topicId = req.params.topicId;
 
-  Topic.createTopic(userId, function (err, topic) {
+  async.auto({
+    topic: function (callback) {
+      Topic.getPublishedTopicById(topicId, callback);
+    },
+    author: ['topic', function (callback, results) {
+      var topic = results.topic;
+      User.getUserByLoginName(topic.author_name, callback);
+    }],
+    items: ['topic', function (callback, results) {
+      var topic = results.topic;
+      Item.getItems(topic, callback);
+    }]
+  }, function (err, results) {
     if (err) {
       return next(err);
     }
-    if (!topic) {
-      return next(new Error(500));
+
+    var topic = results.topic;
+    var author = results.author;
+    var items = results.items;
+    var itemsData = [];
+    items.forEach(function (item) {
+      itemsData.push(helper.getItemData(item));
+    });
+    var authorData = {
+      author: author.loginName,
+      imgUrl: author.url,
+      description: helper.linkify(escape(author.description)),
+      personalSite: author.personalSite,
+      favourite: author.favourite
+    };
+
+    var liked = false; //default, not login user.
+    //If a login user, check liked before or not.
+    if (req.session && req.session.userId) {
+      //console.log("currentUser", req.currentUser);
+      //check in FVTopicList
+      var likeList = req.currentUser.FVTopicList;
+      if (likeList.indexOf(topic._id) > -1) {
+        console.log("liked before");
+        liked = true;
+      }
     }
 
-    console.log('createTopic done');
-    res.redirect('/topic/' + topic._id + '/edit');
+    res.set('Cache-Control', 'private, no-cache, no-store, must-revalidate, post-check=0, pre-check=0');
+    res.set('Connection', 'close');
+    res.set('Expire', '-1');
+    res.set('Pragma', 'no-cache');
+    res.render('topic/index', {
+      pageType: 'TOPIC',
+      title: topic.title,
+      description: topic.description,
+      css: [
+        'http://cdn.bootcss.com/messenger/1.4.0/css/messenger.css',
+        'http://cdn.bootcss.com/messenger/1.4.0/css/messenger-theme-flat.css',
+        'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.css',
+        'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-buttons.css',
+        'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-thumbs.css',
+        '/stylesheets/topic.css'
+      ],
+      js: [
+        '/javascripts/ng-tags-input.js',
+        'http://cdn.bootcss.com/messenger/1.4.0/js/messenger.js',
+        'http://cdn.bootcss.com/messenger/1.4.0/js/messenger-theme-flat.js',
+        'http://cdn.bootcss.com/jquery-mousewheel/3.1.6/jquery.mousewheel.min.js',
+        'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.js',
+        'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-buttons.js',
+        'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-thumbs.js',
+        '/javascripts/utils.js',
+        '/javascripts/topic.js'
+      ],
+      escape: escape,
+      isAuthor: topic.author_id == userId,
+      topicCount: Common.TopList.categoryTopicCount[topic.category],
+      totalTopicCount: Common.TopList.totalTopicCount,
+      categoryTopicCount: Common.TopList.categoryTopicCount,
+      topic: topic,
+      Topic: Common.Topic,
+      tags: topic.tags,
+      Tags: Common.Tags,
+      items: itemsData,
+      authorInfo: authorData,
+      authorCategoryList: Common.AuthorCategoryList,
+      CATEGORIES2ENG: Common.CATEGORIES2ENG,
+      liked: liked
+    });
+    Topic.increasePVCountBy(topic, 1).exec();
+    console.log('showIndex done');
   });
 }
 
@@ -55,18 +132,7 @@ function showEdit(req, res, next) {
     },
     items: ['topic', function (callback, results) {
       var topic = results.topic;
-      Topic.getContents(topic, function (err, items) {
-        if (err) {
-          callback(err);
-          return;
-        }
-        if (!items) {
-          callback(new Error(404));
-          return;
-        }
-
-        callback(null, items);
-      });
+      Item.getItems(topic, callback);
     }],
     collectionItems: function (callback) {
       User.getItems(userId, callback);
@@ -80,12 +146,12 @@ function showEdit(req, res, next) {
     var items = results.items;
     var itemsData = [];
     items.forEach(function (item) {
-      itemsData.push(Item.getItemData(item));
+      itemsData.push(helper.getItemData(item));
     });
     var collectionItems = results.collectionItems;
     var collectionItemsData = [];
     collectionItems.forEach(function (item) {
-      collectionItemsData.push(Item.getItemData(item));
+      collectionItemsData.push(helper.getItemData(item));
     });
     res.set('Cache-Control', 'private, no-cache, no-store, must-revalidate, post-check=0, pre-check=0');
     res.set('Connection', 'close');
@@ -131,7 +197,26 @@ function showChang(req, res, next) {
   console.log('===== showChang =====');
   var topicId = req.params.topicId;
 
-  var ep = EventProxy.create('topic', 'items', 'author', function (topic, items, author) {
+  async.auto({
+    topic: function (callback) {
+      Topic.getPublishedTopicById(topicId, callback);
+    },
+    author: ['topic', function (callback, results) {
+      var topic = results.topic;
+      User.getUserByLoginName(topic.author_name, callback);
+    }],
+    items: ['topic', function (callback, results) {
+      var topic = results.topic;
+      Item.getItems(topic, callback);
+    }]
+  }, function (err, results) {
+    if (err) {
+      return next(err);
+    }
+
+    var topic = results.topic;
+    var author = results.author;
+    var items = results.items;
     var updateDate = topic.update_at.getFullYear() + '-'
       + (topic.update_at.getMonth() + 1) + '-'
       + topic.update_at.getDate();
@@ -148,7 +233,7 @@ function showChang(req, res, next) {
     };
     var itemsData = [];
     items.forEach(function (item) {
-      itemsData.push(Item.getItemData(item));
+      itemsData.push(helper.getItemData(item));
     });
 
     var authorData = {
@@ -184,47 +269,14 @@ function showChang(req, res, next) {
       layout: false
     });
     console.log('showChang done');
-  })
-    .fail(function (err) {
-      return next(err);
-    });
-
-  Topic.getTopicById(topicId, ep.done(function (topic) {
-    if (!topic || !topic.publishDate) {
-      ep.unbind();
-      res.send(404, '您要查看的策展不存在');
-      return;
-    }
-
-    ep.emit('topic', topic);
-    Topic.increasePVCountBy(topic, 1).exec();
-    Topic.getContents(topic, ep.done(function (items) {
-      if (!items) {
-        ep.unbind();
-        res.send(404, '条目列表头不存在');
-        return;
-      }
-
-      ep.emit('items', items);
-    }));
-    //author information: website url, description, images.
-    User.getUserByLoginName(topic.author_name, ep.done(function (author) {
-      if (!author) {
-        ep.unbind();
-        res.send(404, '作者不存在');
-        return;
-      }
-
-      ep.emit('author', author);
-    }));
-  }));
+  });
 }
 
 function showShareChang(req, res, next) {
   console.log('===== showShareChang =====');
   var topicId = req.params.topicId;
 
-  Topic.getTopicById(topicId, function (err, topic) {
+  Topic.getPublishedTopicById(topicId, function (err, topic) {
     if (err) {
       return next(err);
     }
@@ -260,7 +312,7 @@ function sendChang(req, res, next) {
     },
     topic: function (callback) {
       //get the topic data
-      Topic.getTopicById(topicId, function (err, topic) {
+      Topic.getPublishedTopicById(topicId, function (err, topic) {
         if (err) {
           return next(err);
         }
@@ -308,7 +360,6 @@ function sendChang(req, res, next) {
     }],
     render: ['db', 'topic', 'needRender', function (callback, results) {
       var db = results.db;
-      var topic = results.topic;
       var time = results.topic.update_at.getTime();
       var needRender = results.needRender;
 
@@ -386,123 +437,12 @@ function _storeMongoGrid(db, topicId, time, fullFilePath, callback) {
   });
 }
 
-function showIndex(req, res, next) {
-  console.log('showIndex=====');
-  var userId = req.session.userId;
-  var topicId = req.params.topicId;
-
-  //ep的error没处理
-  var ep = EventProxy.create('topic', 'items', 'author', function (topic, items, author) {
-    var itemsData = [];
-    items.forEach(function (item) {
-      itemsData.push(Item.getItemData(item));
-    });
-    var authorData = {
-      author: author.loginName,
-      imgUrl: author.url,
-      description: helper.linkify(escape(author.description)),
-      personalSite: author.personalSite,
-      favourite: author.favourite
-    };
-
-    var liked = false; //default, not login user.
-    //If a login user, check liked before or not.
-    if (req.session && req.session.userId) {
-      //console.log("currentUser", req.currentUser);
-      //check in FVTopicList
-      var likeList = req.currentUser.FVTopicList;
-      if (likeList.indexOf(topic._id) > -1) {
-        console.log("liked before");
-        liked = true;
-      }
-    }
-
-    res.set('Cache-Control', 'private, no-cache, no-store, must-revalidate, post-check=0, pre-check=0');
-    res.set('Connection', 'close');
-    res.set('Expire', '-1');
-    res.set('Pragma', 'no-cache');
-    res.render('topic/index', {
-      pageType: 'TOPIC',
-      title: topic.title,
-      description: topic.description,
-      css: [
-        'http://cdn.bootcss.com/messenger/1.4.0/css/messenger.css',
-        'http://cdn.bootcss.com/messenger/1.4.0/css/messenger-theme-flat.css',
-        'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.css',
-        'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-buttons.css',
-        'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-thumbs.css',
-        '/stylesheets/topic.css'
-      ],
-      js: [
-        '/javascripts/ng-tags-input.js',
-        'http://cdn.bootcss.com/messenger/1.4.0/js/messenger.js',
-        'http://cdn.bootcss.com/messenger/1.4.0/js/messenger-theme-flat.js',
-        'http://cdn.bootcss.com/jquery-mousewheel/3.1.6/jquery.mousewheel.min.js',
-        'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.js',
-        'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-buttons.js',
-        'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-thumbs.js',
-        '/javascripts/utils.js',
-        '/javascripts/topic.js'
-      ],
-      escape: escape,
-      isAuthor: topic.author_id == userId,
-      topicCount: Common.TopList.categoryTopicCount[topic.category],
-      totalTopicCount: Common.TopList.totalTopicCount,
-      categoryTopicCount: Common.TopList.categoryTopicCount,
-      topic: topic,
-      Topic: Common.Topic,
-      tags: topic.tags,
-      Tags: Common.Tags,
-      items: itemsData,
-      authorInfo: authorData,
-      authorCategoryList: Common.AuthorCategoryList,
-      CATEGORIES2ENG: Common.CATEGORIES2ENG,
-      liked: liked
-    });
-    console.log('showIndex done');
-  })
-    .fail(function (err) {
-      return next(err);
-    });
-
-  Topic.getTopicById(topicId, ep.done(function (topic) {
-    if (!topic || !topic.publishDate) {
-      ep.unbind();
-      res.send(404, '您要查看的策展不存在');
-      return;
-    }
-
-    ep.emit('topic', topic);
-    Topic.increasePVCountBy(topic, 1).exec();
-    Topic.getContents(topic, ep.done(function (items) {
-      if (!items) {
-        ep.unbind();
-        res.send(404, '条目列表头不存在');
-        return;
-      }
-
-      ep.emit('items', items);
-    }));
-    //author information: website url, description, images.
-    User.getUserByLoginName(topic.author_name, ep.done(function (author) {
-      if (!author) {
-        ep.unbind();
-        res.send(404, '作者不存在');
-        return;
-      }
-
-      ep.emit('author', author);
-    }));
-  }));
-}
-
 function _getTopicWithAuth(callback, topicId, userId, isAdmin) {
   Topic.getTopicById(topicId, function (err, topic) {
     if (err) {
       callback(err);
       return;
     }
-
     if (!topic) {
       callback(new Error(404));
       return;
@@ -521,22 +461,6 @@ function _getTopicWithAuth(callback, topicId, userId, isAdmin) {
   });
 }
 
-function _getItemWithAuth(callback, type, itemId, topicId) {
-  Item.getItemById(type, itemId, function (err, item) {
-    if (err) {
-      callback(err);
-      return;
-    }
-
-    if (!item) {
-      callback(new Error(404));
-      return;
-    }
-
-    callback(null, item);
-  });
-}
-
 function createItem(req, res, next) {
   console.log('createItem=====');
   var userId = req.session.userId;
@@ -544,10 +468,9 @@ function createItem(req, res, next) {
   var prevItemId = req.body.prevItemId;
 
   try {
-    var data = Item.getData(req);
+    var data = helper.getData(req);
   } catch (err) {
-    next(err);
-    return;
+    return next(err);
   }
   if (!data) {
     next(new Error(500));
@@ -583,19 +506,7 @@ function createItem(req, res, next) {
       _getTopicWithAuth(callback, topicId, userId);
     },
     item: ['parse', function (callback) {
-      Item.createItem(data, function (err, item) {
-        if (err) {
-          callback(err);
-          return;
-        }
-
-        if (!item) {
-          callback(new Error(500));
-          return;
-        }
-
-        callback(null, item);
-      });
+      Item.createItem(data, callback);
     }],
     insert: ['topic', 'item', function (callback, results) {
       var topic = results.topic;
@@ -612,14 +523,7 @@ function createItem(req, res, next) {
         id: item._id
       });
       topic.update_at = Date.now();
-      topic.save(function (err) {
-        if (err) {
-          return callback(err);
-        }
-        callback();
-        Topic.updateNewTopics();
-        Topic.updateSingleTopicSiteCount(topic);
-      })
+      topic.save(callback)
     }]
   }, function (err, results) {
     if (err) {
@@ -627,7 +531,10 @@ function createItem(req, res, next) {
     }
 
     var item = results.item;
-    res.json(Item.getItemData(item));
+    var topic = results.topic;
+    res.json(helper.getItemData(item));
+    updateNewTopics();
+    _updateSingleTopicSiteCount(topic);
     console.log('createItem done');
   });
 }
@@ -663,13 +570,7 @@ function sortItem(req, res, next) {
       }
       topic.items.splice(prevItemIndex + 1, 0, temp);
       topic.update_at = Date.now();
-      topic.save(function (err) {
-        if (err) {
-          return callback(err);
-        }
-        callback();
-        Topic.updateNewTopics();
-      });
+      topic.save(callback);
     }]
   }, function (err) {
     if (err) {
@@ -677,6 +578,7 @@ function sortItem(req, res, next) {
     }
 
     res.send(200);
+    updateNewTopics();
     console.log('sort done');
   });
 }
@@ -692,37 +594,26 @@ function editItem(req, res, next) {
     topic: function (callback) {
       _getTopicWithAuth(callback, topicId, userId);
     },
-    item: function (callback) {
-      _getItemWithAuth(callback, type, itemId, topicId);
-    },
-    update: ['topic', 'item', function (callback, results) {
-      var item = results.item;
+    item: ['topic', function (callback) {
       try {
-        var data = Item.getData(req);
+        var data = helper.getData(req);
       } catch (err) {
         return callback(err);
       }
-      extend(item, data);
-      item.save(function (err, item) {
-        if (err) {
-          return callback(err);
-        }
-
-        callback(null, item);
-      });
+      Item.editItem(type, itemId, data, callback);
     }]
   }, function (err, results) {
     if (err) {
       return next(err);
     }
 
-    var update = results.update;
-    res.json(Item.getItemData(update));
+    var item = results.item;
+    res.json(helper.getItemData(item));
     console.log('editItem done');
     var topic = results.topic;
     topic.update({ update_at: Date.now() }, function () {
-      Topic.updateNewTopics();
-      Topic.updateSingleTopicSiteCount(topic);
+      updateNewTopics();
+      _updateSingleTopicSiteCount(topic);
     });
   });
 }
@@ -738,19 +629,15 @@ function deleteItem(req, res, next) {
     topic: function (callback) {
       _getTopicWithAuth(callback, topicId, userId);
     },
-    item: function (callback) {
-      _getItemWithAuth(callback, type, itemId, topicId);
-    },
-    deleteItem: ['topic', 'item', function (callback, results) {
+    deleteItem: ['topic', function (callback, results) {
       var topic = results.topic;
-      var item = results.item;
-      Item.deleteItem(item, function (err) {
+      Item.deleteItem(type, itemId, function (err) {
         if (err) {
           return callback(err);
         }
         var index = -1;
         for (var i = 0; i < topic.items.length; i++) {
-          if (topic.items[i].id.equals(item._id)) {
+          if (topic.items[i].id.equals(itemId)) {
             index = i;
             break;
           }
@@ -760,23 +647,35 @@ function deleteItem(req, res, next) {
         }
         topic.items.splice(index, 1);
         topic.update_at = Date.now();
-        topic.save(function (err) {
-          if (err) {
-            return callback(err);
-          }
-          callback();
-          Topic.updateNewTopics();
-          Topic.updateSingleTopicSiteCount(topic);
-        })
+        topic.save(callback);
       });
     }]
-  }, function (err) {
+  }, function (err, results) {
     if (err) {
       return next(err);
     }
 
     res.send(200);
+    var topic = results.topic;
+    updateNewTopics();
+    _updateSingleTopicSiteCount(topic);
     console.log('deleteItem done');
+  });
+}
+
+function createTopic(req, res, next) {
+  var userId = req.session.userId;
+
+  Topic.createTopic(userId, function (err, topic) {
+    if (err) {
+      return next(err);
+    }
+    if (!topic) {
+      return next(new Error(500));
+    }
+
+    console.log('createTopic done');
+    res.redirect('/topic/' + topic._id + '/edit');
   });
 }
 
@@ -793,7 +692,14 @@ function deleteTopic(req, res, next) {
       if (err) {
         return next(err);
       }
+
+      async.forEach(topic.items, function (item, callback) {
+        deleteItem(item.type, item.id, callback);
+      });
+      User.deleteTopic(topic.author_id, topic._id);
       res.send(200);
+      updateNewTopics();
+      _updateSingleTopicSiteCount(topic, true);
       console.log('deleteTopic done');
     });
   }, topicId, authorId);
@@ -817,6 +723,7 @@ function saveCover(req, res, next) {
         _id: topic._id,
         cover_url: topic.cover_url
       });
+      updateNewTopics();
       console.log('saveCover done');
     });
   }, _id, authorId);
@@ -849,6 +756,7 @@ function saveTitle(req, res, next) {
         title: topic.title,
         description: topic.description
       });
+      updateNewTopics();
       console.log('saveTitle done');
     });
   }, _id, authorId);
@@ -876,6 +784,7 @@ function saveCategory(req, res, next) {
       res.json({
         category: topic.category
       });
+      updateCategoryTopics();
       console.log('saveCategory done');
     });
   }, topicId, authorId, res.locals.isAdmin);
@@ -895,6 +804,8 @@ function publishTopic(req, res, next) {
         return next(err);
       }
       res.send(200);
+      updateNewTopics();
+      _updateSingleTopicSiteCount(topic);
       console.log('publishTopic done');
     });
   }, topicId, authorId);
@@ -1025,6 +936,208 @@ function removeTag(req, res, next) {
   });
 }
 
+/**
+ * 下面是更新top列表的方法
+ */
+function updateNewTopics() {
+  Topic.getNewTopics(function (err, topics) {
+    if (err) {
+      return console.error(err.stack);
+    }
+
+    Common.TopList.newTopics = topics;
+  });
+}
+
+function _traditionalScore(pv, likes) {
+  return pv / 100 + likes;
+}
+
+function _newHotScore(score, publishDate, updateDate) {
+  var publish = (1000 * 60 * 60 * 24) / ((Date.now() - publishDate) || 1);
+  Math.min(publish, 1);
+  var update = (1000 * 60 * 60) / ((Date.now() - updateDate) || 1);
+  Math.min(update, 1);
+  return score + 100 * publish + 100 * update;
+}
+
+function _scoreCompare(top1, top2) {
+  return (top2.score - top1.score);
+}
+
+function updateHotTopics() {
+  Topic.getPublishedTopics(function (err, topics) {
+    if (err) {
+      return console.error(err.stack);
+    }
+    if (!topics) {
+      return;
+    }
+
+    for (var i in topics) {
+      topics[i].score = _traditionalScore(topics[i].PV_count, topics[i].FVCount);
+    }
+
+    console.log("更新热门策展");
+    Common.TopList.classicTopics = topics.sort(_scoreCompare).slice(0, 120);
+
+    var authorMap = {};
+    var tagMap = {};
+    for (var i in topics) {
+      topics[i].score = _newHotScore(topics[i].score, topics[i].publishDate, topics[i].update_at);
+      authorMap[topics[i].author_id] = authorMap[topics[i].author_id] || { score: 0 };
+      authorMap[topics[i].author_id].score += topics[i].score;
+      for (var j = 0; j < topics[i].tags.length; j++) {
+        tagMap[topics[i].tags[j]] = tagMap[topics[i].tags[j]] || { score: 0 };
+        tagMap[topics[i].tags[j]].score += topics[i].score;
+      }
+    }
+    Common.TopList.hotTopics = topics.sort(_scoreCompare).slice(0, 120);
+    Common.TopList.totalTopicCount = topics.length;
+    Common.FeaturedTopics = topics.slice(0, 3);
+    async.forEachSeries(Common.FeaturedTopics, function (topic, callback) {
+      User.getUserById(topic.author_id, function (err, user) {
+        if (err) {
+          return callback(err);
+        }
+        if (!user) {
+          return callback(new Error());
+        }
+        topic.author_url = user.url;
+        callback(null);
+      });
+    }, function (err) {
+      if (err) {
+        console.error(err.stack);
+      }
+    });
+
+    var authorIds = [];
+    for (var id in authorMap) {
+      authorIds.push(id);
+    }
+    authorIds.sort(function (a, b) {
+      return (authorMap[b].score - authorMap[a].score);
+    });
+    var hotAuthorIds = authorIds.slice(0, 7);
+    User.getUserByIds(hotAuthorIds, function (err, authors) {
+      authors.sort(function (a, b) {
+        return (authorMap[b._id].score - authorMap[a._id].score);
+      });
+      Common.TopList.hotAuthors = authors;
+    });
+
+    var tagTexts = [];
+    for (var text in tagMap) {
+      tagTexts.push(text);
+    }
+    tagTexts.sort(function (a, b) {
+      return (tagMap[b].score - tagMap[a].score);
+    });
+    Common.TopList.hotTags = tagTexts.slice(0, 13);
+  });
+}
+
+function updateCategoryTopics() {
+  for (var category in Common.CATEGORIES2ENG) {
+    (function (category) {
+      Topic.getCategoryTopics(category, function (err, topics) {
+        if (err) {
+          return console.error(err.stack);
+        }
+        if (!topics) {
+          return;
+        }
+
+        for (var i in topics) {
+          topics[i].score = _traditionalScore(topics[i].PV_count, topics[i].FVCount);
+        }
+
+        var authorMap = {};
+        var tagMap = {};
+        for (var i in topics) {
+          topics[i].score = _newHotScore(topics[i].score, topics[i].publishDate, topics[i].update_at);
+          authorMap[topics[i].author_id] = authorMap[topics[i].author_id] || { score: 0 };
+          authorMap[topics[i].author_id].score += topics[i].score;
+          for (var j = 0; j < topics[i].tags.length; j++) {
+            tagMap[topics[i].tags[j]] = tagMap[topics[i].tags[j]] || { score: 0 };
+            tagMap[topics[i].tags[j]].score += topics[i].score;
+          }
+        }
+        Common.TopList.categoryTopics[category] = topics.sort(_scoreCompare).slice(0, 120);
+        Common.TopList.categoryTopicCount[category] = topics.length;
+
+        var authorIds = [];
+        for (var id in authorMap) {
+          authorIds.push(id);
+        }
+        authorIds.sort(function (a, b) {
+          return (authorMap[b].score - authorMap[a].score);
+        });
+        var hotAuthorIds = authorIds;//.slice(0, 7);
+        User.getUserByIds(hotAuthorIds, function (err, authors) {
+          authors.sort(function (a, b) {
+            return (authorMap[b._id].score - authorMap[a._id].score);
+          });
+          Common.TopList.categoryAuthors[category] = authors;
+        });
+
+        var tagTexts = [];
+        for (var text in tagMap) {
+          tagTexts.push(text);
+        }
+        tagTexts.sort(function (a, b) {
+          return (tagMap[b].score - tagMap[a].score);
+        });
+        Common.TopList.categoryTags[category] = tagTexts;//.slice(0, 13);
+      });
+    })(category);
+  }
+}
+
+function _updateSingleTopicSiteCount(topic, deleted) {
+  if (deleted) {
+    delete Common.Topic[topic._id];
+    return;
+  }
+  Item.getItems(topic, function (err, items) {
+    if (err) {
+      return;
+    }
+    if (!items) {
+      return;
+    }
+
+    var urlCount = 0;
+    var siteList = [];
+    items.forEach(function (item) {
+      if (item.url) {
+        urlCount++;
+        siteList.push(utils.getQuote(item.type == 'IMAGE' && item.quote || item.url));
+      }
+    });
+    Common.Topic[topic._id] = Common.Topic[topic._id] || {};
+    Common.Topic[topic._id].urlCount = urlCount;
+    var sites = {};
+    siteList.forEach(function (site) {
+      sites[site] = 1;
+    });
+    Common.Topic[topic._id].siteCount = Object.keys(sites).length;
+  });
+}
+
+function updateTopicSiteCount() {
+  Topic.getPublishedTopics(function (err, topics) {
+    if (err) {
+      return console.error(err.stack);
+    }
+
+    topics.forEach(function (topic) {
+      _updateSingleTopicSiteCount(topic);
+    });
+  });
+}
+
 exports.createTopic = createTopic;
 exports.showEdit = showEdit;
 exports.showChang = showChang;
@@ -1043,3 +1156,8 @@ exports.favorite = favorite;
 exports.sendChang = sendChang;
 exports.addTag = addTag;
 exports.removeTag = removeTag;
+
+exports.updateNewTopics = updateNewTopics;
+exports.updateHotTopics = updateHotTopics;
+exports.updateCategoryTopics = updateCategoryTopics;
+exports.updateTopicSiteCount = updateTopicSiteCount;

@@ -7,6 +7,7 @@
  */
 
 var async = require('async');
+var extend = require('extend');
 
 var helper = require('../helper/helper');
 
@@ -25,7 +26,7 @@ function createCollectionItem(req, res, next) {
   var userId = req.session.userId;
 
   try {
-    var data = Item.getData(req);
+    var data = helper.getData(req);
   } catch (err) {
     return next(err);
   }
@@ -35,30 +36,12 @@ function createCollectionItem(req, res, next) {
 
   async.auto({
     item: function (callback) {
-      Item.createCollectionItem(data, function (err, item) {
-        if (err) {
-          return callback(err);
-        }
-        if (!item) {
-          return callback(new Error(500));
-        }
-
-        callback(null, item);
-      });
+      Item.createItem(data, callback);
     },
     user: ['item', function (callback, results) {
       var item = results.item;
 
-      User.collectItem(userId, item._id, function (err, user) {
-        if (err) {
-          return callback(err);
-        }
-        if (!user) {
-          return callback(new Error(400));
-        }
-
-        callback(null);
-      });
+      User.collectItem(userId, item._id, callback);
     }]
   }, function (err, results) {
     if (err) {
@@ -66,7 +49,7 @@ function createCollectionItem(req, res, next) {
     }
 
     var item = results.item;
-    res.json(Item.getItemData(item));
+    res.json(helper.getItemData(item));
     console.log('createCollectionItem done');
   });
 }
@@ -109,7 +92,7 @@ function collectItem(req, res, next) {
     }
 
     var item = results.item;
-    res.json(Item.getItemData(item));
+    res.json(helper.getItemData(item));
   });
 }
 
@@ -132,16 +115,7 @@ function deleteItem(req, res, next) {
       });
     },
     item: ['user', function (callback) {
-      Item.deleteCollectionItem(type, _id, function (err, item) {
-        if (err) {
-          return callback(err);
-        }
-        if (!item) {
-          return callback(new Error(500));
-        }
-
-        callback(null, item);
-      });
+      Item.deleteItem(type, _id, callback);
     }]
   }, function (err) {
     if (err) {
@@ -182,33 +156,21 @@ function editItem(req, res, next) {
     user: function (callback) {
       _getUserAndAuthId(userId, _id, callback);
     },
-    update: ['user', function (callback) {
+    item: ['user', function (callback) {
       try {
-        var data = Item.getData(req);
+        var data = helper.getData(req);
       } catch (err) {
         return callback(err);
       }
-      Item.updateById(type, _id, data, callback);
-    }],
-    newItem: ['update', function (callback) {
-      Item.getItemById(type, _id, function (err, item) {
-        if (err) {
-          return callback(err);
-        }
-        if (!item) {
-          return callback(new Error(500));
-        }
-
-        callback(null, item);
-      });
+      Item.editItem(type, _id, data, callback);
     }]
   }, function (err, results) {
     if (err) {
       return next(err);
     }
 
-    var newItem = results.newItem;
-    res.json(Item.getItemData(newItem));
+    var item = results.item;
+    res.json(helper.getItemData(item));
   });
 }
 
@@ -224,7 +186,7 @@ function getDetail(req, res, next) {
     if (err) {
       return next(err);
     }
-    res.json(Item.getItemData(results));
+    res.json(helper.getItemData(results));
   });
 }
 

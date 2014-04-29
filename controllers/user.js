@@ -656,15 +656,15 @@ var getandSortTopicsforShow = function (sortName, topics, callback) {
   if (sortName == 'U') {
     //according to update time
     //this is default
-    return Topic.getPublishedTopics(topics, '-update_at', callback);
+    return Topic.getPublishedTopics2(topics, '-update_at', callback);
   }
   else if (sortName == 'F') {
     //accordiing to liked count
     //todo: changed to favourite count.
-    return Topic.getPublishedTopics(topics, '-FVCount', callback);
+    return Topic.getPublishedTopics2(topics, '-FVCount', callback);
   } else if (sortName == 'N') {
     //according to Name
-    return Topic.getPublishedTopics(topics, 'title', callback);
+    return Topic.getPublishedTopics2(topics, 'title', callback);
   }
 }
 

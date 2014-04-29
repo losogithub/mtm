@@ -5,11 +5,8 @@
  * Time: 12:21 PM
  * To change this template use File | Settings | File Templates.
  */
-var EventProxy = require('eventproxy');
-
 var Item = require('./item');
-var models = require('../models');
-var UserModel = models.User;
+var UserModel = require('../models').User;
 
 var getActivedAuthors = function (callback) {
   UserModel.find({'active': true}, callback);
@@ -119,10 +116,12 @@ var getUserByIds = function (ids, callback) {
 };
 
 var appendTopic = function (id, topicId, callback) {
-  var ep = new EventProxy().fail(callback);
-  UserModel.findById(id, ep.done(function (user) {
+  callback = callback || function () {
+  };
+
+  UserModel.findById(id, function (err, user) {
     if (!user) {
-      ep.emit('error', new Error(404))
+      callback(new Error(404));
       return;
     }
 
@@ -130,20 +129,14 @@ var appendTopic = function (id, topicId, callback) {
     var length = topics.length;
     for (var i = 0; i < length; i++) {
       if (topics[i] == topicId) {
-        if (typeof callback === 'function') {
           callback(null, user);
           return;
-        }
       }
     }
     user.topics.push(topicId);
     user.topicCount++;
-    user.save(ep.done(function () {
-      if (typeof callback === 'function') {
-        callback(null, user);
-      }
-    }));
-  }));
+    user.save(callback);
+  });
 }
 
 function deleteTopic(authorId, topicId, callback) {

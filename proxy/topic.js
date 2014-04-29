@@ -7,11 +7,8 @@
  */
 var async = require('async');
 
-var utils = require('../public/javascripts/utils');
 var Common = require('../common');
-var models = require('../models');
-var TopicModel = models.TopicModel;
-var Item = require('./item');
+var TopicModel = require('../models').TopicModel;
 var User = require('./user');
 
 /**
@@ -40,25 +37,6 @@ function createTopic(authorId, callback) {
 }
 
 /**
- * 获取一个策展的所有条目
- * @param topic
- * @param callback
- */
-function getContents(topic, callback) {
-  Item.getItems(topic, callback);
-}
-
-/**
- * 修改条目数
- * @param topic
- * @param increment
- */
-function increaseItemCountBy(topic, increment, callback) {
-  topic.item_count += increment;
-  return topic.save(callback);
-}
-
-/**
  * 修改访问量
  * @param topic
  * @param increment
@@ -71,11 +49,18 @@ function increasePVCountBy(topic, increment, callback) {
  * 获取所有策展
  */
 function getAllTopics(callback) {
+  TopicModel.find({}, callback);
+}
+
+function getPublishedTopics(callback) {
   TopicModel.find({ publishDate: { $exists: true } }, callback);
 }
 
-function getAllTopics2(callback) {
-  TopicModel.find({ _id: { $exists: true } }, callback);
+function getNewTopics(callback) {
+  TopicModel.find({ publishDate: { $exists: true } })
+    .sort('-update_at')
+    .limit(120)
+    .exec(callback);
 }
 
 function getCategoryTopics(category, callback) {
@@ -100,89 +85,31 @@ function getTagTopics(tagText, callback) {
   TopicModel.find({ publishDate: { $exists: true }, tags: tagText }, callback);
 }
 
-/**
- * 获取最新策展
- */
-function updateNewTopics(callback) {
-  callback = callback || function () {
-  };
-
-  TopicModel.find({ publishDate: { $exists: true } })
-    .sort('-update_at')
-    .limit(120)
-    .exec(function (err, topics) {
-      if (err) {
-        return callback(err);
-      }
-
-      Common.TopList.newTopics = topics;
-
-      callback(topics);
-    });
-}
-
 function saveCover(topic, coverUrl, callback) {
-  callback = callback || function () {
-  };
-
   topic.cover_url = coverUrl;
   topic.update_at = Date.now();
-  topic.save(function (err) {
-    if (err) {
-      return callback(err);
-    }
-    callback(null, topic);
-    updateNewTopics();
-  });
+  topic.save(callback);
 }
 
 function saveTitle(topic, title, description, callback) {
-  callback = callback || function () {
-  };
-
   topic.title = title;
   topic.description = description;
   topic.update_at = Date.now();
-  topic.save(function (err) {
-    if (err) {
-      return callback(err);
-    }
-    callback(null, topic);
-    updateNewTopics();
-  });
+  topic.save(callback);
 }
 
 function saveCategory(topic, category, callback) {
-  callback = callback || function () {
-  };
-
   topic.category = category;
-  topic.save(function (err) {
-    if (err) {
-      return callback(err);
-    }
-    callback(null, topic);
-    updateCategoryTopics();
-  });
+  topic.save(callback);
 }
 
 function publishTopic(topic, callback) {
-  callback = callback || function () {
-  };
-
   if (!topic.title) {
     return callback(new Error(400));
   }
   topic.update_at = Date.now();
   topic.publishDate = Date.now();
-  topic.save(function (err, topic) {
-    if (err) {
-      return callback(err);
-    }
-    callback(null, topic);
-    updateNewTopics();
-    updateSingleTopicSiteCount(topic);
-  });
+  topic.save(callback);
 }
 
 /**
@@ -192,19 +119,7 @@ function publishTopic(topic, callback) {
  * @param callback
  */
 function deleteTopic(topic, callback) {
-  callback = callback || function () {
-  };
-
-  topic.remove(function (err) {
-    if (err) {
-      return callback(err);
-    }
-    callback(null, topic);
-    Item.deleteItemList(topic.items, callback);
-    User.deleteTopic(topic.author_id, topic._id);
-    updateNewTopics();
-    updateSingleTopicSiteCount(topic, true);
-  });
+  topic.remove(callback);
 }
 
 /**
@@ -216,13 +131,17 @@ function getTopicById(topicId, callback) {
   TopicModel.findById(topicId, callback);
 }
 
+function getPublishedTopicById(topicId, callback) {
+  TopicModel.findOne({ _id: topicId, publishDate: { $exists: true } }, callback);
+}
+
 function getTopicsByIdsSorted(topicIds, opt, callback) {
   TopicModel.find({'_id': {"$in": topicIds}})
     .sort(opt)
     .exec(callback);
 }
 
-function getPublishedTopics(topicIds, opt, callback) {
+function getPublishedTopics2(topicIds, opt, callback) {
   TopicModel.find({'_id': {"$in": topicIds}, publishDate: {$exists: true}})
     .sort(opt)
     .exec(callback);
@@ -242,246 +161,39 @@ function addTag(topic, tagText, callback) {
     }
   }
   topic.tags.push(tagText);
-  topic.save(function (err) {
-    if (err) {
-      return callback(err);
-    }
-    callback(null);
-  });
+  topic.save(callback);
 }
 
 function removeTag(topic, tagText, callback) {
-  callback = callback || function () {
-  };
-
   for (var i = 0; i < topic.tags.length; i++) {
     if (tagText == topic.tags[i]) {
       topic.tags.splice(i, 1);
       break;
     }
   }
-  topic.save(function (err) {
-    if (err) {
-      return callback(err);
-    }
-    callback(null);
-  });
-}
-
-/**
- * 下面是更新top列表的方法
- */
-
-function _traditionalScore(pv, likes) {
-  return pv / 100 + likes;
-}
-
-function _newHotScore(score, publishDate, updateDate) {
-  var publish = (1000 * 60 * 60 * 24) / ((Date.now() - publishDate) || 1);
-  Math.min(publish, 1);
-  var update = (1000 * 60 * 60) / ((Date.now() - updateDate) || 1);
-  Math.min(update, 1);
-  return score + 100 * publish + 100 * update;
-}
-
-function _scoreCompare(top1, top2) {
-  return (top2.score - top1.score);
-}
-
-function updateHotTopics() {
-  getAllTopics(function (err, topics) {
-    if (err) {
-      return console.error(err.stack);
-    }
-    if (!topics) {
-      return;
-    }
-
-    for (var i in topics) {
-      topics[i].score = _traditionalScore(topics[i].PV_count, topics[i].FVCount);
-    }
-
-    console.log("更新热门策展");
-    Common.TopList.classicTopics = topics.sort(_scoreCompare).slice(0, 120);
-
-    var authorMap = {};
-    var tagMap = {};
-    for (var i in topics) {
-      topics[i].score = _newHotScore(topics[i].score, topics[i].publishDate, topics[i].update_at);
-      authorMap[topics[i].author_id] = authorMap[topics[i].author_id] || { score: 0 };
-      authorMap[topics[i].author_id].score += topics[i].score;
-      for (var j = 0; j < topics[i].tags.length; j++) {
-        tagMap[topics[i].tags[j]] = tagMap[topics[i].tags[j]] || { score: 0 };
-        tagMap[topics[i].tags[j]].score += topics[i].score;
-      }
-    }
-    Common.TopList.hotTopics = topics.sort(_scoreCompare).slice(0, 120);
-    Common.TopList.totalTopicCount = topics.length;
-    Common.FeaturedTopics = topics.slice(0, 3);
-    async.forEachSeries(Common.FeaturedTopics, function (topic, callback) {
-      User.getUserById(topic.author_id, function (err, user) {
-        if (err) {
-          return callback(err);
-        }
-        if (!user) {
-          return callback(new Error());
-        }
-        topic.author_url = user.url;
-        callback(null);
-      });
-    }, function (err) {
-      if (err) {
-        console.error(err.stack);
-      }
-    });
-
-    var authorIds = [];
-    for (var id in authorMap) {
-      authorIds.push(id);
-    }
-    authorIds.sort(function (a, b) {
-      return (authorMap[b].score - authorMap[a].score);
-    });
-    var hotAuthorIds = authorIds.slice(0, 7);
-    User.getUserByIds(hotAuthorIds, function (err, authors) {
-      authors.sort(function (a, b) {
-        return (authorMap[b._id].score - authorMap[a._id].score);
-      });
-      Common.TopList.hotAuthors = authors;
-    });
-
-    var tagTexts = [];
-    for (var text in tagMap) {
-      tagTexts.push(text);
-    }
-    tagTexts.sort(function (a, b) {
-      return (tagMap[b].score - tagMap[a].score);
-    });
-    Common.TopList.hotTags = tagTexts.slice(0, 13);
-  });
-}
-
-function updateCategoryTopics() {
-  for (var category in Common.CATEGORIES2ENG) {
-    (function (category) {
-      getCategoryTopics(category, function (err, topics) {
-        if (err) {
-          return console.error(err.stack);
-        }
-        if (!topics) {
-          return;
-        }
-
-        for (var i in topics) {
-          topics[i].score = _traditionalScore(topics[i].PV_count, topics[i].FVCount);
-        }
-
-        var authorMap = {};
-        var tagMap = {};
-        for (var i in topics) {
-          topics[i].score = _newHotScore(topics[i].score, topics[i].publishDate, topics[i].update_at);
-          authorMap[topics[i].author_id] = authorMap[topics[i].author_id] || { score: 0 };
-          authorMap[topics[i].author_id].score += topics[i].score;
-          for (var j = 0; j < topics[i].tags.length; j++) {
-            tagMap[topics[i].tags[j]] = tagMap[topics[i].tags[j]] || { score: 0 };
-            tagMap[topics[i].tags[j]].score += topics[i].score;
-          }
-        }
-        Common.TopList.categoryTopics[category] = topics.sort(_scoreCompare).slice(0, 120);
-        Common.TopList.categoryTopicCount[category] = topics.length;
-
-        var authorIds = [];
-        for (var id in authorMap) {
-          authorIds.push(id);
-        }
-        authorIds.sort(function (a, b) {
-          return (authorMap[b].score - authorMap[a].score);
-        });
-        var hotAuthorIds = authorIds;//.slice(0, 7);
-        User.getUserByIds(hotAuthorIds, function (err, authors) {
-          authors.sort(function (a, b) {
-            return (authorMap[b._id].score - authorMap[a._id].score);
-          });
-          Common.TopList.categoryAuthors[category] = authors;
-        });
-
-        var tagTexts = [];
-        for (var text in tagMap) {
-          tagTexts.push(text);
-        }
-        tagTexts.sort(function (a, b) {
-          return (tagMap[b].score - tagMap[a].score);
-        });
-        Common.TopList.categoryTags[category] = tagTexts;//.slice(0, 13);
-      });
-    })(category);
-  }
-}
-
-function updateSingleTopicSiteCount(topic, deleted) {
-  if (deleted) {
-    delete Common.Topic[topic._id];
-    return;
-  }
-  getContents(topic, function (err, items) {
-    if (err) {
-      return;
-    }
-    if (!items) {
-      return;
-    }
-
-    var urlCount = 0;
-    var siteList = [];
-    items.forEach(function (item) {
-      if (item.url) {
-        urlCount++;
-        siteList.push(utils.getQuote(item.type == 'IMAGE' && item.quote || item.url));
-      }
-    });
-    Common.Topic[topic._id] = Common.Topic[topic._id] || {};
-    Common.Topic[topic._id].urlCount = urlCount;
-    var sites = {};
-    siteList.forEach(function (site) {
-      sites[site] = 1;
-    });
-    Common.Topic[topic._id].siteCount = Object.keys(sites).length;
-  });
-}
-
-function updateTopicSiteCount() {
-  getAllTopics(function (err, topics) {
-    if (err) {
-      return;
-    }
-
-    topics.forEach(function (topic) {
-      updateSingleTopicSiteCount(topic);
-    });
-  });
+  topic.save(callback);
 }
 
 exports.createTopic = createTopic;//增
-exports.getContents = getContents;//查
-exports.increaseItemCountBy = increaseItemCountBy;
 exports.increasePVCountBy = increasePVCountBy;
+
 exports.getAllTopics = getAllTopics;
-exports.getAllTopics2 = getAllTopics2;
+exports.getPublishedTopics = getPublishedTopics;
+exports.getNewTopics = getNewTopics;
 exports.getCategoryTopics = getCategoryTopics;
 exports.getTagTopics = getTagTopics;
+
 exports.saveCover = saveCover;//改
 exports.saveTitle = saveTitle;//改
 exports.saveCategory = saveCategory;//改
+
 exports.publishTopic = publishTopic;
 exports.deleteTopic = deleteTopic;//删
+
 exports.getTopicById = getTopicById;//查
+exports.getPublishedTopicById = getPublishedTopicById;//查
 exports.getTopicsByIdsSorted = getTopicsByIdsSorted;
-exports.getPublishedTopics = getPublishedTopics;
+exports.getPublishedTopics2 = getPublishedTopics2;
+
 exports.addTag = addTag;
 exports.removeTag = removeTag;
-
-exports.updateNewTopics = updateNewTopics;
-exports.updateHotTopics = updateHotTopics;
-exports.updateCategoryTopics = updateCategoryTopics;
-exports.updateSingleTopicSiteCount = updateSingleTopicSiteCount;
-exports.updateTopicSiteCount = updateTopicSiteCount;

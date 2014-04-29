@@ -9,7 +9,6 @@
     "bufferhelper": "*",
     "connect-redis": "*",
     "ejs": "*",
-    "eventproxy": "*",
     "express": "*",
     "express-partials": "*",
     "express-session": "*",
