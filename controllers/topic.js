@@ -52,7 +52,9 @@ function showIndex(req, res, next) {
     var items = results.items;
     var itemsData = [];
     items.forEach(function (item) {
-      itemsData.push(helper.getItemData(item));
+      if (item.type && item._id) {
+        itemsData.push(helper.getItemData(item));
+      }
     });
     var authorData = {
       author: author.loginName,
@@ -146,7 +148,9 @@ function showEdit(req, res, next) {
     var items = results.items;
     var itemsData = [];
     items.forEach(function (item) {
-      itemsData.push(helper.getItemData(item));
+      if (item.type && item._id) {
+        itemsData.push(helper.getItemData(item));
+      }
     });
     var collectionItems = results.collectionItems;
     var collectionItemsData = [];
@@ -233,7 +237,9 @@ function showChang(req, res, next) {
     };
     var itemsData = [];
     items.forEach(function (item) {
-      itemsData.push(helper.getItemData(item));
+      if (item.type && item._id) {
+        itemsData.push(helper.getItemData(item));
+      }
     });
 
     var authorData = {
