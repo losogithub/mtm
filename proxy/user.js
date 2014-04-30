@@ -5,7 +5,7 @@
  * Time: 12:21 PM
  * To change this template use File | Settings | File Templates.
  */
-var Item = require('./item');
+var Item = require('./item');//todo
 var UserModel = require('../models').User;
 
 var createUser = function (name, loginName, password, email, callback) {

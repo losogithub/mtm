@@ -20,11 +20,20 @@ function createTopic(authorId, callback) {
   callback = callback || function () {
   };
 
-  var topic = new TopicModel();
-  topic.author_id = authorId;
-  topic.author_name = author.loginName;
-  topic.save(function (err, topic) {
-    callback(err, topic);
+  User.getUserById(authorId, function (err, user) {
+    if (err) {
+      return callback(err);
+    }
+    if (!user) {
+      return callback(new Error(400));
+    }
+
+    var topic = new TopicModel();
+    topic.author_id = authorId;
+    topic.author_name = user.loginName;
+    topic.save(function (err, topic) {
+      callback(err, topic);
+    });
   });
 }
 
