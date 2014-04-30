@@ -5,7 +5,6 @@
  * Time: 12:21 PM
  * To change this template use File | Settings | File Templates.
  */
-var Item = require('./item');//todo
 var UserModel = require('../models').User;
 
 var createUser = function (name, loginName, password, email, callback) {
@@ -163,22 +162,6 @@ function deleteItem(user, _id, callback) {
   });
 }
 
-function getItems(_id, callback) {
-  callback = callback || function () {
-  };
-
-  getUserById(_id, function (err, user) {
-    if (err) {
-      return callback(err);
-    }
-    if (!user) {
-      return callback(new Error(400));
-    }
-
-    Item.getItemsById(user.items, callback);
-  });
-}
-
 exports.createUser = createUser;
 exports.getActivedAuthors = getActivedAuthors;
 exports.getUserById = getUserById;
@@ -193,4 +176,3 @@ exports.getUserByNamePass = getUserByNamePass;
 exports.getUserByEmailPass = getUserByEmailPass;
 exports.collectItem = collectItem;
 exports.deleteItem = deleteItem;
-exports.getItems = getItems;

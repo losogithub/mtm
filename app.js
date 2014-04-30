@@ -71,6 +71,8 @@ app.use(function (req, res, next) {
 app.use(express.static(path.join(__dirname, '/public')));
 app.use(require('./middlewares/auth').loadUser);
 
+routes(app);
+
 //error log middle ware
 app.use(function (err, req, res, next) {
   console.error(err.stack);
@@ -109,8 +111,6 @@ app.use(function (err, req, res, next) {
     }
   }
 });
-
-routes(app);
 
 //if(!module.parent){
 http.createServer(app).listen(config.port, function () {

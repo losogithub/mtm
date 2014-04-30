@@ -136,9 +136,13 @@ function showEdit(req, res, next) {
       var topic = results.topic;
       Item.getItems(topic, callback);
     }],
-    collectionItems: function (callback) {
-      User.getItems(userId, callback);
-    }
+    user: function (callback) {
+      User.getUserById(userId, callback);
+    },
+    collectionItems: ['topic', function (callback, results) {
+      var user = results.user;
+      Item.getItemsById(user.items, callback);
+    }]
   }, function (err, results) {
     if (err) {
       return next(err);
@@ -529,7 +533,9 @@ function createItem(req, res, next) {
         id: item._id
       });
       topic.update_at = Date.now();
-      topic.save(callback)
+      topic.save(function (err) {
+        callback(err);
+      })
     }]
   }, function (err, results) {
     if (err) {
@@ -576,7 +582,9 @@ function sortItem(req, res, next) {
       }
       topic.items.splice(prevItemIndex + 1, 0, temp);
       topic.update_at = Date.now();
-      topic.save(callback);
+      topic.save(function (err) {
+        callback(err);
+      });
     }]
   }, function (err) {
     if (err) {
@@ -653,7 +661,9 @@ function deleteItem(req, res, next) {
         }
         topic.items.splice(index, 1);
         topic.update_at = Date.now();
-        topic.save(callback);
+        topic.save(function (err) {
+          callback(err);
+        });
       });
     }]
   }, function (err, results) {
