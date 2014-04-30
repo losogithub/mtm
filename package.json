@@ -28,6 +28,7 @@
     "stream-buffers": "*",
     "validator": "1.5.1",
     "weibo": "*",
-    "xss": "*"
+    "xss": "*",
+    "qiniu":"*"
   }
 }

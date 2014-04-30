@@ -101,29 +101,75 @@
         $scope.submit = function () {
           var data = $scope.item;
           if ($scope.item.type == 'IMAGE') {
+            console.log("image item: " + $scope.item);
+            console.log("submit button: image");
+            //use server to upload the image
+            var data = {"imageByteData": imageByteData};
+            $http.post('/item/image/postfromclient', data)
+                    .success(function(){
+                        $scope.cancel();
+                    })
+                    .error(function (jqXHR) {
+                        if (jqXHR.status == 401) {
+                            $scope.showLogin = true;
+                        } else {
+                            alert('采集失败，请重试');
+                        }
+                    });
+
+
+              //2014-4-30 added stefanzan
             //handle submit for image
+            // 0. get token from server.
             // 1. send data to qiniu
             // 2. get feedback from qiniu
             // 3. send key-inform to server
             // 4. get feedback from server.
-            console.log(ele);
+            /*
+            $http.get('/item/image/uptoken', data)
+                    .success(function(data){
+                       console.log(data);
+          // upload file to qiniu
+                       //var extra = new qiniu.io.putextra();
+                       var key = "" //unique image name
+                       var body = imagebytedata// byte data
+                        console.log(body);
+                        alert('采集失败，请重试');
+                       qiniu.io.put(data.uptoken, key, body, data.extra, function(err,ret){
+
+                       })
+
+                    })
+                    .error(function(){
+                        console.log("get uptoken error.");
+                    });
+
+            */
+
+            ////////////////////////////////////
+            /*
             alert('采集失败，请重试');
             data = $.extend({}, data, {
               url: $scope.item.imageSrc,
               quote: $scope.item.url
             })
+            */
           }
-          $http.post('/item/bookmarklet', data)
-            .success(function () {
-              $scope.cancel();
-            })
-            .error(function (jqXHR) {
-              if (jqXHR.status == 401) {
-                $scope.showLogin = true;
-              } else {
-                alert('采集失败，请重试');
-              }
-            });
+         else
+          { // for others except image, directly post the data.
+              $http.post('/item/bookmarklet', data)
+                      .success(function () {
+                          $scope.cancel();
+                      })
+                      .error(function (jqXHR) {
+                          if (jqXHR.status == 401) {
+                              $scope.showLogin = true;
+                          } else {
+                              alert('采集失败，请重试');
+                          }
+                      });
+          }
+
         }
         $scope.cancel = function () {
           $('#_bookmarklet_modal').modal('hide');
@@ -168,29 +214,50 @@
                   if ( e.clipboardData.items ) {
                       // google-chrome
                       console.log("paste image in chrome");
-                      ele = e.clipboardData.items
-                      console.log(ele);
+                      var ele = e.clipboardData.items
+
+                      var blobImage;
                       for (var i = 0; i < ele.length; ++i) {
                           if ( ele[i].kind == 'file' && ele[i].type.indexOf('image/') !== -1 ) {
-                              var blob = ele[i].getAsFile();
-                              console.log(blob);
-                              window.URL = window.URL || window.webkitURL;
-                              var blobUrl = window.URL.createObjectURL(blob);
-                              console.log(blobUrl);
+                              blobImage = ele[i].getAsFile();
+                              console.log(blobImage);
+                          }
+                      }
+                      if(blobImage !== null){
+                          console.log("blobImage is not null");
+                          //todo: enable save button for collect images
+                          var fileReader = new FileReader();
 
+                          fileReader.onload = function(e){
+                              window.URL = window.URL || window.webkitURL;
+                              var blobUrl = window.URL.createObjectURL(blobImage);
+                              //console.log(blobImage);
+                              //insert showImage to the bookmarklet
                               $('<div id="showImage" class="Image text-center" show=""> <img id="showImage2" src=""></div>').insertAfter("#pasteImage") ;
 
                               document.getElementById('showImage').setAttribute('show', blobUrl);
                               document.getElementById('showImage2').setAttribute('src', blobUrl);
-                              //document.getElementById('pasteImage').append(imageDiv);
+
+                              //remove the editable text field.
                               $('#pasteImage').remove();
-                              //var new_img= document.createElement('img');
-                              //new_img.setAttribute('src', blobUrl);
-                              //document.getElementById('pasteImage').appendChild(new_img);
+                              //enable the save button
+                              $("button[name='save']").removeAttr('disabled');
+
+                              //maybe have problem :todo
+                              //console.log(e.target.result);
+                              imageByteData = e.target.result;
                           }
 
+
+                          //don't know how to use this one.
+                          //But very important, you can not comment this line, otherwise, it will not success.
+                          //maybe this is the triger for the function onload I think.
+                          fileReader.readAsDataURL(blobImage);
+
                       }
-                  } else {
+
+                  }
+                   else {
                       alert('non-chrome');
                   }
               }
@@ -480,9 +547,9 @@
           </div>
           <div class="BtnSet pull-right">
             <button name="save" class='btn btn-primary'
+                    ng-disabled="saving || item.type == 'IMAGE' && !item.imageSrc"
                     type="submit">保存 <i class='fa fa-spinner fa-spin' ng-show="saving"></i>
-                <!--                     ng-disabled="saving || item.type == 'IMAGE' && !item.imageSrc"
- -->
+
             </button>
             <button name="cancel" class="btn btn-default"
                     ng-click="cancel()"
