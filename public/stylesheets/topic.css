@@ -470,7 +470,7 @@ tags-input.ng-invalid .tags {
   position: fixed;
   top: 0;
   bottom: 0;
-  border-radius: 6px;
+  display: none;
 }
 @media (min-width: 992px) {
   .Preview {

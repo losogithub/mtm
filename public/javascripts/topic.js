@@ -129,6 +129,7 @@ $(function () {
     }
   })
   $('.WidgetItemList').on('mouseleave', '>li', function () {
+    $iframe.attr('src', '');
     $preview.hide();
   })
 });
