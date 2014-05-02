@@ -30,6 +30,11 @@ function showIndex(req, res, next) {
   var topicId = req.params.topicId;
 
   async.auto({
+    relatedTopics: function (callback) {
+      async.map(Common.Topic[topicId].relatedTopics.slice(0, 5), function (topicId, callback) {
+        Topic.getTopicById(topicId, callback);
+      }, callback);
+    },
     topic: function (callback) {
       Topic.getPublishedTopicById(topicId, callback);
     },
@@ -46,6 +51,7 @@ function showIndex(req, res, next) {
       return next(err);
     }
 
+    var relatedTopics = results.relatedTopics;
     var topic = results.topic;
     var author = results.author;
     var items = results.items;
@@ -107,6 +113,7 @@ function showIndex(req, res, next) {
       topicCount: Common.TopList.categoryTopicCount[topic.category],
       totalTopicCount: Common.TopList.totalTopicCount,
       categoryTopicCount: Common.TopList.categoryTopicCount,
+      relatedTopics: relatedTopics,
       topic: topic,
       Topic: Common.Topic,
       tags: topic.tags,

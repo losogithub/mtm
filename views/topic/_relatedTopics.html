@@ -1,0 +1,28 @@
+<div class="pbl phl background-white mtl" style="border-radius: 6px;">
+  <h2 class="ptl mbn" style="font-size: 18px;">您可能还喜欢：</h2>
+  <% locals.relatedTopics.forEach(function(topic){ %>
+  <div class="clearfix mtl">
+    <a class="Cover pull-left mrm"
+       style="display: block; height: 50px; width: 50px;
+                filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='<%= topic.cover_url || '' %>',sizingMethod='scale');
+                -ms-filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='<%= topic.cover_url || '' %>',sizingMethod='scale');
+                background: url(<%= topic.cover_url || '' %>) no-repeat center; background-size: cover;"
+       href="/topic/<%= topic._id %>" title="<%= topic.title %>">
+    </a>
+    <h3 class="Title mvs"
+        style="font-size: 18px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
+      <a href="/topic/<%= topic._id %>"
+         title="<%= topic.title %>">
+        <%= topic.title %>
+      </a>
+    </h3>
+    <div class="pull-right text-muted" style="font-size: 12px;">
+      <span class="mrs" title="关注"><i class="fa fa-star"></i> <%= topic.FVCount %></span>
+      <span class="mrs" title="浏览"><i class="fa fa-eye"></i> <%= topic.PV_count %></span>
+    </div>
+    <div style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;font-size: 12px;">
+      <a class="text-muted" target="_blank" href="/u/<%= topic.author_name %>" title="<%= topic.author_name %>"><%= topic.author_name %></a>
+    </div>
+  </div>
+  <% }) %>
+</div>

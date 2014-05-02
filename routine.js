@@ -23,6 +23,7 @@ function _update() {
         callback(null, topics);
       });
     },
+    countTopics: ['topics', _countTopics],
     countTags: ['topics', _countTags],
     calcTags: ['countTags', _calcTags],
     countAuthors: ['topics', _countAuthors],
@@ -32,6 +33,36 @@ function _update() {
       return console.error(err.stack);
     }
   });
+}
+
+function _countTopics(callback, results) {
+  results.topics.forEach(function (topic) {
+    var temp = {};
+    Common.Topic[topic._id] = Common.Topic[topic._id] || {};
+    var temp2 = [];
+    results.topics.forEach(function (topic2) {
+      if (topic._id.equals(topic2._id)) {
+        return;
+      }
+      var sameTagsCount = 0;
+      topic.tags.forEach(function (tag) {
+        topic2.tags.forEach(function (tag2) {
+          if (tag == tag2) {
+            sameTagsCount++;
+          }
+        });
+      });
+      temp2.push(topic2._id);
+      temp[topic2._id] = 100 * sameTagsCount
+        + 10 * (topic.category == topic2.category ? 1 : 0)
+        + (topic.author_id.equals(topic2.author_id) ? 1 : 0);
+    });
+    Common.Topic[topic._id].relatedTopics = temp2;
+    Common.Topic[topic._id].relatedTopics.sort(function (a, b) {
+      return temp[b] - temp[a];
+    })
+  });
+  callback(null);
 }
 
 function _countTags(callback, results) {

@@ -109,6 +109,9 @@
           </div>
 
         </div>
+
+        <% include _relatedTopics.html %>
+
       </div>
       <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-4 col-lg-5">
         <% if (locals.isAdmin || locals.isAuthor) { %>
@@ -181,9 +184,21 @@
 
           </div>
         </div>
-      </div>
-      <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-8 col-lg-7 mtl">
-        <a class="btn btn-primary btn-block btn-hg" href="/" title="石子儿首页">回首页，更多精彩“策展”</a>
+
+        <div class="pbl phl background-white mtl hidden-xs hidden-sm" style="border-radius: 6px;">
+          <h2 class="ptl mbn" style="font-size: 18px;">您可能还喜欢：</h2>
+          <% locals.relatedTopics.forEach(function(topic){ %>
+          <h3 class="Title mbn mtl"
+              style="font-size: 18px;
+              text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
+            <a href="/topic/<%= topic._id %>" class="text-muted"
+               title="<%= topic.title %>">
+              <%= topic.title %>
+            </a>
+          </h3>
+          <% }) %>
+        </div>
+
       </div>
     </div>
   </div>

@@ -140,6 +140,10 @@ function getTopicById(topicId, callback) {
   TopicModel.findById(topicId, callback);
 }
 
+function getTopicsById(topicIds, callback) {
+  TopicModel.find({ _id: { $in: topicIds } }, callback);
+}
+
 function getPublishedTopicById(topicId, callback) {
   TopicModel.findOne({ _id: topicId, publishDate: { $exists: true } }, callback);
 }
@@ -208,6 +212,7 @@ exports.publishTopic = publishTopic;
 exports.deleteTopic = deleteTopic;//删
 
 exports.getTopicById = getTopicById;//查
+exports.getTopicsById = getTopicsById;//查
 exports.getPublishedTopicById = getPublishedTopicById;//查
 exports.getAllTopicsByAuthorId = getAllTopicsByAuthorId;
 exports.getAllTopicsByAuthorIdSorted = getAllTopicsByAuthorIdSorted;
