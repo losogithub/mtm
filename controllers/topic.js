@@ -138,7 +138,7 @@ function showEdit(req, res, next) {
     user: function (callback) {
       User.getUserById(userId, callback);
     },
-    collectionItems: ['topic', function (callback, results) {
+    collectionItems: ['user', function (callback, results) {
       var user = results.user;
       Item.getItemsById(user.items, callback);
     }]
