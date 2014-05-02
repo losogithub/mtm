@@ -466,3 +466,19 @@ tags-input .tags .input.invalid-tag {
 tags-input.ng-invalid .tags {
   border: 2px solid #e74c3c;
 }
+.Preview {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  visibility: hidden;
+}
+@media (min-width: 992px) {
+  .Preview {
+    width: 293px;
+  }
+}
+@media (min-width: 1200px) {
+  .Preview {
+    width: 458px;
+  }
+}

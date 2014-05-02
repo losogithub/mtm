@@ -112,4 +112,22 @@ $(function () {
         });
       });
   });
+
+  var $preview = $('.Preview');
+  var $iframe = $preview.find('>iframe');
+  $('.WidgetItemList').on('mouseenter', '>li', function () {
+    if ($preview.is(':hidden')) {
+      return;
+    }
+    var $this = $(this);
+    var options = $this.data('options');
+    var url = options.type == 'IMAGE' ? options.quote : options.url;
+    if (url) {
+      $iframe.attr('src', url);
+      $preview.css('visibility', 'visible');
+    }
+  })
+  $('.WidgetItemList').on('mouseleave', '>li', function () {
+    $preview.css('visibility', 'hidden');
+  })
 });
