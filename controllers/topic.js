@@ -8,7 +8,6 @@
 var async = require('async');
 var sanitize = require('validator').sanitize;
 var check = require('validator').check;
-var domain = require('domain');
 var phantom = require('phantom');
 var fs = require('fs');
 var portfinder = require('portfinder');
