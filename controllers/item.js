@@ -14,9 +14,7 @@ var Item = require('../proxy').Item;
 var User = require('../proxy').User;
 
 var config = require('../config');
-var qiniu = require('qiniu');
-qiniu.conf.ACCESS_KEY = config.QINIU_ACCESS_KEY;
-qiniu.conf.SECRET_KEY = config.QINIU_SECRET_KEY;
+var qiniuPlugin = require('../helper/qiniu');
 
 
 function showBookmarklet(req, res) {
@@ -41,6 +39,7 @@ function createCollectionItem(req, res, next) {
 
   async.auto({
     item: function (callback) {
+        //note: this createCollectionItem is another function in proxy of Item.js
       Item.createCollectionItem(data, function (err, item) {
         if (err) {
           return callback(err);
@@ -74,6 +73,8 @@ function createCollectionItem(req, res, next) {
     var item = results.item;
     res.json(Item.getItemData(item));
     console.log('createCollectionItem done');
+    //added by stefanzan 5.4 2014
+    next(null, item);
   });
 }
 
@@ -234,55 +235,50 @@ function getDetail(req, res, next) {
   });
 }
 
-function generateUpToken(req, res, next){
-    var putPolicy = new qiniu.rs.PutPolicy(config.BUCKET_NAME);
-    var upToken = putPolicy.token();
-    res.json({"upToken": upToken});
-    console.log('send upToken to client');
-}
+function ceateImageItemAndUploadToQiniu(req, res, next){
 
-
-function uploadToQiniu(req, res, next){
-    var imageDataInfo = decodeBase64Image(req.body.imageByteData);
-    binaryData = imageDataInfo.data;
-
-    var putPolicy = new qiniu.rs.PutPolicy(config.BUCKET_NAME);
-    var upToken = putPolicy.token();
-    var extra = new qiniu.io.PutExtra();
-    extra.mimeType = imageDataInfo.type;
-
-    //generate a unique key for this image
-    var key= "123";
     /*
-    first create a image collectionItem, then get the item id as the key.
-    If failed, delete this collectionItem.
+     first create a image collectionItem, then get the item id as the key.
+     If failed, delete this collectionItem.
      */
 
-    qiniu.io.put(upToken, key, binaryData, extra, function(err,ret){
-        if(!err){
-            console.log(ret.key, ret.hash);
-            res.json({"result": "0"});
-        }
-        else {
+    createCollectionItem(req, res, function(err, item){
+        if(err){
             console.log(err);
-            res.json({"result": "-1"});
+            next(err);
         }
+
+        console.log("image url: " + item.url);
+        console.log("image title: " + item.title);
+        console.log("image quote: " + item.quote);
+        console.log("image des: " + item.description);
+        console.log("image item id: " + item._id);
+        console.log("item type: " + item.type);
+
+        /*
+        build a unique image id for qiniu
+        item id + timestamp
+         */
+        var unixTimeStamp = Math.round(+new Date()/1000);
+        var qiniuId = item._id + unixTimeStamp.toString();
+        //console.log("image id: "+ qiniuId);
+
+        /*
+        update the item url in mongodb
+         */
+        item.qiniuId = qiniuId;
+
+        //update image url to this new key.
+        Item.updateById(item.type, item._id, item);
+        //upload to qiniu with the imageUrl
+        qiniuPlugin.uploadToQiniu(req.body.imageByteData, qiniuId, function(err, data){
+
+        })
     })
+
 }
 
-function decodeBase64Image(dataString) {
-    var matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/),
-        response = {};
 
-    if (matches.length !== 3) {
-        return new Error('Invalid input string');
-    }
-
-    response.type = matches[1];
-    response.data = new Buffer(matches[2], 'base64');
-
-    return response;
-}
 
 exports.showBookmarklet = showBookmarklet;
 exports.createCollectionItem = createCollectionItem;
@@ -290,5 +286,4 @@ exports.collectItem = collectItem;
 exports.deleteItem = deleteItem;
 exports.editItem = editItem;
 exports.getDetail = getDetail;
-exports.generateUpToken = generateUpToken;
-exports.uploadToQiniu = uploadToQiniu;
+exports.ceateImageItemAndUploadToQiniu = ceateImageItemAndUploadToQiniu;

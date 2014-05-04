@@ -12,6 +12,7 @@ var check = require('validator').check;
 var models = require('../models');
 var ItemModels = models.ItemModels;
 var helper = require('../helper/helper');
+var qiniuPlugin = require('../helper/qiniu');
 var utils = require('../public/javascripts/utils');
 
 function updateById(type, _id, data, callback) {
@@ -142,9 +143,11 @@ function deleteItemList(items, callback) {
 
 /**
  * 获取一个策展的所有条目
- * @param voidItemId
- * @param itemCount
+ * @param topic
  * @param callback
+ */
+/*
+ * check all the image items, update its url according to qiniu.
  */
 function getItems(topic, callback) {
   callback = callback || function () {
@@ -159,6 +162,8 @@ function getItems(topic, callback) {
       if (!item) {
         return callback(new Error(500));
       }
+
+
       items.push(item);
       callback(null);
     })
@@ -166,7 +171,10 @@ function getItems(topic, callback) {
     if (err) {
       return callback(err);
     }
-    callback(null, items);
+      //renew image items from qiniu
+      //2014.5.4 check the images from qiniu
+      renewImageItems(items);
+      callback(null, items);
   });
 }
 
@@ -186,6 +194,14 @@ function getItemById(type, itemId, callback) {
   ItemModels[type].findById(itemId, callback);
 }
 
+/*
+ * update the image item to support retrieve from qiniu.
+ * basically, 1. check the image link from qiniu or not, then check the timestamp
+ * 1. it not passed, directly use it
+ * 2. otherwise, get a new one.
+ * 2014.5.4 stefanzan
+ */
+
 function getItemsById(ids, callback) {
   callback = callback || function () {
   };
@@ -203,6 +219,9 @@ function getItemsById(ids, callback) {
     if (err) {
       return callback(err);
     }
+
+    //2014.5.4 check the images from qiniu
+    renewImageItems(allItems);
 
     allItems.sort(function (a, b) {
       return parseInt(b._id, 16) - parseInt(a._id, 16);
@@ -432,6 +451,42 @@ function getItemData(item) {
   itemData._id = item._id;
   itemData.type = item.type;
   return itemData;
+}
+
+function renewImageItems(items){
+  var itemsLength = items.length;
+    console.log("items length: " + itemsLength);
+  for(var i = 0; i < itemsLength ; i++){
+      if(items[i].type == "IMAGE"){
+          items[i] = checkImageItemTimeStamp(items[i]);
+      }
+  }
+}
+
+function checkImageItemTimeStamp(item){
+    console.log("check iamge timestamp");
+    console.log(item);
+   //http://shizier.qiniu.com/fdasfewaeagaf23?e=31432434&token=fdgestgre5454tgrt4654te=
+
+   //need to consider the previous case that the url not from qiniu.
+   var headUrl = "http://shzier.qiniu.com";
+   if((item.url.indexOf(headUrl) == -1) && (!item.qiniuId)){
+
+       return item;
+   }
+
+    console.log("image item url: " + item.url);
+    console.log("image qiniu id: " + item.qiniuId);
+   var obj = require('url').parse(item.url);
+   var timeStamp = obj.query.e;
+   var timeNow = Math.round(+new Date()/1000);
+   if(timeNow - timeStamp >= 3600){
+      //update the timestamp
+     item.url = qiniuPlugin.downloadImageUrl()
+       //update this item in mongodb
+     Item.updateById(item.type, item._id, item);
+   }
+   return item;
 }
 
 exports.updateById = updateById;

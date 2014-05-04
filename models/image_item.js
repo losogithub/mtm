@@ -20,5 +20,5 @@ module.exports = mongoose.model('ImageItem', {
   title: String,
   quote: String,
   description: String,
-  key : String
+  qiniuId: String
 });

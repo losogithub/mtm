@@ -62,7 +62,8 @@ module.exports = function (app) {
 
   //item image uploading
   //app.get('/item/image/uptoken', auth.userRequired, item.generateUpToken);
-  app.post('/item/image/postfromclient', auth.userRequired,item.uploadToQiniu);
+  app.post('/item/image/postfromclient', auth.userRequired,item.ceateImageItemAndUploadToQiniu);
+
   //tag
   app.get('/tag/:tagText', widget.band, tag.showTag);
   app.post('/tag', auth.userRequired, topic.addTag);

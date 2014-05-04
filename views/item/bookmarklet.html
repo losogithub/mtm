@@ -101,10 +101,14 @@
         $scope.submit = function () {
           var data = $scope.item;
           if ($scope.item.type == 'IMAGE') {
-            console.log("image item: " + $scope.item);
-            console.log("submit button: image");
+              console.log("submit button: image");
+              console.log("image url: " + data.url); //assign a new id to this url as a key for qiniu
+              console.log("image title: " + data.title);
+              console.log("image quote: " + data.quote);
+              console.log("image des: " + data.description);
             //use server to upload the image
-            var data = {"imageByteData": imageByteData};
+            //will this global variable cause concurrent problem ? no, it is a variable in the client side.
+            data["imageByteData"] = imageByteData;
             $http.post('/item/image/postfromclient', data)
                     .success(function(){
                         $scope.cancel();
