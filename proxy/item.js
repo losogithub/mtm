@@ -163,7 +163,7 @@ function editItem(type, _id, data, callback) {
 
 function renewImageItems(items){
   var itemsLength = items.length;
-    console.log("items length: " + itemsLength);
+    //console.log("items length: " + itemsLength);
   for(var i = 0; i < itemsLength ; i++){
       if(items[i].type == "IMAGE"){
           items[i] = checkImageItemTimeStamp(items[i]);
@@ -197,10 +197,6 @@ function checkImageItemTimeStamp(item){
    return item;
 }
 
-exports.updateById = updateById;
-
-exports.createCollectionItem = createCollectionItem;//增
-exports.deleteCollectionItem = deleteCollectionItem;
 exports.cloneItem = cloneItem;//增
 exports.createItem = createItem;//增
 exports.getItems = getItems;//查

@@ -140,6 +140,7 @@ function showEdit(req, res, next) {
       User.getUserById(userId, callback);
     },
     collectionItems: ['topic', function (callback, results) {
+      console.log(results);
       var user = results.user;
       Item.getItemsById(user.items, callback);
     }]

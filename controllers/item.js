@@ -230,7 +230,12 @@ function ceateImageItemAndUploadToQiniu(req, res, next){
         item.qiniuId = qiniuId;
         console.log(item);
         //update image url to this new key.
-        Item.updateById(item.type, item._id, item);
+        item.save(function (err, item) {
+            if(err){
+                next(err);
+            }
+
+        })
         //upload to qiniu with the imageUrl
         qiniuPlugin.uploadToQiniu(req.body.imageByteData, qiniuId, function(err, data){
 
