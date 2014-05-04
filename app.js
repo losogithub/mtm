@@ -31,7 +31,6 @@ require('./routine').start();
 //require('./offlineProcess/changPictureUpdate')();
 
 //access log file and error log file
-var accessLogFile = fs.createWriteStream('access.log', {flags: 'a'});
 var errorLogFile = fs.createWriteStream('error.log', {flags: 'a'});
 
 var app = express();
@@ -48,12 +47,11 @@ app.set('views', __dirname + '/views');
 app.engine('html', ejs.renderFile);
 
 //add log middleware
-app.use(express.logger({stream: accessLogFile}));
 app.use(partials());
 
-app.use(express.bodyParser());
-app.use(express.cookieParser());
-app.use(express.session(
+app.use(require('body-parser')());
+app.use(require('cookie-parser')());
+app.use(session(
   {
     secret: config.session_secret,
     store: new RedisStore({host: 'localhost', port: 6379, client: redis, ttl: 3 * 24 * 60 * 60}),
@@ -72,7 +70,8 @@ app.use(function (req, res, next) {
 })
 app.use(express.static(path.join(__dirname, '/public')));
 app.use(require('./middlewares/auth').loadUser);
-app.use(app.router);
+
+routes(app);
 
 //error log middle ware
 app.use(function (err, req, res, next) {
@@ -112,8 +111,6 @@ app.use(function (err, req, res, next) {
     }
   }
 });
-
-routes(app);
 
 //if(!module.parent){
 http.createServer(app).listen(config.port, function () {

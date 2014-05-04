@@ -5,11 +5,16 @@
  * Time: 12:21 PM
  * To change this template use File | Settings | File Templates.
  */
-var EventProxy = require('eventproxy');
+var UserModel = require('../models').User;
 
-var Item = require('./item');
-var models = require('../models');
-var UserModel = models.User;
+var createUser = function (name, loginName, password, email, callback) {
+  var user = new UserModel();
+  user.name = name;
+  user.loginName = loginName;
+  user.password = password;
+  user.email = email;
+  user.save(callback);
+};
 
 var getActivedAuthors = function (callback) {
   UserModel.find({'active': true}, callback);
@@ -93,15 +98,6 @@ var getUserByEmail = function (email, key, callback) {
   UserModel.findOne({email: email, retrieve_key: key}, callback);
 }
 
-var newAndSave = function (name, loginName, password, email, callback) {
-  var user = new UserModel();
-  user.name = name;
-  user.loginName = loginName;
-  user.password = password;
-  user.email = email;
-  user.save(callback);
-};
-
 /**
  * 根据用户ID，查找用户
  * Callback:
@@ -117,52 +113,6 @@ var getUserById = function (id, callback) {
 var getUserByIds = function (ids, callback) {
   UserModel.find({ _id: { $in: ids } }, callback);
 };
-
-var appendTopic = function (id, topicId, callback) {
-  var ep = new EventProxy().fail(callback);
-  UserModel.findById(id, ep.done(function (user) {
-    if (!user) {
-      ep.emit('error', new Error(404))
-      return;
-    }
-
-    var topics = user.topics;
-    var length = topics.length;
-    for (var i = 0; i < length; i++) {
-      if (topics[i] == topicId) {
-        if (typeof callback === 'function') {
-          callback(null, user);
-          return;
-        }
-      }
-    }
-    user.topics.push(topicId);
-    user.topicCount++;
-    user.save(ep.done(function () {
-      if (typeof callback === 'function') {
-        callback(null, user);
-      }
-    }));
-  }));
-}
-
-function deleteTopic(authorId, topicId, callback) {
-  callback = callback || function () {
-  };
-  UserModel.findById(authorId, function (err, author) {
-    if (err) {
-      callback(err)
-      return;
-    }
-    if (!author) {
-      callback(new Error(404))
-      return;
-    }
-    author.topics.pull(topicId);
-    author.topicCount = author.topics.length;
-    author.save(callback);
-  });
-}
 
 function collectItem(_id, itemId, callback) {
   callback = callback || function () {
@@ -212,22 +162,7 @@ function deleteItem(user, _id, callback) {
   });
 }
 
-function getItems(_id, callback) {
-  callback = callback || function () {
-  };
-
-  getUserById(_id, function (err, user) {
-    if (err) {
-      return callback(err);
-    }
-    if (!user) {
-      return callback(new Error(400));
-    }
-
-    Item.getItemsById(user.items, callback);
-  });
-}
-
+exports.createUser = createUser;
 exports.getActivedAuthors = getActivedAuthors;
 exports.getUserById = getUserById;
 exports.getUserByIds = getUserByIds;
@@ -237,11 +172,7 @@ exports.getUserByMail = getUserByMail;
 exports.getUsersByQuery = getUsersByQuery;
 exports.getUserByQuery = getUserByQuery;
 exports.getUserByEmail = getUserByEmail;
-exports.newAndSave = newAndSave;
-exports.appendTopic = appendTopic;
-exports.deleteTopic = deleteTopic;
 exports.getUserByNamePass = getUserByNamePass;
 exports.getUserByEmailPass = getUserByEmailPass;
 exports.collectItem = collectItem;
 exports.deleteItem = deleteItem;
-exports.getItems = getItems;

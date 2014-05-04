@@ -6,10 +6,11 @@
 
   "dependencies": {
     "async": "*",
+    "body-parser": "*",
     "bufferhelper": "*",
     "connect-redis": "*",
+    "cookie-parser": "*",
     "ejs": "*",
-    "eventproxy": "*",
     "express": "*",
     "express-partials": "*",
     "express-session": "*",
@@ -17,6 +18,7 @@
     "fibers": "*",
     "graceful-fs": "*",
     "iconv": "*",
+    "logger": "*",
     "mathjs": "*" ,
     "mongodb": "*",
     "mongoose": "*",
@@ -27,8 +29,8 @@
     "request": "*",
     "stream-buffers": "*",
     "validator": "1.5.1",
-    "weibo": "*",
     "xss": "*",
-    "qiniu":"*"
+    "qiniu":"*",
+    "xss": "*"
   }
 }

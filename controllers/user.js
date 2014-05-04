@@ -38,7 +38,6 @@ function showWorks(req, res, next) {
       return next(new Error(403));
     }
 
-    var topics = user.topics;
     //var topicsInfos = [];
     var mt = req.query.mt || 'p';
     var mo = req.query.mo || 'd';
@@ -46,20 +45,15 @@ function showWorks(req, res, next) {
     //the page to show. default 1
     var currentPage = parseInt(req.query.page) || 1;
 
-    //empty topics
-    //todo: empty topics shall show you have no topics
-    if (!topics) {
-      return renderWorks(res, user);
-    }
     //use this function to get all the details of topics.
-    getAndSortTopics(mt, mo, topics, function (err, topicDetails) {
+    getAndSortTopics(req.session.userId, mt, mo, function (err, topicDetails) {
       if (err) {
         return next(err);
       }
       //use a for to add some attributes
-      if (!topicDetails) {
+      if (!topicDetails.length) {
         console.log("err, cannot get topic details, but have topic ids");
-        return next(new Error(404));
+        return renderWorks(res, user);
       }
 
       //count the totalPage for show
@@ -86,7 +80,7 @@ function showWorks(req, res, next) {
  Find topics inside TopicModel and sort them in a certain order.
  * works page
  */
-var getAndSortTopics = function (mt, mo, topics, callback) {
+var getAndSortTopics = function (authorId, mt, mo, callback) {
   var order = {
     'c': 'create_at',
     'u': 'update_at',
@@ -96,7 +90,7 @@ var getAndSortTopics = function (mt, mo, topics, callback) {
   if (mo == 'd') {
     order = '-' + order;
   }
-  return Topic.getTopicsByIdsSorted(topics, order, callback);
+  return Topic.getAllTopicsByAuthorIdSorted(authorId, order, callback);
 }
 
 var renderWorks = function (res, user, topicsInfos, currentPage, totalPage, mt, mo, length) {
@@ -128,23 +122,29 @@ function showSettings(req, res, next) {
     if (!user) {
       return next(new Error(404));
     }
-    res.render('user/index', {
-      css: [
-        '/stylesheets/user.css'
-      ],
-      js: [
-        '/javascripts/utils.js'
-      ],
-      pageType: 'PERSONAL',
-      personalType: 'SETTINGS',
-      username: user.loginName,
-      favourite: user.favourite,
-      topicCount: user.topicCount,
-      topicsPageView: Common.AuthorPVCount[user.loginName],
-      imageUrl: user.url,
-      description: user.description,
-      connectUrl: user.personalSite,
-      imageUrl: user.url
+
+    Topic.getAllTopicsByAuthorId(userId, function (err, topics) {
+      if (err) {
+        return next(err);
+      }
+
+      res.render('user/index', {
+        css: [
+          '/stylesheets/user.css'
+        ],
+        js: [
+          '/javascripts/utils.js'
+        ],
+        pageType: 'PERSONAL',
+        personalType: 'SETTINGS',
+        username: user.loginName,
+        favourite: user.favourite,
+        topicCount: topics.length,
+        topicsPageView: Common.AuthorPVCount[user.loginName],
+        imageUrl: user.url,
+        description: user.description,
+        connectUrl: user.personalSite
+      });
     });
   });
 }
@@ -537,24 +537,12 @@ function showPersonal(req, res, next) {
   }
 
   //2---------------------------------------
-  //normal case
-  var workType = req.query.type || 'P';
-  // 'P' means made by himself. 'J' means join with others. not himself's topic.
-  //current: first implement 'P'.
-  // for 'J' part, out put empty as default.
-
   var sortOrder = req.query.order || 'U';
   // default order is according to update date. 'F' means favourte, i.e. likes
   // 'N' means name
 
   var currentPage = parseInt(req.query.page) || 1;
   //default currentPage is the first page.
-
-  console.log("workType: %s", workType);
-  console.log("sortOrder: %s", sortOrder);
-  console.log("req.page: %s", currentPage);
-  console.log("req.url: %s", req.url);
-
 
   User.getUserByLoginName(authorName, function (err, user) {
     if (err) {
@@ -595,7 +583,7 @@ function showPersonal(req, res, next) {
     //Inner: U F N
 
     //1. Personal work
-    getandSortTopicsforShow(sortOrder, user.topics, function (err, topicsInfo) {
+    getSortedTopicsforShow(user._id, sortOrder, function (err, topicsInfo) {
       if (err) {
         return next(err);
       }
@@ -609,14 +597,14 @@ function showPersonal(req, res, next) {
       console.log("topics length: ", topicsInfo.length);
 
       //here according to TotalTopic decide totalPage and currentPage topics
-      var totalPage = Math.ceil(topicsInfo.length / 9);
+      var totalPage = Math.ceil(topicsInfo.length / 10);
 
 
       //console.log(topicsInfo);
       //create a template arrary,
       //then push all the topics into this arrary for show.
       var topicsForShow = [];
-      for (var i = (currentPage - 1) * 9; i < topicsInfo.length && i < currentPage * 9; i++) {
+      for (var i = (currentPage - 1) * 10; i < topicsInfo.length && i < currentPage * 10; i++) {
         var temp = topicsInfo[i];
         temp.create_date = topicsInfo[i].create_at.getFullYear() + '-'
           + (topicsInfo[i].create_at.getMonth() + 1) + '-'
@@ -651,20 +639,20 @@ function showPersonal(req, res, next) {
 }
 
 
-var getandSortTopicsforShow = function (sortName, topics, callback) {
+var getSortedTopicsforShow = function (authorId, sortName, callback) {
 
   if (sortName == 'U') {
     //according to update time
     //this is default
-    return Topic.getPublishedTopics(topics, '-update_at', callback);
+    return Topic.getPublishedTopicsByAuthorIdSorted(authorId, '-update_at', callback);
   }
   else if (sortName == 'F') {
     //accordiing to liked count
     //todo: changed to favourite count.
-    return Topic.getPublishedTopics(topics, '-FVCount', callback);
+    return Topic.getPublishedTopicsByAuthorIdSorted(authorId, '-FVCount', callback);
   } else if (sortName == 'N') {
     //according to Name
-    return Topic.getPublishedTopics(topics, 'title', callback);
+    return Topic.getPublishedTopicsByAuthorIdSorted(authorId, 'title', callback);
   }
 }
 

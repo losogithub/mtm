@@ -167,7 +167,7 @@ function signUp(req, res, next) {
             // md5 the pass
             pass = encryp.md5(pass);
 
-            User.newAndSave(name, loginname, pass, email, function (err) {
+            User.createUser(name, loginname, pass, email, function (err) {
               if (err) {
                 return next(err);
               }
@@ -226,7 +226,7 @@ function signUp(req, res, next) {
             // success
             // md5 the pass
             pass = encryp.md5(pass);
-            User.newAndSave(name, loginname, pass, email, function (err) {
+            User.createUser(name, loginname, pass, email, function (err) {
               if (err) {
                 return next(err);
               }

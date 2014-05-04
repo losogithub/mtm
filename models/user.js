@@ -18,10 +18,9 @@ var UserSchema = new Schema({
   retrieve_key: String,
 
   //topics array
-  topics: [ObjectId],
-  topicCount: {type: Number, default: 0},
   PVCount: {type: Number, default: 0},
 
+  //collection
   items: [ObjectId],
 
   //support user likes

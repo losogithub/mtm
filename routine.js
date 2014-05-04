@@ -9,13 +9,14 @@ var async = require('async');
 
 var Common = require('./common');
 var User = require('./proxy').User;
-var Topic = require('./proxy').Topic;
+var TopicProxy = require('./proxy').Topic;
+var Topic = require('./controllers/topic');
 var Item = require('./proxy').Item;
 
 function _update() {
   async.auto({
     topics: function (callback) {
-      Topic.getAllTopics(function (err, topics) {
+      TopicProxy.getPublishedTopics(function (err, topics) {
         if (err) {
           return callback(err);
         }

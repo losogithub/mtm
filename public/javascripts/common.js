@@ -9,19 +9,41 @@
 (function ($) {
 
   window.console = window.console || {log: $.noop, error: $.noop};
-  window.shizier =window.shizier || {};
+  window.shizier = window.shizier || {};
 
-  window.sng = angular.module(
-    'sng',
-    ['ui.bootstrap'].concat(
-      shizier.pageType == 'EDIT'
-        ? ['ui.utils', 'monospaced.elastic', 'ui.sortable']
-        : shizier.pageType == 'TOPIC'
-        ? ['ngTagsInput']
-        : shizier.pageType == 'BOOKMARKLET'
-        ? ['ui.utils']
-        : [])
-  );
+  if (window.angular) {
+    window.sng = angular.module(
+      'sng',
+      ['ui.bootstrap'].concat(
+        shizier.pageType == 'EDIT'
+          ? ['ui.utils', 'monospaced.elastic', 'ui.sortable']
+          : shizier.pageType == 'TOPIC'
+          ? ['ngTagsInput']
+          : shizier.pageType == 'BOOKMARKLET'
+          ? ['ui.utils']
+          : [])
+    );
+
+    window.sng.controller('LoginDialogCtrl', function ($scope, $http) {
+      $scope.submit = function () {
+        if (!$scope.username || !$scope.password) {
+          $scope.error = '用户名和密码不能为空';
+          return;
+        }
+        $http.post('/login_dialog', {
+          userName: $scope.username,
+          password: $scope.password,
+          remember: $scope.remember
+        })
+          .success(function () {
+            location.reload();
+          })
+          .error(function () {
+            $scope.error = '用户名或密码不正确';
+          });
+      };
+    });
+  }
 
   $._messengerDefaults = {
     extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right',
@@ -67,26 +89,6 @@
       $img.attr('src', url);
     }
   };
-
-  window.sng.controller('LoginDialogCtrl', function ($scope, $http) {
-    $scope.submit = function () {
-      if (!$scope.username || !$scope.password) {
-        $scope.error = '用户名和密码不能为空';
-        return;
-      }
-      $http.post('/login_dialog', {
-        userName: $scope.username,
-        password: $scope.password,
-        remember: $scope.remember
-      })
-        .success(function () {
-          location.reload();
-        })
-        .error(function () {
-          $scope.error = '用户名或密码不正确';
-        });
-    };
-  });
 
   $(function ($) {
 
