@@ -267,7 +267,7 @@ function ceateImageItemAndUploadToQiniu(req, res, next){
         update the item url in mongodb
          */
         item.qiniuId = qiniuId;
-
+        console.log(item);
         //update image url to this new key.
         Item.updateById(item.type, item._id, item);
         //upload to qiniu with the imageUrl
