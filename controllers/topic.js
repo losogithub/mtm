@@ -31,6 +31,9 @@ function showIndex(req, res, next) {
 
   async.auto({
     relatedTopics: function (callback) {
+      if (!Common.Topic[topicId] || !Common.Topic[topicId].relatedTopics) {
+        return callback(null, []);
+      }
       async.map(Common.Topic[topicId].relatedTopics.slice(0, 5), function (topicId, callback) {
         Topic.getTopicById(topicId, callback);
       }, callback);
@@ -40,10 +43,16 @@ function showIndex(req, res, next) {
     },
     author: ['topic', function (callback, results) {
       var topic = results.topic;
+      if (!topic) {
+        return callback(new Error(404));
+      }
       User.getUserByLoginName(topic.author_name, callback);
     }],
     items: ['topic', function (callback, results) {
       var topic = results.topic;
+      if (!topic) {
+        return callback(new Error(404));
+      }
       Item.getItems(topic, callback);
     }]
   }, function (err, results) {
