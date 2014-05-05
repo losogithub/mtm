@@ -8,13 +8,13 @@
 var async = require('async');
 var sanitize = require('validator').sanitize;
 var check = require('validator').check;
-var domain = require('domain');
 var phantom = require('phantom');
 var fs = require('fs');
 var portfinder = require('portfinder');
 var mongodb = require('mongodb');
 var config = require('../config');
 
+var qiniuPlugin = require('../helper/qiniu');
 var helper = require('../helper/helper');
 var escape = helper.escape;
 
@@ -139,8 +139,7 @@ function showEdit(req, res, next) {
     user: function (callback) {
       User.getUserById(userId, callback);
     },
-    collectionItems: ['topic', function (callback, results) {
-      console.log(results);
+    collectionItems: ['user', function (callback, results) {
       var user = results.user;
       Item.getItemsById(user.items, callback);
     }]
@@ -641,10 +640,47 @@ function deleteItem(req, res, next) {
   var itemId = req.body._id;
 
   async.auto({
+    deleteQiniuImage: function(callback){
+        console.log("topic, enter delteQiniuImage function");
+          if(type == 'IMAGE'){
+              console.log("it is image");
+              Item.getItemById(type, itemId, function(err, item){
+                  if(err){
+                      callback(err);
+                  }
+                  Item.findItemByUrl(type, item.url, function(err, items){
+                      // this means there is only one item in the item collection that has this url.
+                      if(items.length == 1){
+                          console.log(item);
+                          console.log("item qini ID: " + item.qiniuId);
+                          qiniuPlugin.deleteImageFromQiniu(item.qiniuId, function(err, ret){
+                              if(err){
+                                  console.log("topic delete image from qiniu error, url: " + item.url );
+                                  console.log(ret);
+                                  next(err);
+                              }
+                              else{
+                                  console.log("topic delete image from qiniu successfully!");
+                                  //without the callback function, it would not enter the next function. it is necessary.
+                                  callback(null, ret);
+                              }
+                          })
+                      }
+                      else {
+                          console.log("don't need to delete image number:  "+ items.length);
+                          //console.log(items);
+                          callback(null, items);
+                      }
+                  })
+
+              })
+          }
+      },
     topic: function (callback) {
       _getTopicWithAuth(callback, topicId, userId);
     },
-    deleteItem: ['topic', function (callback, results) {
+    deleteItem: ['topic','deleteQiniuImage', function (callback, results) {
+        console.log("enter deleteItem function");
       var topic = results.topic;
       Item.deleteItem(type, itemId, function (err) {
         if (err) {

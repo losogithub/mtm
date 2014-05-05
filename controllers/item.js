@@ -55,8 +55,7 @@ function createCollectionItem(req, res, next) {
     var item = results.item;
     res.json(helper.getItemData(item));
     console.log('createCollectionItem done');
-    //added by stefanzan 5.4 2014
-    next(null, item);
+
   });
 }
 
@@ -108,6 +107,36 @@ function deleteItem(req, res, next) {
   var _id = req.body._id;
 
   async.auto({
+    deleteQiniuImage: function(callback){
+          if(type == 'IMAGE'){
+              Item.getItemById(type, _id, function(err, item){
+                  if(err){
+                      callback(err);
+                  }
+                  Item.findItemByUrl(type, item.url, function(err, items){
+                      // this means there is only one item in the item collection that has this url.
+                      if(items.length == 1){
+                          qiniuPlugin.deleteImageFromQiniu(item.qiniuId, function(err, ret){
+                              if(err){
+                                  console.log("collect delete image from qiniu error, url: " + item.url );
+                                  console.log(ret);
+                                  next(err);
+                              }
+                              else{
+                                  console.log("collect delete image from qiniu successfully!");
+                                  callback(null, ret);
+                              }
+                          })
+                      }
+                     else {
+                          console.log("collect item num: " + items.length);
+                          callback(null, items);
+                      }
+                  })
+
+              })
+          }
+      },
     user: function (callback) {
       User.getUserById(userId, function (err, user) {
         if (err) {
@@ -120,7 +149,7 @@ function deleteItem(req, res, next) {
         User.deleteItem(user, _id, callback);
       });
     },
-    item: ['user', function (callback) {
+    item: ['user', 'deleteQiniuImage', function (callback) {
       Item.deleteItem(type, _id, callback);
     }]
   }, function (err) {
@@ -196,6 +225,40 @@ function getDetail(req, res, next) {
   });
 }
 
+
+function createImageCollectionItem(req, res, callback) {
+    console.log('createCollectionItem=====');
+    var userId = req.session.userId;
+
+    try {
+        var data = helper.getData(req);
+    } catch (err) {
+        return next(err);
+    }
+    if (!data) {
+        return next(new Error(500));
+    }
+
+    async.auto({
+        item: function (callback) {
+            Item.createItem(data, callback);
+        },
+        user: ['item', function (callback, results) {
+            var item = results.item;
+
+            User.collectItem(userId, item._id, callback);
+        }]
+    }, function (err, results) {
+        if (err) {
+            return next(err);
+        }
+
+        var item = results.item;
+        console.log('createCollectionItem done');
+        callback(null, item);
+    });
+}
+
 function ceateImageItemAndUploadToQiniu(req, res, next){
 
     /*
@@ -203,7 +266,7 @@ function ceateImageItemAndUploadToQiniu(req, res, next){
      If failed, delete this collectionItem.
      */
 
-    createCollectionItem(req, res, function(err, item){
+    createImageCollectionItem(req, res, function(err, item){
         if(err){
             console.log(err);
             next(err);
@@ -228,18 +291,21 @@ function ceateImageItemAndUploadToQiniu(req, res, next){
         update the item url in mongodb
          */
         item.qiniuId = qiniuId;
+        console.log("show item qiniuId: "+ item.qiniuId);
+        var baseUrl="http://shizier.qiniudn.com/";
+        item.url = baseUrl + qiniuId;
         console.log(item);
         //update image url to this new key.
         item.save(function (err, item) {
             if(err){
                 next(err);
             }
-
+            //upload to qiniu with the imageUrl
+            qiniuPlugin.uploadToQiniu(req.body.imageByteData, qiniuId, function(err, data){
+                res.json(helper.getItemData(item));
+            })
         })
-        //upload to qiniu with the imageUrl
-        qiniuPlugin.uploadToQiniu(req.body.imageByteData, qiniuId, function(err, data){
 
-        })
     })
 
 }

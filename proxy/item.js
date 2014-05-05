@@ -90,7 +90,7 @@ function getItems(topic, callback) {
     }
       //renew image items from qiniu
       //2014.5.4 check the images from qiniu
-      renewImageItems(items);
+      //renewImageItems(items);
       callback(null, items);
   });
 }
@@ -133,7 +133,7 @@ function getItemsById(ids, callback) {
     }
 
     //2014.5.4 check the images from qiniu
-    renewImageItems(allItems);
+    //renewImageItems(allItems);
 
     allItems.sort(function (a, b) {
       return parseInt(b._id, 16) - parseInt(a._id, 16);
@@ -172,30 +172,61 @@ function renewImageItems(items){
 }
 
 function checkImageItemTimeStamp(item){
-    console.log("check iamge timestamp");
-    console.log(item);
+    //console.log("check iamge timestamp");
+    //console.log(item);
    //http://shizier.qiniu.com/fdasfewaeagaf23?e=31432434&token=fdgestgre5454tgrt4654te=
 
    //need to consider the previous case that the url not from qiniu.
-   var headUrl = "http://shzier.qiniu.com";
+   var headUrl = "http://shzier.qiniudn.com";
+
+    //case 1:
    if((item.url.indexOf(headUrl) == -1) && (!item.qiniuId)){
 
        return item;
    }
+    //case 2:
+    if((item.url.indexOf(headUrl) == -1) && (item.qiniuId)){
+      // the url is not from qiniu, but having a qiniu id
+      //get a url from qiniu.
+      item.url = qiniuPlugin.downloadImageUrl(item.qiniuId);
+      //update this item in mongodb
+      //Item.updateById(item.type, item._id, item);
+        item.save(function (err, item) {
+            if(err){
+                next(err);
+            }
+        })
+      return item;
+    }
 
-    console.log("image item url: " + item.url);
-    console.log("image qiniu id: " + item.qiniuId);
+   //case 3:
+   //console.log("image item url: " + item.url);
+   //console.log("image qiniu id: " + item.qiniuId);
    var obj = require('url').parse(item.url);
    var timeStamp = obj.query.e;
    var timeNow = Math.round(+new Date()/1000);
    if(timeNow - timeStamp >= 3600){
       //update the timestamp
-     item.url = qiniuPlugin.downloadImageUrl()
+     item.url = qiniuPlugin.downloadImageUrl(item.qiniuId);
        //update this item in mongodb
-     Item.updateById(item.type, item._id, item);
+     //Item.updateById(item.type, item._id, item);
+     item.save(function (err, item) {
+            if(err){
+                next(err);
+            }
+       })
    }
    return item;
 }
+
+/*
+ * check totally how many image items using the same image url.
+ * this is useful for deleting checking.
+ */
+function findItemByUrl(type, url, callback){
+    ItemModels[type].find({'url': url}, callback);
+}
+
 
 exports.cloneItem = cloneItem;//增
 exports.createItem = createItem;//增
@@ -204,3 +235,4 @@ exports.getItemById = getItemById;//查
 exports.getItemsById = getItemsById;//查
 exports.editItem = editItem;
 exports.deleteItem = deleteItem;//删
+exports.findItemByUrl = findItemByUrl;

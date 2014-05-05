@@ -10,7 +10,10 @@ qiniu.conf.SECRET_KEY = config.QINIU_SECRET_KEY;
 //todo: later make domain more flexible
 var domain = "shizier.qiniudn.com";
 
-function downloadImageUrl(domain, key){
+/*
+this is for private bucket, sine now it is public, so it is ok.
+ */
+function downloadImageUrl(key){
     var baseUrl = qiniu.rs.makeBaseUrl(domain, key);
     var policy = new qiniu.rs.GetPolicy();
     return policy.makeRequest(baseUrl);
@@ -27,7 +30,7 @@ function generateUpToken(req, res, next){
 }
 
 
-function uploadToQiniu(imageByteData, qiniuId, next){
+function uploadToQiniu(imageByteData, qiniuId, callback){
     var imageDataInfo = decodeBase64Image(imageByteData);
     binaryData = imageDataInfo.data;
 
@@ -39,18 +42,35 @@ function uploadToQiniu(imageByteData, qiniuId, next){
         qiniu.io.put(upToken, qiniuId, binaryData, extra, function(err,ret){
             if(!err){
                 console.log(ret.key, ret.hash);
-                next(null, ret);
+                callback(null, ret);
             }
             else {
                 console.log(err);
                 //todo how to handle error
                 // according to different error inform, either retrieve or delete the saved item.
 
-                next(-1, ret);
+                callback(-1, ret);
             }
         })
 
 }
+
+
+function deleteImageFromQiniu(key,callback){
+    var client = new qiniu.rs.Client();
+    client.remove(config.BUCKET_NAME, key, function(err, ret){
+        if(err){
+            console.log(err);
+            callback(-1, ret);
+        }
+        else {
+            //ok
+            callback(null, ret);
+        }
+    })
+
+}
+
 
 function decodeBase64Image(dataString) {
     var matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/),
@@ -69,3 +89,4 @@ function decodeBase64Image(dataString) {
 exports.generateUpToken = generateUpToken;
 exports.downloadImageUrl = downloadImageUrl;
 exports.uploadToQiniu = uploadToQiniu;
+exports.deleteImageFromQiniu = deleteImageFromQiniu;
