@@ -467,6 +467,8 @@ tags-input.ng-invalid .tags {
   border: 2px solid #e74c3c;
 }
 .Preview {
+  border-top: 2px solid #ecf0f1;
+  border-bottom: 2px solid #ecf0f1;
   position: fixed;
   top: 0;
   bottom: 0;
