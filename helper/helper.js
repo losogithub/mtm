@@ -610,7 +610,7 @@ function getData(req) {
       var title = sanitize(req.body.title).trim();
       var quote = sanitize(req.body.quote).trim();
       var description = sanitize(req.body.description).trim();
-
+      var qiniuId = sanitize(req.body.qiniuId).trim();
       check(url).notNull().isUrl();
       check(title).len(0, 50);
       if (quote.length) check(quote).isUrl();
@@ -620,7 +620,9 @@ function getData(req) {
         url: url,
         title: title,
         quote: quote,
-        description: description
+        description: description,
+        qiniuId: qiniuId,
+        originalUrl: url
       }
       break;
     case 'VIDEO_CREATE':
@@ -740,7 +742,9 @@ function getItemData(item) {
         title: item.title,
         quote: item.quote,
         quoteDomain: utils.getQuote(item.quote),
-        description: item.description
+        description: item.description,
+        qiniuId : item.qiniuId,
+        originalUrl: item.originalUrl
       }
       break;
     case 'VIDEO':

@@ -17,7 +17,7 @@ var downloadBase64Image = function (url, callback) {
             }
         } else {
             //todo: need fix how to handle this error.
-            throw new Error('Can not download image');
+            callback(-1, "cannot download image");
         }
     });
 };

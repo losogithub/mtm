@@ -110,10 +110,6 @@
               var imageUrl = $('input[name="text"]').val().trim();
               console.log(imageUrl);
               //legal check
-              //todo: more support of checking. using utils.
-              if(imageUrl.length == 0){
-                  alert('采集失败, 请重试并输入正确的网址');
-              }
               data["url"] = imageUrl;
               $http.post('/item/image/postUrlfromclient', data)
                       .success(function(){

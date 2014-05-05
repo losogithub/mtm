@@ -84,7 +84,9 @@ function decodeBase64Image(dataString) {
     //todo: possibly may have bugs.
     var matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/),
         response = {};
-
+    if(!matches){
+        return new Error('Invalid input data string');
+    }
     if (matches.length !== 3) {
         return new Error('Invalid input string');
     }

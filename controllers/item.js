@@ -411,7 +411,7 @@ function createImageItemUploadQiniu(req, res, callback){
                         }
                     });
                 }
-                callback(err, data);
+                callback(err, item);
             })
         })
 
