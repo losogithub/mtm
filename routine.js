@@ -13,21 +13,12 @@ var TopicProxy = require('./proxy').Topic;
 var Topic = require('./controllers/topic');
 var Item = require('./proxy').Item;
 
-function _update() {
+function _updateRelatedTopics() {
   async.auto({
     topics: function (callback) {
-      TopicProxy.getPublishedTopics(function (err, topics) {
-        if (err) {
-          return callback(err);
-        }
-        callback(null, topics);
-      });
+      TopicProxy.getPublishedTopics(callback);
     },
-    countTopics: ['topics', _countTopics],
-    countTags: ['topics', _countTags],
-    calcTags: ['countTags', _calcTags],
-    countAuthors: ['topics', _countAuthors],
-    calcAuthors: ['countAuthors', _calcAuthors]
+    countTopics: ['topics', _countTopics]
   }, function (err) {
     if (err) {
       return console.error(err.stack);
@@ -36,33 +27,51 @@ function _update() {
 }
 
 function _countTopics(callback, results) {
-  results.topics.forEach(function (topic) {
-    var temp = {};
-    Common.Topic[topic._id] = Common.Topic[topic._id] || {};
-    var temp2 = [];
-    results.topics.forEach(function (topic2) {
-      if (topic._id.equals(topic2._id)) {
-        return;
-      }
-      var sameTagsCount = 0;
-      topic.tags.forEach(function (tag) {
-        topic2.tags.forEach(function (tag2) {
-          if (tag == tag2) {
-            sameTagsCount++;
-          }
+  async.forEachSeries(results.topics, function (topic, callback) {
+    setTimeout(function () {
+      var temp = {};
+      Common.Topic[topic._id] = Common.Topic[topic._id] || {};
+      var temp2 = [];
+      results.topics.forEach(function (topic2) {
+        if (topic._id.equals(topic2._id)) {
+          return;
+        }
+        var sameTagsCount = 0;
+        topic.tags.forEach(function (tag) {
+          topic2.tags.forEach(function (tag2) {
+            if (tag == tag2) {
+              sameTagsCount++;
+            }
+          });
         });
+        temp2.push(topic2._id);
+        temp[topic2._id] = 100 * sameTagsCount
+          + 10 * (topic.category == topic2.category ? 1 : 0)
+          + (topic.author_id.equals(topic2.author_id) ? 1 : 0);
       });
-      temp2.push(topic2._id);
-      temp[topic2._id] = 100 * sameTagsCount
-        + 10 * (topic.category == topic2.category ? 1 : 0)
-        + (topic.author_id.equals(topic2.author_id) ? 1 : 0);
-    });
-    Common.Topic[topic._id].relatedTopics = temp2;
-    Common.Topic[topic._id].relatedTopics.sort(function (a, b) {
-      return temp[b] - temp[a];
-    })
+      temp2.sort(function (a, b) {
+        return temp[b] - temp[a];
+      });
+      Common.Topic[topic._id].relatedTopics = temp2;
+      callback();
+    }, 0);
+  }, callback);
+}
+
+function _update() {
+  async.auto({
+    topics: function (callback) {
+      TopicProxy.getPublishedTopics(callback);
+    },
+    countTags: ['topics', _countTags],
+    calcTags: ['countTags', _calcTags],
+    countAuthors: ['topics', 'calcTags', _countAuthors],
+    calcAuthors: ['countAuthors', _calcAuthors]
+  }, function (err) {
+    if (err) {
+      return console.error(err.stack);
+    }
   });
-  callback(null);
 }
 
 function _countTags(callback, results) {
@@ -70,11 +79,8 @@ function _countTags(callback, results) {
   var categories = {};
   var authorIds = {};
   var relatives = {};
-  for (var i in results.topics) {
-    var topic = results.topics[i];
-    for (var j = 0; j < topic.tags.length; j++) {
-      var tagText = topic.tags[j];
-
+  results.topics.forEach(function (topic) {
+    topic.tags.forEach(function (tagText) {
       topicCounts[tagText] = topicCounts[tagText] || 0;
       topicCounts[tagText]++;
 
@@ -87,15 +93,15 @@ function _countTags(callback, results) {
       authorIds[tagText][topic.author_id]++;
 
       relatives[tagText] = relatives[tagText] || {};
-      for (var k = 0; k < topic.tags.length; k++) {
-        var tagText2 = topic.tags[k];
-        if (tagText != tagText2) {
-          relatives[tagText][tagText2] = relatives[tagText][tagText2] || 0;
-          relatives[tagText][tagText2]++;
+      topic.tags.forEach(function (tagText2) {
+        if (tagText == tagText2) {
+          return;
         }
-      }
-    }
-  }
+        relatives[tagText][tagText2] = relatives[tagText][tagText2] || 0;
+        relatives[tagText][tagText2]++;
+      });
+    });
+  });
   callback(null, {
     topicCounts: topicCounts,
     categories: categories,
@@ -191,7 +197,10 @@ function start() {
   Topic.updateTopicSiteCount();
 
   _routine();
+  _updateRelatedTopics();
+
   setInterval(_routine, 60 * 1000);
+  setInterval(_updateRelatedTopics, 60 * 60 * 1000);
 }
 
 exports.start = start;
