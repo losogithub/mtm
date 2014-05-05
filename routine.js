@@ -54,7 +54,7 @@ function _countTopics(callback, results) {
       });
       Common.Topic[topic._id].relatedTopics = temp2;
       callback();
-    }, 400);
+    }, 1000);
   }, callback);
 }
 
