@@ -116,6 +116,7 @@ $(function () {
   var $previewWrapper = $('.PreviewWrapper');
   var $preview = $('.Preview');
   var $iframe = $preview.find('>iframe');
+  var timeout;
   $('.WidgetItemList').on('mouseenter', '>li', function () {
     if ($previewWrapper.is(':hidden')) {
       return;
@@ -124,12 +125,17 @@ $(function () {
     var options = $this.data('options');
     var url = options.type == 'IMAGE' ? options.quote : options.url;
     if (url) {
-      $iframe.attr('src', url);
       $preview.show();
+      timeout = setTimeout(function () {
+        $iframe.attr('src', url);
+      }, 1000);
     }
   })
   $('.WidgetItemList').on('mouseleave', '>li', function () {
-    $iframe.attr('src', '');
+    clearTimeout(timeout);
+    if ($iframe.attr('src')) {
+      $iframe.attr('src', '');
+    }
     $preview.hide();
   })
 });
