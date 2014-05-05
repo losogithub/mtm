@@ -106,13 +106,36 @@
         $scope.submit = function () {
           var data = $scope.item;
           if ($scope.item.type == 'IMAGE') {
-              console.log("submit button: image");
-              console.log("image url: " + data.url); //assign a new id to this url as a key for qiniu
-              console.log("image title: " + data.title);
-              console.log("image quote: " + data.quote);
-              console.log("image des: " + data.description);
+              console.log("image submit");
+              var imageUrl = $('input[name="text"]').val().trim();
+              console.log(imageUrl);
+              //legal check
+              //todo: more support of checking. using utils.
+              if(imageUrl.length == 0){
+                  alert('采集失败, 请重试并输入正确的网址');
+              }
+              data["url"] = imageUrl;
+              $http.post('/item/image/postUrlfromclient', data)
+                      .success(function(){
+                          $scope.cancel();
+                      })
+                      .error(function (jqXHR) {
+                          if (jqXHR.status == 401) {
+                              $scope.showLogin = true;
+                          } else {
+                              alert('采集失败，请重试');
+                          }
+                      });
+
+
+             // console.log("submit button: image");
+             // console.log("image url: " + data.url); //assign a new id to this url as a key for qiniu
+             // console.log("image title: " + data.title);
+             // console.log("image quote: " + data.quote);
+             // console.log("image des: " + data.description);
             //use server to upload the image
             //will this global variable cause concurrent problem ? no, it is a variable in the client side.
+            /*
             data["imageByteData"] = imageByteData;
             $http.post('/item/image/postfromclient', data)
                     .success(function(){
@@ -125,44 +148,8 @@
                             alert('采集失败，请重试');
                         }
                     });
+                    */
 
-
-              //2014-4-30 added stefanzan
-            //handle submit for image
-            // 0. get token from server.
-            // 1. send data to qiniu
-            // 2. get feedback from qiniu
-            // 3. send key-inform to server
-            // 4. get feedback from server.
-            /*
-            $http.get('/item/image/uptoken', data)
-                    .success(function(data){
-                       console.log(data);
-          // upload file to qiniu
-                       //var extra = new qiniu.io.putextra();
-                       var key = "" //unique image name
-                       var body = imagebytedata// byte data
-                        console.log(body);
-                        alert('采集失败，请重试');
-                       qiniu.io.put(data.uptoken, key, body, data.extra, function(err,ret){
-
-                       })
-
-                    })
-                    .error(function(){
-                        console.log("get uptoken error.");
-                    });
-
-            */
-
-            ////////////////////////////////////
-            /*
-            alert('采集失败，请重试');
-            data = $.extend({}, data, {
-              url: $scope.item.imageSrc,
-              quote: $scope.item.url
-            })
-            */
           }
          else
           { // for others except image, directly post the data.
@@ -225,6 +212,14 @@
                       console.log("paste image in chrome");
                       var ele = e.clipboardData.items
 
+                      /*
+                       * 1. check whether it is a url link or imagedata
+                       * 2. if it is a url link, send this link to server, and show save success.
+                       * 3. otherwise, do the next.
+                       */
+
+
+
                       var blobImage;
                       for (var i = 0; i < ele.length; ++i) {
                           if ( ele[i].kind == 'file' && ele[i].type.indexOf('image/') !== -1 ) {
@@ -233,8 +228,6 @@
                           }
                       }
                       if(blobImage !== null){
-                          console.log("blobImage is not null");
-                          //todo: enable save button for collect images
                           var fileReader = new FileReader();
 
                           fileReader.onload = function(e){
@@ -267,7 +260,9 @@
 
                   }
                    else {
-                      alert('non-chrome');
+                      //alert('non-chrome');
+                        var text = $('#pasteImage').html();
+                        console.log(text);
                   }
               }
 
@@ -310,7 +305,7 @@
 
     var clickImageButton = function() {
         console.log("click image button");
-
+        //document.getElementById('pasteImageUrl').focus();
     }
   </script>
 </head>
@@ -381,7 +376,13 @@
                   <div class="Content IMAGE pam"
                        ng-switch-when="IMAGE">
                       <div class="Image">
+                          <!--
                           <div id="pasteImage" contenteditable="true" ng-init="listenPasteImage()">
+                          </div>
+                          -->
+                          <div  class='Content TEXT' style="line-height: 1.4;" >
+                              <input id="pasteImageUrl" name="text" class="form-control flat"
+                                     placeholder="请输入图片地址" type="text" autofocus>
                           </div>
                       </div>
                       <div class="Quote" ng-if="item.url">
@@ -390,25 +391,6 @@
                       </div>
                       <div class="Description text-asbestos small mtx"
                            ng-if="item.description" ng-bind-html="getHtml(item.description)"></div>
-
-                    <!--
-                    <div class="Image text-center" ng-show="item.imageSrc">
-                      <img onerror="shizier.errorImage(this,'default_120x120');"
-                           ng-src="{{item.imageSrc}}">
-                    </div>
-                    -->
-                      <!--
-                    <div class="Title text-center mts">{{item.title || ''}}</div>
-                    <div class="Description text-asbestos text-center small mtx"
-                         ng-bind-html="getHtml(item.description)"></div>
-                    <div class="Quote" ng-if="item.quote">
-                      <i class="fa fa-globe"></i> 出自:
-                      <a target="_blank" href="{{item.quote}}">
-                        {{item.quoteDomain || ''}}
-                      </a>
-                    </div>
-                    -->
-
                   </div>
                   <div class="Content VIDEO pam" ng-show="item.vid"
                        ng-switch-when="VIDEO">
@@ -556,8 +538,8 @@
           </div>
           <div class="BtnSet pull-right">
             <button name="save" class='btn btn-primary'
-                    ng-disabled="saving || item.type == 'IMAGE' && !item.imageSrc"
                     type="submit">保存 <i class='fa fa-spinner fa-spin' ng-show="saving"></i>
+           <!--     ng-disabled="saving || item.type == 'IMAGE' && !item.imageSrc" -->
 
             </button>
             <button name="cancel" class="btn btn-default"

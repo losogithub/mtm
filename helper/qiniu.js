@@ -45,11 +45,7 @@ function uploadToQiniu(imageByteData, qiniuId, callback){
                 callback(null, ret);
             }
             else {
-                console.log(err);
-                //todo how to handle error
-                // according to different error inform, either retrieve or delete the saved item.
-
-                callback(-1, ret);
+                callback(err, ret);
             }
         })
 

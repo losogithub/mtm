@@ -16,7 +16,7 @@ var User = require('../proxy').User;
 
 var config = require('../config');
 var qiniuPlugin = require('../helper/qiniu');
-
+var downloadImage = require('../helper/downloadImage');
 
 function showBookmarklet(req, res) {
   res.render('item/bookmarklet', {
@@ -258,7 +258,9 @@ function createImageCollectionItem(req, res, callback) {
         callback(null, item);
     });
 }
-
+/*
+ * not used now.
+ */
 function ceateImageItemAndUploadToQiniu(req, res, next){
 
     /*
@@ -311,6 +313,140 @@ function ceateImageItemAndUploadToQiniu(req, res, next){
 }
 
 
+/*
+ * this function is called by retrivevImageandUploadToQiniu
+ * which is used to create a image collection item,
+ * upload imgedata to qiniu,
+ * callback to the father function.
+ */
+function createImageItemUploadQiniu(req, res, callback){
+
+    /*
+     first create a image collectionItem, then get the item id as the key.
+     If upload failed, delete this collectionItem.
+     */
+    createImageCollectionItem(req, res, function(err, item){
+        if(err){
+            console.log(err);
+            return callback(err);
+        }
+
+        //console.log("image url: " + item.url);
+        //console.log("image title: " + item.title);
+        //console.log("image quote: " + item.quote);
+        //console.log("image des: " + item.description);
+        //console.log("image item id: " + item._id);
+        //console.log("item type: " + item.type);
+
+        /*
+         build a unique image id for qiniu
+         item id + timestamp
+         */
+        var unixTimeStamp = Math.round(+new Date()/1000);
+        var qiniuId = item._id + unixTimeStamp.toString();
+        //console.log("image id: "+ qiniuId);
+
+        /*
+         update the item url in mongodb
+         */
+        item.qiniuId = qiniuId;
+        var baseUrl="http://shizier.qiniudn.com/";
+        item.url = baseUrl + qiniuId;
+        console.log(item);
+        //update image url to this new key.
+        item.save(function (err, item) {
+            if(err){
+                //delete the created item in the collection.
+                deleteFailedCollectItem(req, res, function(err, id){
+                    if(err){
+                        callback(err);
+                    }
+                });
+                callback(err);
+            }
+            //upload to qiniu with the imageUrl
+            qiniuPlugin.uploadToQiniu(req.body.imageByteData, qiniuId, function(err, data){
+                if(err){
+                    //delete the created item in the collection.
+                    deleteFailedCollectItem(req, res, function(err, id){
+                        if(err){
+                            callback(err);
+                        }
+                    });
+                }
+                callback(err, data);
+            })
+        })
+
+    })
+
+}
+
+
+function retrivevImageandUploadToQiniu(req, res, next){
+    console.log("retrivevImageandUploadToQiniu function:");
+    try {
+        var data = helper.getData(req);
+    } catch (err) {
+        return next(err);
+    }
+    if (!data) {
+        return next(new Error(500));
+    }
+
+    console.log(data.url);
+
+    //1. retrieve image from url
+    downloadImage.downloadBase64Image(data.url, function(err, base64data){
+        //console.log(base64data);
+        //create item and uploadtoQiniu
+        //assign imageByteData
+        req.body.imageByteData = base64data;
+        createImageItemUploadQiniu(req, res, function(err, data){
+           if(err){
+
+               next(err);
+           }
+            //todo: what really need to send back.?
+            res.json(helper.getItemData(data));
+        })
+
+    })
+
+}
+
+/*
+ *  if the qiniu upload fails, then delete the created item.
+ */
+function deleteFailedCollectItem(req, res, callback) {
+    var userId = req.session.userId;
+    var type = req.body.type;
+    var _id = req.body._id;
+
+    async.auto({
+        user: function (callback) {
+            User.getUserById(userId, function (err, user) {
+                if (err) {
+                    return callback(err);
+                }
+                if (!user) {
+                    return callback(new Error(400));
+                }
+
+                User.deleteItem(user, _id, callback);
+            });
+        },
+        item: ['user', function (callback) {
+            Item.deleteItem(type, _id, callback);
+        }]
+    }, function (err) {
+        if (err) {
+            return callback(err, err);
+        }
+
+        callback(null, _id);
+    });
+}
 
 exports.showBookmarklet = showBookmarklet;
 exports.createCollectionItem = createCollectionItem;
@@ -319,3 +455,4 @@ exports.deleteItem = deleteItem;
 exports.editItem = editItem;
 exports.getDetail = getDetail;
 exports.ceateImageItemAndUploadToQiniu = ceateImageItemAndUploadToQiniu;
+exports.retrivevImageandUploadToQiniu = retrivevImageandUploadToQiniu;
