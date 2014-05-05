@@ -67,8 +67,21 @@ function deleteImageFromQiniu(key,callback){
 
 }
 
+function generateQiniuId(id){
+    var unixTimeStamp = Math.round(+new Date()/1000);
+    var qiniuId = id + unixTimeStamp.toString();
+    return qiniuId;
+}
+
+function makeQiniuUrl(key){
+    var baseUrl="http://shizier.qiniudn.com/";
+    var url = baseUrl + key;
+    return url;
+}
+
 
 function decodeBase64Image(dataString) {
+    //todo: possibly may have bugs.
     var matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/),
         response = {};
 
@@ -86,3 +99,5 @@ exports.generateUpToken = generateUpToken;
 exports.downloadImageUrl = downloadImageUrl;
 exports.uploadToQiniu = uploadToQiniu;
 exports.deleteImageFromQiniu = deleteImageFromQiniu;
+exports.generateQiniuId = generateQiniuId;
+exports.makeQiniuUrl = makeQiniuUrl;

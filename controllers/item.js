@@ -197,7 +197,48 @@ function editItem(req, res, next) {
       } catch (err) {
         return callback(err);
       }
-      Item.editItem(type, _id, data, callback);
+      /*
+        * according to the image url to get image data and upload to qiniu.
+         */
+      console.log("edit item at edit page.")
+      console.log(data.url);
+      console.log("data: ")
+      console.log(data);
+      /*
+        I think this function also is been called by edit operation at colelction part
+        thus, first check the url. whether it is start with shizier.qiniudn.com.
+         */
+      if(data.url.indexOf("http://shizier.qiniudn.com") == -1 ){
+          console.log("this is not a qiniu image url");
+          downloadImage.downloadBase64Image(data.url, function(err, base64data){
+               //upload to qiniu, set qiniuId, update the url.
+
+              var qiniuId = qiniuPlugin.generateQiniuId(_id);
+              /*
+               update the item url in mongodb
+               */
+              data.qiniuId = qiniuId;
+              data.url = qiniuPlugin.makeQiniuUrl(qiniuId);
+              console.log(data);
+              //update image url to this new key.
+              Item.editItem(type, _id, data, function(err, item){
+                  if(err){
+                      callback(err);
+                  }
+                  //upload to qiniu with the imageUrl
+                  qiniuPlugin.uploadToQiniu(base64data, qiniuId, function(err, data){
+                      if(err){
+                          callback(err);
+                      }
+                  })
+              });
+
+          })
+      }
+        else {
+          Item.editItem(type, _id, data, callback);
+      }
+
     }]
   }, function (err, results) {
     if (err) {
@@ -342,16 +383,12 @@ function createImageItemUploadQiniu(req, res, callback){
          build a unique image id for qiniu
          item id + timestamp
          */
-        var unixTimeStamp = Math.round(+new Date()/1000);
-        var qiniuId = item._id + unixTimeStamp.toString();
-        //console.log("image id: "+ qiniuId);
-
+        var qiniuId = qiniuPlugin.generateQiniuId(item._id);
         /*
          update the item url in mongodb
          */
         item.qiniuId = qiniuId;
-        var baseUrl="http://shizier.qiniudn.com/";
-        item.url = baseUrl + qiniuId;
+        item.url = qiniuPlugin.makeQiniuUrl(qiniuId);
         console.log(item);
         //update image url to this new key.
         item.save(function (err, item) {
@@ -447,6 +484,8 @@ function deleteFailedCollectItem(req, res, callback) {
         callback(null, _id);
     });
 }
+
+
 
 exports.showBookmarklet = showBookmarklet;
 exports.createCollectionItem = createCollectionItem;

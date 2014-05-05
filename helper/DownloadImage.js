@@ -12,6 +12,7 @@ var downloadBase64Image = function (url, callback) {
                 , image = body.toString('base64');
             if (typeof callback == 'function') {
                 var base64data = base64prefix +  image;
+                console.log(base64data);
                 callback(null, base64data);
             }
         } else {

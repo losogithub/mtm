@@ -13,6 +13,7 @@ var fs = require('fs');
 var portfinder = require('portfinder');
 var mongodb = require('mongodb');
 var config = require('../config');
+var downloadImage = require('../helper/downloadImage');
 
 var qiniuPlugin = require('../helper/qiniu');
 var helper = require('../helper/helper');
@@ -516,7 +517,51 @@ function createItem(req, res, next) {
       _getTopicWithAuth(callback, topicId, userId);
     },
     item: ['parse', function (callback) {
-      Item.createItem(data, callback);
+      /*
+        If it is a image item, retrieve image first.
+         */
+      Item.createItem(data, function(err, item){
+          if(err){
+             return callback(err);
+          }
+          else {
+              if((data.type == 'IMAGE') && (data.url.indexOf("http://shizier.qiniudn.com") == -1) ){
+                  console.log("this image src is not a qiniu image url");
+                  console.log(data.url);
+                  downloadImage.downloadBase64Image(data.url, function(err, base64data){
+                      //upload to qiniu, set qiniuId, update the url.
+                      if(err){
+                          return callback(err);
+                      }
+                      var qiniuId = qiniuPlugin.generateQiniuId(item._id);
+                      /*
+                       update the item url in mongodb
+                       */
+                      data.qiniuId = qiniuId;
+                      data.url = qiniuPlugin.makeQiniuUrl(qiniuId);
+                      console.log(data);
+                      //update image url to this new key.
+                      Item.editItem(item.type, item._id, data, function(err, item){
+                          if(err){
+                              return callback(err);
+                          }
+                          //upload to qiniu with the imageUrl
+                          qiniuPlugin.uploadToQiniu(base64data, qiniuId, function(err, data){
+                              if(err){
+                                  callback(err);
+                              }
+                              // important: here need to return the item
+                              callback(null, item);
+                          })
+                      });
+
+                  })
+              }
+              else {
+                  callback(err, item);
+              }
+          }
+      });
     }],
     newTopic: ['topic', 'item', function (callback, results) {
       var topic = results.topic;
@@ -614,7 +659,45 @@ function editItem(req, res, next) {
       } catch (err) {
         return callback(err);
       }
-      Item.editItem(type, itemId, data, callback);
+      /*
+        check image item and retrieve image
+        stefanzan
+         */
+        if((type == 'IMAGE') && (data.url.indexOf("http://shizier.qiniudn.com") == -1) ){
+            console.log("this is not a qiniu image url");
+            console.log(data.url);
+            downloadImage.downloadBase64Image(data.url, function(err, base64data){
+                //upload to qiniu, set qiniuId, update the url.
+                if(err){
+                    return callback(err);
+                }
+                var qiniuId = qiniuPlugin.generateQiniuId(itemId);
+                /*
+                 update the item url in mongodb
+                 */
+                data.qiniuId = qiniuId;
+                data.url = qiniuPlugin.makeQiniuUrl(qiniuId);
+                console.log(data);
+                //update image url to this new key.
+                Item.editItem(type, itemId, data, function(err, item){
+                    if(err){
+
+                        return callback(err);
+                    }
+                    //upload to qiniu with the imageUrl
+                    qiniuPlugin.uploadToQiniu(base64data, qiniuId, function(err, data){
+                        if(err){
+                            callback(err);
+                        }
+                        callback(err, data);
+                    })
+                });
+
+            })
+        }
+        else {
+            Item.editItem(type, itemId, data, callback);
+        }
     }]
   }, function (err, results) {
     if (err) {
