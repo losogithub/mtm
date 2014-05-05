@@ -12,6 +12,9 @@ require('graceful-fs');//调用一次就会修改fs模块
 var session = require('express-session');
 var RedisStore = require("connect-redis")(session);
 var redis = require('redis').createClient();
+var bodyParser = require('body-parser');
+bodyParser.json()
+
 
 var config = require('./config');
 var routes = require('./routes');
@@ -49,7 +52,7 @@ app.engine('html', ejs.renderFile);
 //add log middleware
 app.use(partials());
 
-app.use(require('body-parser')());
+app.use(bodyParser({limit: '50mb'}));
 app.use(require('cookie-parser')());
 app.use(session(
   {

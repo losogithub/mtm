@@ -779,10 +779,12 @@
     $scope._init();
       $($element).closest('form').validate({
         submitHandler: function () {
+            console.log($scope.item);
           $scope.$parent.saveItem($scope.item, {
             title: $scope.title,
             quote: $scope.quote,
-            description: $scope.description
+            description: $scope.description,
+            qiniuId : $scope.item.qiniuId
           });
         },
         showErrors: function (errorMap, errorList) {

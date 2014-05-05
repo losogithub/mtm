@@ -29,6 +29,8 @@
     "request": "*",
     "stream-buffers": "*",
     "validator": "1.5.1",
+    "xss": "*",
+    "qiniu":"*",
     "xss": "*"
   }
 }
