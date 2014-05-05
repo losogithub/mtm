@@ -106,23 +106,7 @@
         $scope.submit = function () {
           var data = $scope.item;
           if ($scope.item.type == 'IMAGE') {
-              console.log("image submit");
-              var imageUrl = $('input[name="text"]').val().trim();
-              console.log(imageUrl);
-              //legal check
-              data["url"] = imageUrl;
-              $http.post('/item/image/postUrlfromclient', data)
-                      .success(function(){
-                          $scope.cancel();
-                      })
-                      .error(function (jqXHR) {
-                          if (jqXHR.status == 401) {
-                              $scope.showLogin = true;
-                          } else {
-                              alert('采集失败，请重试');
-                          }
-                      });
-
+            data.url = $scope.url;
 
              // console.log("submit button: image");
              // console.log("image url: " + data.url); //assign a new id to this url as a key for qiniu
@@ -147,21 +131,17 @@
                     */
 
           }
-         else
-          { // for others except image, directly post the data.
-              $http.post('/item/bookmarklet', data)
-                      .success(function () {
-                          $scope.cancel();
-                      })
-                      .error(function (jqXHR) {
-                          if (jqXHR.status == 401) {
-                              $scope.showLogin = true;
-                          } else {
-                              alert('采集失败，请重试');
-                          }
-                      });
-          }
-
+          $http.post('/item/bookmarklet', data)
+            .success(function () {
+              $scope.cancel();
+            })
+            .error(function (jqXHR) {
+              if (jqXHR.status == 401) {
+                $scope.showLogin = true;
+              } else {
+                alert('采集失败，请重试');
+              }
+            });
         }
         $scope.cancel = function () {
           $('#_bookmarklet_modal').modal('hide');
@@ -298,11 +278,6 @@
       $modal.modal();
 
     });
-
-    var clickImageButton = function() {
-        console.log("click image button");
-        //document.getElementById('pasteImageUrl').focus();
-    }
   </script>
 </head>
 <body style="height: 100%; background: none;">
@@ -328,7 +303,7 @@
                         ng-class="{active: item.type == 'LINK'}"><i class="fa fa-link"></i></button>
                 <button class="btn btn-default" style="width: 20%;" type="button"
                         ng-click="item.type = 'IMAGE'"
-                        ng-class="{active: item.type == 'IMAGE'}" onClick="clickImageButton()"><i class="fa fa-picture-o"></i></button>
+                        ng-class="{active: item.type == 'IMAGE'}"><i class="fa fa-picture-o"></i></button>
                 <button class="btn btn-default" style="width: 20%;" type="button"
                         ng-click="item.type = 'VIDEO'"
                         ng-class="{active: item.type == 'VIDEO'}"><i class="fa fa-film"></i></button>
@@ -368,25 +343,25 @@
                          ng-if="item.description" ng-bind-html="getHtml(item.description)"></div>
                     <div class="clearfix"></div>
                   </div>
-
                   <div class="Content IMAGE pam"
                        ng-switch-when="IMAGE">
-                      <div class="Image">
-                          <!--
-                          <div id="pasteImage" contenteditable="true" ng-init="listenPasteImage()">
-                          </div>
-                          -->
-                          <div  class='Content TEXT' style="line-height: 1.4;" >
-                              <input id="pasteImageUrl" name="text" class="form-control flat"
-                                     placeholder="请输入图片地址" type="text" autofocus>
-                          </div>
+                    <div class="Image">
+                      <!--
+                      <div id="pasteImage" contenteditable="true" ng-init="listenPasteImage()">
                       </div>
-                      <div class="Quote" ng-if="item.url">
-                          <i class="fa fa-globe"></i>
-                          <a target="_blank" href="{{item.url}}">{{item.title || item.url}}</a>
-                      </div>
-                      <div class="Description text-asbestos small mtx"
-                           ng-if="item.description" ng-bind-html="getHtml(item.description)"></div>
+                      -->
+                      <input class="form-control flat" ng-model="$parent.url"
+                             placeholder="图片地址" type="text" autofocus>
+                    </div>
+                    <div class="Title text-center mts">{{item.title || ''}}</div>
+                    <div class="Description text-asbestos text-center small mtx"
+                         ng-bind-html="getHtml(item.description)"></div>
+                    <div class="Quote" ng-if="item.quote">
+                      <i class="fa fa-globe"></i> 出自:
+                      <a target="_blank" href="{{item.quote}}">
+                        {{item.quoteDomain || ''}}
+                      </a>
+                    </div>
                   </div>
                   <div class="Content VIDEO pam" ng-show="item.vid"
                        ng-switch-when="VIDEO">
@@ -533,10 +508,9 @@
             </ul>
           </div>
           <div class="BtnSet pull-right">
-            <button name="save" class='btn btn-primary'
+            <button name="save" class="btn btn-primary"
+                    ng-disabled="saving"
                     type="submit">保存 <i class='fa fa-spinner fa-spin' ng-show="saving"></i>
-           <!--     ng-disabled="saving || item.type == 'IMAGE' && !item.imageSrc" -->
-
             </button>
             <button name="cancel" class="btn btn-default"
                     ng-click="cancel()"

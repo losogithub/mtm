@@ -13,8 +13,6 @@ var session = require('express-session');
 var RedisStore = require("connect-redis")(session);
 var redis = require('redis').createClient();
 var bodyParser = require('body-parser');
-bodyParser.json()
-
 
 var config = require('./config');
 var routes = require('./routes');

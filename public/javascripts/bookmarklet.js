@@ -23,20 +23,11 @@ var shizier_postMessageListener;
     }
   }
 
-
   var main = function () {
 
     clean();
 
     var selection = document.getSelection ? document.getSelection() : document.selection.createRange().text;
-
-    /*
-      2014.4.29 stefanzan:
-       */
-
-
-    /********************************/
-
 
     var css = '#_shizier_overlay{width:100%;height:100%;position:fixed;top:0;left:0;border:none;z-index:999999;}';
     var style = document.createElement('STYLE');
@@ -51,10 +42,10 @@ var shizier_postMessageListener;
 
     var iframe = document.createElement('IFRAME');
     iframe.id = '_shizier_overlay';
-//    iframe.src = 'http://shizier.com/bookmarklet';
-    iframe.src = 'http://localhost:3000/bookmarklet';
+    iframe.src = 'http://shizier.com/bookmarklet';
+//    iframe.src = 'http://localhost:3000/bookmarklet';
 
-      iframe.allowTransparency = 'true';
+    iframe.allowTransparency = 'true';
     iframe.style.visibility = 'hidden';
     document.getElementsByTagName('body')[0].appendChild(iframe);
 

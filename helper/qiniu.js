@@ -31,24 +31,20 @@ function generateUpToken(req, res, next){
 
 
 function uploadToQiniu(imageByteData, qiniuId, callback){
-    var imageDataInfo = decodeBase64Image(imageByteData);
-    binaryData = imageDataInfo.data;
+  console.log(imageByteData)
+  var imageDataInfo = _decodeBase64Image(imageByteData);
 
-    var putPolicy = new qiniu.rs.PutPolicy(config.BUCKET_NAME);
-    var upToken = putPolicy.token();
-    var extra = new qiniu.io.PutExtra();
-    extra.mimeType = imageDataInfo.type;
-        //upload to qiniu with the qiniuId
-        qiniu.io.put(upToken, qiniuId, binaryData, extra, function(err,ret){
-            if(!err){
-                console.log(ret.key, ret.hash);
-                callback(null, ret);
-            }
-            else {
-                callback(err, ret);
-            }
-        })
-
+  var putPolicy = new qiniu.rs.PutPolicy(config.BUCKET_NAME);
+  var upToken = putPolicy.token();
+  var extra = new qiniu.io.PutExtra();
+  extra.mimeType = imageDataInfo.type;
+  //upload to qiniu with the qiniuId
+  qiniu.io.put(upToken, qiniuId, imageDataInfo.data, extra, function(err, ret){
+    if (err) {
+      return callback(err);
+    }
+    callback(null, ret);
+  });
 }
 
 
@@ -80,21 +76,21 @@ function makeQiniuUrl(key){
 }
 
 
-function decodeBase64Image(dataString) {
-    //todo: possibly may have bugs.
-    var matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/),
-        response = {};
-    if(!matches){
-        return new Error('Invalid input data string');
-    }
-    if (matches.length !== 3) {
-        return new Error('Invalid input string');
-    }
+function _decodeBase64Image(dataString) {
+  //todo: possibly may have bugs.
+  var matches = dataString.match(/^data:([\w+/]+);base64,(.+)$/),
+      response = {};
+  if(!matches){
+      return new Error('Invalid input data string');
+  }
+  if (matches.length !== 3) {
+      return new Error('Invalid input string');
+  }
 
-    response.type = matches[1];
-    response.data = new Buffer(matches[2], 'base64');
+  response.type = matches[1];
+  response.data = new Buffer(matches[2], 'base64');
 
-    return response;
+  return response;
 }
 
 exports.generateUpToken = generateUpToken;

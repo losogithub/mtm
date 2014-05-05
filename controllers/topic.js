@@ -12,10 +12,8 @@ var phantom = require('phantom');
 var fs = require('fs');
 var portfinder = require('portfinder');
 var mongodb = require('mongodb');
-var config = require('../config');
-var downloadImage = require('../helper/downloadImage');
 
-var qiniuPlugin = require('../helper/qiniu');
+var config = require('../config');
 var helper = require('../helper/helper');
 var escape = helper.escape;
 
@@ -533,51 +531,7 @@ function createItem(req, res, next) {
       _getTopicWithAuth(callback, topicId, userId);
     },
     item: ['parse', function (callback) {
-      /*
-        If it is a image item, retrieve image first.
-         */
-      Item.createItem(data, function(err, item){
-          if(err){
-             return callback(err);
-          }
-          else {
-              if((data.type == 'IMAGE') && (data.url.indexOf("http://shizier.qiniudn.com") == -1) ){
-                  console.log("this image src is not a qiniu image url");
-                  console.log(data.url);
-                  downloadImage.downloadBase64Image(data.url, function(err, base64data){
-                      //upload to qiniu, set qiniuId, update the url.
-                      if(err){
-                          return callback(err);
-                      }
-                      var qiniuId = qiniuPlugin.generateQiniuId(item._id);
-                      /*
-                       update the item url in mongodb
-                       */
-                      data.qiniuId = qiniuId;
-                      data.url = qiniuPlugin.makeQiniuUrl(qiniuId);
-                      console.log(data);
-                      //update image url to this new key.
-                      Item.editItem(item.type, item._id, data, function(err, item){
-                          if(err){
-                              return callback(err);
-                          }
-                          //upload to qiniu with the imageUrl
-                          qiniuPlugin.uploadToQiniu(base64data, qiniuId, function(err, data){
-                              if(err){
-                                  callback(err);
-                              }
-                              // important: here need to return the item
-                              callback(null, item);
-                          })
-                      });
-
-                  })
-              }
-              else {
-                  callback(err, item);
-              }
-          }
-      });
+      Item.createItem(data, callback);
     }],
     newTopic: ['topic', 'item', function (callback, results) {
       var topic = results.topic;
@@ -675,45 +629,7 @@ function editItem(req, res, next) {
       } catch (err) {
         return callback(err);
       }
-      /*
-        check image item and retrieve image
-        stefanzan
-         */
-        if((type == 'IMAGE') && (data.url.indexOf("http://shizier.qiniudn.com") == -1) ){
-            console.log("this is not a qiniu image url");
-            console.log(data.url);
-            downloadImage.downloadBase64Image(data.url, function(err, base64data){
-                //upload to qiniu, set qiniuId, update the url.
-                if(err){
-                    return callback(err);
-                }
-                var qiniuId = qiniuPlugin.generateQiniuId(itemId);
-                /*
-                 update the item url in mongodb
-                 */
-                data.qiniuId = qiniuId;
-                data.url = qiniuPlugin.makeQiniuUrl(qiniuId);
-                console.log(data);
-                //update image url to this new key.
-                Item.editItem(type, itemId, data, function(err, item){
-                    if(err){
-
-                        return callback(err);
-                    }
-                    //upload to qiniu with the imageUrl
-                    qiniuPlugin.uploadToQiniu(base64data, qiniuId, function(err, data){
-                        if(err){
-                            callback(err);
-                        }
-                        callback(err, data);
-                    })
-                });
-
-            })
-        }
-        else {
-            Item.editItem(type, itemId, data, callback);
-        }
+      Item.editItem(type, itemId, data, callback);
     }]
   }, function (err, results) {
     if (err) {
@@ -739,47 +655,10 @@ function deleteItem(req, res, next) {
   var itemId = req.body._id;
 
   async.auto({
-    deleteQiniuImage: function(callback){
-        console.log("topic, enter delteQiniuImage function");
-          if(type == 'IMAGE'){
-              console.log("it is image");
-              Item.getItemById(type, itemId, function(err, item){
-                  if(err){
-                      callback(err);
-                  }
-                  Item.findItemByUrl(type, item.url, function(err, items){
-                      // this means there is only one item in the item collection that has this url.
-                      if(items.length == 1){
-                          console.log(item);
-                          console.log("item qini ID: " + item.qiniuId);
-                          qiniuPlugin.deleteImageFromQiniu(item.qiniuId, function(err, ret){
-                              if(err){
-                                  console.log("topic delete image from qiniu error, url: " + item.url );
-                                  console.log(ret);
-                                  next(err);
-                              }
-                              else{
-                                  console.log("topic delete image from qiniu successfully!");
-                                  //without the callback function, it would not enter the next function. it is necessary.
-                                  callback(null, ret);
-                              }
-                          })
-                      }
-                      else {
-                          console.log("don't need to delete image number:  "+ items.length);
-                          //console.log(items);
-                          callback(null, items);
-                      }
-                  })
-
-              })
-          }
-      },
     topic: function (callback) {
       _getTopicWithAuth(callback, topicId, userId);
     },
-    deleteItem: ['topic','deleteQiniuImage', function (callback, results) {
-        console.log("enter deleteItem function");
+    deleteItem: ['topic', function (callback, results) {
       var topic = results.topic;
       Item.deleteItem(type, itemId, function (err) {
         if (err) {

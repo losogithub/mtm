@@ -25,12 +25,11 @@
     "nodemailer": "*",
     "phantom": "*",
     "portfinder": "*",
+    "qiniu":"*",
     "redis": "*",
     "request": "*",
     "stream-buffers": "*",
     "validator": "1.5.1",
-    "xss": "*",
-    "qiniu":"*",
     "xss": "*"
   }
 }
