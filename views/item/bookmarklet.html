@@ -51,18 +51,13 @@
           if (initData) {
             InitData = initData;
           }
-          $http.get('/item/detail?url=' + (!InitData.cite ? encodeURIComponent(InitData.url) : ''))
+          $http.get('/item/detail?url=' + encodeURIComponent(InitData.url))
             .success(function (data) {
               $scope.loaded = true;
               for (var i in InitData.srcs) {
                 InitData.srcs[i] = shizier.utils.suffixImage(InitData.srcs[i]);
               }
-              $scope.item = {
-                url: InitData.url,
-                title: InitData.title,
-                cite: InitData.cite,
-                srcs: InitData.srcs
-              }
+              $scope.item = InitData;
               if ($scope.item.title.length > 50) {
                 $scope.item.title = $scope.item.title.substr(0, 49) + '…';
               }
@@ -80,6 +75,12 @@
               });
               $scope.item.fav = shizier.utils.getFav($scope.item.url);
               $.extend($scope.item, data);
+              if (!data) {
+                $scope.item.type = 'LINK';
+              }
+              if (InitData.cite) {
+                $scope.item.type = 'CITE';
+              }
             })
             .error(function (data, status) {
               if (status == 401) {
@@ -118,11 +119,13 @@
                     */
 
           }
+          $scope.saving = true;
           $http.post('/item/bookmarklet', data)
             .success(function () {
               $scope.cancel();
             })
             .error(function (jqXHR) {
+              $scope.saving = false;
               if (jqXHR.status == 401) {
                 $scope.showLogin = true;
               } else {

@@ -561,19 +561,19 @@ function getDetail(url, callback) {
   if (utils.REGEXP_QUOTE.WEIBO.test(temp)) {
     getWeiboDetail(url, function (err, result) {
       if (err) {
-        return getLinkDetail(url, callback);
+        return callback();
       }
       callback(null, result);
     });
   } else if (utils.REGEXP_QUOTE.VIDEO.test(temp)) {
     getVideoDetail(url, function (err, result) {
       if (err) {
-        return getLinkDetail(url, callback);
+        return callback();
       }
       callback(null, result);
     });
   } else {
-    getLinkDetail(url, callback);
+    callback();
   }
 }
 
