@@ -115,7 +115,7 @@ $(function () {
 
   var $previewWrapper = $('.PreviewWrapper');
   var $preview = $('.Preview');
-  var $iframe = $preview.find('>iframe');
+  var contentWindow = $preview.find('>iframe').get(0).contentWindow;
   var timeout;
   $('.WidgetItemList').on('mouseenter', '>li', function () {
     if ($previewWrapper.is(':hidden')) {
@@ -126,15 +126,16 @@ $(function () {
     var url = options.type == 'IMAGE' ? options.quote : options.url;
     if (url) {
       $preview.show();
+      console.log(url)
       timeout = setTimeout(function () {
-        $iframe.attr('src', url);
+        contentWindow.location.replace(url);
       }, 1000);
     }
   })
   $('.WidgetItemList').on('mouseleave', '>li', function () {
     clearTimeout(timeout);
-    if ($iframe.attr('src')) {
-      $iframe.attr('src', '');
+    if ($preview.is(':visible')) {
+      contentWindow.location.replace('http://');
     }
     $preview.hide();
   })
