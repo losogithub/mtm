@@ -46,8 +46,6 @@ function cloneItem(type, _id, callback) {
 function createItem(data, callback) {
   data.type = data.type.replace('_CREATE', '');
   var item = new ItemModels[data.type](data);
-  item.originalUrl = item.url;
-  item.url = "http://shizier.qiniudn.com/" + item._id;
   async.auto({
     base64data: function (callback) {
       if (data.type != 'IMAGE') {
@@ -64,6 +62,8 @@ function createItem(data, callback) {
       }
       var base64data = results.base64data;
       qiniuPlugin.uploadToQiniu(base64data, item._id.toString(), callback);
+      item.originalUrl = item.url;
+      item.url = "http://shizier.qiniudn.com/" + item._id;
     }]
   }, function (err) {
     if (err) {

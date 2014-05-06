@@ -63,6 +63,9 @@
                 cite: InitData.cite,
                 srcs: InitData.srcs
               }
+              if ($scope.item.title.length > 50) {
+                $scope.item.title = $scope.item.title.substr(0, 49) + '…';
+              }
               if ($scope.item.cite.length > 140) {
                 $scope.item.cite = $scope.item.cite.substr(0, 139) + '…';
               }
