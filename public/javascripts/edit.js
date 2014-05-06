@@ -555,10 +555,18 @@
     $scope.$on('addCollectionItem', function (e, item) {
       $scope.items.splice(0, 0, item);
     });
+    $scope.init = function (items) {
+      $scope.items = items;
+      if (items.length) {
+        $scope.type = 'ALL';
+      } else {
+        $scope.type = 'BOOKMARKLET';
+      }
+    };
     $scope.setType = function (type) {
       $scope.type = type;
       $scope.typeFilter = type == 'ALL' ? null : {type: type};
-    }
+    };
     $scope.playVideo = function (item) {
       item.playing = true;
       $timeout(function () {

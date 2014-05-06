@@ -76,6 +76,19 @@
       </a>
     </h1>
     <div class="row">
+      <div class="col-md-7 col-lg-8">
+
+        <div class="background-white pal mtl" style="border-radius: 6px;">
+          <% var topics = categoryTopics[key].slice(0, 4); %>
+          <% include _topics.html %>
+          <a class="text-muted pull-right" href="/<%= temp[key] %>"
+             style="font-size: 14px; line-height: 1;">
+            更多<%=key%>策展>
+          </a>
+          <div class="clearfix"></div>
+        </div>
+
+      </div>
       <div class="col-md-5 col-lg-4">
 
         <% var tags = categoryTags[key] %>
@@ -85,16 +98,7 @@
         <% include _authors.html %>
 
       </div>
-      <div class="col-md-7 col-lg-8">
-
-        <% var topics = categoryTopics[key].slice(0, 4); %>
-        <% include _topics.html %>
-      </div>
     </div>
-    <a class="text-muted pull-right mrm" href="/<%= temp[key] %>">
-      <span style="font-size: 14px;">更多<%=key%>策展></span>
-    </a>
-    <div class="clearfix"></div>
     <% } %>
 
   </div>

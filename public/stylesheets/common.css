@@ -475,7 +475,7 @@ textarea {
   margin-top: -3px;
 }
 .pagination {
-  margin-bottom: 0;
+  margin: 0;
 }
 .pagination .previous a:not([href]),
 .pagination .next a:not([href]) {

@@ -8,6 +8,13 @@
       <i class="fa fa-tag text-muted"></i> <%= tag %>
     </h1>
     <div class="row">
+      <div class="col-md-7 col-lg-8">
+        <div class="background-white pal mtl" style="border-radius: 6px;">
+          <% include ../_topics.html %>
+
+          <% include ../_pagination.html %>
+        </div>
+      </div>
       <div class="col-md-5 col-lg-4">
 
         <% include ../_tags.html %>
@@ -16,11 +23,6 @@
         <% include ../_authors.html %>
         <% } %>
 
-      </div>
-      <div class="col-md-7 col-lg-8">
-        <% include ../_topics.html %>
-
-        <% include ../_pagination.html %>
       </div>
     </div>
   </div>
