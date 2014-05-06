@@ -63,7 +63,7 @@ function createItem(data, callback) {
         return callback();
       }
       var base64data = results.base64data;
-      qiniuPlugin.uploadToQiniu(base64data, item._id, callback);
+      qiniuPlugin.uploadToQiniu(base64data, item._id.toString(), callback);
     }]
   }, function (err) {
     if (err) {
