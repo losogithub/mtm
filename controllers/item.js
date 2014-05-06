@@ -15,7 +15,6 @@ var Item = require('../proxy').Item;
 var User = require('../proxy').User;
 
 var config = require('../config');
-var qiniuPlugin = require('../helper/qiniu');
 
 function showBookmarklet(req, res) {
   res.render('item/bookmarklet', {
@@ -181,15 +180,11 @@ function getDetail(req, res, next) {
   console.log('getDetail');
   var url = req.query.url;
 
-  if (!url) {
-    return res.json({ type: 'CITE' });
-  }
-
   helper.getDetail(url, function (err, results) {
     if (err) {
       return next(err);
     }
-    res.json(helper.getItemData(results));
+    res.json(results && helper.getItemData(results));
   });
 }
 

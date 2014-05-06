@@ -49,6 +49,14 @@ var shizier_postMessageListener;
     iframe.style.visibility = 'hidden';
     document.getElementsByTagName('body')[0].appendChild(iframe);
 
+    var description;
+    var metas = document.getElementsByTagName('meta');
+    for (var i in metas) {
+      if (metas[i].name && metas[i].name.toLowerCase() == "description") {
+        description = metas[i].content;
+      }
+    }
+
     shizier_postMessageListener = function (event) {
       if (event.data == 'show') {
         iframe.style.visibility = 'visible';
@@ -62,6 +70,7 @@ var shizier_postMessageListener;
         iframe.contentWindow.postMessage({
           url: location.href,
           title: document.title,
+          snippet: description,
           cite: selection.toString(),
           srcs: srcs
         }, '*');
