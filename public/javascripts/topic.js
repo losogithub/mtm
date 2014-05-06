@@ -116,26 +116,26 @@ $(function () {
   var $previewWrapper = $('.PreviewWrapper');
   var $preview = $('.Preview');
   var contentWindow = $preview.find('>iframe').get(0).contentWindow;
-  var timeout;
-  $('.WidgetItemList').on('mouseenter', '>li', function () {
+//  var timeout;
+  $('.WidgetItemList').on('mouseenter', '>li .Quote a', function () {
     if ($previewWrapper.is(':hidden')) {
       return;
     }
     var $this = $(this);
-    var options = $this.data('options');
+    var options = $this.closest('.WidgetItemList>li').data('options');
     var url = options.type == 'IMAGE' ? options.quote : options.url;
     if (url) {
       $preview.show();
       console.log(url)
-      timeout = setTimeout(function () {
+//      timeout = setTimeout(function () {
         contentWindow.location.replace(url);
-      }, 1000);
+//      }, 1000);
     }
   })
-  $('.WidgetItemList').on('mouseleave', '>li', function () {
-    clearTimeout(timeout);
+  $('.WidgetItemList').on('mouseleave', '>li .Quote a', function () {
+//    clearTimeout(timeout);
     if ($preview.is(':visible')) {
-      contentWindow.location.replace('http://');
+      contentWindow.location.replace('about:blank');
     }
     $preview.hide();
   })

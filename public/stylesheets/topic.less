@@ -20,6 +20,10 @@
 
 .Quote {
   &, * { color: @color-muted; }
+  text-align: right;
+  .LINK &, .VIDEO &, .VIDEO_CREATE & {
+    text-align: left;
+  }
   font-size: 12px; line-height: 13px; margin-top: 3px;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
@@ -253,8 +257,7 @@ tags-input {
 }
 
 .Preview {
-  border-top: 2px solid @color-clouds;
-  border-bottom: 2px solid @color-clouds;
+  box-shadow: 0 0 10px @color-concrete;
   position: fixed; top: 0; bottom: 0; display: none;
   @media (min-width: 992px){
     & {width: 293px;}

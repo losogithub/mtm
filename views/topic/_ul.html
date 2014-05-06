@@ -20,7 +20,7 @@
           <a target="_blank" class="LINK_URL" href='<%= item.url %>'><%= item.title || '' %></a>
         </div>
         <div class="Quote">
-          <i class="fa fa-globe"></i> 出自:
+          <i class="fa fa-globe"></i>
           <a target="_blank" class="LINK_URL" href="<%= item.url || '' %>">
             <%= item.url || '' %>
           </a>
@@ -45,7 +45,7 @@
         <div class="Title text-center mts"><%= item.title || '' %></div>
         <div class="Description text-asbestos text-center small mtx"><%- item.description ? escape(item.description).replace(/\n/g, "<br>") : '' %></div>
         <div class="Quote" style="<%- !item.quote ? 'display:none' : '' %>">
-          <i class="fa fa-globe"></i> 出自:
+          出自 <i class="fa fa-globe"></i>
           <a target="_blank" href="<%= item.quote || '' %>">
             <%= item.quoteDomain ? item.quoteDomain : '' %>
           </a>
@@ -58,7 +58,7 @@
         <% include _video_cover.html %>
 
         <div class="Quote">
-          <i class="fa fa-globe"></i> 出自:
+          <i class="fa fa-globe"></i>
           <a target="_blank" class="VIDEO_URL" href="<%= item.url || '' %>"><%= item.quote || item.url || '' %></a>
         </div>
         <div class="Title mtx" style="display: <%= !item.title ? 'none' : 'block' %>;">
@@ -76,7 +76,7 @@
         </div>
 
         <div class="Quote" style="<%- !item.url ? 'display:none' : '' %>">
-          <i class="fa fa-globe"></i> 出自:
+          出自 <i class="fa fa-globe"></i>
           <a target="_blank" href="<%= item.url %>"><%= item.title || item.url %></a>
         </div>
         <div class="Description text-asbestos small mtx" style="display: <%= !item.description ? 'none' : 'block' %>;"><%- item.description ?
