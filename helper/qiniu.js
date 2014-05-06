@@ -17,24 +17,12 @@ function uploadToQiniu(imageByteData, _id, callback){
   var upToken = putPolicy.token();
   var extra = new qiniu.io.PutExtra();
   extra.mimeType = imageDataInfo.type;
-  qiniu.io.put(upToken, _id, imageDataInfo.data, extra, function(err, ret){
-    if (err) {
-      return callback(err);
-    }
-
-    callback(null, ret);
-  });
+  qiniu.io.put(upToken, _id, imageDataInfo.data, extra, callback);
 }
 
 function deleteImageFromQiniu(key, callback) {
   var client = new qiniu.rs.Client();
-  client.remove(config.BUCKET_NAME, key, function (err, ret) {
-    if (err) {
-      return callback(err);
-    }
-
-    callback(null, ret);
-  });
+  client.remove(config.BUCKET_NAME, key, callback);
 }
 
 function _decodeBase64Image(dataString) {
