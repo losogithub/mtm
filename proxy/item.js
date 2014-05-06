@@ -56,13 +56,7 @@ function createItem(data, callback) {
       if (data.imageByteData) {
         return callback(null, data.imageByteData);
       }
-      downloadImage.downloadBase64Image(data.url, function(err, base64data){
-        if (err) {
-          return callback(err);
-        }
-
-        callback(null, base64data);
-      });
+      downloadImage.downloadBase64Image(data.url, callback);
     },
     qiniu: ['base64data', function(callback, results) {
       if (data.type != 'IMAGE') {
