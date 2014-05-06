@@ -12,13 +12,22 @@
   background: url(/images/bg_WidgetDragPlaceholder.png) repeat;
 }
 
-.WidgetItemList-Main .ui-sortable-placeholder {
-  max-height: 65px;
+.WidgetItemList-Main {
+  min-height: 300px;
+  .ui-sortable-placeholder {
+    max-height: 65px;
+  }
 }
 
 .WidgetItemList-Sub {
   padding-bottom: 0;
   transition: margin-bottom 0.25s; -webkit-transition: margin-bottom 0.25s;
+  &.USED {
+    .Content {
+      opacity: 0.1;
+      background-color: transparent !important;
+    }
+  }
   >li {
     cursor: move;
     .IMAGE img {

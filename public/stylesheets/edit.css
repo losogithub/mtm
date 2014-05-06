@@ -105,6 +105,9 @@
   visibility: visible !important;
   background: url(/images/bg_WidgetDragPlaceholder.png) repeat;
 }
+.WidgetItemList-Main {
+  min-height: 300px;
+}
 .WidgetItemList-Main .ui-sortable-placeholder {
   max-height: 65px;
 }
@@ -112,6 +115,10 @@
   padding-bottom: 0;
   transition: margin-bottom 0.25s;
   -webkit-transition: margin-bottom 0.25s;
+}
+.WidgetItemList-Sub.USED .Content {
+  opacity: 0.1;
+  background-color: transparent !important;
 }
 .WidgetItemList-Sub > li {
   cursor: move;

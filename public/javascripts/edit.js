@@ -329,11 +329,10 @@
         prevItemType = $scope.items[index - 2].type;
         prevItemId = $scope.items[index - 2]._id;
       }
-      var url;
       if (moved) {
+        $scope.items[index]._id = null;
         $scope.collectionScope.cancelEdit(true);
         $scope.cancelEdit(true);
-        $scope.items[index]._id = null;
       } else {
         $.ajax('/topic/sort', {
           type: 'PUT',
@@ -631,6 +630,10 @@
         $ul
           .addClass('WidgetItemList-Sorting')
           .sortable('refreshPositions');//因为item缩小了，所以要清除缓存大小
+      },
+
+      update: function () {
+        $scope.item.used = true;
       },
 
       //列表顺序改变后的回调函数
