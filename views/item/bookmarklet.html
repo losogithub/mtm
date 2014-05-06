@@ -108,26 +108,10 @@
           if ($scope.item.type == 'IMAGE') {
             data.url = $scope.url;
 
-             // console.log("submit button: image");
-             // console.log("image url: " + data.url); //assign a new id to this url as a key for qiniu
-             // console.log("image title: " + data.title);
-             // console.log("image quote: " + data.quote);
-             // console.log("image des: " + data.description);
             //use server to upload the image
             //will this global variable cause concurrent problem ? no, it is a variable in the client side.
             /*
             data["imageByteData"] = imageByteData;
-            $http.post('/item/image/postfromclient', data)
-                    .success(function(){
-                        $scope.cancel();
-                    })
-                    .error(function (jqXHR) {
-                        if (jqXHR.status == 401) {
-                            $scope.showLogin = true;
-                        } else {
-                            alert('采集失败，请重试');
-                        }
-                    });
                     */
 
           }

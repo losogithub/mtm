@@ -610,6 +610,7 @@ function getData(req) {
       var title = sanitize(req.body.title).trim();
       var quote = sanitize(req.body.quote).trim();
       var description = sanitize(req.body.description).trim();
+      var imageByteData = req.body.imageByteData;
 
       check(url).notNull().isUrl();
       check(title).len(0, 50);
@@ -620,7 +621,8 @@ function getData(req) {
         url: url,
         title: title,
         quote: quote,
-        description: description
+        description: description,
+        imageByteData: imageByteData
       }
       break;
     case 'VIDEO_CREATE':

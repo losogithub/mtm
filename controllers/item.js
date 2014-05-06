@@ -193,97 +193,9 @@ function getDetail(req, res, next) {
   });
 }
 
-
-function _createImageCollectionItem(req, res, callback) {
-    console.log('createCollectionItem=====');
-    var userId = req.session.userId;
-
-    try {
-        var data = helper.getData(req);
-    } catch (err) {
-        return next(err);
-    }
-    if (!data) {
-        return next(new Error(500));
-    }
-
-    async.auto({
-        item: function (callback) {
-            Item.createItem(data, callback);
-        },
-        user: ['item', function (callback, results) {
-            var item = results.item;
-
-            User.collectItem(userId, item._id, callback);
-        }]
-    }, function (err, results) {
-        if (err) {
-            return next(err);
-        }
-
-        var item = results.item;
-        console.log('createCollectionItem done');
-        callback(null, item);
-    });
-}
-/*
- * not used now.
- */
-function ceateImageItemAndUploadToQiniu(req, res, next){
-
-    /*
-     first create a image collectionItem, then get the item id as the key.
-     If failed, delete this collectionItem.
-     */
-
-    _createImageCollectionItem(req, res, function(err, item){
-        if(err){
-            console.log(err);
-            next(err);
-        }
-
-        console.log("image url: " + item.url);
-        console.log("image title: " + item.title);
-        console.log("image quote: " + item.quote);
-        console.log("image des: " + item.description);
-        console.log("image item id: " + item._id);
-        console.log("item type: " + item.type);
-
-        /*
-        build a unique image id for qiniu
-        item id + timestamp
-         */
-        var unixTimeStamp = Math.round(+new Date()/1000);
-        var qiniuId = item._id + unixTimeStamp.toString();
-        //console.log("image id: "+ qiniuId);
-
-        /*
-        update the item url in mongodb
-         */
-        item.qiniuId = qiniuId;
-        console.log("show item qiniuId: "+ item.qiniuId);
-        var baseUrl="http://shizier.qiniudn.com/";
-        item.url = baseUrl + qiniuId;
-        console.log(item);
-        //update image url to this new key.
-        item.save(function (err, item) {
-            if(err){
-                next(err);
-            }
-            //upload to qiniu with the imageUrl
-            qiniuPlugin.uploadToQiniu(req.body.imageByteData, qiniuId, function(err, data){
-                res.json(helper.getItemData(item));
-            })
-        })
-
-    })
-
-}
-
 exports.showBookmarklet = showBookmarklet;
 exports.createCollectionItem = createCollectionItem;
 exports.collectItem = collectItem;
 exports.deleteItem = deleteItem;
 exports.editItem = editItem;
 exports.getDetail = getDetail;
-exports.ceateImageItemAndUploadToQiniu = ceateImageItemAndUploadToQiniu;

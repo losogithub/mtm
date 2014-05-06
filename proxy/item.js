@@ -46,59 +46,46 @@ function cloneItem(type, _id, callback) {
 function createItem(data, callback) {
   data.type = data.type.replace('_CREATE', '');
   var item = new ItemModels[data.type](data);
+  item.originalUrl = item.url;
+  item.url = "http://shizier.qiniudn.com/" + item._id;
   async.auto({
-    qiniu: function(callback) {
-      if (data.type != 'IMAGE'
-        || data.url.indexOf("http://shizier.qiniudn.com") == 0) {
-        callback();
+    base64data: function (callback) {
+      if (data.type != 'IMAGE') {
+        return callback();
+      }
+      if (data.imageByteData) {
+        return callback(null, data.imageByteData);
       }
       downloadImage.downloadBase64Image(data.url, function(err, base64data){
-        //upload to qiniu, set qiniuId, update the url.
-        if(err){
+        if (err) {
           return callback(err);
         }
-        var qiniuId = qiniuPlugin.generateQiniuId(item._id);
-        data.originalUrl = data.url;
-        data.qiniuId = qiniuId;
-        data.url = qiniuPlugin.makeQiniuUrl(qiniuId);
-        //update image url to this new key.
-        qiniuPlugin.uploadToQiniu(base64data.toString(), qiniuId, function (err) {
-          if (err) {
-            return callback(err);
-          }
 
-          callback();
-        });
+        callback(null, base64data);
       });
-    }
+    },
+    qiniu: ['base64data', function(callback, results) {
+      if (data.type != 'IMAGE') {
+        return callback();
+      }
+      var base64data = results.base64data;
+      qiniuPlugin.uploadToQiniu(base64data, item._id, function (err) {
+        if (err) {
+          return callback(err);
+        }
+
+        callback();
+      });
+    }]
   }, function (err) {
-    if(err){
+    if (err) {
       return callback(err);
     }
 
-    var item = new ItemModels[data.type](data);
     item.save(function (err, item) {
-      callback(err, item)
-    })
-  });
-}
-
-function deleteItem(type, _id, callback) {
-  if (type == 'IMAGE') {
-    getItemById(type, _id, function (err, item) {
-      if (err || !item) {
-        return;
-      }
-      ItemModels[type].find({ url: item.url }, function (err, items) {
-        // this means there is only one item in the item collection that has this url.
-        if (items.length > 1) {
-          return;
-        }
-        qiniuPlugin.deleteImageFromQiniu(item.qiniuId);
-      });
+      callback(err, item);
     });
-  }
-  ItemModels[type].findByIdAndRemove(_id, callback);
+  });
 }
 
 /**
@@ -192,6 +179,21 @@ function editItem(type, _id, data, callback) {
   });
 }
 
+function deleteItem(type, _id, callback) {
+  getItemById(type, _id, function (err, item) {
+    if (err) {
+      return callback(err);
+    }
+    if (!item) {
+      return callback(new Error(404));
+    }
+
+    item.remove(callback);
+    if (type == 'IMAGE') {
+      qiniuPlugin.deleteImageFromQiniu(item._id);
+    }
+  });
+}
 
 exports.cloneItem = cloneItem;//增
 exports.createItem = createItem;//增

@@ -2,100 +2,53 @@
  * Created by zan on 14-5-4.
  */
 
-var config = require('../config');
 var qiniu = require('qiniu');
+var config = require('../config');
 qiniu.conf.ACCESS_KEY = config.QINIU_ACCESS_KEY;
 qiniu.conf.SECRET_KEY = config.QINIU_SECRET_KEY;
 
-//todo: later make domain more flexible
-var domain = "shizier.qiniudn.com";
-
-/*
-this is for private bucket, sine now it is public, so it is ok.
- */
-function downloadImageUrl(key){
-    var baseUrl = qiniu.rs.makeBaseUrl(domain, key);
-    var policy = new qiniu.rs.GetPolicy();
-    return policy.makeRequest(baseUrl);
-}
-
-/*
- For image uploading to Qiniu
- */
-function generateUpToken(req, res, next){
-    var putPolicy = new qiniu.rs.PutPolicy(config.BUCKET_NAME);
-    var upToken = putPolicy.token();
-    res.json({"upToken": upToken});
-    console.log('send upToken to client');
-}
-
-
-function uploadToQiniu(imageByteData, qiniuId, callback){
-  console.log(imageByteData)
+function uploadToQiniu(imageByteData, _id, callback){
   var imageDataInfo = _decodeBase64Image(imageByteData);
+  if (!imageDataInfo) {
+    callback(new Error(400));
+  }
 
   var putPolicy = new qiniu.rs.PutPolicy(config.BUCKET_NAME);
   var upToken = putPolicy.token();
   var extra = new qiniu.io.PutExtra();
   extra.mimeType = imageDataInfo.type;
-  //upload to qiniu with the qiniuId
-  qiniu.io.put(upToken, qiniuId, imageDataInfo.data, extra, function(err, ret){
+  qiniu.io.put(upToken, _id, imageDataInfo.data, extra, function(err, ret){
     if (err) {
       return callback(err);
     }
+
     callback(null, ret);
   });
 }
 
+function deleteImageFromQiniu(key, callback) {
+  var client = new qiniu.rs.Client();
+  client.remove(config.BUCKET_NAME, key, function (err, ret) {
+    if (err) {
+      return callback(err);
+    }
 
-function deleteImageFromQiniu(key,callback){
-    var client = new qiniu.rs.Client();
-    client.remove(config.BUCKET_NAME, key, function(err, ret){
-        if(err){
-            console.log(err);
-            callback(-1, ret);
-        }
-        else {
-            //ok
-            callback(null, ret);
-        }
-    })
-
+    callback(null, ret);
+  });
 }
-
-function generateQiniuId(id){
-    var unixTimeStamp = Math.round(+new Date()/1000);
-    var qiniuId = id + unixTimeStamp.toString();
-    return qiniuId;
-}
-
-function makeQiniuUrl(key){
-    var baseUrl="http://shizier.qiniudn.com/";
-    var url = baseUrl + key;
-    return url;
-}
-
 
 function _decodeBase64Image(dataString) {
   //todo: possibly may have bugs.
-  var matches = dataString.match(/^data:([\w+/]+);base64,(.+)$/),
-      response = {};
-  if(!matches){
-      return new Error('Invalid input data string');
-  }
-  if (matches.length !== 3) {
-      return new Error('Invalid input string');
+  var matches = dataString.match(/^data:([\w+/]+);base64,(.+)$/);
+  if (!matches || matches.length !== 3) {
+    return;
   }
 
-  response.type = matches[1];
-  response.data = new Buffer(matches[2], 'base64');
-
-  return response;
+  return {
+    type: matches[1],
+    data: new Buffer(matches[2], 'base64')
+  };
 }
 
-exports.generateUpToken = generateUpToken;
-exports.downloadImageUrl = downloadImageUrl;
 exports.uploadToQiniu = uploadToQiniu;
 exports.deleteImageFromQiniu = deleteImageFromQiniu;
-exports.generateQiniuId = generateQiniuId;
-exports.makeQiniuUrl = makeQiniuUrl;
