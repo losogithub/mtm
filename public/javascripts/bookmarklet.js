@@ -27,8 +27,6 @@ var shizier_postMessageListener;
 
     clean();
 
-    var selection = document.getSelection ? document.getSelection() : document.selection.createRange().text;
-
     var css = '#_shizier_overlay{width:100%;height:100%;position:fixed;top:0;left:0;border:none;z-index:999999;}';
     var style = document.createElement('STYLE');
     style.id = '_shizier_style';
@@ -49,10 +47,12 @@ var shizier_postMessageListener;
     iframe.style.visibility = 'hidden';
     document.getElementsByTagName('body')[0].appendChild(iframe);
 
+    var selection = document.getSelection ? document.getSelection() : document.selection.createRange().text;
+
     var description;
     var metas = document.getElementsByTagName('meta');
     for (var i in metas) {
-      if (metas[i].name && metas[i].name.toLowerCase() == "description") {
+      if (metas[i].name && metas[i].name.toLowerCase() == 'description') {
         description = metas[i].content;
       }
     }

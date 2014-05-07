@@ -85,7 +85,7 @@ function _getHtml(url, callback) {
     callback(err);
   });
   d.run(function () {
-    request({url: url, encoding: null, 'headers': {'Accept-Encoding': 'gzip,deflate', Cookie: config.WEIBO_COOKIE}}, function (error, response, body) {
+    request({url: url, encoding: null, 'headers': {'Accept-Encoding': 'gzip,deflate'}}, function (error, response, body) {
       if (error) {
         return callback(error);
       }
@@ -490,14 +490,14 @@ function getWeiboDetail(url, callback) {
   console.log(mid);
   var data;
 
-  _getHtml('https://api.weibo.com/2/statuses/queryid.json?source=' + config.WEIBO_APPKEY + '&type=1&isBase62=1&mid=' + mid, function (err, html) {
+  _getHtml('https://api.weibo.com/2/statuses/queryid.json?source=' + config.WEIBO_APPKEY + '&access_token=' + 'd4e7f8f717428c1e2ed3f2bc936d063d' + '&type=1&isBase62=1&mid=' + mid, function (err, html) {
     if (err) {
       return callback(err);
     }
     var idstr = JSON.parse(html).id;
     console.log(idstr);
 
-    _getHtml('https://api.weibo.com/2/statuses/show.json?source=' + config.WEIBO_APPKEY + '&id=' + idstr, function (err, html) {
+    _getHtml('https://api.weibo.com/2/statuses/show.json?source=' + config.WEIBO_APPKEY + '&access_token=' + 'd4e7f8f717428c1e2ed3f2bc936d063d' + '&id=' + idstr, function (err, html) {
       if (err) {
         return callback(err);
       }
@@ -507,7 +507,7 @@ function getWeiboDetail(url, callback) {
         if (!data.retweeted_status || !data.retweeted_status.idstr) {
           return callback();
         }
-        _getHtml('https://api.weibo.com/2/statuses/querymid.json?source=' + config.WEIBO_APPKEY + '&type=1&id=' + data.retweeted_status.idstr, function (err, html) {
+        _getHtml('https://api.weibo.com/2/statuses/querymid.json?source=' + config.WEIBO_APPKEY + '&access_token=' + 'd4e7f8f717428c1e2ed3f2bc936d063d' + '&type=1&id=' + data.retweeted_status.idstr, function (err, html) {
           if (err) {
             return callback(err);
           }
