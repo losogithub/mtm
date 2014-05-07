@@ -60,7 +60,7 @@ var shizier_postMessageListener;
     shizier_postMessageListener = function (event) {
       if (event.data == 'show') {
         iframe.style.visibility = 'visible';
-        //var imgs = document.getElementsByTagName('img');
+//        var imgs = document.getElementsByTagName('img');
         var imgs = [];
 
         var srcs = [];

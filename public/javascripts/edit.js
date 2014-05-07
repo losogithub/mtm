@@ -698,7 +698,9 @@
             return;
           }
           $scope.$parent.saveItem($scope.item, {
-            url: $scope.item.type == 'IMAGE_CREATE' ? shizier.utils.suffixImage($scope.url) : $scope.url
+            url: $scope.item.type == 'IMAGE_CREATE' ? shizier.utils.suffixImage($scope.url) : $scope.url,
+            quote: $scope.quote,
+            title: $scope.title
           });
         },
         showErrors: function (errorMap, errorList) {
@@ -720,7 +722,44 @@
         }
       });
     };
+    var $searchImage = $('#_searchImage')
+    $scope.showSearchImage = function () {
+      $searchImage.on('shown.bs.modal', function () {
+        $('.AutoFocus').focus();
+      });
+      $searchImage.modal();
+    };
   };
+
+  window.sng.controller('SearchImageCtrl', SearchImageCtrl);
+  function SearchImageCtrl($scope, $element) {
+    $scope.images = [];
+    var xhr;
+    $scope.submit = function () {
+      if (xhr) {
+        xhr.abort();
+      }
+      xhr = $.get('/search_image', {
+        keyword: $scope.searchImageKeyword
+      })
+        .done(function (data) {
+          $scope.images = data.images;
+          $scope.$apply();
+        })
+        .fail(function () {
+
+        });
+    };
+    $scope.selectImage = function (image) {
+      $scope.editingScope.url = image.url;
+      $scope.editingScope.quote = image.quote;
+      $scope.editingScope.title = image.title;
+      $($element).modal('hide');
+    }
+    $scope.onError = function (image) {
+      $scope.images.splice($scope.images.indexOf(image), 1);
+    }
+  }
 
   window.sng.controller('LinkCtrl', LinkCtrl);
   function LinkCtrl($scope, $element, $timeout) {
@@ -737,7 +776,6 @@
           $scope.$parent.saveItem($scope.item, {
             title: $scope.title,
             snippet: $scope.snippet,
-            src: shizier.utils.suffixImage($scope.src),
             description: $scope.description
           });
         },
@@ -787,7 +825,7 @@
     $scope.titleMaxLength = 50;
     $scope.descriptionMaxLength = 140;
     $scope.init = function () {
-    $scope._init();
+      $scope._init();
       $($element).closest('form').validate({
         submitHandler: function () {
           $scope.$parent.saveItem($scope.item, {

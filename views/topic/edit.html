@@ -111,7 +111,7 @@
                       <button class="btn btn-link" type="button"
                               ng-click="createItem(null, 'VIDEO_CREATE')"
                               data-type="VIDEO_CREATE" title="视频">
-                        <i class="fa fa-film"></i>
+                        <i class="fa fa-play-circle"></i>
                       </button>
                     </li>
                     <li>
@@ -192,11 +192,6 @@
 
                   <div class="Content LINK pam"
                        ng-switch-when="LINK">
-                    <div class="Thumb mls mbs pull-right" ng-if="item.src">
-                      <a target="_blank" class="fancybox" rel="gallery" href="{{item.src}}" title="{{item.title || ''}}">
-                        <img ng-src="{{item.src}}" alt="{{item.title || ''}}">
-                      </a>
-                    </div>
                     <div class="Title">
                       <img class="Fav" ng-src="{{item.fav}}"
                            ui-event="{ error : 'onFavError(item)' }">
@@ -409,7 +404,7 @@
                           <button class="btn btn-link" type="button"
                                   ng-click="createItem(item, 'VIDEO_CREATE')"
                                   data-type="VIDEO_CREATE" title="视频">
-                            <i class="fa fa-film"></i>
+                            <i class="fa fa-play-circle"></i>
                           </button>
                         </li>
                         <li>
@@ -492,32 +487,6 @@
                       <div class="LetterCounter">{{snippet.length || 0}}/{{snippetMaxLength}}</div>
                     </div>
 
-                    <div class="Thumb clearfix mbl">
-                      <div class="Image pull-right">
-                        <div style="position: relative;display: inline-block;">
-                          <img ng-src="{{SuffixImage(src) || defaultImgSrc}}"
-                               ng-init="src = item.src;"
-                               onerror="shizier.errorImage(this, 'default_120x120', true);"
-                               ui-event="{ error: 'stopLoading()', abort: 'stopLoading()', load: 'stopLoading()'}">
-
-                          <div class="Loading" ng-if="loading"
-                               style="position: absolute;top: 0;left: 0;bottom: 0;right: 0;background-color: rgba(0,0,0,0.2);">
-                            <table style="margin: 0 auto;height: 100%;">
-                              <td>
-                                <i class="fa fa-spinner fa-spin" style="color: white"></i>
-                              </td>
-                            </table>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="prm" style="overflow: hidden;">
-                        <div class="form-group">
-                          <input class="form-control flat mbs Url" ng-model="src" ng-change="startLoading()"
-                                 placeholder="自定义图片URL" id="_linkThumbUrl" type="text">
-                          <label class="input-icon fa fa-link" for="_linkThumbUrl"></label>
-                        </div>
-                      </div>
-                    </div>
                     <div class="form-group"
                          ng-class="{ 'has-error' : description.length > descriptionMaxLength }">
                       <textarea msd-elastic name="description" class="form-control flat AUTO_FOCUS"
@@ -532,12 +501,11 @@
 
                   <div class="Content IMAGE_CREATE pam"
                        ng-switch-when="IMAGE_CREATE" ng-controller="ImageCreateCtrl" ng-init="init()">
-                    <div class="Image">
-                      <i class="fa fa-picture-o text-muted"></i>
-                    </div>
-                    <div class="InfoHint text-muted">
-                      由于受版权保护，有些图片可能无法引用
-                    </div>
+                    <button class="btn btn-link mbm" style="padding: 0;"
+                            ng-click="showSearchImage()"
+                            type="button">
+                      <i class="fa fa-search"></i> 搜索添加
+                    </button>
                     <div>
                       <div class="form-group">
                         <div class="Required"></div>
@@ -589,9 +557,6 @@
 
                   <div class="Content VIDEO_CREATE pam"
                        ng-switch-when="VIDEO_CREATE" ng-controller="VideoCreateCtrl" ng-init="init()">
-                    <div class="Thumb">
-                      <i class="fa fa-film text-muted"></i>
-                    </div>
                     <div class="InfoHint text-muted">
                       目前已支持<a
                       target="_blank" class="text-primary" href="http://www.youku.com">优酷</a>、<a
@@ -901,7 +866,7 @@
                         ng-class="{active: type == 'IMAGE'}"><i class="fa fa-picture-o"></i></button>
                 <button class="btn btn-default" type="button"
                         ng-click="setType('VIDEO')"
-                        ng-class="{active: type == 'VIDEO'}"><i class="fa fa-film"></i></button>
+                        ng-class="{active: type == 'VIDEO'}"><i class="fa fa-play-circle"></i></button>
                 <button class="btn btn-default" type="button"
                         ng-click="setType('CITE')"
                         ng-class="{active: type == 'CITE'}"><i class="fa fa-quote-left"></i></button>
@@ -934,7 +899,7 @@
                   就能便捷地采集：<br>
                   <i class="fa fa-link"></i> 链接、
                   <i class="fa fa-picture-o"></i> 图片、
-                  <i class="fa fa-film"></i> 视频、
+                  <i class="fa fa-play-circle"></i> 视频、
                   <i class="fa fa-quote-left"></i> 引文、
                   <i class="fa fa-weibo"></i> 微博
                 </div>
@@ -951,11 +916,6 @@
 
                         <div class="Content LINK pam"
                              ng-switch-when="LINK">
-                          <div class="Thumb mls mbs pull-right" ng-if="item.src">
-                            <a target="_blank" class="fancybox" rel="gallery" href="{{item.src}}" title="{{item.title || ''}}">
-                              <img ng-src="{{item.src}}" alt="{{item.title || ''}}">
-                            </a>
-                          </div>
                           <div class="Title">
                             <img class="Fav" ng-src="{{item.fav}}"
                                  ui-event="{ error : 'onFavError(item)' }">
@@ -1151,6 +1111,34 @@
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="LoginDialog modal fade" ng-controller="SearchImageCtrl" id="_searchImage" tabindex="-1">
+    <div class="modal-dialog container" style="width: 80%;">
+      <div class="modal-content">
+        <form class="modal-header"
+              ng-submit="submit()"
+              style="border-radius: 6px 6px 0 0;">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <div class="form-group" style="max-width: 200px; margin: 0 auto;">
+            <input class="form-control AutoFocus" id="_searchImageKeyword"
+                   ng-model="searchImageKeyword"
+                   placeholder="搜索图片" type="text">
+            <label class="input-icon fa fa-search" for="_searchImageKeyword"></label>
+          </div>
+        </form>
+        <div class="modal-body clearfix"
+             style="border-radius: 0 0 6px 6px; min-height: 400px; padding-right: 10px; padding-bottom: 10px;">
+          <button class="btn mrm mbm" style="padding: 0; border-radius: 0;"
+                  ng-click="selectImage(image)"
+                  ng-repeat="image in images" type="button">
+            <img ng-src="{{image.url}}" style="max-height: 200px; max-width: 100%;"
+                 ui-event="{ error : 'onError(image)' }">
+          </button>
         </div>
       </div>
     </div>

@@ -165,65 +165,18 @@ function getLinkDetail(url, callback) {
     }
 
     temp = !(temp = html.match(/<meta([^>]*)name\s*=\s*("|')description("|')([^>]*)>/i)) ? null : temp[1] + temp[4];
-    var snippet = (!temp ? null : !(temp = temp.match(/content\s*=\s*("|')([^"']*)("|')/i)) ? null : temp[2].trim())
-      || html.substr((temp = html.indexOf('<body')) < 0 ? 0 : temp)
-      .replace(/<script((?!<\/script>)[\s\S])*<\/script>/gi, ' ')
-      .replace(/<style((?!<\/style>)[\s\S])*<\/style>/gi, ' ')
-      .replace(/<[^>]*>/g, ' ')
-      .replace(/\s+/g, ' ')
-      .trim();
+    var snippet = temp && (temp = temp.match(/content\s*=\s*("|')([^"']*)("|')/i)) && temp[2].trim();
     if (snippet.length > 140) {
       snippet = snippet.substr(0, 139) + '…';
     }
     snippet = sanitize(snippet).entityDecode();
     snippet = sanitize(snippet).trim();
 
-    var imgs = !html ? null : html.match(/<img[^>]*>/gi);
-    console.log(imgs ? imgs.length : 0);
-    var thumb;
-    var img;
-    var width;
-    var height;
-    var srcs = [];
-    var obj = {};
-    var addToSrcs = function (img) {
-      var src = !img ? null : !(temp = img.match(/\ssrc\s*=\s*("|')([^"']+)("|')/i)) ? null : temp[2];
-      if (!src) {
-        return;
-      }
-      src = utils.suffixImage(Url.resolve(url, src));
-      if (!src || obj[src]) {
-        return;
-      }
-      console.log('++' + src);
-      srcs.push(src);
-      obj[src] = true;
-    };
-    for (var i in imgs) {
-      img = imgs[i];
-      width = !img ? null : !(temp = img.match(/\swidth\s*=\s*("|')([\d]+)("|')/i)) ? null : temp[2];
-      height = !img ? null : !(temp = img.match(/\sheight\s*=\s*("|')([\d]+)("|')/i)) ? null : temp[2];
-      if (width || height) {
-        if (width >= 150 && height >= 70) {
-          addToSrcs(img);
-        } else {
-        }
-        continue;
-      }
-      thumb = !img ? null : !(temp = img.match(/\ssrc\s*=\s*("|')[^"']+\.jpg("|')/i)) ? null : temp[0];
-      if (thumb) {
-        addToSrcs(img);
-        continue;
-      }
-    }
-    console.log(srcs.length);
     callback(null, {
       type: 'LINK',
       url: url,
       title: title,
-      snippet: snippet,
-      srcs: srcs,
-      src: srcs && srcs[0]
+      snippet: snippet
     });
   });
 }
@@ -540,6 +493,29 @@ function getWeiboDetail(url, callback) {
   });
 }
 
+function getSearchImages(keyword, callback) {
+  callback = callback || function () {
+  };
+  _getHtml('http://image.so.com/j?pn=100&q=' + keyword, function (err, html) {
+    if (err) {
+      return callback(err);
+    }
+    var list = JSON.parse(html).list;
+    var images = [];
+    list.forEach(function (item) {
+      if (item.title && item.title.length > 50) {
+        item.title = item.title.substr(0, 49) + '…';
+      }
+      images.push({
+        url: item.img,
+        quote: item.link,
+        title: item.title
+      })
+    });
+    callback(null, images);
+  });
+}
+
 function getWeiboTime(created_at) {
   var date = new Date(created_at);
   var _normalizeTime = function (time) {
@@ -587,20 +563,17 @@ function getData(req) {
       var url = sanitize(req.body.url).trim();
       var title = sanitize(req.body.title).trim();
       var snippet = sanitize(req.body.snippet).trim();
-      var src = sanitize(req.body.src).trim();
       var description = sanitize(req.body.description).trim();
 
       check(url).notNull().isUrl();
       check(title).len(0, 50);
       check(snippet).len(0, 140);
-      if (src.length) check(src).isUrl();
       check(description).len(0, 140);
 
       data = {
         url: url,
         title: title,
         snippet: snippet,
-        src: src,
         description: description
       }
       break;
@@ -732,7 +705,6 @@ function getItemData(item) {
         fav: utils.getFav(item.url),
         title: item.title,
         snippet: item.snippet,
-        src: item.src,
         description: item.description
       }
       break;
@@ -809,6 +781,7 @@ exports.concatNoDup = concatNoDup;
 exports.getLinkDetail = getLinkDetail;
 exports.getVideoDetail = getVideoDetail;
 exports.getWeiboDetail = getWeiboDetail;
+exports.getSearchImages = getSearchImages;
 exports.getWeiboTime = getWeiboTime;
 exports.getDetail = getDetail;
 exports.getData = getData;

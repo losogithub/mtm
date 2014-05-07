@@ -16,6 +16,17 @@ var User = require('../proxy').User;
 
 var config = require('../config');
 
+function searchImage(req, res, next) {
+  var keyword = req.query.keyword;
+  helper.getSearchImages(keyword, function (err, images) {
+    if (err) {
+      return next(err);
+    }
+
+    res.json({ images: images});
+  })
+}
+
 function showBookmarklet(req, res) {
   res.render('item/bookmarklet', {
     layout: false,
@@ -188,6 +199,7 @@ function getDetail(req, res, next) {
   });
 }
 
+exports.searchImage = searchImage;
 exports.showBookmarklet = showBookmarklet;
 exports.createCollectionItem = createCollectionItem;
 exports.collectItem = collectItem;

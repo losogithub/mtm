@@ -53,6 +53,7 @@ module.exports = function (app) {
   app.delete('/topic/:topicId', auth.userRequired, topic.deleteTopic);
 
   //item
+  app.get('/search_image', item.searchImage);
   app.get('/bookmarklet', item.showBookmarklet);
   app.get('/item/detail', auth.userRequired, item.getDetail);
   app.post('/item/bookmarklet', auth.userRequired, item.createCollectionItem);//topic下面有同名方法，重构的时候注意

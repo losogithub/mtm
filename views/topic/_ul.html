@@ -9,11 +9,6 @@
 
       <% if (item.type == 'LINK') { %>
       <div class="Content LINK pam">
-        <div class="Thumb mls mbs pull-right" style="display: <%= !item.src ? 'none' : 'block' %>;">
-          <a class="fancybox" rel="gallery" href='<%= item.src || "" %>' title="<%= item.title || '' %>">
-            <img src="<%= item.src || '' %>" alt="<%= item.title || '' %>">
-          </a>
-        </div>
         <div class="Title">
           <img class="Fav" src="<%= item.fav %>"
                onerror="shizier.errorFavImage(this, '<%= item.url %>');">
