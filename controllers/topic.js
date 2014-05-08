@@ -29,22 +29,6 @@ function showIndex(req, res, next) {
   var userId = req.session.userId;
   var topicId = req.params.topicId;
 
-  /*
-   * add multi-visit filter
-   */
-  console.log("ip: " + req.connection.remoteAddress);
-  var visitedArray = require('../routine').getVisitedArray();
-  var visitKey = userId.toString() + topicId.toString() + req.connection.remoteAddress;
-  console.log(visitKey);
-  var increasePVFlag = true;
-  console.log(visitedArray);
-  if(visitedArray[visitKey] == true){
-      console.log("visited onece in 24hours");
-      increasePVFlag = false;
-  } else {
-      visitedArray[visitKey] = true;
-  }
-
   async.auto({
     relatedTopics: function (callback) {
       if (!Common.Topic[topicId] || !Common.Topic[topicId].relatedTopics) {
@@ -149,8 +133,11 @@ function showIndex(req, res, next) {
       CATEGORIES2ENG: Common.CATEGORIES2ENG,
       liked: liked
     });
-    if(increasePVFlag){
-        Topic.increasePVCountBy(topic, 1).exec();
+
+    var visitKey = topicId.toString() + req.connection.remoteAddress;
+    if (!Common.VisitedArray[visitKey]) {
+      Common.VisitedArray[visitKey] = true;
+      Topic.increasePVCountBy(topic, 1).exec();
     }
     console.log('showIndex done');
   });
