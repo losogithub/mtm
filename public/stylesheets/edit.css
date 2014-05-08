@@ -110,7 +110,7 @@ html.EDIT {
   overflow-x: hidden;
 }
 .EDIT .EditArea .Main {
-  margin: 20px auto;
+  margin: 20px auto 200px;
 }
 .Band {
   background-color: #34495e;
