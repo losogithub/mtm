@@ -111,6 +111,8 @@ html.EDIT {
 }
 .EDIT .EditArea .Main {
   margin: 20px auto 200px;
+  width: 653px;
+  max-width: 100%;
 }
 .Band {
   background-color: #34495e;
