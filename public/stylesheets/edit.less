@@ -1,5 +1,64 @@
 @import "theme";
 
+html.EDIT {
+  height: 100%;
+}
+
+.EDIT {
+  body, .Contents {
+    height: 100%;
+  }
+  .EditArea {
+    position: fixed; top: 41px; left: 0; right: 458px; bottom: 0;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    .Main {
+      margin: 20px auto;
+    }
+  }
+}
+
+.Band {
+  background-color: @color-default;
+  z-index: 1001; position: fixed; left: 0; top: 0; right: 0;
+  height: 41px;
+  .Band_Ttl {
+    position: fixed; left: 0; right: 473px;
+    h1 {
+      font-size: 18px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0; line-height: 41px;
+    }
+  }
+  .Band_Btn {
+    position: fixed; right: 0;
+    line-height: 41px;
+  }
+}
+
+.Categories {
+  .btn {
+    border-radius: 0;
+    &.active {
+      background-color: white;
+      color: @color-muted;
+    }
+  }
+}
+
+.Collection {
+  .Categories, .Scrollable { width: 458px;}
+  .Categories {
+    position: fixed; top: 41px; right: 0;
+  }
+  .Scrollable {
+    position: fixed; top: 77px; bottom: 0; right: 0;
+    overflow-y: scroll;
+    @media (max-width: 991px){
+      height: 500px !important;
+    }
+  }
+}
+
 .Cover {
   &:hover, &:focus {
     background-color: lighten(@color-clouds, 4%);
@@ -33,28 +92,6 @@
     .IMAGE img {
       max-width: 100px;
       max-height: 100px;
-    }
-  }
-}
-
-.Collection {
-  .Categories {
-    width: 100%; border-radius: 6px 6px 0 0;
-    .btn {
-      border-radius: 0;
-      &:first-child {
-        border-top-left-radius: 6px;
-      }
-      &.active {
-        background-color: white;
-        color: @color-muted;
-      }
-    }
-  }
-  .Scrollable {
-    overflow-y: scroll;
-    @media (max-width: 991px){
-      height: 500px !important;
     }
   }
 }
@@ -98,37 +135,6 @@
     .Menu.OpacityMenu {
       opacity: 0.1;
     }
-  }
-}
-
-/*悬浮菜单栏*/
-.Band {
-  top:72px; left: 0; right: 0;z-index: 1001;position: absolute;
-  &.affix{ top:0; position: fixed; }
-  .Band_Ttl {
-    font-size: 18px;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0; line-height: 41px;
-  }
-  .Band_Btn {
-    float: right;
-    line-height: 41px;
-  }
-}
-
-.Collection {
-  &.affix {
-    position: static;
-  }
-  @media (min-width: 992px){
-    & {width: 293px;}
-    &.affix-top { position: absolute; top: 0; }
-    &.affix {top: 61px; position: fixed !important;}
-    &.affix-bottom {
-      position: relative !important;
-    }
-  }
-  @media (min-width: 1200px){
-    & { width: 458px;}
   }
 }
 
@@ -185,26 +191,11 @@
   .Handle { visibility: hidden !important; }
 }
 
-//监听body高度变化
-.resize-triggers {
-   visibility: hidden;
- }
-.resize-triggers, .resize-triggers > div, .contract-trigger:before {
-  content: " ";
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
+.SelectImage {
+  button {
+    padding: 0; border-radius: 0;
+    img {
+      max-height: 200px; max-width: 100%;
+    }
+  }
 }
-.resize-triggers > div {
-  background: #eee;
-  overflow: auto;
-}
-.contract-trigger:before {
-  width: 200%;
-  height: 200%;
-}
-//监听body高度变化-END

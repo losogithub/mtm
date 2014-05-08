@@ -229,7 +229,7 @@
   border-left: 2px solid #bdc3c7;
   line-height: 1.4;
 }
-.WidgetItemList > li .IMAGE img {
+.WidgetItemList > li .IMAGE .Image img {
   max-width: 100%;
   max-height: 500px;
 }

@@ -54,9 +54,6 @@
           $http.get('/item/detail?url=' + encodeURIComponent(InitData.url))
             .success(function (data) {
               $scope.loaded = true;
-              for (var i in InitData.srcs) {
-                InitData.srcs[i] = shizier.utils.suffixImage(InitData.srcs[i]);
-              }
               $scope.item = InitData;
               if ($scope.item.title.length > 50) {
                 $scope.item.title = $scope.item.title.substr(0, 49) + '…';
@@ -66,13 +63,6 @@
               }
               $scope.item.quote = $scope.item.url;
               $scope.item.quoteDomain = shizier.utils.getQuote($scope.item.quote, $scope.item.type);
-//              $scope.$watch('item.type', function () {
-//                if ($scope.item.type == 'IMAGE') {
-//                  $dialog.css('min-width', '80%');
-//                } else {
-//                  $dialog.css('min-width', '');
-//                }
-//              });
               $scope.item.fav = shizier.utils.getFav($scope.item.url);
               $.extend($scope.item, data);
               if (!data) {
@@ -110,14 +100,9 @@
         $scope.submit = function () {
           var data = $scope.item;
           if ($scope.item.type == 'IMAGE') {
-            data.url = $scope.url;
-
-            //use server to upload the image
-            //will this global variable cause concurrent problem ? no, it is a variable in the client side.
-            /*
-            data.imageByteData = imageByteData;
-                    */
-
+            data = $.extend({}, data, {
+              url: $scope.imageSrc
+            });
           }
           $scope.saving = true;
           $http.post('/item/bookmarklet', data)
@@ -272,10 +257,11 @@
 </head>
 <body style="height: 100%; background: none;">
   <!-- Modal -->
-  <div class="LoginDialog modal fade" ng-controller="BookmarkletCtrl"
+  <div class="LoginDialog modal fade"
+       ng-controller="BookmarkletCtrl"
        id="_bookmarklet_modal" tabindex="-1">
     <div class="modal-dialog Spin" style="height: 300px;" ng-show="!loaded"></div>
-    <div class="modal-dialog container"
+    <div class="modal-dialog container" ng-class="{ 'LoginDialog-Wide': item.type == 'IMAGE' && !imageSrc }"
          ng-show="loaded && !showLogin">
       <div class="modal-content">
         <div class="modal-header text-center"
@@ -285,10 +271,10 @@
         </div>
         <form class="modal-body clearfix" ng-submit="submit()"
               style="border-radius: 0 0 6px 6px;">
-          <div class="Collection pbl background-white form-group" style="border-radius: 6px; width: 100%;">
+          <div class="background-white form-group" style="border-radius: 6px; width: 100%;">
             <div class="Categories background-muted" style="border-radius: 6px 6px 0 0;">
               <div class="btn-group" style="width: 100%;">
-                <button class="btn btn-default" style="width: 20%;" type="button"
+                <button class="btn btn-default" style="width: 20%; border-top-left-radius: 6px;" type="button"
                         ng-click="item.type = 'LINK'"
                         ng-class="{active: item.type == 'LINK'}"><i class="fa fa-link"></i></button>
                 <button class="btn btn-default" style="width: 20%;" type="button"
@@ -330,13 +316,18 @@
                   </div>
                   <div class="Content IMAGE pam"
                        ng-switch-when="IMAGE">
-                    <div class="Image">
-                      <!--
-                      <div id="pasteImage" contenteditable="true" ng-init="listenPasteImage()">
-                      </div>
-                      -->
-                      <input class="form-control flat" ng-model="$parent.url"
-                             placeholder="图片地址" type="text" autofocus>
+                    <div class="Image text-center" ng-show="$parent.imageSrc">
+                      <img onerror="shizier.errorImage(this,'default_120x120');"
+                           ng-src="{{$parent.imageSrc}}">
+                    </div>
+                    <div class="plm SelectImage" ng-show="!$parent.imageSrc">
+                      <div class="prm mbm text-center text-muted">选择图片</div>
+                      <button class="btn btn-link mrm mbm"
+                              ng-repeat="src in item.srcs track by $index"
+                              ng-click="$parent.$parent.imageSrc = src"
+                              type="button">
+                        <img ng-src="{{src}}">
+                      </button>
                     </div>
                     <div class="Title text-center mts">{{item.title || ''}}</div>
                     <div class="Description text-asbestos text-center small mtx"

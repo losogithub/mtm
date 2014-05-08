@@ -357,6 +357,10 @@
     $(document).mouseup(function () {
       $($element).find('.WidgetItemList-Main').removeAttr('style');
       });
+    var $ul = $($element).find('.WidgetItemList-Main');
+    $($element).find('.EditArea').on('scroll', function () {
+      $ul.sortable('refreshPositions');//因为滚动后位置变了，所以要清除缓存大小
+    });
     $scope.sortableOptions = {
       //sortable微件的标准参数
       opacity: 0.4,
@@ -617,7 +621,7 @@
     $(document).mouseup(function () {
       $ul.removeAttr('style');
     });
-    $(window).on('scroll', function () {
+    $('.Scrollable').add('.EditArea').on('scroll', function () {
       if ($ul.is(':visible')) {
         $ul.sortable('refreshPositions');//因为滚动后位置变了，所以要清除缓存大小
       }
@@ -625,12 +629,10 @@
     $scope.sortableOptions = {
       appendTo: '.WidgetItemList-Main',
       opacity: 0.4,
-      cancel: 'input,textarea',
       cursor: 'move',
       cursorAt: { top: 30 },
       helper: 'clone',
-      scrollSensitivity: 100,
-      scrollSpeed: 50,
+      scroll: false,
       containment: 'body',
       connectWith: '.WidgetItemList-Main',
 
@@ -1050,124 +1052,5 @@
       });
     };
   };
-
-//监听body高度变化
-  $(function () {
-    var attachEvent = document.attachEvent;
-
-    if (!attachEvent) {
-      var requestFrame = (function(){
-        var raf = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame ||
-          function(fn){ return window.setTimeout(fn, 20); };
-        return function(fn){ return raf(fn); };
-      })();
-
-      var cancelFrame = (function(){
-        var cancel = window.cancelAnimationFrame || window.mozCancelAnimationFrame || window.webkitCancelAnimationFrame ||
-          window.clearTimeout;
-        return function(id){ return cancel(id); };
-      })();
-
-      function resetTriggers(element){
-        var triggers = element.__resizeTriggers__,
-          expand = triggers.firstElementChild,
-          contract = triggers.lastElementChild,
-          expandChild = expand.firstElementChild;
-        contract.scrollLeft = contract.scrollWidth;
-        contract.scrollTop = contract.scrollHeight;
-        expandChild.style.width = expand.offsetWidth + 1 + 'px';
-        expandChild.style.height = expand.offsetHeight + 1 + 'px';
-        expand.scrollLeft = expand.scrollWidth;
-        expand.scrollTop = expand.scrollHeight;
-      };
-
-      function checkTriggers(element){
-        return element.offsetWidth != element.__resizeLast__.width ||
-          element.offsetHeight != element.__resizeLast__.height;
-      }
-
-      function scrollListener(e){
-        var element = this;
-        resetTriggers(this);
-        if (this.__resizeRAF__) cancelFrame(this.__resizeRAF__);
-        this.__resizeRAF__ = requestFrame(function(){
-          if (checkTriggers(element)) {
-            element.__resizeLast__.width = element.offsetWidth;
-            element.__resizeLast__.height = element.offsetHeight;
-            element.__resizeListeners__.forEach(function(fn){
-              fn.call(element, e);
-            });
-          }
-        });
-      };
-    }
-
-    window.addResizeListener = function(element, fn){
-      if (attachEvent) element.attachEvent('onresize', fn);
-      else {
-        if (!element.__resizeTriggers__) {
-          if (getComputedStyle(element).position == 'static') element.style.position = 'relative';
-          element.__resizeLast__ = {};
-          element.__resizeListeners__ = [];
-          (element.__resizeTriggers__ = document.createElement('div')).className = 'resize-triggers';
-          element.__resizeTriggers__.innerHTML = '<div class="expand-trigger"><div></div></div>' +
-            '<div class="contract-trigger"></div>';
-          element.appendChild(element.__resizeTriggers__);
-          resetTriggers(element);
-          element.addEventListener('scroll', scrollListener, true);
-        }
-        element.__resizeListeners__.push(fn);
-      }
-    };
-
-    window.removeResizeListener = function(element, fn){
-      if (attachEvent) element.detachEvent('onresize', fn);
-      else {
-        element.__resizeListeners__.splice(element.__resizeListeners__.indexOf(fn), 1);
-        if (!element.__resizeListeners__.length) {
-          element.removeEventListener('scroll', scrollListener);
-          element.__resizeTriggers__ = !element.removeChild(element.__resizeTriggers__);
-        }
-      }
-    }
-  });
-
-  $(function () {
-    var $window = $(window);
-    var $header = $('.Header');
-    var $band = $('.Band');
-    var $main = $('.Main');
-    var $cat = $('.Categories');
-    var $scroll = $('.Collection .Scrollable');
-    var $footer = $('.Footer');
-
-    $band.affix({
-      offset: {
-        top: function () {
-          return (this.top = $header.outerHeight(true))
-        }
-      }
-    });
-    $('.Collection').affix({
-      offset: {
-        top: function () {
-          return (this.top = $header.outerHeight(true))
-        }
-      }
-    });
-
-    function updateSortableHeight() {
-      $scroll.css('height',
-        Math.min(
-          $main.height() - $cat.height() - 20,
-          $footer.offset().top - $band.offset().top - $band.height() - $cat.height() - 60,
-          $window.height() + $window.scrollTop() - $band.height() - $band.offset().top - $cat.height() - 60
-        ));
-    }
-
-    updateSortableHeight();
-    addResizeListener(document.getElementsByTagName('body')[0], updateSortableHeight);
-    $window.on('scroll resize', updateSortableHeight)
-  });
 
 })(jQuery);

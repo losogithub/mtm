@@ -494,6 +494,9 @@ textarea {
 .LoginDialog .modal-body {
   background-color: #ecf0f1;
 }
+.LoginDialog-Wide {
+  min-width: 80%;
+}
 #_scrollUtil {
   position: fixed;
   bottom: 20px;

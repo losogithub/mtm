@@ -93,6 +93,80 @@
 .text-info:hover {
   color: #2a7aaf;
 }
+html.EDIT {
+  height: 100%;
+}
+.EDIT body,
+.EDIT .Contents {
+  height: 100%;
+}
+.EDIT .EditArea {
+  position: fixed;
+  top: 41px;
+  left: 0;
+  right: 458px;
+  bottom: 0;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+.EDIT .EditArea .Main {
+  margin: 20px auto;
+}
+.Band {
+  background-color: #34495e;
+  z-index: 1001;
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  height: 41px;
+}
+.Band .Band_Ttl {
+  position: fixed;
+  left: 0;
+  right: 473px;
+}
+.Band .Band_Ttl h1 {
+  font-size: 18px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+  line-height: 41px;
+}
+.Band .Band_Btn {
+  position: fixed;
+  right: 0;
+  line-height: 41px;
+}
+.Categories .btn {
+  border-radius: 0;
+}
+.Categories .btn.active {
+  background-color: white;
+  color: #bdc3c7;
+}
+.Collection .Categories,
+.Collection .Scrollable {
+  width: 458px;
+}
+.Collection .Categories {
+  position: fixed;
+  top: 41px;
+  right: 0;
+}
+.Collection .Scrollable {
+  position: fixed;
+  top: 77px;
+  bottom: 0;
+  right: 0;
+  overflow-y: scroll;
+}
+@media (max-width: 991px) {
+  .Collection .Scrollable {
+    height: 500px !important;
+  }
+}
 .Cover:hover,
 .Cover:focus {
   background-color: #f8f9fa;
@@ -126,28 +200,6 @@
 .WidgetItemList-Sub > li .IMAGE img {
   max-width: 100px;
   max-height: 100px;
-}
-.Collection .Categories {
-  width: 100%;
-  border-radius: 6px 6px 0 0;
-}
-.Collection .Categories .btn {
-  border-radius: 0;
-}
-.Collection .Categories .btn:first-child {
-  border-top-left-radius: 6px;
-}
-.Collection .Categories .btn.active {
-  background-color: white;
-  color: #bdc3c7;
-}
-.Collection .Scrollable {
-  overflow-y: scroll;
-}
-@media (max-width: 991px) {
-  .Collection .Scrollable {
-    height: 500px !important;
-  }
 }
 /*li*/
 .WidgetItemList.WidgetItemList-Sorting > li {
@@ -206,54 +258,6 @@
 }
 .WidgetItemList li:last-child .Menu.OpacityMenu {
   opacity: 0.1;
-}
-/*悬浮菜单栏*/
-.Band {
-  top: 72px;
-  left: 0;
-  right: 0;
-  z-index: 1001;
-  position: absolute;
-}
-.Band.affix {
-  top: 0;
-  position: fixed;
-}
-.Band .Band_Ttl {
-  font-size: 18px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin: 0;
-  line-height: 41px;
-}
-.Band .Band_Btn {
-  float: right;
-  line-height: 41px;
-}
-.Collection.affix {
-  position: static;
-}
-@media (min-width: 992px) {
-  .Collection {
-    width: 293px;
-  }
-  .Collection.affix-top {
-    position: absolute;
-    top: 0;
-  }
-  .Collection.affix {
-    top: 61px;
-    position: fixed !important;
-  }
-  .Collection.affix-bottom {
-    position: relative !important;
-  }
-}
-@media (min-width: 1200px) {
-  .Collection {
-    width: 458px;
-  }
 }
 .StaticMenu {
   position: absolute;
@@ -324,26 +328,11 @@
 .WEIBO .Handle {
   visibility: hidden !important;
 }
-.resize-triggers {
-  visibility: hidden;
+.SelectImage button {
+  padding: 0;
+  border-radius: 0;
 }
-.resize-triggers,
-.resize-triggers > div,
-.contract-trigger:before {
-  content: " ";
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
-}
-.resize-triggers > div {
-  background: #eee;
-  overflow: auto;
-}
-.contract-trigger:before {
-  width: 200%;
-  height: 200%;
+.SelectImage button img {
+  max-height: 200px;
+  max-width: 100%;
 }

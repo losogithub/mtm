@@ -2,7 +2,7 @@
 <% var temp = !locals.body ? null : locals.body.match(/^<!\-\-([^#]*)##/); %>
 <% temp = !temp ? null : !temp[1] ? null : temp[1] %>
 <% locals.pageType = locals.pageType || temp; %>
-<html lang="zh-cn" ng-app="sng">
+<html lang="zh-cn" ng-app="sng" class="<%= locals.pageType || '' %>">
 <head>
   <title><%= locals.title ? title + ' - 石子儿' : '石子儿 - 互联网策展' %></title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -52,8 +52,8 @@
   <script type="text/javascript" src="<%= js[i] %>"></script>
   <% } %>
 </head>
-<body class="<%= locals.pageType || '' %>">
-<% if (locals.pageType != 'SIGNUP' && locals.pageType != 'LOGIN' && locals.pageType != 'VERIFY') { %>
+<body>
+<% if (locals.pageType != 'SIGNUP' && locals.pageType != 'LOGIN' && locals.pageType != 'VERIFY' && locals.pageType != 'EDIT') { %>
 <header class="navbar navbar-default Header mbn">
   <div class="container">
     <ul class="nav navbar-nav" style="margin-left: -15px;">
@@ -167,6 +167,7 @@
 
 </div>
 
+<% if (locals.pageType != 'EDIT') { %>
 <footer class="Footer pal">
   <ul class="pan">
     <li><a href="/about">关于我们</a></li>
@@ -176,6 +177,7 @@
   </ul>
   <p>Copyright © 2013-2014 <a href="/">shizier.com</a> all rights reserved</p>
 </footer>
+<% } %>
 
 <% include _toTop.html %>
 
