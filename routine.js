@@ -192,6 +192,21 @@ function _routine() {
   _update();
 }
 
+/*
+ * an array to store the visited user, to avoid multi-visit in one day.
+ */
+var visitedArray = new Array();
+
+function _clearIP(){
+    console.log("clear array");
+    visitedArray = []
+}
+
+function getVisitedArray(){
+    return visitedArray;
+}
+
+
 function start() {
   Topic.updateNewTopics();
   Topic.updateTopicSiteCount();
@@ -201,6 +216,8 @@ function start() {
 
   setInterval(_routine, 60 * 1000);
   setInterval(_updateRelatedTopics, 60 * 60 * 1000);
+  setInterval(_clearIP, 24*60*1000);
 }
 
 exports.start = start;
+exports.getVisitedArray = getVisitedArray;
