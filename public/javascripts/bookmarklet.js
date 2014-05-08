@@ -87,7 +87,7 @@ var shizier_postMessageListener;
   if (!document.readyState || /loaded|complete/.test(document.readyState)) {
     main();
   } else {
-    window.onload  = function() {
+    window.onload = function() {
       main();
     }
   }

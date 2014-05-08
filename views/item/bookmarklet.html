@@ -12,7 +12,7 @@
     .modal {
       overflow-y: auto;
     }
-    .Collection, .WidgetItemList {
+    .WidgetItemList {
       padding-bottom: 0;
     }
     .WidgetItemList>li:hover {
@@ -45,7 +45,6 @@
   <script>
     (function () {
       window.sng.controller('BookmarkletCtrl', function ($scope, $http, $sce, $timeout) {
-        var $dialog = $('.modal-dialog');
         var InitData;
         $scope.init = function (initData) {
           if (initData) {
@@ -182,7 +181,6 @@
         $('.AutoFocus').focus();
       });
       $modal.modal();
-
     });
   </script>
 </head>
