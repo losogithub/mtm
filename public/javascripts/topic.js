@@ -116,6 +116,7 @@ $(function () {
   var $previewWrapper = $('.PreviewWrapper');
   var $preview = $('.Preview');
   var contentWindow = $preview.find('>iframe').get(0).contentWindow;
+  var lastUrl;
 //  var timeout;
   $('.WidgetItemList').on('mouseenter', '>li .Quote a', function () {
     if ($previewWrapper.is(':hidden')) {
@@ -128,15 +129,18 @@ $(function () {
       $preview.show();
       console.log(url)
 //      timeout = setTimeout(function () {
+      if (lastUrl != url) {
+        lastUrl = url;
         contentWindow.location.replace(url);
+      }
 //      }, 1000);
     }
   })
   $('.WidgetItemList').on('mouseleave', '>li .Quote a', function () {
 //    clearTimeout(timeout);
-    if ($preview.is(':visible')) {
-      contentWindow.location.replace('about:blank');
-    }
+//    if ($preview.is(':visible')) {
+//      contentWindow.location.replace('about:blank');
+//    }
     $preview.hide();
   })
 });
