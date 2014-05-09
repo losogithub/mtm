@@ -730,7 +730,7 @@ function deleteTopic(req, res, next) {
       }
 
       async.forEach(topic.items, function (item, callback) {
-        deleteItem(item.type, item.id, callback);
+        Item.deleteItem(item.type, item.id, callback);
       });
       res.send(200);
       updateNewTopics();
