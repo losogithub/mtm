@@ -117,6 +117,10 @@ html.EDIT {
 .EDIT .EditArea .ps-scrollbar-y-rail {
   right: 461px !important;
 }
+.ps-container .ps-scrollbar-y-rail {
+  opacity: 0.2;
+  filter: alpha(opacity=20);
+}
 .Band {
   background-color: #34495e;
   z-index: 1001;

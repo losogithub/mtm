@@ -854,28 +854,10 @@
     <div class="Categories btn-group btn-group-sm background-muted">
       <button class="btn btn-default" type="button"
               ng-click="setType('ALL')"
-              ng-class="{active: type == 'ALL'}">采集的石子儿</button>
-      <button class="btn btn-default" type="button"
-              ng-click="setType('LINK')"
-              ng-class="{active: type == 'LINK'}"><i class="fa fa-link"></i></button>
-      <button class="btn btn-default" type="button"
-              ng-click="setType('IMAGE')"
-              ng-class="{active: type == 'IMAGE'}"><i class="fa fa-picture-o"></i></button>
-      <button class="btn btn-default" type="button"
-              ng-click="setType('VIDEO')"
-              ng-class="{active: type == 'VIDEO'}"><i class="fa fa-play-circle"></i></button>
-      <button class="btn btn-default" type="button"
-              ng-click="setType('CITE')"
-              ng-class="{active: type == 'CITE'}"><i class="fa fa-quote-left"></i></button>
-      <button class="btn btn-default" type="button"
-              ng-click="setType('WEIBO')"
-              ng-class="{active: type == 'WEIBO'}"><i class="fa fa-weibo"></i></button>
-      <button class="btn btn-default" type="button"
-              ng-click="setType('TEXT')"
-              ng-class="{active: type == 'TEXT'}"><i class="fa fa-align-left"></i></button>
-      <button class="btn btn-default" type="button"
-              ng-click="setType('TITLE')"
-              ng-class="{active: type == 'TITLE'}"><i class="fa fa-text-width"></i></button>
+              ng-class="{active: type == 'ALL'}">
+        采集的石子儿
+        <span class="Counter">({{items.length}})</span>
+      </button>
       <button class="btn btn-default" type="button"
               ng-click="setType('BOOKMARKLET')"
               ng-class="{active: type == 'BOOKMARKLET'}"><i class="fa fa-magic"></i></button>
@@ -904,7 +886,7 @@
         <ul class="WidgetItemList WidgetItemList-Sub"
             ng-controller="SortableCtrl"
             ng-model="item2" ui-sortable="sortableOptions"
-            ng-repeat="item in items | filter:typeFilter">
+            ng-repeat="item in items">
           <li>
 
             <div class="Item pal"

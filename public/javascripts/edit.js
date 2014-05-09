@@ -371,10 +371,12 @@
     var $window = $(window);
     $scope.sortableOptions = {
       //sortable微件的标准参数
-      opacity: 0.4,
+      axis: 'y',
       cursor: 'move',
       handle: '.MoveUtil',
       helper: "clone",//加这个是为了解决拖动后添加条目util的index问题
+      opacity: 0.4,
+      revert: 250,
       scroll: false,
 
       start: function () {
@@ -604,7 +606,7 @@
 //    };
     $scope.setType = function (type) {
       $scope.type = type;
-      $scope.typeFilter = type == 'ALL' ? null : {type: type};
+//      $scope.typeFilter = type == 'ALL' ? null : {type: type};
     };
     $scope.playVideo = function (item) {
       item.playing = true;
@@ -666,12 +668,13 @@
     var $window = $(window);
     $scope.sortableOptions = {
       appendTo: '.WidgetItemList-Main',
-      opacity: 0.4,
+      connectWith: '.WidgetItemList-Main',
       cursor: 'move',
       cursorAt: { top: 30 },
       helper: 'clone',
+      opacity: 0.4,
+      revert: 250,
       scroll: false,
-      connectWith: '.WidgetItemList-Main',
 
       start: function () {
         $ul
