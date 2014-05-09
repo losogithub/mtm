@@ -49,6 +49,8 @@
         $scope.init = function (initData) {
           if (initData) {
             InitData = initData;
+            $scope.srcs = initData.srcs;
+            delete initData.srcs;
           }
           $http.get('/item/detail?url=' + encodeURIComponent(InitData.url))
             .success(function (data) {
@@ -65,7 +67,7 @@
               $scope.item.fav = shizier.utils.getFav($scope.item.url);
               $.extend($scope.item, data);
               if (!data) {
-                $scope.item.type = 'LINK';
+                $scope.item.type = 'IMAGE';
               }
               if (InitData.cite) {
                 $scope.item.type = 'CITE';
@@ -120,9 +122,6 @@
         $scope.cancel = function () {
           $('#_bookmarklet_modal').modal('hide');
         };
-        $scope.SuffixImage = function (url) {
-          return shizier.utils.suffixImage(url);
-        }
         $scope.onFavError = function (item) {
           var temp = 'http://www.google.com/s2/favicons?domain=' + item.url;
           if (temp != item.fav) {
@@ -190,7 +189,8 @@
        ng-controller="BookmarkletCtrl"
        id="_bookmarklet_modal" tabindex="-1">
     <div class="modal-dialog Spin" style="height: 300px;" ng-show="!loaded"></div>
-    <div class="modal-dialog container" ng-class="{ 'LoginDialog-Wide': item.type == 'IMAGE' && !imageSrc }"
+    <div class="modal-dialog container"
+         ng-class="{ 'LoginDialog-Wide': item.type == 'IMAGE' && srcs.length && !imageSrc }"
          ng-show="loaded && !showLogin">
       <div class="modal-content">
         <div class="modal-header text-center"
@@ -243,7 +243,7 @@
                          ng-if="item.description" ng-bind-html="getHtml(item.description)"></div>
                     <div class="clearfix"></div>
                   </div>
-                  <div class="Content IMAGE pam"
+                  <div class="Content IMAGE pam" ng-show="srcs.length"
                        ng-switch-when="IMAGE">
                     <div class="Image text-center" ng-show="$parent.imageSrc">
                       <img onerror="shizier.errorImage(this,'default_120x120');"
@@ -252,7 +252,7 @@
                     <div class="plm SelectImage" ng-show="!$parent.imageSrc">
                       <div class="prm mbm text-center text-muted">选择图片</div>
                       <button class="btn btn-link mrm mbm"
-                              ng-repeat="src in item.srcs track by $index"
+                              ng-repeat="src in srcs track by $index"
                               ng-click="$parent.$parent.imageSrc = src"
                               type="button">
                         <img ng-src="{{src}}">

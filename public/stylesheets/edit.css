@@ -101,18 +101,21 @@ html.EDIT {
   height: 100%;
 }
 .EDIT .EditArea {
-  position: fixed;
+  padding: 0 489px 0 20px;
+  position: absolute;
   top: 41px;
   left: 0;
-  right: 458px;
+  right: 0;
   bottom: 0;
-  overflow-y: scroll;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 .EDIT .EditArea .Main {
   margin: 20px auto 200px;
   width: 653px;
   max-width: 100%;
+}
+.EDIT .EditArea .ps-scrollbar-y-rail {
+  right: 461px !important;
 }
 .Band {
   background-color: #34495e;
@@ -123,10 +126,13 @@ html.EDIT {
   right: 0;
   height: 41px;
 }
+.Band.background-danger {
+  background-color: #e74c3c;
+}
 .Band .Band_Ttl {
   position: fixed;
   left: 0;
-  right: 473px;
+  right: 469px;
 }
 .Band .Band_Ttl h1 {
   font-size: 18px;
@@ -162,7 +168,7 @@ html.EDIT {
   top: 77px;
   bottom: 0;
   right: 0;
-  overflow-y: scroll;
+  overflow: hidden;
 }
 @media (max-width: 991px) {
   .Collection .Scrollable {
@@ -191,10 +197,6 @@ html.EDIT {
   padding-bottom: 0;
   transition: margin-bottom 0.25s;
   -webkit-transition: margin-bottom 0.25s;
-}
-.WidgetItemList-Sub.USED .Content {
-  opacity: 0.1;
-  background-color: transparent !important;
 }
 .WidgetItemList-Sub > li {
   cursor: move;
