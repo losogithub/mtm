@@ -10,7 +10,7 @@ PID_FILE=$APP_DIR/pid/app.pid
 LOG_FILE=$APP_DIR/log/app.log
 CONFIG_DIR=$APP_DIR/config
 
-# step1: start redis-server
+# Step1: start redis-server
 $(sudo redis-server /etc/redis/6379.conf)
 sleep 1
 if

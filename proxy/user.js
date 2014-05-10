@@ -114,6 +114,12 @@ var getUserByIds = function (ids, callback) {
   UserModel.find({ _id: { $in: ids } }, callback);
 };
 
+
+var getAllUsers = function(callback){
+    UserModel.find(callback);
+}
+
+
 function collectItem(_id, itemId, callback) {
   callback = callback || function () {
   };
@@ -176,3 +182,4 @@ exports.getUserByNamePass = getUserByNamePass;
 exports.getUserByEmailPass = getUserByEmailPass;
 exports.collectItem = collectItem;
 exports.deleteItem = deleteItem;
+exports.getAllUsers = getAllUsers;
