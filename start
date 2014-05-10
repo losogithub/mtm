@@ -1,0 +1,47 @@
+#! /bin/sh
+
+NODE_EXEC=/usr/local/bin/node
+#NODE_ENV="production"
+NODE_ENV="development"
+NODE_APP='app.js'
+APP_DIR='/home/ubuntu/mtm';
+#APP_DIR='/Users/zan/WebstormProjects/mtm';
+PID_FILE=$APP_DIR/pid/app.pid
+LOG_FILE=$APP_DIR/log/app.log
+CONFIG_DIR=$APP_DIR/config
+
+# step1: start redis-server
+$(sudo redis-server /etc/redis/6379.conf)
+sleep 1
+if
+    pgrep -f 'redis'
+then
+    echo "redis-server started"
+    # step1: start mongodb
+    $ (sudo mongod -f /etc/mongodb.conf)
+    sleep 1
+    if
+        pgrep -f 'mongo'
+    then
+        echo "mongo started"
+        #step 3: set iptables
+        $(sudo iptables -t nat -I OUTPUT -p tcp -d 127.0.0.1 --dport 80 -j REDIRECT --to-ports 3000)
+        sleep 1
+        $(sudo iptables -t nat -I PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 3000)
+        sleep 1
+        #step4: start shizier
+        NODE_ENV=$NODE_ENV NODE_CONFIG_DIR=$CONFIG_DIR $NODE_EXEC $APP_DIR/$NODE_APP  1>$LOG_FILE 2>&1 &
+        sleep 2
+        if
+             pgrep -f 'node'
+        then
+             echo "start shizier successfully"
+        else
+             echo "start shizier failed, please check"
+        fi
+    else
+        echo "start mongo failed, please check"
+    fi
+else
+    echo "start redis-server failed, please check"
+fi
