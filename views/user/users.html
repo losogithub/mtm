@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+</head>
+<body>
+  <table>
+    <% users.forEach(function(user){ %>
+    <tr>
+      <td>
+        <img width="20" height="20" src="<%= user.url || '' %>" onerror="this.style.display = 'none';">
+      </td>
+      <td>
+        <%= user.loginName %>
+      </td>
+      <td>
+        <%= user.email %>
+      </td>
+      <td>
+        <%= user.createDate.getFullYear() + '-'
+        + (user.createDate.getMonth() + 1) + '-'
+        + user.createDate.getDate() %>
+      </td>
+      <td>
+        <% if(AuthorTopicCount[user.loginName]) { %>
+          策展数：
+          <%= AuthorTopicCount[user.loginName] %>
+        <% } %>
+      </td>
+      <td>
+        <% if(AuthorPVCount[user.loginName]) { %>
+          浏览量：
+          <%= AuthorPVCount[user.loginName] %>
+        <% } %>
+      </td>
+      <td>
+        <% if(user.items.length) { %>
+          采集石子儿数：
+          <%= user.items.length %>
+        <% } %>
+      </td>
+      <td>
+        <%= !user.active ? '未激活' : '' %>
+      </td>
+    </tr>
+    <% }); %>
+  </table>
+</body>
+</html>

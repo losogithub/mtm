@@ -118,6 +118,12 @@ function getAllUsers(callback){
   UserModel.find(callback);
 }
 
+function getAllUsersSorted(callback){
+  UserModel.find()
+    .sort('-_id')
+    .exec(callback);
+}
+
 function collectItem(_id, itemId, callback) {
   callback = callback || function () {
   };
@@ -181,3 +187,4 @@ exports.getUserByEmailPass = getUserByEmailPass;
 exports.collectItem = collectItem;
 exports.deleteItem = deleteItem;
 exports.getAllUsers = getAllUsers;
+exports.getAllUsersSorted = getAllUsersSorted;

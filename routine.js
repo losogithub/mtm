@@ -155,9 +155,12 @@ function _calcTags(callback, results) {
 }
 
 function _countAuthors(callback, results) {
+  var tempAuthorTopicCount = {};
   var tempAuthorPVCount = {};
   var tempAuthorCategories = {};
   results.topics.forEach(function (topic) {
+    tempAuthorTopicCount[topic.author_name] = tempAuthorTopicCount[topic.author_name] || 0;
+    tempAuthorTopicCount[topic.author_name] ++;
     tempAuthorPVCount[topic.author_name] = tempAuthorPVCount[topic.author_name] || 0;
     tempAuthorPVCount[topic.author_name] += topic.PV_count;
 
@@ -166,6 +169,7 @@ function _countAuthors(callback, results) {
     categories[topic.category] = categories[topic.category] || 0;
     categories[topic.category]++;
   });
+  Common.AuthorTopicCount = tempAuthorTopicCount;
   Common.AuthorPVCount = tempAuthorPVCount;
   Common.AuthorCategories = tempAuthorCategories;
   callback(null);

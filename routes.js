@@ -86,6 +86,7 @@ module.exports = function (app) {
 
 
   //user management
+  app.get('/users', user.showUsers);
   app.get('/works', auth.loginRequired, user.showWorks);
   app.get('/settings', auth.loginRequired, user.showSettings);
   app.post('/settings', auth.userRequired, user.updateSettings); //yes, otherwise update whose info

@@ -22,6 +22,21 @@ var LoginToken = require('../proxy').LoginToken;
 
 var utils = require('../public/javascripts/utils');
 
+function showUsers(req, res, next) {
+  User.getAllUsersSorted(function (err, users) {
+    if (err) {
+      return next(err);
+    }
+
+    res.render('user/users', {
+      layout: false,
+      users: users,
+      AuthorTopicCount: Common.AuthorTopicCount,
+      AuthorPVCount: Common.AuthorPVCount
+    });
+  })
+}
+
 function showWorks(req, res, next) {
 
   //console.log(req.session);
@@ -715,6 +730,7 @@ function favorite(req, res, next) {
   });
 }
 
+exports.showUsers = showUsers;
 exports.showWorks = showWorks;
 exports.showSettings = showSettings;
 exports.updateSettings = updateSettings;
