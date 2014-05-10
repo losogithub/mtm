@@ -28,6 +28,9 @@ function showUsers(req, res, next) {
       return next(err);
     }
 
+    if (!res.locals.isAdmin) {
+      return res.send('您没有访问权限');
+    }
     res.render('user/users', {
       layout: false,
       users: users,
