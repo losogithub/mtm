@@ -501,26 +501,24 @@ textarea {
   position: fixed;
   bottom: 20px;
   right: 15px;
-}
-#_toTop,
-#_toBottom {
   visibility: hidden;
-  opacity: 0;
+}
+#_scrollUtil.VISIBLE {
+  visibility: visible;
+}
+.ToTop,
+.ToBottom {
   padding: 4px 12px;
-  background-color: #bdc3c7;
+  opacity: 0.5;
+  background-color: #bdc3c7 !important;
   color: white;
 }
-#_toTop.VISIBLE,
-#_toBottom.VISIBLE {
-  visibility: visible;
-  opacity: 0.5;
-}
-#_toTop:hover,
-#_toBottom:hover,
-#_toTop:active,
-#_toBottom:active,
-#_toTop:focus,
-#_toBottom:focus {
+.ToTop:hover,
+.ToBottom:hover,
+.ToTop:active,
+.ToBottom:active,
+.ToTop:focus,
+.ToBottom:focus {
   opacity: 1;
   color: #34495e;
 }

@@ -199,34 +199,32 @@ function _clearIP () {
   Common.VisitedArray = [];
 }
 
-function _patch_userDate(){
-    User.getAllUsers(function(err, users){
-        console.log("total users count: " + users.length);
-        async.forEachSeries(users, function (user, callback) {
-            var date = _getTimeStamp(user._id);
-            console.log(date);
-            user.createAt = date;
-            user.save(function(err, user){
-                if (err){
-                    return callback(err);
-                }
-                else {
-                    return callback(null, user);
-                }
-            });
-        }, function (err) {
-            if (err) {
-                console.error(err.stack);
-            }
-        });
-
-    })
+function _patchUserDate(){
+  User.getAllUsers(function(err, users){
+    console.log("total users count: " + users.length);
+    async.forEachSeries(users, function (user, callback) {
+      var date = _getTimeStamp(user._id);
+      console.log(date);
+      user.createDate = date;
+      user.save(function(err, user){
+        if (err){
+          return callback(err);
+        }
+        else {
+          return callback(null, user);
+        }
+      });
+    }, function (err) {
+      if (err) {
+        console.error(err.stack);
+      }
+    });
+  });
 }
 
 function _getTimeStamp(objId){
-    return new Date(parseInt(objId.toString().slice(0,8), 16)*1000);
+  return new Date(parseInt(objId.toString().slice(0,8), 16)*1000);
 }
-
 
 function start() {
   Topic.updateNewTopics();
@@ -235,7 +233,7 @@ function start() {
   _routine();
   _updateRelatedTopics();
 
-  _patch_userDate();
+  _patchUserDate();
   setInterval(_routine, 60 * 1000);
   setInterval(_updateRelatedTopics, 60 * 60 * 1000);
   setInterval(_clearIP, 24 * 60 * 60 * 1000);

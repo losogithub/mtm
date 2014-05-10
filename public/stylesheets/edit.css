@@ -117,6 +117,11 @@ html.EDIT {
 .EDIT .EditArea .ps-scrollbar-y-rail {
   right: 461px !important;
 }
+.EDIT .EditArea #_scrollUtil2 {
+  position: fixed;
+  bottom: 20px;
+  right: 489px;
+}
 .ps-container .ps-scrollbar-y-rail {
   opacity: 0.2;
   filter: alpha(opacity=20);
@@ -173,11 +178,6 @@ html.EDIT {
   bottom: 0;
   right: 0;
   overflow: hidden;
-}
-@media (max-width: 991px) {
-  .Collection .Scrollable {
-    height: 500px !important;
-  }
 }
 .Cover:hover,
 .Cover:focus {

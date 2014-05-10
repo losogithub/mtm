@@ -846,6 +846,16 @@
         </li>
       </ul>
     </div>
+
+    <div id="_scrollUtil2" class="btn-group-vertical">
+      <button class="ToTop btn btn-link" title="返回顶部">
+        <i class="fa fa-angle-up"></i>
+      </button>
+      <button class="ToBottom btn btn-link" title="滚到底部">
+        <i class="fa fa-angle-down"></i>
+      </button>
+    </div>
+
   </div>
 
   <div class="Collection"
@@ -862,8 +872,8 @@
               ng-click="setType('BOOKMARKLET')"
               ng-class="{active: type == 'BOOKMARKLET'}"><i class="fa fa-magic"></i></button>
     </div>
-    <div class="Scrollable background-white">
-      <div class="pal text-center text-muted" style="font-size: 14px;" ng-show="type == 'BOOKMARKLET'">
+    <div class="Scrollable background-white" ng-show="type == 'BOOKMARKLET'">
+      <div class="pal text-center text-muted" style="font-size: 14px;">
         我是石子儿采集助手<br>
         为方便您在浏览任意网页时<br>
         都能随心所欲地采集石子儿<br>
@@ -882,7 +892,9 @@
         <i class="fa fa-quote-left"></i> 引文、
         <i class="fa fa-weibo"></i> 微博
       </div>
-      <div ng-model="items" ng-show="type != 'BOOKMARKLET'">
+    </div>
+    <div class="CollectionItems Scrollable background-white" ng-show="type != 'BOOKMARKLET'">
+      <div ng-model="items">
         <ul class="WidgetItemList WidgetItemList-Sub"
             ng-controller="SortableCtrl"
             ng-model="item2" ui-sortable="sortableOptions"
@@ -1078,7 +1090,11 @@
                 {{item.title}}
               </h2>
 
-              <div class="EditUtil pull-right pas plm">
+              <div class="EditUtil AppendUtil pas prm">
+                <button class="APPEND btn btn-link" type="button" title="添加到末尾"
+                        ng-click="appendItem(item)"><i class="fa fa-caret-left"></i> 到末尾</button>
+              </div>
+              <div class="EditUtil pas plm">
                 <button class="DELETE btn btn-link" type="button" title="删除"
                         ng-click="deleteItem(item)"><i class="fa fa-trash-o"></i> 删除</button>
               </div>

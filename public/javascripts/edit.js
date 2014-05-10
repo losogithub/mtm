@@ -8,6 +8,11 @@
 
 (function ($) {
 
+  var $editArea;
+  var $main;
+  var $window;
+  var marginBottom = 200;
+
   $(function () {
     $('.EditArea').perfectScrollbar({
       suppressScrollX: true
@@ -15,7 +20,33 @@
     $('.Scrollable').perfectScrollbar({
       suppressScrollX: true
     });
-  })
+
+    $editArea = $('.EditArea');
+    $main = $('.Main');
+    $window = $(window);
+    marginBottom = $window.height() - 41 - 65 - 40;
+    $main.css('margin-bottom', marginBottom);
+    $window.on('resize', function () {
+      marginBottom = $window.height() - 41 - 65 - 40;
+      $main.css('margin-bottom', marginBottom);
+      $editArea.scrollTop(Math.min(
+        $editArea.scrollTop(),
+        $main.height() + 20 + marginBottom - $editArea.height()
+      ));
+      $('.EditArea').perfectScrollbar('update');
+    });
+
+    var $toTop = $('.ToTop');
+    var $toBottom = $('.ToBottom');
+    $toTop.click(function () {
+      $toTop.blur();
+      $editArea.animate({scrollTop: 0}, 250);
+    });
+    $toBottom.click(function () {
+      $toBottom.blur();
+      $editArea.animate({scrollTop: $main.height() + 20 + marginBottom - $editArea.height()}, 250);
+    });
+  });
 
   $.validator.setDefaults({
     debug: false,
@@ -366,9 +397,6 @@
     $($element).find('.EditArea').on('scroll', function () {
       $ul.sortable('refreshPositions');//因为滚动后位置变了，所以要清除缓存大小
     });
-    var $editArea = $('.EditArea');
-    var $main = $('.Main');
-    var $window = $(window);
     $scope.sortableOptions = {
       //sortable微件的标准参数
       axis: 'y',
@@ -390,7 +418,7 @@
           if (event.clientY > $window.height() - 100) {
             $editArea.scrollTop(Math.min(
               $editArea.scrollTop() + (50 - ($window.height() - event.clientY)/2),
-              $main.height() + 220 - $editArea.height()
+              $main.height() + 20 + marginBottom - $editArea.height()
             ))
           }
         });
@@ -448,6 +476,11 @@
     };
     $scope.$on('setCollectionScope', function (e, scope) {
       $scope.collectionScope = scope;
+    });
+    $scope.$on('appendItem', function (e, item) {
+      $scope.items.splice($scope.items.length, 0, item);
+      _updateList($scope.items.length - 1, true);
+      $editArea.scrollTop($main.height() + 20 + marginBottom - $editArea.height());
     });
   };
 
@@ -616,6 +649,10 @@
       item.width = $('.WidgetItemList-Sub .Content').width();
       item.height = item.width * 5 / 6;
     };
+    $scope.appendItem = function (item) {
+      $scope.items.splice($scope.items.indexOf(item), 1);
+      $scope.$emit('appendItem', item);
+    };
     $scope.deleteItem = function (item) {
       if (!confirm('条目删除后无法找回，您确定要删除吗？')) {
         return;
@@ -658,14 +695,11 @@
     $(document).mouseup(function () {
       $ul.removeAttr('style');
     });
-    $('.Scrollable').add('.EditArea').on('scroll', function () {
+    $('.CollectionItems').add('.EditArea').on('scroll', function () {
       if ($ul.is(':visible')) {
         $ul.sortable('refreshPositions');//因为滚动后位置变了，所以要清除缓存大小
       }
     });
-    var $editArea = $('.EditArea');
-    var $main = $('.Main');
-    var $window = $(window);
     $scope.sortableOptions = {
       appendTo: '.WidgetItemList-Main',
       connectWith: '.WidgetItemList-Main',
@@ -673,7 +707,6 @@
       cursorAt: { top: 30 },
       helper: 'clone',
       opacity: 0.4,
-      revert: 250,
       scroll: false,
 
       start: function () {
@@ -687,7 +720,7 @@
           if (event.clientY > $window.height() - 100) {
             $editArea.scrollTop(Math.min(
               $editArea.scrollTop() + (50 - ($window.height() - event.clientY)/2),
-              $main.height() + 220 - $editArea.height()
+              $main.height() + 20 + marginBottom - $editArea.height()
             ))
           }
         });

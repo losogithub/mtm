@@ -9,7 +9,7 @@
                style="width: 130px; height: 130px;">
             <img class="img-circle" width="120" height="120" id="_thumb"
                  onerror="shizier.errorImage(this, 'image_95x95')"
-                 src="<%= (locals.personalType == 'PERSONAL' ? locals.authorImage : locals.imageUrl) || '/images/no_img/user_120x120.png' %>">
+                 src="<%= locals.user.url || '/images/no_img/user_120x120.png' %>">
           </div>
           <ul style="list-style: none;padding: 0;overflow: hidden;">
             <li>
@@ -27,27 +27,34 @@
             </li>
           </ul>
 
-          <h1 class="h6 mtn"><%= locals.personalType == 'PERSONAL' ? locals.authorName : locals.username %></h1>
+          <h1 class="h6 mtn"><%= locals.user.loginName %></h1>
+
+          <div class="mtm text-muted" style="font-size: 12px;">
+            注册时间：
+            <%= locals.user.createDate.getFullYear() + '-'
+            + (locals.user.createDate.getMonth() + 1) + '-'
+            + locals.user.createDate.getDate() %>
+          </div>
 
           <% if (locals.personalType != 'PERSONAL') { %>
           <div class="mtm">
             <a href="/settings" class="btn btn-primary">设置</a>
           </div>
           <% } else { %>
-          <% if (locals.authorPersonalUrl) { %>
+          <% if (locals.user.personalSite) { %>
           <div class="mtm">
-            <a target="_blank" href="<%= locals.authorPersonalUrl || '' %>"
-               title="<%= locals.authorPersonalUrl || '' %>">
+            <a target="_blank" href="<%= locals.user.personalSite || '' %>"
+               title="<%= locals.user.personalSite || '' %>">
               <i class="fa fa-home"></i>
-              <%= locals.authorPersonalUrl || '' %>
+              <%= locals.user.personalSite || '' %>
             </a>
           </div>
           <% } %>
           <div class="mtm">
             <button name="favoriteUser" class="<%= locals.likedBefore ? 'ExSelected' : '' %> btn btn-default"
-                    data-favorite='{"authorName":"<%= authorName %>"}' title="喜欢">
+                    data-favorite='{"authorName":"<%= locals.user.loginName %>"}' title="喜欢">
               <i class="fa fa-star StarIcon"></i>
-              <span class="FVCount"><%= locals.favourite || '0' %></span>
+              <span class="FVCount"><%= locals.user.favourite || '0' %></span>
             </button>
 
             <% include ../_followUser.html %>

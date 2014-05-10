@@ -20,11 +20,6 @@ function uploadToQiniu(imageByteData, _id, callback){
   qiniu.io.put(upToken, _id, imageDataInfo.data, extra, callback);
 }
 
-function deleteImageFromQiniu(key, callback) {
-  var client = new qiniu.rs.Client();
-  client.remove(config.BUCKET_NAME, key, callback);
-}
-
 function _decodeBase64Image(dataString) {
   //todo: possibly may have bugs.
   var matches = dataString.match(/^data:([\w+/]+);base64,(.+)$/);
@@ -39,4 +34,3 @@ function _decodeBase64Image(dataString) {
 }
 
 exports.uploadToQiniu = uploadToQiniu;
-exports.deleteImageFromQiniu = deleteImageFromQiniu;

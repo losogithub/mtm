@@ -188,6 +188,16 @@
   padding: 0;
   font-size: 18px;
 }
+.AppendUtil {
+  border-top-left-radius: 0;
+  border-top-right-radius: 6px;
+  right: auto;
+  left: 0;
+}
+.AppendUtil .APPEND:hover,
+.AppendUtil .APPEND:focus {
+  color: #1abc9c;
+}
 .WidgetItemList > li:hover {
   background-color: #f8f9fa;
 }
