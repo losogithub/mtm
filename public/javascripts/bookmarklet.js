@@ -63,7 +63,7 @@ var shizier_postMessageListener;
         var imgs = document.getElementsByTagName('img');
 
         var srcs = [];
-        for (var i in imgs) {
+        for (var i = 0; i < imgs.length; i++) {//imgs是类似数组的对象，只能这样遍历
           srcs.push(imgs[i].src);
         }
         iframe.contentWindow.postMessage({

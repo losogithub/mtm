@@ -43,8 +43,9 @@ module.exports = function (app) {
   app.get('/topic/:topicId/chang', topic.showChang);
   app.get('/topic/:topicId/share_chang', topic.showShareChang);
   app.post('/topic/item', auth.userRequired, topic.createItem);
-  app.put('/topic/item', auth.userRequired, topic.editItem);
   app.put('/topic/sort', auth.userRequired, topic.sortItem);
+  app.put('/topic/insert', auth.userRequired, topic.insertItem);
+  app.put('/topic/item', auth.userRequired, topic.editItem);
   app.put('/topic/cover', auth.userRequired, topic.saveCover);
   app.put('/topic/title', auth.userRequired, topic.saveTitle);
   app.put('/topic/category', auth.userRequired, topic.saveCategory);
@@ -55,6 +56,7 @@ module.exports = function (app) {
   //item
   app.get('/search_image', item.searchImage);
   app.get('/bookmarklet', item.showBookmarklet);
+//  app.get('/item/collection', auth.userRequired, item.getCollection);
   app.get('/item/detail', auth.userRequired, item.getDetail);
   app.post('/item/bookmarklet', auth.userRequired, item.createCollectionItem);//topic下面有同名方法，重构的时候注意
   app.post('/item', auth.userRequired, item.collectItem);

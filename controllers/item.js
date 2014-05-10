@@ -187,6 +187,33 @@ function editItem(req, res, next) {
   });
 }
 
+//function getCollection(req, res, next) {
+//  var _id = req.session.userId;
+//
+//  async.auto({
+//    user: function (callback) {
+//      User.getUserById(_id, callback);
+//    },
+//    items: ['user', function (callback, results) {
+//      var user = results.user;
+//      Item.getItemsById(user.items, callback);
+//    }]
+//  }, function (err, results) {
+//    if (err) {
+//      return next(err);
+//    }
+//
+//    var items = results.items;
+//    var itemsData = [];
+//    items.forEach(function (item) {
+//      if (item && item.type && item._id) {
+//        itemsData.push(helper.getItemData(item));
+//      }
+//    });
+//    res.json(itemsData);
+//  });
+//}
+
 function getDetail(req, res, next) {
   console.log('getDetail');
   var url = req.query.url;
@@ -205,4 +232,5 @@ exports.createCollectionItem = createCollectionItem;
 exports.collectItem = collectItem;
 exports.deleteItem = deleteItem;
 exports.editItem = editItem;
+//exports.getCollection = getCollection;
 exports.getDetail = getDetail;

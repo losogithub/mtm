@@ -189,6 +189,7 @@ function showEdit(req, res, next) {
       pageType: 'EDIT',
       title: '策展中',
       css: [
+        '/bower_components/perfect-scrollbar/min/perfect-scrollbar-0.4.10.min.css',
         'http://cdn.bootcss.com/messenger/1.4.0/css/messenger.css',
         'http://cdn.bootcss.com/messenger/1.4.0/css/messenger-theme-flat.css',
         'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.css',
@@ -198,6 +199,7 @@ function showEdit(req, res, next) {
         '/stylesheets/edit.css'
       ],
       js: [
+        '/bower_components/perfect-scrollbar/min/perfect-scrollbar-0.4.10.min.js',
         '/bower_components/angular-elastic/elastic.js',
         '/javascripts/ui-utils.min.js',
         'http://cdn.bootcss.com/messenger/1.4.0/js/messenger.js',
@@ -543,7 +545,7 @@ function createItem(req, res, next) {
       var item = results.item;
       var prevItemIndex = -1;
       for (var i = 0; i < topic.items.length; i++) {
-        if (topic.items[i].id == prevItemId) {
+        if (topic.items[i] && topic.items[i].id == prevItemId) {
           prevItemIndex = i;
           break;
         }
@@ -575,7 +577,7 @@ function sortItem(req, res, next) {
   console.log('sort=====');
   var userId = req.session.userId;
   var topicId = req.body.topicId;
-  var itemId = req.body._id;
+  var _id = req.body._id;
   var prevItemId = req.body.prevItemId;
 
   async.auto({
@@ -587,7 +589,7 @@ function sortItem(req, res, next) {
 
       var index = -1;
       for (var i = 0; i < topic.items.length; i++) {
-        if (topic.items[i].id == itemId) {
+        if (topic.items[i] && topic.items[i].id == _id) {
           index = i;
           break;
         }
@@ -595,7 +597,7 @@ function sortItem(req, res, next) {
       var temp = topic.items.splice(index, 1)[0];
       var prevItemIndex = -1;
       for (var i = 0; i < topic.items.length; i++) {
-        if (topic.items[i].id == prevItemId) {
+        if (topic.items[i] && topic.items[i].id == prevItemId) {
           prevItemIndex = i;
           break;
         }
@@ -614,6 +616,64 @@ function sortItem(req, res, next) {
     res.send(200);
     updateNewTopics();
     console.log('sort done');
+  });
+}
+
+function insertItem(req, res, next) {
+  console.log('insert=====');
+  var userId = req.session.userId;
+  var topicId = req.body.topicId;
+  var type = req.body.type;
+  var _id = req.body._id;
+  var prevItemId = req.body.prevItemId;
+
+  async.auto({
+    topic: function (callback) {
+      _getTopicWithAuth(callback, topicId, userId);
+    },
+    detach: function (callback) {
+      User.getUserById(userId, function (err, user) {
+        if (err) {
+          return callback(err);
+        }
+        if (!user) {
+          return callback(new Error(400));
+        }
+
+        User.deleteItem(user, _id, callback);
+      });
+    },
+    insert: ['topic', 'detach', function (callback, results) {
+      var topic = results.topic;
+
+      var prevItemIndex = -1;
+      for (var i = 0; i < topic.items.length; i++) {
+        if (topic.items[i] && topic.items[i].id == prevItemId) {
+          prevItemIndex = i;
+          break;
+        }
+      }
+      topic.items.splice(prevItemIndex + 1, 0, {
+        type: type,
+        id: _id
+      });
+      topic.update_at = Date.now();
+      topic.save(function (err) {
+        callback(err);
+      });
+    }]
+  }, function (err, results) {
+    if (err) {
+      return next(err);
+    }
+
+    res.send(200);
+    var topic = results.topic;
+    topic.update({ update_at: Date.now() }, function () {
+      updateNewTopics();
+      _updateSingleTopicSiteCount(topic);
+    });
+    console.log('insert done');
   });
 }
 
@@ -671,7 +731,7 @@ function deleteItem(req, res, next) {
         }
         var index = -1;
         for (var i = 0; i < topic.items.length; i++) {
-          if (topic.items[i].id.equals(itemId)) {
+          if (topic.items[i] && topic.items[i].id == itemId) {
             index = i;
             break;
           }
@@ -1179,8 +1239,9 @@ exports.showChang = showChang;
 exports.showShareChang = showShareChang;
 exports.showIndex = showIndex;
 exports.createItem = createItem;
-exports.editItem = editItem;
 exports.sortItem = sortItem;
+exports.insertItem = insertItem;
+exports.editItem = editItem;
 exports.deleteItem = deleteItem;
 exports.deleteTopic = deleteTopic;
 exports.saveCover = saveCover;

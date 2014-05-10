@@ -8,6 +8,15 @@
 
 (function ($) {
 
+  $(function () {
+    $('.EditArea').perfectScrollbar({
+      suppressScrollX: true
+    });
+    $('.Scrollable').perfectScrollbar({
+      suppressScrollX: true
+    });
+  })
+
   $.validator.setDefaults({
     debug: false,
     ignore: "",
@@ -318,36 +327,32 @@
       if (!_id) {
         return;
       }
-      var prevItemType;
       var prevItemId;
       if (index > 0) {
-        prevItemType = $scope.items[index - 1].type;
         prevItemId = $scope.items[index - 1]._id;
       }
       //拖动的item放在了editWidget下面
       if (!prevItemId && (index > 1)) {//todo
-        prevItemType = $scope.items[index - 2].type;
         prevItemId = $scope.items[index - 2]._id;
       }
+      var url;
       if (moved) {
-        $scope.items[index]._id = null;
-        $scope.collectionScope.cancelEdit(true);
-        $scope.cancelEdit(true);
+        url = '/topic/insert';
       } else {
-        $.ajax('/topic/sort', {
-          type: 'PUT',
-          data: {
-            topicId: $scope.topic._id,
-            type: type,
-            _id: _id,
-            prevItemType: prevItemType,
-            prevItemId: prevItemId
-          }
-        }).fail(function () {
-            $scope.fail = true;
-            $scope.$apply();
-          });
+        url = '/topic/sort';
       }
+      $.ajax(url, {
+        type: 'PUT',
+        data: {
+          topicId: $scope.topic._id,
+          type: type,
+          _id: _id,
+          prevItemId: prevItemId
+        }
+      }).fail(function () {
+          $scope.fail = true;
+          $scope.$apply();
+        });
     }
     $($element).find('.WidgetItemList-Main')
       //防止拖动开始时高度减小导致的抖动
@@ -361,21 +366,34 @@
     $($element).find('.EditArea').on('scroll', function () {
       $ul.sortable('refreshPositions');//因为滚动后位置变了，所以要清除缓存大小
     });
+    var $editArea = $('.EditArea');
+    var $main = $('.Main');
+    var $window = $(window);
     $scope.sortableOptions = {
       //sortable微件的标准参数
-      opacity: 0.4,
+      axis: 'y',
       cursor: 'move',
       handle: '.MoveUtil',
       helper: "clone",//加这个是为了解决拖动后添加条目util的index问题
-      scrollSensitivity: 100,
-      scrollSpeed: 50,
-      axis: 'y',
-      containment: 'body',
+      opacity: 0.4,
+      revert: 250,
+      scroll: false,
 
       start: function () {
         $($element).find('.WidgetItemList-Main')
           .addClass('WidgetItemList-Sorting')
           .sortable('refreshPositions');//因为item缩小了，所以要清除缓存大小
+        $window.mousemove(function (event) {
+          if (event.clientY < 100) {
+            $editArea.scrollTop($editArea.scrollTop() - (50 - event.clientY/2))
+          }
+          if (event.clientY > $window.height() - 100) {
+            $editArea.scrollTop(Math.min(
+              $editArea.scrollTop() + (50 - ($window.height() - event.clientY)/2),
+              $main.height() + 220 - $editArea.height()
+            ))
+          }
+        });
       },
 
       update: function (e, ui) {
@@ -391,6 +409,7 @@
           && !ui.item.sortable.moved) {//这一个条件是多余的，只是为了规避升级sortable后的风险
           _updateList(ui.item.sortable.dropindex);
         }
+        $window.off('mousemove');
       }
     };
     $scope.sortItemTop = function (index) {
@@ -553,7 +572,7 @@
   };
 
   window.sng.controller('CollectionCtrl', CollectionCtrl);
-  function CollectionCtrl($scope, $sce, $timeout, $element) {
+  function CollectionCtrl($scope, $sce, $timeout) {
     _commonListCtrl($scope, $sce, $timeout);
     $scope.$emit('setCollectionScope', $scope);
     $scope.$on('addCollectionItem', function (e, item) {
@@ -567,9 +586,27 @@
         $scope.type = 'BOOKMARKLET';
       }
     };
+//    $(window).focus(function () {
+//      $scope.refresh();
+//    })
+//    $scope.refresh = function () {
+//      if ($scope.loadXhr) {
+//        $scope.loadXhr.abort();
+//        $scope.loadXhr = null;
+//        return;
+//      }
+//      $scope.loadXhr = $.getJSON('/item/collection')
+//        .done(function (data) {
+//          $scope.items = data;
+//        })
+//        .always(function () {
+//          $scope.loadXhr = null;
+//          $scope.$apply();
+//        });
+//    };
     $scope.setType = function (type) {
       $scope.type = type;
-      $scope.typeFilter = type == 'ALL' ? null : {type: type};
+//      $scope.typeFilter = type == 'ALL' ? null : {type: type};
     };
     $scope.playVideo = function (item) {
       item.playing = true;
@@ -611,7 +648,7 @@
 
   window.sng.controller('SortableCtrl', SortableCtrl);
   function SortableCtrl($scope, $element) {
-    $scope.item2 = [$.extend({}, $scope.item)];
+    $scope.item2 = [$scope.item];
     var $ul = $($element);
     $ul
       //防止拖动开始时高度减小导致的抖动
@@ -626,31 +663,44 @@
         $ul.sortable('refreshPositions');//因为滚动后位置变了，所以要清除缓存大小
       }
     });
+    var $editArea = $('.EditArea');
+    var $main = $('.Main');
+    var $window = $(window);
     $scope.sortableOptions = {
       appendTo: '.WidgetItemList-Main',
-      opacity: 0.4,
+      connectWith: '.WidgetItemList-Main',
       cursor: 'move',
       cursorAt: { top: 30 },
       helper: 'clone',
+      opacity: 0.4,
+      revert: 250,
       scroll: false,
-      containment: 'body',
-      connectWith: '.WidgetItemList-Main',
 
       start: function () {
         $ul
           .addClass('WidgetItemList-Sorting')
           .sortable('refreshPositions');//因为item缩小了，所以要清除缓存大小
-      },
-
-      update: function () {
-        $scope.item.used = true;
+        $window.mousemove(function (event) {
+          if (event.clientY < 100) {
+            $editArea.scrollTop($editArea.scrollTop() - (50 - event.clientY/2))
+          }
+          if (event.clientY > $window.height() - 100) {
+            $editArea.scrollTop(Math.min(
+              $editArea.scrollTop() + (50 - ($window.height() - event.clientY)/2),
+              $main.height() + 220 - $editArea.height()
+            ))
+          }
+        });
       },
 
       //列表顺序改变后的回调函数
       stop: function () {
         $ul
           .removeClass('WidgetItemList-Sorting');
-        $scope.item2 = [$.extend({}, $scope.item)];
+        if (!$scope.item2.length) {
+          $scope.$parent.items.splice($scope.$parent.items.indexOf($scope.item), 1);
+        }
+        $window.off('mousemove');
       }
     };
   }
@@ -812,12 +862,6 @@
           }
         }
       });
-    };
-    $scope.startLoading = function () {
-      $scope.loading = true;
-    };
-    $scope.stopLoading = function () {
-      $scope.loading = false;
     };
   };
 
