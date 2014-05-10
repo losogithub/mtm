@@ -385,7 +385,7 @@ function getVideoDetail(url, callback) {
         //<meta property="og:title"......content="意外 官方版 - 薛之谦"/>
         title = !(temp = html.match(/<meta property="og:title"[^<>]*content="([^">]*)/i)) ? null : !temp[1] ? null : temp[1];
         //http://v.yinyuetai.com/video/818636
-        vid = !(temp = url) ? null : !(temp = temp.match(/(\d{6})\/?([?&#]|$)/i)) ? null : !temp[1] ? null : temp[1];
+        vid = !(temp = url) ? null : !(temp = temp.match(/(\d+)\/?([?&#]|$)/i)) ? null : !temp[1] ? null : temp[1];
         //<meta property="og:image" content="http://img0.yytcdn.com/video/mv/131125/818636/E66901428C8A00732EBC7FE11A528C50_240x135.jpeg"/>
         //240x135
         //todo playlist
