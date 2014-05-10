@@ -34,7 +34,6 @@ var sendMail = function (data) {
         if (err) {
           // 写为日志
           console.log(err);
-          next(err);
         }
     });
 

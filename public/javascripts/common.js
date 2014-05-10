@@ -38,8 +38,12 @@
           .success(function () {
             location.reload();
           })
-          .error(function () {
-            $scope.error = '用户名或密码不正确';
+          .error(function (data) {
+            if (data.notActivated) {
+              $scope.error = '未激活，验证邮件已重新发送到您的邮箱' + data.email + '，请通过其中的验证链接完成您的石子儿帐号注册。';
+            } else {
+              $scope.error = '用户名或密码不正确';
+            }
           });
       };
     });

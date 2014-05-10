@@ -5,6 +5,32 @@
 </head>
 <body>
   <table>
+    <tr>
+      <td>
+        头像
+      </td>
+      <td>
+        用户名
+      </td>
+      <td>
+        注册邮箱
+      </td>
+      <td>
+        注册日期
+      </td>
+      <td>
+        策展数
+      </td>
+      <td>
+        浏览量
+      </td>
+      <td>
+        采集石子儿数
+      </td>
+      <td>
+        激活状态
+      </td>
+    </tr>
     <% users.forEach(function(user){ %>
     <tr>
       <td>
@@ -21,23 +47,14 @@
         + (user.createDate.getMonth() + 1) + '-'
         + user.createDate.getDate() %>
       </td>
-      <td>
-        <% if(AuthorTopicCount[user.loginName]) { %>
-          策展数：
-          <%= AuthorTopicCount[user.loginName] %>
-        <% } %>
+      <td style="text-align: right;">
+        <%= AuthorTopicCount[user.loginName] || '' %>
       </td>
-      <td>
-        <% if(AuthorPVCount[user.loginName]) { %>
-          浏览量：
-          <%= AuthorPVCount[user.loginName] %>
-        <% } %>
+      <td style="text-align: right;">
+        <%= AuthorPVCount[user.loginName] || '' %>
       </td>
-      <td>
-        <% if(user.items.length) { %>
-          采集石子儿数：
-          <%= user.items.length %>
-        <% } %>
+      <td style="text-align: right;">
+        <%= user.items.length || '' %>
       </td>
       <td>
         <%= !user.active ? '未激活' : '' %>
