@@ -233,7 +233,7 @@ function start() {
   _routine();
   _updateRelatedTopics();
 
-  _patchUserDate();
+//  _patchUserDate();
   setInterval(_routine, 60 * 1000);
   setInterval(_updateRelatedTopics, 60 * 60 * 1000);
   setInterval(_clearIP, 24 * 60 * 60 * 1000);
