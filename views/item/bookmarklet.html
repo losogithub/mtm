@@ -50,7 +50,9 @@
           if (initData) {
             InitData = initData;
             $scope.srcs = initData.srcs;
+            $scope.titles = initData.titles;
             delete initData.srcs;
+            delete initData.titles;
           }
           $http.get('/item/detail?url=' + encodeURIComponent(InitData.url))
             .success(function (data) {
@@ -102,7 +104,8 @@
           var data = $scope.item;
           if ($scope.item.type == 'IMAGE') {
             data = $.extend({}, data, {
-              url: $scope.imageSrc
+              url: $scope.imageSrc,
+              title: $scope.imageTitle
             });
           }
           $scope.saving = true;
@@ -253,12 +256,12 @@
                       <div class="prm mbm text-center text-muted">选择图片</div>
                       <button class="btn btn-link mrm mbm"
                               ng-repeat="src in srcs track by $index"
-                              ng-click="$parent.$parent.imageSrc = src"
+                              ng-click="$parent.$parent.imageSrc = src;$parent.$parent.imageTitle = titles[$index];"
                               type="button">
                         <img ng-src="{{src}}">
                       </button>
                     </div>
-                    <div class="Title text-center mts">{{item.title || ''}}</div>
+                    <div class="Title text-center mts">{{imageSrc ? imageTitle : item.title}}</div>
                     <div class="Description text-asbestos text-center small mtx"
                          ng-bind-html="getHtml(item.description)"></div>
                     <div class="Quote" ng-if="item.quote">

@@ -129,7 +129,7 @@
       <ul class="WidgetItemList WidgetItemList-Main" ui-sortable="sortableOptions"
           ng-model="items"
           ng-init="items = <%= JSON.stringify(locals.items) %>">
-        <li ng-repeat="item in items track by $index">
+        <li ng-repeat="item in items">
 
           <div class="Item pal"
                ng-switch="item.type" ng-if="editingId != item._id">
@@ -382,14 +382,14 @@
 
               <div class="form-group"
                    ng-class="{ 'has-error' : title.length > titleMaxLength }">
-                <input name="title" class="form-control flat text-center"
+                <input name="title" class="form-control flat text-center AUTO_FOCUS"
                        ng-model="title" ng-init="title = item.title"
                        placeholder="图片标题" type="text">
                 <div class="LetterCounter">{{title.length || 0}}/{{titleMaxLength}}</div>
               </div>
               <div class="form-group"
                    ng-class="{ 'has-error' : description.length > descriptionMaxLength }">
-                <textarea msd-elastic name="description" class="form-control flat text-center AUTO_FOCUS"
+                <textarea msd-elastic name="description" class="form-control flat text-center"
                           ng-model="description" ng-init="description = item.description"
                           placeholder="图片介绍、评论"></textarea>
                 <div class="LetterCounter">{{description.length || 0}}/{{descriptionMaxLength}}</div>
@@ -417,7 +417,7 @@
               </div>
               <div class="form-group mtx"
                    ng-class="{ 'has-error' : description.length > descriptionMaxLength }">
-                <textarea msd-elastic class="form-control flat" name="description"
+                <textarea msd-elastic class="form-control flat AUTO_FOCUS" name="description"
                           ng-model="description" ng-init="description = item.description"
                           placeholder="引文介绍、评论"></textarea>
                 <div class="LetterCounter">{{description.length || 0}}/{{descriptionMaxLength}}</div>

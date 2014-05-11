@@ -8,18 +8,13 @@
 
 (function ($) {
 
+  var $window;
   var $editArea;
   var $main;
-  var $window;
+  var $scrollable;
   var marginBottom = 200;
 
   $(function () {
-    $('.EditArea').perfectScrollbar({
-      suppressScrollX: true
-    });
-    $('.Scrollable').perfectScrollbar({
-      suppressScrollX: true
-    });
 
     $editArea = $('.EditArea');
     $main = $('.Main');
@@ -34,6 +29,14 @@
         $main.height() + 20 + marginBottom - $editArea.height()
       ));
       $('.EditArea').perfectScrollbar('update');
+    });
+
+    $editArea.perfectScrollbar({
+      suppressScrollX: true
+    });
+    $scrollable = $('.Scrollable');
+    $scrollable.perfectScrollbar({
+      suppressScrollX: true
     });
 
     var $toTop = $('.ToTop');
@@ -404,7 +407,7 @@
       handle: '.MoveUtil',
       helper: "clone",//加这个是为了解决拖动后添加条目util的index问题
       opacity: 0.4,
-      revert: 250,
+      revert: 100,
       scroll: false,
 
       start: function () {
@@ -617,6 +620,7 @@
     $scope.$emit('setCollectionScope', $scope);
     $scope.$on('addCollectionItem', function (e, item) {
       $scope.items.splice(0, 0, item);
+      $scrollable.scrollTop(0);
     });
     $scope.$on('setCollectionCategory', function (e, type) {
       $scope.type = type;

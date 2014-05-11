@@ -63,15 +63,18 @@ var shizier_postMessageListener;
         var imgs = document.getElementsByTagName('img');
 
         var srcs = [];
+        var titles = [];
         for (var i = 0; i < imgs.length; i++) {//imgs是类似数组的对象，只能这样遍历
           srcs.push(imgs[i].src);
+          titles.push(imgs[i].alt || imgs[i].title || document.title);
         }
         iframe.contentWindow.postMessage({
           url: location.href,
           title: document.title,
           snippet: description,
           cite: selection.toString(),
-          srcs: srcs
+          srcs: srcs,
+          titles: titles
         }, '*');
       } else if (event.data == 'close') {
         clean();
