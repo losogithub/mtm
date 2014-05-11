@@ -511,28 +511,24 @@ function createItem(req, res, next) {
 
   async.auto({
     parse: function (callback) {
-      if (data.type == 'LINK_CREATE') {
+      if (data.type != 'LINK_CREATE') {
+        return callback();
+      }
+      helper.getDetail(data.url, function (err, results) {
+        if (err) return callback(err);
+
+        if (results) {
+          data = results;
+          return callback();
+        }
+
         helper.getLinkDetail(data.url, function (err, results) {
           if (err) return callback(err);
           results.src = results.srcs && results.srcs[0];
           data = results;
           callback();
         });
-      } else if (data.type == 'VIDEO_CREATE') {
-        helper.getVideoDetail(data.url, function (err, results) {
-          if (err) return callback(err);
-          data = results;
-          callback();
-        });
-      } else if (data.type == 'WEIBO_CREATE') {
-        helper.getWeiboDetail(data.url, function (err, results) {
-          if (err) return callback(err);
-          data = results;
-          callback();
-        });
-      } else {
-        callback();
-      }
+      });
     },
     topic: function (callback) {
       _getTopicWithAuth(callback, topicId, userId);

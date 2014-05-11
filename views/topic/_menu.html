@@ -1,47 +1,28 @@
-<div class="Menu pas">
-  <span>添加条目</span>
-  <ul>
-    <li>
-      <button class="btn btn-link" type="button"
-              data-type="LINK_CREATE" title="链接">
-        <i class="fa fa-link"></i>
-      </button>
-    </li>
-    <li>
-      <button class="btn btn-link" type="button"
-              data-type="IMAGE_CREATE" title="图片">
-        <i class="fa fa-picture-o"></i>
-      </button>
-    </li>
-    <li>
-      <button class="btn btn-link" type="button"
-              data-type="VIDEO_CREATE" title="视频">
-        <i class="fa fa-play-circle"></i>
-      </button>
-    </li>
-    <li>
-      <button class="btn btn-link" type="button"
-              data-type="CITE" title="引文">
-        <i class="fa fa-quote-left"></i>
-      </button>
-    </li>
-    <li>
-      <button class="btn btn-link" type="button"
-              data-type="WEIBO_CREATE" title="weibo">
-        <i class="fa fa-weibo"></i>
-      </button>
-    </li>
-    <li>
-      <button class="btn btn-link" type="button"
-              data-type="TEXT" title="文本">
-        <i class="fa fa-align-left"></i>
-      </button>
-    </li>
-    <li>
-      <button class="btn btn-link" type="button"
-              data-type="TITLE" title="标题">
-        <i class="fa fa-text-width"></i>
-      </button>
-    </li>
-  </ul>
+<div class="Menu btn-group btn-group-sm"
+     ng-class="{OpacityMenu: !items.length}">
+  <button class="btn btn-primary" type="button"
+          ng-click="createItem(item, 'TITLE')"
+          title="标题">
+    <i class="fa fa-text-width"></i>
+  </button>
+  <button class="btn btn-primary" type="button"
+          ng-click="createItem(item, 'TEXT')"
+          title="文本">
+    <i class="fa fa-align-left"></i>
+  </button>
+  <button class="btn btn-primary" type="button"
+          ng-click="createItem(item, 'IMAGE')"
+          title="图片">
+    <i class="fa fa-picture-o"></i>
+  </button>
+  <button class="btn btn-primary" type="button"
+          ng-click="createItem(item, 'LINK_CREATE')"
+          title="链接">
+    <i class="fa fa-link"></i>
+  </button>
+  <button class="btn btn-default" type="button"
+          ng-click="onCreateCite()"
+          title="引文">
+    <i class="fa fa-quote-left"></i>
+  </button>
 </div>

@@ -87,61 +87,7 @@
         </div>
         <div class="StaticMenu">
 
-          <div class="Menu pas"
-               ng-class="{OpacityMenu: !items.length}">
-            <span>添加条目</span>
-            <ul>
-              <li>
-                <button class="btn btn-link" type="button"
-                        ng-click="createItem(null, 'LINK_CREATE')"
-                        data-type="LINK_CREATE" title="链接">
-                  <i class="fa fa-link"></i>
-                </button>
-              </li>
-              <li>
-                <button class="btn btn-link" type="button"
-                        ng-click="createItem(null, 'IMAGE_CREATE')"
-                        data-type="IMAGE_CREATE" title="图片">
-                  <i class="fa fa-picture-o"></i>
-                </button>
-              </li>
-              <li>
-                <button class="btn btn-link" type="button"
-                        ng-click="createItem(null, 'VIDEO_CREATE')"
-                        data-type="VIDEO_CREATE" title="视频">
-                  <i class="fa fa-play-circle"></i>
-                </button>
-              </li>
-              <li>
-                <button class="btn btn-link" type="button"
-                        ng-click="createItem(null, 'CITE')"
-                        data-type="CITE" title="引文">
-                  <i class="fa fa-quote-left"></i>
-                </button>
-              </li>
-              <li>
-                <button class="btn btn-link" type="button"
-                        ng-click="createItem(null, 'WEIBO_CREATE')"
-                        data-type="WEIBO_CREATE" title="weibo">
-                  <i class="fa fa-weibo"></i>
-                </button>
-              </li>
-              <li>
-                <button class="btn btn-link" type="button"
-                        ng-click="createItem(null, 'TEXT')"
-                        data-type="TEXT" title="文本">
-                  <i class="fa fa-align-left"></i>
-                </button>
-              </li>
-              <li>
-                <button class="btn btn-link" type="button"
-                        ng-click="createItem(null, 'TITLE')"
-                        data-type="TITLE" title="标题">
-                  <i class="fa fa-text-width"></i>
-                </button>
-              </li>
-            </ul>
-          </div>
+          <% include _menu.html %>
 
         </div>
       </div>
@@ -183,28 +129,17 @@
       <ul class="WidgetItemList WidgetItemList-Main" ui-sortable="sortableOptions"
           ng-model="items"
           ng-init="items = <%= JSON.stringify(locals.items) %>">
-        <li ng-repeat="item in items track by item._id">
+        <li ng-repeat="item in items track by $index">
 
           <div class="Item pal"
                ng-switch="item.type" ng-if="editingId != item._id">
 
-            <div class="Content LINK pam"
-                 ng-switch-when="LINK">
-              <div class="Title">
-                <img class="Fav" ng-src="{{item.fav}}"
-                     ui-event="{ error : 'onFavError(item)' }">
-                <a target="_blank" class="LINK_URL" href='{{item.url}}'>{{item.title || ''}}</a>
-              </div>
-              <div class="Quote">
-                <i class="fa fa-globe"></i>
-                <a target="_blank" class="LINK_URL" href="{{item.url}}">
-                  {{item.url}}
-                </a>
-              </div>
-              <div class="Snippet text-muted small mtx" ng-if="item.snippet">{{item.snippet}}</div>
-              <div class="Description text-asbestos mts small"
-                   ng-if="item.description" ng-bind-html="getHtml(item.description)"></div>
-              <div class="clearfix"></div>
+            <h2 class="Content TITLE h6"
+                ng-switch-when="TITLE">
+              {{item.title}}
+            </h2>
+            <div class="Content TEXT"
+                 ng-switch-when="TEXT" ng-bind-html="getHtml(item.text)">
             </div>
             <div class="Content IMAGE pam"
                  ng-switch-when="IMAGE">
@@ -225,6 +160,38 @@
                   {{item.quoteDomain || ''}}
                 </a>
               </div>
+            </div>
+            <div class="Content CITE"
+                 ng-switch-when="CITE">
+              <div class="Cite">
+                <i class="fa fa-quote-left text-muted"></i>
+                <q ng-bind-html="getHtml(item.cite)"></q>
+              </div>
+
+              <div class="Quote" ng-if="item.url">
+                出自 <i class="fa fa-globe"></i>
+                <a target="_blank" href="{{item.url}}">{{item.title || item.url}}</a>
+              </div>
+              <div class="Description text-asbestos small mtx"
+                   ng-if="item.description" ng-bind-html="getHtml(item.description)"></div>
+            </div>
+            <div class="Content LINK pam"
+                 ng-switch-when="LINK">
+              <div class="Title">
+                <img class="Fav" ng-src="{{item.fav}}"
+                     ui-event="{ error : 'onFavError(item)' }">
+                <a target="_blank" class="LINK_URL" href='{{item.url}}'>{{item.title || ''}}</a>
+              </div>
+              <div class="Quote">
+                <i class="fa fa-globe"></i>
+                <a target="_blank" class="LINK_URL" href="{{item.url}}">
+                  {{item.url}}
+                </a>
+              </div>
+              <div class="Snippet text-muted small mtx" ng-if="item.snippet">{{item.snippet}}</div>
+              <div class="Description text-asbestos mts small"
+                   ng-if="item.description" ng-bind-html="getHtml(item.description)"></div>
+              <div class="clearfix"></div>
             </div>
             <div class="Content VIDEO pam"
                  ng-switch-when="VIDEO">
@@ -264,20 +231,6 @@
                 <a target="_blank" class="VIDEO_URL" href="{{item.url}}">
                   {{item.title || ''}}
                 </a>
-              </div>
-              <div class="Description text-asbestos small mtx"
-                   ng-if="item.description" ng-bind-html="getHtml(item.description)"></div>
-            </div>
-            <div class="Content CITE"
-                 ng-switch-when="CITE">
-              <div class="Cite">
-                <i class="fa fa-quote-left text-muted"></i>
-                <q ng-bind-html="getHtml(item.cite)"></q>
-              </div>
-
-              <div class="Quote" ng-if="item.url">
-                出自 <i class="fa fa-globe"></i>
-                <a target="_blank" href="{{item.url}}">{{item.title || item.url}}</a>
               </div>
               <div class="Description text-asbestos small mtx"
                    ng-if="item.description" ng-bind-html="getHtml(item.description)"></div>
@@ -366,13 +319,6 @@
               <div class="Description text-asbestos small mtx"
                    ng-if="item.description" ng-bind-html="getHtml(item.description)"></div>
             </div>
-            <div class="Content TEXT"
-                 ng-switch-when="TEXT" ng-bind-html="getHtml(item.text)">
-            </div>
-            <h2 class="Content TITLE h6"
-                ng-switch-when="TITLE">
-              {{item.title}}
-            </h2>
 
             <button class="COLLECT btn btn-default btn-xs"
                     ng-click="collectItem(item)"
@@ -380,61 +326,7 @@
                     type="button">采集</button>
             <div class="AddUtil pull-left">
 
-              <div class="Menu pas"
-                   ng-class="{OpacityMenu: !editingScope}">
-                <span>添加条目</span>
-                <ul>
-                  <li>
-                    <button class="btn btn-link" type="button"
-                            ng-click="createItem(item, 'LINK_CREATE')"
-                            data-type="LINK_CREATE" title="链接">
-                      <i class="fa fa-link"></i>
-                    </button>
-                  </li>
-                  <li>
-                    <button class="btn btn-link" type="button"
-                            ng-click="createItem(item, 'IMAGE_CREATE')"
-                            data-type="IMAGE_CREATE" title="图片">
-                      <i class="fa fa-picture-o"></i>
-                    </button>
-                  </li>
-                  <li>
-                    <button class="btn btn-link" type="button"
-                            ng-click="createItem(item, 'VIDEO_CREATE')"
-                            data-type="VIDEO_CREATE" title="视频">
-                      <i class="fa fa-play-circle"></i>
-                    </button>
-                  </li>
-                  <li>
-                    <button class="btn btn-link" type="button"
-                            ng-click="createItem(item, 'CITE')"
-                            data-type="CITE" title="引文">
-                      <i class="fa fa-quote-left"></i>
-                    </button>
-                  </li>
-                  <li>
-                    <button class="btn btn-link" type="button"
-                            ng-click="createItem(item, 'WEIBO_CREATE')"
-                            data-type="WEIBO_CREATE" title="weibo">
-                      <i class="fa fa-weibo"></i>
-                    </button>
-                  </li>
-                  <li>
-                    <button class="btn btn-link" type="button"
-                            ng-click="createItem(item, 'TEXT')"
-                            data-type="TEXT" title="文本">
-                      <i class="fa fa-align-left"></i>
-                    </button>
-                  </li>
-                  <li>
-                    <button class="btn btn-link" type="button"
-                            ng-click="createItem(item, 'TITLE')"
-                            data-type="TITLE" title="标题">
-                      <i class="fa fa-text-width"></i>
-                    </button>
-                  </li>
-                </ul>
-              </div>
+              <% include _menu.html %>
 
             </div>
             <div class="EditUtil pull-right pas plm">
@@ -448,74 +340,34 @@
           <form class="Widget pal" name="form"
                 ng-switch="item.type" ng-if="editingId == item._id">
 
-            <div class="Content LINK_CREATE pam"
-                 ng-switch-when="LINK_CREATE" ng-controller="LinkCreateCtrl" ng-init="init()">
-              <div class="form-group">
-                <div class="Required"></div>
-                <input name="url" class="form-control flat AUTO_FOCUS"
-                       ng-model="url"
-                       placeholder="链接URL" id="_link_url" type="text">
-                <label class="input-icon fa fa-link" for="_link_url"></label>
-              </div>
-
-              <% include _widget_BtnSet.html %>
-
-            </div>
-
-            <div class="Content LINK pam"
-                 ng-switch-when="LINK" ng-controller="LinkCtrl" ng-init="init()">
-              <div class="form-group mbx"
+            <div class="Content TITLE"
+                 ng-switch-when="TITLE" ng-controller="TitleCtrl" ng-init="init()">
+              <div class="form-group"
                    ng-class="{ 'has-error' : title.length > titleMaxLength }">
-                <input name="title" class="form-control flat"
-                       ng-model="title" ng-init="title = item.title"
-                       placeholder="链接标题" type="text">
+                <div class="Required"></div>
+                <input name="title" class="form-control flat AUTO_FOCUS"
+                       ng-model="title" ng-init="title = item.title" ng-focus="true"
+                       placeholder="标题" type="text">
                 <div class="LetterCounter">{{title.length || 0}}/{{titleMaxLength}}</div>
-
-                <div class="Quote">
-                  <i class="fa fa-globe"></i>
-                  <a target="_blank" class="LINK_URL" href="{{item.url}}">{{item.url}}</a>
-                </div>
-              </div>
-
-              <div class="form-group"
-                   ng-class="{ 'has-error' : snippet.length > snippetMaxLength }">
-                <textarea msd-elastic name="snippet" class="form-control flat"
-                          ng-model="snippet" ng-init="snippet = item.snippet"
-                          placeholder="链接摘要"></textarea>
-                <div class="LetterCounter">{{snippet.length || 0}}/{{snippetMaxLength}}</div>
-              </div>
-
-              <div class="form-group"
-                   ng-class="{ 'has-error' : description.length > descriptionMaxLength }">
-                <textarea msd-elastic name="description" class="form-control flat AUTO_FOCUS"
-                          ng-model="description" ng-init="description = item.description"
-                          placeholder="链接评论"></textarea>
-                <div class="LetterCounter">{{description.length || 0}}/{{descriptionMaxLength}}</div>
               </div>
 
               <% include _widget_BtnSet.html %>
 
             </div>
 
-            <div class="Content IMAGE_CREATE pam"
-                 ng-switch-when="IMAGE_CREATE" ng-controller="ImageCreateCtrl" ng-init="init()">
-              <button class="btn btn-link mbm" style="padding: 0;"
-                      ng-click="showSearchImage()"
-                      type="button">
-                <i class="fa fa-search"></i> 搜索添加
-              </button>
-              <div>
-                <div class="form-group">
-                  <div class="Required"></div>
-                  <input name="url" class="form-control flat AUTO_FOCUS"
-                         ng-model="url"
-                         placeholder="图片URL" id="_image_url" type="text">
-                  <label class="input-icon fa fa-link" for="_image_url"></label>
-                </div>
-
-                <% include _widget_BtnSet.html %>
-
+            <div class="Content TEXT"
+                 ng-switch-when="TEXT" ng-controller="TextCtrl" ng-init="init()">
+              <div class="form-group"
+                   ng-class="{ 'has-error' : text.length > textMaxLength }">
+                <div class="Required"></div>
+                <textarea msd-elastic name="text" class="form-control flat AUTO_FOCUS"
+                          ng-model="text" ng-init="text = item.text"
+                          placeholder="文本"></textarea>
+                <div class="LetterCounter">{{text.length || 0}}/{{textMaxLength}}</div>
               </div>
+
+              <% include _widget_BtnSet.html %>
+
             </div>
 
             <div class="Content IMAGE pam"
@@ -530,20 +382,14 @@
 
               <div class="form-group"
                    ng-class="{ 'has-error' : title.length > titleMaxLength }">
-                <input name="title" class="form-control flat text-center Bold AUTO_FOCUS"
+                <input name="title" class="form-control flat text-center"
                        ng-model="title" ng-init="title = item.title"
                        placeholder="图片标题" type="text">
                 <div class="LetterCounter">{{title.length || 0}}/{{titleMaxLength}}</div>
               </div>
-              <div class="form-group">
-                <input name="quote" class="form-control flat Url"
-                       ng-model="quote" ng-init="quote = item.quote"
-                       placeholder="图片来源网页URL" id="_QuoteUrl" type="text">
-                <label class="input-icon fa fa-link" for="_QuoteUrl"></label>
-              </div>
               <div class="form-group"
                    ng-class="{ 'has-error' : description.length > descriptionMaxLength }">
-                <textarea msd-elastic name="description" class="form-control flat text-center"
+                <textarea msd-elastic name="description" class="form-control flat text-center AUTO_FOCUS"
                           ng-model="description" ng-init="description = item.description"
                           placeholder="图片介绍、评论"></textarea>
                 <div class="LetterCounter">{{description.length || 0}}/{{descriptionMaxLength}}</div>
@@ -551,35 +397,82 @@
 
               <% include _widget_BtnSet.html %>
 
+              <div class="Quote" ng-if="item.quote">
+                出自 <i class="fa fa-globe"></i>
+                <a target="_blank" href="{{item.quote}}">
+                  {{item.quoteDomain || ''}}
+                </a>
+              </div>
             </div>
 
-            <div class="Content VIDEO_CREATE pam"
-                 ng-switch-when="VIDEO_CREATE" ng-controller="VideoCreateCtrl" ng-init="init()">
+            <div class="Content CITE"
+                 ng-switch-when="CITE" ng-controller="CiteCtrl" ng-init="init()">
+              <div class="Cite">
+                <i class="fa fa-quote-left text-muted"></i>
+                <q ng-bind-html="getHtml(item.cite)"></q>
+              </div>
+              <div class="Quote" ng-if="item.url">
+                出自 <i class="fa fa-globe"></i>
+                <a target="_blank" href="{{item.url}}">{{item.title || item.url}}</a>
+              </div>
+              <div class="form-group mtx"
+                   ng-class="{ 'has-error' : description.length > descriptionMaxLength }">
+                <textarea msd-elastic class="form-control flat" name="description"
+                          ng-model="description" ng-init="description = item.description"
+                          placeholder="引文介绍、评论"></textarea>
+                <div class="LetterCounter">{{description.length || 0}}/{{descriptionMaxLength}}</div>
+              </div>
+
+              <% include _widget_BtnSet.html %>
+
+            </div>
+
+            <div class="Content LINK_CREATE pam"
+                 ng-switch-when="LINK_CREATE" ng-controller="LinkCreateCtrl" ng-init="init()">
               <div class="InfoHint text-muted">
-                目前已支持<a
-                target="_blank" class="text-primary" href="http://www.youku.com">优酷</a>、<a
-                target="_blank" class="text-primary" href="http://www.tudou.com">土豆</a>、<a
-                target="_blank" class="text-primary" href="http://www.iqiyi.com/">爱奇艺</a>、<a
-                target="_blank" class="text-primary" href="http://www.pps.tv/">PPS</a>、<a
-                target="_blank" class="text-primary" href="http://tv.sohu.com/">搜狐视频</a>、<a
-                target="_blank" class="text-primary" href="http://v.qq.com/">腾讯视频</a>、<a
-                target="_blank" class="text-primary" href="http://video.sina.com.cn">新浪视频</a>、<a
-                target="_blank" class="text-primary" href="http://v.ifeng.com/">凤凰视频</a>、<a
-                target="_blank" class="text-primary" href="http://www.letv.com/">乐视</a>、<a
-                target="_blank" class="text-primary" href="http://www.pptv.com/">PPTV</a>、<a
-                target="_blank" class="text-primary" href="http://www.ku6.com/">酷6</a>、<a
-                target="_blank" class="text-primary" href="http://www.56.com/">56</a>、<a
-                target="_blank" class="text-primary" href="http://www.baomihua.com/">爆米花</a>、<a
-                target="_blank" class="text-primary" href="http://www.yinyuetai.com/">音悦台</a>、<a
-                target="_blank" class="text-primary" href="http://www.acfun.com/">AcFun</a>、<a
-                target="_blank" class="text-primary" href="http://www.bilibili.tv/">bilibili</a>等视频网站的视频播放页链接。
+                <span class="text-default" style="font-size: 14px;"><i class="fa fa-play-circle"></i> 视频</span>：目前已支持<b>优酷</b>、<b>土豆</b>、<b>爱奇艺</b>、<b>PPS</b>、<b>搜狐视频</b>、<b>腾讯视频</b>、
+                <b>新浪视频</b>、<b>凤凰视频</b>、<b>乐视</b>、<b>PPTV</b>、<b>酷6</b>、<b>56</b>、<b>爆米花</b>、
+                <b>音悦台</b>、<b>AcFun</b>、<b>bilibili</b>等视频网站的视频播放页链接。
+              </div>
+              <div class="InfoHint text-muted">
+                <span class="text-default" style="font-size: 14px;"><i class="fa fa-weibo"></i> 微博</span>：由于受隐私设置保护，有些微博将无法引用
+              </div>
+              <div class="InfoHint text-muted">
+                <span class="text-default" style="font-size: 14px;"><i class="fa fa-globe"></i> 网页</span>
               </div>
               <div class="form-group">
                 <div class="Required"></div>
                 <input name="url" class="form-control flat AUTO_FOCUS"
                        ng-model="url"
-                       placeholder="视频URL" id="_video_url" type="text">
-                <label class="input-icon fa fa-link" for="_video_url"></label>
+                       placeholder="视频、微博或网页URL" id="_link_url" type="text">
+                <label class="input-icon fa fa-link" for="_link_url"></label>
+              </div>
+
+              <% include _widget_BtnSet.html %>
+
+            </div>
+
+            <div class="Content LINK pam"
+                 ng-switch-when="LINK" ng-controller="LinkCtrl" ng-init="init()">
+              <div class="Title">
+                <img class="Fav" ng-src="{{item.fav}}"
+                     ui-event="{ error : 'onFavError(item)' }">
+                <a target="_blank" class="LINK_URL" href='{{item.url}}'>{{item.title || ''}}</a>
+              </div>
+              <div class="Quote">
+                <i class="fa fa-globe"></i>
+                <a target="_blank" class="LINK_URL" href="{{item.url}}">
+                  {{item.url}}
+                </a>
+              </div>
+              <div class="Snippet text-muted small mtx" ng-if="item.snippet">{{item.snippet}}</div>
+
+              <div class="form-group mtx"
+                   ng-class="{ 'has-error' : description.length > descriptionMaxLength }">
+                <textarea msd-elastic name="description" class="form-control flat AUTO_FOCUS"
+                          ng-model="description" ng-init="description = item.description"
+                          placeholder="链接评论"></textarea>
+                <div class="LetterCounter">{{description.length || 0}}/{{descriptionMaxLength}}</div>
               </div>
 
               <% include _widget_BtnSet.html %>
@@ -621,14 +514,12 @@
                 </a>
               </div>
 
-              <div class="form-group mtx"
-                   ng-class="{ 'has-error' : title.length > titleMaxLength }">
-                <input name="title" class="form-control flat Bold"
-                       ng-model="title" ng-init="title = item.title"
-                       placeholder="视频标题" type="text">
-                <div class="LetterCounter">{{title.length || 0}}/{{titleMaxLength}}</div>
+              <div class="Title mtx" ng-if="item.title">
+                <a target="_blank" class="VIDEO_URL" href="{{item.url}}">
+                  {{item.title || ''}}
+                </a>
               </div>
-              <div class="form-group"
+              <div class="form-group mtx"
                    ng-class="{ 'has-error' : description.length > descriptionMaxLength }">
                 <textarea msd-elastic class="form-control flat AUTO_FOCUS" name="description"
                           ng-model="description" ng-init="description = item.description"
@@ -638,63 +529,6 @@
 
               <% include _widget_BtnSet.html %>
 
-            </div>
-
-            <div class="Content CITE"
-                 ng-switch-when="CITE" ng-controller="CiteCtrl" ng-init="init()">
-              <div class="form-group"
-                   ng-class="{ 'has-error' : cite.length > citeMaxLength }">
-                <div class="Required"></div>
-                <textarea msd-elastic class="form-control flat AUTO_FOCUS" name="cite"
-                          ng-model="cite" ng-init="cite = item.cite"
-                          placeholder="引文"></textarea>
-                <div class="LetterCounter">{{cite.length || 0}}/{{citeMaxLength}}</div>
-              </div>
-              <div class="form-group">
-                <input class="form-control flat" name="url" placeholder="引文来源网页URL"
-                       ng-model="url" ng-init="url = item.url"
-                       id="_citeUrl" type="text">
-                <label class="input-icon fa fa-link" for="_citeUrl"></label>
-              </div>
-              <div class="form-group"
-                   ng-class="{ 'has-error' : title.length > titleMaxLength }">
-                <input class="form-control flat" name="title"
-                       ng-model="title" ng-init="title = item.title"
-                       placeholder="引文来源网页标题" type="text">
-                <div class="LetterCounter">{{title.length || 0}}/{{titleMaxLength}}</div>
-              </div>
-              <div class="form-group"
-                   ng-class="{ 'has-error' : description.length > descriptionMaxLength }">
-                <textarea msd-elastic class="form-control flat" name="description"
-                          ng-model="description" ng-init="description = item.description"
-                          placeholder="引文介绍、评论"></textarea>
-                <div class="LetterCounter">{{description.length || 0}}/{{descriptionMaxLength}}</div>
-              </div>
-
-              <% include _widget_BtnSet.html %>
-
-            </div>
-
-            <div class="Content WEIBO_CREATE pam"
-                 ng-switch-when="WEIBO_CREATE" ng-controller="WeiboCreateCtrl" ng-init="init()">
-              <div class="Avatar img-circle text-center">
-                <i class="fa fa-weibo text-muted"></i>
-              </div>
-              <div style="overflow: hidden;">
-                <div class="InfoHint text-muted">
-                  由于受隐私设置保护，有些微博将无法引用
-                </div>
-                <div class="form-group">
-                  <div class="Required" style="float: left;"></div>
-                  <input name="url" class="form-control flat AUTO_FOCUS"
-                         ng-model="url"
-                         placeholder="新浪微博URL" id="_weibo_url" type="text">
-                  <label class="input-icon fa fa-link" for="_weibo_url"></label>
-                </div>
-
-                <% include _widget_BtnSet.html %>
-
-              </div>
             </div>
 
             <div class="Content WEIBO pam"
@@ -791,36 +625,6 @@
 
             </div>
 
-            <div class="Content TEXT"
-                 ng-switch-when="TEXT" ng-controller="TextCtrl" ng-init="init()">
-              <div class="form-group"
-                   ng-class="{ 'has-error' : text.length > textMaxLength }">
-                <div class="Required"></div>
-                <textarea msd-elastic name="text" class="form-control flat AUTO_FOCUS"
-                          ng-model="text" ng-init="text = item.text"
-                          placeholder="文本"></textarea>
-                <div class="LetterCounter">{{text.length || 0}}/{{textMaxLength}}</div>
-              </div>
-
-              <% include _widget_BtnSet.html %>
-
-            </div>
-
-            <div class="Content TITLE"
-                 ng-switch-when="TITLE" ng-controller="TitleCtrl" ng-init="init()">
-              <div class="form-group"
-                   ng-class="{ 'has-error' : title.length > titleMaxLength }">
-                <div class="Required"></div>
-                <input name="title" class="form-control flat Bold AUTO_FOCUS"
-                       ng-model="title" ng-init="title = item.title" ng-focus="true"
-                       placeholder="标题" type="text">
-                <div class="LetterCounter">{{title.length || 0}}/{{titleMaxLength}}</div>
-              </div>
-
-              <% include _widget_BtnSet.html %>
-
-            </div>
-
           </form>
 
           <div class="SortUtil text-muted">
@@ -886,11 +690,11 @@
         <i class="fa fa-level-up"></i> 拖放到书签栏<br>
         2.然后在任意网页点击我<br>
         就能便捷地采集：<br>
-        <i class="fa fa-link"></i> 链接、
         <i class="fa fa-picture-o"></i> 图片、
         <i class="fa fa-play-circle"></i> 视频、
         <i class="fa fa-quote-left"></i> 引文、
-        <i class="fa fa-weibo"></i> 微博
+        <i class="fa fa-weibo"></i> 微博、
+        <i class="fa fa-globe"></i> 网页
       </div>
     </div>
     <div class="CollectionItems Scrollable background-white" ng-show="type != 'BOOKMARKLET'">
@@ -904,23 +708,12 @@
             <div class="Item pal"
                  ng-switch="item.type" ng-if="editingId != item._id">
 
-              <div class="Content LINK pam"
-                   ng-switch-when="LINK">
-                <div class="Title">
-                  <img class="Fav" ng-src="{{item.fav}}"
-                       ui-event="{ error : 'onFavError(item)' }">
-                  <a target="_blank" class="LINK_URL" href='{{item.url}}'>{{item.title || ''}}</a>
-                </div>
-                <div class="Quote">
-                  <i class="fa fa-globe"></i>
-                  <a target="_blank" class="LINK_URL" href="{{item.url}}">
-                    {{item.url}}
-                  </a>
-                </div>
-                <div class="Snippet text-muted small mtx" ng-if="item.snippet">{{item.snippet}}</div>
-                <div class="Description text-asbestos mts small"
-                     ng-if="item.description" ng-bind-html="getHtml(item.description)"></div>
-                <div class="clearfix"></div>
+              <h2 class="Content TITLE h6"
+                  ng-switch-when="TITLE">
+                {{item.title}}
+              </h2>
+              <div class="Content TEXT"
+                   ng-switch-when="TEXT" ng-bind-html="getHtml(item.text)">
               </div>
               <div class="Content IMAGE pam"
                    ng-switch-when="IMAGE">
@@ -941,6 +734,38 @@
                     {{item.quoteDomain || ''}}
                   </a>
                 </div>
+              </div>
+              <div class="Content CITE"
+                   ng-switch-when="CITE">
+                <div class="Cite">
+                  <i class="fa fa-quote-left text-muted"></i>
+                  <q ng-bind-html="getHtml(item.cite)"></q>
+                </div>
+
+                <div class="Quote" ng-if="item.url">
+                  出自 <i class="fa fa-globe"></i>
+                  <a target="_blank" href="{{item.url}}">{{item.title || item.url}}</a>
+                </div>
+                <div class="Description text-asbestos small mtx"
+                     ng-if="item.description" ng-bind-html="getHtml(item.description)"></div>
+              </div>
+              <div class="Content LINK pam"
+                   ng-switch-when="LINK">
+                <div class="Title">
+                  <img class="Fav" ng-src="{{item.fav}}"
+                       ui-event="{ error : 'onFavError(item)' }">
+                  <a target="_blank" class="LINK_URL" href='{{item.url}}'>{{item.title || ''}}</a>
+                </div>
+                <div class="Quote">
+                  <i class="fa fa-globe"></i>
+                  <a target="_blank" class="LINK_URL" href="{{item.url}}">
+                    {{item.url}}
+                  </a>
+                </div>
+                <div class="Snippet text-muted small mtx" ng-if="item.snippet">{{item.snippet}}</div>
+                <div class="Description text-asbestos mts small"
+                     ng-if="item.description" ng-bind-html="getHtml(item.description)"></div>
+                <div class="clearfix"></div>
               </div>
               <div class="Content VIDEO pam"
                    ng-switch-when="VIDEO">
@@ -980,20 +805,6 @@
                   <a target="_blank" class="VIDEO_URL" href="{{item.url}}">
                     {{item.title || ''}}
                   </a>
-                </div>
-                <div class="Description text-asbestos small mtx"
-                     ng-if="item.description" ng-bind-html="getHtml(item.description)"></div>
-              </div>
-              <div class="Content CITE"
-                   ng-switch-when="CITE">
-                <div class="Cite">
-                  <i class="fa fa-quote-left text-muted"></i>
-                  <q ng-bind-html="getHtml(item.cite)"></q>
-                </div>
-
-                <div class="Quote" ng-if="item.url">
-                  出自 <i class="fa fa-globe"></i>
-                  <a target="_blank" href="{{item.url}}">{{item.title || item.url}}</a>
                 </div>
                 <div class="Description text-asbestos small mtx"
                      ng-if="item.description" ng-bind-html="getHtml(item.description)"></div>
@@ -1082,13 +893,6 @@
                 <div class="Description text-asbestos small mtx"
                      ng-if="item.description" ng-bind-html="getHtml(item.description)"></div>
               </div>
-              <div class="Content TEXT"
-                   ng-switch-when="TEXT" ng-bind-html="getHtml(item.text)">
-              </div>
-              <h2 class="Content TITLE h6"
-                  ng-switch-when="TITLE">
-                {{item.title}}
-              </h2>
 
               <div class="EditUtil AppendUtil pas prm">
                 <button class="APPEND btn btn-link" type="button" title="添加到末尾"
@@ -1106,8 +910,9 @@
   </div>
 
   <!-- Modal -->
-  <div class="LoginDialog modal fade" ng-controller="SearchImageCtrl" id="_searchImage" tabindex="-1">
-    <div class="modal-dialog container" style="width: 80%;">
+  <div class="LoginDialog modal fade"
+       ng-controller="SearchImageCtrl" id="_searchImage" tabindex="-1">
+    <div class="modal-dialog container" ng-class="{ 'LoginDialog-Wide': images.length}">
       <div class="modal-content">
         <form class="modal-header"
               ng-submit="submit()"
@@ -1121,7 +926,7 @@
           </div>
         </form>
         <div class="modal-body clearfix SelectImage"
-             style="border-radius: 0 0 6px 6px; min-height: 400px; padding-right: 10px; padding-bottom: 10px;">
+             style="border-radius: 0 0 6px 6px; padding-right: 10px; padding-bottom: 10px;">
           <button class="btn mrm mbm"
                   ng-click="selectImage(image)"
                   ng-repeat="image in images" type="button">
