@@ -38,6 +38,10 @@
     $scrollable.perfectScrollbar({
       suppressScrollX: true
     });
+    $('#_searchImage .modal-body').perfectScrollbar({
+      suppressScrollX: true,
+      includePadding: false
+    });
 
     var $toTop = $('.ToTop');
     var $toBottom = $('.ToBottom');
@@ -932,6 +936,7 @@
         .done(function (data) {
           $scope.images = data.images;
           $scope.$apply();
+          $('#_searchImage .modal-body').scrollTop(0);
         })
         .fail(function () {
 

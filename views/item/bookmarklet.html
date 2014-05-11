@@ -49,10 +49,8 @@
         $scope.init = function (initData) {
           if (initData) {
             InitData = initData;
-            $scope.srcs = initData.srcs;
-            $scope.titles = initData.titles;
-            delete initData.srcs;
-            delete initData.titles;
+            $scope.images = initData.images;
+            delete initData.images;
           }
           $http.get('/item/detail?url=' + encodeURIComponent(InitData.url))
             .success(function (data) {
@@ -193,7 +191,7 @@
        id="_bookmarklet_modal" tabindex="-1">
     <div class="modal-dialog Spin" style="height: 300px;" ng-show="!loaded"></div>
     <div class="modal-dialog container"
-         ng-class="{ 'LoginDialog-Wide': item.type == 'IMAGE' && srcs.length && !imageSrc }"
+         ng-class="{ 'LoginDialog-Wide': item.type == 'IMAGE' && images.length && !imageSrc }"
          ng-show="loaded && !showLogin">
       <div class="modal-content">
         <div class="modal-header text-center"
@@ -246,7 +244,7 @@
                          ng-if="item.description" ng-bind-html="getHtml(item.description)"></div>
                     <div class="clearfix"></div>
                   </div>
-                  <div class="Content IMAGE pam" ng-show="srcs.length"
+                  <div class="Content IMAGE pam" ng-show="images.length"
                        ng-switch-when="IMAGE">
                     <div class="Image text-center" ng-show="$parent.imageSrc">
                       <img onerror="shizier.errorImage(this,'default_120x120');"
@@ -255,10 +253,10 @@
                     <div class="plm SelectImage" ng-show="!$parent.imageSrc">
                       <div class="prm mbm text-center text-muted">选择图片</div>
                       <button class="btn btn-link mrm mbm"
-                              ng-repeat="src in srcs track by $index"
-                              ng-click="$parent.$parent.imageSrc = src;$parent.$parent.imageTitle = titles[$index];"
+                              ng-repeat="image in images track by $index"
+                              ng-click="$parent.$parent.imageSrc = image.src;$parent.$parent.imageTitle = image.title;"
                               type="button">
-                        <img ng-src="{{src}}">
+                        <img ng-src="{{image.src}}">
                       </button>
                     </div>
                     <div class="Title text-center mts">{{imageSrc ? imageTitle : item.title}}</div>

@@ -910,10 +910,11 @@
   </div>
 
   <!-- Modal -->
-  <div class="LoginDialog modal fade"
+  <div class="LoginDialog modal fade" style="overflow: hidden;"
        ng-controller="SearchImageCtrl" id="_searchImage" tabindex="-1">
-    <div class="modal-dialog container" ng-class="{ 'LoginDialog-Wide': images.length}">
-      <div class="modal-content">
+    <div class="modal-dialog container" style="height: 90%;"
+         ng-class="{ 'LoginDialog-Wide': images.length}">
+      <div class="modal-content" style="height: 100%; overflow: hidden;">
         <form class="modal-header"
               ng-submit="submit()"
               style="border-radius: 6px 6px 0 0;">
@@ -926,7 +927,7 @@
           </div>
         </form>
         <div class="modal-body clearfix SelectImage"
-             style="border-radius: 0 0 6px 6px; padding-right: 10px; padding-bottom: 10px;">
+             style="border-radius: 0 0 6px 6px; padding-right: 10px; padding-bottom: 100px; height: 100%; overflow: hidden;">
           <button class="btn mrm mbm"
                   ng-click="selectImage(image)"
                   ng-repeat="image in images" type="button">

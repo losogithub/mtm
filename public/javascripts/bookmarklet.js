@@ -62,19 +62,37 @@ var shizier_postMessageListener;
         iframe.style.visibility = 'visible';
         var imgs = document.getElementsByTagName('img');
 
-        var srcs = [];
-        var titles = [];
+        var images = [];
         for (var i = 0; i < imgs.length; i++) {//imgs是类似数组的对象，只能这样遍历
-          srcs.push(imgs[i].src);
-          titles.push(imgs[i].alt || imgs[i].title || document.title);
+          var top = 0;
+          var left = 0;
+          for (var temp = imgs[i]; temp; temp = temp.offsetParent) {
+            top += temp.offsetTop;
+            left += temp.offsetLeft;
+          }
+          var product
+            = (Math.max(Math.min(top + imgs[i].offsetHeight, window.pageYOffset + window.outerHeight), window.pageYOffset)
+            - Math.max(Math.min(top, window.pageYOffset + window.outerHeight), window.pageYOffset))
+            * (Math.max(Math.min(left + imgs[i].offsetWidth, window.pageXOffset + window.outerWidth), window.pageXOffset)
+            - Math.max(Math.min(left, window.pageXOffset + window.outerWidth), window.pageXOffset));
+          if (product < 100) {
+            continue;
+          }
+          images.push({
+            src: imgs[i].src,
+            title: imgs[i].alt || imgs[i].title || document.title,
+            product: product
+          })
         }
+        images.sort(function (a, b) {
+          return b.product - a.product;
+        });
         iframe.contentWindow.postMessage({
           url: location.href,
           title: document.title,
           snippet: description,
           cite: selection.toString(),
-          srcs: srcs,
-          titles: titles
+          images: images
         }, '*');
       } else if (event.data == 'close') {
         clean();
