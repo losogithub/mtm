@@ -310,15 +310,15 @@ textarea {
 #_scrollUtil {
   position: fixed;
   bottom: 20px; right: 15px;
-}
-
-#_toTop, #_toBottom {
   visibility: hidden;
-  opacity: 0; padding: 4px 12px;
-  background-color: @color-muted; color: white;
   &.VISIBLE {
     visibility: visible;
-    opacity: 0.5;
   }
+}
+
+.ToTop, .ToBottom {
+  padding: 4px 12px;
+  opacity: 0.5;
+  background-color: @color-muted !important; color: white;
   &:hover, &:active, &:focus { opacity: 1; color: @color-default;}
 }

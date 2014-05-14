@@ -1,8 +1,8 @@
 <div id="_scrollUtil" class="btn-group-vertical">
-  <button id="_toTop" class="btn btn-link" title="返回顶部">
+  <button class="ToTop btn btn-link" title="返回顶部">
     <i class="fa fa-angle-up"></i>
   </button>
-  <button id="_toBottom" class="btn btn-link" title="滚到底部">
+  <button class="ToBottom btn btn-link" title="滚到底部">
     <i class="fa fa-angle-down"></i>
   </button>
 </div>
@@ -13,30 +13,27 @@
     var MIN_SCROLL = 100;
     var $window = $(window);
     var $document = $(document);
-    var $_toTop = $('#_toTop');
-    var $_toBottom = $('#_toBottom');
+    var $_scrollUtil = $('#_scrollUtil');
+    var $toTop = $('.ToTop');
+    var $toBottom = $('.ToBottom');
     if ($document.height() - $window.height() > MIN_SCROLL) {
-      $_toTop.addClass('VISIBLE');
-      $_toBottom.addClass('VISIBLE');
+      $_scrollUtil.addClass('VISIBLE');
     } else {
-      $_toTop.removeClass('VISIBLE');
-      $_toBottom.removeClass('VISIBLE');
+      $_scrollUtil.removeClass('VISIBLE');
     }
     $window.on('scroll resize', function () {
       if ($document.height() - $window.height() > MIN_SCROLL) {
-        $_toTop.addClass('VISIBLE');
-        $_toBottom.addClass('VISIBLE');
+        $_scrollUtil.addClass('VISIBLE');
       } else {
-        $_toTop.removeClass('VISIBLE');
-        $_toBottom.removeClass('VISIBLE');
+        $_scrollUtil.removeClass('VISIBLE');
       }
     });
-    $_toTop.click(function () {
-      $_toTop.blur();
+    $toTop.click(function () {
+      $toTop.blur();
       $('html, body').animate({scrollTop: 0}, 250);
     });
-    $_toBottom.click(function () {
-      $_toBottom.blur();
+    $toBottom.click(function () {
+      $toBottom.blur();
       $('html, body').animate({scrollTop: $document.height() - $window.height()}, 250);
     });
   })

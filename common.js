@@ -12,6 +12,7 @@ module.exports = {
   VisitedArray: [],
   Topic: {},
   Tags: [],
+  AuthorTopicCount: {},
   AuthorPVCount: {},
   AuthorCategories: {},
   AuthorCategoryList: {},

@@ -84,7 +84,7 @@
       <% if (!locals.username) { %>
       <li><a href="/signup">注册</a></li>
       <li><a class="ShowLogin" href="##">登录</a></li>
-      <li><a href="/topic/create">开始策展</a></li>
+      <li><a href="/topic/create"><i class="fa fa-puzzle-piece"></i> 开始策展</a></li>
       <% } else { %>
       <li>
         <a href="/works">
@@ -111,7 +111,7 @@
           </li>
         </ul>
       </li>
-      <li><a href="/topic/create">开始策展</a></li>
+      <li><a href="/topic/create"><i class="fa fa-puzzle-piece"></i> 开始策展</a></li>
       <% } %>
     </ul>
   </div>
@@ -134,7 +134,7 @@
           <% if (!locals.username) { %>
           <li><a href="/signup">注册</a></li>
           <li><a href="/login">登录</a></li>
-          <li><a href="/topic/create">开始策展</a></li>
+          <li><a href="/topic/create"><i class="fa fa-puzzle-piece"></i> 开始策展</a></li>
           <% } else { %>
           <li>
             <a href="/works" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
@@ -144,7 +144,7 @@
               <%= username %>
             </a>
           </li>
-          <li><a href="/topic/create">开始策展</a></li>
+          <li><a href="/topic/create"><i class="fa fa-puzzle-piece"></i> 开始策展</a></li>
           <li>
             <form action="/logout" method="post">
               <button class="btn btn-link btn-block Logout" type="submit">

@@ -385,7 +385,7 @@ function getVideoDetail(url, callback) {
         //<meta property="og:title"......content="意外 官方版 - 薛之谦"/>
         title = !(temp = html.match(/<meta property="og:title"[^<>]*content="([^">]*)/i)) ? null : !temp[1] ? null : temp[1];
         //http://v.yinyuetai.com/video/818636
-        vid = !(temp = url) ? null : !(temp = temp.match(/(\d{6})\/?([?&#]|$)/i)) ? null : !temp[1] ? null : temp[1];
+        vid = !(temp = url) ? null : !(temp = temp.match(/(\d+)\/?([?&#]|$)/i)) ? null : !temp[1] ? null : temp[1];
         //<meta property="og:image" content="http://img0.yytcdn.com/video/mv/131125/818636/E66901428C8A00732EBC7FE11A528C50_240x135.jpeg"/>
         //240x135
         //todo playlist
@@ -503,6 +503,9 @@ function getSearchImages(keyword, callback) {
     var list = JSON.parse(html).list;
     var images = [];
     list.forEach(function (item) {
+      item.title = item.title.replace(/<[^>]*>/g, '');
+      item.title = sanitize(item.title).entityDecode();
+      item.title = sanitize(item.title).trim();
       if (item.title && item.title.length > 50) {
         item.title = item.title.substr(0, 49) + '…';
       }
@@ -558,26 +561,24 @@ function getData(req) {
   var data;
 
   switch (type) {
-    case 'LINK_CREATE':
-    case 'LINK':
-      var url = sanitize(req.body.url).trim();
+    case 'TITLE':
       var title = sanitize(req.body.title).trim();
-      var snippet = sanitize(req.body.snippet).trim();
-      var description = sanitize(req.body.description).trim();
 
-      check(url).notNull().isUrl();
-      check(title).len(0, 50);
-      check(snippet).len(0, 140);
-      check(description).len(0, 140);
+      check(title).len(1, 50);
 
       data = {
-        url: url,
-        title: title,
-        snippet: snippet,
-        description: description
+        title: title
       }
       break;
-    case 'IMAGE_CREATE':
+    case 'TEXT':
+      var text = sanitize(req.body.text).trim();
+
+      check(text).len(1, 140);
+
+      data = {
+        text: text
+      }
+      break;
     case 'IMAGE':
       var url = sanitize(req.body.url).trim();
       var title = sanitize(req.body.title).trim();
@@ -598,28 +599,6 @@ function getData(req) {
         imageByteData: imageByteData
       }
       break;
-    case 'VIDEO_CREATE':
-    case 'VIDEO':
-      var url = sanitize(req.body.url).trim();
-      var vid = sanitize(req.body.vid).trim();
-      var cover = sanitize(req.body.cover).trim();
-      var title = sanitize(req.body.title).trim();
-      var description = sanitize(req.body.description).trim();
-
-      check(url).notNull().isUrl();
-      if (type == 'VIDEO') check(vid).notNull();
-      if (cover.length) check(cover).isUrl();
-      check(title).len(0, 50);
-      check(description).len(0, 140);
-
-      data = {
-        url: url,
-        vid: vid,
-        cover: cover,
-        title: title,
-        description: description
-      }
-      break;
     case 'CITE':
       var cite = sanitize(req.body.cite).trim();
       var url = sanitize(req.body.url).trim();
@@ -638,53 +617,52 @@ function getData(req) {
         description: description
       }
       break;
-    case 'WEIBO_CREATE':
-    case 'WEIBO':
+    case 'LINK_CREATE':
       var url = sanitize(req.body.url).trim();
-      var description = sanitize(req.body.description).trim();
-      var created_at = sanitize(req.body.created_at).trim();
-      var idstr = sanitize(req.body.idstr).trim();
-      var mid62 = sanitize(req.body.mid62).trim();
-      var text = sanitize(req.body.text).trim();
-      var parsed_text = sanitize(req.body.parsed_text).trim();
-      var source = sanitize(req.body.source).trim();
-      var pic_urls = req.body.pic_urls;
-      var user = req.body.user;
-      var retweeted_status = req.body.retweeted_status;
 
       check(url).notNull().isUrl();
+
+      data = {
+        url: url
+      }
+      break;
+    case 'LINK':
+      var url = sanitize(req.body.url).trim();
+      var title = sanitize(req.body.title).trim();
+      var snippet = sanitize(req.body.snippet).trim();
+      var description = sanitize(req.body.description).trim();
+
+      check(url).notNull().isUrl();
+      check(title).len(0, 50);
+      check(snippet).len(0, 140);
       check(description).len(0, 140);
 
       data = {
         url: url,
-        description: description,
-        created_at: created_at,
-        idstr: idstr,
-        mid62: mid62,
-        text: text,
-        parsed_text: parsed_text,
-        source: source,
-        pic_urls: pic_urls,
-        user: user,
-        retweeted_status: retweeted_status
+        title: title,
+        snippet: snippet,
+        description: description
       }
       break;
-    case 'TEXT':
-      var text = sanitize(req.body.text).trim();
-
-      check(text).len(1, 140);
-
-      data = {
-        text: text
-      }
-      break;
-    case 'TITLE':
+    case 'VIDEO':
       var title = sanitize(req.body.title).trim();
+      var description = sanitize(req.body.description).trim();
 
-      check(title).len(1, 50);
+      check(title).len(0, 50);
+      check(description).len(0, 140);
 
       data = {
-        title: title
+        title: title,
+        description: description
+      }
+      break;
+    case 'WEIBO':
+      var description = sanitize(req.body.description).trim();
+
+      check(description).len(0, 140);
+
+      data = {
+        description: description
       }
       break;
     default :
@@ -699,13 +677,14 @@ function getItemData(item) {
   var itemData;
 
   switch (item.type) {
-    case 'LINK':
+    case 'TITLE':
       itemData = {
-        url: item.url,
-        fav: utils.getFav(item.url),
-        title: item.title,
-        snippet: item.snippet,
-        description: item.description
+        title: item.title
+      }
+      break;
+    case 'TEXT':
+      itemData = {
+        text: item.text
       }
       break;
     case 'IMAGE':
@@ -717,20 +696,29 @@ function getItemData(item) {
         description: item.description
       }
       break;
+    case 'CITE':
+      itemData = {
+        cite: item.cite,
+        url: item.url,
+        title: item.title,
+        description: item.description
+      }
+      break;
+    case 'LINK':
+      itemData = {
+        url: item.url,
+        fav: utils.getFav(item.url),
+        title: item.title,
+        snippet: item.snippet,
+        description: item.description
+      }
+      break;
     case 'VIDEO':
       itemData = {
         url: item.url,
         quote: utils.getQuote(item.url, 'VIDEO'),
         cover: item.cover,
         vid: item.vid,
-        title: item.title,
-        description: item.description
-      }
-      break;
-    case 'CITE':
-      itemData = {
-        cite: item.cite,
-        url: item.url,
         title: item.title,
         description: item.description
       }
@@ -753,16 +741,6 @@ function getItemData(item) {
 
       if (itemData.retweeted_status && itemData.retweeted_status.idstr) {
         itemData.retweeted_status.time = getWeiboTime(item.retweeted_status.created_at);
-      }
-      break;
-    case 'TEXT':
-      itemData = {
-        text: item.text
-      }
-      break;
-    case 'TITLE':
-      itemData = {
-        title: item.title
       }
       break;
     default:

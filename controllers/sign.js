@@ -483,6 +483,13 @@ function loginDialog(req, res, next) {
         console.log("cannot find user by email&pass: %s, %s", loginName, pass);
         return res.send(401);
       }
+      if (!user.active) {
+        mail.sendActiveMail(user.email, encryp.md5(user.email + config.session_secret), user.loginName, user.email);
+        return res.send(401, {
+          notActivated: true,
+          email: user.email
+        });
+      }
       //found user by email and password
       req.session.userId = user._id;
       if (remember) {
@@ -504,6 +511,13 @@ function loginDialog(req, res, next) {
       if (!user) {
         console.log("cannot find user by name&pass: %s, %s", loginName, pass);
         return res.send(401);
+      }
+      if (!user.active) {
+        mail.sendActiveMail(user.email, encryp.md5(user.email + config.session_secret), user.loginName, user.email);
+        return res.send(401, {
+          notActivated: true,
+          email: user.email
+        });
       }
       //found user by name and password
       req.session.userId = user._id;

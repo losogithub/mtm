@@ -22,6 +22,25 @@ var LoginToken = require('../proxy').LoginToken;
 
 var utils = require('../public/javascripts/utils');
 
+function showUsers(req, res, next) {
+  if (!res.locals.isAdmin) {
+    return res.send('您没有访问权限');
+  }
+
+  User.getAllUsersSorted(function (err, users) {
+    if (err) {
+      return next(err);
+    }
+
+    res.render('user/users', {
+      layout: false,
+      users: users,
+      AuthorTopicCount: Common.AuthorTopicCount,
+      AuthorPVCount: Common.AuthorPVCount
+    });
+  })
+}
+
 function showWorks(req, res, next) {
 
   //console.log(req.session);
@@ -80,7 +99,7 @@ function showWorks(req, res, next) {
  Find topics inside TopicModel and sort them in a certain order.
  * works page
  */
-var getAndSortTopics = function (authorId, mt, mo, callback) {
+function getAndSortTopics(authorId, mt, mo, callback) {
   var order = {
     'c': 'create_at',
     'u': 'update_at',
@@ -93,16 +112,14 @@ var getAndSortTopics = function (authorId, mt, mo, callback) {
   return Topic.getAllTopicsByAuthorIdSorted(authorId, order, callback);
 }
 
-var renderWorks = function (res, user, topicsInfos, currentPage, totalPage, mt, mo, length) {
+function renderWorks(res, user, topicsInfos, currentPage, totalPage, mt, mo, length) {
   res.render('user/index', {
     css: [
       '/stylesheets/user.css'
     ],
     title: '我的策展',
     personalType: 'WORKS',
-    username: user.loginName,
-    favourite: user.favourite,
-    imageUrl: user.url,
+    user: user,
     topicsPageView: Common.AuthorPVCount[user.loginName],
     topicCount: length,
     topics: topicsInfos,
@@ -137,11 +154,9 @@ function showSettings(req, res, next) {
         ],
         pageType: 'PERSONAL',
         personalType: 'SETTINGS',
-        username: user.loginName,
-        favourite: user.favourite,
+        user: user,
         topicCount: topics.length,
         topicsPageView: Common.AuthorPVCount[user.loginName],
-        imageUrl: user.url,
         description: user.description,
         connectUrl: user.personalSite
       });
@@ -618,16 +633,13 @@ function showPersonal(req, res, next) {
       //before render: deal with more than one page.
 
       res.render('user/index', {
-        title: authorName + ' 的策展',
+        title: user.loginName + ' 的策展',
         personalType: 'PERSONAL',
         css: ['/stylesheets/user.css'],
-        authorName: authorName,
-        authorImage: user.url,
+        user: user,
         authorDescription: description,
-        authorPersonalUrl: user.personalSite,
         topicCount: topicsInfo.length,
         topicsPageView: Common.AuthorPVCount[user.loginName],
-        favourite: user.favourite,
         topics: topicsForShow,
         sortOrder: sortOrder,
         totalPage: totalPage,
@@ -722,6 +734,7 @@ function favorite(req, res, next) {
   });
 }
 
+exports.showUsers = showUsers;
 exports.showWorks = showWorks;
 exports.showSettings = showSettings;
 exports.updateSettings = updateSettings;

@@ -8,14 +8,52 @@
 
 (function ($) {
 
+  var $window;
+  var $editArea;
+  var $main;
+  var $scrollable;
+  var marginBottom = 200;
+
   $(function () {
-    $('.EditArea').perfectScrollbar({
+
+    $editArea = $('.EditArea');
+    $main = $('.Main');
+    $window = $(window);
+    marginBottom = $window.height() - 41 - 65 - 40;
+    $main.css('margin-bottom', marginBottom);
+    $window.on('resize', function () {
+      marginBottom = $window.height() - 41 - 65 - 40;
+      $main.css('margin-bottom', marginBottom);
+      $editArea.scrollTop(Math.min(
+        $editArea.scrollTop(),
+        $main.height() + 20 + marginBottom - $editArea.height()
+      ));
+      $('.EditArea').perfectScrollbar('update');
+    });
+
+    $editArea.perfectScrollbar({
       suppressScrollX: true
     });
-    $('.Scrollable').perfectScrollbar({
+    $scrollable = $('.Scrollable');
+    $scrollable.perfectScrollbar({
       suppressScrollX: true
     });
-  })
+    $('#_searchImage .modal-body').perfectScrollbar({
+      suppressScrollX: true,
+      includePadding: false
+    });
+
+    var $toTop = $('.ToTop');
+    var $toBottom = $('.ToBottom');
+    $toTop.click(function () {
+      $toTop.blur();
+      $editArea.animate({scrollTop: 0}, 250);
+    });
+    $toBottom.click(function () {
+      $toBottom.blur();
+      $editArea.animate({scrollTop: $main.height() + 20 + marginBottom - $editArea.height()}, 250);
+    });
+  });
 
   $.validator.setDefaults({
     debug: false,
@@ -134,7 +172,7 @@
   function TopicCtrl($scope, $sce, $timeout, $element) {
     _commonListCtrl($scope, $sce, $timeout);
     $scope.init = function () {
-      if (!$scope.topic.title) {
+      if (!$scope.topic.title && !$scope.topic.items.length) {
         $scope.editTitle();
       }
       $(document).ajaxStart(function() {
@@ -301,7 +339,7 @@
             topicId: $scope.topic._id,
             prevItemType: prevItemType,
             prevItemId: prevItemId
-          },item , data))
+          }, item , data))
           .done(function (data) {
             $.extend(item, data);
             $scope.cancelEdit(true);
@@ -366,9 +404,6 @@
     $($element).find('.EditArea').on('scroll', function () {
       $ul.sortable('refreshPositions');//因为滚动后位置变了，所以要清除缓存大小
     });
-    var $editArea = $('.EditArea');
-    var $main = $('.Main');
-    var $window = $(window);
     $scope.sortableOptions = {
       //sortable微件的标准参数
       axis: 'y',
@@ -376,7 +411,7 @@
       handle: '.MoveUtil',
       helper: "clone",//加这个是为了解决拖动后添加条目util的index问题
       opacity: 0.4,
-      revert: 250,
+      revert: 100,
       scroll: false,
 
       start: function () {
@@ -390,7 +425,7 @@
           if (event.clientY > $window.height() - 100) {
             $editArea.scrollTop(Math.min(
               $editArea.scrollTop() + (50 - ($window.height() - event.clientY)/2),
-              $main.height() + 220 - $editArea.height()
+              $main.height() + 20 + marginBottom - $editArea.height()
             ))
           }
         });
@@ -446,8 +481,20 @@
     $scope.setTitleScope = function (scope) {
       $scope.titleScope = scope;
     };
+    $scope.onCreateCite = function () {
+      alertMessenger('使用侧边栏上的采集工具，体验更便捷的引文采集');
+      $scope.setCollectionCategory('BOOKMARKLET');
+    };
+    $scope.setCollectionCategory = function (type) {
+      $scope.$broadcast('setCollectionCategory', type);
+    };
     $scope.$on('setCollectionScope', function (e, scope) {
       $scope.collectionScope = scope;
+    });
+    $scope.$on('appendItem', function (e, item) {
+      $scope.items.splice($scope.items.length, 0, item);
+      _updateList($scope.items.length - 1, true);
+      $editArea.scrollTop($main.height() + 20 + marginBottom - $editArea.height());
     });
   };
 
@@ -577,6 +624,10 @@
     $scope.$emit('setCollectionScope', $scope);
     $scope.$on('addCollectionItem', function (e, item) {
       $scope.items.splice(0, 0, item);
+      $scrollable.scrollTop(0);
+    });
+    $scope.$on('setCollectionCategory', function (e, type) {
+      $scope.type = type;
     });
     $scope.init = function (items) {
       $scope.items = items;
@@ -615,6 +666,10 @@
       });
       item.width = $('.WidgetItemList-Sub .Content').width();
       item.height = item.width * 5 / 6;
+    };
+    $scope.appendItem = function (item) {
+      $scope.items.splice($scope.items.indexOf(item), 1);
+      $scope.$emit('appendItem', item);
     };
     $scope.deleteItem = function (item) {
       if (!confirm('条目删除后无法找回，您确定要删除吗？')) {
@@ -658,14 +713,11 @@
     $(document).mouseup(function () {
       $ul.removeAttr('style');
     });
-    $('.Scrollable').add('.EditArea').on('scroll', function () {
+    $('.CollectionItems').add('.EditArea').on('scroll', function () {
       if ($ul.is(':visible')) {
         $ul.sortable('refreshPositions');//因为滚动后位置变了，所以要清除缓存大小
       }
     });
-    var $editArea = $('.EditArea');
-    var $main = $('.Main');
-    var $window = $(window);
     $scope.sortableOptions = {
       appendTo: '.WidgetItemList-Main',
       connectWith: '.WidgetItemList-Main',
@@ -673,7 +725,6 @@
       cursorAt: { top: 30 },
       helper: 'clone',
       opacity: 0.4,
-      revert: 250,
       scroll: false,
 
       start: function () {
@@ -687,7 +738,7 @@
           if (event.clientY > $window.height() - 100) {
             $editArea.scrollTop(Math.min(
               $editArea.scrollTop() + (50 - ($window.height() - event.clientY)/2),
-              $main.height() + 220 - $editArea.height()
+              $main.height() + 20 + marginBottom - $editArea.height()
             ))
           }
         });
@@ -704,7 +755,7 @@
       }
     };
   }
-  
+
   function _commonCtrl($scope, $element, $timeout) {
     $scope._init = function () {
       $scope.$parent.setEditingScope($scope);
@@ -735,10 +786,218 @@
     }
   }
 
+  window.sng.controller('TitleCtrl', TitleCtrl);
+  function TitleCtrl($scope, $element, $timeout) {
+    _commonCtrl($scope, $element, $timeout);
+    $scope.titleMaxLength = 50;
+    $scope.init = function () {
+      $scope._init();
+      $($element).closest('form').validate({
+        submitHandler: function () {
+          $scope.$parent.saveItem($scope.item, {
+            title: $scope.title
+          });
+        },
+        showErrors: function (errorMap, errorList) {
+          if (errorList.length) {
+            alertMessenger(errorMap.title);
+          }
+        },
+        rules: {
+          title: {
+            required: true,
+            maxlength: 50
+          }
+        },
+        messages: {
+          title: {
+            required: "尚未输入标题。",
+            maxlength: "标题太长，请缩写到50字以内。"
+          }
+        }
+      });
+    };
+  };
+
+  window.sng.controller('TextCtrl', TextCtrl);
+  function TextCtrl($scope, $element, $timeout) {
+    _commonCtrl($scope, $element, $timeout);
+    $scope.textMaxLength = 140;
+    $scope.init = function () {
+      $scope._init();
+      $($element).closest('form').validate({
+        submitHandler: function () {
+          $scope.$parent.saveItem($scope.item, {
+            text: $scope.text
+          });
+        },
+        showErrors: function (errorMap, errorList) {
+          if (errorList.length) {
+            alertMessenger(errorMap.text);
+          }
+        },
+        rules: {
+          text: {
+            required: true,
+            maxlength: 140
+          }
+        },
+        messages: {
+          text: {
+            required: "尚未输入文本。",
+            maxlength: "文本太长，请缩写到140字以内。"
+          }
+        }
+      });
+    };
+  };
+
+  window.sng.controller('ImageCtrl', ImageCtrl);
+  function ImageCtrl($scope, $element, $timeout) {
+    _commonCtrl($scope, $element, $timeout);
+    $scope.titleMaxLength = 50;
+    $scope.descriptionMaxLength = 140;
+    $scope.init = function () {
+      $scope._init();
+      if (!$scope.item.url) {
+        $scope.showSearchImage();
+      }
+      $($element).closest('form').validate({
+        submitHandler: function () {
+          $scope.$parent.saveItem($scope.item, {
+            title: $scope.title,
+            description: $scope.description
+          });
+        },
+        showErrors: function (errorMap, errorList) {
+          if (errorList.length) {
+            alertMessenger(errorMap.title || errorMap.quote || errorMap.description);
+          }
+        },
+        rules: {
+          title: {
+            maxlength: 50,
+            required: false
+          },
+          quote: {
+            url: true,
+            required: false
+          },
+          description: {
+            maxlength: 140,
+            required: false
+          }
+        },
+        messages: {
+          title: {
+            maxlength: '标题太长，请缩写到50字以内。'
+          },
+          quote: {
+            url: 'URL格式错误。'
+          },
+          description: {
+            maxlength: '介绍、评论太长，请缩写到140字以内。'
+          }
+        }
+      });
+    };
+    var $searchImage = $('#_searchImage');
+    $scope.showSearchImage = function () {
+      $searchImage.on('shown.bs.modal', function () {
+        $('.AutoFocus').focus();
+      });
+      $searchImage.on('hide.bs.modal', function () {
+        if (!$scope.editingScope.item.url) {
+          $timeout(function () {
+            $scope.cancelEdit(true);
+          });
+        } else {
+          $timeout(function () {
+            $($element).find('.AUTO_FOCUS').focus();
+            moveSelection2End($element.find('.AUTO_FOCUS')[0]);
+          });
+        }
+      });
+      $searchImage.modal();
+    };
+  };
+
+  window.sng.controller('SearchImageCtrl', SearchImageCtrl);
+  function SearchImageCtrl($scope, $element) {
+    $scope.images = [];
+    var xhr;
+    $scope.submit = function () {
+      if (xhr) {
+        xhr.abort();
+      }
+      xhr = $.get('/search_image', {
+        keyword: $scope.searchImageKeyword
+      })
+        .done(function (data) {
+          $scope.images = data.images;
+          $scope.$apply();
+          $('#_searchImage .modal-body').scrollTop(0);
+        })
+        .fail(function () {
+
+        });
+    };
+    $scope.selectImage = function (image) {
+      $.extend($scope.editingScope.item, {
+        url: image.url,
+        quote: image.quote,
+        quoteDomain: shizier.utils.getQuote(image.quote)
+      });
+      $scope.editingScope.title = image.title;
+      $($element).modal('hide');
+    }
+    $scope.onError = function (image) {
+      $scope.images.splice($scope.images.indexOf(image), 1);
+    }
+  };
+
+  window.sng.controller('CiteCtrl', CiteCtrl);
+  function CiteCtrl($scope, $element, $timeout) {
+    _commonCtrl($scope, $element, $timeout);
+    $scope.citeMaxLength = 140;
+    $scope.titleMaxLength = 50;
+    $scope.descriptionMaxLength = 140;
+    $scope.init = function () {
+      $scope._init();
+      $($element).closest('form').validate({
+        submitHandler: function () {
+          $scope.$parent.saveItem($scope.item, {
+            description: $scope.description
+          });
+        },
+        showErrors: function (errorMap, errorList) {
+          if (errorList.length) {
+            alertMessenger(errorMap.title || errorMap.description);
+          }
+        },
+        rules: {
+          title: {
+            maxlength: 50,
+            required: false
+          },
+          description: {
+            maxlength: 140,
+            required: false
+          }
+        },
+        messages: {
+          title: {
+            maxlength: '标题太长，请缩写到50字以内。'
+          },
+          description: {
+            maxlength: '介绍、评论太长，请缩写到140字以内。'
+          }
+        }
+      });
+    };
+  };
+
   window.sng.controller('LinkCreateCtrl', CreateCtrl);
-  window.sng.controller('ImageCreateCtrl', CreateCtrl);
-  window.sng.controller('VideoCreateCtrl', CreateCtrl);
-  window.sng.controller('WeiboCreateCtrl', CreateCtrl);
   function CreateCtrl($scope, $element, $timeout) {
     _commonCtrl($scope, $element, $timeout);
     $scope.init = function () {
@@ -750,9 +1009,7 @@
             return;
           }
           $scope.$parent.saveItem($scope.item, {
-            url: $scope.item.type == 'IMAGE_CREATE' ? shizier.utils.suffixImage($scope.url) : $scope.url,
-            quote: $scope.quote,
-            title: $scope.title
+            url: $scope.url
           });
         },
         showErrors: function (errorMap, errorList) {
@@ -774,44 +1031,7 @@
         }
       });
     };
-    var $searchImage = $('#_searchImage')
-    $scope.showSearchImage = function () {
-      $searchImage.on('shown.bs.modal', function () {
-        $('.AutoFocus').focus();
-      });
-      $searchImage.modal();
-    };
   };
-
-  window.sng.controller('SearchImageCtrl', SearchImageCtrl);
-  function SearchImageCtrl($scope, $element) {
-    $scope.images = [];
-    var xhr;
-    $scope.submit = function () {
-      if (xhr) {
-        xhr.abort();
-      }
-      xhr = $.get('/search_image', {
-        keyword: $scope.searchImageKeyword
-      })
-        .done(function (data) {
-          $scope.images = data.images;
-          $scope.$apply();
-        })
-        .fail(function () {
-
-        });
-    };
-    $scope.selectImage = function (image) {
-      $scope.editingScope.url = image.url;
-      $scope.editingScope.quote = image.quote;
-      $scope.editingScope.title = image.title;
-      $($element).modal('hide');
-    }
-    $scope.onError = function (image) {
-      $scope.images.splice($scope.images.indexOf(image), 1);
-    }
-  }
 
   window.sng.controller('LinkCtrl', LinkCtrl);
   function LinkCtrl($scope, $element, $timeout) {
@@ -826,8 +1046,6 @@
       $($element).closest('form').validate({
         submitHandler: function () {
           $scope.$parent.saveItem($scope.item, {
-            title: $scope.title,
-            snippet: $scope.snippet,
             description: $scope.description
           });
         },
@@ -865,55 +1083,6 @@
     };
   };
 
-  window.sng.controller('ImageCtrl', ImageCtrl);
-  function ImageCtrl($scope, $element, $timeout) {
-    _commonCtrl($scope, $element, $timeout);
-    $scope.titleMaxLength = 50;
-    $scope.descriptionMaxLength = 140;
-    $scope.init = function () {
-      $scope._init();
-      $($element).closest('form').validate({
-        submitHandler: function () {
-          $scope.$parent.saveItem($scope.item, {
-            title: $scope.title,
-            quote: $scope.quote,
-            description: $scope.description
-          });
-        },
-        showErrors: function (errorMap, errorList) {
-          if (errorList.length) {
-            alertMessenger(errorMap.title || errorMap.quote || errorMap.description);
-          }
-        },
-        rules: {
-          title: {
-            maxlength: 50,
-            required: false
-          },
-          quote: {
-            url: true,
-            required: false
-          },
-          description: {
-            maxlength: 140,
-            required: false
-          }
-        },
-        messages: {
-          title: {
-            maxlength: '标题太长，请缩写到50字以内。'
-          },
-          quote: {
-            url: 'URL格式错误。'
-          },
-          description: {
-            maxlength: '介绍、评论太长，请缩写到140字以内。'
-          }
-        }
-      });
-    };
-  };
-
   window.sng.controller('VideoCtrl', VideoCtrl);
   function VideoCtrl($scope, $element, $timeout) {
     _commonCtrl($scope, $element, $timeout);
@@ -924,51 +1093,6 @@
       $($element).closest('form').validate({
         submitHandler: function () {
           $scope.$parent.saveItem($scope.item, {
-            title: $scope.title,
-            description: $scope.description
-          });
-        },
-        showErrors: function (errorMap, errorList) {
-          if (errorList.length) {
-            alertMessenger(errorMap.title || errorMap.description);
-          }
-        },
-        rules: {
-          title: {
-            maxlength: 50,
-            required: false
-          },
-          description: {
-            maxlength: 140,
-            required: false
-          }
-        },
-        messages: {
-          title: {
-            maxlength: '标题太长，请缩写到50字以内。'
-          },
-          description: {
-            maxlength: '介绍、评论太长，请缩写到140字以内。'
-          }
-        }
-      });
-    };
-  };
-
-  window.sng.controller('CiteCtrl', CiteCtrl);
-  function CiteCtrl($scope, $element, $timeout) {
-    _commonCtrl($scope, $element, $timeout);
-    $scope.citeMaxLength = 140;
-    $scope.titleMaxLength = 50;
-    $scope.descriptionMaxLength = 140;
-    $scope.init = function () {
-    $scope._init();
-      $($element).closest('form').validate({
-        submitHandler: function () {
-          $scope.$parent.saveItem($scope.item, {
-            cite: $scope.cite,
-            url: $scope.url,
-            title: $scope.title,
             description: $scope.description
           });
         },
@@ -1025,72 +1149,6 @@
         messages: {
           description: {
             maxlength: '介绍、评论太长，请缩写到140字以内。'
-          }
-        }
-      });
-    };
-  };
-
-  window.sng.controller('TextCtrl', TextCtrl);
-  function TextCtrl($scope, $element, $timeout) {
-    _commonCtrl($scope, $element, $timeout);
-    $scope.textMaxLength = 140;
-    $scope.init = function () {
-    $scope._init();
-      $($element).closest('form').validate({
-        submitHandler: function () {
-          $scope.$parent.saveItem($scope.item, {
-            text: $scope.text
-          });
-        },
-        showErrors: function (errorMap, errorList) {
-          if (errorList.length) {
-            alertMessenger(errorMap.text);
-          }
-        },
-        rules: {
-          text: {
-            required: true,
-            maxlength: 140
-          }
-        },
-        messages: {
-          text: {
-            required: "尚未输入文本。",
-            maxlength: "文本太长，请缩写到140字以内。"
-          }
-        }
-      });
-    };
-  };
-
-  window.sng.controller('TitleCtrl', TitleCtrl);
-  function TitleCtrl($scope, $element, $timeout) {
-    _commonCtrl($scope, $element, $timeout);
-    $scope.titleMaxLength = 50;
-    $scope.init = function () {
-    $scope._init();
-      $($element).closest('form').validate({
-        submitHandler: function () {
-          $scope.$parent.saveItem($scope.item, {
-            title: $scope.title
-          });
-        },
-        showErrors: function (errorMap, errorList) {
-          if (errorList.length) {
-            alertMessenger(errorMap.title);
-          }
-        },
-        rules: {
-          title: {
-            required: true,
-            maxlength: 50
-          }
-        },
-        messages: {
-          title: {
-            required: "尚未输入标题。",
-            maxlength: "标题太长，请缩写到50字以内。"
           }
         }
       });

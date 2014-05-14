@@ -13,7 +13,8 @@ var UserSchema = new Schema({
   description: String,
   personalSite: String,
   active: Boolean,
-  createAt: { type: Date, default: Date.now },
+  createDate: { type: Date, default: Date.now },
+
   retrieve_time: Number,
   retrieve_key: String,
 

@@ -21,7 +21,7 @@
 .Quote {
   &, * { color: @color-muted; }
   text-align: right;
-  .LINK &, .VIDEO &, .VIDEO_CREATE & {
+  .LINK &, .VIDEO &{
     text-align: left;
   }
   font-size: 12px; line-height: 13px; margin-top: 3px;
@@ -60,6 +60,13 @@
     font-size: 18px;
   }
 }
+.AppendUtil {
+  border-top-left-radius: 0; border-top-right-radius: 6px;
+  right: auto; left: 0;
+  .APPEND:hover,.APPEND:focus {
+    color: @color-primary;
+  }
+}
 
 .WidgetItemList>li {
   &:hover { background-color: lighten(@color-clouds, 4%); }
@@ -69,9 +76,7 @@
   .IMAGE,
   .IMAGE_CREATE,
   .VIDEO,
-  .VIDEO_CREATE,
-  .WEIBO,
-  .WEIBO_CREATE {
+  .WEIBO {
     border-radius: 6px; background-color: @color-clouds;
     width: 500px; max-width: 100%; margin: auto;
   }
@@ -89,7 +94,8 @@
     .Description { padding-left: 6px; border-left: 2px solid @color-muted; line-height: 1.4; }
   }
 
-  .IMAGE {
+  .IMAGE,
+  .IMAGE_CREATE {
     .Image img { max-width: 100%; max-height: 500px; }
     .Title { line-height: 1.1; font-weight: bold; }
     .Description { line-height: 1.4; }
@@ -122,12 +128,12 @@
   }
 
   &:hover {
-    .WEIBO, .WEIBO_CREATE {
+    .WEIBO {
       .Handle { visibility: visible; }
     }
   }
 
-  .WEIBO,.WEIBO_CREATE {
+  .WEIBO {
     .Retweeted {
       background-color: darken(@color-clouds, 4%); border-radius: 6px;
       padding: 5px 10px; margin: 10px 0; font-size: 80%;

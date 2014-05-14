@@ -117,6 +117,11 @@ html.EDIT {
 .EDIT .EditArea .ps-scrollbar-y-rail {
   right: 461px !important;
 }
+.EDIT .EditArea #_scrollUtil2 {
+  position: fixed;
+  bottom: 20px;
+  right: 489px;
+}
 .ps-container .ps-scrollbar-y-rail {
   opacity: 0.2;
   filter: alpha(opacity=20);
@@ -173,11 +178,6 @@ html.EDIT {
   bottom: 0;
   right: 0;
   overflow: hidden;
-}
-@media (max-width: 991px) {
-  .Collection .Scrollable {
-    height: 500px !important;
-  }
 }
 .Cover:hover,
 .Cover:focus {
@@ -261,9 +261,6 @@ html.EDIT {
 .WidgetItemList .AddUtil {
   display: block;
 }
-.WidgetItemList .AddUtil .Menu {
-  background-color: rgba(26, 188, 156, 0.8);
-}
 .WidgetItemList li:last-child .Menu.OpacityMenu {
   opacity: 0.1;
 }
@@ -276,32 +273,8 @@ html.EDIT {
 /*菜单*/
 .Menu {
   opacity: 0;
-  -webkit-transition: 0.2s linear;
-  transition: 0.2s linear;
-  line-height: 1;
-  border-radius: 6px;
-  background-color: #1abc9c;
-}
-.Menu span {
-  cursor: default;
-  font-weight: bold;
-  color: white;
-}
-.Menu button {
-  color: white !important;
-}
-.Menu ul {
-  display: inline;
-  padding: 0 20px;
-}
-.Menu ul li {
-  display: inline;
-  margin-left: 15px;
-}
-.Menu .btn {
-  vertical-align: baseline;
-  padding: 0;
-  font-size: 18px;
+  -webkit-transition: 0.1s linear;
+  transition: 0.1s linear;
 }
 .StaticMenu .Menu.OpacityMenu {
   opacity: 0.1;
@@ -309,38 +282,15 @@ html.EDIT {
 .Menu:hover {
   opacity: 1 !important;
 }
-.IMAGE_CREATE .Image {
-  margin: 0 auto 5px;
-  width: 300px;
-  max-width: 100%;
-  height: 220px;
-  background-color: white;
-  text-align: center;
-}
-.IMAGE_CREATE .Image i {
-  line-height: 220px;
-  font-size: 30px;
-}
-.VIDEO_CREATE .Thumb {
-  margin: 0 auto 5px;
-  width: 300px;
-  max-width: 100%;
-  height: 220px;
-  background-color: white;
-  text-align: center;
-}
-.VIDEO_CREATE .Thumb i {
-  line-height: 220px;
-  font-size: 30px;
-}
 .WEIBO .Handle {
   visibility: hidden !important;
 }
 .SelectImage button {
   padding: 0;
   border-radius: 0;
+  max-width: 100%;
 }
 .SelectImage button img {
-  max-height: 200px;
-  max-width: 100%;
+  max-height: 500px;
+  max-width: 500px;
 }

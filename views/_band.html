@@ -6,7 +6,7 @@
               class="btn btn-square dropdown-toggle btn-default">
         <i class="fa fa-bookmark-o"></i> 分类
         <span class="Counter">(<%= locals.totalTopicCount %>)</span>
-        <i class="fa fa-bars mls"></i>
+        <i class="fa fa-ellipsis-v mls"></i>
       </button>
       <span class="dropdown-arrow dropdown-arrow-inverse"></span>
       <ul class="dropdown-menu dropdown-inverse">
@@ -32,7 +32,9 @@
     </a>
     <% } else { %>
     <a class="btn btn-square pull-left <%- locals.pageType == 'TAG' || locals.pageType == 'TOPIC' ? 'btn-default' : 'btn-primary' %>"
-       href="/<%= CATEGORIES2ENG[categoryType] %>"><%= categoryType %>
+       href="/<%= CATEGORIES2ENG[categoryType] %>">
+      <%if(temp[categoryType]){%><i class="fa fa-<%= temp[categoryType] %>"></i><%}%>
+      <%= categoryType %>
       <span class="Counter">(<%= locals.topicCount %>)</span>
     </a>
     <% } %>

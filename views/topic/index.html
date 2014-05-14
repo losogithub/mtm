@@ -39,12 +39,12 @@
               </div>
               <div class="pull-right">
                 <% if (locals.isAuthor) { %>
-                <a class="mrs btn btn-primary"
+                <a class="btn btn-link"
                    style="padding: 0 5px; font-size: 18px; vertical-align: baseline;"
-                   href="/topic/<%= topic._id %>/edit" title="编辑"><i class="fa fa-pencil"></i></a>
+                   href="/topic/<%= topic._id %>/edit" title="编辑"><i class="fa fa-puzzle-piece"></i></a>
                 <% include _deleteBtn.html %>
                 <% } %>
-                <a class="mls text-info mls" target="_blank"
+                <a class="text-info mls" target="_blank"
                    href="/topic/<%= topic._id %>/share_chang" title="分享"><i
                   class="fa fa-share"></i></a>
                 <button name="favoriteTopic" class="<%- locals.liked ? 'ExSelected' : '' %> btn btn-default mls"

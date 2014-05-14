@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+</head>
+<body>
+  <table>
+    <tr>
+      <td>
+        头像
+      </td>
+      <td>
+        用户名
+      </td>
+      <td>
+        注册邮箱
+      </td>
+      <td>
+        注册日期
+      </td>
+      <td>
+        策展数
+      </td>
+      <td>
+        浏览量
+      </td>
+      <td>
+        采集石子儿数
+      </td>
+      <td>
+        激活状态
+      </td>
+    </tr>
+    <% users.forEach(function(user){ %>
+    <tr>
+      <td>
+        <img width="20" height="20" src="<%= user.url || '' %>" onerror="this.style.display = 'none';">
+      </td>
+      <td>
+        <%= user.loginName %>
+      </td>
+      <td>
+        <%= user.email %>
+      </td>
+      <td>
+        <%= user.createDate.getFullYear() + '-'
+        + (user.createDate.getMonth() + 1) + '-'
+        + user.createDate.getDate() %>
+      </td>
+      <td style="text-align: right;">
+        <%= AuthorTopicCount[user.loginName] || '' %>
+      </td>
+      <td style="text-align: right;">
+        <%= AuthorPVCount[user.loginName] || '' %>
+      </td>
+      <td style="text-align: right;">
+        <%= user.items.length || '' %>
+      </td>
+      <td>
+        <%= !user.active ? '未激活' : '' %>
+      </td>
+    </tr>
+    <% }); %>
+  </table>
+</body>
+</html>

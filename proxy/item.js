@@ -177,9 +177,6 @@ function deleteItem(type, _id, callback) {
     }
 
     item.remove(callback);
-    if (type == 'IMAGE') {
-      qiniuPlugin.deleteImageFromQiniu(item._id);
-    }
   });
 }
 
