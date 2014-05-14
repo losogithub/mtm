@@ -41,7 +41,6 @@ function index(req, res) {
     }]
   }, function (err, results) {
     if (!err) {
-      console.log(results.topics)
       featuredTopics = results.topics.concat(featuredTopics);
     }
     res.render('index', {
