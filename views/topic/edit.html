@@ -177,7 +177,7 @@
             </div>
             <div class="Content LINK pam"
                  ng-switch-when="LINK">
-              <div class="Title">
+              <div class="Title" title="{{item.snippet || ''}}">
                 <img class="Fav" ng-src="{{item.fav}}"
                      ui-event="{ error : 'onFavError(item)' }">
                 <a target="_blank" class="LINK_URL" href='{{item.url}}'>{{item.title || ''}}</a>
@@ -188,7 +188,6 @@
                   {{item.url}}
                 </a>
               </div>
-              <div class="Snippet text-muted small mtx" ng-if="item.snippet">{{item.snippet}}</div>
               <div class="Description text-asbestos mts small"
                    ng-if="item.description" ng-bind-html="getHtml(item.description)"></div>
               <div class="clearfix"></div>
@@ -454,7 +453,7 @@
 
             <div class="Content LINK pam"
                  ng-switch-when="LINK" ng-controller="LinkCtrl" ng-init="init()">
-              <div class="Title">
+              <div class="Title" title="{{item.snippet || ''}}">
                 <img class="Fav" ng-src="{{item.fav}}"
                      ui-event="{ error : 'onFavError(item)' }">
                 <a target="_blank" class="LINK_URL" href='{{item.url}}'>{{item.title || ''}}</a>
@@ -465,7 +464,6 @@
                   {{item.url}}
                 </a>
               </div>
-              <div class="Snippet text-muted small mtx" ng-if="item.snippet">{{item.snippet}}</div>
 
               <div class="form-group mtx"
                    ng-class="{ 'has-error' : description.length > descriptionMaxLength }">
@@ -751,7 +749,7 @@
               </div>
               <div class="Content LINK pam"
                    ng-switch-when="LINK">
-                <div class="Title">
+                <div class="Title" title="{{item.snippet || ''}}">
                   <img class="Fav" ng-src="{{item.fav}}"
                        ui-event="{ error : 'onFavError(item)' }">
                   <a target="_blank" class="LINK_URL" href='{{item.url}}'>{{item.title || ''}}</a>
@@ -762,7 +760,6 @@
                     {{item.url}}
                   </a>
                 </div>
-                <div class="Snippet text-muted small mtx" ng-if="item.snippet">{{item.snippet}}</div>
                 <div class="Description text-asbestos mts small"
                      ng-if="item.description" ng-bind-html="getHtml(item.description)"></div>
                 <div class="clearfix"></div>

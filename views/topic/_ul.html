@@ -9,7 +9,7 @@
 
       <% if (item.type == 'LINK') { %>
       <div class="Content LINK pam">
-        <div class="Title">
+        <div class="Title" title="<%= item.snippet || '' %>">
           <img class="Fav" src="<%= item.fav %>"
                onerror="shizier.errorFavImage(this, '<%= item.url %>');">
           <a target="_blank" class="LINK_URL" href='<%= item.url %>'><%= item.title || '' %></a>
@@ -20,8 +20,6 @@
             <%= item.url || '' %>
           </a>
         </div>
-        <div class="Snippet text-muted small mtx" style="display: <%= !item.snippet ? 'none' : 'block' %>;"><%- item.snippet ?
-          escape(item.snippet).replace(/\n/g, "<br>") : '' %></div>
         <div class="Description text-asbestos mts small" style="display: <%= !item.description ? 'none' : 'block' %>;"><%- item.description ?
           escape(item.description).replace(/\n/g, "<br>") : '' %></div>
         <div class="clearfix"></div>
