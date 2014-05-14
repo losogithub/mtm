@@ -5,8 +5,10 @@
  * Time: 11:42 PM
  * To change this template use File | Settings | File Templates.
  */
+var async = require('async');
 
 var Common = require('../common');
+var Topic = require('../proxy').Topic;
 
 //var topicsPerPage = 24;
 //var topicsInIndex = 24;
@@ -16,21 +18,32 @@ var topicsInIndex = 12;
 var newTopicsPerPage = 10;
 
 function index(req, res) {
-  res.render('index', {
-    pageType: 'INDEX',
-    topicCount: Common.TopList.totalTopicCount,
-    totalTopicCount: Common.TopList.totalTopicCount,
-    categoryTopicCount: Common.TopList.categoryTopicCount,
-    featuredTopics: Common.FeaturedTopics,
-    hot: Common.TopList.hotTopics.slice(0, topicsInIndex),
-    categoryTopics : Common.TopList.categoryTopics,
-    realGood: Common.TopList.classicTopics.slice(0, topicsInIndex),
-    newTopics: Common.TopList.newTopics.slice(0, newTopicsPerPage),
-    authorCategoryList: Common.AuthorCategoryList,
-    Tags: Common.Tags,
-    Topic: Common.Topic,
-    categoryAuthors: Common.TopList.categoryAuthors,
-    categoryTags: Common.TopList.categoryTags
+  var featuredTopics = Common.FeaturedTopics;
+  async.auto({
+    topics: function (callback) {
+      Topic.getTopicsById(['5337986887a4d07730f2c4c9', '533d3555d1178f3f783ad3e3'], callback);
+    }
+  }, function (err, results) {
+    if (!err) {
+      console.log(results.topics)
+      featuredTopics = results.topics.concat(featuredTopics);
+    }
+    res.render('index', {
+      pageType: 'INDEX',
+      topicCount: Common.TopList.totalTopicCount,
+      totalTopicCount: Common.TopList.totalTopicCount,
+      categoryTopicCount: Common.TopList.categoryTopicCount,
+      featuredTopics: featuredTopics,
+      hot: Common.TopList.hotTopics.slice(0, topicsInIndex),
+      categoryTopics : Common.TopList.categoryTopics,
+      realGood: Common.TopList.classicTopics.slice(0, topicsInIndex),
+      newTopics: Common.TopList.newTopics.slice(0, newTopicsPerPage),
+      authorCategoryList: Common.AuthorCategoryList,
+      Tags: Common.Tags,
+      Topic: Common.Topic,
+      categoryAuthors: Common.TopList.categoryAuthors,
+      categoryTags: Common.TopList.categoryTags
+    });
   });
 }
 
