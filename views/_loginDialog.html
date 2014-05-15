@@ -10,7 +10,7 @@
       <form class="modal-body clearfix" ng-controller="LoginDialogCtrl" ng-submit="submit()"
             name="loginDialog"
             style="border-radius: 0 0 6px 6px;">
-        <p>{{error}}&nbsp;</p>
+        <p>{{loginDialog.$dirty ? '' : error}}&nbsp;</p>
 
         <div class="form-group">
           <input type="text" value="<%= locals.email || '' %>" ng-model="username"

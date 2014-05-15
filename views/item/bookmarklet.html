@@ -81,6 +81,7 @@
             });
         };
         $scope.login = function () {
+          $scope.loginDialog.$setPristine();
           if (!$scope.username || !$scope.password) {
             $scope.error = '用户名和密码不能为空';
             return;
@@ -435,7 +436,7 @@
         </div>
         <form class="modal-body clearfix" name="loginDialog" ng-submit="login()"
               style="border-radius: 0 0 6px 6px;">
-          <p>{{error}}&nbsp;</p>
+          <p>{{loginDialog.$dirty ? '' : error}}&nbsp;</p>
 
           <div class="form-group">
             <input type="text" value="<%= locals.email || '' %>" ng-model="username"

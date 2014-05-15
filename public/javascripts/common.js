@@ -26,6 +26,7 @@
 
     window.sng.controller('LoginDialogCtrl', function ($scope, $http) {
       $scope.submit = function () {
+        $scope.loginDialog.$setPristine();
         if (!$scope.username || !$scope.password) {
           $scope.error = '用户名和密码不能为空';
           return;
@@ -158,7 +159,7 @@
     '爆米花': ['http://resources.pomoho.com/swf/out_player.swf?flvid=#vid#', ''],
     '音悦台': ['http://player.yinyuetai.com/video/swf/#vid#/1/a.swf', 'playMovie=true'],
     'AcFun': ['http://static.acfun.tv/player/ACFlashPlayerX.out.20130927.swf?type=page&url=ac#vid#', ''],
-    'bilibili': ['http://static.hdslb.com/miniloader.swf?aid=#vid#', ''],
+    'bilibili': ['http://static.hdslb.com/miniloader.swf?aid=#vid#', '']
   };
 
   shizier.getVideoSrc = function (quote, vid) {

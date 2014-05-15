@@ -762,9 +762,16 @@ function createTopic(req, res, next) {
     topics: function (callback) {
       Topic.getAllTopicsByAuthorId(userId, callback);
     },
-    topic: function (callback) {
+    topic: ['topics', function (callback, results) {
+      var topics = results.topics;
+      for (var i = 0; i < topics.length; i++) {
+        var topic = topics[i];
+        if (!topic.url && !topic.title && !topic.description && !topic.items.length) {
+          return callback(null, topic);
+        }
+      }
       Topic.createTopic(userId, callback);
-    },
+    }],
     if: ['topics', 'topic', function (callback, results) {
       if (results.topics.length) {
         return callback();
