@@ -11,7 +11,6 @@
  * When given a plain text, translate into a certain html tagged str.
  *
  */
-var Url = require('url');
 var Iconv = require('iconv').Iconv;
 var zlib = require('zlib');
 var async = require('async');
@@ -77,7 +76,6 @@ function concatNoDup(a, b) {
 }
 
 function _getHtml(url, callback) {
-  console.log(url);
   callback = callback || function () {
   };
   var d = domain.create();
@@ -125,14 +123,12 @@ function _getHtml(url, callback) {
         var charset = !(temp = response.headers['content-type']) ? null :
           !(temp = temp.match(/charset=([^\s;]+)/i)) ? null :
             !temp[1] ? null : temp[1];
-        console.log(charset);
         try {
           var html = new Iconv(charset || 'UTF-8', 'UTF-8//TRANSLIT//IGNORE').convert(buffer).toString();
         } catch (err) {
           return callback(err);
         }
         var charset2 = !(temp = html.match(/<meta[^<>]+charset\s*=\s*("|')?([^"'\s/>]+)/i)) ? null : temp[2];
-        console.log(charset2);
         if (charset2 &&
           (!charset
             || charset2.toLowerCase() != charset.toLowerCase())) {
@@ -186,15 +182,13 @@ function getVideoDetail(url, callback) {
   };
   _getHtml(url, function (err, html) {
     if (err) {
-      callback(err);
-      return;
+      return callback(err);
     }
     var temp;
     var title;
     var quote = utils.getQuote(url, 'VIDEO');
     var vid;
     var cover;
-    console.log(quote);
     switch (quote) {
       case 'youku.com':
         //plan A
@@ -440,7 +434,6 @@ function getWeiboDetail(url, callback) {
   };
   var temp;
   var mid = (temp = /weibo\.com\/\d+\/(\w+)/i.exec(url)) && temp[1];
-  console.log(mid);
   var data;
 
   _getHtml('https://api.weibo.com/2/statuses/queryid.json?source=' + config.WEIBO_APPKEY + '&access_token=' + 'd4e7f8f717428c1e2ed3f2bc936d063d' + '&type=1&isBase62=1&mid=' + mid, function (err, html) {
@@ -448,13 +441,11 @@ function getWeiboDetail(url, callback) {
       return callback(err);
     }
     var idstr = JSON.parse(html).id;
-    console.log(idstr);
 
     _getHtml('https://api.weibo.com/2/statuses/show.json?source=' + config.WEIBO_APPKEY + '&access_token=' + 'd4e7f8f717428c1e2ed3f2bc936d063d' + '&id=' + idstr, function (err, html) {
       if (err) {
         return callback(err);
       }
-      console.log(html);
       async.series([function (callback) {
         data = extend(JSON.parse(html), {mid62: mid, id: null});
         if (!data.retweeted_status || !data.retweeted_status.idstr) {
@@ -464,7 +455,6 @@ function getWeiboDetail(url, callback) {
           if (err) {
             return callback(err);
           }
-          console.log(JSON.parse(html));
           extend(data.retweeted_status, {mid62: JSON.parse(html).mid, id: null});
           return callback();
         });

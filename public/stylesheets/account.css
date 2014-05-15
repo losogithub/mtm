@@ -93,41 +93,6 @@
 .text-info:hover {
   color: #2a7aaf;
 }
-.Message {
-  text-align: center;
-  padding: 60px;
-  border: 1px solid #eee;
-  margin: 20px 0;
-}
-.Message h4 {
-  margin: 0 0 22px 0;
-  font-weight: bold;
-}
-.Message p {
-  margin: 0 0 8px 0;
-  font-size: 14px;
-}
-.Message p.Note {
-  margin: -5px 0 0 0;
-  padding: 0 0 8px 0;
-  font-size: 12px;
-  color: #aaaaaa;
-}
-.Message .BtnSet {
-  margin-top: 35px;
-}
-.Message .BtnSet li + li {
-  margin-top: 10px;
-}
-.Message.Message-Error {
-  text-align: left;
-}
-.Message.Message-Error .BtnSet {
-  text-align: center;
-}
-.Message.Message-AL {
-  text-align: left;
-}
 .TextList li {
   padding-left: 10px;
 }

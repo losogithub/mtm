@@ -1204,7 +1204,7 @@ function _updateSingleTopicSiteCount(topic, deleted) {
     items.forEach(function (item) {
       if (item && item.url) {
         urlCount++;
-        siteList.push(utils.getQuote(item.type == 'IMAGE' && item.quote || item.url));
+        siteList.push(utils.getQuote(item.type == 'IMAGE' ? item.quote : item.url));
       }
     });
     Common.Topic[topic._id] = Common.Topic[topic._id] || {};

@@ -1,5 +1,5 @@
 <div class="Menu btn-group btn-group-sm"
-     ng-class="{OpacityMenu: !items.length}">
+     ng-class="{OpacityMenu: !items.length || $index == items.length - 1 }">
   <button class="btn btn-inverse" type="button"
           ng-click="createItem(item, 'TITLE')"
           title="标题">

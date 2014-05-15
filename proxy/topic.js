@@ -10,6 +10,8 @@ var async = require('async');
 var Common = require('../common');
 var TopicModel = require('../models').TopicModel;
 var User = require('./user');
+var downloadImage = require('../helper/downloadImage');
+var qiniuPlugin = require('../helper/qiniu');
 
 /**
  * 新建策展
@@ -87,10 +89,27 @@ function getTagTopics(tagText, callback) {
 }
 
 function saveCover(topic, coverUrl, callback) {
-  topic.cover_url = coverUrl;
-  topic.update_at = Date.now();
-  topic.save(function (err, topic) {
-    callback(err, topic);
+  async.auto({
+    qiniu: function (callback) {
+      if (!coverUrl) {
+        topic.cover_url = null;
+        return callback();
+      }
+      downloadImage.downloadBase64Image(coverUrl, null, function (err, base64data) {
+        var time = Date.now();
+        topic.cover_url = "http://shizier.qiniudn.com/" + topic._id + time;
+        qiniuPlugin.uploadToQiniu(base64data, topic._id.toString() + time, callback);
+      });
+    }
+  }, function (err) {
+    if (err) {
+      return callback(err);
+    }
+
+    topic.update_at = Date.now();
+    topic.save(function (err, topic) {
+      callback(err, topic);
+    });
   });
 }
 

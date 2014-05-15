@@ -3,7 +3,7 @@ var fs = require('fs'),
 
 var downloadBase64Image = function (url, referer, callback) {
   // Make request to our image url
-  request({ url: url, encoding: null, headers: { referer: referer } }, function (err, res, body) {
+  request({ url: url, encoding: null, headers: referer ? { referer: referer } : {} }, function (err, res, body) {
     if (err) {
       //todo: need fix how to handle this error.
       return callback(err, "cannot download image");

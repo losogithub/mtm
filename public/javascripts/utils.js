@@ -25,6 +25,27 @@
       VIDEO: /youku\.com|tudou\.com|iqiyi\.com|pps\.tv|sohu\.com|my\.tv\.sohu\.com|qq\.com|sina\.com\.cn|ifeng\.com|letv\.com|pptv\.com|ku6\.com|56\.com|baomihua\.com|yinyuetai\.com|acfun\.tv|acfun\.com|bilibili\.tv|bilibili\.kankanews\.com$/i,
       WEIBO: /weibo\.com$/i
     },
+    QUOTE_MAP: {
+      'youku.com': '优酷',
+      'tudou.com': '土豆',
+      'iqiyi.com': '爱奇艺',
+      'pps.tv': 'PPS',
+      'sohu.com': '搜狐视频',
+      'my.tv.sohu.com': '搜狐视频',
+      'qq.com': '腾讯视频',
+      'sina.com.cn': '新浪视频',
+      'ifeng.com': '凤凰视频',
+      'letv.com': '乐视',
+      'pptv.com': 'PPTV',
+      'ku6.com': '酷6',
+      '56.com': '56',
+      'baomihua.com': '爆米花',
+      'yinyuetai.com': '音悦台',
+      'acfun.tv': 'AcFun',
+      'acfun.com': 'AcFun',
+      'bilibili.tv': 'bilibili',
+      'bilibili.kankanews.com': 'bilibili'
+    },
 
     getQuote: function (url, type) {
       var temp;
@@ -34,6 +55,9 @@
         return quote;
       }
       quote = (temp = re.exec(quote)) && temp[0] && temp[0].toLowerCase();
+      if (type == 'VIDEO') {
+        quote = this.QUOTE_MAP[quote];
+      }
 
       return quote;
     },

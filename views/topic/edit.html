@@ -41,30 +41,33 @@
           {{topic.title}}
         </h1>
       </div>
-      <div ng-if="coverEditing">
-        <div class="Cover" style="border-radius: 6px 6px 0 0; min-height: 280px; cursor: pointer;"
+      <div ng-if="coverEditing"
+           ng-init="init()" ng-controller="CoverCtrl">
+        <div class="Cover" style="border-radius: 6px 6px 0 0; cursor: pointer;"
              ng-click="cancelEdit()">
           <img onerror="shizier.errorImage(this, 'default_120x120', true);"
-               ng-src="{{SuffixImage(cover_url)}}" ng-show="cover_url"
+               ng-src="{{searchedCoverUrl}}" ng-show="searchedCoverUrl"
                style="border-radius: 6px 6px 0 0; width: 100%;">
         </div>
         <form name="form" class="pal background-clouds-darken"
-              ng-init="init()" ng-controller="CoverCtrl">
-          <div class="form-group mbn">
+              ng-style="!searchedCoverUrl && {'border-radius':'6px 6px 0 0'}">
+          <button type="button" class="btn btn-link mbl" ng-click="showSearchImage()">
+            <i class="fa fa-search"></i> 搜索图片
+          </button>
+          <div class="form-group">
             <input name="url" class="form-control flat mbs AUTO_FOCUS"
-                   ng-model="$parent.cover_url" ng-init="$parent.cover_url = topic.cover_url;"
+                   ng-model="$parent.cover_url"
                    placeholder="策展封面URL" id="_top_url" type="text">
             <label class="input-icon fa fa-link" for="_top_url"></label>
-            <div class="InfoHint text-muted">
-              由于受版权保护，有些图片可能无法引用
-            </div>
-            <div class="BtnSet">
-              <button name="save" class="btn btn-primary"
-                      type="submit">保存</button>
-              <button name="reset" class="btn btn-default"
-                      ng-click="cancelEdit()"
-                      type="button">取消</button>
-            </div>
+          </div>
+          <div class="text-right">
+            <button name="save" class="btn btn-primary"
+                    ng-disabled="xhr"
+                    type="submit">保存 <i class='fa fa-spinner fa-spin' ng-show="xhr"></i>
+            </button>
+            <button name="reset" class="btn btn-default"
+                    ng-click="cancelEdit()"
+                    type="button">取消</button>
           </div>
         </form>
       </div>
@@ -85,7 +88,7 @@
           </div>
 
         </div>
-        <div class="StaticMenu">
+        <div class="AddUtil">
 
           <% include _menu.html %>
 
@@ -115,7 +118,7 @@
             <div class="LetterCounter">{{description.length || 0}}/{{descriptionLimit}}</div>
           </div>
 
-          <div class="BtnSet">
+          <div class="text-right">
             <button name="save" class="btn btn-primary"
                     type="submit">保存</button>
             <button name="reset" class="btn btn-default"
@@ -323,7 +326,7 @@
                     ng-click="collectItem(item)"
                     title="采集素材"
                     type="button">采集</button>
-            <div class="AddUtil pull-left">
+            <div class="AddUtil">
 
               <% include _menu.html %>
 
@@ -393,15 +396,16 @@
                           placeholder="图片介绍、评论"></textarea>
                 <div class="LetterCounter">{{description.length || 0}}/{{descriptionMaxLength}}</div>
               </div>
-
-              <% include _widget_BtnSet.html %>
-
               <div class="Quote" ng-if="item.quote">
                 出自 <i class="fa fa-globe"></i>
                 <a target="_blank" href="{{item.quote}}">
                   {{item.quoteDomain || ''}}
                 </a>
               </div>
+
+              <div class="mtx"></div>
+              <% include _widget_BtnSet.html %>
+
             </div>
 
             <div class="Content CITE"

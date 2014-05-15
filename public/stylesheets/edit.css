@@ -258,25 +258,56 @@ html.EDIT {
 .WidgetItemList > li.ui-sortable-helper .MoveUtil {
   visibility: visible !important;
 }
-.WidgetItemList .AddUtil {
-  display: block;
+.EditUtil {
+  background-color: #f8f9fa;
+  border-top-left-radius: 6px;
+  display: none;
+  line-height: 1;
+  position: absolute;
+  bottom: 0;
+  right: 15px;
 }
-.WidgetItemList li:last-child .Menu.OpacityMenu {
-  opacity: 0.1;
+.EditUtil .btn {
+  color: #bdc3c7;
 }
-.StaticMenu {
+.EditUtil .EDIT:hover,
+.EditUtil .EDIT:focus {
+  color: #1abc9c;
+}
+.EditUtil .DELETE:hover,
+.EditUtil .DELETE:focus {
+  color: #e74c3c;
+}
+.EditUtil .btn {
+  vertical-align: baseline;
+  padding: 0;
+  font-size: 18px;
+}
+.AppendUtil {
+  border-top-left-radius: 0;
+  border-top-right-radius: 6px;
+  right: auto;
+  left: 0;
+}
+.AppendUtil .APPEND:hover,
+.AppendUtil .APPEND:focus {
+  color: #1abc9c;
+}
+.AddUtil {
   position: absolute;
   bottom: -18px;
-  left: 20px;
-  z-index: 1000;
+  left: 0;
+  right: 0;
+  text-align: center;
 }
 /*菜单*/
 .Menu {
+  z-index: 1000;
   opacity: 0;
   -webkit-transition: 0.1s linear;
   transition: 0.1s linear;
 }
-.StaticMenu .Menu.OpacityMenu {
+.Menu.OpacityMenu {
   opacity: 0.1;
 }
 .Menu:hover {

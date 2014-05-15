@@ -132,27 +132,46 @@ html.EDIT {
       .MoveUtil { visibility: visible !important; }
     }
   }
-  .AddUtil {
-    display: block;
+}
+
+.EditUtil {
+  background-color: lighten(@color-clouds, 4%); border-top-left-radius: 6px;
+  .btn {
+    color: @color-muted;
   }
-  li:last-child {
-    .Menu.OpacityMenu {
-      opacity: 0.1;
-    }
+  .EDIT:hover,.EDIT:focus {
+    color: @color-primary;
+  }
+  .DELETE:hover,.DELETE:focus {
+    color: @color-danger;
+  }
+  display: none; line-height: 1;
+  position: absolute; bottom: 0; right: 15px;
+  .btn {
+    vertical-align: baseline;
+    padding: 0;
+    font-size: 18px;
+  }
+}
+.AppendUtil {
+  border-top-left-radius: 0; border-top-right-radius: 6px;
+  right: auto; left: 0;
+  .APPEND:hover,.APPEND:focus {
+    color: @color-primary;
   }
 }
 
-.StaticMenu {
-  position: absolute; bottom: -18px; left: 20px;
-  z-index: 1000;
+.AddUtil {
+  position: absolute; bottom: -18px; left: 0; right: 0; text-align: center;
 }
 
 /*菜单*/
 .Menu {
+  z-index: 1000;
   opacity: 0;
   -webkit-transition: 0.1s linear;
   transition: 0.1s linear;
-  .StaticMenu &.OpacityMenu { opacity: 0.1; }
+  &.OpacityMenu { opacity: 0.1; }
   &:hover { opacity: 1 !important; }
 }
 

@@ -38,7 +38,11 @@
     $scrollable.perfectScrollbar({
       suppressScrollX: true
     });
-    $('#_searchImage .modal-body').perfectScrollbar({
+    var $searchImage = $('#_searchImage');
+    $searchImage.on('shown.bs.modal', function () {
+      $('.AutoFocus').focus();
+    });
+    $searchImage.find('.modal-body').perfectScrollbar({
       suppressScrollX: true,
       includePadding: false
     });
@@ -97,9 +101,6 @@
   }
 
   function _commonListCtrl($scope, $sce, $timeout) {
-    $scope.SuffixImage = function (url) {
-      return shizier.utils.suffixImage(url);
-    }
     $scope.onFavError = function (item) {
       var temp = 'http://www.google.com/s2/favicons?domain=' + item.url;
       if (temp != item.fav) {
@@ -162,10 +163,10 @@
         return;
       }
       $scope.items.splice($scope.items.indexOf(item) + 1, 0, { type: type });
-    }
-    $scope.setEditingScope = function (scope) {
-      $scope.editingScope = scope;
     };
+    $scope.$on('setEditingScope', function (e, scope) {
+      $scope.editingScope = scope;
+    });
   }
 
   window.sng.controller('TopicCtrl', TopicCtrl);
@@ -197,9 +198,9 @@
     $scope.setFail = function () {
       $scope.fail = true;
     };
-    $scope.setXHR = function (xhr) {
+    $scope.$on('setXhr', function (e, xhr) {
       $scope.xhr = xhr;
-    };
+    });
     $scope.isXHR = function () {
       return $scope.XHRing;
     };
@@ -501,20 +502,23 @@
   window.sng.controller('CoverCtrl', CoverCtrl);
   function CoverCtrl($scope, $element, $timeout) {
     function _saveCover() {
-      $.extend($scope.topic, {cover_url: shizier.utils.suffixImage($scope.cover_url)});
-      $scope.$parent.cancelEdit(true);
-      $.ajax('/topic/cover', {
+      var xhr = $.ajax('/topic/cover', {
         type: 'PUT',
         data: {
           _id: $scope.topic._id,
-          cover_url: shizier.utils.suffixImage($scope.cover_url)
+          cover_url: $scope.cover_url
         }
       })
-        .fail(function () {
-          $scope.setFail();
+        .done(function (data) {
+          $.extend($scope.$parent.topic, {cover_url: data.cover_url});
+          $scope.$parent.cancelEdit(true);
           $scope.$apply();
+        })
+        .fail(function () {
+          retryMessenger();
         });
-    };
+      $scope.$emit('setXhr', xhr);
+    }
     $scope.init = function () {
       $scope.$parent.setCoverScope($scope);
       //移动光标到输入框末尾
@@ -522,7 +526,7 @@
         $($element).find('.AUTO_FOCUS').focus();
         moveSelection2End($element.find('.AUTO_FOCUS')[0]);
       });
-      $($element)
+      $($element).find('form[name="form"]')
         .on('submit', function () {
           if ($scope.url) {
             $scope.url = $scope.url.trim().replace('。', '.');
@@ -552,6 +556,16 @@
             }
           }
         });
+    };
+    var $searchImage = $('#_searchImage');
+    $scope.showSearchImage = function () {
+      $searchImage.one('hide.bs.modal', function () {
+        $timeout(function () {
+          $($element).find('.AUTO_FOCUS').focus();
+          moveSelection2End($element.find('.AUTO_FOCUS')[0]);
+        });
+      });
+      $searchImage.modal();
     };
   };
 
@@ -758,7 +772,7 @@
 
   function _commonCtrl($scope, $element, $timeout) {
     $scope._init = function () {
-      $scope.$parent.setEditingScope($scope);
+      $scope.$emit('setEditingScope', $scope);
       $timeout(function () {
         $($element).find('.AUTO_FOCUS').focus();
         moveSelection2End($element.find('.AUTO_FOCUS')[0]);
@@ -903,10 +917,7 @@
     };
     var $searchImage = $('#_searchImage');
     $scope.showSearchImage = function () {
-      $searchImage.on('shown.bs.modal', function () {
-        $('.AutoFocus').focus();
-      });
-      $searchImage.on('hide.bs.modal', function () {
+      $searchImage.one('hide.bs.modal', function () {
         if (!$scope.editingScope.item.url) {
           $timeout(function () {
             $scope.cancelEdit(true);
@@ -943,17 +954,21 @@
         });
     };
     $scope.selectImage = function (image) {
-      $.extend($scope.editingScope.item, {
-        url: image.url,
-        quote: image.quote,
-        quoteDomain: shizier.utils.getQuote(image.quote)
-      });
-      $scope.editingScope.title = image.title;
+      if ($scope.editingScope) {
+        $.extend($scope.editingScope.item, {
+          url: image.url,
+          quote: image.quote,
+          quoteDomain: shizier.utils.getQuote(image.quote)
+        });
+        $scope.editingScope.title = image.title;
+      } else {
+        $scope.$parent.cover_url = $scope.$parent.searchedCoverUrl = image.url;
+      }
       $($element).modal('hide');
-    }
+    };
     $scope.onError = function (image) {
       $scope.images.splice($scope.images.indexOf(image), 1);
-    }
+    };
   };
 
   window.sng.controller('CiteCtrl', CiteCtrl);
@@ -1004,10 +1019,6 @@
       $scope._init();
       $($element).closest('form').validate({
         submitHandler: function () {
-          if (!shizier.utils.getQuote($scope.url, $scope.item.type.replace('_CREATE', ''))) {
-            alertMessenger('暂不支持该网站');
-            return;
-          }
           $scope.$parent.saveItem($scope.item, {
             url: $scope.url
           });

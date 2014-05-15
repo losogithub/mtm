@@ -155,48 +155,6 @@
 .SortUtil i:hover {
   color: #1abc9c;
 }
-.AddUtil {
-  display: none;
-  position: absolute;
-  bottom: -18px;
-  left: 20px;
-  z-index: 1000;
-}
-.EditUtil {
-  background-color: #f8f9fa;
-  border-top-left-radius: 6px;
-  display: none;
-  line-height: 1;
-  position: absolute;
-  bottom: 0;
-  right: 15px;
-}
-.EditUtil .btn {
-  color: #bdc3c7;
-}
-.EditUtil .EDIT:hover,
-.EditUtil .EDIT:focus {
-  color: #1abc9c;
-}
-.EditUtil .DELETE:hover,
-.EditUtil .DELETE:focus {
-  color: #e74c3c;
-}
-.EditUtil .btn {
-  vertical-align: baseline;
-  padding: 0;
-  font-size: 18px;
-}
-.AppendUtil {
-  border-top-left-radius: 0;
-  border-top-right-radius: 6px;
-  right: auto;
-  left: 0;
-}
-.AppendUtil .APPEND:hover,
-.AppendUtil .APPEND:focus {
-  color: #1abc9c;
-}
 .WidgetItemList > li:hover {
   background-color: #f8f9fa;
 }
