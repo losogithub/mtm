@@ -47,24 +47,25 @@ function createItem(data, callback) {
   data.type = data.type.replace('_CREATE', '');
   var item = new ItemModels[data.type](data);
   async.auto({
-    base64data: function (callback) {
+    if: function (callback) {
       if (data.type != 'IMAGE') {
         return callback();
       }
-      if (data.imageByteData) {
-        return callback(null, data.imageByteData);
-      }
-      downloadImage.downloadBase64Image(data.url, data.quote, callback);
-    },
-    qiniu: ['base64data', function(callback, results) {
-      if (data.type != 'IMAGE') {
-        return callback();
-      }
-      var base64data = results.base64data;
-      qiniuPlugin.uploadToQiniu(base64data, item._id.toString(), callback);
-      item.originalUrl = item.url;
-      item.url = "http://shizier.qiniudn.com/" + item._id;
-    }]
+      async.auto({
+        base64data: function (callback) {
+          if (data.imageByteData) {
+            return callback(null, data.imageByteData);
+          }
+          downloadImage.downloadBase64Image(data.url, data.quote, callback);
+        },
+        qiniu: ['base64data', function(callback, results) {
+          var base64data = results.base64data;
+          qiniuPlugin.uploadToQiniu(base64data, item._id.toString(), callback);
+          item.originalUrl = item.url;
+          item.url = "http://shizier.qiniudn.com/" + item._id;
+        }]
+      }, callback);
+    }
   }, function (err) {
     if (err) {
       return callback(err);
