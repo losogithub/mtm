@@ -14,6 +14,20 @@
   var $scrollable;
   var marginBottom = 200;
 
+  function _setMouseMoveListener() {
+    $window.mousemove(function (event) {
+      if (event.clientY < 100) {
+        $editArea.scrollTop($editArea.scrollTop() - (100 - event.clientY))
+      }
+      if (event.clientY > $window.height() - 100) {
+        $editArea.scrollTop(Math.min(
+          $editArea.scrollTop() + (100 - ($window.height() - event.clientY)),
+          $main.height() + 20 + marginBottom - $editArea.height()
+        ));
+      }
+    });
+  }
+
   $(function () {
 
     $editArea = $('.EditArea');
@@ -420,17 +434,7 @@
         $($element).find('.WidgetItemList-Main')
           .addClass('WidgetItemList-Sorting')
           .sortable('refreshPositions');//因为item缩小了，所以要清除缓存大小
-        $window.mousemove(function (event) {
-          if (event.clientY < 100) {
-            $editArea.scrollTop($editArea.scrollTop() - (50 - event.clientY/2))
-          }
-          if (event.clientY > $window.height() - 100) {
-            $editArea.scrollTop(Math.min(
-              $editArea.scrollTop() + (50 - ($window.height() - event.clientY)/2),
-              $main.height() + 20 + marginBottom - $editArea.height()
-            ))
-          }
-        });
+        _setMouseMoveListener();
       },
 
       update: function (e, ui) {
@@ -746,17 +750,7 @@
         $ul
           .addClass('WidgetItemList-Sorting')
           .sortable('refreshPositions');//因为item缩小了，所以要清除缓存大小
-        $window.mousemove(function (event) {
-          if (event.clientY < 100) {
-            $editArea.scrollTop($editArea.scrollTop() - (50 - event.clientY/2))
-          }
-          if (event.clientY > $window.height() - 100) {
-            $editArea.scrollTop(Math.min(
-              $editArea.scrollTop() + (50 - ($window.height() - event.clientY)/2),
-              $main.height() + 20 + marginBottom - $editArea.height()
-            ))
-          }
-        });
+        _setMouseMoveListener();
       },
 
       //列表顺序改变后的回调函数
