@@ -51,7 +51,8 @@
         </div>
         <form name="form" class="pal background-clouds-darken"
               ng-style="!searchedCoverUrl && {'border-radius':'6px 6px 0 0'}">
-          <button type="button" class="btn btn-link mbl" ng-click="showSearchImage()">
+          <button type="button" class="btn btn-link" style="display: block; margin: 0 auto 20px;"
+                  ng-click="showSearchImage()">
             <i class="fa fa-search"></i> 搜索图片
           </button>
           <div class="form-group">
@@ -913,8 +914,8 @@
   <!-- Modal -->
   <div class="LoginDialog modal fade" style="overflow: hidden;"
        ng-controller="SearchImageCtrl" id="_searchImage" tabindex="-1">
-    <div class="modal-dialog container" style="height: 90%;"
-         ng-class="{ 'LoginDialog-Wide': images.length}">
+    <div class="modal-dialog container" ng-style="images.length && {height: '90%'}"
+         ng-class="{ 'LoginDialog-Wide': images.length }">
       <div class="modal-content" style="height: 100%; overflow: hidden;">
         <form class="modal-header"
               ng-submit="submit()"
@@ -933,7 +934,8 @@
                   ng-click="selectImage(image)"
                   ng-repeat="image in images" type="button">
             <img ng-src="{{image.url}}"
-                 ui-event="{ error : 'onError(image)' }">
+                 ng-controller="SearchedImageCtrl"
+                 ui-event="{ error : 'onError(image)', load : 'onLoad(image)' }">
           </button>
         </div>
       </div>

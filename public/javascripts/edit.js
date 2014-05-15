@@ -971,6 +971,16 @@
     };
   };
 
+  window.sng.controller('SearchedImageCtrl', SearchedImageCtrl);
+  function SearchedImageCtrl($scope, $element) {
+    $scope.onLoad = function (image) {
+      var $img = $($element);
+      if ($img.width() * $img.height() < 80000) {
+        $scope.images.splice($scope.images.indexOf(image), 1);
+      }
+    };
+  }
+
   window.sng.controller('CiteCtrl', CiteCtrl);
   function CiteCtrl($scope, $element, $timeout) {
     _commonCtrl($scope, $element, $timeout);
