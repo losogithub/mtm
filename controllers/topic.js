@@ -845,17 +845,17 @@ function createTopic(req, res, next) {
           }, callback);
         },
         item10: function (callback) {
-              Item.createItem({
-                  type: 'TEXT',
-                  text: '到此为止，您已经了解了石子儿的使用方法。现在请点击右上角的“返回”，然后再点击页面右上角的”开始策展”来创建一篇属于自己的策展吧！另外，下面这个链接介绍了石子儿采集工具的详细使用方法，供您参考。'
-              }, callback);
+          Item.createItem({
+            type: 'TEXT',
+            text: '到此为止，您已经了解了石子儿的使用方法。现在请点击右上角的“返回”，然后再点击页面右上角的”开始策展”来创建一篇属于自己的策展吧！另外，下面这个链接介绍了石子儿采集工具的详细使用方法，供您参考。'
+          }, callback);
         },
         item11: function (callback) {
-              Item.createItem({
-                  type: 'LINK',
-                  url: 'http://shizier.com/topic/533d3555d1178f3f783ad3e3',
-                  title: '手把手教你如何做策展'
-              }, callback);
+          Item.createItem({
+            type: 'LINK',
+            url: 'http://shizier.com/topic/533d3555d1178f3f783ad3e3',
+            title: '手把手教你如何做策展'
+          }, callback);
         },
         append: ['item1', 'item2', 'item3', 'item4', 'item5', 'item6', 'item7', 'item8', 'item9', 'item10', 'item11', function (callback, results) {
           var item1 = results.item1;
