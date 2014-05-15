@@ -139,25 +139,6 @@
 .VIDEO .Quote {
   text-align: left;
 }
-/*工具栏*/
-.SortUtil {
-  position: absolute;
-  top: 0px;
-  right: -21px;
-  display: none;
-  z-index: 1000;
-}
-.SortUtil i {
-  display: block;
-  line-height: 21px;
-  width: 21px;
-  height: 21px;
-  text-align: center;
-  cursor: pointer;
-}
-.SortUtil i:hover {
-  color: #1abc9c;
-}
 .WidgetItemList .Hoverable:hover {
   background-color: #f8f9fa;
 }

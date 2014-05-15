@@ -101,7 +101,7 @@ html.EDIT {
   height: 100%;
 }
 .EDIT .EditArea {
-  padding: 0 489px 0 20px;
+  padding: 0 490px 0 20px;
   position: absolute;
   top: 41px;
   left: 0;
@@ -119,8 +119,9 @@ html.EDIT {
 }
 .EDIT .EditArea #_scrollUtil2 {
   position: fixed;
+  z-index: 9999;
   bottom: 20px;
-  right: 489px;
+  right: 472px;
 }
 .ps-container .ps-scrollbar-y-rail {
   opacity: 0.2;
@@ -141,7 +142,8 @@ html.EDIT {
 .Band .Band_Ttl {
   position: fixed;
   left: 0;
-  right: 469px;
+  right: 472px;
+  padding: 0 18px 0 20px;
 }
 .Band .Band_Ttl h1 {
   font-size: 18px;
@@ -209,18 +211,51 @@ html.EDIT {
   max-width: 100px;
   max-height: 100px;
 }
+.SortUtil {
+  position: absolute;
+  top: 0;
+  right: -18px;
+  z-index: 1000;
+  bottom: 0;
+  width: 18px;
+}
+.SortUtil > span {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.SortUtil > div > i {
+  display: block;
+  opacity: 0.5;
+  line-height: 18px;
+  width: 18px;
+  height: 18px;
+  text-align: center;
+  cursor: pointer;
+}
+.SortUtil > div > i:hover {
+  opacity: 1;
+}
+.SortUtil > div:first-of-type {
+  position: absolute;
+  top: 0;
+}
+.SortUtil > div:last-of-type {
+  position: absolute;
+  bottom: 0;
+}
 /*Hoverable*/
 .WidgetItemList.WidgetItemList-Sorting .AddUtil {
-  display: none !important;
+  display: none;
 }
 .WidgetItemList.WidgetItemList-Sorting .Hoverable {
-  background-color: white !important;
+  background-color: white;
 }
 .WidgetItemList.WidgetItemList-Sorting .Hoverable button.COLLECT {
-  display: none !important;
+  display: none;
 }
 .WidgetItemList.WidgetItemList-Sorting .Hoverable .EditUtil {
-  display: none !important;
+  display: none;
 }
 .WidgetItemList > li:first-child .SortUtil > div:first-of-type {
   visibility: hidden;
@@ -229,14 +264,13 @@ html.EDIT {
   visibility: hidden;
 }
 .WidgetItemList .Hoverable .MoveUtil {
-  cursor: move !important;
+  cursor: move;
 }
 .WidgetItemList .Hoverable .SortUtil {
-  visibility: hidden;
-  display: block;
+  opacity: 0;
 }
 .WidgetItemList .Hoverable:hover .SortUtil {
-  visibility: visible;
+  opacity: 1;
 }
 .WidgetItemList .Hoverable:hover .EditUtil {
   display: block;
@@ -244,19 +278,19 @@ html.EDIT {
 .WidgetItemList .Hoverable .Widget {
   background-color: #e0e7e8 !important;
 }
-.WidgetItemList .ui-sortable-helper {
-  max-height: 65px !important;
+.WidgetItemList .ui-sortable-helper .Hoverable {
+  background-color: #f8f9fa;
+}
+.WidgetItemList .ui-sortable-helper .SortUtil > div {
+  visibility: hidden;
+}
+.WidgetItemList .ui-sortable-helper .SortUtil {
+  opacity: 1;
+}
+.WidgetItemList .ui-sortable-helper .Item,
+.WidgetItemList .ui-sortable-helper .Widget {
+  max-height: 65px;
   overflow: hidden;
-  background-color: rgba(102, 153, 102, 0.2) !important;
-}
-.WidgetItemList .ui-sortable-helper .SortUtil > div,
-.WidgetItemList .ui-sortable-helper button.COLLECT,
-.WidgetItemList .ui-sortable-helper .AddUtil,
-.WidgetItemList .ui-sortable-helper .EditUtil {
-  visibility: hidden !important;
-}
-.WidgetItemList .ui-sortable-helper .MoveUtil {
-  visibility: visible !important;
 }
 .EditUtil {
   background-color: #f8f9fa;

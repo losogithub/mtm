@@ -590,11 +590,14 @@ function getData(req, create) {
           imageByteData: imageByteData
         }
       } else {
+        var title = sanitize(req.body.title).trim();
         var description = sanitize(req.body.description).trim();
 
+        check(title).len(0, 50);
         check(description).len(0, 140);
 
         data = {
+          title: title,
           description: description
         }
       }

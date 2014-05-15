@@ -14,7 +14,7 @@
         返回
       </a>
     </div>
-    <div class="Band_Ttl phl">
+    <div class="Band_Ttl">
       <h1 style="width: 653px; margin: 0 auto;">
         <b>策展中<%= topic.publishDate ? '' : '（草稿）' %></b>
         <span ng-show="isDirty()">*</span>
@@ -631,22 +631,22 @@
 
             </form>
 
-            <div class="SortUtil text-muted">
-              <i class="MoveUtil fa fa-arrows-v" title="移动"></i>
+            <div class="SortUtil text-inverse background-muted">
+              <span class="MoveUtil" title="移动"></span>
 
               <div>
-                <i class="fa fa-angle-double-up"
+                <i class="fa fa-angle-up"
                    ng-click="sortItemTop($index)"
                    title="移到顶部"></i>
-                <i class="fa fa-angle-up"
-                   ng-click="sortItemUp($index)"
-                   title="上移一行"></i>
+                <!--<i class="fa fa-angle-up"-->
+                   <!--ng-click="sortItemUp($index)"-->
+                   <!--title="上移一行"></i>-->
               </div>
               <div>
+                <!--<i class="fa fa-angle-down"-->
+                   <!--ng-click="sortItemDown($index)"-->
+                   <!--title="下移一行"></i>-->
                 <i class="fa fa-angle-down"
-                   ng-click="sortItemDown($index)"
-                   title="下移一行"></i>
-                <i class="fa fa-angle-double-down"
                    ng-click="sortItemBottom($index)"
                    title="移到底部"></i>
               </div>

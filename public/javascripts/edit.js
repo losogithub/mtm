@@ -409,6 +409,7 @@
       //sortable微件的标准参数
       axis: 'y',
       cursor: 'move',
+      cursorAt: { top: 30 },
       handle: '.MoveUtil',
       helper: "clone",//加这个是为了解决拖动后添加条目util的index问题
       opacity: 0.4,
