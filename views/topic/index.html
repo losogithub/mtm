@@ -149,6 +149,7 @@
               </a>
             </h1>
             <p class="mtm mbn text-muted small" style="line-height: 1;">
+              <% if (authorCategoryList[topic.author_name]) { %>
               <% for (var i = 0; i < 3; i++) { %>
               <% var tempCategory = authorCategoryList[topic.author_name][i]; %>
               <% if (!tempCategory) { break; } %>
@@ -157,6 +158,7 @@
                  href="/<%= CATEGORIES2ENG[tempCategory] %>">
                 <%= tempCategory %>
               </a>
+              <% } %>
               <% } %>
             </p>
             <% if (authorInfo.personalSite) { %>
