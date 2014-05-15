@@ -500,7 +500,7 @@ function createItem(req, res, next) {
   var prevItemId = req.body.prevItemId;
 
   try {
-    var data = helper.getData(req);
+    var data = helper.getData(req, true);
   } catch (err) {
     return next(err);
   }
@@ -758,10 +758,132 @@ function deleteItem(req, res, next) {
 function createTopic(req, res, next) {
   var userId = req.session.userId;
 
-  Topic.createTopic(userId, function (err, topic) {
+  async.auto({
+    topics: function (callback) {
+      Topic.getAllTopicsByAuthorId(userId, callback);
+    },
+    topic: function (callback) {
+      Topic.createTopic(userId, callback);
+    },
+    if: ['topics', 'topic', function (callback, results) {
+      if (results.topics.length) {
+        return callback();
+      }
+      var topic = results.topic;
+      async.auto({
+        item1: function (callback) {
+          Item.createItem({
+            type: 'TITLE',
+            title: '一篇策展由若干不同类型的条目排列而成，一个条目又叫一个“石子儿”，我是一个“标题”类型石子儿'
+          }, callback);
+        },
+        item2: function (callback) {
+          Item.createItem({
+            type: 'TEXT',
+            text: '石子儿有7种类型：“标题”、“文本”、“图片”、“引文”、“视频”、“微博”、“网页”。我是一个“文本”类型石子儿。'
+          }, callback);
+        },
+        item3: function (callback) {
+          Item.createItem({
+            type: 'IMAGE',
+            url: 'http://shizier.qiniudn.com/5374276ca256f58aab500db8',
+            title: '家庭DIY蛋糕心得-蛋糕-美食',
+            quote: 'http://eat.gansudaily.com.cn/system/2009/03/04/011014400.shtml',
+            description: '我是一个“图片”类型石子儿'
+          }, callback);
+        },
+        item4: function (callback) {
+          Item.createItem({
+            type: 'CITE',
+            cite: '2012年被业界称为“内容策展年”。因社交化媒体2009-2010年爆发式发展，网络上的社交互动，最终将发展为社交化内容策展的需要。\n因此2012年，互联网的结构化、一键式、社交化内容策展将有机会深度整合和提升。\n社交媒体行业的第一个潮流转变了信息消费方式，社交化策展也将随时间彻底改变用户发现内容并与之互动的方式。',
+            url: 'http://baike.baidu.com/link?url=j6aZ12vpok49HYrwJIIauQkT5ZTwL38eeBy_oH69-JW7EOmdIQamwmCppXVn3nr2NiM_HBhkiHVW1lQG7-U4yK',
+            title: '策展_百度百科',
+            description: '我是一个“引文”类型石子儿'
+          }, callback);
+        },
+        item5: function (callback) {
+          Item.createItem({
+            type: 'VIDEO',
+            vid: 'Bz5Uh9CK0PnUKTeR8hCtNw..',
+            cover: 'http://vi0.ku6img.com/data1/p3/ku6video/2013/1/5/6/1362547555180_38758694_38758694/5.jpg',
+            url: 'http://v.ku6.com/show/Bz5Uh9CK0PnUKTeR8hCtNw...html?nr=1',
+            title: '品位生活 策展人带你看画展',
+            description: '我是一个“视频”类型石子儿'
+          }, callback);
+        },
+        item6: function (callback) {
+          Item.createItem({
+            type: 'LINK',
+            url: 'http://shizier.com',
+            title: '石子儿 - 互联网内容策展',
+            description: '我是一个“网页”类型石子儿'
+          }, callback);
+        },
+        item7: function (callback) {
+          Item.createItem({
+            type: 'TITLE',
+            title: '每个石子儿右侧→有操作按钮：“采集”收藏到右侧，“箭头”拖放或上下移动，以及“修改”“删除”'
+          }, callback);
+        },
+        item8: function (callback) {
+          Item.createItem({
+            type: 'TITLE',
+            title: '使用右侧边栏→→→的魔术棒图标下的“★采集石子儿”从任意网站“一键”采集石子儿'
+          }, callback);
+        },
+        item9: function (callback) {
+          Item.createItem({
+            type: 'TITLE',
+            title: '点击下面半透明的“菜单”↓↓↓添加石子儿'
+          }, callback);
+        },
+        append: ['item1', 'item2', 'item3', 'item4', 'item5', 'item6', 'item7', 'item8', 'item9', function (callback, results) {
+          var item1 = results.item1;
+          var item2 = results.item2;
+          var item3 = results.item3;
+          var item4 = results.item4;
+          var item5 = results.item5;
+          var item6 = results.item6;
+          var item7 = results.item7;
+          var item8 = results.item8;
+          var item9 = results.item9;
+          topic.items = [{
+            type: item1.type,
+            id: item1._id
+          },{
+            type: item2.type,
+            id: item2._id
+          },{
+            type: item3.type,
+            id: item3._id
+          },{
+            type: item4.type,
+            id: item4._id
+          },{
+            type: item5.type,
+            id: item5._id
+          },{
+            type: item6.type,
+            id: item6._id
+          },{
+            type: item7.type,
+            id: item7._id
+          },{
+            type: item8.type,
+            id: item8._id
+          },{
+            type: item9.type,
+            id: item9._id
+          }];
+          topic.save(callback);
+        }]
+      }, callback);
+    }]
+  }, function (err, results) {
     if (err) {
       return next(err);
     }
+    var topic = results.topic;
     if (!topic) {
       return next(new Error(500));
     }

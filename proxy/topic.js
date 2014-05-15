@@ -22,10 +22,18 @@ function createTopic(authorId, callback) {
   callback = callback || function () {
   };
 
-  User.getUserById(authorId, function (err, user) {
+  async.auto({
+    user: function (callback) {
+      User.getUserById(authorId, callback);
+    },
+    topics: function (callback) {
+      getAllTopicsByAuthorId(authorId, callback);
+    }
+  }, function (err, results) {
     if (err) {
       return callback(err);
     }
+    var user = results.user;
     if (!user) {
       return callback(new Error(400));
     }
@@ -33,6 +41,12 @@ function createTopic(authorId, callback) {
     var topic = new TopicModel();
     topic.author_id = authorId;
     topic.author_name = user.loginName;
+    var topics = results.topics;
+    if (!topics.length) {
+      topic.cover_url = 'http://shizier.qiniudn.com/533d3555d1178f3f783ad3e31400124490166';
+      topic.title = '标题：这是您的第一篇策展，点击上方↑↑↑“图片”修改封面';
+      topic.description = '描述：点击右侧→“铅笔按钮”修改标题、描述';
+    }
     topic.save(function (err, topic) {
       callback(err, topic);
     });

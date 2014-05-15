@@ -546,7 +546,7 @@ function getDetail(url, callback) {
   }
 }
 
-function getData(req) {
+function getData(req, create) {
   var type = req.body.type;
   var data;
 
@@ -570,41 +570,61 @@ function getData(req) {
       }
       break;
     case 'IMAGE':
-      var url = sanitize(req.body.url).trim();
-      var title = sanitize(req.body.title).trim();
-      var quote = sanitize(req.body.quote).trim();
-      var description = sanitize(req.body.description).trim();
-      var imageByteData = req.body.imageByteData;
+      if (create) {
+        var url = sanitize(req.body.url).trim();
+        var title = sanitize(req.body.title).trim();
+        var quote = sanitize(req.body.quote).trim();
+        var description = sanitize(req.body.description).trim();
+        var imageByteData = req.body.imageByteData;
 
-      check(url).notNull().isUrl();
-      check(title).len(0, 50);
-      if (quote.length) check(quote).isUrl();
-      check(description).len(0, 140);
+        check(url).notNull().isUrl();
+        check(title).len(0, 50);
+        if (quote.length) check(quote).isUrl();
+        check(description).len(0, 140);
 
-      data = {
-        url: url,
-        title: title,
-        quote: quote,
-        description: description,
-        imageByteData: imageByteData
+        data = {
+          url: url,
+          title: title,
+          quote: quote,
+          description: description,
+          imageByteData: imageByteData
+        }
+      } else {
+        var description = sanitize(req.body.description).trim();
+
+        check(description).len(0, 140);
+
+        data = {
+          description: description
+        }
       }
       break;
     case 'CITE':
-      var cite = sanitize(req.body.cite).trim();
-      var url = sanitize(req.body.url).trim();
-      var title = sanitize(req.body.title).trim();
-      var description = sanitize(req.body.description).trim();
+      if (create) {
+        var cite = sanitize(req.body.cite).trim();
+        var url = sanitize(req.body.url).trim();
+        var title = sanitize(req.body.title).trim();
+        var description = sanitize(req.body.description).trim();
 
-      check(cite).len(1, 140);
-      if (url.length) check(url).isUrl();
-      check(title).len(0, 50);
-      check(description).len(0, 140);
+        check(cite).len(1, 140);
+        if (url.length) check(url).isUrl();
+        check(title).len(0, 50);
+        check(description).len(0, 140);
 
-      data = {
-        cite: cite,
-        url: url,
-        title: title,
-        description: description
+        data = {
+          cite: cite,
+          url: url,
+          title: title,
+          description: description
+        }
+      } else {
+        var description = sanitize(req.body.description).trim();
+
+        check(description).len(0, 140);
+
+        data = {
+          description: description
+        }
       }
       break;
     case 'LINK_CREATE':

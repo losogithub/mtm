@@ -74,6 +74,8 @@ $(function () {
     var temp = shizier.getVideoSrc(quote, vid);
     var width = $li.find('.Content').width();
     var height = width * 4 / 5;
+    console.log(vid)
+    console.log(temp)
     $player.clone()
       .find('embed')
       .attr('width', width)

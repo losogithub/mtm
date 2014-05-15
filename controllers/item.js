@@ -39,7 +39,7 @@ function createCollectionItem(req, res, next) {
   var userId = req.session.userId;
 
   try {
-    var data = helper.getData(req);
+    var data = helper.getData(req, true);
   } catch (err) {
     return next(err);
   }

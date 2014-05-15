@@ -143,25 +143,22 @@
   });
 
   var VIDEO_MAP = {
-    'youku.com': ['http://player.youku.com/player.php/sid/#vid#/v.swf', 'isAutoPlay=true'],
-    'tudou.com': ['http://www.tudou.com/v/#vid#&autoPlay=true/v.swf', ''],
-    'iqiyi.com': ['http://www.iqiyi.com/player/20131119102234/Player.swf?vid=#vid#', 'playMovie=true'],
-    'pps.tv': ['http://player.pps.tv/player/sid/#vid#/v.swf', 'auto=1'],
-    'sohu.com': ['http://share.vrs.sohu.com/#vid#/v.swf', 'autoplay=true'],
-    'my.tv.sohu.com': ['http://share.vrs.sohu.com/my/v.swf&id=#vid#', 'autoplay=true'],
-    'qq.com': ['http://static.video.qq.com/TPout.swf?vid=#vid#', 'auto=1'],
-    'sina.com.cn': ['http://you.video.sina.com.cn/api/sinawebApi/outplayrefer.php/vid=#vid#&autoPlay=1/s.swf', ''],
-    'ifeng.com': ['http://v.ifeng.com/include/exterior.swf?guid=#vid#&AutoPlay=true', ''],
-    'letv.com': ['http://i7.imgs.letv.com/player/swfPlayer.swf?id=#vid#', 'autoplay=1'],
-    'pptv.com': ['http://player.pptv.com/v/#vid#.swf', 'autostart=true'],
-    'ku6.com': ['http://player.ku6.com/refer/#vid#/v.swf', 'auto=1'],
-    '56.com': ['http://player.56.com/v_#vid#.swf', 'auto=1'],
-    'baomihua.com': ['http://resources.pomoho.com/swf/out_player.swf?flvid=#vid#', ''],
-    'yinyuetai.com': ['http://player.yinyuetai.com/video/swf/#vid#/1/a.swf', 'playMovie=true'],
-    'acfun.tv': ['http://static.acfun.tv/player/ACFlashPlayerX.out.20130927.swf?type=page&url=ac#vid#', ''],
-    'acfun.com': ['http://static.acfun.tv/player/ACFlashPlayerX.out.20130927.swf?type=page&url=ac#vid#', ''],
-    'bilibili.tv': ['http://static.hdslb.com/miniloader.swf?aid=#vid#', ''],
-    'bilibili.kankanews.com': ['http://static.hdslb.com/miniloader.swf?aid=#vid#', '']
+    '优酷': ['http://player.youku.com/player.php/sid/#vid#/v.swf', 'isAutoPlay=true'],
+    '土豆': ['http://www.tudou.com/v/#vid#&autoPlay=true/v.swf', ''],
+    '爱奇艺': ['http://www.iqiyi.com/player/20131119102234/Player.swf?vid=#vid#', 'playMovie=true'],
+    'PPS': ['http://player.pps.tv/player/sid/#vid#/v.swf', 'auto=1'],
+    '搜狐视频': ['http://share.vrs.sohu.com/#vid#/v.swf', 'autoplay=true'],
+    '腾讯视频': ['http://static.video.qq.com/TPout.swf?vid=#vid#', 'auto=1'],
+    '新浪视频': ['http://you.video.sina.com.cn/api/sinawebApi/outplayrefer.php/vid=#vid#&autoPlay=1/s.swf', ''],
+    '凤凰视频': ['http://v.ifeng.com/include/exterior.swf?guid=#vid#&AutoPlay=true', ''],
+    '乐视': ['http://i7.imgs.letv.com/player/swfPlayer.swf?id=#vid#', 'autoplay=1'],
+    'PPTV': ['http://player.pptv.com/v/#vid#.swf', 'autostart=true'],
+    '酷6': ['http://player.ku6.com/refer/#vid#/v.swf', 'auto=1'],
+    '56': ['http://player.56.com/v_#vid#.swf', 'auto=1'],
+    '爆米花': ['http://resources.pomoho.com/swf/out_player.swf?flvid=#vid#', ''],
+    '音悦台': ['http://player.yinyuetai.com/video/swf/#vid#/1/a.swf', 'playMovie=true'],
+    'AcFun': ['http://static.acfun.tv/player/ACFlashPlayerX.out.20130927.swf?type=page&url=ac#vid#', ''],
+    'bilibili': ['http://static.hdslb.com/miniloader.swf?aid=#vid#', ''],
   };
 
   shizier.getVideoSrc = function (quote, vid) {
