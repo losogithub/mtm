@@ -2,7 +2,7 @@
   <% for (i in locals.items) { %>
   <% var item = items[i] %>
 
-  <li class="<%= item && item.type || '' %>"
+  <li class="<%= item && item.type || '' %> Hoverable"
       data-options="<%= item && JSON.stringify(item) || '' %>">
 
     <div class="Item pal">

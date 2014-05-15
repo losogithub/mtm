@@ -159,10 +159,10 @@
         $scope.cancelEdit();
         return;
       }
+      $scope.items.splice($scope.items.indexOf(item) + 1, 0, { type: type });
       if ($scope.cancelEdit()) {
         return;
       }
-      $scope.items.splice($scope.items.indexOf(item) + 1, 0, { type: type });
     };
     $scope.$on('setEditingScope', function (e, scope) {
       $scope.editingScope = scope;

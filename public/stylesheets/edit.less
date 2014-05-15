@@ -94,7 +94,7 @@ html.EDIT {
 .WidgetItemList-Sub {
   padding-bottom: 0;
   transition: margin-bottom 0.25s; -webkit-transition: margin-bottom 0.25s;
-  >li {
+  .Hoverable {
     cursor: move;
     .IMAGE .Image img {
       max-width: 100px;
@@ -103,34 +103,37 @@ html.EDIT {
   }
 }
 
-/*li*/
+/*Hoverable*/
 .WidgetItemList {
-  &.WidgetItemList-Sorting>li {
-    background-color: white !important;
-    button.COLLECT { display: none !important; }
+  &.WidgetItemList-Sorting {
     .AddUtil { display: none !important; }
-    .EditUtil { display: none !important; }
+    .Hoverable {
+      background-color: white !important;
+      button.COLLECT { display: none !important; }
+      .EditUtil { display: none !important; }
+    }
   }
   >li {
+    &:first-child .SortUtil>div:first-of-type { visibility: hidden; }
+    &:last-child .SortUtil>div:last-of-type { visibility: hidden; }
+  }
+  .Hoverable {
     .MoveUtil { cursor: move !important; }
     .SortUtil { visibility: hidden; display: block; }
     &:hover {
       .SortUtil { visibility: visible; }
       .EditUtil { display: block; }
     }
-    &:first-child .SortUtil>div:first-of-type { visibility: hidden; }
-    &:last-child .SortUtil>div:last-of-type { visibility: hidden; }
 
     .Widget {
       background-color: darken(@color-clouds, 4%) !important;
     }
-
-    &.ui-sortable-helper {
-      max-height: 65px !important; overflow: hidden;
-      background-color: fade(@theme-color, 20%) !important;
-      .SortUtil>div, button.COLLECT, .AddUtil, .EditUtil { visibility: hidden !important; }
-      .MoveUtil { visibility: visible !important; }
-    }
+  }
+  .ui-sortable-helper {
+    max-height: 65px !important; overflow: hidden;
+    background-color: fade(@theme-color, 20%) !important;
+    .SortUtil>div, button.COLLECT, .AddUtil, .EditUtil { visibility: hidden !important; }
+    .MoveUtil { visibility: visible !important; }
   }
 }
 

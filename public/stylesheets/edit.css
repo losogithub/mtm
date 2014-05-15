@@ -202,38 +202,25 @@ html.EDIT {
   transition: margin-bottom 0.25s;
   -webkit-transition: margin-bottom 0.25s;
 }
-.WidgetItemList-Sub > li {
+.WidgetItemList-Sub .Hoverable {
   cursor: move;
 }
-.WidgetItemList-Sub > li .IMAGE .Image img {
+.WidgetItemList-Sub .Hoverable .IMAGE .Image img {
   max-width: 100px;
   max-height: 100px;
 }
-/*li*/
-.WidgetItemList.WidgetItemList-Sorting > li {
+/*Hoverable*/
+.WidgetItemList.WidgetItemList-Sorting .AddUtil {
+  display: none !important;
+}
+.WidgetItemList.WidgetItemList-Sorting .Hoverable {
   background-color: white !important;
 }
-.WidgetItemList.WidgetItemList-Sorting > li button.COLLECT {
+.WidgetItemList.WidgetItemList-Sorting .Hoverable button.COLLECT {
   display: none !important;
 }
-.WidgetItemList.WidgetItemList-Sorting > li .AddUtil {
+.WidgetItemList.WidgetItemList-Sorting .Hoverable .EditUtil {
   display: none !important;
-}
-.WidgetItemList.WidgetItemList-Sorting > li .EditUtil {
-  display: none !important;
-}
-.WidgetItemList > li .MoveUtil {
-  cursor: move !important;
-}
-.WidgetItemList > li .SortUtil {
-  visibility: hidden;
-  display: block;
-}
-.WidgetItemList > li:hover .SortUtil {
-  visibility: visible;
-}
-.WidgetItemList > li:hover .EditUtil {
-  display: block;
 }
 .WidgetItemList > li:first-child .SortUtil > div:first-of-type {
   visibility: hidden;
@@ -241,21 +228,34 @@ html.EDIT {
 .WidgetItemList > li:last-child .SortUtil > div:last-of-type {
   visibility: hidden;
 }
-.WidgetItemList > li .Widget {
+.WidgetItemList .Hoverable .MoveUtil {
+  cursor: move !important;
+}
+.WidgetItemList .Hoverable .SortUtil {
+  visibility: hidden;
+  display: block;
+}
+.WidgetItemList .Hoverable:hover .SortUtil {
+  visibility: visible;
+}
+.WidgetItemList .Hoverable:hover .EditUtil {
+  display: block;
+}
+.WidgetItemList .Hoverable .Widget {
   background-color: #e0e7e8 !important;
 }
-.WidgetItemList > li.ui-sortable-helper {
+.WidgetItemList .ui-sortable-helper {
   max-height: 65px !important;
   overflow: hidden;
   background-color: rgba(102, 153, 102, 0.2) !important;
 }
-.WidgetItemList > li.ui-sortable-helper .SortUtil > div,
-.WidgetItemList > li.ui-sortable-helper button.COLLECT,
-.WidgetItemList > li.ui-sortable-helper .AddUtil,
-.WidgetItemList > li.ui-sortable-helper .EditUtil {
+.WidgetItemList .ui-sortable-helper .SortUtil > div,
+.WidgetItemList .ui-sortable-helper button.COLLECT,
+.WidgetItemList .ui-sortable-helper .AddUtil,
+.WidgetItemList .ui-sortable-helper .EditUtil {
   visibility: hidden !important;
 }
-.WidgetItemList > li.ui-sortable-helper .MoveUtil {
+.WidgetItemList .ui-sortable-helper .MoveUtil {
   visibility: visible !important;
 }
 .EditUtil {
