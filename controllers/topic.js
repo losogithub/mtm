@@ -841,13 +841,13 @@ function createTopic(req, res, next) {
         item9: function (callback) {
           Item.createItem({
             type: 'TITLE',
-            title: '点击下面半透明的“菜单”↓↓↓添加石子儿'
+            title: '把鼠标指针移动到箭头“↓↓↓”下面的位置，点击“菜单”添加石子儿'
           }, callback);
         },
         item10: function (callback) {
               Item.createItem({
                   type: 'TEXT',
-                  text: '您已经了解了石子儿的使用方法，现在请点击右上角的“返回”，然后再点击页面右上角的”开始策展”来创建一篇属于自己的策展吧！另外，下面这个链接介绍了石子儿采集工具的详细使用方法，供您参考。'
+                  text: '到此为止，您已经了解了石子儿的使用方法。现在请点击右上角的“返回”，然后再点击页面右上角的”开始策展”来创建一篇属于自己的策展吧！另外，下面这个链接介绍了石子儿采集工具的详细使用方法，供您参考。'
               }, callback);
         },
         item11: function (callback) {
