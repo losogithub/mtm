@@ -15,7 +15,7 @@
          ng-class="{ 'has-error': error || (!form.username.$valid && !focused) }">
       <input type="text" class="form-control flat" maxlength="20"
              name="username" id="_username" placeholder="用户名或邮箱"
-             ng-init="$parent.focused = true;" ng-focus="$parent.focused = true;" ng-blur="$parent.focused = false;"
+             ng-init="$parent.focused = true;$parent.username = '<%= locals.email || '' %>'" ng-focus="$parent.focused = true;" ng-blur="$parent.focused = false;"
              ng-minlength="2" required
              ng-model="$parent.username" ng-change="$parent.error = '';"
              tooltip="{{getTooltip()}}"
@@ -57,7 +57,7 @@
       $scope.error = '<%= locals.errMsg || "" %>';
 
       $scope.getTooltip = function () {
-        return !$scope.username && $scope.error || '用户名或邮箱';
+        return $scope.error || '用户名或邮箱';
       };
     });
     sng.controller('Form', function ($scope) {
