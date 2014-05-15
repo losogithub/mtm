@@ -134,6 +134,11 @@
           ng-model="items"
           ng-init="items = <%= JSON.stringify(locals.items) %>">
         <li ng-repeat="item in items">
+          <div class="AddUtil">
+
+            <% include _menu.html %>
+
+          </div>
           <div class="Hoverable">
 
             <div class="Item pal"
@@ -646,11 +651,6 @@
                    title="移到底部"></i>
               </div>
             </div>
-
-          </div>
-          <div class="AddUtil">
-
-            <% include _menu.html %>
 
           </div>
         </li>

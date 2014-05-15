@@ -107,7 +107,6 @@
   position: relative;
 }
 .WidgetItemList .Hoverable {
-  z-index: 999;
   position: relative;
 }
 .WidgetItemList .Hoverable:hover button.COLLECT {
