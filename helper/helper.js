@@ -190,7 +190,7 @@ function getVideoDetail(url, callback) {
     var vid;
     var cover;
     switch (quote) {
-      case 'youku.com':
+      case '优酷':
         //plan A
         //&tt=第二十一回&nbsp;惊见摘头鬼 坑亲王谢幕&pu=
         title = !(temp = html.match(/&tt=(((?!&pu).)*)/i)) ? null : !temp[1] ? null : temp[1];
@@ -202,7 +202,7 @@ function getVideoDetail(url, callback) {
         //128x96
         cover = !(temp = html.match(/&pics=([^&"']*)/i)) ? null : !temp[1] ? null : temp[1];
         break;
-      case 'tudou.com':
+      case '土豆':
         //plan A
         //,kw: '爆笑恶搞淮秀帮-超强阵容配音坑爹的谣言时代（淮秀帮 出品）-2bzhan.cc'
         //,kw:"校长 开房找我啊"
@@ -227,7 +227,7 @@ function getVideoDetail(url, callback) {
         //128x96
         cover = !(temp = html.match(/<script[\s\S]*,pic:\s*("|')([^"']+)("|')[\s\S]*<\/script>/)) ? null : !temp[2] ? null : temp[2];
         break;
-      case 'iqiyi.com':
+      case '爱奇艺':
         //专题性质的，即a_的暂不支持，同weibo，无技术障碍
         //plan A
         //<em data-widget-crumbs-elem="name" data-widget-crumbs-name-max="56">恐怖杀手：诡异人体寄生虫-热纪录</em>
@@ -241,7 +241,7 @@ function getVideoDetail(url, callback) {
         //todo 封面403
         cover = !(temp = html.match(/<meta\s+itemprop="image"\s+content='([^'>]*)/i)) ? null : !temp[1] ? null : temp[1];
         break;
-      case 'pps.tv':
+      case 'PPS':
         //plan A
         //<h1 class="p-title"><a title="最肥小龙女！陈妍希被喊滚出娱乐圈"
         title = !(temp = html.match(/<h1 class="p-title"><a title="([^"'>]*)/i)) ? null : !temp[1] ? null : temp[1];
@@ -251,7 +251,7 @@ function getVideoDetail(url, callback) {
         //128x80
         cover = !(temp = html.match(/<script[\s\S]*"sharepic":"([^">]*)"[\s\S]*<\/script>/i)) ? null : !temp[1] ? null : temp[1].replace(/\\\//g, '/').replace('480_360', '128_80');
         break;
-      case 'sohu.com':
+      case '搜狐视频':
         //plan A
         //<h2>\s20130712 第一期 姚贝娜《也许明天》\s</h2>
         title = !(temp = html.match(/<h2>\s*([^<>]*)\s*<\/h2>/i)) ? null : !temp[1] ? null : temp[1];
@@ -262,18 +262,18 @@ function getVideoDetail(url, callback) {
         //120x90
         cover = !(temp = html.match(/<script[\s\S]*var cover="([^">]*)";[\s\S]*<\/script>/i)) ? null : !temp[1] ? null : temp[1];
         break;
-      case 'my.tv.sohu.com':
+      case '搜狐原创':
         //plan A
         //<script>......,title: '立邦漆广告之小屁股篇'......</script>
-        title = !(temp = html.match(/<script((?!<\/script>)[\s\S])*\s,title:\s*['"]([^"'<>;]+)['"]/i)) ? null : !temp[2] ? null : temp[2];
+        title = (temp = html.match(/<script((?!<\/script>)[\s\S])*\s,title:\s*['"]([^"'<>;]+)['"]/i)) && temp[2];
         //http://my.tv.sohu.com/us/139695/445280.shtml
         //<script>......var vid  ='445280';......</script>
-        vid = !(temp = html.match(/<script((?!<\/script>)[\s\S])*\svar vid\s*=\s*['"]([^"'<>;]+)['"];/i)) ? null : !temp[2] ? null : temp[2];
+        vid = (temp = html.match(/<script((?!<\/script>)[\s\S])*\svar vid\s*=\s*['"]([^"'<>;]+)['"];/i)) && temp[2];
         //<script...,bCover: 'http://220.img.pp.sohu.com.cn/p220/2012/10/21/4/8/6_13b449acc64g102_445280_1_1.jpg'...</script>
         //120x90
-        cover = !(temp = html.match(/<script((?!<\/script>)[\s\S])*,bCover: '([^'>]*)'/i)) ? null : !temp[2] ? null : temp[2];
+        cover = (temp = html.match(/<script((?!<\/script>)[\s\S])*,bCover: '([^'>]*)'/i)) && temp[2];
         break;
-      case 'qq.com':
+      case '腾讯视频':
         //plan A
         //var VIDEO_INFO={vid:"c00139loswm",title:" Ballerina",typeid:22,duration:"177",specialTemp:false}
         title = !(temp = html.match(/VIDEO_INFO=\{[\s\S]*title\s*:\s*("|')([^"'}]*)/i)) ? null : !temp[2] ? null : temp[2];
@@ -285,7 +285,7 @@ function getVideoDetail(url, callback) {
         //160x90
         cover = 'http://vpic.video.qq.com/' + vid + '_160_90_3.jpg';
         break;
-      case 'sina.com.cn':
+      case '新浪视频':
         //http://video.sina.com.cn/haokan/play.html?url=http%3A%2F%2Fmy.tv.sohu.com%2Fus%2F53375285%2F62269772.shtml
         //http://video.sina.com.cn/m/sztvyw_63172701.html
         //上面两种url暂不支持，同weibo，未尝试
@@ -306,7 +306,7 @@ function getVideoDetail(url, callback) {
         //160x90
         cover = !(temp = html.match(/\$SCOPE\['video'\] = \{[^{}]*\spic:\s*'([^'{}]*)',/i)) ? null : !temp[1] ? null : temp[1].replace('2.jpg', '1.jpg');
         break;
-      case 'ifeng.com':
+      case '凤凰视频':
         //plan A
         //var videoinfo = {......"name": "中方就划设东海防空识别区驳斥美日有关言论",......}
         title = !(temp = html.match(/var videoinfo = \{[\s\S]*"name": "([^"}]*)/i)) ? null : !temp[1] ? null : temp[1];
@@ -318,7 +318,7 @@ function getVideoDetail(url, callback) {
         //120x90
         cover = !(temp = html.match(/<script[\s\S]*"img":\s*"([^";,<>]*)"[\s\S]*<\/script>/i)) ? null : !temp[1] ? null : temp[1];
         break;
-      case 'letv.com':
+      case '乐视':
         //plan A
         //var __INFO__={......video : {......title:"唐罗利猜中获双人普吉岛浪漫游—非常了得",//视频名称......}......}
         title = !(temp = html.match(/var __INFO__=\{[\s\S]*video : \{[\s\S]*\stitle:"([^"}]*)/i)) ? null : !temp[1] ? null : temp[1];
@@ -328,7 +328,7 @@ function getVideoDetail(url, callback) {
         //120x90
         cover = !(temp = html.match(/<script[\s\S]*share:\{pic:"([^";,<>]*)"[\s\S]*<\/script>/i)) ? null : !temp[1] ? null : temp[1];
         break;
-      case 'pptv.com':
+      case 'PPTV':
         //plan A
         //<title>英超-1314赛季-联赛-第12轮-曼城6：0热刺-精华_PPTV网络电视</title>
         title = !(temp = html.match(/<title>([^<>]*)<\/title>/i)) ? null : !temp[1] ? null : temp[1].substr(0, temp[1].lastIndexOf('_PPTV网络电视'));
@@ -336,7 +336,7 @@ function getVideoDetail(url, callback) {
         //http://v.pptv.com/show/VvVW1T2jE1G0Mpo.html
         vid = !(temp = url) ? null : !(temp = temp.match(/\/(\w+)\.html\/?([?&#]|$)/i)) ? null : !temp[1] ? null : temp[1];
         break;
-      case 'ku6.com':
+      case '酷6':
         //plan A
         //<h1 title="《全民奥斯卡之幕后》第六期：道哥幽默访谈笑点多">
         title = !(temp = html.match(/<h1 title="([^"'>]*)/i)) ? null : !temp[1] ? null : temp[1];
@@ -346,14 +346,15 @@ function getVideoDetail(url, callback) {
         //132x99
         cover = !(temp = html.match(/<script[\s\S]*cover:\s*"([^";,<>]*)"[\s\S]*<\/script>/i)) ? null : !temp[1] ? null : temp[1];
         break;
-      case '56.com':
+      case '56':
         //plan A
         //<h1 id="vh_title">爸爸去哪儿20131122海岛特辑 暖男天天荣升好帮手 </h1>
         //<h1 id="vh_title"><span id="albumTitle">最强cos美少女战士 这样上街不怕被砍吗[搞笑视频 笑死人]</span>
         title = !(temp = html.match(/<h1 id="vh_title">(<span id="albumTitle">)?([^<>]*)(<\/h1>|<\/span>)/i)) ? null : !temp[2] ? null : temp[2];
         //http://www.56.com/u48/v_MTAxMTQ3MDYx.html
+        //http://www.56.com/u22/v_OTEyNzcyMTk.html
         //http://www.56.com/w92/play_album-aid-12053351_vid-MTAwOTU1MDI0.html
-        vid = !(temp = url) ? null : !(temp = temp.match(/(\w{12})\.html\/?([?&#]|$)/i)) ? null : !temp[1] ? null : temp[1];
+        vid = !(temp = url) ? null : !(temp = temp.match(/([A-Za-z0-9]+)\.html\/?([?&#]|$)/i)) ? null : !temp[1] ? null : temp[1];
         //<script..."URL_pURL":"24",..."user_id":"r480730716",..."URL_sURL":"3",..."URL_URLid":"sc_138478337743hd",..."img_host":"v19.56.com",...</script>
         //上面对应的url=http://v19.56img.com/images/24/3/r480730716i56olo56i56.com_sc_138478337743hd.jpg
         //130x78
@@ -364,7 +365,7 @@ function getVideoDetail(url, callback) {
         var h = !(temp = html.match(/<script[\s\S]*"img_host":"([^";,<>]*)"[\s\S]*<\/script>/i)) ? null : !temp[1] ? null : temp[1].replace('56.com', '56img.com');
         cover = !(p && u && s && id && h) ? null : 'http://' + h + '/images/' + p + '/' + s + '/' + u + 'i56olo56i56.com_' + id + '.jpg';
         break;
-      case 'baomihua.com':
+      case '爆米花':
         //plan A
         //var temptitle = '权志龙独揽四项大奖演出惊艳全场';
         title = !(temp = html.match(/var temptitle = '([^']*)';/i)) ? null : !temp[1] ? null : temp[1];
@@ -374,7 +375,7 @@ function getVideoDetail(url, callback) {
         //120x90
         cover = 'http://img01.video.baomihua.com/x/' + vid + '.jpg';
         break;
-      case 'yinyuetai.com':
+      case '音悦台':
         //plan A
         //<meta property="og:title"......content="意外 官方版 - 薛之谦"/>
         title = !(temp = html.match(/<meta property="og:title"[^<>]*content="([^">]*)/i)) ? null : !temp[1] ? null : temp[1];
@@ -385,8 +386,7 @@ function getVideoDetail(url, callback) {
         //todo playlist
         cover = !(temp = html.match(/<meta property="og:image"[^<>]*content="([^">]*)/i)) ? null : !temp[1] ? null : temp[1];
         break;
-      case 'acfun.tv':
-      case 'acfun.com':
+      case 'AcFun':
         //plan A
         //<h1 id="title-article" class="title" title="视频标题">日产GT-R Nismo</h1>
         title = !(temp = html.match(/<h1 id="title-article" class="title" title="视频标题">([^<>]*)<\/h1>/i)) ? null : !temp[1] ? null : temp[1];
@@ -396,8 +396,7 @@ function getVideoDetail(url, callback) {
         //<script...system.preview = $.parseSafe('http://g2.ykimg.com/1100641F4650FA56B9414F046A66C3E3F08B15-C6AF-7C3E-27F1-FED09306E33F');...</script>
         cover = !vid ? null : ~vid.indexOf('_') ? null : !(temp = html.match(/<script[\s\S]*system.preview\s*=\s*\$\.parseSafe\('([^';,<>)]*)'[\s\S]*<\/script>/i)) ? null : !temp[1] ? null : temp[1];
         break;
-      case 'bilibili.tv':
-      case 'bilibili.kankanews.com':
+      case 'bilibili':
         //plan A
         //<meta name="title" content="【舍长实况】《逃生》全集（6P完结）" />
         title = !(temp = html.match(/<meta name="title" content="([^"<>]+)/i)) ? null : !temp[1] ? null : temp[1];
@@ -414,6 +413,7 @@ function getVideoDetail(url, callback) {
       callback(new Error(400));
       return;
     }
+    title = title || (temp = html.match(/<title[^>]*>([^<]*)<\/title[^>]*>/i)) && temp[1];
     if (title && title.length > 50) {
       title = title.substr(0, 49) + '…';
     }

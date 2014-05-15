@@ -31,7 +31,7 @@
       'iqiyi.com': '爱奇艺',
       'pps.tv': 'PPS',
       'sohu.com': '搜狐视频',
-      'my.tv.sohu.com': '搜狐视频',
+      'my.tv.sohu.com': '搜狐原创',
       'qq.com': '腾讯视频',
       'sina.com.cn': '新浪视频',
       'ifeng.com': '凤凰视频',

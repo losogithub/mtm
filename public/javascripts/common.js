@@ -149,6 +149,7 @@
     '爱奇艺': ['http://www.iqiyi.com/player/20131119102234/Player.swf?vid=#vid#', 'playMovie=true'],
     'PPS': ['http://player.pps.tv/player/sid/#vid#/v.swf', 'auto=1'],
     '搜狐视频': ['http://share.vrs.sohu.com/#vid#/v.swf', 'autoplay=true'],
+    '搜狐原创': ['http://share.vrs.sohu.com/my/v.swf&id=#vid#', 'autoplay=true'],
     '腾讯视频': ['http://static.video.qq.com/TPout.swf?vid=#vid#', 'auto=1'],
     '新浪视频': ['http://you.video.sina.com.cn/api/sinawebApi/outplayrefer.php/vid=#vid#&autoPlay=1/s.swf', ''],
     '凤凰视频': ['http://v.ifeng.com/include/exterior.swf?guid=#vid#&AutoPlay=true', ''],
