@@ -18,7 +18,7 @@
     </h3>
     <div class="pull-right text-muted" style="font-size: 12px;">
       <span class="mrs" title="关注"><i class="fa fa-star"></i> <%= topic.FVCount %></span>
-      <span class="mrs" title="浏览"><i class="fa fa-eye"></i> <%= topic.PV_count %></span>
+      <span class="mrs" title="浏览"><i class="fa fa-eye"></i> <%= topic.PV_count + Math.ceil((Date.now() - topic.publishDate.getTime())/3600000) %></span>
     </div>
     <div style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;font-size: 12px;">
       <a class="text-muted" target="_blank" href="/u/<%= topic.author_name %>" title="<%= topic.author_name %>"><%= topic.author_name %></a>

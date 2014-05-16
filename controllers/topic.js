@@ -258,6 +258,7 @@ function showChang(req, res, next) {
       description: topic.description,
       updateAt: updateDate,
       author: topic.author_name,
+      publishDate: topic.publishDate,
       PVCount: topic.PV_count,
       FVCount: topic.FVCount
     };

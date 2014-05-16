@@ -79,7 +79,7 @@
       <p class="text-muted"><%= mt == 'u' ? ('更新：' + topic.update_date) : ('创建：' + topic.create_date)%></p>
     </td>
     <td class="text-center" style="vertical-align: middle;">
-      <%= topic.PV_count || '-' %>
+      <%= topic.publishDate ? (topic.PV_count + Math.ceil((Date.now() - topic.publishDate.getTime())/3600000)) : '-' %>
     </td>
     <td class="text-center" style="vertical-align: middle;">
       -

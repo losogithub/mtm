@@ -55,7 +55,7 @@
         <i class="fa fa-star StarIconFull"></i>
         <span style="width: 40px;display: inline-block;"> <%= topic.FVCount || '0' %></span>
         <span class="text-muted"><i class="fa fa-eye"></i></span>
-        <span style="width: 80px;display: inline-block;"><%= topic.PV_count || '0' %></span>
+        <span style="width: 80px;display: inline-block;"><%= topic.PV_count + Math.ceil((Date.now() - topic.publishDate.getTime())/3600000) %></span>
       </p>
     </td>
   </tr>

@@ -74,7 +74,7 @@
                     });
                   });
                 </script>
-                <span class="text-muted mls" title="浏览"><i class="fa fa-eye"></i> <%= topic.PV_count %></span>
+                <span class="text-muted mls" title="浏览"><i class="fa fa-eye"></i> <%= topic.PV_count + Math.ceil((Date.now() - topic.publishDate.getTime())/3600000) %></span>
               </div>
             </div>
 

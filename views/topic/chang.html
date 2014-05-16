@@ -45,7 +45,7 @@
       </div>
       <div class="pull-right text-muted">
         <span class="mrs"><i class="fa fa-star"></i> <%= topic.FVCount %></span>
-        <i class="fa fa-eye"></i> <%= topic.PVCount %>
+        <i class="fa fa-eye"></i> <%= topic.PVCount + Math.ceil((Date.now() - topic.publishDate.getTime())/3600000) %>
       </div>
     </div>
 
