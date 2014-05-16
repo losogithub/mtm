@@ -56,7 +56,7 @@ var getUserByName = function (name, callback) {
  * @param {Function} callback 回调函数
  */
 var getUserByMail = function (email, callback) {
-  UserModel.findOne({email: email}, callback);
+  UserModel.findOne({email: email.toLowerCase()}, callback);
 };
 
 /**
@@ -90,12 +90,12 @@ var getUserByNamePass = function (name, pass, callback) {
 }
 
 var getUserByEmailPass = function (email, pass, callback) {
-  UserModel.findOne({email: email, password: pass}, callback);
+  UserModel.findOne({email: email.toLowerCase(), password: pass}, callback);
 }
 
 // here is Email need a key
 var getUserByEmail = function (email, key, callback) {
-  UserModel.findOne({email: email, retrieve_key: key}, callback);
+  UserModel.findOne({email: email.toLowerCase(), retrieve_key: key}, callback);
 }
 
 /**

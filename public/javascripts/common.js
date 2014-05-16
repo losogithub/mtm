@@ -26,7 +26,6 @@
 
     window.sng.controller('LoginDialogCtrl', function ($scope, $http) {
       $scope.submit = function () {
-        $scope.loginDialog.$setPristine();
         if (!$scope.username || !$scope.password) {
           $scope.error = '用户名和密码不能为空';
           return;
@@ -45,6 +44,7 @@
             } else {
               $scope.error = '用户名或密码不正确';
             }
+            $scope.loginDialog.$setPristine();
           });
       };
     });

@@ -407,14 +407,6 @@
           $scope.$apply();
         });
     }
-    $($element).find('.WidgetItemList-Main')
-      //防止拖动开始时高度减小导致的抖动
-      .mousedown(function () {
-        $(this).css('min-height', $(this).outerHeight());
-      });
-    $(document).mouseup(function () {
-      $($element).find('.WidgetItemList-Main').removeAttr('style');
-      });
     var $ul = $($element).find('.WidgetItemList-Main');
     $($element).find('.EditArea').on('scroll', function () {
       $ul.sortable('refreshPositions');//因为滚动后位置变了，所以要清除缓存大小

@@ -8,7 +8,7 @@ var UserSchema = new Schema({
   birthday: String,
   gender: String,
   password: String,
-  email: {type: String, unique: true},
+  email: {type: String, unique: true, lowercase: true},
   url: String,
   description: String,
   personalSite: String,
