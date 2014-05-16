@@ -41,7 +41,7 @@
           {{topic.title}}
         </h1>
       </div>
-      <div ng-if="coverEditing"
+      <div ng-show="coverEditing"
            ng-init="init()" ng-controller="CoverCtrl">
         <div class="Cover" style="border-radius: 6px 6px 0 0; cursor: pointer;"
              ng-click="cancelEdit()">
