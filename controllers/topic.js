@@ -259,7 +259,7 @@ function showChang(req, res, next) {
       updateAt: updateDate,
       author: topic.author_name,
       publishDate: topic.publishDate,
-      PVCount: topic.PV_count,
+      PV_count: topic.PV_count,
       FVCount: topic.FVCount
     };
     var itemsData = [];

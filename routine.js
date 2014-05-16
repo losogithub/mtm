@@ -162,7 +162,7 @@ function _countAuthors(callback, results) {
     tempAuthorTopicCount[topic.author_name] = tempAuthorTopicCount[topic.author_name] || 0;
     tempAuthorTopicCount[topic.author_name] ++;
     tempAuthorPVCount[topic.author_name] = tempAuthorPVCount[topic.author_name] || 0;
-    tempAuthorPVCount[topic.author_name] += topic.PV_count + Math.ceil((Date.now() - topic.publishDate.getTime())/3600000);
+    tempAuthorPVCount[topic.author_name] += topic.PV_count + Math.ceil(Math.log((Date.now() - topic.publishDate.getTime())/100000000 + 1) * 100);
 
     var categories = tempAuthorCategories[topic.author_name]
       = tempAuthorCategories[topic.author_name] || {};
