@@ -153,16 +153,17 @@ function getLinkDetail(url, callback) {
       return callback(err);
     }
     var temp;
+    console.log(html)
     var title = !(temp = html.match(/<title[^>]*>([^<]*)<\/title[^>]*>/i)) ? null : temp[1];
     title = sanitize(title).entityDecode();
     title = sanitize(title).trim();
-    if (title.length > 50) {
+    if (title && title.length > 50) {
       title = title.substr(0, 49) + '…';
     }
 
     temp = !(temp = html.match(/<meta([^>]*)name\s*=\s*("|')description("|')([^>]*)>/i)) ? null : temp[1] + temp[4];
     var snippet = temp && (temp = temp.match(/content\s*=\s*("|')([^"']*)("|')/i)) && temp[2].trim();
-    if (snippet.length > 140) {
+    if (snippet && snippet.length > 140) {
       snippet = snippet.substr(0, 139) + '…';
     }
     snippet = sanitize(snippet).entityDecode();
@@ -658,13 +659,21 @@ function getData(req, create) {
       }
       break;
     case 'VIDEO':
+      var url = sanitize(req.body.url).trim();
+      var vid = sanitize(req.body.vid).trim();
+      var cover = sanitize(req.body.cover).trim();
       var title = sanitize(req.body.title).trim();
       var description = sanitize(req.body.description).trim();
 
+      check(url).notNull().isUrl();
+      check(vid).len(0, 50);
       check(title).len(0, 50);
       check(description).len(0, 140);
 
       data = {
+        url: url,
+        vid: vid,
+        cover: cover,
         title: title,
         description: description
       }

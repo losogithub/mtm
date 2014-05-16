@@ -478,8 +478,7 @@ function createItem(req, res, next) {
     return next(err);
   }
   if (!data) {
-    next(new Error(500));
-    return;
+    return next(new Error(500));
   }
 
   async.auto({
@@ -497,7 +496,6 @@ function createItem(req, res, next) {
 
         helper.getLinkDetail(data.url, function (err, results) {
           if (err) return callback(err);
-          results.src = results.srcs && results.srcs[0];
           data = results;
           callback();
         });

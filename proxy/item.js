@@ -44,7 +44,6 @@ function cloneItem(type, _id, callback) {
  * @param callback
  */
 function createItem(data, callback) {
-  data.type = data.type.replace('_CREATE', '');
   var item = new ItemModels[data.type](data);
   async.auto({
     if: function (callback) {
