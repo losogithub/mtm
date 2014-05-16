@@ -46,7 +46,7 @@ function showIndex(req, res, next) {
       if (!topic) {
         return callback(new Error(404));
       }
-      User.getUserByLoginName(topic.author_name, callback);
+      User.getUserById(topic.author_id, callback);
     }],
     items: ['topic', function (callback, results) {
       var topic = results.topic;
@@ -899,11 +899,11 @@ function createTopic(req, res, next) {
             type: item9.type,
             id: item9._id
           },{
-              type: item10.type,
-              id: item10._id
+            type: item10.type,
+            id: item10._id
           },{
-              type: item11.type,
-              id: item11._id
+            type: item11.type,
+            id: item11._id
           }];
           topic.save(callback);
         }]

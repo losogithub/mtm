@@ -23,13 +23,13 @@
 
             <div class="clearfix mtm mbm">
               <div class="pull-left">
-                <a href="/u/<%= topic.author_name %>" title="<%= topic.author_name %>">
+                <a href="/u/<%= authorInfo.author %>" title="<%= authorInfo.author %>">
                   <img width="30" height="30" class="img-circle"
                        style="display: inline-block; width: 30px; height: 30px;"
                        src="<%= authorInfo.imgUrl || '/images/no_img/user_80x80.png' %>"
-                       alt="<%= topic.author_name %>"
+                       alt="<%= authorInfo.author %>"
                        onerror="shizier.errorImage(this,'user_80x80');">
-                  <%= topic.author_name %>
+                  <%= authorInfo.author %>
                 </a>
                 <span class="text-muted small mls" title="更新日期">
                   <%= topic.update_at.getFullYear() + '-'
@@ -135,25 +135,25 @@
         </div>
         <div class="pal background-white mtl" style="border-radius: 6px;">
           <div class="clearfix">
-            <a class="pull-left mrl img-circle-border-clouds" title="<%= topic.author_name %>" target="_blank"
-               href="/u/<%= topic.author_name %>"
-               title="<%= topic.author_name %>"
+            <a class="pull-left mrl img-circle-border-clouds" title="<%= authorInfo.author %>" target="_blank"
+               href="/u/<%= authorInfo.author %>"
+               title="<%= authorInfo.author %>"
                style="display: block; width: 80px; height: 80px;">
               <img class="img-circle" width="70" height="70" id="_thumb"
                    onerror="shizier.errorImage(this, 'image_95x95')"
                    src="<%= authorInfo.imgUrl || '/images/no_img/user_80x80.png' %>"
-                   alt="<%= topic.author_name %>">
+                   alt="<%= authorInfo.author %>">
             </a>
 
             <h1 class="h6 mvn">
-              <a class="text-default-a" href="/u/<%= topic.author_name %>" title="<%= topic.author_name %>">
-                <%= topic.author_name %>
+              <a class="text-default-a" href="/u/<%= authorInfo.author %>" title="<%= topic.author_name %>">
+                <%= authorInfo.author %>
               </a>
             </h1>
             <p class="mtm mbn text-muted small" style="line-height: 1;">
-              <% if (authorCategoryList[topic.author_name]) { %>
+              <% if (authorCategoryList[authorInfo.author]) { %>
               <% for (var i = 0; i < 3; i++) { %>
-              <% var tempCategory = authorCategoryList[topic.author_name][i]; %>
+              <% var tempCategory = authorCategoryList[authorInfo.author][i]; %>
               <% if (!tempCategory) { break; } %>
               <i class="fa fa-bookmark-o"></i>
               <a target="_blank" class="text-muted mrs"
