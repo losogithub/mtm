@@ -70,13 +70,6 @@ function showIndex(req, res, next) {
         itemsData.push(helper.getItemData(item));
       }
     });
-    var authorData = {
-      author: author.loginName,
-      imgUrl: author.url,
-      description: helper.linkify(escape(author.description)),
-      personalSite: author.personalSite,
-      favourite: author.favourite
-    };
 
     var liked = false; //default, not login user.
     //If a login user, check liked before or not.
@@ -128,7 +121,7 @@ function showIndex(req, res, next) {
       tags: topic.tags,
       Tags: Common.Tags,
       items: itemsData,
-      authorInfo: authorData,
+      author: author,
       authorCategoryList: Common.AuthorCategoryList,
       CATEGORIES2ENG: Common.CATEGORIES2ENG,
       liked: liked
@@ -233,7 +226,7 @@ function showChang(req, res, next) {
     },
     author: ['topic', function (callback, results) {
       var topic = results.topic;
-      User.getUserByLoginName(topic.author_name, callback);
+      User.getUserById(topic.author_id, callback);
     }],
     items: ['topic', function (callback, results) {
       var topic = results.topic;
@@ -247,34 +240,13 @@ function showChang(req, res, next) {
     var topic = results.topic;
     var author = results.author;
     var items = results.items;
-    var updateDate = topic.update_at.getFullYear() + '-'
-      + (topic.update_at.getMonth() + 1) + '-'
-      + topic.update_at.getDate();
 
-    var topicData = {
-      _id: topic._id,
-      title: topic.title,
-      coverUrl: topic.cover_url,
-      description: topic.description,
-      updateAt: updateDate,
-      author: topic.author_name,
-      publishDate: topic.publishDate,
-      PV_count: topic.PV_count,
-      FVCount: topic.FVCount
-    };
     var itemsData = [];
     items.forEach(function (item) {
       if (item && item.type && item._id) {
         itemsData.push(helper.getItemData(item));
       }
     });
-
-    var authorData = {
-      author: author.loginName,
-      imgUrl: author.url,
-      description: author.description,
-      personalSite: author.personalSite
-    };
 
     var liked = false; //default, not login user.
     //If a login user, check liked before or not.
@@ -293,12 +265,12 @@ function showChang(req, res, next) {
     res.set('Expire', '-1');
     res.set('Pragma', 'no-cache');
     res.render('topic/chang', {
-      title: topicData.title,
-      description: topicData.description,
+      title: topic.title,
+      description: topic.description,
       escape: escape,
-      topic: topicData,
+      topic: topic,
       items: itemsData,
-      authorInfo: authorData,
+      author: author,
       layout: false
     });
     console.log('showChang done');

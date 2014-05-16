@@ -24,24 +24,26 @@
     </table>
     <span class="pull-right mrm" style="line-height: 40px; color: white;">shizier.com</span>
   </div>
-  <img onerror="$(this).hide();" src="<%= topic.coverUrl %>"
-       style="width: 100%;<%= topic.coverUrl ? '' : 'display: none;' %>">
+  <img onerror="$(this).hide();" src="<%= topic.cover_url %>"
+       style="width: 100%;<%= topic.cover_url ? '' : 'display: none;' %>">
 
   <div class="phl">
     <h1 class="h5 mtl"><a href="/topic/<%= topic._id %>"><%= topic.title %></a></h1>
 
     <div class="clearfix mbm">
       <div class="pull-left">
-        <a href="/u/<%= topic.author %>" title="<%= topic.author %>">
+        <a href="/u/<%= author.loginName %>" title="<%= author.loginName %>">
           <span class="mrs" style="display: inline-block; width: 30px; height: 30px;">
             <img width="30" height="30" class="img-circle"
-                 src="<%= authorInfo.imgUrl || '/images/no_img/user_80x80.png' %>"
+                 src="<%= author.url || '/images/no_img/user_80x80.png' %>"
                  onerror="shizier.errorImage(this,'user_80x80');">
-          </span><span><%= topic.author %></span>
+          </span><span><%= author.loginName %></span>
         </a>
-            <span class="text-muted small mls">
-              <%= topic.updateAt %>
-            </span>
+        <span class="text-muted small mls">
+          <%= topic.update_at.getFullYear() + '-'
+                + (topic.update_at.getMonth() + 1) + '-'
+                + topic.update_at.getDate() %>
+        </span>
       </div>
       <div class="pull-right text-muted">
         <span class="mrs"><i class="fa fa-star"></i> <%= topic.FVCount %></span>
