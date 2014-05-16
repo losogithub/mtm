@@ -11,6 +11,7 @@
   var $window;
   var $editArea;
   var $main;
+  var $ul;
   var $scrollable;
   var marginBottom = 200;
 
@@ -31,7 +32,8 @@
   $(function () {
 
     $editArea = $('.EditArea');
-    $main = $('.Main');
+    $main = $editArea.find('.Main');
+    $ul = $main.find('.WidgetItemList-Main');
     $window = $(window);
     marginBottom = $window.height() - 41 - 65 - 40;
     $main.css('margin-bottom', marginBottom);
@@ -407,7 +409,6 @@
           $scope.$apply();
         });
     }
-    var $ul = $($element).find('.WidgetItemList-Main');
     $($element).find('.EditArea').on('scroll', function () {
       $ul.sortable('refreshPositions');//因为滚动后位置变了，所以要清除缓存大小
     });
@@ -492,7 +493,10 @@
     $scope.$on('appendItem', function (e, item) {
       $scope.items.splice($scope.items.length, 0, item);
       _updateList($scope.items.length - 1, true);
-      $editArea.scrollTop($main.height() + 20 + marginBottom - $editArea.height());
+      var $last = $ul.find('>li:last');
+      var offset = $last.offset();
+      var height = $last.outerHeight();
+      $editArea.scrollTop($editArea.scrollTop() + (offset && offset.top) + height - 101);
     });
   };
 
@@ -636,6 +640,7 @@
     $scope.$on('addCollectionItem', function (e, item) {
       $scope.items.splice(0, 0, item);
       $scrollable.scrollTop(0);
+      $scope.setCollectionCategory('ALL');
     });
     $scope.$on('setCollectionCategory', function (e, type) {
       $scope.type = type;
