@@ -736,6 +736,7 @@
     });
     $scope.sortableOptions = {
       appendTo: '.WidgetItemList-Main',
+      cancel: 'embed',
       connectWith: '.WidgetItemList-Main',
       cursor: 'move',
       cursorAt: { top: 30 },
