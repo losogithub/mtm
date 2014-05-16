@@ -1,6 +1,6 @@
 <div ng-controller="TopicCtrl" style="height: 100%;"
      ng-init="topic = <%= JSON.stringify(locals.topic) %>;init();">
-  <div class="Band text-inverse" ng-class="{'background-danger': fail}">
+  <div class="Band text-inverse" ng-class="{'background-danger': fail, 'background-warning': isXHR()}">
     <div class="Band_Btn text-right prs">
       <% if (!topic.publishDate) { %>
       <button name="publish" class="btn btn-xs btn-primary"

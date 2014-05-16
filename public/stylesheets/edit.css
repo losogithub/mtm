@@ -139,6 +139,9 @@ html.EDIT {
 .Band.background-danger {
   background-color: #e74c3c;
 }
+.Band.background-warning {
+  background-color: #f1c40f;
+}
 .Band .Band_Ttl {
   position: fixed;
   left: 0;
