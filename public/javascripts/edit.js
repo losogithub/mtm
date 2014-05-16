@@ -496,7 +496,7 @@
       var $last = $ul.find('>li:last');
       var offset = $last.offset();
       var height = $last.outerHeight();
-      $editArea.scrollTop($editArea.scrollTop() + (offset && offset.top) + height - 101);
+      $editArea.animate({scrollTop: $editArea.scrollTop() + (offset && offset.top) + height - 101}, 250);
     });
   };
 
