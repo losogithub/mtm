@@ -67,8 +67,8 @@ var shizier_postMessageListener;
           var top = 0;
           var left = 0;
           for (var temp = imgs[i]; temp; temp = temp.offsetParent) {
-            top += temp.offsetTop;
-            left += temp.offsetLeft;
+            top += temp.offsetTop - temp.scrollTop;
+            left += temp.offsetLeft - temp.scrollLeft;
           }
           var product
             = (Math.max(Math.min(top + imgs[i].offsetHeight, window.pageYOffset + window.outerHeight), window.pageYOffset)

@@ -153,7 +153,6 @@ function getLinkDetail(url, callback) {
       return callback(err);
     }
     var temp;
-    console.log(html)
     var title = !(temp = html.match(/<title[^>]*>([^<]*)<\/title[^>]*>/i)) ? null : temp[1];
     title = sanitize(title).entityDecode();
     title = sanitize(title).trim();

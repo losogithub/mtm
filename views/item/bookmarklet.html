@@ -246,29 +246,54 @@
                     <div class="clearfix"></div>
                   </div>
                   <div class="Content IMAGE pam" ng-show="images.length"
+                       ng-init="$parent.imageSrc = images && images[0].src; $parent.imageTitle = images && images[0].title;"
                        ng-switch-when="IMAGE">
-                    <div class="Image text-center" ng-show="$parent.imageSrc">
-                      <img onerror="shizier.errorImage(this,'default_120x120');"
-                           ng-src="{{$parent.imageSrc}}">
+                    <div ng-show="$parent.imageSrc">
+                      <div class="prm mbm text-center">
+                        <button class="btn btn-link pan"
+                                ng-click="tempSrc = $parent.imageSrc; $parent.imageSrc = null; tempTitle = $parent.imageTitle;"
+                                type="button">重新选择</button>
+                      </div>
+                      <div class="Image text-center">
+                        <button class="btn btn-link" style="padding: 0; border-radius: 0;"
+                                ng-click="tempSrc = $parent.imageSrc; $parent.imageSrc = null; tempTitle = $parent.imageTitle;"
+                                type="button">
+                          <img onerror="shizier.errorImage(this,'default_120x120');"
+                               ng-src="{{$parent.imageSrc}}">
+                        </button>
+                      </div>
+                      <div class="Quote" ng-if="item.quote">
+                        出自 <i class="fa fa-globe"></i>
+                        <a target="_blank" href="{{item.quote}}">
+                          {{item.quoteDomain || ''}}
+                        </a>
+                      </div>
+                      <div class="mtx"></div>
+                      <div class="form-group">
+                        <input name="title" class="form-control flat text-center AUTO_FOCUS"
+                               ng-model="$parent.imageTitle"
+                               maxlength="50"
+                               placeholder="图片标题" type="text">
+                        <div class="LetterCounter">{{$parent.imageTitle.length || 0}}/50</div>
+                      </div>
                     </div>
-                    <div class="plm SelectImage" ng-show="!$parent.imageSrc">
-                      <div class="prm mbm text-center text-muted">选择图片</div>
-                      <button class="btn btn-link mrm mbm"
-                              ng-repeat="image in images track by $index"
-                              ng-click="$parent.$parent.imageSrc = image.src;$parent.$parent.imageTitle = image.title;"
-                              type="button">
-                        <img ng-src="{{image.src}}">
-                      </button>
+                    <div ng-show="!$parent.imageSrc">
+                      <div class="prm mbm text-center">
+                        <button class="btn btn-link pan"
+                                ng-click="$parent.imageSrc = tempSrc; $parent.imageTitle = tempTitle;"
+                                type="button">返回默认</button>
+                      </div>
+                      <div class="plm SelectImage">
+                        <button class="btn btn-link mrm mbm"
+                                ng-repeat="image in images track by $index"
+                                ng-click="$parent.$parent.imageSrc = image.src; $parent.$parent.imageTitle = image.title;"
+                                type="button">
+                          <img ng-src="{{image.src}}">
+                        </button>
+                      </div>
                     </div>
-                    <div class="Title text-center mts">{{imageSrc ? imageTitle : item.title}}</div>
                     <div class="Description text-asbestos text-center small mtx"
                          ng-bind-html="getHtml(item.description)"></div>
-                    <div class="Quote" ng-if="item.quote">
-                      出自 <i class="fa fa-globe"></i>
-                      <a target="_blank" href="{{item.quote}}">
-                        {{item.quoteDomain || ''}}
-                      </a>
-                    </div>
                   </div>
                   <div class="Content VIDEO pam" ng-show="item.vid"
                        ng-switch-when="VIDEO">
