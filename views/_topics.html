@@ -24,8 +24,11 @@
           <%= topic.title %>
         </a>
       </h2>
-      <div class="prs" style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;font-size: 12px;">
-        <a class="text-muted hidden-xs" target="_blank" href="/u/<%= topic.author_name %>" title="<%= topic.author_name %>"><%= topic.author_name %></a>
+      <div class="hidden-xs" style="line-height: 12px;">
+        <a class="text-muted" style="font-size: 12px; line-height: 18px"
+           target="_blank" href="/u/<%= topic.author_name %>" title="<%= topic.author_name %>">
+          <%= topic.author_name %>
+        </a>
       </div>
       <div class="text-muted hidden-xs"
            style="font-size: 14px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"
