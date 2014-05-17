@@ -281,6 +281,10 @@ html.EDIT {
 .WidgetItemList .Hoverable .Widget {
   background-color: #e0e7e8 !important;
 }
+.WidgetItemList .ui-sortable-helper {
+  max-height: 65px;
+}
+.WidgetItemList .ui-sortable-helper.Hoverable,
 .WidgetItemList .ui-sortable-helper .Hoverable {
   background-color: #f8f9fa;
 }

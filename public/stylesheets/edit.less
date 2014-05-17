@@ -153,7 +153,8 @@ html.EDIT {
     }
   }
   .ui-sortable-helper {
-    .Hoverable {
+    max-height: 65px;
+    &.Hoverable, .Hoverable {
       background-color: lighten(@color-clouds, 4%);
     }
     .SortUtil>div { visibility: hidden }
