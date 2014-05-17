@@ -41,7 +41,7 @@
           {{topic.title}}
         </h1>
       </div>
-      <div ng-show="coverEditing"
+      <div ng-if="coverEditing"
            ng-init="init()" ng-controller="CoverCtrl">
         <div class="Cover" style="border-radius: 6px 6px 0 0; cursor: pointer;"
              ng-click="cancelEdit()">
@@ -56,8 +56,8 @@
             <i class="fa fa-search"></i> 搜索图片
           </button>
           <div class="form-group">
-            <input name="url" class="form-control flat mbs AUTO_FOCUS"
-                   ng-model="$parent.cover_url"
+            <input name="url" class="form-control flat AUTO_FOCUS"
+                   ng-model="$parent.$parent.cover_url"
                    placeholder="策展封面URL" id="_top_url" type="text">
             <label class="input-icon fa fa-link" for="_top_url"></label>
           </div>
