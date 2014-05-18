@@ -198,6 +198,11 @@
                 <div class="LetterCounter">{{spit.length || 0}}/50</div>
               </div>
             </form>
+            <div class="SpitCount text-muted"
+                 ng-if="spits[itemId].length">
+              <i class="fa fa-comment-o"></i>
+              {{spits[itemId].length}}
+            </div>
             <div class="Spits">
               <div class="Spit mbm" ng-repeat="spit in spits[itemId]">
                 <button class="btn btn-link pan mrm text-danger"

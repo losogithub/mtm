@@ -97,6 +97,11 @@
   -webkit-transition: none !important;
   transition: none !important;
 }
+.SpitCount {
+  color: #bdc3c7;
+  font-size: 12px;
+  white-space: nowrap;
+}
 /*条目*/
 .WidgetItemList {
   list-style: none;
@@ -110,11 +115,8 @@
   position: absolute;
   top: 50%;
   right: -30px;
-  color: #bdc3c7;
   width: 0;
   margin-top: -10px;
-  font-size: 12px;
-  white-space: nowrap;
 }
 .WidgetItemList .Hoverable {
   position: relative;
@@ -448,7 +450,7 @@ tags-input.ng-invalid .tags {
 .SpitBubble .Spits {
   overflow: hidden;
   position: absolute;
-  top: 81px;
+  top: 111px;
   right: 20px;
   bottom: 20px;
   left: 20px;

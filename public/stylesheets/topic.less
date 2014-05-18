@@ -1,14 +1,18 @@
 @import "theme";
 @import "utils";
 
+.SpitCount {
+  color: @color-muted;
+  font-size: 12px; white-space: nowrap;
+}
+
 /*条目*/
 .WidgetItemList {
   list-style: none; padding: 0 0 40px; margin-bottom: 0;
   >li {
     position: relative;
     .SpitCount {
-      position: absolute; top: 50%; right: -30px; color: @color-muted; width: 0; margin-top: -10px;
-      font-size: 12px; white-space: nowrap;
+      position: absolute; top: 50%; right: -30px; width: 0; margin-top: -10px;
     }
   }
   .Hoverable {
@@ -249,7 +253,7 @@ tags-input {
 
 .SpitBubble {
   .Spits {
-    overflow: hidden; position: absolute; top: 81px; right: 20px; bottom: 20px; left: 20px;
+    overflow: hidden; position: absolute; top: 111px; right: 20px; bottom: 20px; left: 20px;
     .Spit {
       line-height: 1.4;
       button {
