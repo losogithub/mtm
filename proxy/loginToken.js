@@ -5,8 +5,7 @@
  * Time: 1:19 PM
  * To change this template use File | Settings | File Templates.
  */
-var models = require('../models');
-var LoginToken = models.LoginToken;
+var LoginToken = require('../models').LoginToken;
 
 var randomToken = function() {
   return Math.round((new Date().valueOf() * Math.random())) + '';

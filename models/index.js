@@ -18,7 +18,7 @@ mongoose.connect(config.db, function (err) {
 exports.TopicSuggestionModel = require('./topic_suggestion').TopicSuggestionModel;
 exports.SuggestionTopicLogModel = require('./topic_suggestion').SuggestionTopicLogModel;
 
-exports.TopicModel = require('./topic').TopicModel;
+exports.TopicModel = require('./topic');
 exports.ItemModels = {
   'VOID': require('./void_item'),
   'LINK': require('./link_item'),

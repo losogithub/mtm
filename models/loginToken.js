@@ -19,6 +19,4 @@ TokenSchema.virtual('cookieValue')
     return JSON.stringify({ email: this.email, token: this.token, series: this.series });
   });
 
-
-exports.TopicModel = mongoose.model('LoginToken', TokenSchema);
-
+module.exports = mongoose.model('LoginToken', TokenSchema);
