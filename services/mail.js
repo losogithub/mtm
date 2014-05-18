@@ -47,21 +47,22 @@ var sendMail = function (data) {
  * @param {String} email 接受人的邮件地址
  */
 exports.sendActiveMail = function (who, token, name, email) {
-    var from = config.mail_opts.auth.user;
-    var to = who;
-    var subject = config.name + ' 帐号激活';
-    var html = '<p>您好：<p/>' +
-        '<p>我们收到您在' + config.name + '的注册信息，请点击下面的链接来激活帐户：</p>' +
-        '<a href="' + SITE_ROOT_URL + '/activeAccount?key=' + token + '&email=' + email + '">激活链接</a>' +
-        '<p>若您没有在' + config.name + '填写过注册信息，说明有人滥用了您的电子邮箱，请删除此邮件，我们对给您造成的打扰感到抱歉。</p>' +
-        '<p>' + config.name + ' 谨上。</p>';
+  var from = config.mail_opts.auth.user;
+  var to = who;
+  var subject = config.name + ' 帐号激活';
+  var url = SITE_ROOT_URL + '/activeAccount?key=' + token + '&email=' + email;
+  var html = '<p>您好：<p/>' +
+      '<p>我们收到您在' + config.name + '的注册信息，请点击下面的链接来激活帐户：</p>' +
+      '<a href="' + url + '">' + url + '</a>' +
+      '<p>若您没有在' + config.name + '填写过注册信息，说明有人滥用了您的电子邮箱，请删除此邮件，我们对给您造成的打扰感到抱歉。</p>' +
+      '<p>' + config.name + ' 谨上。</p>';
 
-    sendMail({
-        from: from,
-        to: to,
-        subject: subject,
-        html: html
-    });
+  sendMail({
+      from: from,
+      to: to,
+      subject: subject,
+      html: html
+  });
 };
 
 /**
