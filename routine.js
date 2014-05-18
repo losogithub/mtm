@@ -200,34 +200,8 @@ function _routine() {
  * an array to store the visited user, to avoid multi-visit in one day.
  */
 function _clearIP () {
-  Common.VisitedArray = [];
-}
-
-function _patchUserDate(){
-  User.getAllUsers(function(err, users){
-    console.log("total users count: " + users.length);
-    async.forEachSeries(users, function (user, callback) {
-      var date = _getTimeStamp(user._id);
-      console.log(date);
-      user.createDate = date;
-      user.save(function(err, user){
-        if (err){
-          return callback(err);
-        }
-        else {
-          return callback(null, user);
-        }
-      });
-    }, function (err) {
-      if (err) {
-        console.error(err.stack);
-      }
-    });
-  });
-}
-
-function _getTimeStamp(objId){
-  return new Date(parseInt(objId.toString().slice(0,8), 16)*1000);
+  Common.TopicVisitedKeys = {};
+  Common.SpitLikedKeys = {};
 }
 
 function start() {

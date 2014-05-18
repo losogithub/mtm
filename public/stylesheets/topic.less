@@ -6,11 +6,22 @@
   list-style: none; padding: 0 0 40px; margin-bottom: 0;
   >li {
     position: relative;
+    .SpitCount {
+      position: absolute; top: 50%; right: -30px; color: @color-muted; width: 0; margin-top: -10px;
+      font-size: 12px; white-space: nowrap;
+    }
   }
   .Hoverable {
     position: relative;
-    &:hover {
+    &:hover, &.Hover {
       button.COLLECT { display: block; }
+    }
+    &:hover {
+      .HoverHelper {
+        @media (min-width: 992px){
+          display: block;
+        }
+      }
     }
     button.COLLECT {
       position: absolute; top: 20px; right: 20px; display: none; opacity: 0.3;
@@ -32,7 +43,7 @@
 }
 
 .WidgetItemList .Hoverable {
-  &:hover { background-color: lighten(@color-clouds, 4%); }
+  &:hover, &.Hover { background-color: lighten(@color-clouds, 4%); }
 
   .LINK,
   .LINK_CREATE,
@@ -90,7 +101,7 @@
     .Description { padding-left: 6px; border-left: 2px solid @color-muted;line-height: 1.4; }
   }
 
-  &:hover {
+  &:hover, &.Hover {
     .WEIBO {
       .Handle { visibility: visible; }
     }
@@ -225,7 +236,7 @@ tags-input {
   }
 }
 
-.Preview {
+.SpitBubble {
   box-shadow: 0 0 15px @color-concrete;
   position: fixed; top: 0; bottom: 0; display: none;
   @media (min-width: 992px){
@@ -234,4 +245,34 @@ tags-input {
   @media (min-width: 1200px){
     & { width: 458px;}
   }
+}
+
+.SpitBubble {
+  .Spits {
+    overflow: hidden; position: absolute; top: 81px; right: 20px; bottom: 20px; left: 20px;
+    .Spit {
+      line-height: 1.4;
+      button {
+        vertical-align: baseline;
+      }
+    }
+  }
+}
+
+.HoverHelper {
+  position: absolute; top: 0; bottom: 0; right: -30px;
+  width: 30px;
+  display: none;
+  z-index: 1;
+}
+
+.Arrow {
+  position: absolute; top: 25px; left: -30px;
+  border-right-color: white !important;
+  border: 15px solid transparent;
+}
+
+.ps-container .ps-scrollbar-y-rail {
+  opacity: 0.2;
+  filter: alpha(opacity=20);
 }

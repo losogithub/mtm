@@ -15,11 +15,6 @@ mongoose.connect(config.db, function (err) {
   }
 });
 
-//models
-require('./user');
-require('./loginToken');
-
-
 exports.TopicSuggestionModel = require('./topic_suggestion').TopicSuggestionModel;
 exports.SuggestionTopicLogModel = require('./topic_suggestion').SuggestionTopicLogModel;
 
@@ -34,6 +29,7 @@ exports.ItemModels = {
   'TEXT': require('./text_item'),
   'TITLE': require('./title_item')
 }
+exports.Spit = require('./spit');
 
-exports.User = mongoose.model('User');
-exports.LoginToken = mongoose.model('LoginToken');
+exports.User = require('./user');
+exports.LoginToken = require('./loginToken');

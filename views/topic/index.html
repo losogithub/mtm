@@ -3,7 +3,8 @@
 <% include ../_band.html %>
 
 <!--内容-->
-<div class="background-clouds">
+<div class="background-clouds"
+     ng-init="spits = <%= JSON.stringify(locals.spits) %>">
   <div class="container">
     <div class="row pbl">
       <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-8 col-lg-7">
@@ -111,9 +112,6 @@
           </div>
 
         </div>
-
-        <% include _relatedTopics.html %>
-
       </div>
       <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-4 col-lg-5">
         <% if (locals.isAdmin || locals.isAuthor) { %>
@@ -189,25 +187,41 @@
           </div>
         </div>
 
-        <div class="pbl phl background-white mtl hidden-xs hidden-sm" style="border-radius: 6px;">
-          <h2 class="ptl mvn" style="font-size: 18px;">您可能还喜欢：</h2>
-          <% locals.relatedTopics.forEach(function(topic){ %>
-          <h3 class="Title mbn mtl"
-              style="font-size: 18px;
-              text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
-            <a href="/topic/<%= topic._id %>" class="text-muted"
-               title="<%= topic.title %>">
-              <%= topic.title %>
-            </a>
-          </h3>
-          <% }) %>
-        </div>
-
-        <div class="PreviewWrapper hidden-xs hidden-sm">
-          <div class="Preview background-white mvl" style="border-radius: 6px;">
-            <iframe sandbox="" scrolling="no" style="border-radius: 6px;border:none;overflow: hidden;width: 100%; height: 100%;"></iframe>
+        <div class="SpitWrapper hidden-xs hidden-sm">
+          <div class="SpitBubble background-white mvl pal" style="border-radius: 6px;"
+               ng-controller="SpitCtrl">
+            <form ng-submit="submit()">
+              <div class="form-group">
+                <input name="spit" type="text" class="form-control AUTO_FOCUS"
+                       ng-model="spit" maxlength="50"
+                       placeholder="匿名吐槽，回车发送"/>
+                <div class="LetterCounter">{{spit.length || 0}}/50</div>
+              </div>
+            </form>
+            <div class="Spits">
+              <div class="Spit mbm" ng-repeat="spit in spits[itemId]">
+                <button class="btn btn-link pan mrm text-danger"
+                        ng-click="like(spit)"
+                        type="button">
+                  <i class="fa fa-thumbs-o-up"></i> <span class="text-muted">{{spit.like || ''}}</span>
+                </button>
+                {{spit.text}}
+              </div>
+            </div>
+            <div class="Arrow" ng-style="{top: arrowY}"></div>
           </div>
         </div>
+
+        <!--<div class="PreviewWrapper hidden-xs hidden-sm">-->
+          <!--<div class="Preview background-white mvl" style="border-radius: 6px;">-->
+            <!--<iframe sandbox="" scrolling="no" style="border-radius: 6px;border:none;overflow: hidden;width: 100%; height: 100%;"></iframe>-->
+          <!--</div>-->
+        <!--</div>-->
+
+      </div>
+      <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-8 col-lg-7">
+
+        <% include _relatedTopics.html %>
 
       </div>
     </div>

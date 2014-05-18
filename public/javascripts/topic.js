@@ -18,7 +18,7 @@ window.sng.controller('TagsInputCtrl', function ($scope, $timeout, $element) {
     return encodeURIComponent(text);
   };
   $scope.onAdded = function ($tag) {
-    $.post('/tag', angular.extend({ topicId: topicId }, $tag))
+    $.post('/tag', $.extend({ topicId: topicId }, $tag))
       .done(function () {
         Messenger().post({
           message: '成功添加标签 [ ' + $tag.text + ' ]'
@@ -39,7 +39,7 @@ window.sng.controller('TagsInputCtrl', function ($scope, $timeout, $element) {
   $scope.onRemoved = function ($tag) {
     $.ajax('/tag', {
       type: 'DELETE',
-      data: angular.extend({ topicId: topicId }, $tag)
+      data: $.extend({ topicId: topicId }, $tag)
     })
       .done(function () {
         Messenger().post({
@@ -60,6 +60,98 @@ window.sng.controller('TagsInputCtrl', function ($scope, $timeout, $element) {
   };
 });
 
+window.sng.controller('SpitCtrl', function ($scope, $timeout) {
+  $scope.submit = function () {
+    if (!$scope.spit) return;
+    $.post('/spit', {
+      itemType: $scope.itemType,
+      itemId: $scope.itemId,
+      text: $scope.spit
+    })
+      .done(function (data) {
+        $scope.spits[data.itemId].splice(0, 0, data);
+        $scope.spit = '';
+        $scope.$apply();
+      })
+      .fail(function () {
+        Messenger().post({
+          message: '吐槽失败',
+          type: 'error'
+        });
+        $(document).one('mousedown keydown', function () {
+          Messenger().hideAll();
+        });
+      });
+  };
+  $scope.like = function (spit) {
+    $.post('/spit/like', {
+      _id: spit._id
+    })
+      .done(function (data) {
+        spit.like = data.like;
+        $scope.$apply();
+      });
+  };
+
+  var $window = $(window);
+  var $spitWrapper = $('.SpitWrapper');
+  var $spitBubble = $('.SpitBubble');
+  var $spits = $spitBubble.find('.Spits');
+  var $item;
+  $spits.perfectScrollbar({
+    suppressScrollX: true
+  });
+
+  function _updateArrow() {
+    $scope.arrowY = Math.min(
+      Math.max(
+        $item.offset().top - $window.scrollTop() + $item.outerHeight()/2 - 35,
+        25
+      ),
+      $window.outerHeight() - 95);
+  }
+
+  $window.scroll(function () {
+    $timeout(function () {
+      if ($item) {
+        _updateArrow();
+      }
+    });
+  });
+  $('.WidgetItemList .Hoverable').add($spitWrapper)
+    .hover(function () {
+      if ($spitWrapper.is(':hidden')) {
+        return;
+      }
+      var $this = $(this);
+      var options = $this.closest('li').data('options');
+
+      if (options) {
+        $item = $this;
+        $timeout(function () {
+          $scope.itemType = options.type;
+          $scope.itemId = options._id;
+          _updateArrow();
+          $spitBubble.find('.AUTO_FOCUS').blur().focus();
+          $spits.scrollTop(0);
+          setTimeout(function () {
+            $spits.perfectScrollbar('update');
+          }, 0);
+        });
+      }
+      if ($item) {
+        $item.addClass('Hover');
+      }
+      $spitBubble.show();
+    }, function () {
+      if ($spitWrapper.is(':hidden')) {
+        return;
+      }
+      $item.removeClass('Hover');
+      $spitBubble.hide();
+    });
+});
+
 $(function () {
 
   var $player = $('.TEMPLATES>.Player');
@@ -74,8 +166,6 @@ $(function () {
     var temp = shizier.getVideoSrc(quote, vid);
     var width = $li.find('.Content').width();
     var height = width * 4 / 5;
-    console.log(vid)
-    console.log(temp)
     $player.clone()
       .find('embed')
       .attr('width', width)
@@ -115,34 +205,27 @@ $(function () {
       });
   });
 
-  var $previewWrapper = $('.PreviewWrapper');
-  var $preview = $('.Preview');
-  var contentWindow = $preview.find('>iframe').get(0).contentWindow;
-  var lastUrl;
-//  var timeout;
-  $('.WidgetItemList').on('mouseenter', '>li .Quote a', function () {
-    if ($previewWrapper.is(':hidden')) {
-      return;
-    }
-    var $this = $(this);
-    var options = $this.closest('.WidgetItemList>li').data('options');
-    var url = options.type == 'IMAGE' ? options.quote : options.url;
-    if (url) {
-      $preview.show();
-      console.log(url)
-//      timeout = setTimeout(function () {
-      if (lastUrl != url) {
-        lastUrl = url;
-        contentWindow.location.replace(url);
-      }
-//      }, 1000);
-    }
-  })
-  $('.WidgetItemList').on('mouseleave', '>li .Quote a', function () {
-//    clearTimeout(timeout);
-//    if ($preview.is(':visible')) {
-//      contentWindow.location.replace('about:blank');
+//  var $previewWrapper = $('.PreviewWrapper');
+//  var $preview = $('.Preview');
+//  var contentWindow = $preview.find('>iframe').get(0).contentWindow;
+//  var lastUrl;
+//  $('.WidgetItemList').on('mouseenter', '>li .Quote a', function () {
+//    if ($previewWrapper.is(':hidden')) {
+//      return;
 //    }
-    $preview.hide();
-  })
+//    var $this = $(this);
+//    var options = $this.closest('.WidgetItemList>li').data('options');
+//    var url = options.type == 'IMAGE' ? options.quote : options.url;
+//    if (url) {
+//      $preview.show();
+//    if (lastUrl != url) {
+//      lastUrl = url;
+//      contentWindow.location.replace(url);
+//    }
+//    }
+//  });
+//  $('.WidgetItemList').on('mouseleave', '>li .Quote a', function () {
+//    $preview.hide();
+//  });
+
 });

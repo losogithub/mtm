@@ -60,7 +60,7 @@
     });
     $searchImage.find('.modal-body').perfectScrollbar({
       suppressScrollX: true,
-      includePadding: false
+      includePadding: true
     });
 
     var $toTop = $('.ToTop');

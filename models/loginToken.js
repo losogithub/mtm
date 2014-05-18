@@ -20,5 +20,5 @@ TokenSchema.virtual('cookieValue')
   });
 
 
-mongoose.model('LoginToken', TokenSchema);
+exports.TopicModel = mongoose.model('LoginToken', TokenSchema);
 

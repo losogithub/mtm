@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 var ObjectId = mongoose.Schema.ObjectId;
 
 //todo: image
-var UserSchema = new Schema({
+module.exports = mongoose.model('User', {
   loginName: {type: String, unique: true},
   birthday: String,
   gender: String,
@@ -34,9 +34,4 @@ var UserSchema = new Schema({
 
   //topic creation task
   TopicTaskList: [ObjectId] // suggestion task
-
-
-
 });
-
-mongoose.model('User', UserSchema);

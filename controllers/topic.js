@@ -20,6 +20,7 @@ var escape = helper.escape;
 var Common = require('../common');
 var Topic = require('../proxy').Topic;
 var Item = require('../proxy').Item;
+var Spit = require('../proxy').Spit;
 var User = require('../proxy').User;
 
 var utils = require('../public/javascripts/utils');
@@ -54,6 +55,22 @@ function showIndex(req, res, next) {
         return callback(new Error(404));
       }
       Item.getItems(topic, callback);
+    }],
+    spits: ['items', function (callback, results) {
+      var items = results.items;
+      var spits = {};
+      async.forEachSeries(items, function (item, callback) {
+        Spit.getSpitsByItemTypeAndId(item.type, item._id, function (err, tempSpits) {
+          if (err) return callback(err);
+
+          spits[item._id] = tempSpits;
+          callback();
+        });
+      }, function (err) {
+        if (err) return callback(err);
+
+        callback(null, spits);
+      });
     }]
   }, function (err, results) {
     if (err) {
@@ -64,6 +81,7 @@ function showIndex(req, res, next) {
     var topic = results.topic;
     var author = results.author;
     var items = results.items;
+    var spits = results.spits;
     var itemsData = [];
     items.forEach(function (item) {
       if (item && item.type && item._id) {
@@ -92,6 +110,7 @@ function showIndex(req, res, next) {
       title: topic.title,
       description: topic.description,
       css: [
+        '/bower_components/perfect-scrollbar/min/perfect-scrollbar-0.4.10.min.css',
         'http://cdn.bootcss.com/messenger/1.4.0/css/messenger.css',
         'http://cdn.bootcss.com/messenger/1.4.0/css/messenger-theme-flat.css',
         'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.css',
@@ -100,6 +119,7 @@ function showIndex(req, res, next) {
         '/stylesheets/topic.css'
       ],
       js: [
+        '/bower_components/perfect-scrollbar/min/perfect-scrollbar-0.4.10.min.js',
         '/javascripts/ng-tags-input.js',
         'http://cdn.bootcss.com/messenger/1.4.0/js/messenger.js',
         'http://cdn.bootcss.com/messenger/1.4.0/js/messenger-theme-flat.js',
@@ -121,6 +141,7 @@ function showIndex(req, res, next) {
       tags: topic.tags,
       Tags: Common.Tags,
       items: itemsData,
+      spits: spits,
       author: author,
       authorCategoryList: Common.AuthorCategoryList,
       CATEGORIES2ENG: Common.CATEGORIES2ENG,
@@ -128,8 +149,8 @@ function showIndex(req, res, next) {
     });
 
     var visitKey = topicId.toString() + req.connection.remoteAddress;
-    if (!Common.VisitedArray[visitKey]) {
-      Common.VisitedArray[visitKey] = true;
+    if (!Common.TopicVisitedKeys[visitKey]) {
+      Common.TopicVisitedKeys[visitKey] = true;
       Topic.increasePVCountBy(topic, 1).exec();
     }
     console.log('showIndex done');

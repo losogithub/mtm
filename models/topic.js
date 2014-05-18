@@ -9,7 +9,7 @@ var mongoose = require('mongoose');
 var ObjectId = mongoose.Schema.ObjectId;
 var Schema = mongoose.Schema;
 
-var TopicSchema = new Schema({
+exports.TopicModel = mongoose.model('Topic', {
   title: String,
   cover_url: String,
   description: String,
@@ -26,5 +26,3 @@ var TopicSchema = new Schema({
   category: { type: String, default: '未分类' },
   tags: [String]
 });
-
-exports.TopicModel = mongoose.model('Topic', TopicSchema);

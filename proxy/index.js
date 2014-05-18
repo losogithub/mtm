@@ -7,5 +7,6 @@
  */
 exports.Topic = require('./topic');
 exports.Item = require('./item');
+exports.Spit = require('./spit');
 exports.User = require('./user');
 exports.LoginToken = require('./loginToken');

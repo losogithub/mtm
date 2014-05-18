@@ -106,11 +106,27 @@
 .WidgetItemList > li {
   position: relative;
 }
+.WidgetItemList > li .SpitCount {
+  position: absolute;
+  top: 50%;
+  right: -30px;
+  color: #bdc3c7;
+  width: 0;
+  margin-top: -10px;
+  font-size: 12px;
+  white-space: nowrap;
+}
 .WidgetItemList .Hoverable {
   position: relative;
 }
-.WidgetItemList .Hoverable:hover button.COLLECT {
+.WidgetItemList .Hoverable:hover button.COLLECT,
+.WidgetItemList .Hoverable.Hover button.COLLECT {
   display: block;
+}
+@media (min-width: 992px) {
+  .WidgetItemList .Hoverable:hover .HoverHelper {
+    display: block;
+  }
 }
 .WidgetItemList .Hoverable button.COLLECT {
   position: absolute;
@@ -139,7 +155,8 @@
 .VIDEO .Quote {
   text-align: left;
 }
-.WidgetItemList .Hoverable:hover {
+.WidgetItemList .Hoverable:hover,
+.WidgetItemList .Hoverable.Hover {
   background-color: #f8f9fa;
 }
 .WidgetItemList .Hoverable .LINK,
@@ -237,7 +254,8 @@
   border-left: 2px solid #bdc3c7;
   line-height: 1.4;
 }
-.WidgetItemList .Hoverable:hover .WEIBO .Handle {
+.WidgetItemList .Hoverable:hover .WEIBO .Handle,
+.WidgetItemList .Hoverable.Hover .WEIBO .Handle {
   visibility: visible;
 }
 .WidgetItemList .Hoverable .WEIBO .Retweeted {
@@ -410,7 +428,7 @@ tags-input .tags .input.invalid-tag {
 tags-input.ng-invalid .tags {
   border: 2px solid #e74c3c;
 }
-.Preview {
+.SpitBubble {
   box-shadow: 0 0 15px #95a5a6;
   position: fixed;
   top: 0;
@@ -418,12 +436,46 @@ tags-input.ng-invalid .tags {
   display: none;
 }
 @media (min-width: 992px) {
-  .Preview {
+  .SpitBubble {
     width: 293px;
   }
 }
 @media (min-width: 1200px) {
-  .Preview {
+  .SpitBubble {
     width: 458px;
   }
+}
+.SpitBubble .Spits {
+  overflow: hidden;
+  position: absolute;
+  top: 81px;
+  right: 20px;
+  bottom: 20px;
+  left: 20px;
+}
+.SpitBubble .Spits .Spit {
+  line-height: 1.4;
+}
+.SpitBubble .Spits .Spit button {
+  vertical-align: baseline;
+}
+.HoverHelper {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: -30px;
+  width: 30px;
+  display: none;
+  z-index: 1;
+}
+.Arrow {
+  position: absolute;
+  top: 25px;
+  left: -30px;
+  border-right-color: white !important;
+  border: 15px solid transparent;
+}
+.ps-container .ps-scrollbar-y-rail {
+  opacity: 0.2;
+  filter: alpha(opacity=20);
 }

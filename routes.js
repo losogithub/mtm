@@ -13,6 +13,7 @@ var site = require('./controllers/site');
 var sign = require('./controllers/sign');
 var topic = require('./controllers/topic');
 var item = require('./controllers/item');
+var spit = require('./controllers/spit');
 var tag = require('./controllers/tag');
 var user = require('./controllers/user');
 var support = require('./controllers/support');
@@ -62,6 +63,9 @@ module.exports = function (app) {
   app.post('/item', auth.userRequired, item.collectItem);
   app.put('/item', auth.userRequired, item.editItem);
   app.delete('/item', auth.userRequired, item.deleteItem);
+
+  app.post('/spit', spit.createSpit);
+  app.post('/spit/like', spit.likeSpit);
 
   //tag
   app.get('/tag/:tagText', widget.band, tag.showTag);
