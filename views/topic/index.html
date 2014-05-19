@@ -250,19 +250,19 @@
                 <div class="form-group">
                   <input type="text" class="form-control"
                          ng-model="comment" maxlength="140"
-                         placeholder="发表评论"/>
+                         placeholder="发表评论，回车发送"/>
                   <div class="LetterCounter">{{comment.length || 0}}/140</div>
                 </div>
               </form>
             </div>
           </div>
           <% } %>
-          <div class="CommentCount text-center mvm">
+          <div class="CommentCount text-center mtm">
             <i class="fa fa-comment-o"></i>
             共{{comments.length}}条评论
           </div>
           <div class="Comments">
-            <div class="Comment mbm clearfix" ng-repeat="comment in comments">
+            <div class="Comment pvm clearfix" ng-repeat="comment in comments">
               <a class="img-circle-border-clouds pull-left mrm"
                  href="/u/{{comment.author.loginName}}">
                 <img class="img-circle" width="50" height="50" ng-src="{{comment.author.url || '/images/no_img/user_80x80.png'}}">
