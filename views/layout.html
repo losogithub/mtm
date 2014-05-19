@@ -81,7 +81,7 @@
       </button>
     </div>
     <ul class="nav navbar-nav navbar-right hidden-xs">
-      <% if (!locals.username) { %>
+      <% if (!locals.yourself.loginName) { %>
       <li><a href="/signup">注册</a></li>
       <li><a class="ShowLogin" href="##">登录</a></li>
       <li><a href="/topic/create"><i class="fa fa-puzzle-piece"></i> 开始策展</a></li>
@@ -90,9 +90,9 @@
         <a href="/works">
           <i class="fa fa-caret-down"></i>
           <img class="img-circle" width="20" height="20"
-            src="<%= locals.imageUrl || '/images/no_img/user_80x80.png' %>"
+            src="<%= locals.yourself.url || '/images/no_img/user_80x80.png' %>"
             onerror="shizier.errorImage(this,'user_80x80');">
-          <%= username %>
+          <%= locals.yourself.loginName %>
         </a>
         <ul style="z-index: 1002;">
           <li>
@@ -131,7 +131,7 @@
               <input name=si type=hidden value="shizier.com">
             </form>
           </li>
-          <% if (!locals.username) { %>
+          <% if (!locals.yourself.loginName) { %>
           <li><a href="/signup">注册</a></li>
           <li><a href="/login">登录</a></li>
           <li><a href="/topic/create"><i class="fa fa-puzzle-piece"></i> 开始策展</a></li>
@@ -139,9 +139,9 @@
           <li>
             <a href="/works" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
               <img class="img-circle" width="20" height="20"
-                   src="<%= locals.imageUrl || '/images/no_img/user_80x80.png' %>"
+                   src="<%= locals.yourself.url || '/images/no_img/user_80x80.png' %>"
                    onerror="shizier.errorImage(this,'user_80x80');">
-              <%= username %>
+              <%= locals.yourself.loginName %>
             </a>
           </li>
           <li><a href="/topic/create"><i class="fa fa-puzzle-piece"></i> 开始策展</a></li>

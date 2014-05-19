@@ -30,6 +30,7 @@ exports.ItemModels = {
   'TITLE': require('./title_item')
 }
 exports.Spit = require('./spit');
+exports.Comment = require('./comment');
 
 exports.User = require('./user');
 exports.LoginToken = require('./loginToken');

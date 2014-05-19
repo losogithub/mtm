@@ -14,6 +14,7 @@ var sign = require('./controllers/sign');
 var topic = require('./controllers/topic');
 var item = require('./controllers/item');
 var spit = require('./controllers/spit');
+var comment = require('./controllers/comment');
 var tag = require('./controllers/tag');
 var user = require('./controllers/user');
 var support = require('./controllers/support');
@@ -53,6 +54,9 @@ module.exports = function (app) {
   app.put('/topic/publish', auth.userRequired, topic.publishTopic);
   app.delete('/topic/item', auth.userRequired, topic.deleteItem);
   app.delete('/topic/:topicId', auth.userRequired, topic.deleteTopic);
+
+  app.post('/comment', auth.userRequired, comment.createComment);
+  app.post('/comment/like', comment.likeComment);
 
   //item
   app.get('/search_image', item.searchImage);

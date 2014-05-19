@@ -202,6 +202,7 @@ function _routine() {
 function _clearIP () {
   Common.TopicVisitedKeys = {};
   Common.SpitLikedKeys = {};
+  Common.CommentLikedKeys = {};
 }
 
 function start() {

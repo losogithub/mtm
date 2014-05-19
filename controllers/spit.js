@@ -32,11 +32,9 @@ function createSpit(req, res, next) {
 function likeSpit(req, res, next) {
   var _id = req.body._id;
 
-  var spitLikedKey = _id + req.connection.remoteAddress;
-  if (Common.SpitLikedKeys[spitLikedKey]) {
+  var key = _id + req.connection.remoteAddress;
+  if (Common.SpitLikedKeys[key]) {
     return next(new Error(403));
-  } else {
-    Common.SpitLikedKeys[spitLikedKey] = true;
   }
 
   Spit.likeSpit(_id, function (err, spit) {
@@ -45,6 +43,7 @@ function likeSpit(req, res, next) {
     res.json({
       like: spit.like
     });
+    Common.SpitLikedKeys[key] = true;
   });
 }
 

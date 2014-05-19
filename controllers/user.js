@@ -544,8 +544,8 @@ function showPersonal(req, res, next) {
   console.log("authorName: %s", req.params.authorName);
   //login user and the same with the author of this one
   // jump to works page
-  if (req.session.userId && req.currentUser
-    && req.currentUser.loginName == authorName) {
+  if (req.session.userId && res.locals.yourself
+    && res.locals.yourself.loginName == authorName) {
     //jump to works page
     console.log("the same person, jump to works");
     return res.redirect('/works');

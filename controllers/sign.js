@@ -426,7 +426,6 @@ function _checkOnlyPassword(emailIDFlag, pass, remember, user, req, res) {
   }
 
   req.session.userId = user._id;
-  req.currentUser = user;
   //console.log("currentUser: %s", req.currentUser);
   if (remember) {
     // Remember me

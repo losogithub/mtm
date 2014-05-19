@@ -15,7 +15,6 @@ var LoginToken = require('../proxy').LoginToken;
 var check = require('validator').check;
 var sanitize = require('validator').sanitize;
 var config = require('../config');
-var encryp = require('../helper/encryp');
 var helper = require('../helper/helper');
 
 var fs = require('fs');
@@ -44,11 +43,8 @@ function loadUser(req, res, next) {
         return next(err);
       }
       if (user) {
-        req.currentUser = user; //check whether currentUser is the same with this Id.
-        res.locals.username = user.loginName; // used in html template to judefy and display uername
+        res.locals.yourself = user; //check whether currentUser is the same with this Id.
         res.locals.isAdmin = config.admins[user.loginName];
-        //added 10.11 2013
-        res.locals.imageUrl = user.url;
         return next();
       }
       //check fail: not login. user cookie contain session id, but not correct.
@@ -124,12 +120,8 @@ function _authenticateFromLoginToken(req, res, next) {
               }
               if (user) {
                 req.session.userId = user._id;
-                req.currentUser = user; //what does this used for ?? get it, passed to the next middleware.
-                req.currentUser.series = cookie.series; //save series information.
                 //used in html template to judgfy and display user name.
-                res.locals.username = user.loginName;
-                //added 10.11 2013
-                res.locals.imageUrl = user.url;
+                res.locals.yourself = user;
                 //update the token
                 token.token = LoginToken.randomToken();
                 token.save(function () {

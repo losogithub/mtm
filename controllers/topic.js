@@ -6,6 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 var async = require('async');
+var extend = require('extend');
 var sanitize = require('validator').sanitize;
 var check = require('validator').check;
 var phantom = require('phantom');
@@ -21,6 +22,7 @@ var Common = require('../common');
 var Topic = require('../proxy').Topic;
 var Item = require('../proxy').Item;
 var Spit = require('../proxy').Spit;
+var Comment = require('../proxy').Comment;
 var User = require('../proxy').User;
 
 var utils = require('../public/javascripts/utils');
@@ -35,7 +37,7 @@ function showIndex(req, res, next) {
       if (!Common.Topic[topicId] || !Common.Topic[topicId].relatedTopics) {
         return callback(null, []);
       }
-      async.map(Common.Topic[topicId].relatedTopics.slice(0, 5), function (topicId, callback) {
+      async.mapSeries(Common.Topic[topicId].relatedTopics.slice(0, 5), function (topicId, callback) {
         Topic.getTopicById(topicId, callback);
       }, callback);
     },
@@ -44,17 +46,47 @@ function showIndex(req, res, next) {
     },
     author: ['topic', function (callback, results) {
       var topic = results.topic;
-      if (!topic) {
-        return callback(new Error(404));
-      }
+      if (!topic) return callback(new Error(404));
+
       User.getUserById(topic.author_id, callback);
     }],
     items: ['topic', function (callback, results) {
       var topic = results.topic;
-      if (!topic) {
-        return callback(new Error(404));
-      }
+      if (!topic) return callback(new Error(404));
+
       Item.getItems(topic, callback);
+    }],
+    comments: ['topic', function (callback, results) {
+      var topic = results.topic;
+      if (!topic) return callback(new Error(404));
+
+      Comment.getCommentsByTopicId(topic._id, function (err, comments) {
+        if (err) return callback(err);
+
+        async.mapSeries(comments, function (comment, callback) {
+          var newComment = comment.toJSON();
+
+          var key = newComment._id + req.connection.remoteAddress;
+          if (Common.CommentLikedKeys[key]) {
+            newComment.liked = true;
+          }
+
+          User.getUserById(comment.authorId, function (err, user) {
+            if (err) return callback(err);
+
+            if (user) {
+              extend(newComment, {
+                author: {
+                  loginName: user.loginName,
+                  url: user.url
+                }
+              })
+            }
+
+            callback(null, newComment);
+          });
+        }, callback);
+      });
     }],
     spits: ['items', function (callback, results) {
       var items = results.items;
@@ -63,6 +95,12 @@ function showIndex(req, res, next) {
         Spit.getSpitsByItemTypeAndId(item.type, item._id, function (err, tempSpits) {
           if (err) return callback(err);
 
+          tempSpits.forEach(function (spit) {
+            var key = spit._id + req.connection.remoteAddress;
+            if (Common.CommentLikedKeys[key]) {
+              spit.liked = true;
+            }
+          });
           spits[item._id] = tempSpits;
           callback();
         });
@@ -81,7 +119,10 @@ function showIndex(req, res, next) {
     var topic = results.topic;
     var author = results.author;
     var items = results.items;
+    var comments = results.comments;
+    console.log(comments)
     var spits = results.spits;
+
     var itemsData = [];
     items.forEach(function (item) {
       if (item && item.type && item._id) {
@@ -94,7 +135,7 @@ function showIndex(req, res, next) {
     if (req.session && req.session.userId) {
       //console.log("currentUser", req.currentUser);
       //check in FVTopicList
-      var likeList = req.currentUser.FVTopicList;
+      var likeList = res.locals.yourself.FVTopicList;
       if (likeList.indexOf(topic._id) > -1) {
         console.log("liked before");
         liked = true;
@@ -141,6 +182,7 @@ function showIndex(req, res, next) {
       tags: topic.tags,
       Tags: Common.Tags,
       items: itemsData,
+      comments: comments,
       spits: spits,
       author: author,
       authorCategoryList: Common.AuthorCategoryList,
@@ -148,9 +190,9 @@ function showIndex(req, res, next) {
       liked: liked
     });
 
-    var visitKey = topicId.toString() + req.connection.remoteAddress;
-    if (!Common.TopicVisitedKeys[visitKey]) {
-      Common.TopicVisitedKeys[visitKey] = true;
+    var key = topicId.toString() + req.connection.remoteAddress;
+    if (!Common.TopicVisitedKeys[key]) {
+      Common.TopicVisitedKeys[key] = true;
       Topic.increasePVCountBy(topic, 1).exec();
     }
     console.log('showIndex done');
@@ -274,7 +316,7 @@ function showChang(req, res, next) {
     if (req.session && req.session.userId) {
       //console.log("currentUser", req.currentUser);
       //check in FVTopicList
-      var likeList = req.currentUser.FVTopicList;
+      var likeList = res.locals.yourself.FVTopicList;
       if (likeList.indexOf(topic._id) > -1) {
         console.log("liked before");
         liked = true;

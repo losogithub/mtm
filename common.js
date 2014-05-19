@@ -11,6 +11,7 @@ var utils = require('./public/javascripts/utils');
 module.exports = {
   TopicVisitedKeys: {},
   SpitLikedKeys: {},
+  CommentLikedKeys: {},
   Topic: {},
   Tags: [],
   AuthorTopicCount: {},

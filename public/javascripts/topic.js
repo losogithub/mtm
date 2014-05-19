@@ -60,6 +60,61 @@ window.sng.controller('TagsInputCtrl', function ($scope, $timeout, $element) {
   };
 });
 
+window.sng.controller('CommentCtrl', function ($scope) {
+  function _formatCreateDate(comment) {
+    function _prefixZero(num) {
+      return num < 10 ? '0' + num : num;
+    }
+
+    var temp = new Date(comment.createDate);
+    comment.createDate = temp.getFullYear() + '-'
+      + _prefixZero(temp.getMonth() + 1) + '-'
+      + _prefixZero(temp.getDate()) + ' '
+      + _prefixZero(temp.getHours()) + ':'
+      + _prefixZero(temp.getMinutes()) + ':'
+      + _prefixZero(temp.getSeconds());
+  }
+  $scope.init = function () {
+    $scope.comments.forEach(function (comment) {
+      _formatCreateDate(comment);
+    });
+  }
+  $scope.submit = function () {
+    if (!$scope.comment) return;
+    $.post('/comment', {
+      topicId: $scope.topicId,
+      replyId: null,
+      text: $scope.comment
+    })
+      .done(function (data) {
+        _formatCreateDate(data);
+        data.author = $scope.yourself;
+        $scope.comments.splice(0, 0, data);
+        $scope.comment = '';
+        $scope.$apply();
+      })
+      .fail(function () {
+        Messenger().post({
+          message: '评论失败',
+          type: 'error'
+        });
+        $(document).one('mousedown keydown', function () {
+          Messenger().hideAll();
+        });
+      });
+  };
+  $scope.like = function (comment) {
+    $.post('/comment/like', {
+      _id: comment._id
+    })
+      .done(function (data) {
+        comment.like = data.like;
+        comment.liked = true;
+        $scope.$apply();
+      });
+  };
+});
+
 window.sng.controller('SpitCtrl', function ($scope, $timeout) {
   $scope.submit = function () {
     if (!$scope.spit) return;
@@ -89,6 +144,7 @@ window.sng.controller('SpitCtrl', function ($scope, $timeout) {
     })
       .done(function (data) {
         spit.like = data.like;
+        spit.liked = true;
         $scope.$apply();
       });
   };

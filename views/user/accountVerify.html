@@ -14,7 +14,7 @@
         style="background-color: #ecf0f1;border-radius: 6px;"
         ng-controller="Form" name="form">
     <div class="form-group">
-      <span class="ptm"><%= locals.username || '' %></span>
+      <span class="ptm"><%= locals.yourself.loginName || '' %></span>
     </div>
     <div class="form-group"
          ng-class="{ 'has-error': passwordTooltip || (!form.password.$valid && !focused) }">

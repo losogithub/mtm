@@ -97,11 +97,6 @@
   -webkit-transition: none !important;
   transition: none !important;
 }
-.SpitCount {
-  color: #bdc3c7;
-  font-size: 12px;
-  white-space: nowrap;
-}
 /*条目*/
 .WidgetItemList {
   list-style: none;
@@ -430,12 +425,19 @@ tags-input .tags .input.invalid-tag {
 tags-input.ng-invalid .tags {
   border: 2px solid #e74c3c;
 }
+.SpitCount,
+.CommentCount {
+  color: #bdc3c7;
+  font-size: 12px;
+  white-space: nowrap;
+}
 .SpitBubble {
   box-shadow: 0 0 15px #95a5a6;
   position: fixed;
   top: 0;
   bottom: 0;
   display: none;
+  z-index: 1;
 }
 @media (min-width: 992px) {
   .SpitBubble {
@@ -451,14 +453,21 @@ tags-input.ng-invalid .tags {
   overflow: hidden;
   position: absolute;
   top: 111px;
-  right: 20px;
+  right: 0;
   bottom: 20px;
   left: 20px;
+  padding-right: 20px;
 }
 .SpitBubble .Spits .Spit {
   line-height: 1.4;
 }
 .SpitBubble .Spits .Spit button {
+  vertical-align: baseline;
+}
+.Comments .Comment {
+  line-height: 1.4;
+}
+.Comments .Comment button {
   vertical-align: baseline;
 }
 .HoverHelper {
@@ -468,7 +477,7 @@ tags-input.ng-invalid .tags {
   right: -30px;
   width: 30px;
   display: none;
-  z-index: 1;
+  z-index: 2;
 }
 .Arrow {
   position: absolute;
