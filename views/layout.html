@@ -81,7 +81,7 @@
       </button>
     </div>
     <ul class="nav navbar-nav navbar-right hidden-xs">
-      <% if (!locals.yourself.loginName) { %>
+      <% if (!locals.yourself) { %>
       <li><a href="/signup">注册</a></li>
       <li><a class="ShowLogin" href="##">登录</a></li>
       <li><a href="/topic/create"><i class="fa fa-puzzle-piece"></i> 开始策展</a></li>
@@ -131,7 +131,7 @@
               <input name=si type=hidden value="shizier.com">
             </form>
           </li>
-          <% if (!locals.yourself.loginName) { %>
+          <% if (!locals.yourself) { %>
           <li><a href="/signup">注册</a></li>
           <li><a href="/login">登录</a></li>
           <li><a href="/topic/create"><i class="fa fa-puzzle-piece"></i> 开始策展</a></li>

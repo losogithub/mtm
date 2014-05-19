@@ -188,7 +188,7 @@
         </div>
 
         <div class="SpitWrapper hidden-xs hidden-sm">
-          <div class="SpitBubble background-white mvl" style="border-radius: 6px;"
+          <div class="SpitBubble background-clouds-lighten mvl" style="border-radius: 6px;"
                ng-controller="SpitCtrl">
             <form class="background-clouds-darken phl ptl clearfix" style="border-radius: 6px 6px 0 0;"
                   ng-submit="submit()">
@@ -226,18 +226,18 @@
 
       </div>
       <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-8 col-lg-7">
-        <div class="background-white mtl phl ptl pbm" style="border-radius: 6px;"
+        <div class="background-white mtl phl pbm" style="border-radius: 6px;"
              ng-init="comments = <%= JSON.stringify(locals.comments) %>;
               topicId = <%= JSON.stringify(locals.topic._id) %>;
               yourself = {
-                _id: '<%= locals.yourself._id %>',
-                loginName: '<%= locals.yourself.loginName %>',
-                url: '<%= locals.yourself.url %>'
+                _id: '<%= locals.yourself && locals.yourself._id %>',
+                loginName: '<%= locals.yourself && locals.yourself.loginName %>',
+                url: '<%= locals.yourself && locals.yourself.url %>'
               };
               init();"
              ng-controller="CommentCtrl">
           <% if (locals.yourself) { %>
-          <div class="clearfix background-clouds-darken phl ptl" style="border-radius: 6px 6px 0 0;margin: -20px -20px 0;">
+          <div class="clearfix background-clouds-darken phl ptl" style="border-radius: 6px 6px 0 0;margin: 0 -20px;">
             <a class="img-circle-border pull-left mrm"
                href="/u/{{yourself.loginName}}">
               <img class="img-circle" width="50" height="50" ng-src="{{yourself.url || '/images/no_img/user_80x80.png'}}">
@@ -257,7 +257,7 @@
             </div>
           </div>
           <% } %>
-          <div class="CommentCount text-center mtm">
+          <div class="CommentCount text-center ptm">
             <i class="fa fa-comment-o"></i>
             共{{comments.length}}条评论
           </div>

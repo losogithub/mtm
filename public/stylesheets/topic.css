@@ -483,7 +483,7 @@ tags-input.ng-invalid .tags {
   position: absolute;
   top: 25px;
   left: -30px;
-  border-right-color: white !important;
+  border-right-color: #f8f9fa !important;
   border: 15px solid transparent;
 }
 .ps-container .ps-scrollbar-y-rail {

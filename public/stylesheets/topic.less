@@ -42,7 +42,7 @@
 }
 
 .WidgetItemList .Hoverable {
-  &:hover, &.Hover { background-color: lighten(@color-clouds, 4%); }
+  &:hover, &.Hover { background-color: @color-clouds-lighten; }
 
   .LINK,
   .LINK_CREATE,
@@ -108,7 +108,7 @@
 
   .WEIBO {
     .Retweeted {
-      background-color: darken(@color-clouds, 4%); border-radius: 6px;
+      background-color: @color-clouds-darken; border-radius: 6px;
       padding: 5px 10px; margin: 10px 0; font-size: 80%;
     }
     .Avatar {
@@ -283,7 +283,7 @@ tags-input {
 
 .Arrow {
   position: absolute; top: 25px; left: -30px;
-  border-right-color: white !important;
+  border-right-color: @color-clouds-lighten !important;
   border: 15px solid transparent;
 }
 
