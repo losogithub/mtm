@@ -27,35 +27,35 @@ function _updateRelatedTopics() {
 }
 
 function _countTopics(callback, results) {
-  async.forEachSeries(results.topics, function (topic, callback) {
-    setTimeout(function () {
-      var temp = {};
-      Common.Topic[topic._id] = Common.Topic[topic._id] || {};
-      var temp2 = [];
-      results.topics.forEach(function (topic2) {
-        if (topic._id.equals(topic2._id)) {
-          return;
-        }
-        var sameTagsCount = 0;
-        topic.tags.forEach(function (tag) {
-          topic2.tags.forEach(function (tag2) {
-            if (tag == tag2) {
-              sameTagsCount++;
-            }
-          });
-        });
-        temp2.push(topic2._id);
-        temp[topic2._id] = 100 * sameTagsCount
-          + 10 * (topic.category == topic2.category ? 1 : 0)
-          + (topic.author_id.equals(topic2.author_id) ? 1 : 0);
-      });
-      temp2.sort(function (a, b) {
-        return temp[b] - temp[a];
-      });
-      Common.Topic[topic._id].relatedTopics = temp2;
-      callback();
-    }, 1000);
-  }, callback);
+//  async.forEachSeries(results.topics, function (topic, callback) {
+//    setTimeout(function () {
+//      var temp = {};
+//      Common.Topic[topic._id] = Common.Topic[topic._id] || {};
+//      var temp2 = [];
+//      results.topics.forEach(function (topic2) {
+//        if (topic._id.equals(topic2._id)) {
+//          return;
+//        }
+//        var sameTagsCount = 0;
+//        topic.tags.forEach(function (tag) {
+//          topic2.tags.forEach(function (tag2) {
+//            if (tag == tag2) {
+//              sameTagsCount++;
+//            }
+//          });
+//        });
+//        temp2.push(topic2._id);
+//        temp[topic2._id] = 100 * sameTagsCount
+//          + 10 * (topic.category == topic2.category ? 1 : 0)
+//          + (topic.author_id.equals(topic2.author_id) ? 1 : 0);
+//      });
+//      temp2.sort(function (a, b) {
+//        return temp[b] - temp[a];
+//      });
+//      Common.Topic[topic._id].relatedTopics = temp2;
+//      callback();
+//    }, 1000);
+//  }, callback);
 }
 
 function _update() {
