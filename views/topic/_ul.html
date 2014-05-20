@@ -1,11 +1,11 @@
 <ul class="WidgetItemList WidgetItemList-Main">
-  <% for (var i in locals.items) { %>
+  <% for (var i = 0; i < locals.items.length; i++) { %>
   <% var item = items[i] %>
 
   <li class="<%= item && item.type || '' %>"
       data-options="<%= item && JSON.stringify(item) || '' %>">
     <div class="Hoverable">
-      <div class="ItemNumber"><%= i %></div>
+      <div class="ItemNumber"><%= i + 1 %></div>
       <div class="Item pal">
 
         <% if (item.type == 'LINK') { %>
