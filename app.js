@@ -76,8 +76,8 @@ routes(app);
 
 //error log middle ware
 app.use(function (err, req, res, next) {
-  console.error(err.stack || err);
-  var meta = '[' + new Date() + '] ' + req.url + '\n';
+  var meta = '[' + new Date() + '] ' + req.url + '\nreferer:' + req.header.referer + '\n';
+  console.error(meta + err.stack || err);
   errorLogFile.write(meta + err.stack || err + '\n');
   var accept = req.headers.accept || '';
   if (~accept.indexOf('html')) {
