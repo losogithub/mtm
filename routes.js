@@ -43,7 +43,7 @@ module.exports = function (app) {
   app.get('/topic/:topicId', widget.band, topic.showIndex);
   app.get('/topic/:topicId/edit', auth.loginRequired, topic.showEdit);
   app.get('/topic/:topicId/chang', topic.showChang);
-  app.get('/topic/:topicId/share_chang', topic.showShareChang);
+//  app.get('/topic/:topicId/share_chang', topic.showShareChang);
   app.post('/topic/item', auth.userRequired, topic.createItem);
   app.put('/topic/sort', auth.userRequired, topic.sortItem);
   app.put('/topic/insert', auth.userRequired, topic.insertItem);
