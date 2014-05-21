@@ -214,10 +214,10 @@ function start() {
   Topic.updateTopicSiteCount();
 
   _routine();
-  _updateRelatedTopics();
+//  _updateRelatedTopics();
 
   setInterval(_routine, 60 * 1000);
-  setInterval(_updateRelatedTopics, 60 * 60 * 1000);
+//  setInterval(_updateRelatedTopics, 60 * 60 * 1000);
   setInterval(_clearIP, 24 * 60 * 60 * 1000);
 }
 
