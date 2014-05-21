@@ -79,7 +79,7 @@
       <div class="col-md-7 col-lg-8">
 
         <div class="background-white pal mtl" style="border-radius: 6px;">
-          <% var topics = categoryTopics[key].slice(0, 4); %>
+          <% var topics = categoryTopics[key] ? categoryTopics[key].slice(0, 4) : []; %>
           <% include _topics.html %>
           <a class="text-muted pull-right" href="/<%= temp[key] %>"
              style="font-size: 14px; line-height: 1;">
@@ -91,10 +91,10 @@
       </div>
       <div class="col-md-5 col-lg-4">
 
-        <% var tags = categoryTags[key] %>
+        <% var tags = categoryTags[key] || [] %>
         <% include _tags.html %>
 
-        <% var authors = categoryAuthors[key] %>
+        <% var authors = categoryAuthors[key] || [] %>
         <% include _authors.html %>
 
       </div>

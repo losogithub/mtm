@@ -15,8 +15,6 @@ var User = require('../proxy').User;
 //var topicsInIndex = 24;
 //var newTopicsPerPage = 19;
 var topicsPerPage = 12;
-var topicsInIndex = 12;
-var newTopicsPerPage = 10;
 
 function index(req, res) {
   var featuredTopics = Common.FeaturedTopics;
@@ -49,10 +47,7 @@ function index(req, res) {
       totalTopicCount: Common.TopList.totalTopicCount,
       categoryTopicCount: Common.TopList.categoryTopicCount,
       featuredTopics: featuredTopics,
-      hot: Common.TopList.hotTopics.slice(0, topicsInIndex),
       categoryTopics : Common.TopList.categoryTopics,
-      realGood: Common.TopList.classicTopics.slice(0, topicsInIndex),
-      newTopics: Common.TopList.newTopics.slice(0, newTopicsPerPage),
       authorCategoryList: Common.AuthorCategoryList,
       Tags: Common.Tags,
       Topic: Common.Topic,
@@ -65,7 +60,9 @@ function index(req, res) {
 function showNew(req, res) {
   var currentPage = parseInt(req.query.page) || 1;
 
-  var newTopicsPage = Common.TopList.newTopics.slice((currentPage - 1) * topicsPerPage, currentPage * topicsPerPage);
+  var newTopicsPage = Common.TopList.newTopics
+    ? Common.TopList.newTopics.slice((currentPage - 1) * topicsPerPage, currentPage * topicsPerPage)
+    : [];
   var totalPages = Math.ceil(Common.TopList.newTopics.length / topicsPerPage);
 
   res.render('category', {
@@ -87,7 +84,9 @@ function showCategory(req, res) {
   console.log(Common.CATEGORIES2CHN);
   console.log(res.locals.categoryType);
 
-  var categoryTopicsPage = Common.TopList.categoryTopics[category].slice((currentPage - 1) * topicsPerPage, currentPage * topicsPerPage);
+  var categoryTopicsPage = Common.TopList.categoryTopics[category]
+    ? Common.TopList.categoryTopics[category].slice((currentPage - 1) * topicsPerPage, currentPage * topicsPerPage)
+    : [];
   var totalPages = Math.ceil(Common.TopList.categoryTopics[category].length / topicsPerPage);
 
   res.render('category', {

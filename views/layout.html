@@ -2,7 +2,7 @@
 <% var temp = !locals.body ? null : locals.body.match(/^<!\-\-([^#]*)##/); %>
 <% temp = !temp ? null : !temp[1] ? null : temp[1] %>
 <% locals.pageType = locals.pageType || temp; %>
-<html lang="zh-cn" ng-app="sng" class="<%= locals.pageType || '' %>">
+<html lang="zh-cn" ng-app="sng" class="<%= locals.pageType || '' %>" xmlns:wb=“http://open.weibo.com/wb”>
 <head>
   <title><%= locals.title ? title + ' - 石子儿' : '石子儿 - 互联网内容策展' %></title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -11,6 +11,15 @@
   <meta name="description" content="<%= locals.description
     || '把各种各样的信息，自由地搭配组合，策展成一个页面保存起来，展示给感兴趣的人。我们致力于让任何人都可以策展信息，让其他人和信息相遇、相会。' %>">
   <meta name="keyword" content="石子儿，石子，石子网，石子儿网，石子微集，策展，互联网内容策展">
+  <% if (locals.pageType == 'TOPIC') { %>
+  <!--必填-->
+  <meta property="og:type" content="webpage" />
+  <meta property="og:url" content="http://shizier.com/topic/<%= topic._id %>" />
+  <meta property="og:title" content="<%= topic.title %>" />
+  <meta property="og:description" content="<%= topic.description || '' %>" />
+  <!--选填-->
+  <meta property="og:image" content="<%= topic.cover_url %>" />
+  <% } %>
 
   <link href="/stylesheets/bootstrap.min.css" rel="stylesheet">
   <!--<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">-->

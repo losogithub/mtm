@@ -37,7 +37,9 @@ function showIndex(req, res, next) {
       if (!Common.Topic[topicId] || !Common.Topic[topicId].relatedTopics) {
         return callback(null, []);
       }
-      async.mapSeries(Common.Topic[topicId].relatedTopics.slice(0, 5), function (topicId, callback) {
+      async.mapSeries(Common.Topic[topicId].relatedTopics
+        ? Common.Topic[topicId].relatedTopics.slice(0, 5)
+        : [], function (topicId, callback) {
         Topic.getTopicById(topicId, callback);
       }, callback);
     },
