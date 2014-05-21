@@ -83,34 +83,40 @@ function _countTags(callback, results) {
   var categories = {};
   var authorIds = {};
   var relatives = {};
-  results.topics.forEach(function (topic) {
-    topic.tags.forEach(function (tagText) {
-      topicCounts[tagText] = topicCounts[tagText] || 0;
-      topicCounts[tagText]++;
+  async.forEachSeries(results.topics, function (topic, callback) {
+    setTimeout(function () {
+      topic.tags.forEach(function (tagText) {
+        topicCounts[tagText] = topicCounts[tagText] || 0;
+        topicCounts[tagText]++;
 
-      categories[tagText] = categories[tagText] || {};
-      categories[tagText][topic.category] = categories[tagText][topic.category] || 0;
-      categories[tagText][topic.category]++;
+        categories[tagText] = categories[tagText] || {};
+        categories[tagText][topic.category] = categories[tagText][topic.category] || 0;
+        categories[tagText][topic.category]++;
 
-      authorIds[tagText] = authorIds[tagText] || {};
-      authorIds[tagText][topic.author_id] = authorIds[tagText][topic.author_id] || 0;
-      authorIds[tagText][topic.author_id]++;
+        authorIds[tagText] = authorIds[tagText] || {};
+        authorIds[tagText][topic.author_id] = authorIds[tagText][topic.author_id] || 0;
+        authorIds[tagText][topic.author_id]++;
 
-      relatives[tagText] = relatives[tagText] || {};
-      topic.tags.forEach(function (tagText2) {
-        if (tagText == tagText2) {
-          return;
-        }
-        relatives[tagText][tagText2] = relatives[tagText][tagText2] || 0;
-        relatives[tagText][tagText2]++;
+        relatives[tagText] = relatives[tagText] || {};
+        topic.tags.forEach(function (tagText2) {
+          if (tagText == tagText2) {
+            return;
+          }
+          relatives[tagText][tagText2] = relatives[tagText][tagText2] || 0;
+          relatives[tagText][tagText2]++;
+        });
       });
+      callback();
+    }, 10);
+  }, function (err) {
+    if (err) return callback(err);
+
+    callback(null, {
+      topicCounts: topicCounts,
+      categories: categories,
+      authorIds: authorIds,
+      relatives: relatives
     });
-  });
-  callback(null, {
-    topicCounts: topicCounts,
-    categories: categories,
-    authorIds: authorIds,
-    relatives: relatives
   });
 }
 
@@ -162,21 +168,23 @@ function _countAuthors(callback, results) {
   var tempAuthorTopicCount = {};
   var tempAuthorPVCount = {};
   var tempAuthorCategories = {};
-  results.topics.forEach(function (topic) {
-    tempAuthorTopicCount[topic.author_name] = tempAuthorTopicCount[topic.author_name] || 0;
-    tempAuthorTopicCount[topic.author_name] ++;
-    tempAuthorPVCount[topic.author_name] = tempAuthorPVCount[topic.author_name] || 0;
-    tempAuthorPVCount[topic.author_name] += topic.PV_count + Math.ceil(Math.log((Date.now() - topic.publishDate.getTime())/100000000 + 1) * 100);
+  async.forEachSeries(results.topics, function (topic, callback) {
+    setTimeout(function () {
+      tempAuthorTopicCount[topic.author_name] = tempAuthorTopicCount[topic.author_name] || 0;
+      tempAuthorTopicCount[topic.author_name] ++;
+      tempAuthorPVCount[topic.author_name] = tempAuthorPVCount[topic.author_name] || 0;
+      tempAuthorPVCount[topic.author_name] += topic.PV_count + Math.ceil(Math.log((Date.now() - topic.publishDate.getTime())/100000000 + 1) * 100);
 
-    var categories = tempAuthorCategories[topic.author_name]
-      = tempAuthorCategories[topic.author_name] || {};
-    categories[topic.category] = categories[topic.category] || 0;
-    categories[topic.category]++;
-  });
+      var categories = tempAuthorCategories[topic.author_name]
+        = tempAuthorCategories[topic.author_name] || {};
+      categories[topic.category] = categories[topic.category] || 0;
+      categories[topic.category]++;
+      callback();
+    }, 10);
+  }, callback);
   Common.AuthorTopicCount = tempAuthorTopicCount;
   Common.AuthorPVCount = tempAuthorPVCount;
   Common.AuthorCategories = tempAuthorCategories;
-  callback(null);
 }
 
 function _calcAuthors(callback) {
