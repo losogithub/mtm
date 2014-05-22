@@ -87,9 +87,9 @@
 
             <p class="text-muted text-right mts" style="font-size: 14px;">
               <i class="fa fa-puzzle-piece"></i> 策展了来自
-              <b class="text-default"><%= Topic[topic._id] && Topic[topic._id].siteCount %></b>
+              <b class="text-default"><%= Topic[topic._id] && Topic[topic._id].siteCount || 0 %></b>
               个网站的
-              <span class="text-default"><%= Topic[topic._id] && Topic[topic._id].urlCount %></span>
+              <span class="text-default"><%= Topic[topic._id] && Topic[topic._id].urlCount || 0 %></span>
               条碎片信息
             </p>
 
