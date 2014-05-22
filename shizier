@@ -28,25 +28,6 @@ CONFIG_DIR=$APP_DIR/config
 
 
 case "$1" in
-    start)
-        set -- $(pgrep -f 'node')
-        pid=$1
-        if [ $pid ]
-        then
-            echo "node process ${pid} exists, process is already running"
-        else
-            echo "Starting node app..."
-            NODE_ENV=$NODE_ENV NODE_CONFIG_DIR=$CONFIG_DIR $NODE_EXEC $APP_DIR/$NODE_APP  1>$LOG_FILE 2>&1 &
-            sleep 2
-            if
-                pgrep -f 'node'
-            then
-                echo "start successfully"
-            else
-                echo "start failed"
-            fi
-        fi
-        ;;
 
     stop)
         set -- $(pgrep -f 'node')
@@ -55,7 +36,7 @@ case "$1" in
         then
             echo "Stopping $APP_DIR/$NODE_APP ..."
             echo "Killing ${pid}"
-            kill ${pid};
+            kill -9 ${pid};
             sleep 2
             if
                 pgrep -f 'node'
@@ -69,34 +50,27 @@ case "$1" in
         fi
         ;;
 
-    restart)
+    start)
         set -- $(pgrep -f 'node')
         pid=$1
         if [ $pid ]
         then
             echo "Restarting $APP_DIR/$NODE_APP ..."
-            echo "Killing ${pid}"
-            kill ${pid};
-            sleep 2
-            if
-                pgrep -f 'node'
-            then
-                echo "stop failed"
-            else
-                echo "stop successfully"
-            fi
-            NODE_ENV=$NODE_ENV NODE_CONFIG_DIR=$CONFIG_DIR $NODE_EXEC $APP_DIR/$NODE_APP  1>$LOG_FILE 2>&1 &
-            sleep 2
-            if
-                pgrep -f 'node'
-            then
-                echo "start successfully"
-            else
-                echo "start failed"
-            fi
-            echo "Node restarted !"
+            echo "Killing  ${pid}"
+            kill -9 ${pid};
         else
             echo "node process is not running"
+        fi    
+        sleep 2
+        echo "start node process"
+        NODE_ENV=$NODE_ENV NODE_CONFIG_DIR=$CONFIG_DIR $NODE_EXEC $APP_DIR/$NODE_APP  1>$LOG_FILE 2>&1 &
+        sleep 2
+        if
+            pgrep -f 'node'
+        then
+            echo "start successfully"
+        else
+            echo "start failed"
         fi
         ;;
 
@@ -112,6 +86,6 @@ case "$1" in
         ;;
 
     *)
-        echo "Usage: /etc/init.d/node-app {start|stop|restart|status}"
+        echo "Usage: /etc/init.d/node-app {start|stop|status}"
     ;;
 esac

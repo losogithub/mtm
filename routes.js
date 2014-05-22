@@ -19,6 +19,7 @@ var tag = require('./controllers/tag');
 var user = require('./controllers/user');
 var support = require('./controllers/support');
 var about = require('./controllers/about');
+//var manage = require('./controllers/manage');
 
 module.exports = function (app) {
   app.get('/test', function (req, res) {
@@ -121,6 +122,10 @@ module.exports = function (app) {
    app.get('/reset_pass', sign.reset_pass);
    app.post('/reset_pass', sign.update_pass);
    */
+
+ //group email sending
+ //app.get('/manage/groupemail', manage.showGroupEmail);
+
 
   //About
   app.get('/about', about.showAbout);
