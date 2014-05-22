@@ -94,10 +94,10 @@ exports.sendGroupMail = function(userList, subject ,data){
     var from = config.mail_opts.auth.user;
     var subject = subject;
     var html = '<p>' + data + '</p>';
-    userList.forEach(sendEachMail(to){
+    userList.forEach(function(to){
         sendMail({
             from: from,
-            to: to,
+            to: to.email,
             subject: subject,
             html: html
         });
