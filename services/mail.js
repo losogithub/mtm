@@ -19,19 +19,18 @@ var SITE_ROOT_URL = 'http://' + config.hostname;
  */
 var sendMail = function (data) {
 
-/*
+  /*
     if (config.debug) {
         console.log('******************** 在测试环境下，不会真的发送邮件*******************');
         for (var k in data) {
             console.log('%s: %s', k, data[k]);
         }
         return;
-    }
-    */
+    }*/
     // 遍历邮件数组，发送每一封邮件，如果有发送失败的，就再压入数组，同时触发mailEvent事件
     // the function said doesn't be implememted. 9.21.2013 taozan
 
-    transport.sendmail(data, function (err) {
+    transport.sendMail(data, function (err) {
         if (err) {
           // 写为日志
           console.log(err);
@@ -95,10 +94,10 @@ exports.sendGroupMail = function(userList, subject ,data){
     var from = config.mail_opts.auth.user;
     var subject = subject;
     var html = '<p>' + data + '</p>';
-    userList.forEach(function(to){
+    userList.forEach(sendEachMail(to){
         sendMail({
             from: from,
-            to: to.email,
+            to: to,
             subject: subject,
             html: html
         });
