@@ -19,7 +19,7 @@ var tag = require('./controllers/tag');
 var user = require('./controllers/user');
 var support = require('./controllers/support');
 var about = require('./controllers/about');
-//var manage = require('./controllers/manage');
+var manage = require('./controllers/manage');
 
 module.exports = function (app) {
   app.get('/test', function (req, res) {
@@ -124,8 +124,8 @@ module.exports = function (app) {
    */
 
  //group email sending
- //app.get('/manage/groupemail', manage.showGroupEmail);
-
+ app.get('/manage/groupemail', manage.showGroupEmail);
+ app.post('/manage/groupemail', manage.sendGroupMail);
 
   //About
   app.get('/about', about.showAbout);
