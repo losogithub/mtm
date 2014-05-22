@@ -63,7 +63,7 @@ function showTag(req, res, next) {
       totalPage: totalPages,
       currentPage: currentPage,
       authors: authors,
-      authorCategoryList: Common.AuthorCategoryList,
+      AuthorCategoryList: Common.AuthorCategoryList,
       topics: tagTopicsPage,
       Topic: Common.Topic
     });

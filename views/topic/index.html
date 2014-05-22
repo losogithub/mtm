@@ -87,9 +87,9 @@
 
             <p class="text-muted text-right mts" style="font-size: 14px;">
               <i class="fa fa-puzzle-piece"></i> 策展了来自
-              <b class="text-default"><%= Topic[topic._id] && Topic[topic._id].siteCount || 0 %></b>
+              <b class="text-default"><%= Topic && Topic[topic._id] && Topic[topic._id].siteCount || 0 %></b>
               个网站的
-              <span class="text-default"><%= Topic[topic._id] && Topic[topic._id].urlCount || 0 %></span>
+              <span class="text-default"><%= Topic && Topic[topic._id] && Topic[topic._id].urlCount || 0 %></span>
               条碎片信息
             </p>
 
@@ -158,9 +158,11 @@
               </a>
             </h1>
             <p class="mtm mbn text-muted small" style="line-height: 1;">
-              <% if (authorCategoryList[author.loginName]) { %>
+              <% if (AuthorCategoryList && AuthorCategoryList[author.loginName]) { %>
               <% for (var i = 0; i < 3; i++) { %>
-              <% var tempCategory = authorCategoryList[author.loginName][i]; %>
+              <% var tempCategory = AuthorCategoryList
+                && AuthorCategoryList[author.loginName]
+                && AuthorCategoryList[author.loginName][i]; %>
               <% if (!tempCategory) { break; } %>
               <i class="fa fa-bookmark-o"></i>
               <a target="_blank" class="text-muted mrs"

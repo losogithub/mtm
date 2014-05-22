@@ -122,7 +122,6 @@ function showIndex(req, res, next) {
     var author = results.author;
     var items = results.items;
     var comments = results.comments;
-    console.log(comments)
     var spits = results.spits;
 
     var itemsData = [];
@@ -139,7 +138,6 @@ function showIndex(req, res, next) {
       //check in FVTopicList
       var likeList = res.locals.yourself.FVTopicList;
       if (likeList.indexOf(topic._id) > -1) {
-        console.log("liked before");
         liked = true;
       }
     }
@@ -187,7 +185,7 @@ function showIndex(req, res, next) {
       comments: comments,
       spits: spits,
       author: author,
-      authorCategoryList: Common.AuthorCategoryList,
+      AuthorCategoryList: Common.AuthorCategoryList,
       CATEGORIES2ENG: Common.CATEGORIES2ENG,
       liked: liked
     });

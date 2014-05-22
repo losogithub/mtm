@@ -48,7 +48,7 @@ function index(req, res) {
       categoryTopicCount: Common.TopList.categoryTopicCount,
       featuredTopics: featuredTopics,
       categoryTopics : Common.TopList.categoryTopics,
-      authorCategoryList: Common.AuthorCategoryList,
+      AuthorCategoryList: Common.AuthorCategoryList,
       Tags: Common.Tags,
       Topic: Common.Topic,
       categoryAuthors: Common.TopList.categoryAuthors,
@@ -63,7 +63,9 @@ function showNew(req, res) {
   var newTopicsPage = Common.TopList.newTopics
     ? Common.TopList.newTopics.slice((currentPage - 1) * topicsPerPage, currentPage * topicsPerPage)
     : [];
-  var totalPages = Math.ceil(Common.TopList.newTopics.length / topicsPerPage);
+  var totalPages = Math.ceil(Common.TopList.newTopics
+    ? Common.TopList.newTopics.length / topicsPerPage
+    : 0);
 
   res.render('category', {
     title: '最新',
@@ -81,13 +83,13 @@ function showNew(req, res) {
 function showCategory(req, res) {
   var currentPage = parseInt(req.query.page) || 1;
   var category = Common.CATEGORIES2CHN[res.locals.categoryType];
-  console.log(Common.CATEGORIES2CHN);
-  console.log(res.locals.categoryType);
 
   var categoryTopicsPage = Common.TopList.categoryTopics[category]
     ? Common.TopList.categoryTopics[category].slice((currentPage - 1) * topicsPerPage, currentPage * topicsPerPage)
     : [];
-  var totalPages = Math.ceil(Common.TopList.categoryTopics[category].length / topicsPerPage);
+  var totalPages = Math.ceil(Common.TopList.categoryTopics[category]
+    ? Common.TopList.categoryTopics[category].length / topicsPerPage
+    : 0);
 
   res.render('category', {
     title: category,
@@ -99,7 +101,7 @@ function showCategory(req, res) {
     totalPage: totalPages,
     currentPage: currentPage,
     authors: Common.TopList.categoryAuthors[category],
-    authorCategoryList: Common.AuthorCategoryList,
+    AuthorCategoryList: Common.AuthorCategoryList,
     tags: Common.TopList.categoryTags[category],
     Tags: Common.Tags,
     Topic: Common.Topic

@@ -1,4 +1,4 @@
-<% if (tags.length) { %>
+<% if (authors && authors.length) { %>
 <div class="Authors background-white pll ptl mtl" style="border-radius: 6px;">
   <% for (var i in authors) { %>
   <% if (i == 4 && pageType == 'INDEX') { break; } %>
@@ -15,7 +15,9 @@
     <small class="Authors_Name text-center" title="<%= author.loginName %>"><%= author.loginName %></small>
     <small class="Authors_Category text-center">
       <i class="fa fa-bookmark-o"></i>
-      <%= authorCategoryList[author.loginName][0] %>
+      <%= AuthorCategoryList
+        && AuthorCategoryList[author.loginName]
+        && AuthorCategoryList[author.loginName][0] %>
     </small>
     <% } %>
 

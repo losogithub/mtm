@@ -45,18 +45,18 @@
         </div>
         <div class="pull-right hidden-xs" style="font-size: 12px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
           <i class="fa fa-puzzle-piece"></i> 策展了来自
-          <b class="text-asbestos"><%= Topic[topic._id] && Topic[topic._id].siteCount || 0 %></b>
+          <b class="text-asbestos"><%= Topic && Topic[topic._id] && Topic[topic._id].siteCount || 0 %></b>
           个网站的
-          <span class="text-asbestos"><%= Topic[topic._id] && Topic[topic._id].urlCount || 0 %></span>
+          <span class="text-asbestos"><%= Topic && Topic[topic._id] && Topic[topic._id].urlCount || 0 %></span>
           条碎片信息
         </div>
         <div class="pull-right visible-xs"
              style="font-size: 12px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"
           title="策展了来自 <%= Topic[topic._id] && Topic[topic._id].siteCount || 0 %> 个网站的 <%= Topic[topic._id] && Topic[topic._id].urlCount || 0 %> 条碎片信息">
           <i class="fa fa-globe"></i>
-          <b class="text-asbestos"><%= Topic[topic._id] && Topic[topic._id].siteCount || 0 %></b>
+          <b class="text-asbestos"><%= Topic && Topic[topic._id] && Topic[topic._id].siteCount || 0 %></b>
           <i class="fa fa-puzzle-piece mls"></i>
-          <span class="text-asbestos"><%= Topic[topic._id] && Topic[topic._id].urlCount || 0 %></span>
+          <span class="text-asbestos"><%= Topic && Topic[topic._id] && Topic[topic._id].urlCount || 0 %></span>
         </div>
       </div>
     </div>

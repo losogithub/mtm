@@ -24,10 +24,6 @@ var path = require('path');
 var urlinfo = require('url').parse(config.host);
 config.hostname = urlinfo.hostname || config.host;
 
-//global variables instaitate.
-//e.g. hotopicsData, updateTopicsData
-require('./routine').start();
-
 //deleted outdated images
 //require('./offlineProcess/changPictureUpdate')();
 
@@ -116,6 +112,10 @@ app.use(function (err, req, res, next) {
 //if(!module.parent){
 http.createServer(app).listen(config.port, function () {
   console.log('Listening on port ' + config.port);
+
+  //global variables instaitate.
+  //e.g. hotopicsData, updateTopicsData
+  require('./routine').start();
 });
 //}
 
