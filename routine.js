@@ -13,19 +13,14 @@ var TopicProxy = require('./proxy').Topic;
 var Topic = require('./controllers/topic');
 var Item = require('./proxy').Item;
 
-function _updateRelatedTopics() {
+function _updateRelatedTopics(callback) {
+  console.log('_updateRelatedTopics')
   async.auto({
     topics: function (callback) {
       TopicProxy.getPublishedTopics(callback);
     },
     countTopics: ['topics', _countTopics]
-  }, function (err) {
-    if (err) {
-      return console.error(err.stack);
-    }
-
-    console.log('_updateRelatedTopics done')
-  });
+  }, callback);
 }
 
 function _countTopics(callback, results) {
@@ -56,11 +51,11 @@ function _countTopics(callback, results) {
       });
       Common.Topic[topic._id].relatedTopics = temp2;
       callback();
-    }, 2000);
+    }, 0);
   }, callback);
 }
 
-function _update() {
+function _update(callback) {
   async.auto({
     topics: function (callback) {
       TopicProxy.getPublishedTopics(callback);
@@ -69,13 +64,7 @@ function _update() {
     calcTags: ['countTags', _calcTags],
     countAuthors: ['topics', 'calcTags', _countAuthors],
     calcAuthors: ['countAuthors', _calcAuthors]
-  }, function (err) {
-    if (err) {
-      return console.error(err.stack);
-    }
-
-    console.log('_update done')
-  });
+  }, callback);
 }
 
 function _countTags(callback, results) {
@@ -107,7 +96,7 @@ function _countTags(callback, results) {
         });
       });
       callback();
-    }, 10);
+    }, 0);
   }, function (err) {
     if (err) return callback(err);
 
@@ -161,7 +150,7 @@ function _calcTags(callback, results) {
         tags: tempTags//.slice(0, 13)
       };
       callback();
-    }, 10);
+    }, 0);
   }, function (err) {
     if (err) return callback(err);
 
@@ -186,7 +175,7 @@ function _countAuthors(callback, results) {
       categories[topic.category] = categories[topic.category] || 0;
       categories[topic.category]++;
       callback();
-    }, 10);
+    }, 0);
   }, function (err) {
     if (err) return callback(err);
 
@@ -212,10 +201,39 @@ function _calcAuthors(callback) {
   callback(null);
 }
 
+var RelatedCount = 0;
+
 function _routine() {
-  Topic.updateHotTopics();
-  Topic.updateCategoryTopics();
-  _update();
+  console.log('_routine');
+  async.series([
+    function (callback) {
+      Topic.updateHotTopics(callback);
+    },
+    function (callback) {
+      Topic.updateCategoryTopics(callback);
+    },
+    function (callback) {
+      _update(callback);
+    },
+    function (callback) {
+      if (RelatedCount == 0) {
+        _updateRelatedTopics(callback);
+      } else {
+        callback();
+      }
+      RelatedCount++;
+      if (RelatedCount == 60) {
+        RelatedCount = 0;
+      }
+    }
+  ], function (err) {
+    if (err) return console.error(err.stack);
+
+    console.log('_routine done')
+    setTimeout(function () {
+      _routine();
+    }, 60 * 1000);
+  });
 }
 
 /*
@@ -228,14 +246,17 @@ function _clearIP () {
 }
 
 function start() {
-  Topic.updateNewTopics();
-  Topic.updateTopicSiteCount();
+  async.series([
+    function (callback) {
+      Topic.updateNewTopics(callback);
+    },
+    function (callback) {
+      Topic.updateTopicSiteCount(callback);
+    }
+  ], function () {
+    _routine();
+  });
 
-  _routine();
-//  _updateRelatedTopics();
-
-  setInterval(_routine, 60 * 1000);
-//  setInterval(_updateRelatedTopics, 60 * 60 * 1000);
   setInterval(_clearIP, 24 * 60 * 60 * 1000);
 }
 
