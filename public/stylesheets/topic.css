@@ -500,3 +500,23 @@ tags-input.ng-invalid .tags {
   opacity: 0.2;
   filter: alpha(opacity=20);
 }
+.bdshare-button-style1-32 {
+  text-align: center;
+}
+.bdshare-button-style1-32 a {
+  float: none !important;
+  display: inline-block !important;
+}
+.WB_praise .praise_btn_line {
+  text-align: center;
+}
+.WB_praise .praise_btn_line .praise_btn {
+  float: none;
+  display: inline-block;
+}
+.WB_praise .praise_btn_line .praise_data {
+  float: none;
+  display: inline-block;
+  vertical-align: top;
+  height: 22px;
+}

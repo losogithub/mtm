@@ -37,7 +37,9 @@ function showIndex(req, res, next) {
       if (!Common.Topic[topicId] || !Common.Topic[topicId].relatedTopics) {
         return callback(null, []);
       }
-      async.mapSeries(Common.Topic[topicId].relatedTopics.slice(0, 5), function (topicId, callback) {
+      async.mapSeries(Common.Topic[topicId].relatedTopics
+        ? Common.Topic[topicId].relatedTopics.slice(0, 5)
+        : [], function (topicId, callback) {
         Topic.getTopicById(topicId, callback);
       }, callback);
     },
@@ -1215,13 +1217,17 @@ function removeTag(req, res, next) {
 /**
  * 下面是更新top列表的方法
  */
-function updateNewTopics() {
+function updateNewTopics(callback) {
+  callback = callback || function () {
+  };
+
   Topic.getNewTopics(function (err, topics) {
     if (err) {
-      return console.error(err.stack);
+      return callback();
     }
 
     Common.TopList.newTopics = topics;
+    callback();
   });
 }
 
@@ -1241,20 +1247,17 @@ function _scoreCompare(top1, top2) {
   return (top2.score - top1.score);
 }
 
-function updateHotTopics() {
+function updateHotTopics(callback) {
+  callback = callback || function () {
+  };
+
   Topic.getPublishedTopics(function (err, topics) {
-    if (err) {
-      return console.error(err.stack);
-    }
-    if (!topics) {
-      return;
-    }
+    if (err) return callback();
 
     for (var i in topics) {
       topics[i].score = _traditionalScore(topics[i].PV_count, topics[i].FVCount);
     }
 
-    console.log("更新热门策展");
     Common.TopList.classicTopics = topics.sort(_scoreCompare).slice(0, 120);
 
     var authorMap = {};
@@ -1311,78 +1314,74 @@ function updateHotTopics() {
       return (tagMap[b].score - tagMap[a].score);
     });
     Common.TopList.hotTags = tagTexts.slice(0, 13);
+    callback();
   });
 }
 
-function updateCategoryTopics() {
-  for (var category in Common.CATEGORIES2ENG) {
-    (function (category) {
-      Topic.getCategoryTopics(category, function (err, topics) {
-        if (err) {
-          return console.error(err.stack);
-        }
-        if (!topics) {
-          return;
-        }
+function updateCategoryTopics(callback) {
+  callback = callback || function () {
+  };
 
-        for (var i in topics) {
-          topics[i].score = _traditionalScore(topics[i].PV_count, topics[i].FVCount);
-        }
+  async.forEachSeries(Object.keys(Common.CATEGORIES2ENG), function (category, callback) {
+    Topic.getCategoryTopics(category, function (err, topics) {
+      if (err) return callback();
 
-        var authorMap = {};
-        var tagMap = {};
-        for (var i in topics) {
-          topics[i].score = _newHotScore(topics[i].score, topics[i].publishDate, topics[i].update_at);
-          authorMap[topics[i].author_id] = authorMap[topics[i].author_id] || { score: 0 };
-          authorMap[topics[i].author_id].score += topics[i].score;
-          for (var j = 0; j < topics[i].tags.length; j++) {
-            tagMap[topics[i].tags[j]] = tagMap[topics[i].tags[j]] || { score: 0 };
-            tagMap[topics[i].tags[j]].score += topics[i].score;
-          }
-        }
-        Common.TopList.categoryTopics[category] = topics.sort(_scoreCompare).slice(0, 120);
-        Common.TopList.categoryTopicCount[category] = topics.length;
+      for (var i in topics) {
+        topics[i].score = _traditionalScore(topics[i].PV_count, topics[i].FVCount);
+      }
 
-        var authorIds = [];
-        for (var id in authorMap) {
-          authorIds.push(id);
+      var authorMap = {};
+      var tagMap = {};
+      for (var i in topics) {
+        topics[i].score = _newHotScore(topics[i].score, topics[i].publishDate, topics[i].update_at);
+        authorMap[topics[i].author_id] = authorMap[topics[i].author_id] || { score: 0 };
+        authorMap[topics[i].author_id].score += topics[i].score;
+        for (var j = 0; j < topics[i].tags.length; j++) {
+          tagMap[topics[i].tags[j]] = tagMap[topics[i].tags[j]] || { score: 0 };
+          tagMap[topics[i].tags[j]].score += topics[i].score;
         }
-        authorIds.sort(function (a, b) {
-          return (authorMap[b].score - authorMap[a].score);
-        });
-        var hotAuthorIds = authorIds;//.slice(0, 7);
-        User.getUserByIds(hotAuthorIds, function (err, authors) {
-          authors.sort(function (a, b) {
-            return (authorMap[b._id].score - authorMap[a._id].score);
-          });
-          Common.TopList.categoryAuthors[category] = authors;
-        });
+      }
+      Common.TopList.categoryTopics[category] = topics.sort(_scoreCompare).slice(0, 120);
+      Common.TopList.categoryTopicCount[category] = topics.length;
 
-        var tagTexts = [];
-        for (var text in tagMap) {
-          tagTexts.push(text);
-        }
-        tagTexts.sort(function (a, b) {
-          return (tagMap[b].score - tagMap[a].score);
-        });
-        Common.TopList.categoryTags[category] = tagTexts;//.slice(0, 13);
+      var authorIds = [];
+      for (var id in authorMap) {
+        authorIds.push(id);
+      }
+      authorIds.sort(function (a, b) {
+        return (authorMap[b].score - authorMap[a].score);
       });
-    })(category);
-  }
+      var hotAuthorIds = authorIds;//.slice(0, 7);
+      User.getUserByIds(hotAuthorIds, function (err, authors) {
+        authors.sort(function (a, b) {
+          return (authorMap[b._id].score - authorMap[a._id].score);
+        });
+        Common.TopList.categoryAuthors[category] = authors;
+      });
+
+      var tagTexts = [];
+      for (var text in tagMap) {
+        tagTexts.push(text);
+      }
+      tagTexts.sort(function (a, b) {
+        return (tagMap[b].score - tagMap[a].score);
+      });
+      Common.TopList.categoryTags[category] = tagTexts;//.slice(0, 13);
+      callback();
+    });
+  }, callback);
 }
 
-function _updateSingleTopicSiteCount(topic, deleted) {
+function _updateSingleTopicSiteCount(topic, deleted, callback) {
+  callback = callback || function () {
+  };
+
   if (deleted) {
     delete Common.Topic[topic._id];
-    return;
+    return callback();
   }
   Item.getItems(topic, function (err, items) {
-    if (err) {
-      return;
-    }
-    if (!items) {
-      return;
-    }
+    if (err) return callback();
 
     var urlCount = 0;
     var siteList = [];
@@ -1399,18 +1398,22 @@ function _updateSingleTopicSiteCount(topic, deleted) {
       sites[site] = 1;
     });
     Common.Topic[topic._id].siteCount = Object.keys(sites).length;
+    callback();
   });
 }
 
-function updateTopicSiteCount() {
+function updateTopicSiteCount(callback) {
+  callback = callback || function () {
+  };
+
   Topic.getPublishedTopics(function (err, topics) {
     if (err) {
-      return console.error(err.stack);
+      return callback();
     }
 
-    topics.forEach(function (topic) {
-      _updateSingleTopicSiteCount(topic);
-    });
+    async.forEachSeries(topics, function (topic, callback) {
+      _updateSingleTopicSiteCount(topic, false, callback);
+    }, callback);
   });
 }
 

@@ -94,7 +94,7 @@ function getItems(topic, callback) {
         }
         if (!item) {
 //          return callback(new Error(500));
-          callback();
+          return callback();
         }
 
         items.push(item);

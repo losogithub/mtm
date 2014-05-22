@@ -188,22 +188,32 @@ window.sng.controller('SpitCtrl', function ($scope, $timeout) {
           $scope.itemType = options.type;
           $scope.itemId = options._id;
           _updateArrow();
-          $spitBubble.find('.AUTO_FOCUS').blur().focus();
           $spits.scrollTop(0);
           setTimeout(function () {
             $spits.perfectScrollbar('update');
           }, 0);
         });
       }
+      if ($spitBubble.is(':hidden')) {
+        $spitBubble.show();
+        setTimeout(function () {
+          $spitBubble.find('.AUTO_FOCUS').blur().focus();
+        }, 0);
+      }
       if ($item) {
         $item.addClass('Hover');
       }
-      $spitBubble.show();
     }, function () {
       if ($spitWrapper.is(':hidden')) {
         return;
       }
       $item.removeClass('Hover');
+    });
+  $('.WidgetItemList').add($spitWrapper)
+    .hover(null, function () {
+      if ($spitWrapper.is(':hidden')) {
+        return;
+      }
       $spitBubble.hide();
     });
 });
