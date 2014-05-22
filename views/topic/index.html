@@ -23,21 +23,25 @@
             <h1 class="h5 mtl visible-xs"><a href="/topic/<%= topic._id %>"><%= topic.title %></a></h1>
 
             <div class="clearfix mtm mbm">
-              <div class="pull-left">
-                <a href="/u/<%= author.loginName %>" title="<%= author.loginName %>">
-                  <img width="30" height="30" class="img-circle"
-                       style="display: inline-block; width: 30px; height: 30px;"
-                       src="<%= author.url || '/images/no_img/user_80x80.png' %>"
-                       alt="<%= author.loginName %>"
-                       onerror="shizier.errorImage(this,'user_80x80');">
-                  <%= author.loginName %>
-                </a>
-                <span class="text-muted small mls" title="更新日期">
-                  <%= topic.update_at.getFullYear() + '-'
-                        + (topic.update_at.getMonth() + 1) + '-'
-                        + topic.update_at.getDate() %>
-                </span>
-              </div>
+              <a class="pull-left mrs" href="/u/<%= author.loginName %>" title="<%= author.loginName %>">
+                <img width="30" height="30" class="img-circle"
+                     style="display: inline-block; width: 30px; height: 30px;"
+                     src="<%= author.url || '/images/no_img/user_80x80.png' %>"
+                     alt="<%= author.loginName %>"
+                     onerror="shizier.errorImage(this,'user_80x80');">
+                <%= author.loginName %>
+              </a>
+              <span class="text-muted small pull-left" title="更新日期">
+                <% function _prefixZero(num) {
+                  return num < 10 ? '0' + num : num;
+                } %>
+                <%= topic.update_at.getFullYear() + '-'
+                      + _prefixZero(topic.update_at.getMonth() + 1) + '-'
+                      + _prefixZero(topic.update_at.getDate()) + ' '
+                      + _prefixZero(topic.update_at.getHours()) + ':'
+                      + _prefixZero(topic.update_at.getMinutes()) + ':'
+                      + _prefixZero(topic.update_at.getSeconds()) %>
+              </span>
               <div class="pull-right">
                 <% if (locals.isAuthor) { %>
                 <a class="btn btn-link"

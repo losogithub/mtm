@@ -189,13 +189,13 @@ function showIndex(req, res, next) {
       CATEGORIES2ENG: Common.CATEGORIES2ENG,
       liked: liked
     });
-//
-//    var key = topicId.toString() + req.connection.remoteAddress;
-//    if (!Common.TopicVisitedKeys[key]) {
-//      Common.TopicVisitedKeys[key] = true;
-//      Topic.increasePVCountBy(topic, 1).exec();
-//    }
-//    console.log('showIndex done');
+
+    var key = topicId + req.connection.remoteAddress;
+    if (!Common.TopicVisitedKeys[key]) {
+      Common.TopicVisitedKeys[key] = true;
+      Topic.increasePVCountBy(topic, 1).exec();
+    }
+    console.log('showIndex done');
   });
 }
 
