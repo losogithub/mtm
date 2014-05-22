@@ -1,6 +1,5 @@
 <ul class="WidgetItemList WidgetItemList-Main">
-  <% for (var i = 0; i < locals.items.length; i++) { %>
-  <% var item = items[i] %>
+  <% locals.items.forEach(function (item) { %>
 
   <li class="<%= item && item.type || '' %>"
       data-options="<%= item && JSON.stringify(item) || '' %>">
@@ -103,13 +102,13 @@
                href="<%= item.pic_urls[0].thumbnail_pic.replace('/thumbnail/', '/large/') %>"><img
               src="<%= item.pic_urls[0].thumbnail_pic %>"></a>
             <% } else { %>
-            <% for (var i = 0; i < item.pic_urls.length; i++) { %>
-            <% if (item.pic_urls[i]) { %>
+            <% item.pic_urls.forEach(function (pic_url) { %>
+            <% if (pic_url) { %>
             <a class="WeiboImage fancybox" rel="gallery"
-               href="<%= item.pic_urls[i].thumbnail_pic.replace('/thumbnail/', '/large/') %>"><img
-              src="<%= item.pic_urls[i].thumbnail_pic.replace('/thumbnail/', '/square/') %>"></a>
+               href="<%= pic_url.thumbnail_pic.replace('/thumbnail/', '/large/') %>"><img
+              src="<%= pic_url.thumbnail_pic.replace('/thumbnail/', '/square/') %>"></a>
             <% } %>
-            <% } %>
+            <% }); %>
             <% } %>
             <% } %>
           </div>
@@ -128,13 +127,13 @@
                  href="<%= retweetedItem.pic_urls[0].thumbnail_pic.replace('/thumbnail/', '/large/') %>"><img
                 src="<%= retweetedItem.pic_urls[0].thumbnail_pic %>"></a>
               <% } else { %>
-              <% for (var i = 0; i < retweetedItem.pic_urls.length; i++) { %>
-              <% if (retweetedItem.pic_urls[i]) { %>
+              <% retweetedItem.pic_urls.forEach(function (pic_url) { %>
+              <% if (pic_url) { %>
               <a class="WeiboImage fancybox" rel="gallery"
-                 href="<%= retweetedItem.pic_urls[i].thumbnail_pic.replace('/thumbnail/', '/large/') %>"><img
-                src="<%= retweetedItem.pic_urls[i].thumbnail_pic.replace('/thumbnail/', '/square/') %>"></a>
+                 href="<%= pic_url.thumbnail_pic.replace('/thumbnail/', '/large/') %>"><img
+                src="<%= pic_url.thumbnail_pic.replace('/thumbnail/', '/square/') %>"></a>
               <% } %>
-              <% } %>
+              <% }); %>
               <% } %>
               <% } %>
             </div>
@@ -183,5 +182,5 @@
     </div>
   </li>
 
-  <% } %>
+  <% }); %>
 </ul>

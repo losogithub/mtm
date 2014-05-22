@@ -7,11 +7,11 @@
         <li class="previous">
           <a <%- currentPage == 1 ? '' : 'href="' + locals.query + (currentPage - 1) + '"' %> class="fui-arrow-left"></a>
         </li>
-        <% for (var i = 1 ; i <= totalPage; i++ ) { %>
-        <% if (i == currentPage) { %>
-        <li class="active"><a><%= i %></a></li>
+        <% for (var totalPageI = 1 ; totalPageI <= totalPage; totalPageI++) { %>
+        <% if (totalPageI == currentPage) { %>
+        <li class="active"><a><%= totalPageI %></a></li>
         <% } else { %>
-        <li><a href="<%= locals.query + i %>"><%= i %></a></li>
+        <li><a href="<%= locals.query + totalPageI %>"><%= totalPageI %></a></li>
         <% } %>
         <% } %>
         <li class="next">

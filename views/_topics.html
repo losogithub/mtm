@@ -1,5 +1,4 @@
-<% for (i in topics) { %>
-<% var topic = topics[i]; %>
+<% topics.forEach(function (topic) { %>
   <div class="Tile clearfix mbl">
     <a class="Cover pull-left"
        style="display: block; height: 85px; width: 85px;
@@ -61,4 +60,4 @@
       </div>
     </div>
   </div>
-<% } %>
+<% }); %>

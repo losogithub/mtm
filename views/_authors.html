@@ -1,8 +1,8 @@
 <% if (authors && authors.length) { %>
 <div class="Authors background-white pll ptl mtl" style="border-radius: 6px;">
-  <% for (var i in authors) { %>
+  <% for (var authorsI in authors) { %>
   <% if (i == 4 && pageType == 'INDEX') { break; } %>
-  <% var author = authors[i]; %>
+  <% var author = authors[authorsI]; %>
   <a class="mrm mbl text-muted" target="_blank"
      href="/u/<%= author.loginName %>"
      title="<%= author.loginName %>">

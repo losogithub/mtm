@@ -31,9 +31,9 @@
   <% if (locals.pageType == 'ACCOUNT' || locals.pageType == 'LOGIN' || locals.pageType == 'SIGNUP') { %>
   <link type='text/css' rel="stylesheet" href="/stylesheets/account.css"/>
   <% } %>
-  <% for (i in locals.css) { %>
-  <link type='text/css' rel='stylesheet' href='<%= css[i] %>'/>
-  <% } %>
+  <% (locals.css || []).forEach(function (css) { %>
+  <link type='text/css' rel='stylesheet' href='<%= css %>'/>
+  <% }); %>
 
   <!--更高版本的cdn上404,貌似确实是有bug的-->
   <!--[if IE]>
@@ -57,9 +57,9 @@
   <% if (locals.pageType == 'ACCOUNT' || locals.pageType == 'LOGIN' || locals.pageType == 'SIGNUP') { %>
   <script type="text/javascript" src="/javascripts/account.js"></script>
   <% } %>
-  <% for (i in locals.js) { %>
-  <script type="text/javascript" src="<%= js[i] %>"></script>
-  <% } %>
+  <% (locals.js || []).forEach(function (js) { %>
+  <script type="text/javascript" src="<%= js %>"></script>
+  <% }); %>
 </head>
 <body>
 <% if (locals.pageType != 'SIGNUP' && locals.pageType != 'LOGIN' && locals.pageType != 'VERIFY' && locals.pageType != 'EDIT') { %>

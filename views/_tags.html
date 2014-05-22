@@ -1,10 +1,10 @@
 <% if (tags && tags.length || locals.isAuthor) { %>
 <div class="pts pls background-white Tags clearfix mtl" style="border-radius: 6px; min-height: 35px;">
-  <% for (var i = 0; i < tags.length; i++) { %>
-  <% if (i == 7 && pageType == 'INDEX') { break; } %>
-  <a href="/tag/<%- encodeURIComponent(tags[i]) %>"
-     class="tag btn btn-default btn-xs pull-left mrs mbs"><%= tags[i] %>
-    <span class="Counter">(<%= Tags && Tags[tags[i]] && Tags[tags[i]].topicCount || 0 %>)</span>
+  <% for (var tagsI = 0; tagsI < tags.length; tagsI++) { %>
+  <% if (tagsI == 7 && pageType == 'INDEX') { break; } %>
+  <a href="/tag/<%- encodeURIComponent(tags[tagsI]) %>"
+     class="tag btn btn-default btn-xs pull-left mrs mbs"><%= tags[tagsI] %>
+    <span class="Counter">(<%= Tags && Tags[tags[tagsI]] && Tags[tags[tagsI]].topicCount || 0 %>)</span>
   </a>
   <% } %>
   <% if (locals.isAuthor) { %>
