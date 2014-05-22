@@ -172,6 +172,14 @@ function deleteItem(user, _id, callback) {
   });
 }
 
+function getAllUserEmail(callback){
+    UserModel.find({}, 'email', callback);
+}
+function getAllActiveUserEmail(callback){
+    UserModel.find({'active': true}, 'email', callback);
+}
+
+
 exports.createUser = createUser;
 exports.getActivedAuthors = getActivedAuthors;
 exports.getUserById = getUserById;
@@ -188,3 +196,5 @@ exports.collectItem = collectItem;
 exports.deleteItem = deleteItem;
 exports.getAllUsers = getAllUsers;
 exports.getAllUsersSorted = getAllUsersSorted;
+exports.getAllUserEmail = getAllUserEmail;
+exports.getAllActiveUserEmail = getAllActiveUserEmail;

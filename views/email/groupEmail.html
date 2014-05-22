@@ -1,0 +1,46 @@
+<div class="container" >
+<div  style="background-color: #D5D5D5; width: 680px; float: left; margin-left: 10px ">
+    <br>
+    <input name="themeText"
+           type="text"
+           class="form-control flat AUTO_FOCUS ng-pristine ng-valid"
+           ng-model="themeText"
+           placeholder="请在此处输入邮件主题" autocomplete="off"
+           style="word-wrap: break-word; resize: none; width: 650px; margin-left: 10px">
+    <br>
+    <textarea msd-elastic="" name="text"
+              class="form-control flat AUTO_FOCUS ng-pristine ng-valid"
+              ng-model="text"
+              placeholder="请在此处输入邮件内容"
+              autocomplete="off"
+              style="overflow: hidden;
+              word-wrap: break-word; resize: none; height: 300px; width: 650px; margin-left: 10px"></textarea>
+    <br>
+    <button type="submit" id="sendButton" class="btn btn-primary btn-block center-block" style="width: 100px; float: right; margin-right: 20px; margin-bottom: 10px" >发送</button>
+
+</div>
+    <div style="width: 200px; float: right; margin-right: 200px">
+        <label class="checkbox unchecked" for="checkbox1">
+            <span class="icons">
+                <span class="first-icon fui-checkbox-unchecked"></span>
+                <span class="second-icon fui-checkbox-checked"></span></span>
+            <input type="checkbox" value="" id="checkbox1" data-toggle="checkbox">
+            所有用户
+        </label>
+        <label class="checkbox unchecked" for="checkbox2">
+            <span class="icons">
+                <span class="first-icon fui-checkbox-unchecked"></span>
+                <span class="second-icon fui-checkbox-checked"></span></span>
+            <input type="checkbox" value="" id="checkbox2" data-toggle="checkbox">
+            激活用户
+        </label>
+        <label class="checkbox unchecked checked" for="checkbox3">
+        <span class="icons">
+            <span class="first-icon fui-checkbox-unchecked"></span>
+            <span class="second-icon fui-checkbox-checked"></span></span>
+            <input type="checkbox" value="" id="checkbox3" data-toggle="checkbox">
+        管理员
+    </label>
+    </div>
+    <br>
+</div>
