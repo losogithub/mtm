@@ -126,42 +126,48 @@ function _calcTags(callback, results) {
   var authorIds = results.countTags.authorIds;
   var relatives = results.countTags.relatives;
   var tempCommonTags = [];
-  for (var tagText in categories) {
-    var tempWeight = 0;
-    var tempCategory = '未分类';
-    for (var category in categories[tagText]) {
-      if (categories[tagText][category] > tempWeight) {
-        tempWeight = categories[tagText][category];
-        tempCategory = category;
+  async.forEachSeries(Object.keys(categories), function (tagText, callback) {
+    setTimeout(function () {
+      var tempWeight = 0;
+      var tempCategory = '未分类';
+      for (var category in categories[tagText]) {
+        if (categories[tagText][category] > tempWeight) {
+          tempWeight = categories[tagText][category];
+          tempCategory = category;
+        }
       }
-    }
 
-    var tempAuthorIds = [];
-    for (var authorId in authorIds[tagText]) {
-      tempAuthorIds.push(authorId);
-    }
-    tempAuthorIds.sort(function (a, b) {
-      return authorIds[tagText][b] - authorIds[tagText][a];
-    });
+      var tempAuthorIds = [];
+      for (var authorId in authorIds[tagText]) {
+        tempAuthorIds.push(authorId);
+      }
+      tempAuthorIds.sort(function (a, b) {
+        return authorIds[tagText][b] - authorIds[tagText][a];
+      });
 
-    var tempTags = [];
-    for (var tagText2 in relatives[tagText]) {
-      tempTags.push(tagText2);
-    }
-    tempTags.sort(function (a, b) {
-      return relatives[tagText][b] - relatives[tagText][a];
-    });
+      var tempTags = [];
+      for (var tagText2 in relatives[tagText]) {
+        tempTags.push(tagText2);
+      }
+      tempTags.sort(function (a, b) {
+        return relatives[tagText][b] - relatives[tagText][a];
+      });
 
-    tempCommonTags[tagText] = {
-      category: tempCategory,
-      topicCount: topicCounts[tagText],
-      authorWeights: authorIds[tagText],
-      authorIds: tempAuthorIds,//.slice(0, 7),
-      tags: tempTags//.slice(0, 13)
-    };
-  }
-  Common.Tags = tempCommonTags;
-  callback(null);
+      tempCommonTags[tagText] = {
+        category: tempCategory,
+        topicCount: topicCounts[tagText],
+        authorWeights: authorIds[tagText],
+        authorIds: tempAuthorIds,//.slice(0, 7),
+        tags: tempTags//.slice(0, 13)
+      };
+      callback();
+    }, 10);
+  }, function (err) {
+    if (err) return callback(err);
+
+    Common.Tags = tempCommonTags;
+    callback();
+  });
 }
 
 function _countAuthors(callback, results) {
@@ -181,10 +187,14 @@ function _countAuthors(callback, results) {
       categories[topic.category]++;
       callback();
     }, 10);
-  }, callback);
-  Common.AuthorTopicCount = tempAuthorTopicCount;
-  Common.AuthorPVCount = tempAuthorPVCount;
-  Common.AuthorCategories = tempAuthorCategories;
+  }, function (err) {
+    if (err) return callback(err);
+
+    Common.AuthorTopicCount = tempAuthorTopicCount;
+    Common.AuthorPVCount = tempAuthorPVCount;
+    Common.AuthorCategories = tempAuthorCategories;
+    callback();
+  });
 }
 
 function _calcAuthors(callback) {
