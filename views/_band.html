@@ -16,26 +16,26 @@
         <li class="<%- categoryType == key ? 'selected' : '' %>">
           <a href="/<%= CATEGORIES2ENG[key] %>">
             <%if(temp[key]){%><i class="fa fa-<%= temp[key] %> text-<%= temp2[key] %>"></i><%}%> <%= key %>
-            <span class="Counter">(<%- locals.categoryTopicCount[key] || '0' %>)</span>
+            <span class="Counter">(<%= locals.categoryTopicCount[key] || 0 %>)</span>
           </a>
         </li>
         <% } %>
         <li class="<%- categoryType == '最新' ? 'selected' : '' %>">
-          <a href="/new">最新 <span class="Counter">(<%- locals.totalTopicCount || '0' %>)</span></a></li>
+          <a href="/new">最新 <span class="Counter">(<%= locals.totalTopicCount || 0 %>)</span></a></li>
       </ul>
     </div>
     <% if (locals.pageType != 'INDEX') { %>
     <% if (locals.pageType == '最新') { %>
     <a class="btn btn-square pull-left <%- locals.pageType == 'TAG' || locals.pageType == 'TOPIC' ? 'btn-default' : 'btn-primary' %>"
        href="/new"><%= categoryType %>
-      <span class="Counter">(<%= locals.topicCount %>)</span>
+      <span class="Counter">(<%= locals.topicCount || 0 %>)</span>
     </a>
     <% } else { %>
     <a class="btn btn-square pull-left <%- locals.pageType == 'TAG' || locals.pageType == 'TOPIC' ? 'btn-default' : 'btn-primary' %>"
        href="/<%= CATEGORIES2ENG[categoryType] %>">
       <%if(temp[categoryType]){%><i class="fa fa-<%= temp[categoryType] %>"></i><%}%>
       <%= categoryType %>
-      <span class="Counter">(<%= locals.topicCount %>)</span>
+      <span class="Counter">(<%= locals.topicCount || 0 %>)</span>
     </a>
     <% } %>
     <% } %>
