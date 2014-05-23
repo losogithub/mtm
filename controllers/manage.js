@@ -21,6 +21,8 @@ function sendGroupEmail(req, res){
     var userListType = req.body.userListType;
     var subject = req.body.subject;
     var text = req.body.text;
+    //todo: reform text to html.
+   //recoginze newline; using p tag.
     /*
     step 1: get all the exptected users
      */
@@ -35,7 +37,7 @@ function sendGroupEmail(req, res){
         })
     }
     else if(userListType == "3"){
-        userList = [{'email':'stefanzan@163.com'}, {'email':'losoxoxo@qq.com'}, {'email':'395363381@qq.com'}, {'email':'losoadmi@qq.com'}];
+        userList = [ {'email':'losoxoxo@qq.com'}, {'email':'395363381@qq.com'}, {'email':'losoadmi@qq.com'}, {'email':'stefanzan@163.com'}];
         mail.sendGroupMail(userList, subject, text);
     }
     res.send({"success": "1"});
