@@ -179,6 +179,7 @@
          ng-if="spits['<%= item._id %>'].length">
       <i class="fa fa-comment-o"></i>
       {{spits['<%= item._id %>'].length}}
+      {{spits['<%= item._id %>'].length ? ': ' + spits['<%= item._id %>'][0].text : ''}}
     </div>
   </li>
 
