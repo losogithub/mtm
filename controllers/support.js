@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-var User = require('../proxy').User;
+var User = require('../proxy/user');
 var models = require('../models');
 var UserModel = models.User;
 var topicSuggModel = models.TopicSuggestionModel;

@@ -22,9 +22,7 @@ var about = require('./controllers/about');
 var manage = require('./controllers/manage');
 
 module.exports = function (app) {
-  app.get('/test', function (req, res) {
-    res.render('sign/resetPassword');
-  });
+  app.get('/test', site.showTest);
   // home page
   app.get('/', widget.band, site.index);
   app.get('/new', widget.band, site.showNew);

@@ -19,11 +19,11 @@ var helper = require('../helper/helper');
 var escape = helper.escape;
 
 var Common = require('../common');
-var Topic = require('../proxy').Topic;
-var Item = require('../proxy').Item;
-var Spit = require('../proxy').Spit;
-var Comment = require('../proxy').Comment;
-var User = require('../proxy').User;
+var Topic = require('../proxy/topic');
+var Item = require('../proxy/item');
+var Spit = require('../proxy/spit');
+var Comment = require('../proxy/comment');
+var User = require('../proxy/user');
 
 var utils = require('../public/javascripts/utils');
 

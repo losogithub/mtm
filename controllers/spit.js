@@ -9,7 +9,7 @@ var sanitize = require('validator').sanitize;
 var check = require('validator').check;
 
 var Common = require('../common');
-var Spit = require('../proxy').Spit;
+var Spit = require('../proxy/spit');
 
 function createSpit(req, res, next) {
   var itemType = req.body.itemType;

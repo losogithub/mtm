@@ -10,7 +10,7 @@ var sanitize = require('validator').sanitize;
 var check = require('validator').check;
 
 var Common = require('../common');
-var Comment = require('../proxy').Comment;
+var Comment = require('../proxy/comment');
 
 function createComment(req, res, next) {
   var topicId = req.body.topicId;

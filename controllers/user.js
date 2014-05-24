@@ -15,10 +15,10 @@ var helper = require('../helper/helper');
 var escape = helper.escape;
 
 var Common = require('../common');
-var User = require('../proxy').User;
-var Topic = require('../proxy').Topic;
+var User = require('../proxy/user');
+var Topic = require('../proxy/topic');
 var config = require('../config');
-var LoginToken = require('../proxy').LoginToken;
+var LoginToken = require('../proxy/loginToken');
 
 var utils = require('../public/javascripts/utils');
 

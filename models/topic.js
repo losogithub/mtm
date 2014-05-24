@@ -7,7 +7,6 @@
  */
 var mongoose = require('mongoose');
 var ObjectId = mongoose.Schema.ObjectId;
-var Schema = mongoose.Schema;
 
 module.exports = mongoose.model('Topic', {
   title: String,

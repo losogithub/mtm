@@ -11,8 +11,8 @@ var extend = require('extend');
 
 var helper = require('../helper/helper');
 
-var Item = require('../proxy').Item;
-var User = require('../proxy').User;
+var Item = require('../proxy/item');
+var User = require('../proxy/user');
 
 var config = require('../config');
 

@@ -8,10 +8,10 @@
 var async = require('async');
 
 var Common = require('./common');
-var User = require('./proxy').User;
-var TopicProxy = require('./proxy').Topic;
+var User = require('./proxy/user');
+var TopicProxy = require('./proxy/topic');
 var Topic = require('./controllers/topic');
-var Item = require('./proxy').Item;
+var Item = require('./proxy/item');
 
 function _updateRelatedTopics(callback) {
   console.log('_updateRelatedTopics')

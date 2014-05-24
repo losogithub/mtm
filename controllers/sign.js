@@ -13,8 +13,8 @@ var helper = require('../helper/helper');
 var config = require('../config');
 
 
-var User = require('../proxy').User;
-var LoginToken = require('../proxy').LoginToken;
+var User = require('../proxy/user');
+var LoginToken = require('../proxy/loginToken');
 var mail = require('../services/mail');
 
 

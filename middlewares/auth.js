@@ -9,8 +9,8 @@
  * 需要管理员权限
  */
 
-var User = require('../proxy').User;
-var LoginToken = require('../proxy').LoginToken;
+var User = require('../proxy/user');
+var LoginToken = require('../proxy/loginToken');
 
 var check = require('validator').check;
 var sanitize = require('validator').sanitize;

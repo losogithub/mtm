@@ -9,8 +9,8 @@
 var async = require('async');
 
 var Common = require('../common');
-var Topic = require('../proxy').Topic;
-var User = require('../proxy').User;
+var Topic = require('../proxy/topic');
+var User = require('../proxy/user');
 
 var topicsPerPage = 12;
 

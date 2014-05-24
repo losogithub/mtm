@@ -2,7 +2,7 @@
  * Created by zan on 14-5-20.
  */
 var mail = require('../services/mail');
-var User = require('../proxy').User;
+var User = require('../proxy/user');
 
 function showGroupEmail(req, res){
   if (!res.locals.isAdmin) {

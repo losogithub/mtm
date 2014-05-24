@@ -19,6 +19,7 @@ exports.TopicSuggestionModel = require('./topic_suggestion').TopicSuggestionMode
 exports.SuggestionTopicLogModel = require('./topic_suggestion').SuggestionTopicLogModel;
 
 exports.TopicModel = require('./topic');
+exports.Topic2 = require('./topic2');
 exports.ItemModels = {
   'LINK': require('./link_item'),
   'IMAGE': require('./image_item'),
