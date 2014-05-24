@@ -222,9 +222,6 @@ $(function () {
 
   var $player = $('.TEMPLATES>.Player');
 
-  //初始化fancybox
-  $('.fancybox:visible').fancybox(shizier.fancyboxOptions);
-
   $('.WidgetItemList').on('click', '.Cover', function () {
     var $li = $(this).closest('li');
     var vid = $li.data('options').vid;

@@ -55,24 +55,6 @@
     theme: 'flat'
   };
 
-  shizier.fancyboxOptions = {
-    openEffect: 'elastic',
-    closeEffect: 'elastic',
-    openSpeed: 100,
-    closeSpeed: 100,
-    nextSpeed: 100,
-    prevSpeed: 100,
-    nextClick: true,
-    closeBtn: false,
-    helpers: {
-      overlay: {
-        speedOut: 100
-      },
-      buttons: {},
-      thumbs: {}
-    }
-  };
-
   shizier.errorImage = shizier.errorImage || function (img, name, ignoreNull) {
     var $img = $(img);
     if (ignoreNull && !$img.attr('src')) {

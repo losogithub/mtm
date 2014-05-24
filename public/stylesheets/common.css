@@ -253,9 +253,6 @@ textarea {
 .radio .icons .second-icon {
   background-color: transparent;
 }
-#fancybox-thumbs.bottom {
-  bottom: 15px !important;
-}
 .Required {
   position: relative;
 }

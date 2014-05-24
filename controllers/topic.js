@@ -154,9 +154,6 @@ function showIndex(req, res, next) {
         '/bower_components/perfect-scrollbar/min/perfect-scrollbar-0.4.10.min.css',
         'http://cdn.bootcss.com/messenger/1.4.0/css/messenger.css',
         'http://cdn.bootcss.com/messenger/1.4.0/css/messenger-theme-flat.css',
-        'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.css',
-        'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-buttons.css',
-        'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-thumbs.css',
         '/stylesheets/topic.css'
       ],
       js: [
@@ -165,9 +162,6 @@ function showIndex(req, res, next) {
         'http://cdn.bootcss.com/messenger/1.4.0/js/messenger.js',
         'http://cdn.bootcss.com/messenger/1.4.0/js/messenger-theme-flat.js',
         'http://cdn.bootcss.com/jquery-mousewheel/3.1.6/jquery.mousewheel.min.js',
-        'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.js',
-        'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-buttons.js',
-        'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-thumbs.js',
         '/javascripts/utils.js',
         '/javascripts/topic.js'
       ],
@@ -248,9 +242,6 @@ function showEdit(req, res, next) {
         '/bower_components/perfect-scrollbar/min/perfect-scrollbar-0.4.10.min.css',
         'http://cdn.bootcss.com/messenger/1.4.0/css/messenger.css',
         'http://cdn.bootcss.com/messenger/1.4.0/css/messenger-theme-flat.css',
-        'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.css',
-        'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-buttons.css',
-        'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-thumbs.css',
         '/stylesheets/topic.css',
         '/stylesheets/edit.css'
       ],
@@ -261,9 +252,6 @@ function showEdit(req, res, next) {
         'http://cdn.bootcss.com/messenger/1.4.0/js/messenger.js',
         'http://cdn.bootcss.com/messenger/1.4.0/js/messenger-theme-flat.js',
         'http://cdn.bootcss.com/jquery-mousewheel/3.1.6/jquery.mousewheel.min.js',
-        'http://cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.js',
-        'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-buttons.js',
-        'http://cdn.bootcss.com/fancybox/2.1.5/helpers/jquery.fancybox-thumbs.js',
         '/javascripts/jquery-ui-1.10.4.custom.min.js',
         '/bower_components/angular-ui-sortable/sortable.js',
         'http://cdn.bootcss.com/jquery-validate/1.11.1/jquery.validate.min.js',

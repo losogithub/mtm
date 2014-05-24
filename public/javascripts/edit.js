@@ -524,7 +524,6 @@
       $scope.$parent.setCoverScope($scope);
       //移动光标到输入框末尾
       $timeout(function () {
-        console.log($($element).find('.AUTO_FOCUS').length)
         $($element).find('.AUTO_FOCUS').focus();
         moveSelection2End($element.find('.AUTO_FOCUS')[0]);
       });
