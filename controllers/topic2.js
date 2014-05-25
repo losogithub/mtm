@@ -61,7 +61,7 @@ function showIndex(req, res, next) {
         Comment.getCommentsByItemTypeAndId(item.type, item._id, function (err, tempComments) {
           if (err) return callback(err);
 
-          var newComments = [];
+          comments[item._id] = comments[item._id] || [];
           tempComments.forEach(function (comment) {
             var newComment = comment.toJSON();
 
@@ -79,11 +79,10 @@ function showIndex(req, res, next) {
                     loginName: user.loginName,
                     url: user.url
                   }
-                })
+                });
               }
 
-              newComments.push(newComment);
-              comments[item._id] = newComments;
+              comments[item._id].push(newComment);
               callback();
             });
           });
