@@ -160,6 +160,12 @@
           var temp = shizier.getVideoSrc(item.quote, item.vid);
           return temp ? temp.vars : '';
         };
+        var $autofocus = $('.AUTO_FOCUS');
+        $scope.autofocus = function () {
+          $timeout(function () {
+            $autofocus.focus();
+          })
+        };
         $scope.getHtml = function (text) {
           return $sce.trustAsHtml(text && shizier.utils.escape(text).replace(/\n/g, "<br>") || '');
         };
@@ -211,7 +217,7 @@
         parent.postMessage('close', '*');
       });
       $modal.on('shown.bs.modal', function () {
-        $('.AutoFocus').focus();
+        $('.AUTO_FOCUS').focus();
       });
       $modal.modal();
     });
@@ -240,19 +246,19 @@
             <div class="Categories background-muted" style="border-radius: 6px 6px 0 0;">
               <div class="btn-group" style="width: 100%;">
                 <button class="btn btn-default" style="width: 20%; border-top-left-radius: 6px;" type="button"
-                        ng-click="item.type = 'LINK'"
+                        ng-click="item.type = 'LINK'; autofocus();"
                         ng-class="{active: item.type == 'LINK'}"><i class="fa fa-link"></i></button>
                 <button class="btn btn-default" style="width: 20%;" type="button"
-                        ng-click="item.type = 'IMAGE'"
+                        ng-click="item.type = 'IMAGE'; autofocus();"
                         ng-class="{active: item.type == 'IMAGE'}"><i class="fa fa-picture-o"></i></button>
                 <button class="btn btn-default" style="width: 20%;" type="button"
-                        ng-click="item.type = 'VIDEO'"
+                        ng-click="item.type = 'VIDEO'; autofocus();"
                         ng-class="{active: item.type == 'VIDEO'}"><i class="fa fa-play-circle"></i></button>
                 <button class="btn btn-default" style="width: 20%;" type="button"
-                        ng-click="item.type = 'CITE'"
+                        ng-click="item.type = 'CITE'; autofocus();"
                         ng-class="{active: item.type == 'CITE'}"><i class="fa fa-quote-left"></i></button>
                 <button class="btn btn-default" style="width: 20%; border-top-right-radius: 6px;" type="button"
-                        ng-click="item.type = 'WEIBO'"
+                        ng-click="item.type = 'WEIBO'; autofocus();"
                         ng-class="{active: item.type == 'WEIBO'}"><i class="fa fa-weibo"></i></button>
               </div>
             </div>
@@ -263,7 +269,7 @@
 
                   <div class="Content LINK pam"
                        ng-switch-when="LINK">
-                    <div class="Title">
+                    <div class="Title" title="{{item.snippet || ''}}">
                       <img class="Fav" ng-src="{{item.fav}}"
                            ui-event="{ error : 'onFavError(item)' }">
                       <a target="_blank" class="LINK_URL" href='{{item.url}}'>{{item.title || ''}}</a>
@@ -274,8 +280,6 @@
                         {{item.url}}
                       </a>
                     </div>
-                    <div class="Snippet text-muted small mtx" ng-if="item.snippet">{{item.snippet}}</div>
-                    <div class="clearfix"></div>
                   </div>
                   <div class="Content IMAGE pam" ng-show="images.length"
                        ng-init="$parent.imageSrc = images && images[0].src; $parent.imageTitle = images && images[0].title;"
@@ -301,7 +305,7 @@
                         </a>
                       </div>
                       <div class="mtx mbm">
-                        <input name="title" class="form-control flat text-center AUTO_FOCUS"
+                        <input name="title" class="form-control flat text-center"
                                ng-model="$parent.imageTitle"
                                maxlength="50"
                                placeholder="图片标题" type="text">
@@ -458,16 +462,16 @@
                     </div>
                     <div class="clearfix"></div>
                   </div>
-                  <div class="mtl">
-                    <textarea msd-elastic name="description" class="form-control"
-                              ng-model="item.description"
-                              maxlength="{{descriptionMaxLength}}"
-                              placeholder="评论"></textarea>
-                    <div class="LetterCounter">{{item.description.length || 0}}/{{descriptionMaxLength}}</div>
-                  </div>
                 </div>
               </li>
             </ul>
+          </div>
+          <div class="form-group">
+            <textarea msd-elastic name="description" class="form-control flat AUTO_FOCUS"
+                      ng-model="item.description"
+                      maxlength="{{descriptionMaxLength}}"
+                      placeholder="评论"></textarea>
+            <div class="LetterCounter">{{item.description.length || 0}}/{{descriptionMaxLength}}</div>
           </div>
           <div class="pull-right">
             <button name="save" class="btn btn-primary"
@@ -495,7 +499,7 @@
 
           <div class="form-group">
             <input type="text" value="<%= locals.email || '' %>" ng-model="username"
-                   class="form-control flat AutoFocus" id="uName" name="username"
+                   class="form-control flat AUTO_FOCUS" id="uName" name="username"
                    placeholder="用户名或邮箱">
             <label class="input-icon fui-user" for="uName"></label>
           </div>
