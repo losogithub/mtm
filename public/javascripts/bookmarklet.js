@@ -69,12 +69,16 @@ var shizier_postMessageListener;
           for (var temp = imgs[i]; temp; temp = temp.offsetParent) {
             top += temp.offsetTop - temp.scrollTop;
             left += temp.offsetLeft - temp.scrollLeft;
+            if (temp.tagName != 'BODY' && !temp.offsetParent) {
+              top += window.pageYOffset;
+              left += window.pageXOffset;
+            }
           }
           var product
-            = (Math.max(Math.min(top + imgs[i].offsetHeight, window.pageYOffset + window.outerHeight), window.pageYOffset)
-            - Math.max(Math.min(top, window.pageYOffset + window.outerHeight), window.pageYOffset))
-            * (Math.max(Math.min(left + imgs[i].offsetWidth, window.pageXOffset + window.outerWidth), window.pageXOffset)
-            - Math.max(Math.min(left, window.pageXOffset + window.outerWidth), window.pageXOffset));
+            = (Math.max(Math.min(top + imgs[i].offsetHeight, window.innerHeight), 0)
+            - Math.max(Math.min(top, window.innerHeight), 0))
+            * (Math.max(Math.min(left + imgs[i].offsetWidth, window.innerWidth), 0)
+            - Math.max(Math.min(left, window.innerWidth), 0));
           if (product < 100) {
             continue;
           }
