@@ -83,10 +83,10 @@ function showIndex(req, res, next) {
               }
 
               newComments.push(newComment);
+              comments[item._id] = newComments;
+              callback();
             });
           });
-          comments[item._id] = newComments;
-          callback();
         });
       }, function (err) {
         if (err) return callback(err);
