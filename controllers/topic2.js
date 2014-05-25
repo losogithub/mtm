@@ -61,8 +61,7 @@ function showIndex(req, res, next) {
         Comment.getCommentsByItemTypeAndId(item.type, item._id, function (err, tempComments) {
           if (err) return callback(err);
 
-          comments[item._id] = comments[item._id] || [];
-          tempComments.forEach(function (comment) {
+          async.mapSeries(tempComments, function (comment, callback) {
             var newComment = comment.toJSON();
 
             var key = comment._id + req.connection.remoteAddress;
@@ -82,9 +81,13 @@ function showIndex(req, res, next) {
                 });
               }
 
-              comments[item._id].push(newComment);
-              callback();
+              callback(null, newComment);
             });
+          }, function (err, newComments) {
+            if (err) return callback(err);
+
+            comments[item._id] = newComments;
+            callback();
           });
         });
       }, function (err) {
