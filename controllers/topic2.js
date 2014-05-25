@@ -125,7 +125,7 @@ function showIndex(req, res, next) {
         '/bower_components/perfect-scrollbar/min/perfect-scrollbar-0.4.10.min.css',
         'http://cdn.bootcss.com/messenger/1.4.0/css/messenger.css',
         'http://cdn.bootcss.com/messenger/1.4.0/css/messenger-theme-flat.css',
-        '/stylesheets/topic.css'
+        '/stylesheets/topic2.css'
       ],
       js: [
         '/bower_components/perfect-scrollbar/min/perfect-scrollbar-0.4.10.min.js',
@@ -134,7 +134,7 @@ function showIndex(req, res, next) {
         'http://cdn.bootcss.com/messenger/1.4.0/js/messenger-theme-flat.js',
         'http://cdn.bootcss.com/jquery-mousewheel/3.1.6/jquery.mousewheel.min.js',
         '/javascripts/utils.js',
-        '/javascripts/topic.js'
+        '/javascripts/topic2.js'
       ],
       items: itemsData,
       comments: comments

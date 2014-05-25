@@ -1,0 +1,208 @@
+@import "theme";
+@import "utils";
+
+/*条目*/
+.WidgetItemList {
+  list-style: none; padding: 0 0 40px; margin-bottom: 0;
+  >li {
+    position: relative;
+    .SpitCount {
+      position: absolute; top: 50%; right: -30px; width: 0; margin-top: -10px;
+    }
+  }
+  .Hoverable {
+    position: relative;
+    &:hover {
+      .HoverHelper {
+        @media (min-width: 992px){
+          display: block;
+        }
+      }
+    }
+  }
+}
+
+.Quote {
+  &, * { color: @color-muted; }
+  text-align: right;
+  .LINK &, .VIDEO &{
+    text-align: left;
+  }
+  font-size: 12px; line-height: 13px; margin-top: 3px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+.WidgetItemList .Hoverable {
+  &:hover, &.Hover { background-color: @color-clouds-lighten; }
+
+  .Description { padding-left: 6px; border-left: 2px solid @color-muted; line-height: 1.4; }
+
+  .Content {
+    border-radius: 6px; background-color: @color-clouds;
+    width: 500px; max-width: 100%; margin-left: auto; margin-right: auto;
+  }
+
+  .LINK {
+    .Title {
+      font-size: 20px; line-height: 1.1;font-weight: bold;
+      img { width: 16px; height: 16px; }
+      a { vertical-align: middle; }
+    }
+    .Snippet { line-height: 1.2; }
+  }
+
+  .IMAGE,
+  .IMAGE_CREATE {
+    .Image img { max-width: 100%; max-height: 500px; }
+    .Title { line-height: 1.1; font-weight: bold; }
+  }
+
+  .VIDEO {
+    embed { background-color: white; }
+    .Cover {
+      transition: none; -webkit-transition: none;
+      border-radius: 0; padding: 0;
+      text-align: center; width: 120px; height: 90px; display: block;
+      background: @color-concrete no-repeat center; background-size: cover;
+      .Background {
+        width: 120px; height: 90px;
+        transition: 0.25s; -webkit-transition: 0.25s;
+      }
+      i {
+        line-height: 90px; font-size: 60px;
+        color: rgba(255, 255, 255, 0.6);
+      }
+      &:hover, &:focus, &:active {
+        .Background { background-color: rgba(0, 0, 0, 0.6); }
+        i {
+          color: #eee;
+        }
+      }
+    }
+    .Title { font-weight: bold; line-height: 1.1; }
+  }
+
+  &:hover, &.Hover {
+    .WEIBO {
+      .Handle { visibility: visible; }
+    }
+  }
+
+  .WEIBO {
+    .Retweeted {
+      background-color: @color-clouds-darken; border-radius: 6px;
+      padding: 5px 10px; margin: 10px 0; font-size: 80%;
+    }
+    .Avatar {
+      width: 50px; height: 50px; float: left; margin-right: 10px; background-color: white;
+      img { width: 50px; height: 50px; }
+      i { font-size: 30px; line-height: 50px; }
+    }
+    .Author { font-weight: bold; }
+    .Text { margin-top: 5px; }
+    .Verify {
+      display: none;
+      &.PERSONAL {
+        display: inline; text-decoration: none; color: #fb0;
+      }
+      &.ORG {
+        display: inline; text-decoration: none; color: #07e;
+      }
+    }
+    .Pic { width: 255px; margin-bottom: 15px;
+      a { float: left; margin: 5px 5px 0 0; }
+    }
+    .Handle { float: right; visibility: hidden; }
+  }
+
+  .CITE {
+    .Cite {
+      line-height: 1.4; font-weight: bold; font-size: 20px;
+      q { quotes: none; }
+    }
+  }
+}
+
+.DeleteTopic {
+  padding: 0 !important; font-size: 18px; vertical-align: baseline;
+  &:hover,&:focus { color: @color-danger !important; }
+}
+
+.SpitCount, .CommentCount {
+  color: @color-muted;
+  white-space: nowrap;
+}
+
+.SpitBubble {
+  box-shadow: 0 0 15px @color-concrete;
+  position: fixed; top: 0; bottom: 0; display: none;
+  z-index: 1;
+  @media (min-width: 992px){
+    & {width: 293px;}
+  }
+  @media (min-width: 1200px){
+    & { width: 458px;}
+  }
+}
+
+.SpitBubble {
+  .Spits {
+    overflow: hidden;
+    position: absolute; top: 150px; right: 0; bottom: 20px; left: 20px; padding-right: 20px;
+    .Spit {
+      line-height: 1.4;
+      button {
+        vertical-align: baseline;
+      }
+    }
+  }
+}
+
+.Comments {
+  .Comment {
+    line-height: 1.4;
+    button {
+      vertical-align: baseline;
+    }
+  }
+}
+
+.HoverHelper {
+  position: absolute; top: 0; bottom: 0; right: -30px;
+  width: 30px;
+  display: none;
+  z-index: 2;
+}
+
+.Arrow {
+  position: absolute; top: 25px; left: -30px;
+  border-right-color: @color-clouds-lighten !important;
+  border: 15px solid transparent;
+}
+
+.ps-container .ps-scrollbar-y-rail {
+  opacity: 0.2;
+  filter: alpha(opacity=20);
+}
+
+.bdshare-button-style1-32 {
+  text-align: center;
+  a {
+    float: none !important;
+    display: inline-block !important;
+  }
+}
+
+.WB_praise .praise_btn_line {
+  text-align: center;
+  .praise_btn {
+    float: none;
+    display: inline-block;
+  }
+  .praise_data {
+    float: none;
+    display: inline-block;
+    vertical-align: top;
+    height: 22px;
+  }
+}

@@ -392,6 +392,7 @@ function getVideoDetail(url, callback) {
         title = !(temp = html.match(/<h1 id="title-article" class="title" title="视频标题">([^<>]*)<\/h1>/i)) ? null : !temp[1] ? null : temp[1];
         //http://www.acfun.tv/a/ac926643(这是文章，要排除)
         //http://www.acfun.tv/v/ac926028
+        //http://www.acfun.com/v/1097523_10.htm
         vid = !(temp = url) ? null : !(temp = temp.match(/\/v\/ac(\w+)\/?([?&#]|$)/i)) ? null : !temp[1] ? null : temp[1];
         //<script...system.preview = $.parseSafe('http://g2.ykimg.com/1100641F4650FA56B9414F046A66C3E3F08B15-C6AF-7C3E-27F1-FED09306E33F');...</script>
         cover = !vid ? null : ~vid.indexOf('_') ? null : !(temp = html.match(/<script[\s\S]*system.preview\s*=\s*\$\.parseSafe\('([^';,<>)]*)'[\s\S]*<\/script>/i)) ? null : !temp[1] ? null : temp[1];

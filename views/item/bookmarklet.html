@@ -7,7 +7,7 @@
   <link type='text/css' rel='stylesheet' href="/stylesheets/jquery-ui-1.10.4.custom.min.css">
   <link type='text/css' rel="stylesheet" href="/font-awesome-4.0.3/css/font-awesome.min.css">
   <link type='text/css' rel='stylesheet' href='/stylesheets/common.css'/>
-  <link type='text/css' rel='stylesheet' href='/stylesheets/topic.css'/>
+  <link type='text/css' rel='stylesheet' href='/stylesheets/topic2.css'/>
   <link type='text/css' rel='stylesheet' href='/stylesheets/edit.css'/>
   <style>
     .modal {
@@ -272,13 +272,6 @@
                       </a>
                     </div>
                     <div class="Snippet text-muted small mtx" ng-if="item.snippet">{{item.snippet}}</div>
-                    <div class="form-group">
-                      <textarea msd-elastic name="description" class="form-control flat text-center"
-                                ng-model="$parent.item.description"
-                                maxlength="{{descriptionMaxLength}}"
-                                placeholder="评论"></textarea>
-                      <div class="LetterCounter">{{description.length || 0}}/{{descriptionMaxLength}}</div>
-                    </div>
                     <div class="clearfix"></div>
                   </div>
                   <div class="Content IMAGE pam" ng-show="images.length"
@@ -304,20 +297,12 @@
                           {{item.quoteDomain || ''}}
                         </a>
                       </div>
-                      <div class="mtx"></div>
-                      <div class="form-group">
+                      <div class="mtx mbm">
                         <input name="title" class="form-control flat text-center AUTO_FOCUS"
                                ng-model="$parent.imageTitle"
                                maxlength="50"
                                placeholder="图片标题" type="text">
                         <div class="LetterCounter">{{$parent.imageTitle.length || 0}}/50</div>
-                      </div>
-                      <div class="form-group">
-                        <textarea msd-elastic name="description" class="form-control flat text-center"
-                                  ng-model="$parent.item.description"
-                                  maxlength="{{descriptionMaxLength}}"
-                                  placeholder="评论"></textarea>
-                        <div class="LetterCounter">{{description.length || 0}}/{{descriptionMaxLength}}</div>
                       </div>
                     </div>
                     <div ng-show="!$parent.imageSrc">
@@ -375,15 +360,8 @@
                         {{item.title || ''}}
                       </a>
                     </div>
-                    <div class="form-group">
-                      <textarea msd-elastic name="description" class="form-control flat text-center"
-                                ng-model="$parent.item.description"
-                                maxlength="{{descriptionMaxLength}}"
-                                placeholder="评论"></textarea>
-                      <div class="LetterCounter">{{description.length || 0}}/{{descriptionMaxLength}}</div>
-                    </div>
                   </div>
-                  <div class="Content CITE"
+                  <div class="Content CITE pam"
                        ng-switch-when="CITE">
                     <div class="Cite">
                       <i class="fa fa-quote-left text-muted"></i>
@@ -393,13 +371,6 @@
                     <div class="Quote" ng-if="item.url">
                       出自 <i class="fa fa-globe"></i>
                       <a target="_blank" href="{{item.url}}">{{item.title || item.url}}</a>
-                    </div>
-                    <div class="form-group">
-                      <textarea msd-elastic name="description" class="form-control text-center"
-                                ng-model="$parent.item.description"
-                                maxlength="{{descriptionMaxLength}}"
-                                placeholder="评论"></textarea>
-                      <div class="LetterCounter">{{description.length || 0}}/{{descriptionMaxLength}}</div>
                     </div>
                   </div>
                   <div class="Content WEIBO pam"
@@ -483,13 +454,13 @@
                         ><i class="fa fa-comment-o"></i> 评论</a>
                     </div>
                     <div class="clearfix"></div>
-                    <div class="form-group">
-                      <textarea msd-elastic name="description" class="form-control flat text-center"
-                                ng-model="$parent.item.description"
-                                maxlength="{{descriptionMaxLength}}"
-                                placeholder="评论"></textarea>
-                      <div class="LetterCounter">{{description.length || 0}}/{{descriptionMaxLength}}</div>
-                    </div>
+                  </div>
+                  <div class="mtl">
+                    <textarea msd-elastic name="description" class="form-control"
+                              ng-model="$parent.item.description"
+                              maxlength="{{descriptionMaxLength}}"
+                              placeholder="评论"></textarea>
+                    <div class="LetterCounter">{{description.length || 0}}/{{descriptionMaxLength}}</div>
                   </div>
                 </div>
               </li>
