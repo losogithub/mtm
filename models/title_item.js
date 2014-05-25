@@ -13,6 +13,8 @@ module.exports = mongoose.model('TitleItem', {
   type: { type: String, default: 'TITLE'},
   create_at: { type: Date, default: Date.now },
   update_at: { type: Date, default: Date.now },
+  authorId: ObjectId,
+  topicId: ObjectId,
 
   title: String
 });

@@ -31,6 +31,26 @@ function createComment(req, res, next) {
   });
 }
 
+function createComment2(req, res, next) {
+  var itemType = req.body.itemType;
+  var itemId = req.body.itemId;
+  var replyId = req.body.replyId;
+  var authorId = req.session.userId;
+  var text = sanitize(req.body.text).trim();
+
+  try {
+    check(text).len(1, 140);
+  } catch (e) {
+    return next(e);
+  }
+
+  Comment.createComment2(itemType, itemId, replyId, authorId, text, function (err, comment) {
+    if (err) return next(err);
+
+    res.json(comment);
+  });
+}
+
 function likeComment(req, res, next) {
   var _id = req.body._id;
 
@@ -50,4 +70,5 @@ function likeComment(req, res, next) {
 }
 
 exports.createComment = createComment;
+exports.createComment2 = createComment2;
 exports.likeComment = likeComment;

@@ -12,6 +12,8 @@ module.exports = mongoose.model('TextItem', {
   type: { type: String, default: 'TEXT'},
   create_at: { type: Date, default: Date.now },
   update_at: { type: Date, default: Date.now },
+  authorId: ObjectId,
+  topicId: ObjectId,
 
   text: String
 });

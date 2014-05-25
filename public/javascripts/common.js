@@ -20,7 +20,7 @@
           : shizier.pageType == 'TOPIC'
           ? ['ngTagsInput']
           : shizier.pageType == 'BOOKMARKLET'
-          ? ['ui.utils']
+          ? ['ui.utils', 'monospaced.elastic', 'ui.autocomplete']
           : [])
     );
 

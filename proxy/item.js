@@ -112,6 +112,32 @@ function getItems(topic, callback) {
   });
 }
 
+function getItemsByTopicId(topicId, callback) {
+  callback = callback || function () {
+  };
+
+  var allItems = [];
+  async.forEach(['LINK', 'IMAGE', 'VIDEO', 'CITE', 'WEIBO', 'TEXT', 'TITLE'], function (type, callback) {
+    ItemModels[type].find({ topicId: topicId }, function (err, items) {
+      if (err) {
+        return callback(err);
+      }
+
+      allItems = allItems.concat(items);
+      callback(null);
+    });
+  }, function (err) {
+    if (err) {
+      return callback(err);
+    }
+
+    allItems.sort(function (a, b) {
+      return parseInt(b._id, 16) - parseInt(a._id, 16);
+    });
+    callback(null, allItems);
+  });
+}
+
 /**
  * 查找条目
  * @param type
@@ -183,6 +209,7 @@ function deleteItem(type, _id, callback) {
 exports.cloneItem = cloneItem;//增
 exports.createItem = createItem;//增
 exports.getItems = getItems;//查
+exports.getItemsByTopicId = getItemsByTopicId;//查
 exports.getItemById = getItemById;//查
 exports.getItemsById = getItemsById;//查
 exports.editItem = editItem;

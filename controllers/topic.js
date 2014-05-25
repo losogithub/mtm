@@ -99,7 +99,7 @@ function showIndex(req, res, next) {
 
           tempSpits.forEach(function (spit) {
             var key = spit._id + req.connection.remoteAddress;
-            if (Common.CommentLikedKeys[key]) {
+            if (Common.SpitLikedKeys[key]) {
               spit.liked = true;
             }
           });

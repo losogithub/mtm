@@ -12,6 +12,8 @@ module.exports = mongoose.model('ImageItem', {
   type: { type: String, default: 'IMAGE'},
   create_at: { type: Date, default: Date.now },
   update_at: { type: Date, default: Date.now },
+  authorId: ObjectId,
+  topicId: ObjectId,
 
   url: String,
   title: String,

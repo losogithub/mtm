@@ -81,15 +81,30 @@
     },
 
     escape: function (html) {
-    if (!html) {
-      return html;
-    }
-    return String(html)
-      .replace(/&/g, '&amp;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#39;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;');
+      if (!html) {
+        return html;
+      }
+      return String(html)
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    },
+
+    getFormatedDate: function (date) {
+      if (typeof date == Date) return date;
+
+      function _prefixZero(num) {
+        return num < 10 ? '0' + num : num;
+      }
+
+      return date.getFullYear() + '-'
+        + _prefixZero(date.getMonth() + 1) + '-'
+        + _prefixZero(date.getDate()) + ' '
+        + _prefixZero(date.getHours()) + ':'
+        + _prefixZero(date.getMinutes()) + ':'
+        + _prefixZero(date.getSeconds());
     }
   };
 

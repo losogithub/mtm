@@ -12,6 +12,8 @@ module.exports = mongoose.model('VideoItem', {
   type: { type: String, default: 'VIDEO'},
   create_at: { type: Date, default: Date.now },
   update_at: { type: Date, default: Date.now },
+  authorId: ObjectId,
+  topicId: ObjectId,
 
   url: String,
   vid: String,

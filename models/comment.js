@@ -11,6 +11,8 @@ var ObjectId = mongoose.Schema.ObjectId;
 
 module.exports = mongoose.model('Comment', {
   topicId: ObjectId,
+  itemType: String,
+  itemId: ObjectId,
   replyId: ObjectId,
   authorId: ObjectId,
   text: String,

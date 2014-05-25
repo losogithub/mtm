@@ -9,6 +9,7 @@ var async = require('async');
 
 var Common = require('../common');
 var Topic = require('../proxy/topic');
+var Topic2 = require('../proxy/topic2');
 var User = require('../proxy/user');
 
 //var topicsPerPage = 24;
@@ -17,29 +18,17 @@ var User = require('../proxy/user');
 var topicsPerPage = 12;
 
 function showTest(req, res) {
-  var featuredTopics = Common.FeaturedTopics;
   async.auto({
     topics: function (callback) {
-      Topic.getTopicsById(['5337986887a4d07730f2c4c9', '533d3555d1178f3f783ad3e3'], callback);
-    },
-    authors: ['topics', function (callback, results) {
-      var topics = results.topics;
-      async.forEachSeries(topics, function (topic, callback) {
-        User.getUserById(topic.author_id, function (err, user) {
-          if (err) {
-            return callback(err);
-          }
-          if (!user) {
-            return callback(new Error());
-          }
-          topic.author_url = user.url;
-          callback(null);
-        });
-      }, callback);
-    }]
+      Topic2.getTopic2s(callback);
+    }
   }, function (err, results) {
+    var topics = results.topics;
+
+    console.log(topics)
     res.render('test', {
-      pageType: 'TEST'
+      pageType: 'TEST',
+      topics: topics
     });
   });
 }

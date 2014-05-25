@@ -22,11 +22,35 @@ function createComment(topicId, replyId, authorId, text, callback) {
     });
 }
 
+function createComment2(itemType, itemId, replyId, authorId, text, callback) {
+  callback = callback || function () {
+  };
+
+  new Comment({
+    itemType: itemType,
+    itemId: itemId,
+    replyId: replyId || undefined,
+    authorId: authorId,
+    text: text
+  }).save(function (err, comment) {
+      callback(err, comment);
+    });
+}
+
 function getCommentsByTopicId(topicId, callback) {
   Comment.find({
     topicId: topicId
   })
     .sort('-_id')
+    .exec(callback);
+}
+
+function getCommentsByItemTypeAndId(itemType, itemId, callback) {
+  Comment.find({
+    itemType: itemType,
+    itemId: itemId
+  })
+    .sort('-like -_id')
     .exec(callback);
 }
 
@@ -45,5 +69,7 @@ function likeComment(_id, callback) {
 }
 
 exports.createComment = createComment;
+exports.createComment2 = createComment2;
 exports.getCommentsByTopicId = getCommentsByTopicId;
+exports.getCommentsByItemTypeAndId = getCommentsByItemTypeAndId;
 exports.likeComment = likeComment;

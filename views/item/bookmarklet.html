@@ -4,6 +4,7 @@
   <title>采集石子儿</title>
   <link type='text/css' rel='stylesheet' href='/stylesheets/bootstrap.min.css'/>
   <link type='text/css' rel='stylesheet' href="/stylesheets/flat-ui.css">
+  <link type='text/css' rel='stylesheet' href="/stylesheets/jquery-ui-1.10.4.custom.min.css">
   <link type='text/css' rel="stylesheet" href="/font-awesome-4.0.3/css/font-awesome.min.css">
   <link type='text/css' rel='stylesheet' href='/stylesheets/common.css'/>
   <link type='text/css' rel='stylesheet' href='/stylesheets/topic.css'/>
@@ -21,6 +22,9 @@
     .Content.IMAGE {
       width: 100% !important;
     }
+    .ui-autocomplete {
+      z-index: 1041;
+    }
   </style>
 
   <!--[if IE]>
@@ -28,6 +32,7 @@
   <script src="http://cdn.bootcss.com/respond.js/1.3.0/respond.min.js"></script>
   <![endif]-->
   <script type="text/javascript" src="http://cdn.bootcss.com/jquery/1.11.0/jquery.min.js"></script>
+  <script type="text/javascript" src="/javascripts/jquery-ui-1.10.4.custom.min.js"></script>
   <script src="http://cdn.bootcss.com/angular.js/1.2.15/angular.min.js"></script>
   <script>
     window.shizier = window.shizier || {};
@@ -42,10 +47,13 @@
   <script type="text/javascript" src="/javascripts/utils.js"></script>
   <script type="text/javascript" src="/javascripts/ui-utils.min.js"></script>
   <script type="text/javascript" src="/bower_components/spin.js/spin.js"></script>
+  <script type="text/javascript" src="/bower_components/ui-autocomplete/autocomplete.js"></script>
+  <script type="text/javascript" src='/bower_components/angular-elastic/elastic.js'></script>
   <script>
     (function () {
-      window.sng.controller('BookmarkletCtrl', function ($scope, $http, $sce, $timeout) {
+      window.sng.controller('BookmarkletCtrl', function ($scope, $http, $sce, $timeout, $compile) {
         var InitData;
+        $scope.descriptionMaxLength = 140;
         $scope.init = function (initData) {
           if (initData) {
             InitData = initData;
@@ -54,6 +62,9 @@
           }
           $http.get('/item/detail?url=' + encodeURIComponent(InitData.url))
             .success(function (data) {
+              var detail = data.detail;
+              $scope.topicTexts = data.topicTexts;
+
               $scope.loaded = true;
               $scope.item = InitData;
               if ($scope.item.title.length > 50) {
@@ -65,8 +76,8 @@
               $scope.item.quote = $scope.item.url;
               $scope.item.quoteDomain = shizier.utils.getQuote($scope.item.quote, $scope.item.type);
               $scope.item.fav = shizier.utils.getFav($scope.item.url);
-              $.extend($scope.item, data);
-              if (!data) {
+              $.extend($scope.item, detail);
+              if (!detail) {
                 $scope.item.type = 'IMAGE';
               }
               if (InitData.cite) {
@@ -108,7 +119,7 @@
             });
           }
           $scope.saving = true;
-          $http.post('/item/bookmarklet', data)
+          $http.post($scope.item.topic ? '/item2' : '/item/bookmarklet', data)
             .success(function () {
               $scope.cancel();
             })
@@ -151,6 +162,24 @@
         };
         $scope.getWeiboHtml = function (text) {
           return $sce.trustAsHtml(text);
+        };
+        $scope.autocompleteOption = {
+          options: {
+            autoFocus: true,
+            focusOpen: true,
+            onlySelect: true,
+            source: function (request, response) {
+              var data = $scope.autocompleteOption.methods.filter($scope.topicTexts, request.term);
+
+              if (!data.length) {
+                data.push({
+                  label: 'not found',
+                  value: ''
+                });
+              }
+              response(data);
+            }
+          }
         };
       });
 
@@ -202,6 +231,8 @@
         </div>
         <form class="modal-body clearfix" ng-submit="submit()"
               style="border-radius: 0 0 6px 6px;">
+          <input class="form-control form-group flat" placeholder="添加到话题（选择或新建，不填则添加到收藏夹）"
+                 type="text" ng-model="item.topic" ui-autocomplete="autocompleteOption">
           <div class="background-white form-group" style="border-radius: 6px; width: 100%;">
             <div class="Categories background-muted" style="border-radius: 6px 6px 0 0;">
               <div class="btn-group" style="width: 100%;">
@@ -241,8 +272,13 @@
                       </a>
                     </div>
                     <div class="Snippet text-muted small mtx" ng-if="item.snippet">{{item.snippet}}</div>
-                    <div class="Description text-asbestos mts small"
-                         ng-if="item.description" ng-bind-html="getHtml(item.description)"></div>
+                    <div class="form-group">
+                      <textarea msd-elastic name="description" class="form-control flat text-center"
+                                ng-model="$parent.item.description"
+                                maxlength="{{descriptionMaxLength}}"
+                                placeholder="图片介绍、评论"></textarea>
+                      <div class="LetterCounter">{{description.length || 0}}/{{descriptionMaxLength}}</div>
+                    </div>
                     <div class="clearfix"></div>
                   </div>
                   <div class="Content IMAGE pam" ng-show="images.length"
@@ -276,6 +312,13 @@
                                placeholder="图片标题" type="text">
                         <div class="LetterCounter">{{$parent.imageTitle.length || 0}}/50</div>
                       </div>
+                      <div class="form-group">
+                        <textarea msd-elastic name="description" class="form-control flat text-center"
+                                  ng-model="$parent.item.description"
+                                  maxlength="{{descriptionMaxLength}}"
+                                  placeholder="图片介绍、评论"></textarea>
+                        <div class="LetterCounter">{{description.length || 0}}/{{descriptionMaxLength}}</div>
+                      </div>
                     </div>
                     <div ng-show="!$parent.imageSrc">
                       <div class="prm mbm text-center">
@@ -292,8 +335,6 @@
                         </button>
                       </div>
                     </div>
-                    <div class="Description text-asbestos text-center small mtx"
-                         ng-bind-html="getHtml(item.description)"></div>
                   </div>
                   <div class="Content VIDEO pam" ng-show="item.vid"
                        ng-switch-when="VIDEO">
@@ -334,8 +375,13 @@
                         {{item.title || ''}}
                       </a>
                     </div>
-                    <div class="Description text-asbestos small mtx"
-                         ng-if="item.description" ng-bind-html="getHtml(item.description)"></div>
+                    <div class="form-group">
+                      <textarea msd-elastic name="description" class="form-control flat text-center"
+                                ng-model="$parent.item.description"
+                                maxlength="{{descriptionMaxLength}}"
+                                placeholder="图片介绍、评论"></textarea>
+                      <div class="LetterCounter">{{description.length || 0}}/{{descriptionMaxLength}}</div>
+                    </div>
                   </div>
                   <div class="Content CITE"
                        ng-switch-when="CITE">
@@ -348,8 +394,13 @@
                       出自 <i class="fa fa-globe"></i>
                       <a target="_blank" href="{{item.url}}">{{item.title || item.url}}</a>
                     </div>
-                    <div class="Description text-asbestos small mtx"
-                         ng-if="item.description" ng-bind-html="getHtml(item.description)"></div>
+                    <div class="form-group">
+                      <textarea msd-elastic name="description" class="form-control text-center"
+                                ng-model="$parent.item.description"
+                                maxlength="{{descriptionMaxLength}}"
+                                placeholder="图片介绍、评论"></textarea>
+                      <div class="LetterCounter">{{description.length || 0}}/{{descriptionMaxLength}}</div>
+                    </div>
                   </div>
                   <div class="Content WEIBO pam"
                        ng-switch-when="WEIBO">
@@ -432,8 +483,13 @@
                         ><i class="fa fa-comment-o"></i> 评论</a>
                     </div>
                     <div class="clearfix"></div>
-                    <div class="Description text-asbestos small mtx"
-                         ng-if="item.description" ng-bind-html="getHtml(item.description)"></div>
+                    <div class="form-group">
+                      <textarea msd-elastic name="description" class="form-control flat text-center"
+                                ng-model="$parent.item.description"
+                                maxlength="{{descriptionMaxLength}}"
+                                placeholder="图片介绍、评论"></textarea>
+                      <div class="LetterCounter">{{description.length || 0}}/{{descriptionMaxLength}}</div>
+                    </div>
                   </div>
                 </div>
               </li>

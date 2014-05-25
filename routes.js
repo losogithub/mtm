@@ -12,6 +12,7 @@ var widget = require('./middlewares/widget');
 var site = require('./controllers/site');
 var sign = require('./controllers/sign');
 var topic = require('./controllers/topic');
+var topic2 = require('./controllers/topic2');
 var item = require('./controllers/item');
 var spit = require('./controllers/spit');
 var comment = require('./controllers/comment');
@@ -54,8 +55,11 @@ module.exports = function (app) {
   app.delete('/topic/item', auth.userRequired, topic.deleteItem);
   app.delete('/topic/:topicId', auth.userRequired, topic.deleteTopic);
 
+  app.get('/topic2/:topicText', topic2.showIndex);
+
   app.post('/comment', auth.userRequired, comment.createComment);
   app.post('/comment/like', comment.likeComment);
+  app.post('/comment2', comment.createComment2);
 
   //item
   app.get('/search_image', item.searchImage);
@@ -64,6 +68,7 @@ module.exports = function (app) {
   app.get('/item/detail', auth.userRequired, item.getDetail);
   app.post('/item/bookmarklet', auth.userRequired, item.createCollectionItem);//topic下面有同名方法，重构的时候注意
   app.post('/item', auth.userRequired, item.collectItem);
+  app.post('/item2', auth.userRequired, item.createItem);
   app.put('/item', auth.userRequired, item.editItem);
   app.delete('/item', auth.userRequired, item.deleteItem);
 

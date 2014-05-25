@@ -12,6 +12,8 @@ module.exports = mongoose.model('WeiboItem', {
   type: { type: String, default: 'WEIBO'},
   create_at: { type: Date, default: Date.now },
   update_at: { type: Date, default: Date.now },
+  authorId: ObjectId,
+  topicId: ObjectId,
 
   url: String,
   description: String,

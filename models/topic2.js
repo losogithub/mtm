@@ -10,7 +10,7 @@ var mongoose = require('mongoose');
 var ObjectId = mongoose.Schema.ObjectId;
 
 module.exports = mongoose.model('Topic2', {
-  text: String,
+  text: { type: String, unique: true },
   authorId: ObjectId,
   PVCount: { type: Number, default: 0 },
   createDate: { type: Date, default: Date.now }

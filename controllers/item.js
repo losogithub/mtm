@@ -8,11 +8,14 @@
 
 var async = require('async');
 var extend = require('extend');
+var sanitize = require('validator').sanitize;
+var check = require('validator').check;
 
 var helper = require('../helper/helper');
 
 var Item = require('../proxy/item');
 var User = require('../proxy/user');
+var Topic2 = require('../proxy/topic2');
 
 var config = require('../config');
 
@@ -218,11 +221,70 @@ function getDetail(req, res, next) {
   console.log('getDetail');
   var url = req.query.url;
 
-  helper.getDetail(url, function (err, results) {
+  async.auto({
+    topics: function (callback) {
+      Topic2.getTopic2s(callback);
+    },
+    detail: function (callback) {
+      helper.getDetail(url, callback);
+    }
+  }, function (err, results) {
+    if (err) return next(err);
+
+    var topics = results.topics;
+    var topicTexts = [];
+    topics.slice(0, 5).forEach(function (topic) {
+      if (!topic.text) {
+        return;
+      }
+      topicTexts.push(topic.text);
+    });
+    var detail = results.detail;
+    res.json({
+      topicTexts: topicTexts,
+      detail: detail && helper.getItemData(detail)
+    });
+  });
+}
+
+function createItem(req, res, next) {
+  console.log('createItem=====');
+  var userId = req.session.userId;
+  var topicText = sanitize(req.body.topic).trim();
+
+  try {
+    var data = helper.getData(req, true);
+    check(topicText).len(0, 20);
+  } catch (err) {
+    return next(err);
+  }
+  if (!data) {
+    return next(new Error(500));
+  }
+
+  async.auto({
+    tempTopic: function (callback) {
+      Topic2.getTopic2ByText(topicText, callback);
+    },
+    topic: ['tempTopic', function (callback, results) {
+      var topic = results.tempTopic;
+      if (topic) return callback(null, topic);
+
+      Topic2.createTopic2(topicText, userId, callback);
+    }],
+    item: ['topic', function (callback, results) {
+      data.authorId = userId;
+      data.topicId = results.topic._id;
+      Item.createItem(data, callback);
+    }]
+  }, function (err, results) {
     if (err) {
       return next(err);
     }
-    res.json(results && helper.getItemData(results));
+
+    var item = results.item;
+    res.json(helper.getItemData(item));
+    console.log('createItem done');
   });
 }
 
@@ -234,3 +296,4 @@ exports.deleteItem = deleteItem;
 exports.editItem = editItem;
 //exports.getCollection = getCollection;
 exports.getDetail = getDetail;
+exports.createItem = createItem;
