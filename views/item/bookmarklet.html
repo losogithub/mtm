@@ -217,7 +217,9 @@
         parent.postMessage('close', '*');
       });
       $modal.on('shown.bs.modal', function () {
-        $('.AUTO_FOCUS').focus();
+        setTimeout(function () {
+          $('.AUTO_FOCUS').focus();
+        }, 0);
       });
       $modal.modal();
     });
