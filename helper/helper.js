@@ -254,7 +254,7 @@ function getVideoDetail(url, callback) {
       case '搜狐视频':
         //plan A
         //<h2>\s20130712 第一期 姚贝娜《也许明天》\s</h2>
-        title = !(temp = html.match(/<h2>\s*([^<>]*)\s*<\/h2>/i)) ? null : !temp[1] ? null : temp[1];
+        title = !(temp = html.match(/<title>\s*([^<>]*)\s*<\/title>/i)) ? null : !temp[1] ? null : temp[1];
         //http://tv.sohu.com/20130712/n381487508.shtml
         //<script type="text/javascript">......var vid="1237900";......</script>
         vid = !(temp = html.match(/<script((?!<\/script>)[\s\S])*\svar vid\s*=\s*['"]([^"'<>;]+)['"];/i)) ? null : !temp[2] ? null : temp[2];
