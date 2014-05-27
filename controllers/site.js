@@ -45,7 +45,7 @@ function showTest(req, res) {
         Topic2.getTopic2ById(item.topicId, function (err, topic) {
           if (err) return callback(err);
 
-          topic.itemCount = 0;
+          topic.itemCount = 1;
           extend(newItem, {
             topic: topic
           });
