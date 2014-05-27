@@ -46,13 +46,6 @@ function showUsers(req, res, next) {
 }
 
 function showWorks(req, res, next) {
-
-  //console.log(req.session);
-  console.log("sort strategy: ")
-  console.log(req.query.mt);
-  console.log(req.query.mo);
-
-  console.log("render show works page");
   User.getUserById(req.session.userId, function (err, user) {
     if (err) {
       return next(err);
@@ -215,7 +208,7 @@ function renderWorks(req, res, next, user, topicsInfos, currentPage, totalPage, 
       return next(err);
     }
 
-    var user = results.user;
+    res.locals.yourself = results.user;
     var items = results.items;
     var comments = results.comments;
 
