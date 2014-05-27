@@ -4,13 +4,13 @@
   <li class="<%= item && item.type || '' %>"
       data-options="<%= item && JSON.stringify(item) || '' %>">
     <div class="Item Hoverable pal">
-      <div class="text-center" style="line-height: 20px;">
-        <a class="text-primary" href="/topic2/<%= item.topic.text %>">
+      <div class="text-center" style="line-height: 30px;">
+        <a class="text-primary h6" style="" href="/topic2/<%= item.topic.text %>">
           <span class="text-muted">#</span>
           <%= item.topic.text %>
           <span class="text-muted">#</span>
         </a>
-        <span class="text-muted">
+        <span class="text-muted" style="font-size: 12px;">
           共<%= item.topic.itemCount %>个石子儿
         </span>
       </div>
