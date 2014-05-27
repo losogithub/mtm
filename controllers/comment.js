@@ -13,6 +13,7 @@ var Common = require('../common');
 var Item = require('../proxy/item');
 var Comment = require('../proxy/comment');
 var Message = require('../proxy/message');
+var User = require('../proxy/user');
 
 function createComment(req, res, next) {
   var topicId = req.body.topicId;
@@ -50,10 +51,12 @@ function createComment2(req, res, next) {
     if (err) return next(err);
 
     res.json(comment);
+
     Item.getItemById(itemType, itemId, function (err, item) {
-      if (err || !item) return;
+      if (err || !item || item.authorId == authorId) return;
 
       Message.createMessage(item.authorId, authorId, itemType, itemId, null);
+      User.increaseMessageCount(item.authorId, null);
     });
   });
 }

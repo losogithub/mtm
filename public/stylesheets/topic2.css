@@ -317,6 +317,9 @@
     width: 458px;
   }
 }
+.SpitBubble {
+  z-index: 11;
+}
 .SpitBubble .Spits {
   overflow: hidden;
   position: absolute;

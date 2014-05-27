@@ -118,6 +118,9 @@ function getAndSortTopics(authorId, mt, mo, callback) {
 
 function renderWorks(req, res, next, user, topicsInfos, currentPage, totalPage, mt, mo, length) {
   async.auto({
+    user: function (callback) {
+      User.resetMessageCount(user, callback);
+    },
     messages: function (callback) {
       Message.getMessagesByOwnerId(user._id, callback);
     },
@@ -212,6 +215,7 @@ function renderWorks(req, res, next, user, topicsInfos, currentPage, totalPage, 
       return next(err);
     }
 
+    var user = results.user;
     var items = results.items;
     var comments = results.comments;
 

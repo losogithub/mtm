@@ -105,6 +105,9 @@
             src="<%= locals.yourself.url || '/images/no_img/user_80x80.png' %>"
             onerror="shizier.errorImage(this,'user_80x80');">
           <%= locals.yourself.loginName %>
+          <% if(locals.yourself.messageCount) { %>
+          <span class="navbar-new"><%= locals.yourself.messageCount %></span>
+          <% } %>
         </a>
         <ul style="z-index: 1002;">
           <li>

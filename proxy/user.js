@@ -175,8 +175,23 @@ function deleteItem(user, _id, callback) {
 function getAllUserEmail(callback){
     UserModel.find({}, 'email', callback);
 }
+
 function getAllActiveUserEmail(callback){
     UserModel.find({'active': true}, 'email', callback);
+}
+
+function increaseMessageCount(_id, callback) {
+  UserModel.findByIdAndUpdate(_id, { $inc: { messageCount: 1 } }).exec(callback);
+}
+
+function resetMessageCount(user, callback) {
+  callback = callback || function () {
+  };
+
+  user.messageCount = 0;
+  user.save(function (err, user) {
+    callback(err, user);
+  });
 }
 
 
@@ -198,3 +213,5 @@ exports.getAllUsers = getAllUsers;
 exports.getAllUsersSorted = getAllUsersSorted;
 exports.getAllUserEmail = getAllUserEmail;
 exports.getAllActiveUserEmail = getAllActiveUserEmail;
+exports.increaseMessageCount = increaseMessageCount;
+exports.resetMessageCount = resetMessageCount;

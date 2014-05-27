@@ -12,6 +12,7 @@ module.exports = mongoose.model('User', {
   description: String,
   personalSite: String,
   active: Boolean,
+  messageCount: { type: Number, default: 0 },
   createDate: { type: Date, default: Date.now },
 
   retrieve_time: Number,
