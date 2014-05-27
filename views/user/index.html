@@ -1,9 +1,119 @@
 <!--PERSONAL##这是layout要用的参数，不能删！-->
-<div class="pvl background-clouds">
-  <div class="container">
+<div class="background-clouds">
+  <div class="container pbl">
+    <% if (locals.personalType == 'WORKS' && locals.items.length) { %>
+    <div class="row"
+         ng-init="comments = <%= JSON.stringify(locals.comments) %>">
+      <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-8 col-lg-7">
+        <div class="background-white mtl pal" style="border-radius: 6px;">
+
+          <h1 class="h6 text-center" style="margin: 40px 0;">
+            您最近被评论的石子儿
+          </h1>
+
+          <div style="margin: 0 -20px;">
+            <% include _ul.html %>
+          </div>
+
+          <!--模板-->
+          <div class="TEMPLATES" style="display:none;">
+
+            <% include ../topic2/_video_player.html %>
+
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-4 col-lg-5">
+        <div class="SpitWrapper hidden-xs hidden-sm">
+          <div class="SpitBubble background-clouds-lighten mvl pal" style="border-radius: 6px;"
+               ng-init="yourself = <%= JSON.stringify(locals.yourself && {
+                _id: locals.yourself._id,
+                loginName: locals.yourself.loginName,
+                url: locals.yourself.url
+              }) %>;init();"
+               ng-controller="CommentCtrl2">
+            <% if (locals.yourself) { %>
+            <div class="clearfix background-clouds-darken phl ptl" style="border-radius: 6px 6px 0 0;margin: -20px -20px 0;">
+              <a class="img-circle-border pull-left mrm"
+                 href="/u/{{yourself.loginName}}">
+                <img class="img-circle" width="50" height="50" ng-src="{{yourself.url || '/images/no_img/user_80x80.png'}}">
+              </a>
+              <div style="overflow: hidden;">
+                <div style="line-height: 1;">
+                  <a href="/u/{{yourself.loginName}}">{{yourself.loginName}}</a>
+                </div>
+                <form class="mtm" ng-submit="submit()">
+                  <div class="form-group">
+                    <input type="text" class="form-control AUTO_FOCUS"
+                           ng-model="comment" maxlength="140"
+                           placeholder="发表评论，回车发送"/>
+                    <div class="LetterCounter">{{comment.length || 0}}/140</div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <% } else { %>
+            <div class="clearfix background-clouds-darken phl ptl" style="border-radius: 6px 6px 0 0;margin: -20px -20px 0;">
+              <div class="img-circle-border pull-left mrm">
+                <img class="img-circle" width="50" height="50" ng-src="/images/no_img/user_80x80.png">
+              </div>
+              <div style="overflow: hidden;">
+                <div class="text-muted" style="line-height: 1;">
+                  匿名用户
+                </div>
+                <form class="mtm" ng-submit="submit()">
+                  <div class="form-group">
+                    <input type="text" class="form-control AUTO_FOCUS"
+                           ng-model="comment" maxlength="140"
+                           placeholder="发表评论，回车发送"/>
+                    <div class="LetterCounter">{{comment.length || 0}}/140</div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <% } %>
+            <div class="SpitCount text-center mtm">
+              <i class="fa fa-comment-o"></i>
+              共{{comments[itemId].length}}条评论
+            </div>
+            <div class="Spits Comments">
+              <div class="Comment pvm clearfix" ng-repeat="comment in comments[itemId]">
+                <a class="img-circle-border-clouds pull-left mrm" ng-show="comment.author"
+                   href="/u/{{comment.author.loginName}}">
+                  <img class="img-circle" width="50" height="50" ng-src="{{comment.author.url || '/images/no_img/user_80x80.png'}}">
+                </a>
+                <div class="img-circle-border-clouds pull-left mrm" ng-show="!comment.author">
+                  <img class="img-circle" width="50" height="50" ng-src="/images/no_img/user_80x80.png">
+                </div>
+                <div style="overflow: hidden;">
+                  <div class="clearfix" style="line-height: 1;">
+                    <button class="btn btn-link pan pull-right mlm"
+                            ng-class="comment.liked ? 'text-muted' : 'text-danger'"
+                            ng-click="like(comment)"
+                            type="button">
+                      <span class="text-muted">{{comment.like || ''}}</span> <i class="fa fa-thumbs-o-up"></i>
+                    </button>
+                    <a href="/u/{{comment.author.loginName}}" ng-show="comment.author">
+                      {{comment.author.loginName}}
+                    </a>
+                    <span class="text-muted" ng-show="!comment.author">匿名用户</span>
+              <span class="text-muted mls" style="font-size: 12px;">
+                {{comment.createDate}}
+              </span>
+                  </div>
+                  <div class="mtm">{{comment.text}}</div>
+                </div>
+              </div>
+            </div>
+            <div class="Arrow" ng-style="{top: arrowY}"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% } %>
     <div class="row">
       <div class="col-md-4 col-lg-3">
-        <div class="clearfix pal mbl" data-spy="affix" data-offset-top="72"
+        <div class="clearfix pal mtl"
              style="background-color: #34495e;color:white;border-radius: 6px;">
           <div class="pull-left mrl img-circle-border"
                style="width: 130px; height: 130px;">
@@ -76,7 +186,7 @@
       </div>
 
       <div class="col-md-8 col-lg-9">
-        <div class="pal" style="background-color: white;border-radius: 6px;">
+        <div class="pal mtl" style="background-color: white;border-radius: 6px;">
           <% if (locals.personalType == 'WORKS') { %>
           <% include _works.html %>
           <% } else if (locals.personalType == 'SETTINGS') { %>

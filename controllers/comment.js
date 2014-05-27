@@ -10,7 +10,9 @@ var sanitize = require('validator').sanitize;
 var check = require('validator').check;
 
 var Common = require('../common');
+var Item = require('../proxy/item');
 var Comment = require('../proxy/comment');
+var Message = require('../proxy/message');
 
 function createComment(req, res, next) {
   var topicId = req.body.topicId;
@@ -35,7 +37,7 @@ function createComment2(req, res, next) {
   var itemType = req.body.itemType;
   var itemId = req.body.itemId;
   var replyId = req.body.replyId;
-  var authorId = req.session.userId;
+  var authorId = req.session.userId;//允许为空
   var text = sanitize(req.body.text).trim();
 
   try {
@@ -48,6 +50,11 @@ function createComment2(req, res, next) {
     if (err) return next(err);
 
     res.json(comment);
+    Item.getItemById(itemType, itemId, function (err, item) {
+      if (err || !item) return;
+
+      Message.createMessage(item.authorId, authorId, itemType, itemId, null);
+    });
   });
 }
 

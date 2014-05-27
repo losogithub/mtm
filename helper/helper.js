@@ -666,7 +666,7 @@ function getData(req, create) {
       var description = sanitize(req.body.description).trim();
 
       check(url).notNull().isUrl();
-      check(vid).len(0, 50);
+      check(vid).len(1, 50);
       check(title).len(0, 50);
       check(description).len(0, 140);
 

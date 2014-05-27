@@ -66,7 +66,7 @@ function showIndex(req, res, next) {
 
             var key = comment._id + req.connection.remoteAddress;
             if (Common.CommentLikedKeys[key]) {
-              comment.liked = true;
+              newComment.liked = true;
             }
 
             User.getUserById(comment.authorId, function (err, user) {

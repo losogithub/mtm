@@ -7,6 +7,7 @@
  * To change this template use File | Settings | File Templates.
  */
 var async = require('async');
+var extend = require('extend');
 var check = require('validator').check;
 var sanitize = require('validator').sanitize;
 
@@ -17,6 +18,9 @@ var escape = helper.escape;
 var Common = require('../common');
 var User = require('../proxy/user');
 var Topic = require('../proxy/topic');
+var Message = require('../proxy/message');
+var Item = require('../proxy/item');
+var Comment = require('../proxy/comment');
 var config = require('../config');
 var LoginToken = require('../proxy/loginToken');
 
@@ -72,7 +76,7 @@ function showWorks(req, res, next) {
       //use a for to add some attributes
       if (!topicDetails.length) {
         console.log("err, cannot get topic details, but have topic ids");
-        return renderWorks(res, user);
+        return renderWorks(req, res, next, user);
       }
 
       //count the totalPage for show
@@ -90,7 +94,7 @@ function showWorks(req, res, next) {
         topicsForShow.push(temp);
       }
 
-      return renderWorks(res, user, topicsForShow, currentPage, totalPage, mt, mo, topicDetails.length);
+      return renderWorks(req, res, next, user, topicsForShow, currentPage, totalPage, mt, mo, topicDetails.length);
     });
   });
 }
@@ -112,21 +116,146 @@ function getAndSortTopics(authorId, mt, mo, callback) {
   return Topic.getAllTopicsByAuthorIdSorted(authorId, order, callback);
 }
 
-function renderWorks(res, user, topicsInfos, currentPage, totalPage, mt, mo, length) {
-  res.render('user/index', {
-    css: [
-      '/stylesheets/user.css'
-    ],
-    title: '我的策展',
-    personalType: 'WORKS',
-    user: user,
-    topicsPageView: Common.AuthorPVCount[user.loginName],
-    topicCount: length,
-    topics: topicsInfos,
-    currentPage: currentPage,
-    totalPage: totalPage,
-    mt: mt,
-    mo: mo
+function renderWorks(req, res, next, user, topicsInfos, currentPage, totalPage, mt, mo, length) {
+  async.auto({
+    messages: function (callback) {
+      Message.getMessagesByOwnerId(user._id, callback);
+    },
+    tempItems: ['messages', function (callback, results) {
+      var messages = results.messages;
+
+      var itemIds = {};
+      var tempItems = [];
+      async.forEachSeries(messages, function (message, callback) {
+        if (itemIds[message.itemId]) return callback();
+
+        itemIds[message.itemId] = 1;
+        Item.getItemById(message.itemType, message.itemId, function (err, item) {
+          if (err) return callback(err);
+
+          tempItems.push(item);
+          callback();
+        });
+      }, function (err) {
+        if (err) return callback(err);
+
+        callback(null, tempItems);
+      });
+    }],
+    items: ['tempItems', function (callback, results) {
+      var tempItems = results.tempItems;
+
+      async.mapSeries(tempItems, function (item, callback) {
+        var newItem = item.toJSON();
+        newItem.create_at = utils.getFormatedDate(newItem.create_at);
+
+        User.getUserById(item.authorId, function (err, user) {
+          if (err) return callback(err);
+
+          if (user) {
+            extend(newItem, {
+              author: {
+                loginName: user.loginName,
+                url: user.url
+              }
+            })
+          }
+
+          callback(null, newItem);
+        });
+      }, callback);
+    }],
+    comments: ['items', function (callback, results) {
+      var items = results.items;
+      var comments = {};
+      async.forEachSeries(items, function (item, callback) {
+        Comment.getCommentsByItemTypeAndId(item.type, item._id, function (err, tempComments) {
+          if (err) return callback(err);
+
+          async.mapSeries(tempComments, function (comment, callback) {
+            var newComment = comment.toJSON();
+
+            var key = comment._id + req.connection.remoteAddress;
+            if (Common.CommentLikedKeys[key]) {
+              newComment.liked = true;
+            }
+
+            User.getUserById(comment.authorId, function (err, user) {
+              if (err) return callback(err);
+
+              if (user) {
+                extend(newComment, {
+                  author: {
+                    loginName: user.loginName,
+                    url: user.url
+                  }
+                });
+              }
+
+              callback(null, newComment);
+            });
+          }, function (err, newComments) {
+            if (err) return callback(err);
+
+            comments[item._id] = newComments;
+            callback();
+          });
+        });
+      }, function (err) {
+        if (err) return callback(err);
+
+        callback(null, comments);
+      });
+    }]
+  }, function (err, results) {
+    if (err) {
+      return next(err);
+    }
+
+    var items = results.items;
+    var comments = results.comments;
+
+    var itemsData = [];
+    items.forEach(function (item) {
+      if (item && item.type && item._id) {
+        itemsData.push(extend(
+          helper.getItemData(item), {
+            author: item.author,
+            create_at: item.create_at
+          }
+        ));
+      }
+    });
+
+    res.render('user/index', {
+      title: '我的策展',
+      personalType: 'WORKS',
+      user: user,
+      topicsPageView: Common.AuthorPVCount[user.loginName],
+      topicCount: length,
+      topics: topicsInfos,
+      currentPage: currentPage,
+      totalPage: totalPage,
+      mt: mt,
+      mo: mo,
+      css: [
+        '/bower_components/perfect-scrollbar/min/perfect-scrollbar-0.4.10.min.css',
+        'http://cdn.bootcss.com/messenger/1.4.0/css/messenger.css',
+        'http://cdn.bootcss.com/messenger/1.4.0/css/messenger-theme-flat.css',
+        '/stylesheets/topic2.css',
+        '/stylesheets/user.css'
+      ],
+      js: [
+        '/bower_components/perfect-scrollbar/min/perfect-scrollbar-0.4.10.min.js',
+        'http://cdn.bootcss.com/messenger/1.4.0/js/messenger.js',
+        'http://cdn.bootcss.com/messenger/1.4.0/js/messenger-theme-flat.js',
+        'http://cdn.bootcss.com/jquery-mousewheel/3.1.6/jquery.mousewheel.min.js',
+        '/javascripts/utils.js',
+        '/javascripts/topic2.js'
+      ],
+      items: itemsData,
+      comments: comments
+    });
   });
 }
 

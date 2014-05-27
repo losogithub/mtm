@@ -31,6 +31,7 @@ exports.ItemModels = {
 }
 exports.Spit = require('./spit');
 exports.Comment = require('./comment');
+exports.Message = require('./message');
 
 exports.User = require('./user');
 exports.LoginToken = require('./loginToken');
