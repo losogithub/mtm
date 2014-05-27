@@ -18,7 +18,10 @@ var Comment = require('../proxy/comment');
 var utils = require('../public/javascripts/utils');
 
 function showIndex(req, res, next) {
-  console.log('showIndex=====');
+  console.log('topic2 showIndex=====');
+
+  console.log('ip: ' + req.connection.remoteAddress);
+  console.log("topicId: " + req.params.topicId);
   var topicText = req.params.topicText;
 
   async.auto({
