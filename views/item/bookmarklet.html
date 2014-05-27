@@ -62,6 +62,7 @@
           }
           $http.get('/item/detail?url=' + encodeURIComponent(InitData.url))
             .success(function (data) {
+              $scope.showLogin = false;
               var detail = data.detail;
               $scope.topicTexts = data.topicTexts;
 
@@ -105,7 +106,6 @@
             remember: $scope.remember
           })
             .success(function () {
-              $scope.showLogin = false;
               $scope.init();
             })
             .error(function () {

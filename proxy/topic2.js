@@ -36,6 +36,10 @@ function getTopic2ByText(text, callback) {
   }, callback);
 }
 
+function getTopic2ById(_id, callback) {
+  Topic2.findById(_id, callback);
+}
+
 function increasePVCountBy(topic, increment, callback) {
   return topic.update({$inc: {PV_count: increment}}, callback);
 }
@@ -43,4 +47,5 @@ function increasePVCountBy(topic, increment, callback) {
 exports.createTopic2 = createTopic2;
 exports.getTopic2s = getTopic2s;
 exports.getTopic2ByText = getTopic2ByText;
+exports.getTopic2ById = getTopic2ById;
 exports.increasePVCountBy = increasePVCountBy;

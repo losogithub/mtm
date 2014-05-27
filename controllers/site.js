@@ -6,11 +6,17 @@
  * To change this template use File | Settings | File Templates.
  */
 var async = require('async');
+var extend = require('extend');
 
 var Common = require('../common');
 var Topic = require('../proxy/topic');
 var Topic2 = require('../proxy/topic2');
 var User = require('../proxy/user');
+var Item = require('../proxy/item');
+var Comment = require('../proxy/comment');
+
+var helper = require('../helper/helper');
+var utils = require('../public/javascripts/utils');
 
 //var topicsPerPage = 24;
 //var topicsInIndex = 24;
@@ -19,16 +25,115 @@ var topicsPerPage = 12;
 
 function showTest(req, res) {
   async.auto({
-    topics: function (callback) {
-      Topic2.getTopic2s(callback);
-    }
-  }, function (err, results) {
-    var topics = results.topics;
+    tempItems: function (callback) {
+      Item.getAllTopic2Items(callback);
+    },
+    items: ['tempItems', function (callback, results) {
+      var tempItems = results.tempItems;
 
-    console.log(topics)
+      var topics = {};
+      var items = [];
+      async.forEachSeries(tempItems, function (item, callback) {
+        if (topics[item.topicId]) {
+          topics[item.topicId].itemCount++;
+          return callback();
+        }
+
+        var newItem = item.toJSON();
+        newItem.create_at = utils.getFormatedDate(newItem.create_at);
+
+        Topic2.getTopic2ById(item.topicId, function (err, topic) {
+          if (err) return callback(err);
+
+          topic.itemCount = 0;
+          extend(newItem, {
+            topic: topic
+          });
+
+          topics[item.topicId] = topic;
+          items.push(newItem);
+          callback();
+        });
+      }, function (err) {
+        if (err) return callback(err);
+
+        callback(null, items);
+      });
+    }],
+    comments: ['items', function (callback, results) {
+      var items = results.items;
+      var comments = {};
+      async.forEachSeries(items, function (item, callback) {
+        Comment.getCommentsByItemTypeAndId(item.type, item._id, function (err, tempComments) {
+          if (err) return callback(err);
+
+          async.mapSeries(tempComments, function (comment, callback) {
+            var newComment = comment.toJSON();
+
+            var key = comment._id + req.connection.remoteAddress;
+            if (Common.CommentLikedKeys[key]) {
+              newComment.liked = true;
+            }
+
+            User.getUserById(comment.authorId, function (err, user) {
+              if (err) return callback(err);
+
+              if (user) {
+                extend(newComment, {
+                  author: {
+                    loginName: user.loginName,
+                    url: user.url
+                  }
+                });
+              }
+
+              callback(null, newComment);
+            });
+          }, function (err, newComments) {
+            if (err) return callback(err);
+
+            comments[item._id] = newComments;
+            callback();
+          });
+        });
+      }, function (err) {
+        if (err) return callback(err);
+
+        callback(null, comments);
+      });
+    }]
+  }, function (err, results) {
+    var items = results.items;
+    var comments = results.comments;
+
+    var itemsData = [];
+    items.forEach(function (item) {
+      if (item && item.type && item._id) {
+        itemsData.push(extend(
+          item,
+          helper.getItemData(item)
+        ));
+      }
+    });
+
     res.render('test', {
       pageType: 'TEST',
-      topics: topics
+      css: [
+        '/bower_components/perfect-scrollbar/min/perfect-scrollbar-0.4.10.min.css',
+        'http://cdn.bootcss.com/messenger/1.4.0/css/messenger.css',
+        'http://cdn.bootcss.com/messenger/1.4.0/css/messenger-theme-flat.css',
+        '/stylesheets/topic2.css'
+      ],
+      js: [
+        '/bower_components/perfect-scrollbar/min/perfect-scrollbar-0.4.10.min.js',
+        'http://cdn.bootcss.com/messenger/1.4.0/js/messenger.js',
+        'http://cdn.bootcss.com/messenger/1.4.0/js/messenger-theme-flat.js',
+        'http://cdn.bootcss.com/jquery-mousewheel/3.1.6/jquery.mousewheel.min.js',
+        '/javascripts/utils.js',
+        '/javascripts/topic2.js'
+      ],
+      items: itemsData,
+      comments: comments
     });
   });
 }

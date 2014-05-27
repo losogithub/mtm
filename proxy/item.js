@@ -112,6 +112,28 @@ function getItems(topic, callback) {
   });
 }
 
+function getAllTopic2Items(callback) {
+  callback = callback || function () {
+  };
+
+  var allItems = [];
+  async.forEach(['LINK', 'IMAGE', 'VIDEO', 'CITE', 'WEIBO'], function (type, callback) {
+    ItemModels[type].find({ topicId: { $exists: true } }, function (err, items) {
+      if (err) return callback(err);
+
+      allItems = allItems.concat(items);
+      callback();
+    });
+  }, function (err) {
+    if (err) return callback(err);
+
+    allItems.sort(function (a, b) {
+      return parseInt(b._id, 16) - parseInt(a._id, 16);
+    });
+    callback(null, allItems);
+  });
+}
+
 function getItemsByTopicId(topicId, callback) {
   callback = callback || function () {
   };
@@ -209,6 +231,7 @@ function deleteItem(type, _id, callback) {
 exports.cloneItem = cloneItem;//增
 exports.createItem = createItem;//增
 exports.getItems = getItems;//查
+exports.getAllTopic2Items = getAllTopic2Items;//查
 exports.getItemsByTopicId = getItemsByTopicId;//查
 exports.getItemById = getItemById;//查
 exports.getItemsById = getItemsById;//查

@@ -4,21 +4,15 @@
   <li class="<%= item && item.type || '' %>"
       data-options="<%= item && JSON.stringify(item) || '' %>">
     <div class="Item Hoverable pal">
-      <div style="line-height: 20px;">
-        <a style="display: inline-block;"
-           href="/u/<%= item.author.loginName %>">
-          <img class="img-circle" width="20" height="20"
-               ng-src="<%= item.author.url || '/images/no_img/user_80x80.png' %>">
-        </a>
-        <a class="mrs" href="/u/<%= item.author.loginName %>"><%= item.author.loginName %></a>
-        <span class="text-muted" style="font-size: 12px;">
-          <%= item.create_at %>
-        </span>
-        <a class="pull-right text-primary" href="/topic2/<%= item.topic.text %>">
+      <div class="text-center" style="line-height: 20px;">
+        <a class="text-primary" href="/topic2/<%= item.topic.text %>">
           <span class="text-muted">#</span>
           <%= item.topic.text %>
           <span class="text-muted">#</span>
         </a>
+        <span class="text-muted">
+          共<%= item.topic.itemCount %>个石子儿
+        </span>
       </div>
 
       <% if (item.type == 'LINK') { %>
@@ -58,7 +52,7 @@
       <% if (item.type == 'VIDEO') { %>
       <div class="Content VIDEO pam mtm">
 
-        <% include ../topic2/_video_cover.html %>
+        <% include ./topic2/_video_cover.html %>
 
         <div class="Quote">
           <i class="fa fa-globe"></i>

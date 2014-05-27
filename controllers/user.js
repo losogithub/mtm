@@ -18,6 +18,7 @@ var escape = helper.escape;
 var Common = require('../common');
 var User = require('../proxy/user');
 var Topic = require('../proxy/topic');
+var Topic2 = require('../proxy/topic2');
 var Message = require('../proxy/message');
 var Item = require('../proxy/item');
 var Comment = require('../proxy/comment');
@@ -154,10 +155,18 @@ function renderWorks(req, res, next, user, topicsInfos, currentPage, totalPage, 
                 loginName: user.loginName,
                 url: user.url
               }
-            })
+            });
           }
 
-          callback(null, newItem);
+          Topic2.getTopic2ById(item.topicId, function (err, topic) {
+            if (err) return callback(err);
+
+            extend(newItem, {
+              topic: topic
+            });
+
+            callback(null, newItem);
+          });
         });
       }, callback);
     }],
@@ -216,10 +225,8 @@ function renderWorks(req, res, next, user, topicsInfos, currentPage, totalPage, 
     items.forEach(function (item) {
       if (item && item.type && item._id) {
         itemsData.push(extend(
-          helper.getItemData(item), {
-            author: item.author,
-            create_at: item.create_at
-          }
+          item,
+          helper.getItemData(item)
         ));
       }
     });

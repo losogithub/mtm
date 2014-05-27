@@ -1,22 +1,22 @@
 <div class="background-clouds">
   <div class="container pbl">
-
-    <h1 class="h6 mvn mtl">
-      热门话题
-    </h1>
     <div class="row">
       <div class="col-md-7 col-lg-8">
 
         <div class="background-white pal mtl" style="border-radius: 6px;">
-          <% locals.topics.forEach(function (topic) { %>
-          <div>
-            <a href="/topic2/<%= topic.text %>">
-              <span class="text-muted">#</span>
-              <%= topic.text %>
-              <span class="text-muted">#</span>
-            </a>
+
+          <h1 class="h6 text-center" style="margin: 40px 0;">
+            热门话题
+          </h1>
+
+          <div style="margin: 0 -20px;">
+            <% include _ul.html %>
           </div>
-          <% }) %>
+
+          <!--模板-->
+          <div class="TEMPLATES" style="display:none;">
+            <% include ./topic2/_video_player.html %>
+          </div>
         </div>
 
       </div>
