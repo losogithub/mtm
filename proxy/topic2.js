@@ -36,6 +36,12 @@ function getTopic2ByText(text, callback) {
   }, callback);
 }
 
+function getTopic2sByRegExp(regExp, callback) {
+  Topic2.find({
+    text: regExp
+  }, callback);
+}
+
 function getTopic2ById(_id, callback) {
   Topic2.findById(_id, callback);
 }
@@ -47,5 +53,6 @@ function increasePVCountBy(topic, increment, callback) {
 exports.createTopic2 = createTopic2;
 exports.getTopic2s = getTopic2s;
 exports.getTopic2ByText = getTopic2ByText;
+exports.getTopic2sByRegExp = getTopic2sByRegExp;
 exports.getTopic2ById = getTopic2ById;
 exports.increasePVCountBy = increasePVCountBy;

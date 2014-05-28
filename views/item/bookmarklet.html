@@ -9,23 +9,7 @@
   <link type='text/css' rel='stylesheet' href='/stylesheets/common.css'/>
   <link type='text/css' rel='stylesheet' href='/stylesheets/topic2.css'/>
   <link type='text/css' rel='stylesheet' href='/stylesheets/edit.css'/>
-  <style>
-    .modal {
-      overflow-y: auto;
-    }
-    .WidgetItemList {
-      padding-bottom: 0;
-    }
-    .WidgetItemList .Hoverable:hover {
-      background-color: transparent;
-    }
-    .Content.IMAGE {
-      width: 100% !important;
-    }
-    .ui-autocomplete {
-      z-index: 1041;
-    }
-  </style>
+  <link type='text/css' rel='stylesheet' href='/stylesheets/bookmarklet.css'/>
 
   <!--[if IE]>
   <script src="http://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.min.js"></script>
@@ -47,11 +31,10 @@
   <script type="text/javascript" src="/javascripts/utils.js"></script>
   <script type="text/javascript" src="/javascripts/ui-utils.min.js"></script>
   <script type="text/javascript" src="/bower_components/spin.js/spin.js"></script>
-  <script type="text/javascript" src="/bower_components/ui-autocomplete/autocomplete.js"></script>
   <script type="text/javascript" src='/bower_components/angular-elastic/elastic.js'></script>
   <script>
     (function () {
-      window.sng.controller('BookmarkletCtrl', function ($scope, $http, $sce, $timeout, $compile) {
+      window.sng.controller('BookmarkletCtrl', function ($scope, $http, $sce, $timeout) {
         var InitData;
         $scope.descriptionMaxLength = 140;
         $scope.init = function (initData) {
@@ -172,23 +155,11 @@
         $scope.getWeiboHtml = function (text) {
           return $sce.trustAsHtml(text);
         };
-        $scope.autocompleteOption = {
-          options: {
-            autoFocus: true,
-            focusOpen: true,
-            onlySelect: true,
-            source: function (request, response) {
-              var data = $scope.autocompleteOption.methods.filter($scope.topicTexts, request.term);
-
-              if (!data.length) {
-                data.push({
-                  label: 'not found',
-                  value: ''
-                });
-              }
-              response(data);
-            }
-          }
+        $scope.getTopics = function(val) {
+          return $http.get('/bookmarklet/topics?topic=' + encodeURIComponent(val))
+            .then(function(res){
+              return res.data;
+            });
         };
       });
 
@@ -242,8 +213,16 @@
         </div>
         <form class="modal-body clearfix" ng-submit="submit()"
               style="border-radius: 0 0 6px 6px;">
-          <input class="form-control form-group flat" placeholder="添加到话题（选择或新建，不填则添加到收藏夹）"
-                 type="text" ng-model="item.topic" ui-autocomplete="autocompleteOption">
+          <div class="input-group form-group">
+            <span class="input-group-addon">#</span>
+            <div style="position: relative;">
+            <input class="form-control flat AUTO_FOCUS" style="border-radius: 0;"
+                   placeholder="添加到话题（选择或新建，不填则添加到收藏夹）"
+                   type="text" ng-model="item.topic"
+                   typeahead="address for address in getTopics($viewValue)">
+            </div>
+            <span class="input-group-addon">#</span>
+          </div>
           <div class="background-white form-group" style="border-radius: 6px; width: 100%;">
             <div class="Categories background-muted" style="border-radius: 6px 6px 0 0;">
               <div class="btn-group" style="width: 100%;">
@@ -469,7 +448,7 @@
             </ul>
           </div>
           <div class="form-group">
-            <textarea msd-elastic name="description" class="form-control flat AUTO_FOCUS"
+            <textarea msd-elastic name="description" class="form-control flat"
                       ng-model="item.description"
                       maxlength="{{descriptionMaxLength}}"
                       placeholder="评论"></textarea>

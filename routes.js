@@ -63,7 +63,6 @@ module.exports = function (app) {
 
   //item
   app.get('/search_image', item.searchImage);
-  app.get('/bookmarklet', item.showBookmarklet);
 //  app.get('/item/collection', auth.userRequired, item.getCollection);
   app.get('/item/detail', auth.userRequired, item.getDetail);
   app.post('/item/bookmarklet', auth.userRequired, item.createCollectionItem);//topic下面有同名方法，重构的时候注意
@@ -71,6 +70,9 @@ module.exports = function (app) {
   app.post('/item2', auth.userRequired, item.createItem);
   app.put('/item', auth.userRequired, item.editItem);
   app.delete('/item', auth.userRequired, item.deleteItem);
+
+  app.get('/bookmarklet', item.showBookmarklet);
+  app.get('/bookmarklet/topics', topic2.getHintTopics);
 
   app.post('/spit', spit.createSpit);
   app.post('/spit/like', spit.likeSpit);

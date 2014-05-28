@@ -152,4 +152,21 @@ function showIndex(req, res, next) {
   });
 }
 
+function getHintTopics(req, res, next) {
+  var topicText = req.query.topic;
+
+  Topic2.getTopic2sByRegExp(new RegExp(topicText.toString(), 'i'), function (err, topics) {
+    if (err) return next(err);
+
+    var topicTexts = [];
+    topics.slice(0, 5).forEach(function (topic) {
+      if (!topic.text) return;
+
+      topicTexts.push(topic.text);
+    });
+    res.json(topicTexts);
+  });
+}
+
 exports.showIndex = showIndex;
+exports.getHintTopics = getHintTopics;

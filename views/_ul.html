@@ -5,11 +5,11 @@
       data-options="<%= item && JSON.stringify(item) || '' %>">
     <div class="Item Hoverable pal">
       <div class="text-center" style="line-height: 30px;">
+        <span class="text-muted h6">#</span>
         <a class="text-primary h6" href="/topic2/<%= item.topic.text %>">
-          <span class="text-muted">#</span>
           <%= item.topic.text %>
-          <span class="text-muted">#</span>
         </a>
+        <span class="text-muted h6">#</span>
         <% if (item.topic.itemCount - 1) { %>
         <span class="text-muted" style="font-size: 12px;">
           共<%= item.topic.itemCount %>个石子儿
