@@ -50,6 +50,7 @@
               $scope.topicTexts = data.topicTexts;
 
               $scope.loaded = true;
+              $('.AUTO_FOCUS').focus();
               $scope.item = InitData;
               if ($scope.item.title.length > 50) {
                 $scope.item.title = $scope.item.title.substr(0, 49) + '…';
@@ -188,9 +189,7 @@
         parent.postMessage('close', '*');
       });
       $modal.on('shown.bs.modal', function () {
-        setTimeout(function () {
-          $('.AUTO_FOCUS').focus();
-        }, 0);
+        $('.AUTO_FOCUS').focus();
       });
       $modal.modal();
     });
