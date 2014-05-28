@@ -19,6 +19,8 @@
   visibility: visible;
   opacity: 1;
   z-index: 1041;
+  border-top-right-radius: 0px;
+  border-top-left-radius: 0px;
   border-bottom-right-radius: 6px;
   border-bottom-left-radius: 6px;
   li > a {
@@ -29,7 +31,10 @@
   }
   li:first-child > a {
     border-radius: 0;
-    padding-top: 8px;
+  }
+  li:last-child > a {
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
   }
 }
 .input-group-addon {
