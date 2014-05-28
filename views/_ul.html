@@ -5,14 +5,16 @@
       data-options="<%= item && JSON.stringify(item) || '' %>">
     <div class="Item Hoverable pal">
       <div class="text-center" style="line-height: 30px;">
-        <a class="text-primary h6" style="" href="/topic2/<%= item.topic.text %>">
+        <a class="text-primary h6" href="/topic2/<%= item.topic.text %>">
           <span class="text-muted">#</span>
           <%= item.topic.text %>
           <span class="text-muted">#</span>
         </a>
+        <% if (item.topic.itemCount - 1) { %>
         <span class="text-muted" style="font-size: 12px;">
           共<%= item.topic.itemCount %>个石子儿
         </span>
+        <% } %>
       </div>
 
       <% if (item.type == 'LINK') { %>
@@ -157,6 +159,14 @@
       <% if (item.description) { %>
       <div class="Description mtm">
         <%= item.description %>
+      </div>
+      <% } %>
+
+      <% if (item.topic.itemCount - 1) { %>
+      <div class="text-center" style="line-height: 20px;font-size: 12px;">
+        <a class="text-muted" href="/topic2/<%= item.topic.text %>">
+            还有<%= item.topic.itemCount - 1 %>个…
+        </a>
       </div>
       <% } %>
 
