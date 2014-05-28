@@ -96,6 +96,7 @@
 body {
   word-wrap: break-word;
   font-family: "微软雅黑", arial, sans-serif;
+  overflow-x: hidden;
 }
 h1,
 h2,
