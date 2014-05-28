@@ -114,6 +114,8 @@
   z-index: 1041;
   border-bottom-right-radius: 6px;
   border-bottom-left-radius: 6px;
+}
+.dropdown-menu li > a {
   color: white;
 }
 .dropdown-menu li.active > a {
