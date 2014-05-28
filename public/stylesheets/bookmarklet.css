@@ -107,11 +107,15 @@
 }
 .dropdown-menu {
   font-size: 15px;
-  background-color: transparent;
+  background-color: #1abc9c;
   margin-top: 0;
   visibility: visible;
   opacity: 1;
   z-index: 1041;
+}
+.dropdown-menu li:first-child > a {
+  border-radius: 0;
+  padding-top: 8px;
 }
 .input-group-addon {
   border: none;
