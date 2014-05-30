@@ -62,7 +62,7 @@
   <% }); %>
 </head>
 <body>
-<% if (locals.pageType != 'SIGNUP' && locals.pageType != 'LOGIN' && locals.pageType != 'VERIFY' && locals.pageType != 'EDIT') { %>
+<% if (locals.pageType != 'SIGNUP' && locals.pageType != 'LOGIN' && locals.pageType != 'VERIFY' && locals.pageType != 'TOOL') { %>
 <header class="navbar navbar-default Header mbn">
   <div class="container">
     <ul class="nav navbar-nav" style="margin-left: -15px;">
@@ -72,9 +72,6 @@
           互联网内容策展
         </a>
       </li>
-      <!--<li>-->
-        <!--<a href="/test" title="互联网内容策展">体验新功能（测试版）</a>-->
-      <!--</li>-->
     </ul>
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
@@ -118,12 +115,18 @@
         </ul>
       </li>
       <% } %>
+      <li>
+        <a href="/tool" title="便捷地从任意网页采集石子儿">采集神器</a>
+      </li>
     </ul>
   </div>
   <div class="container">
     <div class="row">
       <div class="collapse" id="bs-example-navbar-collapse-1">
         <ul class="navbar-nav man pan pbl visible-xs">
+          <li>
+            <a href="/tool" title="便捷地从任意网页采集石子儿">采集神器</a>
+          </li>
           <% if (!locals.yourself) { %>
           <li><a href="/signup">注册</a></li>
           <li><a href="/login">登录</a></li>
@@ -158,7 +161,7 @@
 
 </div>
 
-<% if (locals.pageType != 'EDIT') { %>
+<% if (locals.pageType != 'TOOL') { %>
 <footer class="Footer pal">
   <ul class="pan">
     <li><a href="/about">关于我们</a></li>

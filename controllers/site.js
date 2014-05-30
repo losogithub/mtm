@@ -132,4 +132,11 @@ function showIndex(req, res) {
   });
 }
 
+function showTool(req, res) {
+  res.render('tool', {
+    pageType: 'TOOL'
+  });
+}
+
 exports.showIndex = showIndex;
+exports.showTool = showTool;

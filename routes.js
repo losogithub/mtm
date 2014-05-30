@@ -21,6 +21,7 @@ module.exports = function (app) {
   app.get('/test', site.showIndex);
   // home page
   app.get('/', site.showIndex);
+  app.get('/tool', site.showTool);
 
   //策展
   app.get('/topic/:topicId', topic.showIndex);
@@ -28,7 +29,7 @@ module.exports = function (app) {
   app.get('/t/:topicText', topic2.showIndex);
 
   app.post('/comment/like', comment.likeComment);
-  app.post('/comment', comment.createComment);
+  app.post('/comment2', comment.createComment);
 
   //item
   app.get('/item/detail', auth.userRequired, item.getDetail);
