@@ -94,7 +94,7 @@
             });
         };
         $scope.submit = function () {
-          if ($scope.item.topic) {
+          if (!$scope.item.topic) {
             alert('请选择话题');
             return;
           }
