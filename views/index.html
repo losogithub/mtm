@@ -1,105 +1,114 @@
+<div class="background-clouds">
+  <div class="container pbl">
+    <div class="row"
+         ng-init="comments = <%= JSON.stringify(locals.comments) %>">
+      <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-8 col-lg-7">
 
-<% include _band.html %>
+        <div class="background-white pal mtl" style="border-radius: 6px;">
 
-<% if (featuredTopics && featuredTopics.length > 2) { %>
-<div ng-non-bindable id="featuredTopics" class="carousel slide" data-ride="carousel">
-  <!-- Indicators -->
-  <ol class="carousel-indicators">
-    <li data-target="#featuredTopics" data-slide-to="0" class="active"></li>
-    <li data-target="#featuredTopics" data-slide-to="1"></li>
-    <li data-target="#featuredTopics" data-slide-to="2"></li>
-  </ol>
+          <h1 class="h6 text-center" style="margin: 40px 0;">
+            热门话题
+          </h1>
 
-  <!-- Wrapper for slides -->
-  <div class="carousel-inner">
-    <% for (var i = 0; i < 3; i++) { %>
-    <div class="item <%= i == 0 ? 'active' : '' %>"
-         style="background: url(<%= featuredTopics[i].cover_url || '' %>) no-repeat top; background-size: cover;">
-      <div>
-        <div class="container">
-          <div class="row">
-            <div class="col-sm-7 col-lg-6 hidden-xs">
-              <a class="Cover pull-right" href="/topic/<%= featuredTopics[i]._id %>">
-                <img class="pull-right" src="<%= featuredTopics[i].cover_url || '' %>" alt="<%= featuredTopics[i].title %>" title="<%= featuredTopics[i].title %>">
+          <div style="margin: 0 -20px;">
+            <% include _ul.html %>
+          </div>
+
+          <!--模板-->
+          <div class="TEMPLATES" style="display:none;">
+            <% include ./topic2/_video_player.html %>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-4 col-lg-5">
+        <div class="SpitWrapper hidden-xs hidden-sm">
+          <div class="SpitBubble background-clouds-lighten mvl pal" style="border-radius: 6px;"
+               ng-init="yourself = <%= JSON.stringify(locals.yourself && {
+                _id: locals.yourself._id,
+                loginName: locals.yourself.loginName,
+                url: locals.yourself.url
+              }) %>;init();"
+               ng-controller="CommentCtrl2">
+            <% if (locals.yourself) { %>
+            <div class="clearfix background-clouds-darken phl ptl" style="border-radius: 6px 6px 0 0;margin: -20px -20px 0;">
+              <a class="img-circle-border pull-left mrm"
+                 href="/u/{{yourself.loginName}}">
+                <img class="img-circle" width="50" height="50" ng-src="{{yourself.url || '/images/no_img/user_80x80.png'}}">
               </a>
-            </div>
-            <div class="col-sm-5 col-lg-6 Text">
-              <div style="vertical-align: bottom; position: relative;">
-                <h2 class="h6" style="position: absolute;bottom: 0; width: 100%;">
-                  <a class="text-inverse" href="/topic/<%= featuredTopics[i]._id %>"><%= featuredTopics[i].title %></a></h2>
-              </div>
-              <div>
-                <p><a class="text-inverse" href="/u/<%= featuredTopics[i].author_name %>" title="<%= featuredTopics[i].author_name %>">
-                  <img width="30" height="30" class="img-circle" style="display: inline-block; width: 30px; height: 30px;"
-                       src="<%= featuredTopics[i].author_url || '/images/no_img/user_80x80.png' %>"
-                       alt="<%= featuredTopics[i].author_name %>"
-                       onerror="shizier.errorImage(this,'user_80x80');">
-                  <%= featuredTopics[i].author_name %>
-                </a></p>
-                <p class="hidden-xs mtm text-muted" style="max-height: 120px; overflow: hidden;"><%= featuredTopics[i].description %></p>
-                <p class="text-muted text-right" style="font-size: 14px;">
-                  <i class="fa fa-puzzle-piece"></i> 策展了来自
-                  <b class="text-inverse"><%= Topic[featuredTopics[i]._id] && Topic[featuredTopics[i]._id].siteCount || 0 %></b>
-                  个网站的
-                  <span class="text-inverse"><%= Topic[featuredTopics[i]._id] && Topic[featuredTopics[i]._id].urlCount || 0 %></span>
-                  条碎片信息
-                </p>
+              <div style="overflow: hidden;">
+                <div style="line-height: 1;">
+                  <a href="/u/{{yourself.loginName}}">{{yourself.loginName}}</a>
+                </div>
+                <form class="mtm" ng-submit="submit()">
+                  <div class="form-group">
+                    <input type="text" class="form-control AUTO_FOCUS"
+                           ng-model="comment" maxlength="140"
+                           placeholder="发表评论，回车发送"/>
+                    <div class="LetterCounter">{{comment.length || 0}}/140</div>
+                  </div>
+                </form>
               </div>
             </div>
+            <% } else { %>
+            <div class="clearfix background-clouds-darken phl ptl" style="border-radius: 6px 6px 0 0;margin: -20px -20px 0;">
+              <div class="img-circle-border pull-left mrm">
+                <img class="img-circle" width="50" height="50" ng-src="/images/no_img/user_80x80.png">
+              </div>
+              <div style="overflow: hidden;">
+                <div class="text-muted" style="line-height: 1;">
+                  匿名用户
+                </div>
+                <form class="mtm" ng-submit="submit()">
+                  <div class="form-group">
+                    <input type="text" class="form-control AUTO_FOCUS"
+                           ng-model="comment" maxlength="140"
+                           placeholder="发表评论，回车发送"/>
+                    <div class="LetterCounter">{{comment.length || 0}}/140</div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <% } %>
+            <div class="SpitCount text-center mtm">
+              <i class="fa fa-comment-o"></i>
+              共{{comments[itemId].length}}条评论
+            </div>
+            <div class="Spits Comments">
+              <div class="Comment pvm clearfix" ng-repeat="comment in comments[itemId]">
+                <a class="img-circle-border-clouds pull-left mrm" ng-show="comment.author"
+                   href="/u/{{comment.author.loginName}}">
+                  <img class="img-circle" width="50" height="50" ng-src="{{comment.author.url || '/images/no_img/user_80x80.png'}}">
+                </a>
+                <div class="img-circle-border-clouds pull-left mrm" ng-show="!comment.author">
+                  <img class="img-circle" width="50" height="50" ng-src="/images/no_img/user_80x80.png">
+                </div>
+                <div style="overflow: hidden;">
+                  <div class="clearfix" style="line-height: 1;">
+                    <button class="btn btn-link pan pull-right mlm"
+                            ng-class="comment.liked ? 'text-muted' : 'text-danger'"
+                            ng-click="like(comment)"
+                            type="button">
+                      <span class="text-muted">{{comment.like || ''}}</span> <i class="fa fa-thumbs-o-up"></i>
+                    </button>
+                    <a href="/u/{{comment.author.loginName}}" ng-show="comment.author">
+                      {{comment.author.loginName}}
+                    </a>
+                    <span class="text-muted" ng-show="!comment.author">匿名用户</span>
+              <span class="text-muted mls" style="font-size: 12px;">
+                {{comment.createDate}}
+              </span>
+                  </div>
+                  <div class="mtm">{{comment.text}}</div>
+                </div>
+              </div>
+            </div>
+            <div class="Arrow" ng-style="{top: arrowY}"></div>
           </div>
         </div>
       </div>
     </div>
-    <% } %>
-  </div>
-
-  <!-- Controls -->
-  <a class="left carousel-control" href="#featuredTopics" data-slide="prev">
-    <i class="fa fa-chevron-left"></i>
-  </a>
-  <a class="right carousel-control" href="#featuredTopics" data-slide="next">
-    <i class="fa fa-chevron-right"></i>
-  </a>
-</div>
-<% } %>
-
-<div class="background-clouds">
-  <div class="container pbl">
-
-    <% var temp = {'生活':'life','娱乐':'entertainment','新闻':'news','科技':'tech','文化':'culture'}; %>
-    <% var temp2 = {'生活':'cutlery','娱乐':'music','新闻':'globe','科技':'laptop','文化':'book'}; %>
-    <% var temp3 = {'生活':'muted','娱乐':'warning','新闻':'info','科技':'black','文化':'danger'}; %>
-    <% for (var key in temp) { %>
-    <h1 class="h6 mvn mtl">
-      <a target="_blank" class="text-default-a" href="/<%= temp[key] %>">
-        <i class="fa fa-<%= temp2[key] %> text-<%= temp3[key] %>"></i> <%= key %>
-      </a>
-    </h1>
-    <div class="row">
-      <div class="col-md-7 col-lg-8">
-
-        <div class="background-white pal mtl" style="border-radius: 6px;">
-          <% var topics = categoryTopics[key] ? categoryTopics[key].slice(0, 4) : []; %>
-          <% include _topics.html %>
-          <a class="text-muted pull-right" href="/<%= temp[key] %>"
-             style="font-size: 14px; line-height: 1;">
-            更多<%=key%>策展>
-          </a>
-          <div class="clearfix"></div>
-        </div>
-
-      </div>
-      <div class="col-md-5 col-lg-4">
-
-        <% var tags = categoryTags[key] || [] %>
-        <% include _tags.html %>
-
-        <% var authors = categoryAuthors[key] || [] %>
-        <% include _authors.html %>
-
-      </div>
-    </div>
-    <% } %>
 
   </div>
 </div>

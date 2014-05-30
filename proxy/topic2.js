@@ -8,7 +8,6 @@
 
 var async = require('async');
 
-var Common = require('../common');
 var Topic2 = require('../models').Topic2;
 var User = require('./user');
 

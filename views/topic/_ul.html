@@ -155,31 +155,7 @@
             escape(item.description).replace(/\n/g, "<br>") : '' %></div>
         </div>
         <% } %>
-        <% if (item.type == 'TEXT') { %>
-        <div class='Content TEXT' style="line-height: 1.4;">
-          <%- item.text ? escape(item.text).replace(/\n/g, "<br>") : '' %>
-        </div>
-        <% } %>
-        <% if (item.type == 'TITLE') { %>
-        <h2 class='Content TITLE h6'>
-          <%= item.title ? item.title : '' %>
-        </h2>
-        <% } %>
-
-        <button class="COLLECT btn btn-default btn-xs"
-                data-item="<%= JSON.stringify({type: item.type, _id: item._id}) %>"
-                title="采集素材"
-                type="button">采集</button>
       </div>
-
-      <div class="HoverHelper"></div>
-    </div>
-
-    <div class="SpitCount hidden-xs hidden-sm"
-         ng-if="spits['<%= item._id %>'].length">
-      <i class="fa fa-comment-o"></i>
-      {{spits['<%= item._id %>'].length}}
-      {{spits['<%= item._id %>'].length ? ': ' + spits['<%= item._id %>'][0].text : ''}}
     </div>
   </li>
 

@@ -15,11 +15,7 @@
     window.sng = angular.module(
       'sng',
       ['ui.bootstrap'].concat(
-        shizier.pageType == 'EDIT'
-          ? ['ui.utils', 'monospaced.elastic', 'ui.sortable']
-          : shizier.pageType == 'TOPIC'
-          ? ['ngTagsInput']
-          : shizier.pageType == 'BOOKMARKLET'
+        shizier.pageType == 'BOOKMARKLET'
           ? ['ui.utils', 'monospaced.elastic']
           : [])
     );
@@ -122,6 +118,29 @@
       shizier.normalizeUrl($(this));
     });
 
+    var $player = $('.TEMPLATES>.Player');
+
+    $('.WidgetItemList').on('click', '.Cover', function () {
+      var $li = $(this).closest('li');
+      var options = $li.data('options');
+      var temp = shizier.getVideoSrc(options.quote, options.vid);
+      var width = $li.find('.Content').width();
+      var height = width * 4 / 5;
+      $player.clone()
+        .find('embed')
+        .attr('width', width)
+        .attr('height', height)
+        .attr('flashvars', temp.vars)
+        .attr('src', temp.src)
+        .end()
+        .show()
+        .insertAfter($(this).hide());
+    });
+    $('.WidgetItemList').on('click', '.Player button[name="close"]', function () {
+      $(this).parent().prev().slideDown(100).end().slideUp(100, function () {
+        $(this).remove();
+      });
+    });
 
   });
 

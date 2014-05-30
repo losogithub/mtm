@@ -9,7 +9,6 @@ var async = require('async');
 var extend = require('extend');
 
 var Common = require('../common');
-var Topic = require('../proxy/topic');
 var Topic2 = require('../proxy/topic2');
 var User = require('../proxy/user');
 var Item = require('../proxy/item');
@@ -18,12 +17,7 @@ var Comment = require('../proxy/comment');
 var helper = require('../helper/helper');
 var utils = require('../public/javascripts/utils');
 
-//var topicsPerPage = 24;
-//var topicsInIndex = 24;
-//var newTopicsPerPage = 19;
-var topicsPerPage = 12;
-
-function showTest(req, res) {
+function showIndex(req, res) {
   async.auto({
     tempItems: function (callback) {
       Item.getAllTopic2Items(callback);
@@ -116,7 +110,7 @@ function showTest(req, res) {
       }
     });
 
-    res.render('test', {
+    res.render('index', {
       pageType: 'TEST',
       css: [
         '/bower_components/perfect-scrollbar/min/perfect-scrollbar-0.4.10.min.css',
@@ -130,7 +124,7 @@ function showTest(req, res) {
         'http://cdn.bootcss.com/messenger/1.4.0/js/messenger-theme-flat.js',
         'http://cdn.bootcss.com/jquery-mousewheel/3.1.6/jquery.mousewheel.min.js',
         '/javascripts/utils.js',
-        '/javascripts/topic2.js'
+        '/javascripts/topic.js'
       ],
       items: itemsData,
       comments: comments
@@ -138,99 +132,4 @@ function showTest(req, res) {
   });
 }
 
-function index(req, res) {
-  var featuredTopics = Common.FeaturedTopics;
-  async.auto({
-    topics: function (callback) {
-      Topic.getTopicsById(['5337986887a4d07730f2c4c9', '533d3555d1178f3f783ad3e3'], callback);
-    },
-    authors: ['topics', function (callback, results) {
-      var topics = results.topics;
-      async.forEachSeries(topics, function (topic, callback) {
-        User.getUserById(topic.author_id, function (err, user) {
-          if (err) {
-            return callback(err);
-          }
-          if (!user) {
-            return callback(new Error());
-          }
-          topic.author_url = user.url;
-          callback(null);
-        });
-      }, callback);
-    }]
-  }, function (err, results) {
-    if (!err) {
-      featuredTopics = results.topics.concat(featuredTopics);
-    }
-    res.render('index', {
-      pageType: 'INDEX',
-      topicCount: Common.TopList.totalTopicCount,
-      totalTopicCount: Common.TopList.totalTopicCount,
-      categoryTopicCount: Common.TopList.categoryTopicCount,
-      featuredTopics: featuredTopics,
-      categoryTopics : Common.TopList.categoryTopics,
-      AuthorCategoryList: Common.AuthorCategoryList,
-      Tags: Common.Tags,
-      Topic: Common.Topic,
-      categoryAuthors: Common.TopList.categoryAuthors,
-      categoryTags: Common.TopList.categoryTags
-    });
-  });
-}
-
-function showNew(req, res) {
-  var currentPage = parseInt(req.query.page) || 1;
-
-  var newTopicsPage = Common.TopList.newTopics
-    ? Common.TopList.newTopics.slice((currentPage - 1) * topicsPerPage, currentPage * topicsPerPage)
-    : [];
-  var totalPages = Math.ceil(Common.TopList.newTopics
-    ? Common.TopList.newTopics.length / topicsPerPage
-    : 0);
-
-  res.render('category', {
-    title: '最新',
-    pageType: '最新',
-    topicCount: Common.TopList.totalTopicCount,
-    totalTopicCount: Common.TopList.totalTopicCount,
-    categoryTopicCount: Common.TopList.categoryTopicCount,
-    topics: newTopicsPage,
-    totalPage: totalPages,
-    currentPage: currentPage,
-    Topic: Common.Topic
-  });
-}
-
-function showCategory(req, res) {
-  var currentPage = parseInt(req.query.page) || 1;
-  var category = Common.CATEGORIES2CHN[res.locals.categoryType];
-
-  var categoryTopicsPage = Common.TopList.categoryTopics[category]
-    ? Common.TopList.categoryTopics[category].slice((currentPage - 1) * topicsPerPage, currentPage * topicsPerPage)
-    : [];
-  var totalPages = Math.ceil(Common.TopList.categoryTopics[category]
-    ? Common.TopList.categoryTopics[category].length / topicsPerPage
-    : 0);
-
-  res.render('category', {
-    title: category,
-    pageType: category,
-    topicCount: Common.TopList.categoryTopicCount[category],
-    totalTopicCount: Common.TopList.totalTopicCount,
-    categoryTopicCount: Common.TopList.categoryTopicCount,
-    topics: categoryTopicsPage,
-    totalPage: totalPages,
-    currentPage: currentPage,
-    authors: Common.TopList.categoryAuthors[category],
-    AuthorCategoryList: Common.AuthorCategoryList,
-    tags: Common.TopList.categoryTags[category],
-    Tags: Common.Tags,
-    Topic: Common.Topic
-  });
-}
-
-exports.showTest = showTest;
-exports.index = index;
-exports.showNew = showNew;
-exports.showCategory = showCategory;
+exports.showIndex = showIndex;

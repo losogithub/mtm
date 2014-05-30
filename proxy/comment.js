@@ -8,21 +8,7 @@
 
 var Comment = require('../models').Comment;
 
-function createComment(topicId, replyId, authorId, text, callback) {
-  callback = callback || function () {
-  };
-
-  new Comment({
-    topicId: topicId,
-    replyId: replyId || undefined,
-    authorId: authorId,
-    text: text
-  }).save(function (err, comment) {
-      callback(err, comment);
-    });
-}
-
-function createComment2(itemType, itemId, replyId, authorId, text, callback) {
+function createComment(itemType, itemId, replyId, authorId, text, callback) {
   callback = callback || function () {
   };
 
@@ -35,14 +21,6 @@ function createComment2(itemType, itemId, replyId, authorId, text, callback) {
   }).save(function (err, comment) {
       callback(err, comment);
     });
-}
-
-function getCommentsByTopicId(topicId, callback) {
-  Comment.find({
-    topicId: topicId
-  })
-    .sort('-_id')
-    .exec(callback);
 }
 
 function getCommentsByItemTypeAndId(itemType, itemId, callback) {
@@ -69,7 +47,5 @@ function likeComment(_id, callback) {
 }
 
 exports.createComment = createComment;
-exports.createComment2 = createComment2;
-exports.getCommentsByTopicId = getCommentsByTopicId;
 exports.getCommentsByItemTypeAndId = getCommentsByItemTypeAndId;
 exports.likeComment = likeComment;

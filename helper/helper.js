@@ -552,24 +552,6 @@ function getData(req, create) {
   var data;
 
   switch (type) {
-    case 'TITLE':
-      var title = sanitize(req.body.title).trim();
-
-      check(title).len(1, 50);
-
-      data = {
-        title: title
-      }
-      break;
-    case 'TEXT':
-      var text = sanitize(req.body.text).trim();
-
-      check(text).len(1, 140);
-
-      data = {
-        text: text
-      }
-      break;
     case 'IMAGE':
       if (create) {
         var url = sanitize(req.body.url).trim();
@@ -699,16 +681,6 @@ function getItemData(item) {
   var itemData;
 
   switch (item.type) {
-    case 'TITLE':
-      itemData = {
-        title: item.title
-      }
-      break;
-    case 'TEXT':
-      itemData = {
-        text: item.text
-      }
-      break;
     case 'IMAGE':
       itemData = {
         url: item.url,

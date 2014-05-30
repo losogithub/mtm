@@ -7,18 +7,6 @@
  */
 (function () {
   var utils = {
-    CATEGORIES2ENG: {
-      '生活': 'life',
-      '娱乐': 'entertainment',
-      '新闻': 'news',
-      '科技': 'tech',
-      '文化': 'culture',
-      '时尚': 'fashion',
-      '幽默': 'humor',
-      '商业': 'business',
-      '体育': 'sport',
-      '未分类': 'unclassified'
-    },
     REGEXP_URL: /^(https?|ftp):\/\/(([\w\-]+\.)+[\w\-]+)(:|\/|\?|$)/i,
     REGEXP_PROTOCOL: /^(https?|ftp):\/\//i,
     REGEXP_QUOTE: {

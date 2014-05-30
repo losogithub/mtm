@@ -17,8 +17,8 @@ function createMessage(ownerId, authorId, itemType, itemId, callback) {
     authorId: authorId,
     itemType: itemType,
     itemId: itemId
-  }).save(function (err, spit) {
-      callback(err, spit);
+  }).save(function (err, message) {
+      callback(err, message);
     });
 }
 

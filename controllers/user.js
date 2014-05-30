@@ -1,5 +1,4 @@
 /**
- /**
  * Created with JetBrains WebStorm.
  * User: stefanzan
  * Date: 10/1/13
@@ -39,9 +38,7 @@ function showUsers(req, res, next) {
 
     res.render('user/users', {
       layout: false,
-      users: users,
-      AuthorTopicCount: Common.AuthorTopicCount,
-      AuthorPVCount: Common.AuthorPVCount
+      users: users
     });
   })
 }
@@ -55,62 +52,12 @@ function showWorks(req, res, next) {
       return next(new Error(403));
     }
 
-    //var topicsInfos = [];
-    var mt = req.query.mt || 'p';
-    var mo = req.query.mo || 'd';
-
-    //the page to show. default 1
-    var currentPage = parseInt(req.query.page) || 1;
-
     //use this function to get all the details of topics.
-    getAndSortTopics(req.session.userId, mt, mo, function (err, topicDetails) {
-      if (err) {
-        return next(err);
-      }
-      //use a for to add some attributes
-      if (!topicDetails.length) {
-        console.log("err, cannot get topic details, but have topic ids");
-        return renderWorks(req, res, next, user);
-      }
-
-      //count the totalPage for show
-      var totalPage = Math.ceil(topicDetails.length / 10);
-
-      var topicsForShow = [];
-      for (var i = (currentPage - 1) * 10; i < topicDetails.length && i < currentPage * 10; i++) {
-        var temp = topicDetails[i];
-        temp.create_date = topicDetails[i].create_at.getFullYear() + '年'
-          + (topicDetails[i].create_at.getMonth() + 1) + '月'
-          + topicDetails[i].create_at.getDate() + '日';
-        temp.update_date = topicDetails[i].update_at.getFullYear() + '年'
-          + (topicDetails[i].update_at.getMonth() + 1) + '月'
-          + topicDetails[i].update_at.getDate() + '日';
-        topicsForShow.push(temp);
-      }
-
-      return renderWorks(req, res, next, user, topicsForShow, currentPage, totalPage, mt, mo, topicDetails.length);
-    });
+    renderWorks(req, res, next, user);
   });
 }
 
-/*
- Find topics inside TopicModel and sort them in a certain order.
- * works page
- */
-function getAndSortTopics(authorId, mt, mo, callback) {
-  var order = {
-    'c': 'create_at',
-    'u': 'update_at',
-    'p': 'PV_count',
-    'r': 'create_at'
-  }[mt];
-  if (mo == 'd') {
-    order = '-' + order;
-  }
-  return Topic.getAllTopicsByAuthorIdSorted(authorId, order, callback);
-}
-
-function renderWorks(req, res, next, user, topicsInfos, currentPage, totalPage, mt, mo, length) {
+function renderWorks(req, res, next, user) {
   async.auto({
     user: function (callback) {
       User.resetMessageCount(user, callback);
@@ -235,13 +182,6 @@ function renderWorks(req, res, next, user, topicsInfos, currentPage, totalPage, 
       title: '我的策展',
       personalType: 'WORKS',
       user: user,
-      topicsPageView: Common.AuthorPVCount[user.loginName],
-      topicCount: length,
-      topics: topicsInfos,
-      currentPage: currentPage,
-      totalPage: totalPage,
-      mt: mt,
-      mo: mo,
       css: [
         '/bower_components/perfect-scrollbar/min/perfect-scrollbar-0.4.10.min.css',
         'http://cdn.bootcss.com/messenger/1.4.0/css/messenger.css',
@@ -255,7 +195,7 @@ function renderWorks(req, res, next, user, topicsInfos, currentPage, totalPage, 
         'http://cdn.bootcss.com/messenger/1.4.0/js/messenger-theme-flat.js',
         'http://cdn.bootcss.com/jquery-mousewheel/3.1.6/jquery.mousewheel.min.js',
         '/javascripts/utils.js',
-        '/javascripts/topic2.js'
+        '/javascripts/topic.js'
       ],
       items: itemsData,
       comments: comments
@@ -273,26 +213,18 @@ function showSettings(req, res, next) {
       return next(new Error(404));
     }
 
-    Topic.getAllTopicsByAuthorId(userId, function (err, topics) {
-      if (err) {
-        return next(err);
-      }
-
-      res.render('user/index', {
-        css: [
-          '/stylesheets/user.css'
-        ],
-        js: [
-          '/javascripts/utils.js'
-        ],
-        pageType: 'PERSONAL',
-        personalType: 'SETTINGS',
-        user: user,
-        topicCount: topics.length,
-        topicsPageView: Common.AuthorPVCount[user.loginName],
-        description: user.description,
-        connectUrl: user.personalSite
-      });
+    res.render('user/index', {
+      css: [
+        '/stylesheets/user.css'
+      ],
+      js: [
+        '/javascripts/utils.js'
+      ],
+      pageType: 'PERSONAL',
+      personalType: 'SETTINGS',
+      user: user,
+      description: user.description,
+      connectUrl: user.personalSite
     });
   });
 }
@@ -684,14 +616,6 @@ function showPersonal(req, res, next) {
     return res.redirect('/works');
   }
 
-  //2---------------------------------------
-  var sortOrder = req.query.order || 'U';
-  // default order is according to update date. 'F' means favourte, i.e. likes
-  // 'N' means name
-
-  var currentPage = parseInt(req.query.page) || 1;
-  //default currentPage is the first page.
-
   User.getUserByLoginName(authorName, function (err, user) {
     if (err) {
       return next(err);
@@ -726,79 +650,15 @@ function showPersonal(req, res, next) {
       }
     }
 
-    //getAndSort all the topics according to
-    //P or J
-    //Inner: U F N
-
-    //1. Personal work
-    getSortedTopicsforShow(user._id, sortOrder, function (err, topicsInfo) {
-      if (err) {
-        return next(err);
-      }
-      /*
-       //null topics has no problem
-       else if(!topicsInfo){
-       console.log("err: null topics");
-       }*/
-
-      //sorted topics
-      console.log("topics length: ", topicsInfo.length);
-
-      //here according to TotalTopic decide totalPage and currentPage topics
-      var totalPage = Math.ceil(topicsInfo.length / 10);
-
-
-      //console.log(topicsInfo);
-      //create a template arrary,
-      //then push all the topics into this arrary for show.
-      var topicsForShow = [];
-      for (var i = (currentPage - 1) * 10; i < topicsInfo.length && i < currentPage * 10; i++) {
-        var temp = topicsInfo[i];
-        temp.create_date = topicsInfo[i].create_at.getFullYear() + '-'
-          + (topicsInfo[i].create_at.getMonth() + 1) + '-'
-          + topicsInfo[i].create_at.getDate();
-        temp.update_date = topicsInfo[i].update_at.getFullYear() + '-'
-          + (topicsInfo[i].update_at.getMonth() + 1) + '-'
-          + topicsInfo[i].update_at.getDate();
-        topicsForShow.push(temp);
-      }
-
-      //before render: deal with more than one page.
-
-      res.render('user/index', {
-        title: user.loginName + ' 的策展',
-        personalType: 'PERSONAL',
-        css: ['/stylesheets/user.css'],
-        user: user,
-        authorDescription: description,
-        topicCount: topicsInfo.length,
-        topicsPageView: Common.AuthorPVCount[user.loginName],
-        topics: topicsForShow,
-        sortOrder: sortOrder,
-        totalPage: totalPage,
-        currentPage: currentPage,
-        likedBefore: likedBefore
-      });
+    res.render('user/index', {
+      title: user.loginName + ' 的策展',
+      personalType: 'PERSONAL',
+      css: ['/stylesheets/user.css'],
+      user: user,
+      authorDescription: description,
+      likedBefore: likedBefore
     });
   });
-}
-
-
-var getSortedTopicsforShow = function (authorId, sortName, callback) {
-
-  if (sortName == 'U') {
-    //according to update time
-    //this is default
-    return Topic.getPublishedTopicsByAuthorIdSorted(authorId, '-update_at', callback);
-  }
-  else if (sortName == 'F') {
-    //accordiing to liked count
-    //todo: changed to favourite count.
-    return Topic.getPublishedTopicsByAuthorIdSorted(authorId, '-FVCount', callback);
-  } else if (sortName == 'N') {
-    //according to Name
-    return Topic.getPublishedTopicsByAuthorIdSorted(authorId, 'title', callback);
-  }
 }
 
 function favorite(req, res, next) {

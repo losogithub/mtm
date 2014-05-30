@@ -15,9 +15,6 @@ mongoose.connect(config.db, function (err) {
   }
 });
 
-exports.TopicSuggestionModel = require('./topic_suggestion').TopicSuggestionModel;
-exports.SuggestionTopicLogModel = require('./topic_suggestion').SuggestionTopicLogModel;
-
 exports.TopicModel = require('./topic');
 exports.Topic2 = require('./topic2');
 exports.ItemModels = {
@@ -25,11 +22,8 @@ exports.ItemModels = {
   'IMAGE': require('./image_item'),
   'VIDEO': require('./video_item'),
   'CITE': require('./cite_item'),
-  'WEIBO': require('./weibo_item'),
-  'TEXT': require('./text_item'),
-  'TITLE': require('./title_item')
+  'WEIBO': require('./weibo_item')
 }
-exports.Spit = require('./spit');
 exports.Comment = require('./comment');
 exports.Message = require('./message');
 

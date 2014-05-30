@@ -124,54 +124,6 @@ function getAllUsersSorted(callback){
     .exec(callback);
 }
 
-function collectItem(_id, itemId, callback) {
-  callback = callback || function () {
-  };
-
-  getUserById(_id, function (err, user) {
-    if (err) {
-      return callback(err);
-    }
-    if (!user) {
-      return callback(new Error(400));
-    }
-
-    user.items.push(itemId);
-    user.save(function (err, user) {
-      if (err) {
-        return callback(err);
-      }
-      if (!user) {
-        return callback(new Error(500));
-      }
-
-      callback(null, user);
-    });
-  })
-}
-
-function deleteItem(user, _id, callback) {
-  callback = callback || function () {
-  };
-
-
-  var index = user.items.indexOf(_id);
-  if (index < 0) {
-    return callback(new Error(403));
-  }
-  user.items.splice(index, 1);
-  user.save(function (err, user) {
-    if (err) {
-      return callback(err);
-    }
-    if (!user) {
-      return callback(new Error(500));
-    }
-
-    callback(null);
-  });
-}
-
 function getAllUserEmail(callback){
     UserModel.find({}, 'email', callback);
 }
@@ -207,8 +159,6 @@ exports.getUserByQuery = getUserByQuery;
 exports.getUserByEmail = getUserByEmail;
 exports.getUserByNamePass = getUserByNamePass;
 exports.getUserByEmailPass = getUserByEmailPass;
-exports.collectItem = collectItem;
-exports.deleteItem = deleteItem;
 exports.getAllUsers = getAllUsers;
 exports.getAllUsersSorted = getAllUsersSorted;
 exports.getAllUserEmail = getAllUserEmail;

@@ -19,9 +19,6 @@ var utils = require('../public/javascripts/utils');
 
 function showIndex(req, res, next) {
   console.log('topic2 showIndex=====');
-
-  console.log('ip: ' + req.connection.remoteAddress);
-  console.log("topicId: " + req.params.topicId);
   var topicText = req.params.topicText;
 
   async.auto({
@@ -132,12 +129,11 @@ function showIndex(req, res, next) {
       ],
       js: [
         '/bower_components/perfect-scrollbar/min/perfect-scrollbar-0.4.10.min.js',
-        '/javascripts/ng-tags-input.js',
         'http://cdn.bootcss.com/messenger/1.4.0/js/messenger.js',
         'http://cdn.bootcss.com/messenger/1.4.0/js/messenger-theme-flat.js',
         'http://cdn.bootcss.com/jquery-mousewheel/3.1.6/jquery.mousewheel.min.js',
         '/javascripts/utils.js',
-        '/javascripts/topic2.js'
+        '/javascripts/topic.js'
       ],
       items: itemsData,
       comments: comments
@@ -146,7 +142,7 @@ function showIndex(req, res, next) {
     var key = topic._id + req.connection.remoteAddress;
     if (!Common.TopicVisitedKeys[key]) {
       Common.TopicVisitedKeys[key] = true;
-      Topic2.increasePVCountBy(topic, 1, null);
+      Topic2.increasePVCountBy(topic, 1);
     }
     console.log('showIndex done');
   });

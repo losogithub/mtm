@@ -21,9 +21,6 @@ module.exports = mongoose.model('User', {
   //topics array
   PVCount: {type: Number, default: 0},
 
-  //collection
-  items: [ObjectId],
-
   //support user likes
   favourite: {type: Number, default: 0},
   favouriteList: [ObjectId], //liked by someone

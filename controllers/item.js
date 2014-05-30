@@ -19,96 +19,10 @@ var Topic2 = require('../proxy/topic2');
 
 var config = require('../config');
 
-function searchImage(req, res, next) {
-  var keyword = req.query.keyword;
-  helper.getSearchImages(keyword, function (err, images) {
-    if (err) {
-      return next(err);
-    }
-
-    res.json({ images: images});
-  })
-}
-
 function showBookmarklet(req, res) {
   res.render('item/bookmarklet', {
     layout: false,
     pageType: 'BOOKMARKLET'
-  });
-}
-
-function createCollectionItem(req, res, next) {
-  console.log('createCollectionItem=====');
-  var userId = req.session.userId;
-
-  try {
-    var data = helper.getData(req, true);
-  } catch (err) {
-    return next(err);
-  }
-  if (!data) {
-    return next(new Error(500));
-  }
-
-  async.auto({
-    item: function (callback) {
-      Item.createItem(data, callback);
-    },
-    user: ['item', function (callback, results) {
-      var item = results.item;
-
-      User.collectItem(userId, item._id, callback);
-    }]
-  }, function (err, results) {
-    if (err) {
-      return next(err);
-    }
-
-    var item = results.item;
-    res.json(helper.getItemData(item));
-    console.log('createCollectionItem done');
-  });
-}
-
-function collectItem(req, res, next) {
-  var userId = req.session.userId;
-  var type = req.body.type;
-  var _id = req.body._id;
-
-  async.auto({
-    item: function (callback) {
-      Item.cloneItem(type, _id, function (err, item) {
-        if (err) {
-          return callback(err);
-        }
-        if (!item) {
-          return callback(new Error(500));
-        }
-
-        callback(null, item);
-      });
-    },
-    user: ['item', function (callback, results) {
-      var item = results.item;
-
-      User.collectItem(userId, item._id, function (err, user) {
-        if (err) {
-          return callback(err);
-        }
-        if (!user) {
-          return callback(new Error(400));
-        }
-
-        callback(null);
-      });
-    }]
-  }, function (err, results) {
-    if (err) {
-      return next(err);
-    }
-
-    var item = results.item;
-    res.json(helper.getItemData(item));
   });
 }
 
@@ -190,33 +104,6 @@ function editItem(req, res, next) {
   });
 }
 
-//function getCollection(req, res, next) {
-//  var _id = req.session.userId;
-//
-//  async.auto({
-//    user: function (callback) {
-//      User.getUserById(_id, callback);
-//    },
-//    items: ['user', function (callback, results) {
-//      var user = results.user;
-//      Item.getItemsById(user.items, callback);
-//    }]
-//  }, function (err, results) {
-//    if (err) {
-//      return next(err);
-//    }
-//
-//    var items = results.items;
-//    var itemsData = [];
-//    items.forEach(function (item) {
-//      if (item && item.type && item._id) {
-//        itemsData.push(helper.getItemData(item));
-//      }
-//    });
-//    res.json(itemsData);
-//  });
-//}
-
 function getDetail(req, res, next) {
   console.log('getDetail');
   var url = req.query.url;
@@ -288,12 +175,8 @@ function createItem(req, res, next) {
   });
 }
 
-exports.searchImage = searchImage;
 exports.showBookmarklet = showBookmarklet;
-exports.createCollectionItem = createCollectionItem;
-exports.collectItem = collectItem;
 exports.deleteItem = deleteItem;
 exports.editItem = editItem;
-//exports.getCollection = getCollection;
 exports.getDetail = getDetail;
 exports.createItem = createItem;

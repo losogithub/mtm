@@ -4,11 +4,9 @@
   <title>采集石子儿</title>
   <link type='text/css' rel='stylesheet' href='/stylesheets/bootstrap.min.css'/>
   <link type='text/css' rel='stylesheet' href="/stylesheets/flat-ui.css">
-  <link type='text/css' rel='stylesheet' href="/stylesheets/jquery-ui-1.10.4.custom.min.css">
   <link type='text/css' rel="stylesheet" href="/font-awesome-4.0.3/css/font-awesome.min.css">
   <link type='text/css' rel='stylesheet' href='/stylesheets/common.css'/>
   <link type='text/css' rel='stylesheet' href='/stylesheets/topic2.css'/>
-  <link type='text/css' rel='stylesheet' href='/stylesheets/edit.css'/>
   <link type='text/css' rel='stylesheet' href='/stylesheets/bookmarklet.css'/>
 
   <!--[if IE]>
@@ -16,7 +14,6 @@
   <script src="http://cdn.bootcss.com/respond.js/1.3.0/respond.min.js"></script>
   <![endif]-->
   <script type="text/javascript" src="http://cdn.bootcss.com/jquery/1.11.0/jquery.min.js"></script>
-  <script type="text/javascript" src="/javascripts/jquery-ui-1.10.4.custom.min.js"></script>
   <script src="http://cdn.bootcss.com/angular.js/1.2.15/angular.min.js"></script>
   <script>
     window.shizier = window.shizier || {};
@@ -24,9 +21,6 @@
   </script>
   <script src="http://cdn.bootcss.com/twitter-bootstrap/3.1.1/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="/javascripts/ui-bootstrap-tpls-0.10.0.js"></script>
-  <script type="text/javascript" src="/javascripts/bootstrap-select.js"></script>
-  <script type="text/javascript" src="/javascripts/flatui-checkbox.js"></script>
-  <script type="text/javascript" src="/javascripts/flatui-radio.js"></script>
   <script type="text/javascript" src="/javascripts/common.js"></script>
   <script type="text/javascript" src="/javascripts/utils.js"></script>
   <script type="text/javascript" src="/javascripts/ui-utils.min.js"></script>
@@ -100,6 +94,10 @@
             });
         };
         $scope.submit = function () {
+          if ($scope.item.topic) {
+            alert('请选择话题');
+            return;
+          }
           var data = $scope.item;
           if ($scope.item.type == 'IMAGE') {
             data = $.extend({}, data, {
@@ -108,7 +106,7 @@
             });
           }
           $scope.saving = true;
-          $http.post($scope.item.topic ? '/item2' : '/item/bookmarklet', data)
+          $http.post('/item', data)
             .success(function () {
               $scope.cancel();
             })
@@ -218,7 +216,7 @@
             <span class="input-group-addon">#</span>
             <div style="position: relative;">
             <input class="form-control flat AUTO_FOCUS" style="border-radius: 0;"
-                   placeholder="添加到话题（选择或新建，不填则添加到收藏夹）"
+                   placeholder="添加到话题（选择或新建）"
                    type="text" ng-model="item.topic"
                    typeahead="address for address in getTopics($viewValue)">
             </div>

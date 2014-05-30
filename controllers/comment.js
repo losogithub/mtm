@@ -16,25 +16,6 @@ var Message = require('../proxy/message');
 var User = require('../proxy/user');
 
 function createComment(req, res, next) {
-  var topicId = req.body.topicId;
-  var replyId = req.body.replyId;
-  var authorId = req.session.userId;
-  var text = sanitize(req.body.text).trim();
-
-  try {
-    check(text).len(1, 140);
-  } catch (e) {
-    return next(e);
-  }
-
-  Comment.createComment(topicId, replyId, authorId, text, function (err, comment) {
-    if (err) return next(err);
-
-    res.json(comment);
-  });
-}
-
-function createComment2(req, res, next) {
   var itemType = req.body.itemType;
   var itemId = req.body.itemId;
   var replyId = req.body.replyId;
@@ -47,7 +28,7 @@ function createComment2(req, res, next) {
     return next(e);
   }
 
-  Comment.createComment2(itemType, itemId, replyId, authorId, text, function (err, comment) {
+  Comment.createComment(itemType, itemId, replyId, authorId, text, function (err, comment) {
     if (err) return next(err);
 
     res.json(comment);
@@ -80,5 +61,4 @@ function likeComment(req, res, next) {
 }
 
 exports.createComment = createComment;
-exports.createComment2 = createComment2;
 exports.likeComment = likeComment;

@@ -12,32 +12,6 @@ var ItemModels = require('../models').ItemModels;
 var downloadImage = require('../helper/downloadImage');
 var qiniuPlugin = require('../helper/qiniu');
 
-function cloneItem(type, _id, callback) {
-  callback = callback || function () {
-  };
-
-  getItemById(type, _id, function (err, item) {
-    if (err) {
-      return callback(err);
-    }
-    if (!item) {
-      return callback(new Error(400));
-    }
-
-    item._id = (new ItemModels[type]())._id;
-    ItemModels[type].create(item, function (err, item) {
-      if (err) {
-        return callback(err);
-      }
-      if (!item) {
-        return callback(new Error(500));
-      }
-
-      callback(null, item);
-    });
-  })
-}
-
 /**
  * 创建条目
  * @param data
@@ -139,7 +113,7 @@ function getItemsByTopicId(topicId, callback) {
   };
 
   var allItems = [];
-  async.forEach(['LINK', 'IMAGE', 'VIDEO', 'CITE', 'WEIBO', 'TEXT', 'TITLE'], function (type, callback) {
+  async.forEach(['LINK', 'IMAGE', 'VIDEO', 'CITE', 'WEIBO'], function (type, callback) {
     ItemModels[type].find({ topicId: topicId }, function (err, items) {
       if (err) {
         return callback(err);
@@ -175,7 +149,7 @@ function getItemsById(ids, callback) {
   };
 
   var allItems = [];
-  async.forEach(['LINK', 'IMAGE', 'VIDEO', 'CITE', 'WEIBO', 'TEXT', 'TITLE'], function (type, callback) {
+  async.forEach(['LINK', 'IMAGE', 'VIDEO', 'CITE', 'WEIBO'], function (type, callback) {
     ItemModels[type].find({ _id: { $in: ids } }, function (err, items) {
       if (err) {
         return callback(err);
@@ -228,7 +202,6 @@ function deleteItem(type, _id, callback) {
   });
 }
 
-exports.cloneItem = cloneItem;//增
 exports.createItem = createItem;//增
 exports.getItems = getItems;//查
 exports.getAllTopic2Items = getAllTopic2Items;//查

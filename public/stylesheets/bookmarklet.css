@@ -137,3 +137,12 @@
   font-size: 18px;
   font-weight: bold;
 }
+.SelectImage button {
+  padding: 0;
+  border-radius: 0;
+  max-width: 100%;
+}
+.SelectImage button img {
+  max-height: 500px;
+  max-width: 500px;
+}

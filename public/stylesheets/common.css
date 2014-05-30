@@ -273,8 +273,11 @@ textarea {
 /*徽标*/
 .Logo {
   padding: 16px 15px !important;
+  color: #bdc3c7 !important;
+  vertical-align: middle;
 }
 .Logo img {
+  vertical-align: middle;
   width: 100px;
   height: 40px;
 }
