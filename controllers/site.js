@@ -134,6 +134,7 @@ function showIndex(req, res) {
 
 function showTool(req, res) {
   res.render('tool', {
+    title: '采集神器',
     pageType: 'TOOL'
   });
 }
