@@ -141,6 +141,7 @@ function getItemsByTopicId(topicId, callback) {
  * @param callback
  */
 function getItemById(type, itemId, callback) {
+  if (!ItemModels[type]) return callback();
   ItemModels[type].findById(itemId, callback);
 }
 
