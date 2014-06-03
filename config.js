@@ -19,7 +19,7 @@ module.exports = {
   name: "石子儿",
   hostname: 'shizier.com',
   host: "shizier.com", //revise later
-  port: '3000',
+  port: '3001',
   db: 'mongodb://127.0.0.1:27017/mtm',
   admins: {
     admin: 1,
