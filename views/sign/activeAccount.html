@@ -1,10 +1,19 @@
 <!--ACCOUNT##这是layout要用的参数，不能删！-->
-<div class="container">
-  <div class="center-block pal text-center"
-       style="background-color: #ecf0f1;border-radius: 6px;max-width: 600px;">
-    <h1 class="h6">最后一步，验证邮箱</h1>
-
-    <p>我们已将验证邮件发送到您的邮箱 <strong><%= locals.emailAddress || ''
-      %></strong>。请查看验证邮件，并通过其中的验证链接完成您的石子儿帐号注册。</p>
+<ion-header-bar class="bar-stable">
+  <div class="buttons">
+    <a class="button button-icon icon ion-ios7-arrow-back" href="/"></a>
   </div>
-</div>
+
+  <h1 class="title">
+    验证邮箱
+  </h1>
+
+  <div class="buttons">
+    <button menu-toggle="right" class="button button-icon icon ion-navicon"></button>
+  </div>
+</ion-header-bar>
+
+<ion-content class="text-center padding">
+  我们已将验证邮件发送到您的邮箱 <strong><%= locals.emailAddress || ''
+  %></strong>。请查看验证邮件，并通过其中的验证链接完成您的石子儿帐号注册。
+</ion-content>

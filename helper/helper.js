@@ -694,6 +694,7 @@ function getItemData(item) {
       itemData = {
         cite: item.cite,
         url: item.url,
+        quoteDomain: utils.getQuote(item.url),
         title: item.title,
         description: item.description
       }
@@ -701,6 +702,7 @@ function getItemData(item) {
     case 'LINK':
       itemData = {
         url: item.url,
+        quoteDomain: utils.getQuote(item.url),
         fav: utils.getFav(item.url),
         title: item.title,
         snippet: item.snippet,
@@ -710,7 +712,7 @@ function getItemData(item) {
     case 'VIDEO':
       itemData = {
         url: item.url,
-        quote: utils.getQuote(item.url, 'VIDEO'),
+        quoteDomain: utils.getQuote(item.url, 'VIDEO'),
         cover: item.cover,
         vid: item.vid,
         title: item.title,
@@ -720,6 +722,7 @@ function getItemData(item) {
     case 'WEIBO':
       itemData = {
         url: item.url,
+        quoteDomain: utils.getQuote(item.url),
         description: item.description,
         created_at: item.created_at,
         time: getWeiboTime(item.created_at),

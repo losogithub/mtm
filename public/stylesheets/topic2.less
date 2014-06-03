@@ -1,39 +1,7 @@
 @import "theme";
 @import "utils";
 
-/*条目*/
 .WidgetItemList {
-  list-style: none; padding: 0 0 40px; margin-bottom: 0;
-  >li {
-    position: relative;
-    .SpitCount {
-      position: absolute; top: 50%; right: -30px; width: 0; margin-top: -10px;
-    }
-  }
-  .Hoverable {
-    position: relative;
-    &:hover {
-      .HoverHelper {
-        @media (min-width: 992px){
-          display: block;
-        }
-      }
-    }
-  }
-}
-
-.Quote {
-  &, * { color: @color-muted; }
-  text-align: right;
-  .LINK &, .VIDEO &{
-    text-align: left;
-  }
-  font-size: 12px; line-height: 13px; margin-top: 3px;
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-}
-
-.WidgetItemList .Hoverable {
-  &:hover, &.Hover { background-color: @color-clouds-lighten; }
 
   .Description { padding-left: 6px; border-left: 2px solid @color-muted; line-height: 1.4; }
 

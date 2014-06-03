@@ -56,7 +56,7 @@ var getUserByName = function (name, callback) {
  * @param {Function} callback 回调函数
  */
 var getUserByMail = function (email, callback) {
-  UserModel.findOne({email: email.toLowerCase()}, callback);
+  UserModel.findOne({email: (email || '').toLowerCase()}, callback);
 };
 
 /**

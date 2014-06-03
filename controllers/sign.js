@@ -19,52 +19,19 @@ var mail = require('../services/mail');
 
 
 function showSignUp(req, res) {
-  console.log("render register page");
-  //console.log("login Referer: ", req.session._loginReferer);
-  //2013.12.16 revise _loginReferer to loginOrSignup
-
-  //2013.11.30 check whether is a already logged in user
-  //var refer = req.session._loginReferer || '/';
-
-  //for already logged in user
-  console.log("referer: ", req.headers.referer);
-  //var  refer = req.headers.referer || '/';
-
   if (req.session && req.session.userId) {
-    /*
-     If it is a logged in user, jump to its refer or home.
-     shall we consider a black list ?
-     //todo:
-     */
-    // for signup, seems no need of req.query.fromUrl
-    var refer = req.headers.referer || '/';
-    return res.redirect(refer);
-  }
-  else {
-    res.render('sign/signup');
+    return res.redirect(req.headers.referer || '/');
   }
 
+  res.render('sign/signup');
 };
 
-
 function signUp(req, res, next) {
-  console.log("----- Register -------");
-  //console.log("login Referer: ", req.session._loginReferer);
-  console.log("header referer: ", req.headers.referer);
-
   var name = sanitize(req.body.username).trim();
-  name = sanitize(name).xss();
   var loginname = name;
   var pass = sanitize(req.body.password).trim();
-  pass = sanitize(pass).xss();
   var email = sanitize(req.body.email).trim();
-  email = email;
-  email = sanitize(email).xss();
 
-  // 1. check name
-  // nFlag: name flag
-  // eFlag: email flag
-  // pFlag: password flag
   var nFlag = true;
   var eFlag = true;
   var pFlag = true;
@@ -72,14 +39,14 @@ function signUp(req, res, next) {
   var nMsg = '';
   var pMsg = '';
   if (name === '') {
-    nMsg = '请输入您的注册用户名。';
+    nMsg = '请输入用户名';
     nFlag = false;
   }
   //todo: chinese name support.
   else if (name.length < 2) {
     console.log('name length less than 2');
     nFlag = false;
-    nMsg = '长度不能少于2.';
+    nMsg = '用户名长度不能少于2';
   }
   else {
     /*
@@ -108,12 +75,12 @@ function signUp(req, res, next) {
 
   // 2. check email
   if (email === '') {
-    eMsg = '请输入您的注册邮箱。';
+    eMsg = '请输入邮箱';
     eFlag = false;
   }
   else {
     try {
-      check(email, '不正确的电子邮箱。').isEmail();
+      check(email, '邮箱格式不正确').isEmail();
     } catch (e) {
       eMsg = e.message;
       eFlag = false;
@@ -123,10 +90,10 @@ function signUp(req, res, next) {
 
   //3. password
   if (pass === '') {
-    pMsg = '请输入您的密码。';
+    pMsg = '请输入密码';
   }
   else if (pass.length < 6) {
-    pMsg = '密码最少不能短于6位。';
+    pMsg = '密码最少6位';
   }
 
   if (nFlag) {
@@ -136,7 +103,7 @@ function signUp(req, res, next) {
       }
       if (user) {
         console.log('user name has been registered!');
-        nMsg = '对不起，该用户名已被注册。';
+        nMsg = '对不起，该用户名已被注册';
         // because of the callback function asynchronized.
         if (eFlag) {
           User.getUserByMail(email, function (err, user) {
@@ -145,12 +112,9 @@ function signUp(req, res, next) {
             }
             if (user) {
               console.log('user email has been registered');
-              eMsg = '对不起，该邮箱已被注册。';
+              eMsg = '对不起，该邮箱已被注册';
             }
 
-            console.log("nMsg: %s", nMsg);
-            console.log("eMsg: %s", eMsg);
-            console.log("pMsg: %s", pMsg);
             // finally error render error info page.
             if (eMsg || nMsg || pMsg) {
               //console.log("%s", eMsg);
@@ -173,11 +137,6 @@ function signUp(req, res, next) {
               }
               // 发送激活邮件
               mail.sendActiveMail(email, encryp.md5(email + config.session_secret), name, email);
-              //todo: what does these set means ? 2013.11.26
-              res.set('Cache-Control', 'private, no-cache, no-store, must-revalidate, post-check=0, pre-check=0');
-              res.set('Connection', 'close');
-              res.set('Expire', '-1');
-              res.set('Pragma', 'no-cache');
               res.render('sign/activeAccount', {
                 emailAddress: email
               });
@@ -205,12 +164,9 @@ function signUp(req, res, next) {
             }
             if (user) {
               console.log('user email has been registered');
-              eMsg = '对不起，该邮箱已被注册。';
+              eMsg = '对不起，该邮箱已被注册';
             }
 
-            console.log("nMsg: %s", nMsg);
-            console.log("eMsg: %s", eMsg);
-            console.log("pMsg: %s", pMsg);
             // finally either registerd email address, or wrong password
             if (eMsg || pMsg) {
               //console.log("%s", eMsg);
@@ -232,10 +188,6 @@ function signUp(req, res, next) {
               }
               // 发送激活邮件
               mail.sendActiveMail(email, encryp.md5(email + config.session_secret), name, email);
-              res.set('Cache-Control', 'private, no-cache, no-store, must-revalidate, post-check=0, pre-check=0');
-              res.set('Connection', 'close');
-              res.set('Expire', '-1');
-              res.set('Pragma', 'no-cache');
               res.render('sign/activeAccount', {
                 emailAddress: email
               });
@@ -262,7 +214,7 @@ function signUp(req, res, next) {
       }
       if (user) {
         //console.log('has');
-        eMsg = '对不起，该邮箱已被注册。';
+        eMsg = '对不起，该邮箱已被注册';
       }
 
       // wrong name, maybe correct email address.
@@ -279,50 +231,9 @@ function signUp(req, res, next) {
   }
 };
 
-
-/**
- * Show user login page.
- *
- * @param  {HttpRequest} req
- * @param  {HttpResponse} res
- */
 function showLogin(req, res) {
-  //if it is null, then assign to this.
-  //otherwise it was assigned by some middleware.
-  //No, 2013.11.30 if it is not null, it must be assigned before not equal to /login. So you  cannot revise it.
-  //even it equals to /singup. it is ok. later in login function will check this.
-  /*
-   if (!req.session._loginReferer) {
-   req.session._loginReferer =  req.headers.referer || '/';
-   }
-   */
-
-  //var refer = req.session._loginReferer || '/';
-
-
-  //todo: 2013.11.26 it seems needed for jump
-  //2013.12.16: seems no need.
-  //e.g. before login: suppose you go to forgetPassword page, then  you click login.
-  // after you successfully logged in, it shall not jump to forgetpassword page.
-  // 2 example: suppose you are at register page, then click loggin, after succesfully loggin,
-  //  shall not jump to register page.
-
-
-  // suppose an already logged in user, you shall jump to home.
-  if (req.session && req.session.userId && req.session.userId) {
-    //if logged in, jump to refer page.
-    //note: not all page jump to loginReferer.
-    //add: 2013.11.23: it seems impossible for this situation. So I commented it.
-    // 2013.11.26. No, maybe not.
-    /*for (var i = 0, len = notJump.length; i !== len; ++i) {
-     if (refer.indexOf(notJump[i]) >= 0) {
-     refer = '/';
-     break;
-     }
-     } */
-
-    var refer = req.headers.referer || '/';
-    return res.redirect(refer);
+  if (req.session && req.session.userId) {
+    return res.redirect(req.headers.referer || '/');
   }
 
   res.render('sign/login', {
@@ -352,10 +263,10 @@ function login(req, res, next) {
 
   var errMsg = '';
   if (!loginname) {
-    if (!pass) errMsg = '请输入您的用户名，密码。';
-    else errMsg = '请输入您的用户名或则邮箱。';
+    if (!pass) errMsg = '请输入用户名、密码';
+    else errMsg = '请输入用户名';
   } else {
-    if (!pass) errMsg = '请输入您的密码。';
+    if (!pass) errMsg = '请输入密码';
   }
 
   if (errMsg) {
@@ -374,7 +285,7 @@ function login(req, res, next) {
       }
       if (!user) {
         res.render('sign/login', {
-          errMsg: '对不起，该用户名尚未注册。',
+          errMsg: '对不起，该用户名尚未注册',
           email: loginname
         });
         return;
@@ -391,7 +302,7 @@ function login(req, res, next) {
       }
       if (!user) {
         res.render('sign/login', {
-          errMsg: '对不起，该邮箱尚未注册。',
+          errMsg: '对不起，该邮箱尚未注册',
           email: loginname//user.loginName
         });
         return;
@@ -412,7 +323,7 @@ function _checkOnlyPassword(emailIDFlag, pass, remember, user, req, res) {
   }
   if (pass !== user.password) {
     res.render('sign/login', {
-      errMsg: '您输入的密码不正确。',
+      errMsg: '密码不正确',
       email: email
     });
     return;
@@ -750,13 +661,8 @@ function resetPassword(req, res, next) {
 
 
 function activeAccount(req, res, next) {
-  console.log(req.query);
   var key = req.query.key;
   var email = req.query.email;
-
-  console.log("----active account-----");
-  console.log(key);
-  console.log(email);
 
   User.getUserByMail(email, function (err, user) {
     if (err) {
@@ -765,7 +671,7 @@ function activeAccount(req, res, next) {
     if (!user) {
       return next(new Error(400));
     }
-    else if (user.active) {
+    if (user.active) {
 
       //duplicated code
       //start

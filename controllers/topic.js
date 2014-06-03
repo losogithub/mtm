@@ -65,15 +65,9 @@ function showIndex(req, res, next) {
       title: topic.title,
       description: topic.description,
       css: [
-        '/bower_components/perfect-scrollbar/min/perfect-scrollbar-0.4.10.min.css',
-        'http://cdn.bootcss.com/messenger/1.4.0/css/messenger.css',
-        'http://cdn.bootcss.com/messenger/1.4.0/css/messenger-theme-flat.css',
         '/stylesheets/topic.css'
       ],
       js: [
-        '/bower_components/perfect-scrollbar/min/perfect-scrollbar-0.4.10.min.js',
-        'http://cdn.bootcss.com/messenger/1.4.0/js/messenger.js',
-        'http://cdn.bootcss.com/messenger/1.4.0/js/messenger-theme-flat.js',
         'http://cdn.bootcss.com/jquery-mousewheel/3.1.6/jquery.mousewheel.min.js',
         '/javascripts/utils.js'
       ],

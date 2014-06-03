@@ -1,176 +1,207 @@
-<ul class="WidgetItemList WidgetItemList-Main">
-  <% locals.items.forEach(function (item, index) { %>
+<% locals.items.forEach(function (item, index) { %>
 
-  <li class="<%= item && item.type || '' %>"
-      data-options="<%= item && JSON.stringify(item) || '' %>">
-    <div class="Item Hoverable pal">
-      <div style="line-height: 20px;">
-        <a style="display: inline-block;"
-           href="/u/<%= item.author.loginName %>">
-          <img class="img-circle" width="20" height="20"
-               ng-src="<%= item.author.url || '/images/no_img/user_80x80.png' %>">
+<ion-slide style="height: 100%;">
+<ion-scroll style="height: 100%;">
+<div class="container padding-bottom"
+     ng-init="yourself = <%= JSON.stringify(locals.yourself && {
+              _id: locals.yourself._id,
+              loginName: locals.yourself.loginName,
+              url: locals.yourself.url
+            }) %>;
+            itemType = '<%= item.type %>';
+            itemId = '<%= item._id %>';
+            init();"
+     ng-controller="CommentCtrl2">
+<div class="Item list card"
+     data-options="<%= item && JSON.stringify(item) || '' %>">
+  <div class="item item-body <%= item.type %>">
+  <% if (item.type == 'LINK') { %>
+    <div class="Title" title="<%= item.snippet || '' %>">
+      <img class="Fav" src="<%= item.fav %>"
+           onerror="shizier.errorFavImage(this, '<%= item.url %>');">
+      <a target="_blank" class="LINK_URL" href='<%= item.url %>'><%= item.title || '' %></a>
+    </div>
+  <% } %>
+  <% if (item.type == 'IMAGE') { %>
+    <div style="margin: -15px -15px 0;">
+      <div class="text-center">
+        <a href='<%= item.url || "" %>' style="display: block;"
+           title="<%= item.title || '' %>">
+          <img class="img-responsive" style="margin: auto;" onerror="shizier.errorImage(this,'default_120x120');"
+               src="<%= item.url || '' %>" alt="<%= item.title || '' %>">
         </a>
-        <a class="mrs" href="/u/<%= item.author.loginName %>"><%= item.author.loginName %></a>
-        <span class="text-muted" style="font-size: 12px;">
-          <%= item.create_at %>
-        </span>
       </div>
 
-      <% if (item.type == 'LINK') { %>
-      <div class="Content LINK pam mtm">
-        <div class="Title" title="<%= item.snippet || '' %>">
-          <img class="Fav" src="<%= item.fav %>"
-               onerror="shizier.errorFavImage(this, '<%= item.url %>');">
-          <a target="_blank" class="LINK_URL" href='<%= item.url %>'><%= item.title || '' %></a>
-        </div>
-        <div class="Quote">
-          <i class="fa fa-globe"></i>
-          <a target="_blank" class="LINK_URL" href="<%= item.url || '' %>">
-            <%= item.url || '' %>
-          </a>
-        </div>
+      <h2 class="text-center"
+          style="display: <%= !item.title ? 'none' : 'block' %>; margin: 10px 0; font-size: 20px; font-weight: bold;">
+        <%= item.title || '' %>
+      </h2>
+    </div>
+  <% } %>
+  <% if (item.type == 'VIDEO') { %>
+
+    <% include _video_cover.html %>
+
+    <h2 style="display: <%= !item.title ? 'none' : 'block' %>; margin: 10px 0; font-size: 20px; font-weight: bold;">
+      <%= item.title ? item.title : '' %>
+    </h2>
+  <% } %>
+  <% if (item.type == 'CITE') { %>
+    <div class="Cite">
+      <i class="fa fa-quote-left text-muted"></i>
+      <q><%- item.cite ? escape(item.cite).replace(/\n/g, "<br>") : '' %></q>
+    </div>
+  <% } %>
+  <% if (item.type == 'WEIBO') { %>
+
+    <div class="clearfix">
+      <a target="_blank"  class="Avatar AuthorUrl img-circle" href="<%= (item.user && 'http://weibo.com/' + item.user.profile_url) || '' %>">
+        <img class="img-circle"
+             src="<%= item.user && item.user.profile_image_url || '' %>"
+             alt="<%= item.user && item.user.screen_name || '' %>">
+      </a>
+
+      <div style="overflow: hidden;">
+        <a target="_blank" class="ScreenName AuthorUrl" href="<%= (item.user && 'http://weibo.com/' + item.user.profile_url) || '' %>">
+          <span class="ScreenName"><%= item.user && item.user.screen_name || '' %></span>
+        </a>
+        <a target="_blank" class="Verify <%= !item.user ? '' : !item.user.verified ? '' : item.user.verified_type ? 'ORG' : 'PERSONAL' %>" href="http://verified.weibo.com/verify"><b>V</b></a>
       </div>
+    </div>
+
+    <div class="Text"><%- item.parsed_text || '' %></div>
+    <div class="Pic clearfix" style="<%= item.pic_urls && item.pic_urls.length && 'display: block;' || 'display: none;' %><%= item.pic_urls && item.pic_urls.length == 4 && 'width: 170px;' || '' %>">
+      <% if (item.pic_urls) { %>
+      <% if (item.pic_urls.length == 1 && item.pic_urls[0]) { %>
+      <a class="WeiboImage fancybox" rel="gallery"
+         href="<%= item.pic_urls[0].thumbnail_pic.replace('/thumbnail/', '/large/') %>"><img
+        src="<%= item.pic_urls[0].thumbnail_pic %>"></a>
+      <% } else { %>
+      <% item.pic_urls.forEach(function (pic_url) { %>
+      <% if (pic_url) { %>
+      <a class="WeiboImage fancybox" rel="gallery"
+         href="<%= pic_url.thumbnail_pic.replace('/thumbnail/', '/large/') %>"><img
+        src="<%= pic_url.thumbnail_pic.replace('/thumbnail/', '/square/') %>"></a>
       <% } %>
-      <% if (item.type == 'IMAGE') { %>
-      <div class="Content IMAGE pam mtm">
-        <div class="Image text-center">
-          <a class="IMAGE_LINK fancybox" rel="gallery" href='<%= item.url || "" %>'
-             title="<%= (item.title || '') + (item.title && item.description ? ' -- ' : '') + (item.description || '') %>">
-            <img onerror="shizier.errorImage(this,'default_120x120');"
-                 src="<%= item.url || '' %>" alt="<%= item.title || '' %>">
-          </a>
-        </div>
-
-        <div class="Title text-center mts"><%= item.title || '' %></div>
-        <div class="Quote" style="<%- !item.quote ? 'display:none' : '' %>">
-          出自 <i class="fa fa-globe"></i>
-          <a target="_blank" href="<%= item.quote || '' %>">
-            <%= item.quoteDomain ? item.quoteDomain : '' %>
-          </a>
-        </div>
-      </div>
+      <% }); %>
       <% } %>
-      <% if (item.type == 'VIDEO') { %>
-      <div class="Content VIDEO pam mtm">
-
-        <% include _video_cover.html %>
-
-        <div class="Quote">
-          <i class="fa fa-globe"></i>
-          <a target="_blank" class="VIDEO_URL" href="<%= item.url || '' %>"><%= item.quote || item.url || '' %></a>
-        </div>
-        <div class="Title mtx" style="display: <%= !item.title ? 'none' : 'block' %>;">
-          <a target="_blank" class="VIDEO_URL" href='<%= item.url ? item.url : "" %>'><%= item.title ? item.title : '' %></a>
-        </div>
-      </div>
       <% } %>
-      <% if (item.type == 'CITE') { %>
-      <div class="Content CITE mtm pam">
-        <div class="Cite">
-          <i class="fa fa-quote-left text-muted"></i>
-          <q><%- item.cite ? escape(item.cite).replace(/\n/g, "<br>") : '' %></q>
-        </div>
-
-        <div class="Quote">
-          出自 <i class="fa fa-globe"></i>
-          <a target="_blank" href="<%= item.url %>"><%= item.title || item.url %></a>
-        </div>
-      </div>
-      <% } %>
-      <% if (item.type == 'WEIBO') { %>
-      <div class="Content WEIBO pam mtm">
-
-        <div class="clearfix">
-          <a target="_blank"  class="Avatar AuthorUrl img-circle" href="<%= (item.user && 'http://weibo.com/' + item.user.profile_url) || '' %>">
-            <img class="img-circle"
-                 src="<%= item.user && item.user.profile_image_url || '' %>"
-                 alt="<%= item.user && item.user.screen_name || '' %>">
-          </a>
-
-          <div style="overflow: hidden;">
-            <a target="_blank" class="ScreenName AuthorUrl" href="<%= (item.user && 'http://weibo.com/' + item.user.profile_url) || '' %>">
-              <span class="ScreenName"><%= item.user && item.user.screen_name || '' %></span>
-            </a>
-            <a target="_blank" class="Verify <%= !item.user ? '' : !item.user.verified ? '' : item.user.verified_type ? 'ORG' : 'PERSONAL' %>" href="http://verified.weibo.com/verify"><b>V</b></a>
-          </div>
-        </div>
-
-        <div class="Text"><%- item.parsed_text || '' %></div>
-        <div class="Pic clearfix" style="<%= item.pic_urls && item.pic_urls.length && 'display: block;' || 'display: none;' %><%= item.pic_urls && item.pic_urls.length == 4 && 'width: 170px;' || '' %>">
-          <% if (item.pic_urls) { %>
-          <% if (item.pic_urls.length == 1 && item.pic_urls[0]) { %>
-          <a class="WeiboImage fancybox" rel="gallery"
-             href="<%= item.pic_urls[0].thumbnail_pic.replace('/thumbnail/', '/large/') %>"><img
-            src="<%= item.pic_urls[0].thumbnail_pic %>"></a>
-          <% } else { %>
-          <% item.pic_urls.forEach(function (pic_url) { %>
-          <% if (pic_url) { %>
-          <a class="WeiboImage fancybox" rel="gallery"
-             href="<%= pic_url.thumbnail_pic.replace('/thumbnail/', '/large/') %>"><img
-            src="<%= pic_url.thumbnail_pic.replace('/thumbnail/', '/square/') %>"></a>
-          <% } %>
-          <% }); %>
-          <% } %>
-          <% } %>
-        </div>
-        <% if (item.retweeted_status && item.retweeted_status.idstr) { %>
-        <% var retweetedItem = item.retweeted_status; %>
-        <div class="Retweeted clearfix">
-          <a target="_blank" class="Author AuthorUrl" href="<%= (retweetedItem.user && 'http://weibo.com/' + retweetedItem.user.profile_url) || '' %>">
-            @<span class="ScreenName"><%= retweetedItem.user && retweetedItem.user.screen_name || '' %></span>
-          </a>
-          <a target="_blank" class="Verify <%= !retweetedItem.user ? '' : !retweetedItem.user.verified ? '' : retweetedItem.user.verified_type ? 'ORG' : 'PERSONAL' %>" href="http://verified.weibo.com/verify"><b>V</b></a>
-          <div class="Text"><%- retweetedItem.parsed_text || '' %></div>
-          <div class="Pic clearfix" style="<%= retweetedItem.pic_urls && retweetedItem.pic_urls.length && 'display: block;' || 'display: none;' %><%= retweetedItem.pic_urls && retweetedItem.pic_urls.length == 4 && 'width: 170px;' || '' %>">
-            <% if (retweetedItem.pic_urls) { %>
-            <% if (retweetedItem.pic_urls.length == 1 && retweetedItem.pic_urls[0]) { %>
-            <a class="WeiboImage fancybox" rel="gallery"
-               href="<%= retweetedItem.pic_urls[0].thumbnail_pic.replace('/thumbnail/', '/large/') %>"><img
-              src="<%= retweetedItem.pic_urls[0].thumbnail_pic %>"></a>
-            <% } else { %>
-            <% retweetedItem.pic_urls.forEach(function (pic_url) { %>
-            <% if (pic_url) { %>
-            <a class="WeiboImage fancybox" rel="gallery"
-               href="<%= pic_url.thumbnail_pic.replace('/thumbnail/', '/large/') %>"><img
-              src="<%= pic_url.thumbnail_pic.replace('/thumbnail/', '/square/') %>"></a>
-            <% } %>
-            <% }); %>
-            <% } %>
-            <% } %>
-          </div>
-          <a target="_blank" class="Time text-muted" style="float: left;" href="<%= retweetedItem.user && 'http://weibo.com/' + retweetedItem.user.idstr + '/' + retweetedItem.mid62 || '' %>"><%= retweetedItem.time || '' %></a>
-          <div class="Handle">
-            <a target="_blank" class="Forward text-muted mrs" href="<%= retweetedItem.user && 'http://weibo.com/' + retweetedItem.user.idstr + '/' + retweetedItem.mid62 + '?type=repost' || '' %>"><i class="fa fa-share"></i> 转发</a>
-            <a target="_blank" class="Comment text-muted" href="<%= retweetedItem.user && 'http://weibo.com/' + retweetedItem.user.idstr + '/' + retweetedItem.mid62 || '' %>"><i class="fa fa-comment-o"></i> 评论</a>
-          </div>
-          <div class="clearfix"></div>
-        </div>
+    </div>
+    <% if (item.retweeted_status && item.retweeted_status.idstr) { %>
+    <% var retweetedItem = item.retweeted_status; %>
+    <div class="Retweeted clearfix">
+      <a target="_blank" class="Author AuthorUrl" href="<%= (retweetedItem.user && 'http://weibo.com/' + retweetedItem.user.profile_url) || '' %>">
+        @<span class="ScreenName"><%= retweetedItem.user && retweetedItem.user.screen_name || '' %></span>
+      </a>
+      <a target="_blank" class="Verify <%= !retweetedItem.user ? '' : !retweetedItem.user.verified ? '' : retweetedItem.user.verified_type ? 'ORG' : 'PERSONAL' %>" href="http://verified.weibo.com/verify"><b>V</b></a>
+      <div class="Text"><%- retweetedItem.parsed_text || '' %></div>
+      <div class="Pic clearfix" style="<%= retweetedItem.pic_urls && retweetedItem.pic_urls.length && 'display: block;' || 'display: none;' %><%= retweetedItem.pic_urls && retweetedItem.pic_urls.length == 4 && 'width: 170px;' || '' %>">
+        <% if (retweetedItem.pic_urls) { %>
+        <% if (retweetedItem.pic_urls.length == 1 && retweetedItem.pic_urls[0]) { %>
+        <a class="WeiboImage fancybox" rel="gallery"
+           href="<%= retweetedItem.pic_urls[0].thumbnail_pic.replace('/thumbnail/', '/large/') %>"><img
+          src="<%= retweetedItem.pic_urls[0].thumbnail_pic %>"></a>
+        <% } else { %>
+        <% retweetedItem.pic_urls.forEach(function (pic_url) { %>
+        <% if (pic_url) { %>
+        <a class="WeiboImage fancybox" rel="gallery"
+           href="<%= pic_url.thumbnail_pic.replace('/thumbnail/', '/large/') %>"><img
+          src="<%= pic_url.thumbnail_pic.replace('/thumbnail/', '/square/') %>"></a>
         <% } %>
-        <a target="_blank" class="Time text-muted" style="float: left;" href="<%= item.user && 'http://weibo.com/' + item.user.idstr + '/' + item.mid62 || '' %>"><%= item.time || '' %></a>
-        <div class="Handle">
-          <a target="_blank" class="Forward text-muted mrs" href="<%= item.user && 'http://weibo.com/' + item.user.idstr + '/' + item.mid62 + '?type=repost' || '' %>"><i class="fa fa-share"></i> 转发</a>
-          <a target="_blank" class="Comment text-muted" href="<%= item.user && 'http://weibo.com/' + item.user.idstr + '/' + item.mid62 || '' %>"><i class="fa fa-comment-o"></i> 评论</a>
-        </div>
-        <div class="clearfix"></div>
+        <% }); %>
+        <% } %>
+        <% } %>
       </div>
-      <% } %>
-
-      <% if (item.description) { %>
-      <div class="Description mtm">
-        <%= item.description %>
+      <a target="_blank" class="Time text-muted" style="float: left;" href="<%= retweetedItem.user && 'http://weibo.com/' + retweetedItem.user.idstr + '/' + retweetedItem.mid62 || '' %>"><%= retweetedItem.time || '' %></a>
+      <div class="Handle">
+        <a target="_blank" class="Forward text-muted mrs" href="<%= retweetedItem.user && 'http://weibo.com/' + retweetedItem.user.idstr + '/' + retweetedItem.mid62 + '?type=repost' || '' %>"><i class="fa fa-share"></i> 转发</a>
+        <a target="_blank" class="Comment text-muted" href="<%= retweetedItem.user && 'http://weibo.com/' + retweetedItem.user.idstr + '/' + retweetedItem.mid62 || '' %>"><i class="fa fa-comment-o"></i> 评论</a>
       </div>
-      <% } %>
+      <div class="clearfix"></div>
+    </div>
+    <% } %>
+    <a target="_blank" class="Time text-muted" style="float: left;" href="<%= item.user && 'http://weibo.com/' + item.user.idstr + '/' + item.mid62 || '' %>"><%= item.time || '' %></a>
+    <div class="Handle">
+      <a target="_blank" class="Forward text-muted mrs" href="<%= item.user && 'http://weibo.com/' + item.user.idstr + '/' + item.mid62 + '?type=repost' || '' %>"><i class="fa fa-share"></i> 转发</a>
+      <a target="_blank" class="Comment text-muted" href="<%= item.user && 'http://weibo.com/' + item.user.idstr + '/' + item.mid62 || '' %>"><i class="fa fa-comment-o"></i> 评论</a>
+    </div>
+    <div class="clearfix"></div>
+  <% } %>
 
-      <div class="HoverHelper"></div>
+    <% if (item.description) { %>
+    <div style="margin: 10px 0;">
+      <%= item.description %>
+    </div>
+    <% } %>
+
+    <div style="margin: 10px 0;">
+      <a href="/u/<%= item.author.loginName %>">
+        <img class="img-circle" style="border-radius: 50%;"
+             width="20" height="20"
+             ng-src="<%= item.author.url || '/images/no_img/user_80x80.png' %>">
+        <%= item.author.loginName %>
+      </a>
     </div>
 
-    <div class="SpitCount hidden-xs hidden-sm"
-         ng-if="comments['<%= item._id %>'].length">
-      <i class="fa fa-comment-o"></i>
-      {{comments['<%= item._id %>'].length}}
-      {{comments['<%= item._id %>'].length ? ': ' + comments['<%= item._id %>'][0].text : ''}}
+    <div class="text-muted" style="font-size: 12px; margin: 10px 0;">
+      发布于
+      <%= item.create_at %>
     </div>
-  </li>
 
-  <% }); %>
-</ul>
+    <div class="text-muted text-right" style="font-size: 12px;">
+      来自 <i class="fa fa-globe"></i>
+      <a class="text-muted" target="_blank" href="<%= item.quote || item.url || '' %>">
+        <%= item.quoteDomain ? item.quoteDomain : '' %>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="text-center" ng-show="comments[itemId].length">
+  <i class="fa fa-comment-o"></i>
+  共{{comments[itemId].length}}条评论
+</div>
+
+<div class="list card" style="margin-bottom: 60px;">
+  <div class="item item-avatar" ng-repeat="comment in comments[itemId]">
+    <img style="border-radius: 50%;"
+         ng-src="{{comment.author && comment.author.url || '/images/no_img/user_80x80.png'}}">
+    <h2 class="clearfix">
+      <button class="button button-icon pull-right mlm" style="line-height: 1; min-height: 0;"
+              ng-class="comment.liked ? 'text-muted' : 'text-danger'"
+              ng-click="like(comment)"
+              type="button">
+        <span class="text-muted">{{comment.like || ''}}</span> <i class="fa fa-thumbs-o-up"></i>
+      </button>
+      <a href="/u/{{comment.author.loginName}}" ng-show="comment.author">
+        {{comment.author.loginName}}
+      </a>
+      <span class="text-muted" ng-show="!comment.author">匿名用户</span>
+    </h2>
+    <div class="text-muted" style="font-size: 12px; margin-bottom: 10px;">
+      发表于
+      {{comment.createDate}}
+    </div>
+    <p>{{comment.text}}</p>
+  </div>
+  <div class="item item-avatar stable-bg">
+    <img style="border-radius: 50%;"
+         ng-src="{{yourself.url || '/images/no_img/user_80x80.png'}}">
+    <h2>
+      <a ng-show="yourself" href="/u/{{yourself.loginName}}">{{yourself.loginName}}</a>
+      <span ng-show="!yourself" class="text-muted">匿名用户</span>
+    </h2>
+    <form class="mtm" ng-submit="submit()" style="position: relative;">
+      <input type="text"
+             ng-model="comment" maxlength="140"
+             placeholder="发表评论"/>
+      <div class="LetterCounter">
+        {{comment.length || 0}}/140
+      </div>
+    </form>
+  </div>
+</div>
+</div>
+</ion-scroll>
+</ion-slide>
+<% }); %>

@@ -1,82 +1,48 @@
 <!--LOGIN##这是layout要用的参数，不能删！-->
-<div class="container">
-  <div class="mal" style="position: absolute; left: 0; top: 0;">
+<ion-header-bar class="bar-stable">
+  <div class="buttons">
+    <a class="button button-icon icon ion-ios7-arrow-back" href="/"></a>
+  </div>
+
+  <h1 class="title">
     登录
+  </h1>
+
+  <div class="buttons">
+    <button menu-toggle="right" class="button button-icon icon ion-navicon"></button>
   </div>
-  <a href="/" class="Logo-Circle">
-    <img src="/images/logo_white.png">
+</ion-header-bar>
 
-    <p>互联网内容策展</p>
-  </a>
-
-  <form class="tile center-block pal" style="text-align: left;" action="/login?fromUrl=<%- encodeURIComponent(fromUrl) %>" method="post"
-        ng-controller="Form" name="form">
-    <div class="form-group" ng-controller="Username"
-         ng-class="{ 'has-error': error || (!form.username.$valid && !focused) }">
-      <input type="text" class="form-control flat" maxlength="20"
-             name="username" id="_username" placeholder="用户名或邮箱"
-             ng-init="$parent.focused = true;$parent.username = '<%= locals.email || '' %>'" ng-focus="$parent.focused = true;" ng-blur="$parent.focused = false;"
-             ng-minlength="2" required
-             ng-model="$parent.username" ng-change="$parent.error = '';"
-             tooltip="{{getTooltip()}}"
-             tooltip-trigger="focus" tooltip-placement="{{placement}}" autofocus/>
-      <label class="input-icon fui-user" for="_username"></label>
-    </div>
-    <div class="form-group"
-         ng-class="{ 'has-error': passwordTooltip || (!form.password.$valid && !focused) }">
-      <input type="password" class="form-control flat" maxlength="20"
-             name="password" id="_password" placeholder="密码"
-             ng-init="$parent.focused = true; $parent.passwordTooltip = '<%= locals.passwordMsg || '' %>';"
-             ng-focus="$parent.focused = true;" ng-blur="$parent.focused = false;"
-             ng-minlength="6" required
-             ng-model="$parent.password" ng-change="$parent.passwordTooltip = '';"
-             tooltip="{{passwordTooltip}}"
-             tooltip-trigger="focus" tooltip-placement="{{placement}}"/>
-      <label class="input-icon fui-lock" for="_password"></label>
-    </div>
-
-    <div class="form-group">
-      <label class="checkbox">
-        <input type="checkbox" checked name="remember" data-toggle="checkbox"/>
-        <strong>自动登录</strong>
+<ion-content>
+  <form class="list padding" method="post" action="/login?fromUrl=<%- encodeURIComponent(fromUrl) %>">
+    <p class="text-danger">
+      <%= locals.errMsg || "" %>&nbsp;
+    </p>
+    <label class="item item-input padding">
+      <input type="text" autofocus
+             ng-model="username"
+             ng-init="username = '<%= locals.email || '' %>'"
+             name="username" id="_userName" placeholder="用户名或邮箱">
+      <i class="button-icon icon ion-ios7-person-outline placeholder-icon"></i>
+    </label>
+    <label class="item item-input padding">
+      <input type="password" maxlength="20"
+             ng-model="password"
+             name="password" id="_password" placeholder="密码">
+      <i class="button-icon icon ion-ios7-locked-outline placeholder-icon"></i>
+    </label>
+    <div class="item-checkbox mtl mbl" style="position: relative; margin-left: -5px;">
+      <label class="checkbox" style="right: auto;">
+        <input type="checkbox" checked name="remember">
       </label>
+      自动登录
     </div>
-
-    <button type="submit" class="btn btn-primary btn-block center-block">登录</button>
+    <button class="button button-block button-positive"
+            type="submit">
+      登录石子儿
+    </button>
+    <p class="text-right">
+      <a class="text-muted" href="/forgetPassword">忘记密码?</a>
+    </p>
   </form>
-
-  <div class="mtm phl">
-    <a class="text-muted" href="/forgetPassword">忘记密码?</a>
-    <a class="text-muted pull-right" href="/signup">注册</a>
-  </div>
-</div>
-
-<script>
-  (function () {
-    sng.controller('Username', function ($scope) {
-      $scope.error = '<%= locals.errMsg || "" %>';
-
-      $scope.getTooltip = function () {
-        return $scope.error || '用户名或邮箱';
-      };
-    });
-    sng.controller('Form', function ($scope) {
-      var refreshPlacement = function () {
-        if ($(window).width() < 769) {
-          $scope.placement = 'top';
-        } else {
-          $scope.placement = 'right';
-        }
-        var active = document.activeElement;
-        active.blur();
-        active.focus();
-      };
-      setTimeout(function () {
-        refreshPlacement();
-      }, 0);
-      $(window).resize(function () {
-        refreshPlacement();
-      });
-    });
-  })();
-</script>
+</ion-content>

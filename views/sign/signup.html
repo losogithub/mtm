@@ -1,112 +1,55 @@
 <!--SIGNUP##这是layout要用的参数，不能删！-->
-<div class="container">
-  <div class="mal" style="position: absolute; left: 0; top: 0;">
+<ion-header-bar class="bar-stable">
+  <div class="buttons">
+    <a class="button button-icon icon ion-ios7-arrow-back" href="/"></a>
+  </div>
+
+  <h1 class="title">
     注册
+  </h1>
+
+  <div class="buttons">
+    <button menu-toggle="right" class="button button-icon icon ion-navicon"></button>
   </div>
-  <div class="navbar" style="position: absolute; right: 0; top: 0;">
-    <ul class="nav navbar-nav" style="margin: 0;">
-      <li><a href="/login">登录 <i class="fa fa-arrow-circle-right"></i></a></li>
-    </ul>
-  </div>
-  <a href="/" class="Logo-Circle">
-    <img src="/images/logo_white.png">
+</ion-header-bar>
 
-    <p>互联网内容策展</p>
-  </a>
-
-  <form class="tile center-block pal" style="text-align: left;" method="post" action="/signup"
-        ng-controller="Form" name="form">
-    <div class="form-group" ng-controller="Username"
-         ng-class="{ 'has-error': error || (!form.username.$valid && !focused) }">
-      <input type="text" class="form-control flat" maxlength="20"
-             name="username" id="_userName" placeholder="用户名"
-             ng-init="$parent.focused = true;$parent.username = '<%= locals.name || '' %>'" ng-focus="$parent.focused = true;" ng-blur="$parent.focused = false;"
-             ng-minlength="2" required
-             ng-model="$parent.username" ng-change="$parent.error = '';"
-             tooltip="{{getTooltip()}}"
-             tooltip-trigger="focus" tooltip-placement="{{placement}}" autofocus/>
-      <label class="input-icon fui-user" for="_userName"></label>
-    </div>
-    <div class="form-group" ng-controller="Email"
-         ng-class="{ 'has-error': error || (!form.email.$valid && !focused) }">
-      <input type="email" class="form-control flat"
-             name="email" id="_email" placeholder="邮箱"
-             ng-init="$parent.focused = true;$parent.email = '<%= locals.email || '' %>'" ng-focus="$parent.focused = true;" ng-blur="$parent.focused = false;"
-             required
-             ng-model="$parent.email" ng-change="$parent.error = '';"
-             tooltip="{{getTooltip()}}"
-             tooltip-trigger="focus" tooltip-placement="{{placement}}"/>
-      <label class="input-icon fui-mail" for="_email"></label>
-    </div>
-    <div class="form-group" ng-controller="Password"
-         ng-class="{ 'has-error': error || (!form.password.$valid && !focused) }">
-      <input type="password" class="form-control flat" maxlength="20"
-             name="password" id="_password" placeholder="密码"
-             ng-init="$parent.focused = true;" ng-focus="$parent.focused = true;" ng-blur="$parent.focused = false;"
-             ng-minlength="6" required
-             ng-model="$parent.password" ng-change="$parent.error = '';"
-             tooltip="{{passwordTooltip}}"
-             tooltip-trigger="focus" tooltip-placement="{{placement}}"/>
-      <label class="input-icon fui-lock" for="_password"></label>
-    </div>
-
-    <div class="form-group">
-      <label class="checkbox" ng-init="rules = true;" ng-click="rules = !rules;">
-        <input type="checkbox" data-toggle="checkbox" id="rules" checked/>
-        <strong>同意石子儿的<a href="/rules" target="_blank"
-          >《使用条规》</a>和<a href="/privacy" target="_blank"
-          >《隐私条款》</a></strong>
+<ion-content>
+  <form class="list padding" method="post" action="/signup">
+    <p class="text-danger">
+      <%= locals.nameMsg || locals.emailMsg || locals.passwordMsg || "" %>&nbsp;
+    </p>
+    <label class="item item-input padding">
+      <input type="text" maxlength="20" autofocus
+             ng-model="username"
+             ng-init="username = '<%= locals.name || '' %>'"
+             name="username" id="_userName" placeholder="用户名">
+      <i class="button-icon icon ion-ios7-person-outline placeholder-icon"></i>
+    </label>
+    <label class="item item-input padding">
+      <input type="email"
+             ng-model="email"
+             ng-init="email = '<%= locals.email || '' %>'"
+             name="email" id="_email" placeholder="邮箱">
+      <i class="button-icon icon ion-ios7-email-outline placeholder-icon"></i>
+    </label>
+    <label class="item item-input padding">
+      <input type="password" maxlength="20"
+             ng-model="password"
+             name="password" id="_password" placeholder="密码">
+      <i class="button-icon icon ion-ios7-locked-outline placeholder-icon"></i>
+    </label>
+    <div class="item-checkbox mtl mbl" style="position: relative; margin-left: -5px;">
+      <label class="checkbox" style="right: auto;">
+        <input type="checkbox" ng-model="rules" ng-init="rules = true;">
       </label>
+      <span>同意石子儿的<a href="/rules" target="_blank"
+        >《使用条规》</a>和<a href="/privacy" target="_blank"
+        >《隐私条款》</a></span>
     </div>
-
-    <button ng-class="{disabled: !rules}" ng-disabled="!rules" type="submit" name="signup" class="btn btn-primary btn-block">注册</button>
+    <button class="button button-block button-positive"
+            ng-disabled="!rules"
+            type="submit">
+      注册石子儿
+    </button>
   </form>
-</div>
-
-<script>
-  (function () {
-    sng.controller('Username', function ($scope) {
-      $scope.error = '<%= locals.nameMsg || "" %>';
-
-      $scope.getTooltip = function () {
-        return ($scope.error || '请输入2-20位用户名，注册后不能更改') || '个人页面： shizier.com/u/' + ($scope.username || '用户名');
-      };
-    });
-
-    sng.controller('Email', function ($scope) {
-      $scope.error = '<%= locals.emailMsg || "" %>';
-
-      $scope.getTooltip = function () {
-        return $scope.error || '用来接收激活邮件、找回密码';
-      };
-    });
-
-    sng.controller('Password', function ($scope) {
-      new shizier.account.initRegistForm($scope);
-      $scope.error = '<%= locals.passwordMsg || "" %>';
-
-      $scope.passwordTooltip = '请输入6-20位密码';
-    });
-
-    sng.controller('Form', function ($scope) {
-      var $checkbox = $(":checkbox");
-      $checkbox.checkbox('check');
-      var refreshPlacement = function () {
-        if ($(window).width() < 769) {
-          $scope.placement = 'top';
-        } else {
-          $scope.placement = 'right';
-        }
-        var active = document.activeElement;
-        active.blur();
-        active.focus();
-      };
-      setTimeout(function () {
-        refreshPlacement();
-      }, 0);
-      $(window).resize(function () {
-        refreshPlacement();
-      });
-    });
-  })();
-</script>
+</ion-content>

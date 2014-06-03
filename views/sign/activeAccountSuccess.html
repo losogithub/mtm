@@ -1,11 +1,18 @@
 <!--ACCOUNT##这是layout要用的参数，不能删！-->
-<div class="container">
-  <div class="center-block pal text-center"
-       style="background-color: #ecf0f1;border-radius: 6px;max-width: 600px;">
-    <h5>注册成功</h5>
-
-    <p>您现在就可以…</p>
-    <a href="/topic/create" class="btn btn-primary btn-hg btn-block mbl"><i class="fa fa-puzzle-piece"></i> 开始策展</a>
-    <a href="/" class="btn btn-default btn-block">返回主页</a>
+<ion-header-bar class="bar-stable">
+  <div class="buttons">
+    <a class="button button-icon icon ion-ios7-arrow-back" href="/"></a>
   </div>
-</div>
+
+  <h1 class="title">
+    注册成功
+  </h1>
+
+  <div class="buttons">
+    <button menu-toggle="right" class="button button-icon icon ion-navicon"></button>
+  </div>
+</ion-header-bar>
+
+<ion-content class="text-center padding">
+  <a href="/" class="button button-positive button-block">返回主页</a>
+</ion-content>

@@ -18,7 +18,9 @@ var about = require('./controllers/about');
 var manage = require('./controllers/manage');
 
 module.exports = function (app) {
-  app.get('/test', site.showIndex);
+  app.get('/test', function(req, res) {
+    res.render('error')
+  });
   // home page
   app.get('/', site.showIndex);
   app.get('/tool', site.showTool);

@@ -36,18 +36,38 @@ function showIndex(req, res) {
         var newItem = item.toJSON();
         newItem.create_at = utils.getFormatedDate(newItem.create_at);
 
-        Topic2.getTopic2ById(item.topicId, function (err, topic) {
-          if (err) return callback(err);
+        async.auto({
+          topic: function (callback) {
+            Topic2.getTopic2ById(item.topicId, function (err, topic) {
+              if (err) return callback(err);
 
-          topic.itemCount = 1;
-          extend(newItem, {
-            topic: topic
-          });
+              topic.itemCount = 1;
+              extend(newItem, {
+                topic: topic
+              });
 
-          topics[item.topicId] = topic;
-          items.push(newItem);
-          callback();
-        });
+              topics[item.topicId] = topic;
+              items.push(newItem);
+              callback();
+            });
+          },
+          author: ['topic', function (callback) {
+            User.getUserById(item.authorId, function (err, user) {
+              if (err) return callback(err);
+
+              if (user) {
+                extend(newItem, {
+                  author: {
+                    loginName: user.loginName,
+                    url: user.url
+                  }
+                })
+              }
+
+              callback();
+            });
+          }]
+        }, callback);
       }, function (err) {
         if (err) return callback(err);
 
@@ -111,17 +131,11 @@ function showIndex(req, res) {
     });
 
     res.render('index', {
-      pageType: 'TEST',
+      pageType: 'INDEX',
       css: [
-        '/bower_components/perfect-scrollbar/min/perfect-scrollbar-0.4.10.min.css',
-        'http://cdn.bootcss.com/messenger/1.4.0/css/messenger.css',
-        'http://cdn.bootcss.com/messenger/1.4.0/css/messenger-theme-flat.css',
         '/stylesheets/topic2.css'
       ],
       js: [
-        '/bower_components/perfect-scrollbar/min/perfect-scrollbar-0.4.10.min.js',
-        'http://cdn.bootcss.com/messenger/1.4.0/js/messenger.js',
-        'http://cdn.bootcss.com/messenger/1.4.0/js/messenger-theme-flat.js',
         'http://cdn.bootcss.com/jquery-mousewheel/3.1.6/jquery.mousewheel.min.js',
         '/javascripts/utils.js',
         '/javascripts/topic.js'

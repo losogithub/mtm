@@ -21,12 +21,11 @@
   <meta property="og:image" content="<%= topic.cover_url %>" />
   <% } %>
 
-  <link href="/stylesheets/bootstrap.min.css" rel="stylesheet">
-  <!--<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">-->
-  <!--<link type='text/css' rel='stylesheet' href='http://cdn.bootcss.com/twitter-bootstrap/3.0.3/css/bootstrap.css'/>-->
-  <link type='text/css' rel='stylesheet' href="/stylesheets/flat-ui.css">
+  <link href="/stylesheets/ionic.min.css" rel="stylesheet">
+  <!--<link href="/stylesheets/bootstrap.min.css" rel="stylesheet">-->
+  <!--<link type='text/css' rel='stylesheet' href="/stylesheets/flat-ui.css">-->
   <link href="/font-awesome-4.0.3/css/font-awesome.min.css" rel="stylesheet">
-  <!--<link href="http://cdn.bootcss.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">-->
+  <!--<link type='text/css' rel='stylesheet' href='/bower_components/perfect-scrollbar/min/perfect-scrollbar-0.4.10.min.css'/>-->
   <link type='text/css' rel='stylesheet' href='/stylesheets/common.css'/>
   <% if (locals.pageType == 'ACCOUNT' || locals.pageType == 'LOGIN' || locals.pageType == 'SIGNUP') { %>
   <link type='text/css' rel="stylesheet" href="/stylesheets/account.css"/>
@@ -41,18 +40,20 @@
   <script src="http://cdn.bootcss.com/respond.js/1.3.0/respond.min.js"></script>
   <![endif]-->
   <script type="text/javascript" src="http://cdn.bootcss.com/jquery/1.11.0/jquery.min.js"></script>
-  <script src="http://cdn.bootcss.com/angular.js/1.2.15/angular.min.js"></script>
+  <script src="/javascripts/ionic.bundle.min.js"></script>
   <script>
     window.shizier = window.shizier || {};
     shizier.pageType = '<%= locals.pageType %>';
   </script>
-  <!--<script type="text/javascript" src="/javascripts/bootstrap.js"></script>-->
-  <!--<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>-->
-  <script src="http://cdn.bootcss.com/twitter-bootstrap/3.1.1/js/bootstrap.min.js"></script>
-  <script type="text/javascript" src="/javascripts/ui-bootstrap-tpls-0.10.0.js"></script>
-  <script type="text/javascript" src="/javascripts/bootstrap-select.js"></script>
-  <script type="text/javascript" src="/javascripts/flatui-checkbox.js"></script>
-  <script type="text/javascript" src="/javascripts/flatui-radio.js"></script>
+  <script type="text/javascript" src="/javascripts/ui-utils.min.js"></script>
+  <!--<script src="http://cdn.bootcss.com/twitter-bootstrap/3.1.1/js/bootstrap.min.js"></script>-->
+  <!--<script type="text/javascript" src="/javascripts/ui-bootstrap-tpls-0.10.0.js"></script>-->
+  <!--<script src="/bower_components/angular-strap/dist/angular-strap.min.js"></script>-->
+  <!--<script src="/bower_components/angular-strap/dist/angular-strap.tpl.min.js"></script>-->
+  <!--<script type="text/javascript" src="/javascripts/bootstrap-select.js"></script>-->
+  <!--<script type="text/javascript" src="/javascripts/flatui-checkbox.js"></script>-->
+  <!--<script type="text/javascript" src="/javascripts/flatui-radio.js"></script>-->
+  <!--<script type="text/javascript" src="/bower_components/perfect-scrollbar/min/perfect-scrollbar-0.4.10.min.js"></script>-->
   <script type="text/javascript" src="/javascripts/common.js"></script>
   <% if (locals.pageType == 'ACCOUNT' || locals.pageType == 'LOGIN' || locals.pageType == 'SIGNUP') { %>
   <script type="text/javascript" src="/javascripts/account.js"></script>
@@ -61,123 +62,64 @@
   <script type="text/javascript" src="<%= js %>"></script>
   <% }); %>
 </head>
-<body>
-<% if (locals.pageType != 'SIGNUP' && locals.pageType != 'LOGIN' && locals.pageType != 'VERIFY' && locals.pageType != 'TOOL') { %>
-<header class="navbar navbar-default Header mbn">
-  <div class="container">
-    <ul class="nav navbar-nav" style="margin-left: -15px;">
-      <li>
-        <a class="Logo" href="/" title="互联网内容策展">
-          <img class="mrm" src="/images/logo_full_160x64.png">
-          互联网内容策展
+<body class="ionic">
+<ion-side-menus ng-init="comments = <%= JSON.stringify(locals.comments) %>">
+  <!-- Center content -->
+  <ion-side-menu-content drag-content="false">
+
+    <%- body %>
+
+  </ion-side-menu-content>
+
+  <!-- Right menu -->
+  <ion-side-menu side="right" class="dark-bg">
+    <header class="bar bar-header bar-dark">
+      <a class="title" href="/"><img src="/images/logo_white_50x20.png"></a>
+    </header>
+    <ion-content class="has-header">
+      <form class="list" action="/logout" method="post">
+        <% if (!locals.yourself) { %>
+        <a class="item item-icon-left item-dark" href="/login">
+          <i class="icon ion-log-in"></i>
+          登录
         </a>
-      </li>
-    </ul>
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-    </div>
-    <ul class="nav navbar-nav navbar-right hidden-xs">
-      <% if (!locals.yourself) { %>
-      <li><a href="/signup">注册</a></li>
-      <li><a class="ShowLogin" href="##">登录</a></li>
-      <% } else { %>
-      <li>
-        <a href="/works">
-          <i class="fa fa-caret-down"></i>
-          <img class="img-circle" width="20" height="20"
-            src="<%= locals.yourself.url || '/images/no_img/user_80x80.png' %>"
-            onerror="shizier.errorImage(this,'user_80x80');">
+        <a class="item item-icon-left item-dark" href="/signup">
+          <i class="icon ion-ios7-person-outline"></i>
+          注册
+        </a>
+        <% } else { %>
+        <a class="item item-icon-left item-dark" href="/works">
+          <i class="icon phx">
+            <img class="img-circle" width="26" height="26"
+                 src="<%= locals.yourself.url || '/images/no_img/user_80x80.png' %>"
+                 onerror="shizier.errorImage(this,'user_80x80');">
+          </i>
           <%= locals.yourself.loginName %>
           <% if(locals.yourself.messageCount) { %>
           <span class="navbar-new"><%= locals.yourself.messageCount %></span>
           <% } %>
         </a>
-        <ul style="z-index: 1002;">
-          <li>
-            <a href="/settings">
-              <i class="fa fa-cog"></i>
-              设置
-            </a>
-          </li>
-          <li>
-            <form action="/logout" method="post">
-              <button class="btn btn-link btn-block Logout" type="submit">
-                <i class="fa fa-sign-out"></i>
-                登出
-              </button>
-            </form>
-          </li>
-        </ul>
-      </li>
-      <% } %>
-      <li>
-        <a href="/tool" title="便捷地从任意网页采集石子儿">采集神器</a>
-      </li>
-    </ul>
-  </div>
-  <div class="container">
-    <div class="row">
-      <div class="collapse" id="bs-example-navbar-collapse-1">
-        <ul class="navbar-nav man pan pbl visible-xs">
-          <li>
-            <a href="/tool" title="便捷地从任意网页采集石子儿">采集神器</a>
-          </li>
-          <% if (!locals.yourself) { %>
-          <li><a href="/signup">注册</a></li>
-          <li><a href="/login">登录</a></li>
-          <% } else { %>
-          <li>
-            <a href="/works" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
-              <img class="img-circle" width="20" height="20"
-                   src="<%= locals.yourself.url || '/images/no_img/user_80x80.png' %>"
-                   onerror="shizier.errorImage(this,'user_80x80');">
-              <%= locals.yourself.loginName %>
-            </a>
-          </li>
-          <li>
-            <form action="/logout" method="post">
-              <button class="btn btn-link btn-block Logout" type="submit">
-                <i class="fa fa-sign-out"></i>
-                登出
-              </button>
-            </form>
-          </li>
-          <% } %>
-        </ul>
-      </div>
-    </div>
-  </div>
-</header>
-<% } %>
-
-<div class="Contents">
-
-  <%- body %>
-
-</div>
-
-<% if (locals.pageType != 'TOOL') { %>
-<footer class="Footer pal">
-  <ul class="pan">
-    <li><a href="/about">关于我们</a></li>
-    <li><a href="/rules">使用条规</a></li>
-    <li><a href="/privacy">隐私条款</a></li>
-    <li><a href="/help">帮助</a></li>
-  </ul>
-  <p>Copyright © 2013-2014 <a href="/">shizier.com</a> all rights reserved</p>
-</footer>
-<% } %>
-
-<% include _toTop.html %>
-
-<% if (locals.pageType != 'LOGIN' && locals.pageType != 'SIGNUP' && locals.pageType != 'ACCOUNT') { %>
-<% include _loginDialog.html %>
-<% } %>
+        <a class="item item-icon-left item-dark" href="/settings">
+          <i class="icon ion-ios7-gear-outline"></i>
+          设置
+        </a>
+        <button class="item item-icon-left item-dark text-left" style="width: 100%;" type="submit">
+          <i class="icon ion-log-out"></i>
+            登出
+        </button>
+        <% } %>
+        <a class="item item-icon-left item-dark" href="/tool">
+          <i class="icon ion-ios7-star-outline"></i>
+          采集神器
+        </a>
+        <a class="item item-icon-left item-dark" href="/about">
+          <i class="icon ion-ios7-information-outline"></i>
+          关于
+        </a>
+      </form>
+    </ion-content>
+  </ion-side-menu>
+</ion-side-menus>
 
 <script>
   (function (i, s, o, g, r, a, m) {
@@ -194,7 +136,6 @@
 
   ga('create', 'UA-45968298-1', 'shizier.com');
   ga('send', 'pageview');
-
 </script>
 
 </body>

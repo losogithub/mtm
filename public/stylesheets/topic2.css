@@ -97,57 +97,12 @@
   -webkit-transition: none !important;
   transition: none !important;
 }
-/*条目*/
-.WidgetItemList {
-  list-style: none;
-  padding: 0 0 40px;
-  margin-bottom: 0;
-}
-.WidgetItemList > li {
-  position: relative;
-}
-.WidgetItemList > li .SpitCount {
-  position: absolute;
-  top: 50%;
-  right: -30px;
-  width: 0;
-  margin-top: -10px;
-}
-.WidgetItemList .Hoverable {
-  position: relative;
-}
-@media (min-width: 992px) {
-  .WidgetItemList .Hoverable:hover .HoverHelper {
-    display: block;
-  }
-}
-.Quote {
-  text-align: right;
-  font-size: 12px;
-  line-height: 13px;
-  margin-top: 3px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.Quote,
-.Quote * {
-  color: #bdc3c7;
-}
-.LINK .Quote,
-.VIDEO .Quote {
-  text-align: left;
-}
-.WidgetItemList .Hoverable:hover,
-.WidgetItemList .Hoverable.Hover {
-  background-color: #f8f9fa;
-}
-.WidgetItemList .Hoverable .Description {
+.WidgetItemList .Description {
   padding-left: 6px;
   border-left: 2px solid #bdc3c7;
   line-height: 1.4;
 }
-.WidgetItemList .Hoverable .Content {
+.WidgetItemList .Content {
   border-radius: 6px;
   background-color: #ecf0f1;
   width: 500px;
@@ -155,35 +110,35 @@
   margin-left: auto;
   margin-right: auto;
 }
-.WidgetItemList .Hoverable .LINK .Title {
+.WidgetItemList .LINK .Title {
   font-size: 20px;
   line-height: 1.1;
   font-weight: bold;
 }
-.WidgetItemList .Hoverable .LINK .Title img {
+.WidgetItemList .LINK .Title img {
   width: 16px;
   height: 16px;
 }
-.WidgetItemList .Hoverable .LINK .Title a {
+.WidgetItemList .LINK .Title a {
   vertical-align: middle;
 }
-.WidgetItemList .Hoverable .LINK .Snippet {
+.WidgetItemList .LINK .Snippet {
   line-height: 1.2;
 }
-.WidgetItemList .Hoverable .IMAGE .Image img,
-.WidgetItemList .Hoverable .IMAGE_CREATE .Image img {
+.WidgetItemList .IMAGE .Image img,
+.WidgetItemList .IMAGE_CREATE .Image img {
   max-width: 100%;
   max-height: 500px;
 }
-.WidgetItemList .Hoverable .IMAGE .Title,
-.WidgetItemList .Hoverable .IMAGE_CREATE .Title {
+.WidgetItemList .IMAGE .Title,
+.WidgetItemList .IMAGE_CREATE .Title {
   line-height: 1.1;
   font-weight: bold;
 }
-.WidgetItemList .Hoverable .VIDEO embed {
+.WidgetItemList .VIDEO embed {
   background-color: white;
 }
-.WidgetItemList .Hoverable .VIDEO .Cover {
+.WidgetItemList .VIDEO .Cover {
   transition: none;
   -webkit-transition: none;
   border-radius: 0;
@@ -195,94 +150,94 @@
   background: #95a5a6 no-repeat center;
   background-size: cover;
 }
-.WidgetItemList .Hoverable .VIDEO .Cover .Background {
+.WidgetItemList .VIDEO .Cover .Background {
   width: 120px;
   height: 90px;
   transition: 0.25s;
   -webkit-transition: 0.25s;
 }
-.WidgetItemList .Hoverable .VIDEO .Cover i {
+.WidgetItemList .VIDEO .Cover i {
   line-height: 90px;
   font-size: 60px;
   color: rgba(255, 255, 255, 0.6);
 }
-.WidgetItemList .Hoverable .VIDEO .Cover:hover .Background,
-.WidgetItemList .Hoverable .VIDEO .Cover:focus .Background,
-.WidgetItemList .Hoverable .VIDEO .Cover:active .Background {
+.WidgetItemList .VIDEO .Cover:hover .Background,
+.WidgetItemList .VIDEO .Cover:focus .Background,
+.WidgetItemList .VIDEO .Cover:active .Background {
   background-color: rgba(0, 0, 0, 0.6);
 }
-.WidgetItemList .Hoverable .VIDEO .Cover:hover i,
-.WidgetItemList .Hoverable .VIDEO .Cover:focus i,
-.WidgetItemList .Hoverable .VIDEO .Cover:active i {
+.WidgetItemList .VIDEO .Cover:hover i,
+.WidgetItemList .VIDEO .Cover:focus i,
+.WidgetItemList .VIDEO .Cover:active i {
   color: #eee;
 }
-.WidgetItemList .Hoverable .VIDEO .Title {
+.WidgetItemList .VIDEO .Title {
   font-weight: bold;
   line-height: 1.1;
 }
-.WidgetItemList .Hoverable:hover .WEIBO .Handle,
-.WidgetItemList .Hoverable.Hover .WEIBO .Handle {
+.WidgetItemList:hover .WEIBO .Handle,
+.WidgetItemList.Hover .WEIBO .Handle {
   visibility: visible;
 }
-.WidgetItemList .Hoverable .WEIBO .Retweeted {
+.WidgetItemList .WEIBO .Retweeted {
   background-color: #e0e7e8;
   border-radius: 6px;
   padding: 5px 10px;
   margin: 10px 0;
   font-size: 80%;
 }
-.WidgetItemList .Hoverable .WEIBO .Avatar {
+.WidgetItemList .WEIBO .Avatar {
   width: 50px;
   height: 50px;
   float: left;
   margin-right: 10px;
   background-color: white;
 }
-.WidgetItemList .Hoverable .WEIBO .Avatar img {
+.WidgetItemList .WEIBO .Avatar img {
   width: 50px;
   height: 50px;
 }
-.WidgetItemList .Hoverable .WEIBO .Avatar i {
+.WidgetItemList .WEIBO .Avatar i {
   font-size: 30px;
   line-height: 50px;
 }
-.WidgetItemList .Hoverable .WEIBO .Author {
+.WidgetItemList .WEIBO .Author {
   font-weight: bold;
 }
-.WidgetItemList .Hoverable .WEIBO .Text {
+.WidgetItemList .WEIBO .Text {
   margin-top: 5px;
 }
-.WidgetItemList .Hoverable .WEIBO .Verify {
+.WidgetItemList .WEIBO .Verify {
   display: none;
 }
-.WidgetItemList .Hoverable .WEIBO .Verify.PERSONAL {
+.WidgetItemList .WEIBO .Verify.PERSONAL {
   display: inline;
   text-decoration: none;
   color: #fb0;
 }
-.WidgetItemList .Hoverable .WEIBO .Verify.ORG {
+.WidgetItemList .WEIBO .Verify.ORG {
   display: inline;
   text-decoration: none;
   color: #07e;
 }
-.WidgetItemList .Hoverable .WEIBO .Pic {
+.WidgetItemList .WEIBO .Pic {
   width: 255px;
   margin-bottom: 15px;
 }
-.WidgetItemList .Hoverable .WEIBO .Pic a {
+.WidgetItemList .WEIBO .Pic a {
   float: left;
   margin: 5px 5px 0 0;
 }
-.WidgetItemList .Hoverable .WEIBO .Handle {
+.WidgetItemList .WEIBO .Handle {
   float: right;
   visibility: hidden;
 }
-.WidgetItemList .Hoverable .CITE .Cite {
+.WidgetItemList .CITE .Cite {
   line-height: 1.4;
   font-weight: bold;
   font-size: 20px;
 }
-.WidgetItemList .Hoverable .CITE .Cite q {
+.WidgetItemList .CITE .Cite q {
   quotes: none;
 }
 .DeleteTopic {

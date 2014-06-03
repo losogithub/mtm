@@ -14,42 +14,12 @@
   if (window.angular) {
     window.sng = angular.module(
       'sng',
-      ['ui.bootstrap'].concat(
+      ['ui.utils', 'ionic'].concat(
         shizier.pageType == 'BOOKMARKLET'
-          ? ['ui.utils', 'monospaced.elastic']
+          ? ['monospaced.elastic']
           : [])
     );
-
-    window.sng.controller('LoginDialogCtrl', function ($scope, $http) {
-      $scope.submit = function () {
-        if (!$scope.username || !$scope.password) {
-          $scope.error = '用户名和密码不能为空';
-          return;
-        }
-        $http.post('/login_dialog', {
-          userName: $scope.username,
-          password: $scope.password,
-          remember: $scope.remember
-        })
-          .success(function () {
-            location.reload();
-          })
-          .error(function (data) {
-            if (data.notActivated) {
-              $scope.error = '未激活，验证邮件已重新发送到您的邮箱' + data.email + '，请通过其中的验证链接完成您的石子儿帐号注册。';
-            } else {
-              $scope.error = '用户名或密码不正确';
-            }
-            $scope.loginDialog.$setPristine();
-          });
-      };
-    });
   }
-
-  $._messengerDefaults = {
-    extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right',
-    theme: 'flat'
-  };
 
   shizier.errorImage = shizier.errorImage || function (img, name, ignoreNull) {
     var $img = $(img);
@@ -75,19 +45,10 @@
 
   $(function ($) {
 
-    var $modal = $('#myModal');
     $(document).ajaxError(function (event, jqXHR) {
       if (jqXHR.status == 401) {
-        $modal.modal('show');
+        location.assign('/login');
       }
-    });
-
-    $('.ShowLogin').click(function () {
-      $modal.modal('show');
-    });
-
-    $modal.on('shown.bs.modal', function () {
-      $('.LoginFocus').focus();
     });
 
     var URL_INPUT_SELECTOR = 'input[name="url"], input.Url';

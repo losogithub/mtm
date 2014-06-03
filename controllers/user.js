@@ -52,153 +52,142 @@ function showWorks(req, res, next) {
       return next(new Error(403));
     }
 
-    //use this function to get all the details of topics.
-    renderWorks(req, res, next, user);
-  });
-}
+    async.auto({
+      user: function (callback) {
+        User.resetMessageCount(user, callback);
+      },
+      messages: function (callback) {
+        Message.getMessagesByOwnerId(user._id, callback);
+      },
+      tempItems: ['messages', function (callback, results) {
+        var messages = results.messages;
 
-function renderWorks(req, res, next, user) {
-  async.auto({
-    user: function (callback) {
-      User.resetMessageCount(user, callback);
-    },
-    messages: function (callback) {
-      Message.getMessagesByOwnerId(user._id, callback);
-    },
-    tempItems: ['messages', function (callback, results) {
-      var messages = results.messages;
+        var itemIds = {};
+        var tempItems = [];
+        async.forEachSeries(messages, function (message, callback) {
+          if (itemIds[message.itemId]) return callback();
 
-      var itemIds = {};
-      var tempItems = [];
-      async.forEachSeries(messages, function (message, callback) {
-        if (itemIds[message.itemId]) return callback();
-
-        itemIds[message.itemId] = 1;
-        Item.getItemById(message.itemType, message.itemId, function (err, item) {
-          if (err) return callback(err);
-
-          tempItems.push(item);
-          callback();
-        });
-      }, function (err) {
-        if (err) return callback(err);
-
-        callback(null, tempItems);
-      });
-    }],
-    items: ['tempItems', function (callback, results) {
-      var tempItems = results.tempItems;
-
-      async.mapSeries(tempItems, function (item, callback) {
-        var newItem = item.toJSON();
-        newItem.create_at = utils.getFormatedDate(newItem.create_at);
-
-        User.getUserById(item.authorId, function (err, user) {
-          if (err) return callback(err);
-
-          if (user) {
-            extend(newItem, {
-              author: {
-                loginName: user.loginName,
-                url: user.url
-              }
-            });
-          }
-
-          Topic2.getTopic2ById(item.topicId, function (err, topic) {
+          itemIds[message.itemId] = 1;
+          Item.getItemById(message.itemType, message.itemId, function (err, item) {
             if (err) return callback(err);
 
-            extend(newItem, {
-              topic: topic
-            });
-
-            callback(null, newItem);
-          });
-        });
-      }, callback);
-    }],
-    comments: ['items', function (callback, results) {
-      var items = results.items;
-      var comments = {};
-      async.forEachSeries(items, function (item, callback) {
-        Comment.getCommentsByItemTypeAndId(item.type, item._id, function (err, tempComments) {
-          if (err) return callback(err);
-
-          async.mapSeries(tempComments, function (comment, callback) {
-            var newComment = comment.toJSON();
-
-            var key = comment._id + req.connection.remoteAddress;
-            if (Common.CommentLikedKeys[key]) {
-              newComment.liked = true;
-            }
-
-            User.getUserById(comment.authorId, function (err, user) {
-              if (err) return callback(err);
-
-              if (user) {
-                extend(newComment, {
-                  author: {
-                    loginName: user.loginName,
-                    url: user.url
-                  }
-                });
-              }
-
-              callback(null, newComment);
-            });
-          }, function (err, newComments) {
-            if (err) return callback(err);
-
-            comments[item._id] = newComments;
+            tempItems.push(item);
             callback();
           });
+        }, function (err) {
+          if (err) return callback(err);
+
+          callback(null, tempItems);
         });
-      }, function (err) {
-        if (err) return callback(err);
+      }],
+      items: ['tempItems', function (callback, results) {
+        var tempItems = results.tempItems;
 
-        callback(null, comments);
-      });
-    }]
-  }, function (err, results) {
-    if (err) {
-      return next(err);
-    }
+        async.mapSeries(tempItems, function (item, callback) {
+          var newItem = item.toJSON();
+          newItem.create_at = utils.getFormatedDate(newItem.create_at);
 
-    res.locals.yourself = results.user;
-    var items = results.items;
-    var comments = results.comments;
+          User.getUserById(item.authorId, function (err, user) {
+            if (err) return callback(err);
 
-    var itemsData = [];
-    items.forEach(function (item) {
-      if (item && item.type && item._id) {
-        itemsData.push(extend(
-          item,
-          helper.getItemData(item)
-        ));
+            if (user) {
+              extend(newItem, {
+                author: {
+                  loginName: user.loginName,
+                  url: user.url
+                }
+              });
+            }
+
+            Topic2.getTopic2ById(item.topicId, function (err, topic) {
+              if (err) return callback(err);
+
+              extend(newItem, {
+                topic: topic
+              });
+
+              callback(null, newItem);
+            });
+          });
+        }, callback);
+      }],
+      comments: ['items', function (callback, results) {
+        var items = results.items;
+        var comments = {};
+        async.forEachSeries(items, function (item, callback) {
+          Comment.getCommentsByItemTypeAndId(item.type, item._id, function (err, tempComments) {
+            if (err) return callback(err);
+
+            async.mapSeries(tempComments, function (comment, callback) {
+              var newComment = comment.toJSON();
+
+              var key = comment._id + req.connection.remoteAddress;
+              if (Common.CommentLikedKeys[key]) {
+                newComment.liked = true;
+              }
+
+              User.getUserById(comment.authorId, function (err, user) {
+                if (err) return callback(err);
+
+                if (user) {
+                  extend(newComment, {
+                    author: {
+                      loginName: user.loginName,
+                      url: user.url
+                    }
+                  });
+                }
+
+                callback(null, newComment);
+              });
+            }, function (err, newComments) {
+              if (err) return callback(err);
+
+              comments[item._id] = newComments;
+              callback();
+            });
+          });
+        }, function (err) {
+          if (err) return callback(err);
+
+          callback(null, comments);
+        });
+      }]
+    }, function (err, results) {
+      if (err) {
+        return next(err);
       }
-    });
 
-    res.render('user/index', {
-      title: '我的策展',
-      personalType: 'WORKS',
-      user: user,
-      css: [
-        '/bower_components/perfect-scrollbar/min/perfect-scrollbar-0.4.10.min.css',
-        'http://cdn.bootcss.com/messenger/1.4.0/css/messenger.css',
-        'http://cdn.bootcss.com/messenger/1.4.0/css/messenger-theme-flat.css',
-        '/stylesheets/topic2.css',
-        '/stylesheets/user.css'
-      ],
-      js: [
-        '/bower_components/perfect-scrollbar/min/perfect-scrollbar-0.4.10.min.js',
-        'http://cdn.bootcss.com/messenger/1.4.0/js/messenger.js',
-        'http://cdn.bootcss.com/messenger/1.4.0/js/messenger-theme-flat.js',
-        'http://cdn.bootcss.com/jquery-mousewheel/3.1.6/jquery.mousewheel.min.js',
-        '/javascripts/utils.js',
-        '/javascripts/topic.js'
-      ],
-      items: itemsData,
-      comments: comments
+      res.locals.yourself = results.user;
+      var items = results.items;
+      var comments = results.comments;
+
+      var itemsData = [];
+      items.forEach(function (item) {
+        if (item && item.type && item._id) {
+          itemsData.push(extend(
+            item,
+            helper.getItemData(item)
+          ));
+        }
+      });
+
+      res.render('user/index', {
+        title: '我的策展',
+        personalType: 'WORKS',
+        user: user,
+        css: [
+          '/stylesheets/topic2.css',
+          '/stylesheets/user.css'
+        ],
+        js: [
+          'http://cdn.bootcss.com/jquery-mousewheel/3.1.6/jquery.mousewheel.min.js',
+          '/javascripts/utils.js',
+          '/javascripts/topic.js'
+        ],
+        items: itemsData,
+        comments: comments
+      });
     });
   });
 }
