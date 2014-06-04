@@ -24,6 +24,42 @@ function showIndex(req, res, next) {
   async.auto({
     topic: function (callback) {
       Topic2.getTopic2ByText(topicText, callback);
+    }
+  }, function (err, results) {
+    if (err) {
+      return next(err);
+    }
+
+    var topic = results.topic;
+
+    res.render('topic2/topic', {
+      pageType: 'TOPIC',
+      title: '#' + topic.text + '#',
+      topic: topic,
+      css: [
+        '/stylesheets/topic2.css'
+      ],
+      js: [
+        '/javascripts/utils.js',
+        '/javascripts/topic.js'
+      ]
+    });
+
+    var key = topic._id + req.connection.remoteAddress;
+    if (!Common.TopicVisitedKeys[key]) {
+      Common.TopicVisitedKeys[key] = true;
+      Topic2.increasePVCountBy(topic, 1);
+    }
+    console.log('showIndex done');
+  });
+}
+
+function getTopic(req, res, next) {
+  var topicText = req.params.topicText;
+
+  async.auto({
+    topic: function (callback) {
+      Topic2.getTopic2ByText(topicText, callback);
     },
     tempItems: ['topic', function (callback, results) {
       var topic = results.topic;
@@ -69,16 +105,25 @@ function showIndex(req, res, next) {
               newComment.liked = true;
             }
 
+            function _prefixZero(num) {
+              return num < 10 ? '0' + num : num;
+            }
+            var temp = comment.createDate;
+            newComment.createDate = temp.getFullYear() + '-'
+              + _prefixZero(temp.getMonth() + 1) + '-'
+              + _prefixZero(temp.getDate()) + ' '
+              + _prefixZero(temp.getHours()) + ':'
+              + _prefixZero(temp.getMinutes()) + ':'
+              + _prefixZero(temp.getSeconds());
+
             User.getUserById(comment.authorId, function (err, user) {
               if (err) return callback(err);
 
               if (user) {
-                extend(newComment, {
-                  author: {
-                    loginName: user.loginName,
-                    url: user.url
-                  }
-                });
+                newComment.author = {
+                  loginName: user.loginName,
+                  url: user.url
+                };
               }
 
               callback(null, newComment);
@@ -86,7 +131,7 @@ function showIndex(req, res, next) {
           }, function (err, newComments) {
             if (err) return callback(err);
 
-            comments[item._id] = newComments;
+            item.comments = newComments;
             callback();
           });
         });
@@ -101,44 +146,18 @@ function showIndex(req, res, next) {
       return next(err);
     }
 
-    var topic = results.topic;
     var items = results.items;
-    var comments = results.comments;
 
-    var itemsData = [];
     items.forEach(function (item) {
       if (item && item.type && item._id) {
-        itemsData.push(extend(
-          helper.getItemData(item), {
-            author: item.author,
-            create_at: item.create_at
-          }
-        ));
+        extend(
+          item,
+          helper.getItemData(item)
+        );
       }
     });
 
-    res.render('topic2/topic', {
-      pageType: 'TOPIC',
-      title: '#' + topic.text + '#',
-      topic: topic,
-      css: [
-        '/stylesheets/topic2.css'
-      ],
-      js: [
-        'http://cdn.bootcss.com/jquery-mousewheel/3.1.6/jquery.mousewheel.min.js',
-        '/javascripts/utils.js',
-        '/javascripts/topic.js'
-      ],
-      items: itemsData,
-      comments: comments
-    });
-
-    var key = topic._id + req.connection.remoteAddress;
-    if (!Common.TopicVisitedKeys[key]) {
-      Common.TopicVisitedKeys[key] = true;
-      Topic2.increasePVCountBy(topic, 1);
-    }
-    console.log('showIndex done');
+    res.json(items);
   });
 }
 
@@ -158,5 +177,14 @@ function getHintTopics(req, res, next) {
   });
 }
 
+function getHotTopics(req, res) {
+  var index = parseInt(req.query.index);
+  var count = parseInt(req.query.count);
+
+  res.json(Common.HotTopics.slice(index, index + count));
+}
+
 exports.showIndex = showIndex;
+exports.getTopic = getTopic;
 exports.getHintTopics = getHintTopics;
+exports.getHotTopics = getHotTopics;

@@ -9,5 +9,6 @@
 module.exports = {
   TopicVisitedKeys: {},
   SpitLikedKeys: {},
-  CommentLikedKeys: {}
+  CommentLikedKeys: {},
+  HotTopics: []
 }

@@ -181,7 +181,6 @@ function showWorks(req, res, next) {
           '/stylesheets/user.css'
         ],
         js: [
-          'http://cdn.bootcss.com/jquery-mousewheel/3.1.6/jquery.mousewheel.min.js',
           '/javascripts/utils.js',
           '/javascripts/topic.js'
         ],

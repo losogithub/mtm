@@ -68,7 +68,6 @@ function showIndex(req, res, next) {
         '/stylesheets/topic.css'
       ],
       js: [
-        'http://cdn.bootcss.com/jquery-mousewheel/3.1.6/jquery.mousewheel.min.js',
         '/javascripts/utils.js'
       ],
       escape: escape,

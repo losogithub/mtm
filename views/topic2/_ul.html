@@ -1,169 +1,190 @@
-<% locals.items.forEach(function (item, index) { %>
-
-<ion-slide style="height: 100%;">
+<ion-slide style="height: 100%;"
+           ng-repeat="item in items">
 <ion-scroll style="height: 100%;">
-<div class="container padding-bottom"
-     ng-init="yourself = <%= JSON.stringify(locals.yourself && {
-              _id: locals.yourself._id,
-              loginName: locals.yourself.loginName,
-              url: locals.yourself.url
-            }) %>;
-            itemType = '<%= item.type %>';
-            itemId = '<%= item._id %>';
-            init();"
-     ng-controller="CommentCtrl2">
-<div class="Item list card"
-     data-options="<%= item && JSON.stringify(item) || '' %>">
-  <div class="item item-body <%= item.type %>">
-  <% if (item.type == 'LINK') { %>
-    <div class="Title" title="<%= item.snippet || '' %>">
-      <img class="Fav" src="<%= item.fav %>"
-           onerror="shizier.errorFavImage(this, '<%= item.url %>');">
-      <a target="_blank" class="LINK_URL" href='<%= item.url %>'><%= item.title || '' %></a>
+<div class="container padding-bottom">
+
+<div class="Item list card">
+  <div class="item item-body" ng-class="item.type" ng-switch="item.type">
+    <div class="Title" title="{{item.snippet || ''}}" ng-switch-when="LINK">
+      <img class="Fav" ng-src="{{item.fav}}"
+           ui-event="{ error : 'onFavError(item)' }">
+      <a target="_blank" class="LINK_URL" href='{{item.url}}'>{{item.title}}</a>
     </div>
-  <% } %>
-  <% if (item.type == 'IMAGE') { %>
-    <div style="margin: -15px -15px 0;">
+
+    <div style="margin: -15px -15px 0;" ng-switch-when="IMAGE">
       <div class="text-center">
-        <a href='<%= item.url || "" %>' style="display: block;"
-           title="<%= item.title || '' %>">
-          <img class="img-responsive" style="margin: auto;" onerror="shizier.errorImage(this,'default_120x120');"
-               src="<%= item.url || '' %>" alt="<%= item.title || '' %>">
+        <a href='{{item.url}}' style="display: block;"
+           title="{{item.title || ''}}">
+          <img class="img-responsive" style="margin: auto;"
+               onerror="shizier.errorImage(this,'default_120x120');"
+               ng-src="{{item.url}}" alt="{{item.title || ''}}">
         </a>
       </div>
 
       <h2 class="text-center"
-          style="display: <%= !item.title ? 'none' : 'block' %>; margin: 10px 0; font-size: 20px; font-weight: bold;">
-        <%= item.title || '' %>
+          ng-show="item.title"
+          style="margin: 10px 0; font-size: 20px; font-weight: bold;">
+        {{item.title}}
       </h2>
     </div>
-  <% } %>
-  <% if (item.type == 'VIDEO') { %>
 
-    <% include _video_cover.html %>
+    <div ng-switch-when="VIDEO">
 
-    <h2 style="display: <%= !item.title ? 'none' : 'block' %>; margin: 10px 0; font-size: 20px; font-weight: bold;">
-      <%= item.title ? item.title : '' %>
-    </h2>
-  <% } %>
-  <% if (item.type == 'CITE') { %>
-    <div class="Cite">
+      <div class="VideoWrapper" style="margin: -15px -15px 0;">
+        <button class="Cover button" style="margin: 15px 15px 0;"
+                type="button" ng-if="!item.playing"
+                ng-click="playVideo(item)"
+                ng-style="{'background-image':'url({{item.cover}})'}">
+          <div class="Background">
+            <i class="fa fa-play-circle"></i>
+          </div>
+        </button>
+        <div class="Player" ng-if="item.playing" ng-show="item.show">
+          <button name="close" class="button button-clear button-block"
+                  ng-click="item.playing = false;item.show = false;"
+                  type="button"><i class="fa fa-caret-up"></i> 收起</button>
+          <!--src为空会导致ie一直等待，localhost响应最快-->
+          <embed style="display: block;"
+                 src="about:blank"
+                 ng-src="{{getVideoSrc(item)}}"
+                 flashvars="{{getVideoVars(item)}}"
+                 width="{{item.width}}"
+                 height="{{item.height}}"
+                 type="application/x-shockwave-flash"
+                 allowscriptaccess="always"
+                 allowfullscreen="true"
+                 wmode="opaque"
+                 quality="high"></embed>
+        </div>
+      </div>
+
+      <h2 ng-show="item.title"
+          style="margin: 10px 0; font-size: 20px; font-weight: bold;">
+        {{item.title}}
+      </h2>
+    </div>
+
+    <div class="Cite" ng-switch-when="CITE">
       <i class="fa fa-quote-left text-muted"></i>
-      <q><%- item.cite ? escape(item.cite).replace(/\n/g, "<br>") : '' %></q>
+      <q ng-bind-html="getHtml(item.cite)"></q>
     </div>
-  <% } %>
-  <% if (item.type == 'WEIBO') { %>
 
-    <div class="clearfix">
-      <a target="_blank"  class="Avatar AuthorUrl img-circle" href="<%= (item.user && 'http://weibo.com/' + item.user.profile_url) || '' %>">
-        <img class="img-circle"
-             src="<%= item.user && item.user.profile_image_url || '' %>"
-             alt="<%= item.user && item.user.screen_name || '' %>">
-      </a>
-
-      <div style="overflow: hidden;">
-        <a target="_blank" class="ScreenName AuthorUrl" href="<%= (item.user && 'http://weibo.com/' + item.user.profile_url) || '' %>">
-          <span class="ScreenName"><%= item.user && item.user.screen_name || '' %></span>
+    <div ng-switch-when="WEIBO">
+      <div class="clearfix">
+        <a target="_blank"  class="Avatar AuthorUrl img-circle"
+           href="http://weibo.com/{{item.user.profile_url}}">
+          <img class="img-circle"
+               ng-src="{{item.user.profile_image_url}}"
+               alt="{{item.user.screen_name}}">
         </a>
-        <a target="_blank" class="Verify <%= !item.user ? '' : !item.user.verified ? '' : item.user.verified_type ? 'ORG' : 'PERSONAL' %>" href="http://verified.weibo.com/verify"><b>V</b></a>
-      </div>
-    </div>
 
-    <div class="Text"><%- item.parsed_text || '' %></div>
-    <div class="Pic clearfix" style="<%= item.pic_urls && item.pic_urls.length && 'display: block;' || 'display: none;' %><%= item.pic_urls && item.pic_urls.length == 4 && 'width: 170px;' || '' %>">
-      <% if (item.pic_urls) { %>
-      <% if (item.pic_urls.length == 1 && item.pic_urls[0]) { %>
-      <a class="WeiboImage fancybox" rel="gallery"
-         href="<%= item.pic_urls[0].thumbnail_pic.replace('/thumbnail/', '/large/') %>"><img
-        src="<%= item.pic_urls[0].thumbnail_pic %>"></a>
-      <% } else { %>
-      <% item.pic_urls.forEach(function (pic_url) { %>
-      <% if (pic_url) { %>
-      <a class="WeiboImage fancybox" rel="gallery"
-         href="<%= pic_url.thumbnail_pic.replace('/thumbnail/', '/large/') %>"><img
-        src="<%= pic_url.thumbnail_pic.replace('/thumbnail/', '/square/') %>"></a>
-      <% } %>
-      <% }); %>
-      <% } %>
-      <% } %>
-    </div>
-    <% if (item.retweeted_status && item.retweeted_status.idstr) { %>
-    <% var retweetedItem = item.retweeted_status; %>
-    <div class="Retweeted clearfix">
-      <a target="_blank" class="Author AuthorUrl" href="<%= (retweetedItem.user && 'http://weibo.com/' + retweetedItem.user.profile_url) || '' %>">
-        @<span class="ScreenName"><%= retweetedItem.user && retweetedItem.user.screen_name || '' %></span>
-      </a>
-      <a target="_blank" class="Verify <%= !retweetedItem.user ? '' : !retweetedItem.user.verified ? '' : retweetedItem.user.verified_type ? 'ORG' : 'PERSONAL' %>" href="http://verified.weibo.com/verify"><b>V</b></a>
-      <div class="Text"><%- retweetedItem.parsed_text || '' %></div>
-      <div class="Pic clearfix" style="<%= retweetedItem.pic_urls && retweetedItem.pic_urls.length && 'display: block;' || 'display: none;' %><%= retweetedItem.pic_urls && retweetedItem.pic_urls.length == 4 && 'width: 170px;' || '' %>">
-        <% if (retweetedItem.pic_urls) { %>
-        <% if (retweetedItem.pic_urls.length == 1 && retweetedItem.pic_urls[0]) { %>
-        <a class="WeiboImage fancybox" rel="gallery"
-           href="<%= retweetedItem.pic_urls[0].thumbnail_pic.replace('/thumbnail/', '/large/') %>"><img
-          src="<%= retweetedItem.pic_urls[0].thumbnail_pic %>"></a>
-        <% } else { %>
-        <% retweetedItem.pic_urls.forEach(function (pic_url) { %>
-        <% if (pic_url) { %>
-        <a class="WeiboImage fancybox" rel="gallery"
-           href="<%= pic_url.thumbnail_pic.replace('/thumbnail/', '/large/') %>"><img
-          src="<%= pic_url.thumbnail_pic.replace('/thumbnail/', '/square/') %>"></a>
-        <% } %>
-        <% }); %>
-        <% } %>
-        <% } %>
+        <div style="overflow: hidden;">
+          <a target="_blank" class="ScreenName AuthorUrl"
+             href="http://weibo.com/{{item.user.profile_url}}">
+            <span class="ScreenName">{{item.user.screen_name}}</span>
+          </a>
+          <a target="_blank" class="Verify"
+             ng-class="!item.user.verified ? '' : item.user.verified_type ? 'ORG' : 'PERSONAL'"
+             href="http://verified.weibo.com/verify"><b>V</b></a>
+        </div>
       </div>
-      <a target="_blank" class="Time text-muted" style="float: left;" href="<%= retweetedItem.user && 'http://weibo.com/' + retweetedItem.user.idstr + '/' + retweetedItem.mid62 || '' %>"><%= retweetedItem.time || '' %></a>
+
+      <div class="Text" ng-bind-html="getWeiboHtml(item.parsed_text)"></div>
+      <div class="Pic clearfix" ng-if="item.pic_urls && item.pic_urls.length"
+           style="{{item.pic_urls && item.pic_urls.length == 4 ? 'width: 170px;' : ''}}">
+        <a target="_blank" class="WeiboImage fancybox" rel="gallery"
+           ng-if="item.pic_urls.length == 1 && item.pic_urls[0]"
+           href="{{item.pic_urls[0].thumbnail_pic.replace('/thumbnail/', '/large/')}}"><img
+          ng-src="{{item.pic_urls[0].thumbnail_pic}}"></a>
+        <a target="_blank" class="WeiboImage fancybox" rel="gallery"
+           ng-if="item.pic_urls.length > 1 && pic"
+           ng-repeat="pic in item.pic_urls"
+           href="{{pic.thumbnail_pic.replace('/thumbnail/', '/large/')}}"><img
+          ng-src="{{pic.thumbnail_pic.replace('/thumbnail/', '/square/')}}"></a>
+      </div>
+      <div class="Retweeted clearfix" ng-init="reItem = item.retweeted_status;"
+           ng-if="item.retweeted_status && item.retweeted_status.idstr">
+        <a target="_blank" class="Author AuthorUrl"
+           href="http://weibo.com/{{reItem.user.profile_url}}">
+          @<span class="ScreenName">{{reItem.user.screen_name}}</span>
+        </a>
+        <a target="_blank" class="Verify"
+           ng-class="!reItem.user.verified ? '' : reItem.user.verified_type ? 'ORG' : 'PERSONAL'"
+           href="http://verified.weibo.com/verify"><b>V</b></a>
+        <div class="Text" ng-bind-html="getWeiboHtml(reItem.parsed_text)"></div>
+        <div class="Pic clearfix" ng-if="reItem.pic_urls && reItem.pic_urls.length"
+             style="{{reItem.pic_urls && reItem.pic_urls.length == 4 ? 'width: 170px;' : ''}}">
+          <a target="_blank" class="WeiboImage fancybox" rel="gallery"
+             ng-if="reItem.pic_urls.length == 1 && reItem.pic_urls[0]"
+             href="{{reItem.pic_urls[0].thumbnail_pic.replace('/thumbnail/', '/large/')}}"><img
+            ng-src="{{reItem.pic_urls[0].thumbnail_pic}}"></a>
+          <a target="_blank" class="WeiboImage fancybox" rel="gallery"
+             ng-if="reItem.pic_urls.length > 1 && pic"
+             ng-repeat="pic in reItem.pic_urls"
+             href="{{pic.thumbnail_pic.replace('/thumbnail/', '/large/')}}"><img
+            ng-src="{{pic.thumbnail_pic.replace('/thumbnail/', '/square/')}}"></a>
+        </div>
+        <a target="_blank" class="Time text-muted pull-left"
+           href="http://weibo.com/{{reItem.user.idstr}}/{{reItem.mid62}}"
+          >{{reItem.time}}</a>
+        <div class="Handle">
+          <a target="_blank" class="Forward text-muted mrs"
+             href="http://weibo.com/{{reItem.user.idstr}}/{{reItem.mid62}}?type=repost"
+            ><i class="fa fa-share"></i> 转发</a>
+          <a target="_blank" class="Comment text-muted"
+             href="http://weibo.com/{{reItem.user.idstr}}/{{reItem.mid62}}"
+            ><i class="fa fa-comment-o"></i> 评论</a>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      <a target="_blank" class="Time text-muted pull-left"
+         href="http://weibo.com/{{item.user.idstr}}/{{item.mid62}}">{{item.time}}</a>
       <div class="Handle">
-        <a target="_blank" class="Forward text-muted mrs" href="<%= retweetedItem.user && 'http://weibo.com/' + retweetedItem.user.idstr + '/' + retweetedItem.mid62 + '?type=repost' || '' %>"><i class="fa fa-share"></i> 转发</a>
-        <a target="_blank" class="Comment text-muted" href="<%= retweetedItem.user && 'http://weibo.com/' + retweetedItem.user.idstr + '/' + retweetedItem.mid62 || '' %>"><i class="fa fa-comment-o"></i> 评论</a>
+        <a target="_blank" class="Forward text-muted mrs"
+           href="http://weibo.com/{{item.user.idstr}}/{{item.mid62}}?type=repost"
+          ><i class="fa fa-share"></i> 转发</a>
+        <a target="_blank" class="Comment text-muted"
+           href="http://weibo.com/{{item.user.idstr}}/{{item.mid62}}"
+          ><i class="fa fa-comment-o"></i> 评论</a>
       </div>
       <div class="clearfix"></div>
     </div>
-    <% } %>
-    <a target="_blank" class="Time text-muted" style="float: left;" href="<%= item.user && 'http://weibo.com/' + item.user.idstr + '/' + item.mid62 || '' %>"><%= item.time || '' %></a>
-    <div class="Handle">
-      <a target="_blank" class="Forward text-muted mrs" href="<%= item.user && 'http://weibo.com/' + item.user.idstr + '/' + item.mid62 + '?type=repost' || '' %>"><i class="fa fa-share"></i> 转发</a>
-      <a target="_blank" class="Comment text-muted" href="<%= item.user && 'http://weibo.com/' + item.user.idstr + '/' + item.mid62 || '' %>"><i class="fa fa-comment-o"></i> 评论</a>
-    </div>
-    <div class="clearfix"></div>
-  <% } %>
 
-    <% if (item.description) { %>
-    <div style="margin: 10px 0;">
-      <%= item.description %>
+    <div style="margin: 10px 0;" ng-show="item.description">
+      {{item.description}}
     </div>
-    <% } %>
 
     <div style="margin: 10px 0;">
-      <a href="/u/<%= item.author.loginName %>">
+      <a href="/u/{{item.author.loginName}}">
         <img class="img-circle" style="border-radius: 50%;"
              width="20" height="20"
-             ng-src="<%= item.author.url || '/images/no_img/user_80x80.png' %>">
-        <%= item.author.loginName %>
+             ng-src="{{item.author.url || '/images/no_img/user_80x80.png'}}">
+        {{item.author.loginName}}
       </a>
     </div>
 
     <div class="text-muted" style="font-size: 12px; margin: 10px 0;">
       发布于
-      <%= item.create_at %>
+      {{item.create_at}}
     </div>
 
     <div class="text-muted text-right" style="font-size: 12px;">
       来自 <i class="fa fa-globe"></i>
-      <a class="text-muted" target="_blank" href="<%= item.quote || item.url || '' %>">
-        <%= item.quoteDomain ? item.quoteDomain : '' %>
+      <a class="text-muted" target="_blank" href="{{item.quote || item.url || ''}}">
+        {{item.quoteDomain || ''}}
       </a>
     </div>
   </div>
 </div>
 
-<div class="text-center" ng-show="comments[itemId].length">
+<div class="text-center" ng-show="item.comments.length">
   <i class="fa fa-comment-o"></i>
-  共{{comments[itemId].length}}条评论
+  共{{item.comments.length}}条评论，
+  <a class="positive" style="cursor: pointer;" ng-click="openModal(item);">发表评论</a>
 </div>
 
-<div class="list card" style="margin-bottom: 60px;">
-  <div class="item item-avatar" ng-repeat="comment in comments[itemId]">
+<div class="list card">
+  <div class="item item-avatar" ng-repeat="comment in item.comments">
     <img style="border-radius: 50%;"
          ng-src="{{comment.author && comment.author.url || '/images/no_img/user_80x80.png'}}">
     <h2 class="clearfix">
@@ -184,24 +205,13 @@
     </div>
     <p>{{comment.text}}</p>
   </div>
-  <div class="item item-avatar stable-bg">
-    <img style="border-radius: 50%;"
-         ng-src="{{yourself.url || '/images/no_img/user_80x80.png'}}">
-    <h2>
-      <a ng-show="yourself" href="/u/{{yourself.loginName}}">{{yourself.loginName}}</a>
-      <span ng-show="!yourself" class="text-muted">匿名用户</span>
-    </h2>
-    <form class="mtm" ng-submit="submit()" style="position: relative;">
-      <input type="text"
-             ng-model="comment" maxlength="140"
-             placeholder="发表评论"/>
-      <div class="LetterCounter">
-        {{comment.length || 0}}/140
-      </div>
-    </form>
-  </div>
+  <button class="item item-positive button-block stable-bg" ng-click="openModal(item);">
+    发表评论
+  </button>
 </div>
+
+<p style="margin-bottom: 60px;">
+</p>
 </div>
 </ion-scroll>
 </ion-slide>
-<% }); %>

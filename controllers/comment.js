@@ -31,7 +31,18 @@ function createComment(req, res, next) {
   Comment.createComment(itemType, itemId, replyId, authorId, text, function (err, comment) {
     if (err) return next(err);
 
-    res.json(comment);
+    var newComment = comment.toJSON();
+    function _prefixZero(num) {
+      return num < 10 ? '0' + num : num;
+    }
+    var temp = comment.createDate;
+    newComment.createDate = temp.getFullYear() + '-'
+      + _prefixZero(temp.getMonth() + 1) + '-'
+      + _prefixZero(temp.getDate()) + ' '
+      + _prefixZero(temp.getHours()) + ':'
+      + _prefixZero(temp.getMinutes()) + ':'
+      + _prefixZero(temp.getSeconds());
+    res.json(newComment);
 
     Item.getItemById(itemType, itemId, function (err, item) {
       if (err || !item || item.authorId == authorId) return;

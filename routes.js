@@ -28,10 +28,12 @@ module.exports = function (app) {
   //策展
   app.get('/topic/:topicId', topic.showIndex);
 
+  app.get('/api/t/hot', topic2.getHotTopics);
   app.get('/t/:topicText', topic2.showIndex);
+  app.get('/api/t/:topicText', topic2.getTopic);
 
   app.post('/comment/like', comment.likeComment);
-  app.post('/comment2', comment.createComment);
+  app.post('/comment', comment.createComment);
 
   //item
   app.get('/item/detail', auth.userRequired, item.getDetail);

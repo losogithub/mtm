@@ -16,38 +16,70 @@
 <ion-tabs class="tabs-dark tabs-icon-only">
 
   <ion-tab title="Topic" icon-on="ion-ios7-chatbubble" icon-off="ion-ios7-chatbubble-outline">
-    <ion-content scroll="false" class="stable-bg">
-      <div style="height: 100%;">
-        <ion-slide-box style="height: 100%;" show-pager="false">
-          <ion-slide style="height: 100%;">
-            <ion-scroll style="height: 100%;" class="">
-              <div class="text-center" style="margin-top: 10px;">
-                <i class="fa fa-arrows-h"></i><br>
-                向右滑动预览热门话题
-              </div>
-              <div class="list card" style="margin-bottom: 30px;">
-                <% locals.items.forEach(function (item, index) { %>
-                <a class="item" href="/t/<%= item.topic.text %>">
-                  <span class="text-muted">#</span>
+    <ion-content scroll="false" class="stable-bg"
+                 ng-init="yourself = <%= JSON.stringify(locals.yourself && {
+                      _id: locals.yourself._id,
+                      loginName: locals.yourself.loginName,
+                      url: locals.yourself.url
+                    }) %>;"
+                 ng-controller="IndexCtrl">
+      <ion-slide-box style="height: 100%;" on-slide-changed="slideHasChanged($index)"
+                     pager-click="activeIndex = index;" active-slide="activeIndex">
+        <ion-slide style="height: 100%;">
+          <ion-scroll style="height: 100%;">
+            <div class="text-center" style="padding-top: 10px;">
+              <i class="fa fa-arrows-h"></i><br>
+              向右滑动预览热门话题
+            </div>
+            <div class="list card">
+              <a class="item" href="/t/{{item.topic.text}}"
+                 ng-repeat="item in items">
+                <span class="text-muted">#</span>
                   <span>
-                    <%= item.topic.text %>
+                    {{item.topic.text}}
                   </span>
-                  <span class="text-muted">#</span>
-                  <% if (item.topic.itemCount - 1) { %>
-                  <span class="badge badge-stable" style="right: 15px;">
-                    <%= item.topic.itemCount %>
-                  </span>
-                  <% } %>
-                </a>
-                <% }); %>
+                <span class="text-muted">#</span>
+                <span class="badge badge-assertive" style="right: 15px;"
+                      ng-show="item.topic.itemCount - 1">
+                  {{item.topic.itemCount}}
+                </span>
+              </a>
+            </div>
+            <div style="height: 110px;">
+              <ion-infinite-scroll
+                ng-if="!noMoreHotTopics"
+                on-infinite="loadMore()">
+              </ion-infinite-scroll>
+              <div class="text-center" style="margin: 20px 0;"
+                   ng-show="noMoreHotTopics">
+                没有更多热门话题了
               </div>
-            </ion-scroll>
-          </ion-slide>
+            </div>
+          </ion-scroll>
+        </ion-slide>
 
-          <% include ./_ul.html %>
+        <% include ./_ul.html %>
 
-        </ion-slide-box>
-      </div>
+      </ion-slide-box>
+
+      <script id="comment.html" type="text/ng-template">
+        <div id="_comment" class="modal item item-avatar">
+          <img style="border-radius: 50%;"
+               ng-src="{{yourself.url || '/images/no_img/user_80x80.png'}}">
+          <h2>
+            <a ng-show="yourself" href="/u/{{yourself.loginName}}">{{yourself.loginName}}</a>
+            <span ng-show="!yourself" class="text-muted">匿名用户</span>
+          </h2>
+          <form class="mtm" ng-submit="submit(item, $parent)" style="position: relative;">
+            <input type="text"
+                   ng-model="$parent.comment" maxlength="140"
+                   placeholder="发表评论"/>
+            <div class="LetterCounter positive">
+              {{comment.length || 0}}/140
+            </div>
+          </form>
+        </div>
+      </script>
     </ion-content>
   </ion-tab>
 
@@ -60,8 +92,3 @@
   </ion-tab>
 
 </ion-tabs>
-
-<!--模板-->
-<div class="TEMPLATES" style="display:none;">
-  <% include ./topic2/_video_player.html %>
-</div>
